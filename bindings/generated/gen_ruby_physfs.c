@@ -9,21 +9,21 @@
 static mrb_value GenPush_PHYSFS_Stat(mrb_state *mrb, const PHYSFS_Stat *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "filesize", mrb_int_value(mrb, (mrb_int)in->filesize));
-    SDLStaticGen_RubyHashSet(mrb, h, "modtime", mrb_int_value(mrb, (mrb_int)in->modtime));
-    SDLStaticGen_RubyHashSet(mrb, h, "createtime", mrb_int_value(mrb, (mrb_int)in->createtime));
-    SDLStaticGen_RubyHashSet(mrb, h, "accesstime", mrb_int_value(mrb, (mrb_int)in->accesstime));
-    SDLStaticGen_RubyHashSet(mrb, h, "filetype", mrb_int_value(mrb, (mrb_int)in->filetype));
-    SDLStaticGen_RubyHashSet(mrb, h, "readonly", mrb_int_value(mrb, (mrb_int)in->readonly));
+    GrappleGen_RubyHashSet(mrb, h, "filesize", mrb_int_value(mrb, (mrb_int)in->filesize));
+    GrappleGen_RubyHashSet(mrb, h, "modtime", mrb_int_value(mrb, (mrb_int)in->modtime));
+    GrappleGen_RubyHashSet(mrb, h, "createtime", mrb_int_value(mrb, (mrb_int)in->createtime));
+    GrappleGen_RubyHashSet(mrb, h, "accesstime", mrb_int_value(mrb, (mrb_int)in->accesstime));
+    GrappleGen_RubyHashSet(mrb, h, "filetype", mrb_int_value(mrb, (mrb_int)in->filetype));
+    GrappleGen_RubyHashSet(mrb, h, "readonly", mrb_int_value(mrb, (mrb_int)in->readonly));
     return h;
 }
 
 static mrb_value GenPush_PHYSFS_Version(mrb_state *mrb, const PHYSFS_Version *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "major", mrb_int_value(mrb, (mrb_int)in->major));
-    SDLStaticGen_RubyHashSet(mrb, h, "minor", mrb_int_value(mrb, (mrb_int)in->minor));
-    SDLStaticGen_RubyHashSet(mrb, h, "patch", mrb_int_value(mrb, (mrb_int)in->patch));
+    GrappleGen_RubyHashSet(mrb, h, "major", mrb_int_value(mrb, (mrb_int)in->major));
+    GrappleGen_RubyHashSet(mrb, h, "minor", mrb_int_value(mrb, (mrb_int)in->minor));
+    GrappleGen_RubyHashSet(mrb, h, "patch", mrb_int_value(mrb, (mrb_int)in->patch));
     return h;
 }
 
@@ -34,8 +34,8 @@ static mrb_value GenR_PHYSFS_caseFold(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_uint32 a0 = (PHYSFS_uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    PHYSFS_uint32 io1 = (PHYSFS_uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_uint32 a0 = (PHYSFS_uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_uint32 io1 = (PHYSFS_uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_caseFold(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -51,7 +51,7 @@ static mrb_value GenR_PHYSFS_close(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
     int rv = PHYSFS_close(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -76,7 +76,7 @@ static mrb_value GenR_PHYSFS_delete(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     int rv = PHYSFS_delete(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -89,7 +89,7 @@ static mrb_value GenR_PHYSFS_deregisterArchiver(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     int rv = PHYSFS_deregisterArchiver(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -102,7 +102,7 @@ static mrb_value GenR_PHYSFS_eof(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
     int rv = PHYSFS_eof(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -115,7 +115,7 @@ static mrb_value GenR_PHYSFS_exists(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     int rv = PHYSFS_exists(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -128,7 +128,7 @@ static mrb_value GenR_PHYSFS_fileLength(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
     PHYSFS_sint64 rv = PHYSFS_fileLength(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -141,7 +141,7 @@ static mrb_value GenR_PHYSFS_flush(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
     int rv = PHYSFS_flush(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -155,7 +155,7 @@ static mrb_value GenR_PHYSFS_getAllocator(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     const PHYSFS_Allocator * rv = PHYSFS_getAllocator();
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "PHYSFS_Allocator");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "PHYSFS_Allocator");
     }
 }
 
@@ -190,7 +190,7 @@ static mrb_value GenR_PHYSFS_getErrorByCode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_ErrorCode a0 = (PHYSFS_ErrorCode)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_ErrorCode a0 = (PHYSFS_ErrorCode)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = PHYSFS_getErrorByCode(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -229,7 +229,7 @@ static mrb_value GenR_PHYSFS_getMountPoint(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = PHYSFS_getMountPoint(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -242,8 +242,8 @@ static mrb_value GenR_PHYSFS_getPrefDir(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     const char * rv = PHYSFS_getPrefDir(a0, a1);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -256,7 +256,7 @@ static mrb_value GenR_PHYSFS_getRealDir(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = PHYSFS_getRealDir(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -281,7 +281,7 @@ static mrb_value GenR_PHYSFS_init(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     int rv = PHYSFS_init(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -306,7 +306,7 @@ static mrb_value GenR_PHYSFS_mkdir(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     int rv = PHYSFS_mkdir(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -319,9 +319,9 @@ static mrb_value GenR_PHYSFS_mount(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     int rv = PHYSFS_mount(a0, a1, a2);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -334,10 +334,10 @@ static mrb_value GenR_PHYSFS_mountHandle(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     int rv = PHYSFS_mountHandle(a0, a1, a2, a3);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -350,10 +350,10 @@ static mrb_value GenR_PHYSFS_mountIo(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_Io *a0 = (PHYSFS_Io *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_Io");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    PHYSFS_Io *a0 = (PHYSFS_Io *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_Io");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     int rv = PHYSFS_mountIo(a0, a1, a2, a3);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -366,9 +366,9 @@ static mrb_value GenR_PHYSFS_openAppend(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_File * rv = PHYSFS_openAppend(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "PHYSFS_File");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "PHYSFS_File");
     }
 }
 
@@ -379,9 +379,9 @@ static mrb_value GenR_PHYSFS_openRead(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_File * rv = PHYSFS_openRead(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "PHYSFS_File");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "PHYSFS_File");
     }
 }
 
@@ -392,9 +392,9 @@ static mrb_value GenR_PHYSFS_openWrite(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_File * rv = PHYSFS_openWrite(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "PHYSFS_File");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "PHYSFS_File");
     }
 }
 
@@ -405,7 +405,7 @@ static mrb_value GenR_PHYSFS_permitSymbolicLinks(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_permitSymbolicLinks(a0);
     return mrb_nil_value();
     }
@@ -418,8 +418,8 @@ static mrb_value GenR_PHYSFS_readSBE16(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_sint16 io1 = (PHYSFS_sint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_sint16 io1 = (PHYSFS_sint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_readSBE16(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -435,8 +435,8 @@ static mrb_value GenR_PHYSFS_readSBE32(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_sint32 io1 = (PHYSFS_sint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_sint32 io1 = (PHYSFS_sint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_readSBE32(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -452,8 +452,8 @@ static mrb_value GenR_PHYSFS_readSBE64(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_sint64 io1 = (PHYSFS_sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_sint64 io1 = (PHYSFS_sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_readSBE64(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -469,8 +469,8 @@ static mrb_value GenR_PHYSFS_readSLE16(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_sint16 io1 = (PHYSFS_sint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_sint16 io1 = (PHYSFS_sint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_readSLE16(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -486,8 +486,8 @@ static mrb_value GenR_PHYSFS_readSLE32(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_sint32 io1 = (PHYSFS_sint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_sint32 io1 = (PHYSFS_sint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_readSLE32(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -503,8 +503,8 @@ static mrb_value GenR_PHYSFS_readSLE64(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_sint64 io1 = (PHYSFS_sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_sint64 io1 = (PHYSFS_sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_readSLE64(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -520,8 +520,8 @@ static mrb_value GenR_PHYSFS_readUBE16(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_uint16 io1 = (PHYSFS_uint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_uint16 io1 = (PHYSFS_uint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_readUBE16(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -537,8 +537,8 @@ static mrb_value GenR_PHYSFS_readUBE32(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_uint32 io1 = (PHYSFS_uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_uint32 io1 = (PHYSFS_uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_readUBE32(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -554,8 +554,8 @@ static mrb_value GenR_PHYSFS_readUBE64(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_uint64 io1 = (PHYSFS_uint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_uint64 io1 = (PHYSFS_uint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_readUBE64(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -571,8 +571,8 @@ static mrb_value GenR_PHYSFS_readULE16(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_uint16 io1 = (PHYSFS_uint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_uint16 io1 = (PHYSFS_uint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_readULE16(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -588,8 +588,8 @@ static mrb_value GenR_PHYSFS_readULE32(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_uint32 io1 = (PHYSFS_uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_uint32 io1 = (PHYSFS_uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_readULE32(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -605,8 +605,8 @@ static mrb_value GenR_PHYSFS_readULE64(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_uint64 io1 = (PHYSFS_uint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_uint64 io1 = (PHYSFS_uint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_readULE64(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -622,7 +622,7 @@ static mrb_value GenR_PHYSFS_registerArchiver(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const PHYSFS_Archiver *a0 = (const PHYSFS_Archiver *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_Archiver");
+    const PHYSFS_Archiver *a0 = (const PHYSFS_Archiver *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_Archiver");
     int rv = PHYSFS_registerArchiver(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -635,8 +635,8 @@ static mrb_value GenR_PHYSFS_seek(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_uint64 a1 = (PHYSFS_uint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_uint64 a1 = (PHYSFS_uint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_seek(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -649,7 +649,7 @@ static mrb_value GenR_PHYSFS_setAllocator(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const PHYSFS_Allocator *a0 = (const PHYSFS_Allocator *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_Allocator");
+    const PHYSFS_Allocator *a0 = (const PHYSFS_Allocator *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_Allocator");
     int rv = PHYSFS_setAllocator(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -662,8 +662,8 @@ static mrb_value GenR_PHYSFS_setBuffer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_uint64 a1 = (PHYSFS_uint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_uint64 a1 = (PHYSFS_uint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_setBuffer(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -676,7 +676,7 @@ static mrb_value GenR_PHYSFS_setErrorCode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_ErrorCode a0 = (PHYSFS_ErrorCode)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_ErrorCode a0 = (PHYSFS_ErrorCode)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_setErrorCode(a0);
     return mrb_nil_value();
     }
@@ -689,8 +689,8 @@ static mrb_value GenR_PHYSFS_setRoot(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_setRoot(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -703,11 +703,11 @@ static mrb_value GenR_PHYSFS_setSaneConfig(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     int rv = PHYSFS_setSaneConfig(a0, a1, a2, a3, a4);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -720,7 +720,7 @@ static mrb_value GenR_PHYSFS_setWriteDir(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     int rv = PHYSFS_setWriteDir(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -733,7 +733,7 @@ static mrb_value GenR_PHYSFS_stat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_Stat out1;
     memset(&out1, 0, sizeof(out1));
     int rv = PHYSFS_stat(a0, &out1);
@@ -751,7 +751,7 @@ static mrb_value GenR_PHYSFS_swapSBE16(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_sint16 a0 = (PHYSFS_sint16)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_sint16 a0 = (PHYSFS_sint16)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_sint16 rv = PHYSFS_swapSBE16(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -764,7 +764,7 @@ static mrb_value GenR_PHYSFS_swapSBE32(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_sint32 a0 = (PHYSFS_sint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_sint32 a0 = (PHYSFS_sint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_sint32 rv = PHYSFS_swapSBE32(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -777,7 +777,7 @@ static mrb_value GenR_PHYSFS_swapSBE64(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_sint64 a0 = (PHYSFS_sint64)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_sint64 a0 = (PHYSFS_sint64)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_sint64 rv = PHYSFS_swapSBE64(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -790,7 +790,7 @@ static mrb_value GenR_PHYSFS_swapSLE16(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_sint16 a0 = (PHYSFS_sint16)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_sint16 a0 = (PHYSFS_sint16)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_sint16 rv = PHYSFS_swapSLE16(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -803,7 +803,7 @@ static mrb_value GenR_PHYSFS_swapSLE32(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_sint32 a0 = (PHYSFS_sint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_sint32 a0 = (PHYSFS_sint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_sint32 rv = PHYSFS_swapSLE32(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -816,7 +816,7 @@ static mrb_value GenR_PHYSFS_swapSLE64(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_sint64 a0 = (PHYSFS_sint64)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_sint64 a0 = (PHYSFS_sint64)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_sint64 rv = PHYSFS_swapSLE64(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -829,7 +829,7 @@ static mrb_value GenR_PHYSFS_swapUBE16(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_uint16 a0 = (PHYSFS_uint16)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_uint16 a0 = (PHYSFS_uint16)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_uint16 rv = PHYSFS_swapUBE16(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -842,7 +842,7 @@ static mrb_value GenR_PHYSFS_swapUBE32(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_uint32 a0 = (PHYSFS_uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_uint32 a0 = (PHYSFS_uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_uint32 rv = PHYSFS_swapUBE32(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -855,7 +855,7 @@ static mrb_value GenR_PHYSFS_swapUBE64(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_uint64 a0 = (PHYSFS_uint64)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_uint64 a0 = (PHYSFS_uint64)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_uint64 rv = PHYSFS_swapUBE64(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -868,7 +868,7 @@ static mrb_value GenR_PHYSFS_swapULE16(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_uint16 a0 = (PHYSFS_uint16)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_uint16 a0 = (PHYSFS_uint16)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_uint16 rv = PHYSFS_swapULE16(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -881,7 +881,7 @@ static mrb_value GenR_PHYSFS_swapULE32(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_uint32 a0 = (PHYSFS_uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_uint32 a0 = (PHYSFS_uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_uint32 rv = PHYSFS_swapULE32(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -894,7 +894,7 @@ static mrb_value GenR_PHYSFS_swapULE64(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_uint64 a0 = (PHYSFS_uint64)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_uint64 a0 = (PHYSFS_uint64)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_uint64 rv = PHYSFS_swapULE64(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -919,7 +919,7 @@ static mrb_value GenR_PHYSFS_tell(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
     PHYSFS_sint64 rv = PHYSFS_tell(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -932,7 +932,7 @@ static mrb_value GenR_PHYSFS_unmount(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     int rv = PHYSFS_unmount(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -945,10 +945,10 @@ static mrb_value GenR_PHYSFS_utf8FromLatin1(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *src1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *src1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     char *a1 = SDL_strdup(src1 != NULL ? src1 : "");
-    PHYSFS_uint64 a2 = (PHYSFS_uint64)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    PHYSFS_uint64 a2 = (PHYSFS_uint64)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     PHYSFS_utf8FromLatin1(a0, a1, a2);
     SDL_free(a1);
     return mrb_nil_value();
@@ -962,9 +962,9 @@ static mrb_value GenR_PHYSFS_utf8ToUcs2(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    PHYSFS_uint16 io1 = (PHYSFS_uint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    PHYSFS_uint64 a2 = (PHYSFS_uint64)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_uint16 io1 = (PHYSFS_uint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_uint64 a2 = (PHYSFS_uint64)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     PHYSFS_utf8ToUcs2(a0, &io1, a2);
     return mrb_int_value(mrb, (mrb_int)io1);
     }
@@ -977,9 +977,9 @@ static mrb_value GenR_PHYSFS_utf8ToUcs4(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    PHYSFS_uint32 io1 = (PHYSFS_uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    PHYSFS_uint64 a2 = (PHYSFS_uint64)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_uint32 io1 = (PHYSFS_uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_uint64 a2 = (PHYSFS_uint64)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     PHYSFS_utf8ToUcs4(a0, &io1, a2);
     return mrb_int_value(mrb, (mrb_int)io1);
     }
@@ -992,9 +992,9 @@ static mrb_value GenR_PHYSFS_utf8ToUtf16(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    PHYSFS_uint16 io1 = (PHYSFS_uint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    PHYSFS_uint64 a2 = (PHYSFS_uint64)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    PHYSFS_uint16 io1 = (PHYSFS_uint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_uint64 a2 = (PHYSFS_uint64)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     PHYSFS_utf8ToUtf16(a0, &io1, a2);
     return mrb_int_value(mrb, (mrb_int)io1);
     }
@@ -1007,8 +1007,8 @@ static mrb_value GenR_PHYSFS_utf8stricmp(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_utf8stricmp(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1021,9 +1021,9 @@ static mrb_value GenR_PHYSFS_writeBytes(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
     size_t len1 = 0;
-    const char *a1 = SDLStaticGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
+    const char *a1 = GrappleGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
     PHYSFS_sint64 rv = PHYSFS_writeBytes(a0, (const void *)a1, (PHYSFS_uint64)len1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1036,8 +1036,8 @@ static mrb_value GenR_PHYSFS_writeSBE16(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_sint16 a1 = (PHYSFS_sint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_sint16 a1 = (PHYSFS_sint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_writeSBE16(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1050,8 +1050,8 @@ static mrb_value GenR_PHYSFS_writeSBE32(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_sint32 a1 = (PHYSFS_sint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_sint32 a1 = (PHYSFS_sint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_writeSBE32(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1064,8 +1064,8 @@ static mrb_value GenR_PHYSFS_writeSBE64(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_sint64 a1 = (PHYSFS_sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_sint64 a1 = (PHYSFS_sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_writeSBE64(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1078,8 +1078,8 @@ static mrb_value GenR_PHYSFS_writeSLE16(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_sint16 a1 = (PHYSFS_sint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_sint16 a1 = (PHYSFS_sint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_writeSLE16(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1092,8 +1092,8 @@ static mrb_value GenR_PHYSFS_writeSLE32(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_sint32 a1 = (PHYSFS_sint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_sint32 a1 = (PHYSFS_sint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_writeSLE32(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1106,8 +1106,8 @@ static mrb_value GenR_PHYSFS_writeSLE64(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_sint64 a1 = (PHYSFS_sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_sint64 a1 = (PHYSFS_sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_writeSLE64(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1120,8 +1120,8 @@ static mrb_value GenR_PHYSFS_writeUBE16(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_uint16 a1 = (PHYSFS_uint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_uint16 a1 = (PHYSFS_uint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_writeUBE16(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1134,8 +1134,8 @@ static mrb_value GenR_PHYSFS_writeUBE32(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_uint32 a1 = (PHYSFS_uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_uint32 a1 = (PHYSFS_uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_writeUBE32(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1148,8 +1148,8 @@ static mrb_value GenR_PHYSFS_writeUBE64(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_uint64 a1 = (PHYSFS_uint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_uint64 a1 = (PHYSFS_uint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_writeUBE64(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1162,8 +1162,8 @@ static mrb_value GenR_PHYSFS_writeULE16(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_uint16 a1 = (PHYSFS_uint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_uint16 a1 = (PHYSFS_uint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_writeULE16(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1176,8 +1176,8 @@ static mrb_value GenR_PHYSFS_writeULE32(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_uint32 a1 = (PHYSFS_uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_uint32 a1 = (PHYSFS_uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_writeULE32(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1190,18 +1190,18 @@ static mrb_value GenR_PHYSFS_writeULE64(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
-    PHYSFS_uint64 a1 = (PHYSFS_uint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    PHYSFS_uint64 a1 = (PHYSFS_uint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = PHYSFS_writeULE64(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
 }
 
-void SDLStaticGen_OpenRuby_physfs(mrb_state *mrb);
-void SDLStaticGen_OpenRuby_physfs(mrb_state *mrb)
+void GrappleGen_OpenRuby_physfs(mrb_state *mrb);
+void GrappleGen_OpenRuby_physfs(mrb_state *mrb)
 {
     struct RClass *mod;
-    SDLStaticGen_RubyEnsureHandleClass(mrb);
+    GrappleGen_RubyEnsureHandleClass(mrb);
     mod = mrb_define_module(mrb, "PHYSFS");
     mrb_define_module_function(mrb, mod, "caseFold", GenR_PHYSFS_caseFold, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "close", GenR_PHYSFS_close, MRB_ARGS_ANY());

@@ -6,7 +6,7 @@
 // cap of 2. So the tests lean on the clamping and on the precedence order,
 // which is the part a player notices when it is wrong ("I changed the
 // setting and nothing happened").
-#include <SDLStatic/engine_graphics.h>
+#include <grapple/engine_graphics.h>
 
 #include <gtest/gtest.h>
 
@@ -50,13 +50,13 @@ class Args
 // covered by GraphicsShippingDefaults below.
 TEST(GraphicsDefaults, ArePacedAndNeutral)
 {
-    const SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
+    const Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
 
     EXPECT_TRUE(s.vsync);
     EXPECT_EQ(s.max_fps, 0) << "follow the display";
-    EXPECT_EQ(s.presentation, SDLSTATIC_PRESENT_LETTERBOX);
+    EXPECT_EQ(s.presentation, GRAPPLE_PRESENT_LETTERBOX);
     EXPECT_FLOAT_EQ(s.render_scale, 1.0f);
-    EXPECT_EQ(s.filter, SDLSTATIC_FILTER_AUTO);
+    EXPECT_EQ(s.filter, GRAPPLE_FILTER_AUTO);
 
     // A neutral image: the grade is what the artist chose.
     EXPECT_FLOAT_EQ(s.brightness, 1.0f);
@@ -70,7 +70,7 @@ TEST(GraphicsDefaults, ArePacedAndNeutral)
 // something impossible. None of it may reach the renderer.
 TEST(GraphicsClamp, PullsNonsenseBackIntoRange)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
     s.brightness = 40.0f;
     s.contrast = -3.0f;
     s.saturation = 99.0f;
@@ -87,7 +87,7 @@ TEST(GraphicsClamp, PullsNonsenseBackIntoRange)
     WriteEnum(s.particles, 77);
     WriteEnum(s.presentation, -4);
 
-    SDLStatic_GraphicsClamp(&s);
+    Grapple_GraphicsClamp(&s);
 
     EXPECT_FLOAT_EQ(s.brightness, 2.0f);
     EXPECT_FLOAT_EQ(s.contrast, 0.5f);
@@ -98,17 +98,17 @@ TEST(GraphicsClamp, PullsNonsenseBackIntoRange)
     EXPECT_EQ(s.max_fps, 10) << "a 2 fps cap looks like a hang, not a preference";
     EXPECT_FLOAT_EQ(s.ui_scale, 3.0f);
     EXPECT_FLOAT_EQ(s.screen_shake, 0.0f);
-    EXPECT_EQ(s.particles, SDLSTATIC_QUALITY_HIGH);
-    EXPECT_EQ(s.presentation, SDLSTATIC_PRESENT_LETTERBOX);
+    EXPECT_EQ(s.particles, GRAPPLE_QUALITY_HIGH);
+    EXPECT_EQ(s.presentation, GRAPPLE_PRESENT_LETTERBOX);
 }
 
 // A negative cap is the documented way to say "no limiter", so clamping
 // must not treat it as a mistake.
 TEST(GraphicsClamp, LeavesTheUncappedSentinelAlone)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
     s.max_fps = -1;
-    SDLStatic_GraphicsClamp(&s);
+    Grapple_GraphicsClamp(&s);
     EXPECT_EQ(s.max_fps, -1);
 }
 
@@ -116,60 +116,60 @@ TEST(GraphicsClamp, LeavesTheUncappedSentinelAlone)
 // rather than sitting politely beside them.
 TEST(GraphicsClamp, ReducedFlashingCapsBloom)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
     s.bloom = 1.0f;
     s.reduced_flashing = true;
-    SDLStatic_GraphicsClamp(&s);
+    Grapple_GraphicsClamp(&s);
     EXPECT_LE(s.bloom, 0.25f);
 }
 
 TEST(GraphicsQuality, MapsToConcreteNumbers)
 {
-    EXPECT_FLOAT_EQ(SDLStatic_GraphicsParticleDensity(SDLSTATIC_QUALITY_OFF), 0.0f);
-    EXPECT_FLOAT_EQ(SDLStatic_GraphicsParticleDensity(SDLSTATIC_QUALITY_HIGH), 1.0f);
-    EXPECT_LT(SDLStatic_GraphicsParticleDensity(SDLSTATIC_QUALITY_LOW),
-              SDLStatic_GraphicsParticleDensity(SDLSTATIC_QUALITY_MEDIUM));
+    EXPECT_FLOAT_EQ(Grapple_GraphicsParticleDensity(GRAPPLE_QUALITY_OFF), 0.0f);
+    EXPECT_FLOAT_EQ(Grapple_GraphicsParticleDensity(GRAPPLE_QUALITY_HIGH), 1.0f);
+    EXPECT_LT(Grapple_GraphicsParticleDensity(GRAPPLE_QUALITY_LOW),
+              Grapple_GraphicsParticleDensity(GRAPPLE_QUALITY_MEDIUM));
 
-    EXPECT_EQ(SDLStatic_GraphicsMaxDynamicLights(SDLSTATIC_QUALITY_OFF), 0);
-    EXPECT_GT(SDLStatic_GraphicsMaxDynamicLights(SDLSTATIC_QUALITY_HIGH),
-              SDLStatic_GraphicsMaxDynamicLights(SDLSTATIC_QUALITY_MEDIUM));
+    EXPECT_EQ(Grapple_GraphicsMaxDynamicLights(GRAPPLE_QUALITY_OFF), 0);
+    EXPECT_GT(Grapple_GraphicsMaxDynamicLights(GRAPPLE_QUALITY_HIGH),
+              Grapple_GraphicsMaxDynamicLights(GRAPPLE_QUALITY_MEDIUM));
 
     // The light map still has a resolution when lights are off — "off"
     // means draw no lights, not render the map at zero pixels.
-    EXPECT_GT(SDLStatic_GraphicsLightMapScale(SDLSTATIC_QUALITY_OFF), 0.0f);
-    EXPECT_FLOAT_EQ(SDLStatic_GraphicsLightMapScale(SDLSTATIC_QUALITY_HIGH), 1.0f);
+    EXPECT_GT(Grapple_GraphicsLightMapScale(GRAPPLE_QUALITY_OFF), 0.0f);
+    EXPECT_FLOAT_EQ(Grapple_GraphicsLightMapScale(GRAPPLE_QUALITY_HIGH), 1.0f);
 
     // Soft shadows need rays to look soft rather than banded, so only the
     // top tier gets a penumbra.
-    EXPECT_FLOAT_EQ(SDLStatic_GraphicsShadowSoftness(SDLSTATIC_QUALITY_LOW), 0.0f);
-    EXPECT_GT(SDLStatic_GraphicsShadowSoftness(SDLSTATIC_QUALITY_HIGH), 0.0f);
+    EXPECT_FLOAT_EQ(Grapple_GraphicsShadowSoftness(GRAPPLE_QUALITY_LOW), 0.0f);
+    EXPECT_GT(Grapple_GraphicsShadowSoftness(GRAPPLE_QUALITY_HIGH), 0.0f);
 }
 
 TEST(GraphicsQuality, NamesRoundTrip)
 {
-    const SDLStatic_GraphicsQuality tiers[] = {SDLSTATIC_QUALITY_OFF, SDLSTATIC_QUALITY_LOW,
-                                               SDLSTATIC_QUALITY_MEDIUM,
-                                               SDLSTATIC_QUALITY_HIGH};
-    for (SDLStatic_GraphicsQuality tier : tiers)
+    const Grapple_GraphicsQuality tiers[] = {GRAPPLE_QUALITY_OFF, GRAPPLE_QUALITY_LOW,
+                                               GRAPPLE_QUALITY_MEDIUM,
+                                               GRAPPLE_QUALITY_HIGH};
+    for (Grapple_GraphicsQuality tier : tiers)
     {
-        SDLStatic_GraphicsQuality parsed = SDLSTATIC_QUALITY_OFF;
-        ASSERT_TRUE(SDLStatic_GraphicsQualityFromName(SDLStatic_GraphicsQualityName(tier),
+        Grapple_GraphicsQuality parsed = GRAPPLE_QUALITY_OFF;
+        ASSERT_TRUE(Grapple_GraphicsQualityFromName(Grapple_GraphicsQualityName(tier),
                                                       &parsed));
         EXPECT_EQ(parsed, tier);
     }
 
-    SDLStatic_GraphicsQuality untouched = SDLSTATIC_QUALITY_MEDIUM;
-    EXPECT_FALSE(SDLStatic_GraphicsQualityFromName("ultra", &untouched));
-    EXPECT_EQ(untouched, SDLSTATIC_QUALITY_MEDIUM) << "a bad name changes nothing";
-    EXPECT_TRUE(SDLStatic_GraphicsQualityFromName("HIGH", &untouched)) << "case-insensitive";
+    Grapple_GraphicsQuality untouched = GRAPPLE_QUALITY_MEDIUM;
+    EXPECT_FALSE(Grapple_GraphicsQualityFromName("ultra", &untouched));
+    EXPECT_EQ(untouched, GRAPPLE_QUALITY_MEDIUM) << "a bad name changes nothing";
+    EXPECT_TRUE(Grapple_GraphicsQualityFromName("HIGH", &untouched)) << "case-insensitive";
 }
 
 // --- TOML -----------------------------------------------------------------
 
 TEST(GraphicsToml, OverlaysOnlyTheKeysPresent)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
-    ASSERT_TRUE(SDLStatic_GraphicsLoadTomlString(&s, R"(
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
+    ASSERT_TRUE(Grapple_GraphicsLoadTomlString(&s, R"(
 [display]
 vsync = false
 render_scale = 0.75
@@ -182,15 +182,15 @@ bloom = 0.4
     EXPECT_FLOAT_EQ(s.render_scale, 0.75f);
     EXPECT_FLOAT_EQ(s.bloom, 0.4f);
     // Everything the file did not mention is untouched.
-    EXPECT_EQ(s.presentation, SDLSTATIC_PRESENT_LETTERBOX);
-    EXPECT_EQ(s.shadows, SDLSTATIC_QUALITY_HIGH);
+    EXPECT_EQ(s.presentation, GRAPPLE_PRESENT_LETTERBOX);
+    EXPECT_EQ(s.shadows, GRAPPLE_QUALITY_HIGH);
     EXPECT_FLOAT_EQ(s.brightness, 1.0f);
 }
 
 TEST(GraphicsToml, ReadsEveryEnum)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
-    ASSERT_TRUE(SDLStatic_GraphicsLoadTomlString(&s, R"(
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
+    ASSERT_TRUE(Grapple_GraphicsLoadTomlString(&s, R"(
 [display]
 window_mode = "borderless"
 presentation = "integer"
@@ -208,22 +208,22 @@ antialias = "fxaa"
 color_blind = "deuteranopia"
 )"));
 
-    EXPECT_EQ(s.window_mode, SDLSTATIC_WINDOW_BORDERLESS);
-    EXPECT_EQ(s.presentation, SDLSTATIC_PRESENT_INTEGER);
-    EXPECT_EQ(s.filter, SDLSTATIC_FILTER_NEAREST);
-    EXPECT_EQ(s.particles, SDLSTATIC_QUALITY_LOW);
-    EXPECT_EQ(s.dynamic_lights, SDLSTATIC_QUALITY_MEDIUM);
-    EXPECT_EQ(s.shadows, SDLSTATIC_QUALITY_OFF);
-    EXPECT_EQ(s.antialias, SDLSTATIC_AA_FXAA);
-    EXPECT_EQ(s.color_blind, SDLSTATIC_COLORBLIND_DEUTERANOPIA);
+    EXPECT_EQ(s.window_mode, GRAPPLE_WINDOW_BORDERLESS);
+    EXPECT_EQ(s.presentation, GRAPPLE_PRESENT_INTEGER);
+    EXPECT_EQ(s.filter, GRAPPLE_FILTER_NEAREST);
+    EXPECT_EQ(s.particles, GRAPPLE_QUALITY_LOW);
+    EXPECT_EQ(s.dynamic_lights, GRAPPLE_QUALITY_MEDIUM);
+    EXPECT_EQ(s.shadows, GRAPPLE_QUALITY_OFF);
+    EXPECT_EQ(s.antialias, GRAPPLE_AA_FXAA);
+    EXPECT_EQ(s.color_blind, GRAPPLE_COLORBLIND_DEUTERANOPIA);
 }
 
 // Sections are a convenience, not a requirement — someone writing a config
 // by hand should not have to know which section a key lives in.
 TEST(GraphicsToml, AcceptsKeysAtTheTopLevelToo)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
-    ASSERT_TRUE(SDLStatic_GraphicsLoadTomlString(&s, "vsync = false\nbloom = 0.5\n"));
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
+    ASSERT_TRUE(Grapple_GraphicsLoadTomlString(&s, "vsync = false\nbloom = 0.5\n"));
     EXPECT_FALSE(s.vsync);
     EXPECT_FLOAT_EQ(s.bloom, 0.5f);
 }
@@ -232,61 +232,61 @@ TEST(GraphicsToml, AcceptsKeysAtTheTopLevelToo)
 // means 1.0 as far as a person is concerned.
 TEST(GraphicsToml, AcceptsIntegersWhereFloatsAreExpected)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
-    ASSERT_TRUE(SDLStatic_GraphicsLoadTomlString(&s, "[effects]\nbloom = 1\n"));
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
+    ASSERT_TRUE(Grapple_GraphicsLoadTomlString(&s, "[effects]\nbloom = 1\n"));
     EXPECT_FLOAT_EQ(s.bloom, 1.0f);
 }
 
 TEST(GraphicsToml, ValuesAreClampedOnTheWayIn)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
-    ASSERT_TRUE(SDLStatic_GraphicsLoadTomlString(&s, "[image]\nbrightness = 40.0\n"));
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
+    ASSERT_TRUE(Grapple_GraphicsLoadTomlString(&s, "[image]\nbrightness = 40.0\n"));
     EXPECT_FLOAT_EQ(s.brightness, 2.0f) << "a config file cannot black out a game";
 }
 
 TEST(GraphicsToml, AMalformedFileChangesNothingAndSaysWhy)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
     s.bloom = 0.5f;
-    EXPECT_FALSE(SDLStatic_GraphicsLoadTomlString(&s, "[display\nvsync = "));
+    EXPECT_FALSE(Grapple_GraphicsLoadTomlString(&s, "[display\nvsync = "));
     EXPECT_FLOAT_EQ(s.bloom, 0.5f) << "the previous values survive";
-    EXPECT_NE(SDLStatic_GraphicsConfigError(), nullptr);
+    EXPECT_NE(Grapple_GraphicsConfigError(), nullptr);
 }
 
 TEST(GraphicsToml, RoundTripsThroughItsOwnWriter)
 {
-    SDLStatic_GraphicsSettings original = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings original = Grapple_GraphicsDefaults();
     original.vsync = false;
     original.max_fps = 120;
-    original.presentation = SDLSTATIC_PRESENT_EXPAND;
-    original.window_mode = SDLSTATIC_WINDOW_BORDERLESS;
+    original.presentation = GRAPPLE_PRESENT_EXPAND;
+    original.window_mode = GRAPPLE_WINDOW_BORDERLESS;
     original.render_scale = 0.75f;
-    original.filter = SDLSTATIC_FILTER_NEAREST;
-    original.particles = SDLSTATIC_QUALITY_LOW;
-    original.dynamic_lights = SDLSTATIC_QUALITY_MEDIUM;
-    original.shadows = SDLSTATIC_QUALITY_OFF;
+    original.filter = GRAPPLE_FILTER_NEAREST;
+    original.particles = GRAPPLE_QUALITY_LOW;
+    original.dynamic_lights = GRAPPLE_QUALITY_MEDIUM;
+    original.shadows = GRAPPLE_QUALITY_OFF;
     original.bloom = 0.4f;
     original.crt = 0.6f;
     original.crt_curvature = 0.2f;
     original.pixelation = 3;
     original.chromatic_aberration = 0.15f;
-    original.antialias = SDLSTATIC_AA_FXAA;
+    original.antialias = GRAPPLE_AA_FXAA;
     original.brightness = 1.2f;
     original.contrast = 0.9f;
     original.saturation = 1.1f;
-    original.color_blind = SDLSTATIC_COLORBLIND_TRITANOPIA;
+    original.color_blind = GRAPPLE_COLORBLIND_TRITANOPIA;
     original.reduced_flashing = false;
     original.screen_shake = 0.5f;
     original.ui_scale = 1.5f;
 
-    char *text = SDLStatic_GraphicsToToml(&original);
+    char *text = Grapple_GraphicsToToml(&original);
     ASSERT_NE(text, nullptr);
 
-    SDLStatic_GraphicsSettings restored = SDLStatic_GraphicsDefaults();
-    ASSERT_TRUE(SDLStatic_GraphicsLoadTomlString(&restored, text)) << text;
+    Grapple_GraphicsSettings restored = Grapple_GraphicsDefaults();
+    ASSERT_TRUE(Grapple_GraphicsLoadTomlString(&restored, text)) << text;
     SDL_free(text);
 
-    EXPECT_TRUE(SDLStatic_GraphicsEqual(&original, &restored))
+    EXPECT_TRUE(Grapple_GraphicsEqual(&original, &restored))
         << "every field a player can change has to survive a save and a load";
 }
 
@@ -294,9 +294,9 @@ TEST(GraphicsToml, RoundTripsThroughItsOwnWriter)
 
 TEST(GraphicsArgs, AcceptsBothSpellings)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
     const Args args({"game", "--vsync=off", "--max-fps", "120", "--bloom=0.4"});
-    EXPECT_EQ(SDLStatic_GraphicsLoadArgs(&s, args.argc(), args.argv()), 3);
+    EXPECT_EQ(Grapple_GraphicsLoadArgs(&s, args.argc(), args.argv()), 3);
     EXPECT_FALSE(s.vsync);
     EXPECT_EQ(s.max_fps, 120);
     EXPECT_FLOAT_EQ(s.bloom, 0.4f);
@@ -304,19 +304,19 @@ TEST(GraphicsArgs, AcceptsBothSpellings)
 
 TEST(GraphicsArgs, BareBooleanFlagsMeanOn)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
     s.vsync = false;
     const Args args({"game", "--vsync", "--reduced-flashing"});
-    SDLStatic_GraphicsLoadArgs(&s, args.argc(), args.argv());
+    Grapple_GraphicsLoadArgs(&s, args.argc(), args.argv());
     EXPECT_TRUE(s.vsync);
     EXPECT_TRUE(s.reduced_flashing);
 }
 
 TEST(GraphicsArgs, NoVsyncIsItsOwnFlag)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
     const Args args({"game", "--no-vsync"});
-    SDLStatic_GraphicsLoadArgs(&s, args.argc(), args.argv());
+    Grapple_GraphicsLoadArgs(&s, args.argc(), args.argv());
     EXPECT_FALSE(s.vsync);
 }
 
@@ -324,42 +324,42 @@ TEST(GraphicsArgs, NoVsyncIsItsOwnFlag)
 // choke on arguments meant for somebody else.
 TEST(GraphicsArgs, IgnoresArgumentsItDoesNotOwn)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
     const Args args({"game", "--level", "forest", "-v", "--bloomier=9", "--crt=0.5"});
-    EXPECT_EQ(SDLStatic_GraphicsLoadArgs(&s, args.argc(), args.argv()), 1);
+    EXPECT_EQ(Grapple_GraphicsLoadArgs(&s, args.argc(), args.argv()), 1);
     EXPECT_FLOAT_EQ(s.crt, 0.5f);
     EXPECT_FLOAT_EQ(s.bloom, 0.0f) << "--bloomier is not --bloom";
 }
 
 TEST(GraphicsArgs, ReadsEveryQualityAndMode)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
     const Args args({"game", "--shadows=low", "--lights=off", "--particles=medium",
                      "--presentation=expand", "--filter=nearest", "--fullscreen",
                      "--color-blind=protanopia", "--antialias=fxaa", "--render-scale=0.5"});
-    SDLStatic_GraphicsLoadArgs(&s, args.argc(), args.argv());
+    Grapple_GraphicsLoadArgs(&s, args.argc(), args.argv());
 
-    EXPECT_EQ(s.shadows, SDLSTATIC_QUALITY_LOW);
-    EXPECT_EQ(s.dynamic_lights, SDLSTATIC_QUALITY_OFF);
-    EXPECT_EQ(s.particles, SDLSTATIC_QUALITY_MEDIUM);
-    EXPECT_EQ(s.presentation, SDLSTATIC_PRESENT_EXPAND);
-    EXPECT_EQ(s.filter, SDLSTATIC_FILTER_NEAREST);
-    EXPECT_EQ(s.window_mode, SDLSTATIC_WINDOW_BORDERLESS);
-    EXPECT_EQ(s.color_blind, SDLSTATIC_COLORBLIND_PROTANOPIA);
-    EXPECT_EQ(s.antialias, SDLSTATIC_AA_FXAA);
+    EXPECT_EQ(s.shadows, GRAPPLE_QUALITY_LOW);
+    EXPECT_EQ(s.dynamic_lights, GRAPPLE_QUALITY_OFF);
+    EXPECT_EQ(s.particles, GRAPPLE_QUALITY_MEDIUM);
+    EXPECT_EQ(s.presentation, GRAPPLE_PRESENT_EXPAND);
+    EXPECT_EQ(s.filter, GRAPPLE_FILTER_NEAREST);
+    EXPECT_EQ(s.window_mode, GRAPPLE_WINDOW_BORDERLESS);
+    EXPECT_EQ(s.color_blind, GRAPPLE_COLORBLIND_PROTANOPIA);
+    EXPECT_EQ(s.antialias, GRAPPLE_AA_FXAA);
     EXPECT_FLOAT_EQ(s.render_scale, 0.5f);
 }
 
 TEST(GraphicsArgs, FindsAnExplicitConfigPath)
 {
     const Args equals({"game", "--config=/tmp/a.toml"});
-    EXPECT_STREQ(SDLStatic_GraphicsArgsConfigPath(equals.argc(), equals.argv()), "/tmp/a.toml");
+    EXPECT_STREQ(Grapple_GraphicsArgsConfigPath(equals.argc(), equals.argv()), "/tmp/a.toml");
 
     const Args spaced({"game", "--config", "/tmp/b.toml"});
-    EXPECT_STREQ(SDLStatic_GraphicsArgsConfigPath(spaced.argc(), spaced.argv()), "/tmp/b.toml");
+    EXPECT_STREQ(Grapple_GraphicsArgsConfigPath(spaced.argc(), spaced.argv()), "/tmp/b.toml");
 
     const Args none({"game", "--bloom=1"});
-    EXPECT_EQ(SDLStatic_GraphicsArgsConfigPath(none.argc(), none.argv()), nullptr);
+    EXPECT_EQ(Grapple_GraphicsArgsConfigPath(none.argc(), none.argv()), nullptr);
 }
 
 // --- precedence -----------------------------------------------------------
@@ -368,18 +368,18 @@ TEST(GraphicsArgs, FindsAnExplicitConfigPath)
 // what a player uses when a saved setting has made the game unstartable.
 TEST(GraphicsResolve, TheCommandLineBeatsTheFile)
 {
-    const std::string path = std::string(testing::TempDir()) + "sdlstatic_gfx_resolve.toml";
+    const std::string path = std::string(testing::TempDir()) + "grapple_gfx_resolve.toml";
     const std::string toml = "[display]\nvsync = false\n[effects]\nbloom = 0.9\n";
     ASSERT_TRUE(SDL_SaveFile(path.c_str(), toml.data(), toml.size())) << SDL_GetError();
 
     const Args args({"game", std::string("--config=") + path, "--bloom=0.1"});
-    SDLStatic_GraphicsSettings s{};
-    SDLStatic_GraphicsResolve(&s, args.argc(), args.argv(), nullptr, nullptr);
+    Grapple_GraphicsSettings s{};
+    Grapple_GraphicsResolve(&s, args.argc(), args.argv(), nullptr, nullptr);
 
     EXPECT_FALSE(s.vsync) << "from the file, which the command line did not mention";
     EXPECT_FLOAT_EQ(s.bloom, 0.1f) << "from the command line, which beats the file";
-    ASSERT_NE(SDLStatic_GraphicsConfigPath(), nullptr);
-    EXPECT_EQ(std::string(SDLStatic_GraphicsConfigPath()), path);
+    ASSERT_NE(Grapple_GraphicsConfigPath(), nullptr);
+    EXPECT_EQ(std::string(Grapple_GraphicsConfigPath()), path);
 
     SDL_RemovePath(path.c_str());
 }
@@ -387,14 +387,14 @@ TEST(GraphicsResolve, TheCommandLineBeatsTheFile)
 TEST(GraphicsResolve, WithNothingToReadTheDefaultsSurvive)
 {
     const Args args({"game", "--config=/nonexistent/definitely/not/here.toml"});
-    SDLStatic_GraphicsSettings s{};
-    SDLStatic_GraphicsResolve(&s, args.argc(), args.argv(), nullptr, nullptr);
+    Grapple_GraphicsSettings s{};
+    Grapple_GraphicsResolve(&s, args.argc(), args.argv(), nullptr, nullptr);
 
-    const SDLStatic_GraphicsSettings defaults = SDLStatic_GraphicsDefaults();
-    EXPECT_TRUE(SDLStatic_GraphicsEqual(&s, &defaults));
+    const Grapple_GraphicsSettings defaults = Grapple_GraphicsDefaults();
+    EXPECT_TRUE(Grapple_GraphicsEqual(&s, &defaults));
     EXPECT_TRUE(s.vsync);
-    EXPECT_EQ(s.presentation, SDLSTATIC_PRESENT_LETTERBOX);
-    EXPECT_NE(SDLStatic_GraphicsConfigError(), nullptr) << "and it says why";
+    EXPECT_EQ(s.presentation, GRAPPLE_PRESENT_LETTERBOX);
+    EXPECT_NE(Grapple_GraphicsConfigError(), nullptr) << "and it says why";
 }
 
 // The game's shipped defaults, read out of whatever it mounted its media
@@ -417,11 +417,11 @@ TEST(GraphicsResolve, ReadsTheConfigShippedInTheMediaArchive)
         }
     };
     std::vector<std::string> seen;
-    SDLStatic_GraphicsSetArchiveReader(Fake::Read, &seen);
+    Grapple_GraphicsSetArchiveReader(Fake::Read, &seen);
 
-    SDLStatic_GraphicsSettings s{};
-    SDLStatic_GraphicsResolve(&s, 0, nullptr, nullptr, nullptr);
-    SDLStatic_GraphicsSetArchiveReader(nullptr, nullptr);
+    Grapple_GraphicsSettings s{};
+    Grapple_GraphicsResolve(&s, 0, nullptr, nullptr, nullptr);
+    Grapple_GraphicsSetArchiveReader(nullptr, nullptr);
 
     EXPECT_FLOAT_EQ(s.crt, 0.8f);
     ASSERT_FALSE(seen.empty());
@@ -444,22 +444,22 @@ TEST(GraphicsResolve, TheCommandLineBeatsTheArchiveToo)
             return *text != nullptr;
         }
     };
-    SDLStatic_GraphicsSetArchiveReader(Fake::Read, nullptr);
+    Grapple_GraphicsSetArchiveReader(Fake::Read, nullptr);
 
     const Args args({"game", "--crt=0.0"});
-    SDLStatic_GraphicsSettings s{};
-    SDLStatic_GraphicsResolve(&s, args.argc(), args.argv(), nullptr, nullptr);
-    SDLStatic_GraphicsSetArchiveReader(nullptr, nullptr);
+    Grapple_GraphicsSettings s{};
+    Grapple_GraphicsResolve(&s, args.argc(), args.argv(), nullptr, nullptr);
+    Grapple_GraphicsSetArchiveReader(nullptr, nullptr);
 
     EXPECT_FLOAT_EQ(s.crt, 0.0f);
 }
 
 TEST(GraphicsResolve, NullOutIsSurvivable)
 {
-    SDLStatic_GraphicsResolve(nullptr, 0, nullptr, nullptr, nullptr);
-    EXPECT_EQ(SDLStatic_GraphicsLoadArgs(nullptr, 0, nullptr), 0);
-    EXPECT_FALSE(SDLStatic_GraphicsLoadTomlString(nullptr, "x = 1"));
-    EXPECT_EQ(SDLStatic_GraphicsToToml(nullptr), nullptr);
+    Grapple_GraphicsResolve(nullptr, 0, nullptr, nullptr, nullptr);
+    EXPECT_EQ(Grapple_GraphicsLoadArgs(nullptr, 0, nullptr), 0);
+    EXPECT_FALSE(Grapple_GraphicsLoadTomlString(nullptr, "x = 1"));
+    EXPECT_EQ(Grapple_GraphicsToToml(nullptr), nullptr);
 }
 
 // --- saving ---------------------------------------------------------------
@@ -467,20 +467,20 @@ TEST(GraphicsResolve, NullOutIsSurvivable)
 // What an options screen does when the player presses Apply.
 TEST(GraphicsSave, WritesAFileTheLoaderCanReadBack)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
     s.bloom = 0.33f;
-    s.shadows = SDLSTATIC_QUALITY_LOW;
+    s.shadows = GRAPPLE_QUALITY_LOW;
 
-    ASSERT_TRUE(SDLStatic_GraphicsSave(&s, "SDLStaticTest", "GraphicsSaveTest"))
+    ASSERT_TRUE(Grapple_GraphicsSave(&s, "GrappleTest", "GraphicsSaveTest"))
         << SDL_GetError();
 
-    char *path = SDLStatic_GraphicsSavePath("SDLStaticTest", "GraphicsSaveTest");
+    char *path = Grapple_GraphicsSavePath("GrappleTest", "GraphicsSaveTest");
     ASSERT_NE(path, nullptr);
 
-    SDLStatic_GraphicsSettings loaded = SDLStatic_GraphicsDefaults();
-    EXPECT_TRUE(SDLStatic_GraphicsLoadTomlFile(&loaded, path)) << path;
+    Grapple_GraphicsSettings loaded = Grapple_GraphicsDefaults();
+    EXPECT_TRUE(Grapple_GraphicsLoadTomlFile(&loaded, path)) << path;
     EXPECT_FLOAT_EQ(loaded.bloom, 0.33f);
-    EXPECT_EQ(loaded.shadows, SDLSTATIC_QUALITY_LOW);
+    EXPECT_EQ(loaded.shadows, GRAPPLE_QUALITY_LOW);
 
     SDL_RemovePath(path);
     SDL_free(path);
@@ -488,9 +488,9 @@ TEST(GraphicsSave, WritesAFileTheLoaderCanReadBack)
 
 TEST(GraphicsSave, NeedsSomewhereToSaveTo)
 {
-    const SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
-    EXPECT_FALSE(SDLStatic_GraphicsSave(&s, "org", nullptr));
-    EXPECT_EQ(SDLStatic_GraphicsSavePath("org", nullptr), nullptr);
+    const Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
+    EXPECT_FALSE(Grapple_GraphicsSave(&s, "org", nullptr));
+    EXPECT_EQ(Grapple_GraphicsSavePath("org", nullptr), nullptr);
 }
 
 // --- applying to an engine ------------------------------------------------
@@ -501,15 +501,15 @@ class GraphicsEngine : public ::testing::Test
     void SetUp() override { ASSERT_TRUE(SDL_Init(0)) << SDL_GetError(); }
     void TearDown() override { SDL_Quit(); }
 
-    SDLStatic_Engine *Make(const SDLStatic_GraphicsSettings *graphics)
+    Grapple_Engine *Make(const Grapple_GraphicsSettings *graphics)
     {
-        SDLStatic_EngineConfig config{};
+        Grapple_EngineConfig config{};
         config.headless = true;
         config.manual_clock = true;
         config.window_width = 1920;
         config.window_height = 1080;
         config.graphics = graphics;
-        return SDLStatic_CreateEngine(&config);
+        return Grapple_CreateEngine(&config);
     }
 };
 
@@ -518,72 +518,72 @@ class GraphicsEngine : public ::testing::Test
 // overridden by whatever the game hard-coded.
 TEST_F(GraphicsEngine, SettingsWinOverThePlainConfigFields)
 {
-    SDLStatic_GraphicsSettings gfx = SDLStatic_GraphicsDefaults();
-    gfx.presentation = SDLSTATIC_PRESENT_EXPAND;
+    Grapple_GraphicsSettings gfx = Grapple_GraphicsDefaults();
+    gfx.presentation = GRAPPLE_PRESENT_EXPAND;
     gfx.max_fps = 120;
 
-    SDLStatic_EngineConfig config{};
+    Grapple_EngineConfig config{};
     config.headless = true;
     config.manual_clock = true;
     config.window_width = 2560;
     config.window_height = 1080;
-    config.presentation = SDLSTATIC_PRESENT_INTEGER; // the game's guess
+    config.presentation = GRAPPLE_PRESENT_INTEGER; // the game's guess
     config.max_fps = 30;
     config.graphics = &gfx; // the player's choice
 
-    SDLStatic_Engine *engine = SDLStatic_CreateEngine(&config);
+    Grapple_Engine *engine = Grapple_CreateEngine(&config);
     ASSERT_NE(engine, nullptr) << SDL_GetError();
-    EXPECT_EQ(SDLStatic_EnginePresentation_(engine), SDLSTATIC_PRESENT_EXPAND);
-    EXPECT_GT(SDLStatic_EngineViewRect(engine).w, 1920.0f) << "expanded, not integer-scaled";
-    SDLStatic_DestroyEngine(engine);
+    EXPECT_EQ(Grapple_EnginePresentation_(engine), GRAPPLE_PRESENT_EXPAND);
+    EXPECT_GT(Grapple_EngineViewRect(engine).w, 1920.0f) << "expanded, not integer-scaled";
+    Grapple_DestroyEngine(engine);
 }
 
 // Without a settings struct the engine still reports coherent settings,
 // rather than defaults nobody applied.
 TEST_F(GraphicsEngine, MirrorsThePlainFieldsWhenGivenNoSettings)
 {
-    SDLStatic_EngineConfig config{};
+    Grapple_EngineConfig config{};
     config.headless = true;
     config.manual_clock = true;
-    config.presentation = SDLSTATIC_PRESENT_EXPAND;
+    config.presentation = GRAPPLE_PRESENT_EXPAND;
     config.no_vsync = true;
     config.max_fps = 45;
 
-    SDLStatic_Engine *engine = SDLStatic_CreateEngine(&config);
+    Grapple_Engine *engine = Grapple_CreateEngine(&config);
     ASSERT_NE(engine, nullptr);
-    const SDLStatic_GraphicsSettings *g = SDLStatic_EngineGraphics(engine);
+    const Grapple_GraphicsSettings *g = Grapple_EngineGraphics(engine);
     ASSERT_NE(g, nullptr);
-    EXPECT_EQ(g->presentation, SDLSTATIC_PRESENT_EXPAND);
+    EXPECT_EQ(g->presentation, GRAPPLE_PRESENT_EXPAND);
     EXPECT_FALSE(g->vsync);
     EXPECT_EQ(g->max_fps, 45);
-    SDLStatic_DestroyEngine(engine);
+    Grapple_DestroyEngine(engine);
 }
 
 TEST_F(GraphicsEngine, ChangingSettingsAtRuntimeTakesEffect)
 {
-    SDLStatic_Engine *engine = Make(nullptr);
+    Grapple_Engine *engine = Make(nullptr);
     ASSERT_NE(engine, nullptr);
 
-    SDLStatic_GraphicsSettings next = *SDLStatic_EngineGraphics(engine);
-    next.presentation = SDLSTATIC_PRESENT_NATIVE;
+    Grapple_GraphicsSettings next = *Grapple_EngineGraphics(engine);
+    next.presentation = GRAPPLE_PRESENT_NATIVE;
     next.render_scale = 0.5f;
-    ASSERT_TRUE(SDLStatic_EngineSetGraphics(engine, &next));
+    ASSERT_TRUE(Grapple_EngineSetGraphics(engine, &next));
 
-    EXPECT_EQ(SDLStatic_EnginePresentation_(engine), SDLSTATIC_PRESENT_NATIVE);
-    EXPECT_FLOAT_EQ(SDLStatic_EngineGraphics(engine)->render_scale, 0.5f);
-    SDLStatic_DestroyEngine(engine);
+    EXPECT_EQ(Grapple_EnginePresentation_(engine), GRAPPLE_PRESENT_NATIVE);
+    EXPECT_FLOAT_EQ(Grapple_EngineGraphics(engine)->render_scale, 0.5f);
+    Grapple_DestroyEngine(engine);
 }
 
 TEST_F(GraphicsEngine, RejectedValuesAreClampedNotStored)
 {
-    SDLStatic_Engine *engine = Make(nullptr);
+    Grapple_Engine *engine = Make(nullptr);
     ASSERT_NE(engine, nullptr);
 
-    SDLStatic_GraphicsSettings next = *SDLStatic_EngineGraphics(engine);
+    Grapple_GraphicsSettings next = *Grapple_EngineGraphics(engine);
     next.brightness = 99.0f;
-    ASSERT_TRUE(SDLStatic_EngineSetGraphics(engine, &next));
-    EXPECT_FLOAT_EQ(SDLStatic_EngineGraphics(engine)->brightness, 2.0f);
-    SDLStatic_DestroyEngine(engine);
+    ASSERT_TRUE(Grapple_EngineSetGraphics(engine, &next));
+    EXPECT_FLOAT_EQ(Grapple_EngineGraphics(engine)->brightness, 2.0f);
+    Grapple_DestroyEngine(engine);
 }
 
 // A software renderer has no OpenGL, so the effects must report themselves
@@ -591,39 +591,39 @@ TEST_F(GraphicsEngine, RejectedValuesAreClampedNotStored)
 // the strength of this.
 TEST_F(GraphicsEngine, EffectsAreUnavailableWithoutOpenGL)
 {
-    SDLStatic_GraphicsSettings gfx = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings gfx = Grapple_GraphicsDefaults();
     gfx.bloom = 0.5f;
-    SDLStatic_Engine *engine = Make(&gfx);
+    Grapple_Engine *engine = Make(&gfx);
     ASSERT_NE(engine, nullptr);
-    EXPECT_FALSE(SDLStatic_EngineEffectsAvailable(engine));
-    SDLStatic_DestroyEngine(engine);
+    EXPECT_FALSE(Grapple_EngineEffectsAvailable(engine));
+    Grapple_DestroyEngine(engine);
 }
 
 // ...and asking for them anyway must not stop the game running.
 TEST_F(GraphicsEngine, AFrameStillRendersWithEffectsRequestedAndUnavailable)
 {
-    SDLStatic_GraphicsSettings gfx = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings gfx = Grapple_GraphicsDefaults();
     gfx.bloom = 0.8f;
     gfx.crt = 0.5f;
     gfx.render_scale = 0.5f;
-    SDLStatic_Engine *engine = Make(&gfx);
+    Grapple_Engine *engine = Make(&gfx);
     ASSERT_NE(engine, nullptr);
 
     for (int i = 0; i < 3; ++i)
     {
-        SDLStatic_EngineAdvance(engine, 16666667ull);
-        SDLStatic_EngineTick(engine);
+        Grapple_EngineAdvance(engine, 16666667ull);
+        Grapple_EngineTick(engine);
     }
-    EXPECT_GE(SDLStatic_EngineFrameCount(engine), 3u);
-    SDLStatic_DestroyEngine(engine);
+    EXPECT_GE(Grapple_EngineFrameCount(engine), 3u);
+    Grapple_DestroyEngine(engine);
 }
 
 TEST_F(GraphicsEngine, NullsAreHandled)
 {
-    EXPECT_EQ(SDLStatic_EngineGraphics(nullptr), nullptr);
-    EXPECT_FALSE(SDLStatic_EngineEffectsAvailable(nullptr));
-    const SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
-    EXPECT_FALSE(SDLStatic_EngineSetGraphics(nullptr, &s));
+    EXPECT_EQ(Grapple_EngineGraphics(nullptr), nullptr);
+    EXPECT_FALSE(Grapple_EngineEffectsAvailable(nullptr));
+    const Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
+    EXPECT_FALSE(Grapple_EngineSetGraphics(nullptr, &s));
 }
 
 } // namespace
@@ -636,19 +636,19 @@ namespace
 // Shipping defaults: as good as the machine can manage, on the whole screen.
 TEST(GraphicsShippingDefaults, AreFullscreenAtMaximumFidelity)
 {
-    const SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
-    EXPECT_EQ(s.window_mode, SDLSTATIC_WINDOW_BORDERLESS) << "what a finished game does";
-    EXPECT_EQ(s.particles, SDLSTATIC_QUALITY_HIGH);
-    EXPECT_EQ(s.dynamic_lights, SDLSTATIC_QUALITY_HIGH);
-    EXPECT_EQ(s.shadows, SDLSTATIC_QUALITY_HIGH);
-    EXPECT_EQ(s.antialias, SDLSTATIC_AA_FXAA) << "fidelity, not style";
+    const Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
+    EXPECT_EQ(s.window_mode, GRAPPLE_WINDOW_BORDERLESS) << "what a finished game does";
+    EXPECT_EQ(s.particles, GRAPPLE_QUALITY_HIGH);
+    EXPECT_EQ(s.dynamic_lights, GRAPPLE_QUALITY_HIGH);
+    EXPECT_EQ(s.shadows, GRAPPLE_QUALITY_HIGH);
+    EXPECT_EQ(s.antialias, GRAPPLE_AA_FXAA) << "fidelity, not style";
     EXPECT_FLOAT_EQ(s.render_scale, 1.0f);
     EXPECT_TRUE(s.vsync);
 
     // Accessibility alters the image away from what the artist intended, so
     // it is opt-in however useful it is to the people who need it.
     EXPECT_FALSE(s.reduced_flashing);
-    EXPECT_EQ(s.color_blind, SDLSTATIC_COLORBLIND_NONE);
+    EXPECT_EQ(s.color_blind, GRAPPLE_COLORBLIND_NONE);
 
     // Style is the game's decision, not the engine's.
     EXPECT_FLOAT_EQ(s.bloom, 0.0f);
@@ -659,8 +659,8 @@ TEST(GraphicsShippingDefaults, AreFullscreenAtMaximumFidelity)
 
 TEST(GraphicsSafeMode, IsAWindowYouCanAlwaysSee)
 {
-    const SDLStatic_GraphicsSettings s = SDLStatic_GraphicsSafeMode();
-    EXPECT_EQ(s.window_mode, SDLSTATIC_WINDOW_WINDOWED);
+    const Grapple_GraphicsSettings s = Grapple_GraphicsSafeMode();
+    EXPECT_EQ(s.window_mode, GRAPPLE_WINDOW_WINDOWED);
     EXPECT_EQ(s.window_width, 1280);
     EXPECT_EQ(s.window_height, 720);
     EXPECT_EQ(s.display, 0) << "the primary monitor, which is the one plugged in";
@@ -669,13 +669,13 @@ TEST(GraphicsSafeMode, IsAWindowYouCanAlwaysSee)
     // mode must not run it.
     EXPECT_FLOAT_EQ(s.bloom, 0.0f);
     EXPECT_FLOAT_EQ(s.crt, 0.0f);
-    EXPECT_EQ(s.antialias, SDLSTATIC_AA_OFF);
+    EXPECT_EQ(s.antialias, GRAPPLE_AA_OFF);
     EXPECT_FLOAT_EQ(s.brightness, 1.0f);
 
     // Down, not off — it still has to be playable enough to reach the
     // options screen and undo whatever went wrong.
-    EXPECT_EQ(s.shadows, SDLSTATIC_QUALITY_OFF);
-    EXPECT_EQ(s.particles, SDLSTATIC_QUALITY_LOW);
+    EXPECT_EQ(s.shadows, GRAPPLE_QUALITY_OFF);
+    EXPECT_EQ(s.particles, GRAPPLE_QUALITY_LOW);
     EXPECT_FLOAT_EQ(s.render_scale, 1.0f);
 }
 
@@ -683,16 +683,16 @@ TEST(GraphicsSafeMode, IsAWindowYouCanAlwaysSee)
 // settings are what is broken, so they must not read them.
 TEST(GraphicsResolve, SafeModeIgnoresEveryConfigFile)
 {
-    const std::string path = std::string(testing::TempDir()) + "sdlstatic_gfx_broken.toml";
+    const std::string path = std::string(testing::TempDir()) + "grapple_gfx_broken.toml";
     const std::string toml = "[display]\nwindow_mode = \"exclusive\"\nrender_scale = 0.25\n"
                              "[effects]\ncrt = 1.0\n";
     ASSERT_TRUE(SDL_SaveFile(path.c_str(), toml.data(), toml.size())) << SDL_GetError();
 
     const Args args({"game", std::string("--config=") + path, "--with-safe-mode"});
-    SDLStatic_GraphicsSettings s{};
-    SDLStatic_GraphicsResolve(&s, args.argc(), args.argv(), nullptr, nullptr);
+    Grapple_GraphicsSettings s{};
+    Grapple_GraphicsResolve(&s, args.argc(), args.argv(), nullptr, nullptr);
 
-    EXPECT_EQ(s.window_mode, SDLSTATIC_WINDOW_WINDOWED) << "not the file's exclusive";
+    EXPECT_EQ(s.window_mode, GRAPPLE_WINDOW_WINDOWED) << "not the file's exclusive";
     EXPECT_FLOAT_EQ(s.crt, 0.0f);
     EXPECT_FLOAT_EQ(s.render_scale, 1.0f);
     SDL_RemovePath(path.c_str());
@@ -700,16 +700,16 @@ TEST(GraphicsResolve, SafeModeIgnoresEveryConfigFile)
 
 TEST(GraphicsResolve, DefaultSettingsIgnoresEveryConfigFileToo)
 {
-    const std::string path = std::string(testing::TempDir()) + "sdlstatic_gfx_odd.toml";
+    const std::string path = std::string(testing::TempDir()) + "grapple_gfx_odd.toml";
     const std::string toml = "[quality]\nshadows = \"off\"\n";
     ASSERT_TRUE(SDL_SaveFile(path.c_str(), toml.data(), toml.size()));
 
     const Args args({"game", std::string("--config=") + path, "--with-default-settings"});
-    SDLStatic_GraphicsSettings s{};
-    SDLStatic_GraphicsResolve(&s, args.argc(), args.argv(), nullptr, nullptr);
+    Grapple_GraphicsSettings s{};
+    Grapple_GraphicsResolve(&s, args.argc(), args.argv(), nullptr, nullptr);
 
-    EXPECT_EQ(s.shadows, SDLSTATIC_QUALITY_HIGH);
-    EXPECT_EQ(s.window_mode, SDLSTATIC_WINDOW_BORDERLESS);
+    EXPECT_EQ(s.shadows, GRAPPLE_QUALITY_HIGH);
+    EXPECT_EQ(s.window_mode, GRAPPLE_WINDOW_BORDERLESS);
     SDL_RemovePath(path.c_str());
 }
 
@@ -717,41 +717,41 @@ TEST(GraphicsResolve, DefaultSettingsIgnoresEveryConfigFileToo)
 // applies on top — order-independently, so a player can add one fix.
 TEST(GraphicsArgs, SafeModeIsReplacedThenOverlaid)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
     const Args args({"game", "--bloom=0.5", "--with-safe-mode"});
-    SDLStatic_GraphicsLoadArgs(&s, args.argc(), args.argv());
-    EXPECT_EQ(s.window_mode, SDLSTATIC_WINDOW_WINDOWED) << "safe mode applied first";
+    Grapple_GraphicsLoadArgs(&s, args.argc(), args.argv());
+    EXPECT_EQ(s.window_mode, GRAPPLE_WINDOW_WINDOWED) << "safe mode applied first";
     EXPECT_FLOAT_EQ(s.bloom, 0.5f) << "then the explicit argument, whatever the order";
 }
 
 TEST(GraphicsArgs, ReadsWindowSizeAndDisplay)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
     const Args args({"game", "--window-size=1600x900", "--display=1"});
-    SDLStatic_GraphicsLoadArgs(&s, args.argc(), args.argv());
+    Grapple_GraphicsLoadArgs(&s, args.argc(), args.argv());
     EXPECT_EQ(s.window_width, 1600);
     EXPECT_EQ(s.window_height, 900);
-    EXPECT_EQ(s.window_mode, SDLSTATIC_WINDOW_WINDOWED) << "asking for a size implies windowed";
+    EXPECT_EQ(s.window_mode, GRAPPLE_WINDOW_WINDOWED) << "asking for a size implies windowed";
     EXPECT_EQ(s.display, 1);
 
     // Nonsense leaves it alone rather than producing a 0x0 window.
-    SDLStatic_GraphicsSettings other = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings other = Grapple_GraphicsDefaults();
     const Args bad({"game", "--window-size=huge"});
-    SDLStatic_GraphicsLoadArgs(&other, bad.argc(), bad.argv());
+    Grapple_GraphicsLoadArgs(&other, bad.argc(), bad.argv());
     EXPECT_EQ(other.window_width, 0);
 }
 
 TEST(GraphicsToml, WindowSizeAndDisplayRoundTrip)
 {
-    SDLStatic_GraphicsSettings original = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings original = Grapple_GraphicsDefaults();
     original.window_width = 1600;
     original.window_height = 900;
     original.display = 2;
 
-    char *text = SDLStatic_GraphicsToToml(&original);
+    char *text = Grapple_GraphicsToToml(&original);
     ASSERT_NE(text, nullptr);
-    SDLStatic_GraphicsSettings restored = SDLStatic_GraphicsDefaults();
-    ASSERT_TRUE(SDLStatic_GraphicsLoadTomlString(&restored, text)) << text;
+    Grapple_GraphicsSettings restored = Grapple_GraphicsDefaults();
+    ASSERT_TRUE(Grapple_GraphicsLoadTomlString(&restored, text)) << text;
     SDL_free(text);
 
     EXPECT_EQ(restored.window_width, 1600);
@@ -769,29 +769,29 @@ TEST(GraphicsToml, WindowSizeAndDisplayRoundTrip)
 // have video running.
 TEST(GraphicsDisplays, HandleIndicesThatDoNotExist)
 {
-    EXPECT_EQ(SDLStatic_EngineDisplayName(-1), nullptr);
-    EXPECT_EQ(SDLStatic_EngineDisplayName(9999), nullptr);
-    EXPECT_EQ(SDLStatic_EngineDisplay(nullptr), 0);
-    EXPECT_FALSE(SDLStatic_EngineSetDisplay(nullptr, 0));
-    EXPECT_GE(SDLStatic_EngineDisplayCount(), 0) << "never negative, video or not";
+    EXPECT_EQ(Grapple_EngineDisplayName(-1), nullptr);
+    EXPECT_EQ(Grapple_EngineDisplayName(9999), nullptr);
+    EXPECT_EQ(Grapple_EngineDisplay(nullptr), 0);
+    EXPECT_FALSE(Grapple_EngineSetDisplay(nullptr, 0));
+    EXPECT_GE(Grapple_EngineDisplayCount(), 0) << "never negative, video or not";
 }
 
 TEST(GraphicsClamp, WindowSizeIsUsableOrTheDefault)
 {
-    SDLStatic_GraphicsSettings s = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings s = Grapple_GraphicsDefaults();
     s.window_width = 4;
     s.window_height = 4;
-    SDLStatic_GraphicsClamp(&s);
+    Grapple_GraphicsClamp(&s);
     EXPECT_GE(s.window_width, 320) << "a 4x4 window cannot show a UI";
 
     // Zero is not a mistake: it means "the engine's default".
-    SDLStatic_GraphicsSettings zeroed = SDLStatic_GraphicsDefaults();
-    SDLStatic_GraphicsClamp(&zeroed);
+    Grapple_GraphicsSettings zeroed = Grapple_GraphicsDefaults();
+    Grapple_GraphicsClamp(&zeroed);
     EXPECT_EQ(zeroed.window_width, 0);
 
-    SDLStatic_GraphicsSettings negative = SDLStatic_GraphicsDefaults();
+    Grapple_GraphicsSettings negative = Grapple_GraphicsDefaults();
     negative.display = -3;
-    SDLStatic_GraphicsClamp(&negative);
+    Grapple_GraphicsClamp(&negative);
     EXPECT_EQ(negative.display, 0);
 }
 

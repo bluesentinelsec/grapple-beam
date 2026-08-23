@@ -15,27 +15,27 @@ static void GenDtor_toml_free(void *p)
 static int GenL_toml_array_at(lua_State *L)
 {
     (void)L;
-    const toml_array_t *a0 = (const toml_array_t *)SDLStaticGen_LuaCheckHandle(L, 1, "toml_array_t");
+    const toml_array_t *a0 = (const toml_array_t *)GrappleGen_LuaCheckHandle(L, 1, "toml_array_t");
     int a1 = (int)luaL_checkinteger(L, 2);
     toml_array_t * rv = toml_array_at(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "toml_array_t");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "toml_array_t");
     return 1;
 }
 
 static int GenL_toml_array_in(lua_State *L)
 {
     (void)L;
-    const toml_table_t *a0 = (const toml_table_t *)SDLStaticGen_LuaCheckHandle(L, 1, "toml_table_t");
+    const toml_table_t *a0 = (const toml_table_t *)GrappleGen_LuaCheckHandle(L, 1, "toml_table_t");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     toml_array_t * rv = toml_array_in(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "toml_array_t");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "toml_array_t");
     return 1;
 }
 
 static int GenL_toml_array_key(lua_State *L)
 {
     (void)L;
-    const toml_array_t *a0 = (const toml_array_t *)SDLStaticGen_LuaCheckHandle(L, 1, "toml_array_t");
+    const toml_array_t *a0 = (const toml_array_t *)GrappleGen_LuaCheckHandle(L, 1, "toml_array_t");
     const char * rv = toml_array_key(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     return 1;
@@ -44,7 +44,7 @@ static int GenL_toml_array_key(lua_State *L)
 static int GenL_toml_array_kind(lua_State *L)
 {
     (void)L;
-    const toml_array_t *a0 = (const toml_array_t *)SDLStaticGen_LuaCheckHandle(L, 1, "toml_array_t");
+    const toml_array_t *a0 = (const toml_array_t *)GrappleGen_LuaCheckHandle(L, 1, "toml_array_t");
     char rv = toml_array_kind(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -53,7 +53,7 @@ static int GenL_toml_array_kind(lua_State *L)
 static int GenL_toml_array_nelem(lua_State *L)
 {
     (void)L;
-    const toml_array_t *a0 = (const toml_array_t *)SDLStaticGen_LuaCheckHandle(L, 1, "toml_array_t");
+    const toml_array_t *a0 = (const toml_array_t *)GrappleGen_LuaCheckHandle(L, 1, "toml_array_t");
     int rv = toml_array_nelem(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -62,7 +62,7 @@ static int GenL_toml_array_nelem(lua_State *L)
 static int GenL_toml_array_type(lua_State *L)
 {
     (void)L;
-    const toml_array_t *a0 = (const toml_array_t *)SDLStaticGen_LuaCheckHandle(L, 1, "toml_array_t");
+    const toml_array_t *a0 = (const toml_array_t *)GrappleGen_LuaCheckHandle(L, 1, "toml_array_t");
     char rv = toml_array_type(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -71,7 +71,7 @@ static int GenL_toml_array_type(lua_State *L)
 static int GenL_toml_free(lua_State *L)
 {
     (void)L;
-    toml_table_t *a0 = (toml_table_t *)SDLStaticGen_LuaTakeHandle(L, 1, "toml_table_t");
+    toml_table_t *a0 = (toml_table_t *)GrappleGen_LuaTakeHandle(L, 1, "toml_table_t");
     toml_free(a0);
     return 0;
 }
@@ -79,7 +79,7 @@ static int GenL_toml_free(lua_State *L)
 static int GenL_toml_key_exists(lua_State *L)
 {
     (void)L;
-    const toml_table_t *a0 = (const toml_table_t *)SDLStaticGen_LuaCheckHandle(L, 1, "toml_table_t");
+    const toml_table_t *a0 = (const toml_table_t *)GrappleGen_LuaCheckHandle(L, 1, "toml_table_t");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     int rv = toml_key_exists(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -89,7 +89,7 @@ static int GenL_toml_key_exists(lua_State *L)
 static int GenL_toml_key_in(lua_State *L)
 {
     (void)L;
-    const toml_table_t *a0 = (const toml_table_t *)SDLStaticGen_LuaCheckHandle(L, 1, "toml_table_t");
+    const toml_table_t *a0 = (const toml_table_t *)GrappleGen_LuaCheckHandle(L, 1, "toml_table_t");
     int a1 = (int)luaL_checkinteger(L, 2);
     const char * rv = toml_key_in(a0, a1);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
@@ -105,7 +105,7 @@ static int GenL_toml_parse(lua_State *L)
     char *a1 = SDL_strdup(src1);
     int a2 = (int)luaL_checkinteger(L, 3);
     toml_table_t * rv = toml_parse(a0, a1, a2);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "toml_table_t", GenDtor_toml_free);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "toml_table_t", GenDtor_toml_free);
     SDL_free(a1);
     SDL_free(a0);
     return 1;
@@ -114,27 +114,27 @@ static int GenL_toml_parse(lua_State *L)
 static int GenL_toml_table_at(lua_State *L)
 {
     (void)L;
-    const toml_array_t *a0 = (const toml_array_t *)SDLStaticGen_LuaCheckHandle(L, 1, "toml_array_t");
+    const toml_array_t *a0 = (const toml_array_t *)GrappleGen_LuaCheckHandle(L, 1, "toml_array_t");
     int a1 = (int)luaL_checkinteger(L, 2);
     toml_table_t * rv = toml_table_at(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "toml_table_t");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "toml_table_t");
     return 1;
 }
 
 static int GenL_toml_table_in(lua_State *L)
 {
     (void)L;
-    const toml_table_t *a0 = (const toml_table_t *)SDLStaticGen_LuaCheckHandle(L, 1, "toml_table_t");
+    const toml_table_t *a0 = (const toml_table_t *)GrappleGen_LuaCheckHandle(L, 1, "toml_table_t");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     toml_table_t * rv = toml_table_in(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "toml_table_t");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "toml_table_t");
     return 1;
 }
 
 static int GenL_toml_table_key(lua_State *L)
 {
     (void)L;
-    const toml_table_t *a0 = (const toml_table_t *)SDLStaticGen_LuaCheckHandle(L, 1, "toml_table_t");
+    const toml_table_t *a0 = (const toml_table_t *)GrappleGen_LuaCheckHandle(L, 1, "toml_table_t");
     const char * rv = toml_table_key(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     return 1;
@@ -143,7 +143,7 @@ static int GenL_toml_table_key(lua_State *L)
 static int GenL_toml_table_narr(lua_State *L)
 {
     (void)L;
-    const toml_table_t *a0 = (const toml_table_t *)SDLStaticGen_LuaCheckHandle(L, 1, "toml_table_t");
+    const toml_table_t *a0 = (const toml_table_t *)GrappleGen_LuaCheckHandle(L, 1, "toml_table_t");
     int rv = toml_table_narr(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -152,7 +152,7 @@ static int GenL_toml_table_narr(lua_State *L)
 static int GenL_toml_table_nkval(lua_State *L)
 {
     (void)L;
-    const toml_table_t *a0 = (const toml_table_t *)SDLStaticGen_LuaCheckHandle(L, 1, "toml_table_t");
+    const toml_table_t *a0 = (const toml_table_t *)GrappleGen_LuaCheckHandle(L, 1, "toml_table_t");
     int rv = toml_table_nkval(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -161,7 +161,7 @@ static int GenL_toml_table_nkval(lua_State *L)
 static int GenL_toml_table_ntab(lua_State *L)
 {
     (void)L;
-    const toml_table_t *a0 = (const toml_table_t *)SDLStaticGen_LuaCheckHandle(L, 1, "toml_table_t");
+    const toml_table_t *a0 = (const toml_table_t *)GrappleGen_LuaCheckHandle(L, 1, "toml_table_t");
     int rv = toml_table_ntab(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -191,8 +191,8 @@ static int GenL_toml_utf8_to_ucs(lua_State *L)
     return 2;
 }
 
-int SDLStaticGen_OpenLua_toml(lua_State *L);
-int SDLStaticGen_OpenLua_toml(lua_State *L)
+int GrappleGen_OpenLua_toml(lua_State *L);
+int GrappleGen_OpenLua_toml(lua_State *L)
 {
     lua_createtable(L, 0, 18);
     lua_pushcfunction(L, GenL_toml_array_at);

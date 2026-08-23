@@ -1,6 +1,6 @@
 /*
  * sdk_anchor.c — one real source file for the SDK archive.
- * Original SDLStatic code (zlib).
+ * Original Grapple code (zlib).
  *
  * The SDK is assembled entirely from $<TARGET_OBJECTS:...>. Under Ninja and
  * Make that is enough; the Xcode generator treats a static library with no
@@ -10,9 +10,9 @@
  *
  * So the target gets one source. It exists to be compiled.
  */
-const char *SDLStatic_SdkAnchor(void);
+const char *Grapple_SdkAnchor(void);
 
-const char *SDLStatic_SdkAnchor(void)
+const char *Grapple_SdkAnchor(void)
 {
-    return "SDL3-static-extensions";
+    return "grapple-beam";
 }

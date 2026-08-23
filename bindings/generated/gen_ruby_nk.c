@@ -3,26 +3,26 @@
  * mruby bindings for Nuklear. */
 #include "../src/gen_support_ruby.h"
 
-#include <SDLStatic/nuklear.h>
+#include <grapple/nuklear.h>
 #include <string.h>
 
 static void GenRead_nk_color(mrb_state *mrb, mrb_value h, struct nk_color *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->r = (nk_byte)SDLStaticGen_RubyFieldInt(mrb, h, "r");
-    out->g = (nk_byte)SDLStaticGen_RubyFieldInt(mrb, h, "g");
-    out->b = (nk_byte)SDLStaticGen_RubyFieldInt(mrb, h, "b");
-    out->a = (nk_byte)SDLStaticGen_RubyFieldInt(mrb, h, "a");
+    out->r = (nk_byte)GrappleGen_RubyFieldInt(mrb, h, "r");
+    out->g = (nk_byte)GrappleGen_RubyFieldInt(mrb, h, "g");
+    out->b = (nk_byte)GrappleGen_RubyFieldInt(mrb, h, "b");
+    out->a = (nk_byte)GrappleGen_RubyFieldInt(mrb, h, "a");
 }
 
 static mrb_value GenPush_nk_color(mrb_state *mrb, const struct nk_color *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "r", mrb_int_value(mrb, (mrb_int)in->r));
-    SDLStaticGen_RubyHashSet(mrb, h, "g", mrb_int_value(mrb, (mrb_int)in->g));
-    SDLStaticGen_RubyHashSet(mrb, h, "b", mrb_int_value(mrb, (mrb_int)in->b));
-    SDLStaticGen_RubyHashSet(mrb, h, "a", mrb_int_value(mrb, (mrb_int)in->a));
+    GrappleGen_RubyHashSet(mrb, h, "r", mrb_int_value(mrb, (mrb_int)in->r));
+    GrappleGen_RubyHashSet(mrb, h, "g", mrb_int_value(mrb, (mrb_int)in->g));
+    GrappleGen_RubyHashSet(mrb, h, "b", mrb_int_value(mrb, (mrb_int)in->b));
+    GrappleGen_RubyHashSet(mrb, h, "a", mrb_int_value(mrb, (mrb_int)in->a));
     return h;
 }
 
@@ -30,19 +30,19 @@ static void GenRead_nk_colorf(mrb_state *mrb, mrb_value h, struct nk_colorf *out
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->r = (float)SDLStaticGen_RubyFieldNum(mrb, h, "r");
-    out->g = (float)SDLStaticGen_RubyFieldNum(mrb, h, "g");
-    out->b = (float)SDLStaticGen_RubyFieldNum(mrb, h, "b");
-    out->a = (float)SDLStaticGen_RubyFieldNum(mrb, h, "a");
+    out->r = (float)GrappleGen_RubyFieldNum(mrb, h, "r");
+    out->g = (float)GrappleGen_RubyFieldNum(mrb, h, "g");
+    out->b = (float)GrappleGen_RubyFieldNum(mrb, h, "b");
+    out->a = (float)GrappleGen_RubyFieldNum(mrb, h, "a");
 }
 
 static mrb_value GenPush_nk_colorf(mrb_state *mrb, const struct nk_colorf *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "r", mrb_float_value(mrb, (mrb_float)in->r));
-    SDLStaticGen_RubyHashSet(mrb, h, "g", mrb_float_value(mrb, (mrb_float)in->g));
-    SDLStaticGen_RubyHashSet(mrb, h, "b", mrb_float_value(mrb, (mrb_float)in->b));
-    SDLStaticGen_RubyHashSet(mrb, h, "a", mrb_float_value(mrb, (mrb_float)in->a));
+    GrappleGen_RubyHashSet(mrb, h, "r", mrb_float_value(mrb, (mrb_float)in->r));
+    GrappleGen_RubyHashSet(mrb, h, "g", mrb_float_value(mrb, (mrb_float)in->g));
+    GrappleGen_RubyHashSet(mrb, h, "b", mrb_float_value(mrb, (mrb_float)in->b));
+    GrappleGen_RubyHashSet(mrb, h, "a", mrb_float_value(mrb, (mrb_float)in->a));
     return h;
 }
 
@@ -50,27 +50,27 @@ static void GenRead_nk_rect(mrb_state *mrb, mrb_value h, struct nk_rect *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->x = (float)SDLStaticGen_RubyFieldNum(mrb, h, "x");
-    out->y = (float)SDLStaticGen_RubyFieldNum(mrb, h, "y");
-    out->w = (float)SDLStaticGen_RubyFieldNum(mrb, h, "w");
-    out->h = (float)SDLStaticGen_RubyFieldNum(mrb, h, "h");
+    out->x = (float)GrappleGen_RubyFieldNum(mrb, h, "x");
+    out->y = (float)GrappleGen_RubyFieldNum(mrb, h, "y");
+    out->w = (float)GrappleGen_RubyFieldNum(mrb, h, "w");
+    out->h = (float)GrappleGen_RubyFieldNum(mrb, h, "h");
 }
 
 static mrb_value GenPush_nk_rect(mrb_state *mrb, const struct nk_rect *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "x", mrb_float_value(mrb, (mrb_float)in->x));
-    SDLStaticGen_RubyHashSet(mrb, h, "y", mrb_float_value(mrb, (mrb_float)in->y));
-    SDLStaticGen_RubyHashSet(mrb, h, "w", mrb_float_value(mrb, (mrb_float)in->w));
-    SDLStaticGen_RubyHashSet(mrb, h, "h", mrb_float_value(mrb, (mrb_float)in->h));
+    GrappleGen_RubyHashSet(mrb, h, "x", mrb_float_value(mrb, (mrb_float)in->x));
+    GrappleGen_RubyHashSet(mrb, h, "y", mrb_float_value(mrb, (mrb_float)in->y));
+    GrappleGen_RubyHashSet(mrb, h, "w", mrb_float_value(mrb, (mrb_float)in->w));
+    GrappleGen_RubyHashSet(mrb, h, "h", mrb_float_value(mrb, (mrb_float)in->h));
     return h;
 }
 
 static mrb_value GenPush_nk_scroll(mrb_state *mrb, const struct nk_scroll *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "x", mrb_int_value(mrb, (mrb_int)in->x));
-    SDLStaticGen_RubyHashSet(mrb, h, "y", mrb_int_value(mrb, (mrb_int)in->y));
+    GrappleGen_RubyHashSet(mrb, h, "x", mrb_int_value(mrb, (mrb_int)in->x));
+    GrappleGen_RubyHashSet(mrb, h, "y", mrb_int_value(mrb, (mrb_int)in->y));
     return h;
 }
 
@@ -78,15 +78,15 @@ static void GenRead_nk_vec2(mrb_state *mrb, mrb_value h, struct nk_vec2 *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->x = (float)SDLStaticGen_RubyFieldNum(mrb, h, "x");
-    out->y = (float)SDLStaticGen_RubyFieldNum(mrb, h, "y");
+    out->x = (float)GrappleGen_RubyFieldNum(mrb, h, "x");
+    out->y = (float)GrappleGen_RubyFieldNum(mrb, h, "y");
 }
 
 static mrb_value GenPush_nk_vec2(mrb_state *mrb, const struct nk_vec2 *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "x", mrb_float_value(mrb, (mrb_float)in->x));
-    SDLStaticGen_RubyHashSet(mrb, h, "y", mrb_float_value(mrb, (mrb_float)in->y));
+    GrappleGen_RubyHashSet(mrb, h, "x", mrb_float_value(mrb, (mrb_float)in->x));
+    GrappleGen_RubyHashSet(mrb, h, "y", mrb_float_value(mrb, (mrb_float)in->y));
     return h;
 }
 
@@ -97,9 +97,9 @@ static mrb_value GenR_nk__begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     const struct nk_command * rv = nk__begin(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "nk_command");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_command");
     }
 }
 
@@ -110,10 +110,10 @@ static mrb_value GenR_nk__draw_begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const struct nk_buffer *a1 = (const struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_buffer *a1 = (const struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
     const struct nk_draw_command * rv = nk__draw_begin(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "nk_draw_command");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_draw_command");
     }
 }
 
@@ -124,10 +124,10 @@ static mrb_value GenR_nk__draw_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const struct nk_buffer *a1 = (const struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_buffer *a1 = (const struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
     const struct nk_draw_command * rv = nk__draw_end(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "nk_draw_command");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_draw_command");
     }
 }
 
@@ -138,10 +138,10 @@ static mrb_value GenR_nk__draw_list_begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_draw_list *a0 = (const struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
-    const struct nk_buffer *a1 = (const struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
+    const struct nk_draw_list *a0 = (const struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    const struct nk_buffer *a1 = (const struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
     const struct nk_draw_command * rv = nk__draw_list_begin(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "nk_draw_command");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_draw_command");
     }
 }
 
@@ -152,10 +152,10 @@ static mrb_value GenR_nk__draw_list_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_draw_list *a0 = (const struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
-    const struct nk_buffer *a1 = (const struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
+    const struct nk_draw_list *a0 = (const struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    const struct nk_buffer *a1 = (const struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
     const struct nk_draw_command * rv = nk__draw_list_end(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "nk_draw_command");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_draw_command");
     }
 }
 
@@ -166,11 +166,11 @@ static mrb_value GenR_nk__draw_list_next(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_draw_command *a0 = (const struct nk_draw_command *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_command");
-    const struct nk_buffer *a1 = (const struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
-    const struct nk_draw_list *a2 = (const struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_draw_list");
+    const struct nk_draw_command *a0 = (const struct nk_draw_command *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_command");
+    const struct nk_buffer *a1 = (const struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
+    const struct nk_draw_list *a2 = (const struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_draw_list");
     const struct nk_draw_command * rv = nk__draw_list_next(a0, a1, a2);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "nk_draw_command");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_draw_command");
     }
 }
 
@@ -181,11 +181,11 @@ static mrb_value GenR_nk__draw_next(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_draw_command *a0 = (const struct nk_draw_command *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_command");
-    const struct nk_buffer *a1 = (const struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
-    const struct nk_context *a2 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_context");
+    const struct nk_draw_command *a0 = (const struct nk_draw_command *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_command");
+    const struct nk_buffer *a1 = (const struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
+    const struct nk_context *a2 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_context");
     const struct nk_draw_command * rv = nk__draw_next(a0, a1, a2);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "nk_draw_command");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_draw_command");
     }
 }
 
@@ -196,10 +196,10 @@ static mrb_value GenR_nk__next(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const struct nk_command *a1 = (const struct nk_command *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_command");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_command *a1 = (const struct nk_command *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_command");
     const struct nk_command * rv = nk__next(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "nk_command");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_command");
     }
 }
 
@@ -210,11 +210,11 @@ static mrb_value GenR_nk_begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_rect a2;
     GenRead_nk_rect(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_begin(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -227,12 +227,12 @@ static mrb_value GenR_nk_begin_titled(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_rect a3;
     GenRead_nk_rect(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
-    nk_flags a4 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    nk_flags a4 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_begin_titled(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -245,7 +245,7 @@ static mrb_value GenR_nk_buffer_clear(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_buffer *a0 = (struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
+    struct nk_buffer *a0 = (struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
     nk_buffer_clear(a0);
     return mrb_nil_value();
     }
@@ -258,7 +258,7 @@ static mrb_value GenR_nk_buffer_free(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_buffer *a0 = (struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
+    struct nk_buffer *a0 = (struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
     nk_buffer_free(a0);
     return mrb_nil_value();
     }
@@ -271,8 +271,8 @@ static mrb_value GenR_nk_buffer_info(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_memory_status *a0 = (struct nk_memory_status *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_memory_status");
-    const struct nk_buffer *a1 = (const struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
+    struct nk_memory_status *a0 = (struct nk_memory_status *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_memory_status");
+    const struct nk_buffer *a1 = (const struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
     nk_buffer_info(a0, a1);
     return mrb_nil_value();
     }
@@ -285,9 +285,9 @@ static mrb_value GenR_nk_buffer_init(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_buffer *a0 = (struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
-    const struct nk_allocator *a1 = (const struct nk_allocator *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_allocator");
-    nk_size a2 = (nk_size)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_buffer *a0 = (struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
+    const struct nk_allocator *a1 = (const struct nk_allocator *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_allocator");
+    nk_size a2 = (nk_size)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_buffer_init(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -300,7 +300,7 @@ static mrb_value GenR_nk_buffer_init_default(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_buffer *a0 = (struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
+    struct nk_buffer *a0 = (struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
     nk_buffer_init_default(a0);
     return mrb_nil_value();
     }
@@ -313,8 +313,8 @@ static mrb_value GenR_nk_buffer_mark(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_buffer *a0 = (struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
-    enum nk_buffer_allocation_type a1 = (enum nk_buffer_allocation_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_buffer *a0 = (struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
+    enum nk_buffer_allocation_type a1 = (enum nk_buffer_allocation_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_buffer_mark(a0, a1);
     return mrb_nil_value();
     }
@@ -327,11 +327,11 @@ static mrb_value GenR_nk_buffer_push(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_buffer *a0 = (struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
-    enum nk_buffer_allocation_type a1 = (enum nk_buffer_allocation_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_buffer *a0 = (struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
+    enum nk_buffer_allocation_type a1 = (enum nk_buffer_allocation_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     size_t len2 = 0;
-    const char *a2 = SDLStaticGen_RubyToBlob(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &len2);
-    nk_size a4 = (nk_size)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToBlob(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &len2);
+    nk_size a4 = (nk_size)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_buffer_push(a0, a1, (const void *)a2, (nk_size)len2, a4);
     return mrb_nil_value();
     }
@@ -344,8 +344,8 @@ static mrb_value GenR_nk_buffer_reset(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_buffer *a0 = (struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
-    enum nk_buffer_allocation_type a1 = (enum nk_buffer_allocation_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_buffer *a0 = (struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
+    enum nk_buffer_allocation_type a1 = (enum nk_buffer_allocation_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_buffer_reset(a0, a1);
     return mrb_nil_value();
     }
@@ -358,7 +358,7 @@ static mrb_value GenR_nk_buffer_total(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_buffer *a0 = (const struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
+    const struct nk_buffer *a0 = (const struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
     nk_size rv = nk_buffer_total(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -371,7 +371,7 @@ static mrb_value GenR_nk_button_color(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_color a1;
     GenRead_nk_color(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_bool rv = nk_button_color(a0, a1);
@@ -386,8 +386,8 @@ static mrb_value GenR_nk_button_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_button_label(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -400,9 +400,9 @@ static mrb_value GenR_nk_button_label_styled(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const struct nk_style_button *a1 = (const struct nk_style_button *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_style_button");
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_style_button *a1 = (const struct nk_style_button *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_style_button");
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_bool rv = nk_button_label_styled(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -415,7 +415,7 @@ static mrb_value GenR_nk_button_pop_behavior(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_bool rv = nk_button_pop_behavior(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -428,8 +428,8 @@ static mrb_value GenR_nk_button_push_behavior(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_button_behavior a1 = (enum nk_button_behavior)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_button_behavior a1 = (enum nk_button_behavior)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_button_push_behavior(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -442,8 +442,8 @@ static mrb_value GenR_nk_button_set_behavior(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_button_behavior a1 = (enum nk_button_behavior)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_button_behavior a1 = (enum nk_button_behavior)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_button_set_behavior(a0, a1);
     return mrb_nil_value();
     }
@@ -456,8 +456,8 @@ static mrb_value GenR_nk_button_symbol(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_symbol_type a1 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_symbol_type a1 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_button_symbol(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -470,10 +470,10 @@ static mrb_value GenR_nk_button_symbol_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_symbol_type a1 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_symbol_type a1 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_button_symbol_label(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -486,11 +486,11 @@ static mrb_value GenR_nk_button_symbol_label_styled(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const struct nk_style_button *a1 = (const struct nk_style_button *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_style_button");
-    enum nk_symbol_type a2 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    const char *a3 = SDLStaticGen_RubyToStr(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_flags a4 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_style_button *a1 = (const struct nk_style_button *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_style_button");
+    enum nk_symbol_type a2 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a3 = GrappleGen_RubyToStr(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_flags a4 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_button_symbol_label_styled(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -503,9 +503,9 @@ static mrb_value GenR_nk_button_symbol_styled(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const struct nk_style_button *a1 = (const struct nk_style_button *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_style_button");
-    enum nk_symbol_type a2 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_style_button *a1 = (const struct nk_style_button *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_style_button");
+    enum nk_symbol_type a2 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_bool rv = nk_button_symbol_styled(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -518,11 +518,11 @@ static mrb_value GenR_nk_button_symbol_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_symbol_type a1 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_flags a4 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_symbol_type a1 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_flags a4 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_button_symbol_text(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -535,12 +535,12 @@ static mrb_value GenR_nk_button_symbol_text_styled(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const struct nk_style_button *a1 = (const struct nk_style_button *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_style_button");
-    enum nk_symbol_type a2 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    const char *a3 = SDLStaticGen_RubyToStr(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    nk_flags a5 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_style_button *a1 = (const struct nk_style_button *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_style_button");
+    enum nk_symbol_type a2 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a3 = GrappleGen_RubyToStr(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    nk_flags a5 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     nk_bool rv = nk_button_symbol_text_styled(a0, a1, a2, a3, a4, a5);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -553,9 +553,9 @@ static mrb_value GenR_nk_button_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_bool rv = nk_button_text(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -568,10 +568,10 @@ static mrb_value GenR_nk_button_text_styled(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const struct nk_style_button *a1 = (const struct nk_style_button *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_style_button");
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_style_button *a1 = (const struct nk_style_button *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_style_button");
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_button_text_styled(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -584,11 +584,11 @@ static mrb_value GenR_nk_chart_add_slot(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_chart_type a1 = (enum nk_chart_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_chart_type a1 = (enum nk_chart_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_chart_add_slot(a0, a1, a2, a3, a4);
     return mrb_nil_value();
     }
@@ -601,15 +601,15 @@ static mrb_value GenR_nk_chart_add_slot_colored(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_chart_type a1 = (enum nk_chart_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_chart_type a1 = (enum nk_chart_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_color a2;
     GenRead_nk_color(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     struct nk_color a3;
     GenRead_nk_color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     nk_chart_add_slot_colored(a0, a1, a2, a3, a4, a5, a6);
     return mrb_nil_value();
     }
@@ -622,11 +622,11 @@ static mrb_value GenR_nk_chart_begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_chart_type a1 = (enum nk_chart_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_chart_type a1 = (enum nk_chart_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_chart_begin(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -639,15 +639,15 @@ static mrb_value GenR_nk_chart_begin_colored(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_chart_type a1 = (enum nk_chart_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_chart_type a1 = (enum nk_chart_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_color a2;
     GenRead_nk_color(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     struct nk_color a3;
     GenRead_nk_color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     nk_bool rv = nk_chart_begin_colored(a0, a1, a2, a3, a4, a5, a6);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -660,7 +660,7 @@ static mrb_value GenR_nk_chart_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_chart_end(a0);
     return mrb_nil_value();
     }
@@ -673,8 +673,8 @@ static mrb_value GenR_nk_chart_push(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_flags rv = nk_chart_push(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -687,9 +687,9 @@ static mrb_value GenR_nk_chart_push_slot(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_flags rv = nk_chart_push_slot(a0, a1, a2);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -702,10 +702,10 @@ static mrb_value GenR_nk_check_flags_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    unsigned int a2 = (unsigned int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    unsigned int a3 = (unsigned int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    unsigned int a2 = (unsigned int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    unsigned int a3 = (unsigned int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     unsigned int rv = nk_check_flags_label(a0, a1, a2, a3);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -718,11 +718,11 @@ static mrb_value GenR_nk_check_flags_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    unsigned int a3 = (unsigned int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    unsigned int a4 = (unsigned int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    unsigned int a3 = (unsigned int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    unsigned int a4 = (unsigned int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     unsigned int rv = nk_check_flags_text(a0, a1, a2, a3, a4);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -735,9 +735,9 @@ static mrb_value GenR_nk_check_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_bool a2 = (nk_bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_bool a2 = (nk_bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     nk_bool rv = nk_check_label(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -750,10 +750,10 @@ static mrb_value GenR_nk_check_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_bool a3 = (nk_bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_bool a3 = (nk_bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_check_text(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -766,12 +766,12 @@ static mrb_value GenR_nk_check_text_align(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_bool a3 = (nk_bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_flags a4 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    nk_flags a5 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_bool a3 = (nk_bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_flags a4 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    nk_flags a5 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     nk_bool rv = nk_check_text_align(a0, a1, a2, a3, a4, a5);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -784,10 +784,10 @@ static mrb_value GenR_nk_checkbox_flags_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    unsigned int io2 = (unsigned int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    unsigned int a3 = (unsigned int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    unsigned int io2 = (unsigned int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    unsigned int a3 = (unsigned int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_checkbox_flags_label(a0, a1, &io2, a3);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -803,11 +803,11 @@ static mrb_value GenR_nk_checkbox_flags_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    unsigned int io3 = (unsigned int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    unsigned int a4 = (unsigned int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    unsigned int io3 = (unsigned int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    unsigned int a4 = (unsigned int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_checkbox_flags_text(a0, a1, a2, &io3, a4);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -823,9 +823,9 @@ static mrb_value GenR_nk_checkbox_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_bool io2 = (nk_bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_bool io2 = (nk_bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     nk_bool rv = nk_checkbox_label(a0, a1, &io2);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -841,11 +841,11 @@ static mrb_value GenR_nk_checkbox_label_align(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_bool io2 = (nk_bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_flags a4 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_bool io2 = (nk_bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_flags a4 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_checkbox_label_align(a0, a1, &io2, a3, a4);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -861,10 +861,10 @@ static mrb_value GenR_nk_checkbox_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_bool io3 = (nk_bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_bool io3 = (nk_bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_checkbox_text(a0, a1, a2, &io3);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -880,12 +880,12 @@ static mrb_value GenR_nk_checkbox_text_align(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_bool io3 = (nk_bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_flags a4 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    nk_flags a5 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_bool io3 = (nk_bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_flags a4 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    nk_flags a5 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     nk_bool rv = nk_checkbox_text_align(a0, a1, a2, &io3, a4, a5);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -901,7 +901,7 @@ static mrb_value GenR_nk_clear(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_clear(a0);
     return mrb_nil_value();
     }
@@ -928,10 +928,10 @@ static mrb_value GenR_nk_color_d(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    double io0 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    double io1 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    double io2 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    double io3 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    double io0 = (double)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    double io1 = (double)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    double io2 = (double)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    double io3 = (double)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_color a4;
     GenRead_nk_color(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
     nk_color_d(&io0, &io1, &io2, &io3, a4);
@@ -951,7 +951,7 @@ static mrb_value GenR_nk_color_dv(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    double io0 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    double io0 = (double)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     struct nk_color a1;
     GenRead_nk_color(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_color_dv(&io0, a1);
@@ -966,10 +966,10 @@ static mrb_value GenR_nk_color_f(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float io0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float io2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float io3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float io0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float io3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_color a4;
     GenRead_nk_color(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
     nk_color_f(&io0, &io1, &io2, &io3, a4);
@@ -989,7 +989,7 @@ static mrb_value GenR_nk_color_fv(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float io0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float io0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     struct nk_color a1;
     GenRead_nk_color(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_color_fv(&io0, a1);
@@ -1004,7 +1004,7 @@ static mrb_value GenR_nk_color_hex_rgb(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *src0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *src0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     char *a0 = SDL_strdup(src0 != NULL ? src0 : "");
     struct nk_color a1;
     GenRead_nk_color(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
@@ -1021,7 +1021,7 @@ static mrb_value GenR_nk_color_hex_rgba(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *src0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *src0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     char *a0 = SDL_strdup(src0 != NULL ? src0 : "");
     struct nk_color a1;
     GenRead_nk_color(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
@@ -1038,9 +1038,9 @@ static mrb_value GenR_nk_color_hsv_b(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    nk_byte io0 = (nk_byte)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    nk_byte io1 = (nk_byte)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_byte io2 = (nk_byte)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_byte io0 = (nk_byte)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    nk_byte io1 = (nk_byte)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_byte io2 = (nk_byte)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_color a3;
     GenRead_nk_color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     nk_color_hsv_b(&io0, &io1, &io2, a3);
@@ -1059,7 +1059,7 @@ static mrb_value GenR_nk_color_hsv_bv(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    nk_byte io0 = (nk_byte)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    nk_byte io0 = (nk_byte)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     struct nk_color a1;
     GenRead_nk_color(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_color_hsv_bv(&io0, a1);
@@ -1074,9 +1074,9 @@ static mrb_value GenR_nk_color_hsv_f(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float io0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float io2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float io0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_color a3;
     GenRead_nk_color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     nk_color_hsv_f(&io0, &io1, &io2, a3);
@@ -1095,7 +1095,7 @@ static mrb_value GenR_nk_color_hsv_fv(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float io0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float io0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     struct nk_color a1;
     GenRead_nk_color(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_color_hsv_fv(&io0, a1);
@@ -1110,9 +1110,9 @@ static mrb_value GenR_nk_color_hsv_i(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int io0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int io0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_color a3;
     GenRead_nk_color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     nk_color_hsv_i(&io0, &io1, &io2, a3);
@@ -1131,7 +1131,7 @@ static mrb_value GenR_nk_color_hsv_iv(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int io0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int io0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     struct nk_color a1;
     GenRead_nk_color(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_color_hsv_iv(&io0, a1);
@@ -1146,10 +1146,10 @@ static mrb_value GenR_nk_color_hsva_b(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    nk_byte io0 = (nk_byte)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    nk_byte io1 = (nk_byte)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_byte io2 = (nk_byte)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_byte io3 = (nk_byte)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_byte io0 = (nk_byte)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    nk_byte io1 = (nk_byte)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_byte io2 = (nk_byte)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_byte io3 = (nk_byte)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_color a4;
     GenRead_nk_color(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
     nk_color_hsva_b(&io0, &io1, &io2, &io3, a4);
@@ -1169,7 +1169,7 @@ static mrb_value GenR_nk_color_hsva_bv(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    nk_byte io0 = (nk_byte)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    nk_byte io0 = (nk_byte)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     struct nk_color a1;
     GenRead_nk_color(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_color_hsva_bv(&io0, a1);
@@ -1184,10 +1184,10 @@ static mrb_value GenR_nk_color_hsva_f(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float io0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float io2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float io3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float io0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float io3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_color a4;
     GenRead_nk_color(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
     nk_color_hsva_f(&io0, &io1, &io2, &io3, a4);
@@ -1207,7 +1207,7 @@ static mrb_value GenR_nk_color_hsva_fv(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float io0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float io0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     struct nk_color a1;
     GenRead_nk_color(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_color_hsva_fv(&io0, a1);
@@ -1222,10 +1222,10 @@ static mrb_value GenR_nk_color_hsva_i(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int io0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int io3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int io0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int io3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_color a4;
     GenRead_nk_color(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
     nk_color_hsva_i(&io0, &io1, &io2, &io3, a4);
@@ -1245,7 +1245,7 @@ static mrb_value GenR_nk_color_hsva_iv(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int io0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int io0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     struct nk_color a1;
     GenRead_nk_color(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_color_hsva_iv(&io0, a1);
@@ -1260,10 +1260,10 @@ static mrb_value GenR_nk_color_pick(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_colorf out1;
     memset(&out1, 0, sizeof(out1));
-    enum nk_color_format a2 = (enum nk_color_format)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    enum nk_color_format a2 = (enum nk_color_format)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_color_pick(a0, &out1, a2);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -1279,10 +1279,10 @@ static mrb_value GenR_nk_color_picker(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_colorf a1;
     GenRead_nk_colorf(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    enum nk_color_format a2 = (enum nk_color_format)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    enum nk_color_format a2 = (enum nk_color_format)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_colorf rv = nk_color_picker(a0, a1, a2);
     return GenPush_nk_colorf(mrb, &rv);
     }
@@ -1309,10 +1309,10 @@ static mrb_value GenR_nk_colorf_hsva_f(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float io0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float io2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float io3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float io0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float io3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_colorf a4;
     GenRead_nk_colorf(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
     nk_colorf_hsva_f(&io0, &io1, &io2, &io3, a4);
@@ -1332,7 +1332,7 @@ static mrb_value GenR_nk_colorf_hsva_fv(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float io0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float io0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     struct nk_colorf a1;
     GenRead_nk_colorf(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_colorf_hsva_fv(&io0, a1);
@@ -1347,7 +1347,7 @@ static mrb_value GenR_nk_combo_begin_color(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_color a1;
     GenRead_nk_color(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     struct nk_vec2 a2;
@@ -1364,8 +1364,8 @@ static mrb_value GenR_nk_combo_begin_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_vec2 a2;
     GenRead_nk_vec2(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     nk_bool rv = nk_combo_begin_label(a0, a1, a2);
@@ -1380,8 +1380,8 @@ static mrb_value GenR_nk_combo_begin_symbol(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_symbol_type a1 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_symbol_type a1 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_vec2 a2;
     GenRead_nk_vec2(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     nk_bool rv = nk_combo_begin_symbol(a0, a1, a2);
@@ -1396,9 +1396,9 @@ static mrb_value GenR_nk_combo_begin_symbol_label(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    enum nk_symbol_type a2 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    enum nk_symbol_type a2 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_vec2 a3;
     GenRead_nk_vec2(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     nk_bool rv = nk_combo_begin_symbol_label(a0, a1, a2, a3);
@@ -1413,10 +1413,10 @@ static mrb_value GenR_nk_combo_begin_symbol_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    enum nk_symbol_type a3 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    enum nk_symbol_type a3 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_vec2 a4;
     GenRead_nk_vec2(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
     nk_bool rv = nk_combo_begin_symbol_text(a0, a1, a2, a3, a4);
@@ -1431,9 +1431,9 @@ static mrb_value GenR_nk_combo_begin_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_vec2 a3;
     GenRead_nk_vec2(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     nk_bool rv = nk_combo_begin_text(a0, a1, a2, a3);
@@ -1448,7 +1448,7 @@ static mrb_value GenR_nk_combo_close(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_combo_close(a0);
     return mrb_nil_value();
     }
@@ -1461,7 +1461,7 @@ static mrb_value GenR_nk_combo_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_combo_end(a0);
     return mrb_nil_value();
     }
@@ -1474,9 +1474,9 @@ static mrb_value GenR_nk_combo_item_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_flags a2 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_flags a2 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_bool rv = nk_combo_item_label(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1489,10 +1489,10 @@ static mrb_value GenR_nk_combo_item_symbol_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_symbol_type a1 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_symbol_type a1 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_combo_item_symbol_label(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1505,11 +1505,11 @@ static mrb_value GenR_nk_combo_item_symbol_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_symbol_type a1 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_flags a4 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_symbol_type a1 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_flags a4 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_combo_item_symbol_text(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1522,10 +1522,10 @@ static mrb_value GenR_nk_combo_item_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_combo_item_text(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1538,12 +1538,12 @@ static mrb_value GenR_nk_combo_separator(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    int a5 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    int a5 = (int)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     struct nk_vec2 a6;
     GenRead_nk_vec2(mrb, (argc > 6 ? argv[6] : mrb_nil_value()), &a6);
     int rv = nk_combo_separator(a0, a1, a2, a3, a4, a5, a6);
@@ -1558,11 +1558,11 @@ static mrb_value GenR_nk_combo_string(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     struct nk_vec2 a5;
     GenRead_nk_vec2(mrb, (argc > 5 ? argv[5] : mrb_nil_value()), &a5);
     int rv = nk_combo_string(a0, a1, a2, a3, a4, a5);
@@ -1577,12 +1577,12 @@ static mrb_value GenR_nk_combobox_separator(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int io3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    int a5 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int io3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    int a5 = (int)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     struct nk_vec2 a6;
     GenRead_nk_vec2(mrb, (argc > 6 ? argv[6] : mrb_nil_value()), &a6);
     nk_bool rv = nk_combobox_separator(a0, a1, a2, &io3, a4, a5, a6);
@@ -1600,11 +1600,11 @@ static mrb_value GenR_nk_combobox_string(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     struct nk_vec2 a5;
     GenRead_nk_vec2(mrb, (argc > 5 ? argv[5] : mrb_nil_value()), &a5);
     nk_bool rv = nk_combobox_string(a0, a1, &io2, a3, a4, a5);
@@ -1622,8 +1622,8 @@ static mrb_value GenR_nk_contextual_begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    nk_flags a1 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    nk_flags a1 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_vec2 a2;
     GenRead_nk_vec2(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     struct nk_rect a3;
@@ -1640,7 +1640,7 @@ static mrb_value GenR_nk_contextual_close(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_contextual_close(a0);
     return mrb_nil_value();
     }
@@ -1653,7 +1653,7 @@ static mrb_value GenR_nk_contextual_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_contextual_end(a0);
     return mrb_nil_value();
     }
@@ -1666,9 +1666,9 @@ static mrb_value GenR_nk_contextual_item_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_flags a2 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_flags a2 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_bool rv = nk_contextual_item_label(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1681,10 +1681,10 @@ static mrb_value GenR_nk_contextual_item_symbol_label(mrb_state *mrb, mrb_value 
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_symbol_type a1 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_symbol_type a1 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_contextual_item_symbol_label(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1697,11 +1697,11 @@ static mrb_value GenR_nk_contextual_item_symbol_text(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_symbol_type a1 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_flags a4 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_symbol_type a1 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_flags a4 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_contextual_item_symbol_text(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1714,10 +1714,10 @@ static mrb_value GenR_nk_contextual_item_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_contextual_item_text(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1730,11 +1730,11 @@ static mrb_value GenR_nk_convert(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    struct nk_buffer *a1 = (struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
-    struct nk_buffer *a2 = (struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_buffer");
-    struct nk_buffer *a3 = (struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "nk_buffer");
-    const struct nk_convert_config *a4 = (const struct nk_convert_config *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), "nk_convert_config");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_buffer *a1 = (struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
+    struct nk_buffer *a2 = (struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_buffer");
+    struct nk_buffer *a3 = (struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "nk_buffer");
+    const struct nk_convert_config *a4 = (const struct nk_convert_config *)GrappleGen_RubyCheckHandle(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), "nk_convert_config");
     nk_flags rv = nk_convert(a0, a1, a2, a3, a4);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1747,10 +1747,10 @@ static mrb_value GenR_nk_draw_image(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_command_buffer *a0 = (struct nk_command_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
+    struct nk_command_buffer *a0 = (struct nk_command_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    const struct nk_image *a2 = (const struct nk_image *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_image");
+    const struct nk_image *a2 = (const struct nk_image *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_image");
     struct nk_color a3;
     GenRead_nk_color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     nk_draw_image(a0, a1, a2, a3);
@@ -1765,13 +1765,13 @@ static mrb_value GenR_nk_draw_list_add_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
-    const struct nk_user_font *a1 = (const struct nk_user_font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_user_font");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    const struct nk_user_font *a1 = (const struct nk_user_font *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_user_font");
     struct nk_rect a2;
     GenRead_nk_rect(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
-    const char *a3 = SDLStaticGen_RubyToStr(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    const char *a3 = GrappleGen_RubyToStr(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     struct nk_color a6;
     GenRead_nk_color(mrb, (argc > 6 ? argv[6] : mrb_nil_value()), &a6);
     nk_draw_list_add_text(a0, a1, a2, a3, a4, a5, a6);
@@ -1786,13 +1786,13 @@ static mrb_value GenR_nk_draw_list_fill_circle(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_vec2 a1;
     GenRead_nk_vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_color a3;
     GenRead_nk_color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
-    unsigned int a4 = (unsigned int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    unsigned int a4 = (unsigned int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_draw_list_fill_circle(a0, a1, a2, a3, a4);
     return mrb_nil_value();
     }
@@ -1805,17 +1805,17 @@ static mrb_value GenR_nk_draw_list_fill_poly_convex(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_vec2 tmp1;
     const struct nk_vec2 *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_nk_vec2(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    unsigned int a2 = (unsigned int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    unsigned int a2 = (unsigned int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_color a3;
     GenRead_nk_color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
-    enum nk_anti_aliasing a4 = (enum nk_anti_aliasing)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    enum nk_anti_aliasing a4 = (enum nk_anti_aliasing)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_draw_list_fill_poly_convex(a0, a1, a2, a3, a4);
     return mrb_nil_value();
     }
@@ -1828,12 +1828,12 @@ static mrb_value GenR_nk_draw_list_fill_rect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     struct nk_color a2;
     GenRead_nk_color(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_draw_list_fill_rect(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -1846,7 +1846,7 @@ static mrb_value GenR_nk_draw_list_fill_rect_multi_color(mrb_state *mrb, mrb_val
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     struct nk_color a2;
@@ -1869,7 +1869,7 @@ static mrb_value GenR_nk_draw_list_fill_triangle(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_vec2 a1;
     GenRead_nk_vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     struct nk_vec2 a2;
@@ -1890,7 +1890,7 @@ static mrb_value GenR_nk_draw_list_init(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     nk_draw_list_init(a0);
     return mrb_nil_value();
     }
@@ -1903,13 +1903,13 @@ static mrb_value GenR_nk_draw_list_path_arc_to(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_vec2 a1;
     GenRead_nk_vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    unsigned int a5 = (unsigned int)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    unsigned int a5 = (unsigned int)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     nk_draw_list_path_arc_to(a0, a1, a2, a3, a4, a5);
     return mrb_nil_value();
     }
@@ -1922,12 +1922,12 @@ static mrb_value GenR_nk_draw_list_path_arc_to_fast(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_vec2 a1;
     GenRead_nk_vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_draw_list_path_arc_to_fast(a0, a1, a2, a3, a4);
     return mrb_nil_value();
     }
@@ -1940,7 +1940,7 @@ static mrb_value GenR_nk_draw_list_path_clear(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     nk_draw_list_path_clear(a0);
     return mrb_nil_value();
     }
@@ -1953,14 +1953,14 @@ static mrb_value GenR_nk_draw_list_path_curve_to(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_vec2 a1;
     GenRead_nk_vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     struct nk_vec2 a2;
     GenRead_nk_vec2(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     struct nk_vec2 a3;
     GenRead_nk_vec2(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
-    unsigned int a4 = (unsigned int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    unsigned int a4 = (unsigned int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_draw_list_path_curve_to(a0, a1, a2, a3, a4);
     return mrb_nil_value();
     }
@@ -1973,7 +1973,7 @@ static mrb_value GenR_nk_draw_list_path_fill(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_color a1;
     GenRead_nk_color(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_draw_list_path_fill(a0, a1);
@@ -1988,7 +1988,7 @@ static mrb_value GenR_nk_draw_list_path_line_to(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_vec2 a1;
     GenRead_nk_vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_draw_list_path_line_to(a0, a1);
@@ -2003,12 +2003,12 @@ static mrb_value GenR_nk_draw_list_path_rect_to(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_vec2 a1;
     GenRead_nk_vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     struct nk_vec2 a2;
     GenRead_nk_vec2(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_draw_list_path_rect_to(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -2021,11 +2021,11 @@ static mrb_value GenR_nk_draw_list_path_stroke(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_color a1;
     GenRead_nk_color(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    enum nk_draw_list_stroke a2 = (enum nk_draw_list_stroke)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    enum nk_draw_list_stroke a2 = (enum nk_draw_list_stroke)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_draw_list_path_stroke(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -2038,13 +2038,13 @@ static mrb_value GenR_nk_draw_list_setup(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
-    const struct nk_convert_config *a1 = (const struct nk_convert_config *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_convert_config");
-    struct nk_buffer *a2 = (struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_buffer");
-    struct nk_buffer *a3 = (struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "nk_buffer");
-    struct nk_buffer *a4 = (struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), "nk_buffer");
-    enum nk_anti_aliasing a5 = (enum nk_anti_aliasing)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    enum nk_anti_aliasing a6 = (enum nk_anti_aliasing)SDLStaticGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    const struct nk_convert_config *a1 = (const struct nk_convert_config *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_convert_config");
+    struct nk_buffer *a2 = (struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_buffer");
+    struct nk_buffer *a3 = (struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "nk_buffer");
+    struct nk_buffer *a4 = (struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), "nk_buffer");
+    enum nk_anti_aliasing a5 = (enum nk_anti_aliasing)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    enum nk_anti_aliasing a6 = (enum nk_anti_aliasing)GrappleGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     nk_draw_list_setup(a0, a1, a2, a3, a4, a5, a6);
     return mrb_nil_value();
     }
@@ -2057,14 +2057,14 @@ static mrb_value GenR_nk_draw_list_stroke_circle(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_vec2 a1;
     GenRead_nk_vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_color a3;
     GenRead_nk_color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
-    unsigned int a4 = (unsigned int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    unsigned int a4 = (unsigned int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     nk_draw_list_stroke_circle(a0, a1, a2, a3, a4, a5);
     return mrb_nil_value();
     }
@@ -2077,7 +2077,7 @@ static mrb_value GenR_nk_draw_list_stroke_curve(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_vec2 a1;
     GenRead_nk_vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     struct nk_vec2 a2;
@@ -2088,8 +2088,8 @@ static mrb_value GenR_nk_draw_list_stroke_curve(mrb_state *mrb, mrb_value self)
     GenRead_nk_vec2(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
     struct nk_color a5;
     GenRead_nk_color(mrb, (argc > 5 ? argv[5] : mrb_nil_value()), &a5);
-    unsigned int a6 = (unsigned int)SDLStaticGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
-    float a7 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 7 ? argv[7] : mrb_nil_value()));
+    unsigned int a6 = (unsigned int)GrappleGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    float a7 = (float)GrappleGen_RubyToNum(mrb, (argc > 7 ? argv[7] : mrb_nil_value()));
     nk_draw_list_stroke_curve(a0, a1, a2, a3, a4, a5, a6, a7);
     return mrb_nil_value();
     }
@@ -2102,14 +2102,14 @@ static mrb_value GenR_nk_draw_list_stroke_line(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_vec2 a1;
     GenRead_nk_vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     struct nk_vec2 a2;
     GenRead_nk_vec2(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     struct nk_color a3;
     GenRead_nk_color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_draw_list_stroke_line(a0, a1, a2, a3, a4);
     return mrb_nil_value();
     }
@@ -2122,19 +2122,19 @@ static mrb_value GenR_nk_draw_list_stroke_poly_line(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_vec2 tmp1;
     const struct nk_vec2 *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_nk_vec2(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    unsigned int a2 = (unsigned int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    unsigned int a2 = (unsigned int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_color a3;
     GenRead_nk_color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
-    enum nk_draw_list_stroke a4 = (enum nk_draw_list_stroke)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    enum nk_anti_aliasing a6 = (enum nk_anti_aliasing)SDLStaticGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    enum nk_draw_list_stroke a4 = (enum nk_draw_list_stroke)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    enum nk_anti_aliasing a6 = (enum nk_anti_aliasing)GrappleGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     nk_draw_list_stroke_poly_line(a0, a1, a2, a3, a4, a5, a6);
     return mrb_nil_value();
     }
@@ -2147,13 +2147,13 @@ static mrb_value GenR_nk_draw_list_stroke_rect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     struct nk_color a2;
     GenRead_nk_color(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_draw_list_stroke_rect(a0, a1, a2, a3, a4);
     return mrb_nil_value();
     }
@@ -2166,7 +2166,7 @@ static mrb_value GenR_nk_draw_list_stroke_triangle(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_draw_list *a0 = (struct nk_draw_list *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
+    struct nk_draw_list *a0 = (struct nk_draw_list *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_draw_list");
     struct nk_vec2 a1;
     GenRead_nk_vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     struct nk_vec2 a2;
@@ -2175,7 +2175,7 @@ static mrb_value GenR_nk_draw_list_stroke_triangle(mrb_state *mrb, mrb_value sel
     GenRead_nk_vec2(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     struct nk_color a4;
     GenRead_nk_color(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     nk_draw_list_stroke_triangle(a0, a1, a2, a3, a4, a5);
     return mrb_nil_value();
     }
@@ -2188,10 +2188,10 @@ static mrb_value GenR_nk_draw_nine_slice(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_command_buffer *a0 = (struct nk_command_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
+    struct nk_command_buffer *a0 = (struct nk_command_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    const struct nk_nine_slice *a2 = (const struct nk_nine_slice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_nine_slice");
+    const struct nk_nine_slice *a2 = (const struct nk_nine_slice *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_nine_slice");
     struct nk_color a3;
     GenRead_nk_color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     nk_draw_nine_slice(a0, a1, a2, a3);
@@ -2206,12 +2206,12 @@ static mrb_value GenR_nk_draw_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_command_buffer *a0 = (struct nk_command_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
+    struct nk_command_buffer *a0 = (struct nk_command_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    const struct nk_user_font *a4 = (const struct nk_user_font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), "nk_user_font");
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    const struct nk_user_font *a4 = (const struct nk_user_font *)GrappleGen_RubyCheckHandle(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), "nk_user_font");
     struct nk_color a5;
     GenRead_nk_color(mrb, (argc > 5 ? argv[5] : mrb_nil_value()), &a5);
     struct nk_color a6;
@@ -2228,8 +2228,8 @@ static mrb_value GenR_nk_edit_focus(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    nk_flags a1 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    nk_flags a1 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_edit_focus(a0, a1);
     return mrb_nil_value();
     }
@@ -2242,7 +2242,7 @@ static mrb_value GenR_nk_edit_unfocus(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_edit_unfocus(a0);
     return mrb_nil_value();
     }
@@ -2255,7 +2255,7 @@ static mrb_value GenR_nk_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_end(a0);
     return mrb_nil_value();
     }
@@ -2268,12 +2268,12 @@ static mrb_value GenR_nk_fill_arc(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_command_buffer *a0 = (struct nk_command_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    struct nk_command_buffer *a0 = (struct nk_command_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     struct nk_color a6;
     GenRead_nk_color(mrb, (argc > 6 ? argv[6] : mrb_nil_value()), &a6);
     nk_fill_arc(a0, a1, a2, a3, a4, a5, a6);
@@ -2288,7 +2288,7 @@ static mrb_value GenR_nk_fill_circle(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_command_buffer *a0 = (struct nk_command_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
+    struct nk_command_buffer *a0 = (struct nk_command_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     struct nk_color a2;
@@ -2305,10 +2305,10 @@ static mrb_value GenR_nk_fill_rect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_command_buffer *a0 = (struct nk_command_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
+    struct nk_command_buffer *a0 = (struct nk_command_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_color a3;
     GenRead_nk_color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     nk_fill_rect(a0, a1, a2, a3);
@@ -2323,7 +2323,7 @@ static mrb_value GenR_nk_fill_rect_multi_color(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_command_buffer *a0 = (struct nk_command_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
+    struct nk_command_buffer *a0 = (struct nk_command_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     struct nk_color a2;
@@ -2346,13 +2346,13 @@ static mrb_value GenR_nk_fill_triangle(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_command_buffer *a0 = (struct nk_command_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    struct nk_command_buffer *a0 = (struct nk_command_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     struct nk_color a7;
     GenRead_nk_color(mrb, (argc > 7 ? argv[7] : mrb_nil_value()), &a7);
     nk_fill_triangle(a0, a1, a2, a3, a4, a5, a6, a7);
@@ -2367,8 +2367,8 @@ static mrb_value GenR_nk_filter_ascii(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_text_edit *a0 = (const struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
-    nk_rune a1 = (nk_rune)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_text_edit *a0 = (const struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    nk_rune a1 = (nk_rune)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_filter_ascii(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2381,8 +2381,8 @@ static mrb_value GenR_nk_filter_binary(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_text_edit *a0 = (const struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
-    nk_rune a1 = (nk_rune)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_text_edit *a0 = (const struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    nk_rune a1 = (nk_rune)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_filter_binary(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2395,8 +2395,8 @@ static mrb_value GenR_nk_filter_decimal(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_text_edit *a0 = (const struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
-    nk_rune a1 = (nk_rune)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_text_edit *a0 = (const struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    nk_rune a1 = (nk_rune)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_filter_decimal(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2409,8 +2409,8 @@ static mrb_value GenR_nk_filter_default(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_text_edit *a0 = (const struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
-    nk_rune a1 = (nk_rune)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_text_edit *a0 = (const struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    nk_rune a1 = (nk_rune)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_filter_default(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2423,8 +2423,8 @@ static mrb_value GenR_nk_filter_float(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_text_edit *a0 = (const struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
-    nk_rune a1 = (nk_rune)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_text_edit *a0 = (const struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    nk_rune a1 = (nk_rune)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_filter_float(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2437,8 +2437,8 @@ static mrb_value GenR_nk_filter_hex(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_text_edit *a0 = (const struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
-    nk_rune a1 = (nk_rune)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_text_edit *a0 = (const struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    nk_rune a1 = (nk_rune)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_filter_hex(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2451,8 +2451,8 @@ static mrb_value GenR_nk_filter_oct(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_text_edit *a0 = (const struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
-    nk_rune a1 = (nk_rune)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_text_edit *a0 = (const struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    nk_rune a1 = (nk_rune)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_filter_oct(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2465,10 +2465,10 @@ static mrb_value GenR_nk_font_atlas_add(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_font_atlas *a0 = (struct nk_font_atlas *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
-    const struct nk_font_config *a1 = (const struct nk_font_config *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_font_config");
+    struct nk_font_atlas *a0 = (struct nk_font_atlas *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
+    const struct nk_font_config *a1 = (const struct nk_font_config *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_font_config");
     struct nk_font * rv = nk_font_atlas_add(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "nk_font");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_font");
     }
 }
 
@@ -2479,12 +2479,12 @@ static mrb_value GenR_nk_font_atlas_add_compressed_base85(mrb_state *mrb, mrb_va
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_font_atlas *a0 = (struct nk_font_atlas *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    const struct nk_font_config *a3 = (const struct nk_font_config *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "nk_font_config");
+    struct nk_font_atlas *a0 = (struct nk_font_atlas *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const struct nk_font_config *a3 = (const struct nk_font_config *)GrappleGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "nk_font_config");
     struct nk_font * rv = nk_font_atlas_add_compressed_base85(a0, a1, a2, a3);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "nk_font");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_font");
     }
 }
 
@@ -2495,11 +2495,11 @@ static mrb_value GenR_nk_font_atlas_add_default(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_font_atlas *a0 = (struct nk_font_atlas *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const struct nk_font_config *a2 = (const struct nk_font_config *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_font_config");
+    struct nk_font_atlas *a0 = (struct nk_font_atlas *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_font_config *a2 = (const struct nk_font_config *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_font_config");
     struct nk_font * rv = nk_font_atlas_add_default(a0, a1, a2);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "nk_font");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_font");
     }
 }
 
@@ -2510,7 +2510,7 @@ static mrb_value GenR_nk_font_atlas_begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_font_atlas *a0 = (struct nk_font_atlas *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
+    struct nk_font_atlas *a0 = (struct nk_font_atlas *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
     nk_font_atlas_begin(a0);
     return mrb_nil_value();
     }
@@ -2523,7 +2523,7 @@ static mrb_value GenR_nk_font_atlas_cleanup(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_font_atlas *a0 = (struct nk_font_atlas *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
+    struct nk_font_atlas *a0 = (struct nk_font_atlas *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
     nk_font_atlas_cleanup(a0);
     return mrb_nil_value();
     }
@@ -2536,7 +2536,7 @@ static mrb_value GenR_nk_font_atlas_clear(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_font_atlas *a0 = (struct nk_font_atlas *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
+    struct nk_font_atlas *a0 = (struct nk_font_atlas *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
     nk_font_atlas_clear(a0);
     return mrb_nil_value();
     }
@@ -2549,8 +2549,8 @@ static mrb_value GenR_nk_font_atlas_init(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_font_atlas *a0 = (struct nk_font_atlas *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
-    const struct nk_allocator *a1 = (const struct nk_allocator *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_allocator");
+    struct nk_font_atlas *a0 = (struct nk_font_atlas *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
+    const struct nk_allocator *a1 = (const struct nk_allocator *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_allocator");
     nk_font_atlas_init(a0, a1);
     return mrb_nil_value();
     }
@@ -2563,9 +2563,9 @@ static mrb_value GenR_nk_font_atlas_init_custom(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_font_atlas *a0 = (struct nk_font_atlas *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
-    const struct nk_allocator *a1 = (const struct nk_allocator *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_allocator");
-    const struct nk_allocator *a2 = (const struct nk_allocator *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_allocator");
+    struct nk_font_atlas *a0 = (struct nk_font_atlas *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
+    const struct nk_allocator *a1 = (const struct nk_allocator *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_allocator");
+    const struct nk_allocator *a2 = (const struct nk_allocator *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_allocator");
     nk_font_atlas_init_custom(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -2578,7 +2578,7 @@ static mrb_value GenR_nk_font_atlas_init_default(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_font_atlas *a0 = (struct nk_font_atlas *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
+    struct nk_font_atlas *a0 = (struct nk_font_atlas *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
     nk_font_atlas_init_default(a0);
     return mrb_nil_value();
     }
@@ -2591,7 +2591,7 @@ static mrb_value GenR_nk_free(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_free(a0);
     return mrb_nil_value();
     }
@@ -2616,9 +2616,9 @@ static mrb_value GenR_nk_group_begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_flags a2 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_flags a2 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_bool rv = nk_group_begin(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2631,10 +2631,10 @@ static mrb_value GenR_nk_group_begin_titled(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_group_begin_titled(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2647,7 +2647,7 @@ static mrb_value GenR_nk_group_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_group_end(a0);
     return mrb_nil_value();
     }
@@ -2660,10 +2660,10 @@ static mrb_value GenR_nk_group_get_scroll(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_uint io2 = (nk_uint)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_uint io3 = (nk_uint)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_uint io2 = (nk_uint)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_uint io3 = (nk_uint)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_group_get_scroll(a0, a1, &io2, &io3);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)io2);
@@ -2679,11 +2679,11 @@ static mrb_value GenR_nk_group_scrolled_begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_scroll out1;
     memset(&out1, 0, sizeof(out1));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_bool rv = nk_group_scrolled_begin(a0, &out1, a2, a3);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -2699,7 +2699,7 @@ static mrb_value GenR_nk_group_scrolled_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_group_scrolled_end(a0);
     return mrb_nil_value();
     }
@@ -2712,11 +2712,11 @@ static mrb_value GenR_nk_group_scrolled_offset_begin(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    nk_uint io1 = (nk_uint)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_uint io2 = (nk_uint)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    const char *a3 = SDLStaticGen_RubyToStr(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_flags a4 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    nk_uint io1 = (nk_uint)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_uint io2 = (nk_uint)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a3 = GrappleGen_RubyToStr(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_flags a4 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_group_scrolled_offset_begin(a0, &io1, &io2, a3, a4);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -2733,10 +2733,10 @@ static mrb_value GenR_nk_group_set_scroll(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_uint a2 = (nk_uint)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_uint a3 = (nk_uint)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_uint a2 = (nk_uint)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_uint a3 = (nk_uint)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_group_set_scroll(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -2749,9 +2749,9 @@ static mrb_value GenR_nk_hsv(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_color rv = nk_hsv(a0, a1, a2);
     return GenPush_nk_color(mrb, &rv);
     }
@@ -2764,9 +2764,9 @@ static mrb_value GenR_nk_hsv_f(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_color rv = nk_hsv_f(a0, a1, a2);
     return GenPush_nk_color(mrb, &rv);
     }
@@ -2779,10 +2779,10 @@ static mrb_value GenR_nk_hsva(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_color rv = nk_hsva(a0, a1, a2, a3);
     return GenPush_nk_color(mrb, &rv);
     }
@@ -2795,10 +2795,10 @@ static mrb_value GenR_nk_hsva_colorf(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_colorf rv = nk_hsva_colorf(a0, a1, a2, a3);
     return GenPush_nk_colorf(mrb, &rv);
     }
@@ -2811,10 +2811,10 @@ static mrb_value GenR_nk_hsva_f(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_color rv = nk_hsva_f(a0, a1, a2, a3);
     return GenPush_nk_color(mrb, &rv);
     }
@@ -2827,7 +2827,7 @@ static mrb_value GenR_nk_image_is_subimage(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_image *a0 = (const struct nk_image *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_image");
+    const struct nk_image *a0 = (const struct nk_image *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_image");
     nk_bool rv = nk_image_is_subimage(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2840,9 +2840,9 @@ static mrb_value GenR_nk_init(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const struct nk_allocator *a1 = (const struct nk_allocator *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_allocator");
-    const struct nk_user_font *a2 = (const struct nk_user_font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_user_font");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_allocator *a1 = (const struct nk_allocator *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_allocator");
+    const struct nk_user_font *a2 = (const struct nk_user_font *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_user_font");
     nk_bool rv = nk_init(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2855,10 +2855,10 @@ static mrb_value GenR_nk_init_custom(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    struct nk_buffer *a1 = (struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
-    struct nk_buffer *a2 = (struct nk_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_buffer");
-    const struct nk_user_font *a3 = (const struct nk_user_font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "nk_user_font");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_buffer *a1 = (struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_buffer");
+    struct nk_buffer *a2 = (struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_buffer");
+    const struct nk_user_font *a3 = (const struct nk_user_font *)GrappleGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "nk_user_font");
     nk_bool rv = nk_init_custom(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2871,8 +2871,8 @@ static mrb_value GenR_nk_init_default(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const struct nk_user_font *a1 = (const struct nk_user_font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_user_font");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_user_font *a1 = (const struct nk_user_font *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_user_font");
     nk_bool rv = nk_init_default(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2885,7 +2885,7 @@ static mrb_value GenR_nk_input_any_mouse_click_in_rect(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_bool rv = nk_input_any_mouse_click_in_rect(a0, a1);
@@ -2900,7 +2900,7 @@ static mrb_value GenR_nk_input_begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_input_begin(a0);
     return mrb_nil_value();
     }
@@ -2913,11 +2913,11 @@ static mrb_value GenR_nk_input_button(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_buttons a1 = (enum nk_buttons)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_bool a4 = (nk_bool)SDLStaticGen_RubyToBool((argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_buttons a1 = (enum nk_buttons)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_bool a4 = (nk_bool)GrappleGen_RubyToBool((argc > 4 ? argv[4] : mrb_nil_value()));
     nk_input_button(a0, a1, a2, a3, a4);
     return mrb_nil_value();
     }
@@ -2930,8 +2930,8 @@ static mrb_value GenR_nk_input_char(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    char a1 = (char)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    char a1 = (char)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_input_char(a0, a1);
     return mrb_nil_value();
     }
@@ -2944,7 +2944,7 @@ static mrb_value GenR_nk_input_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_input_end(a0);
     return mrb_nil_value();
     }
@@ -2957,8 +2957,8 @@ static mrb_value GenR_nk_input_has_mouse_click(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
-    enum nk_buttons a1 = (enum nk_buttons)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    enum nk_buttons a1 = (enum nk_buttons)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_input_has_mouse_click(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2971,11 +2971,11 @@ static mrb_value GenR_nk_input_has_mouse_click_down_in_rect(mrb_state *mrb, mrb_
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
-    enum nk_buttons a1 = (enum nk_buttons)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    enum nk_buttons a1 = (enum nk_buttons)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_rect a2;
     GenRead_nk_rect(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
-    nk_bool a3 = (nk_bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_bool a3 = (nk_bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_input_has_mouse_click_down_in_rect(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2988,8 +2988,8 @@ static mrb_value GenR_nk_input_has_mouse_click_in_button_rect(mrb_state *mrb, mr
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
-    enum nk_buttons a1 = (enum nk_buttons)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    enum nk_buttons a1 = (enum nk_buttons)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_rect a2;
     GenRead_nk_rect(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     nk_bool rv = nk_input_has_mouse_click_in_button_rect(a0, a1, a2);
@@ -3004,8 +3004,8 @@ static mrb_value GenR_nk_input_has_mouse_click_in_rect(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
-    enum nk_buttons a1 = (enum nk_buttons)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    enum nk_buttons a1 = (enum nk_buttons)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_rect a2;
     GenRead_nk_rect(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     nk_bool rv = nk_input_has_mouse_click_in_rect(a0, a1, a2);
@@ -3020,8 +3020,8 @@ static mrb_value GenR_nk_input_is_key_down(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
-    enum nk_keys a1 = (enum nk_keys)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    enum nk_keys a1 = (enum nk_keys)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_input_is_key_down(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3034,8 +3034,8 @@ static mrb_value GenR_nk_input_is_key_pressed(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
-    enum nk_keys a1 = (enum nk_keys)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    enum nk_keys a1 = (enum nk_keys)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_input_is_key_pressed(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3048,8 +3048,8 @@ static mrb_value GenR_nk_input_is_key_released(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
-    enum nk_keys a1 = (enum nk_keys)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    enum nk_keys a1 = (enum nk_keys)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_input_is_key_released(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3062,11 +3062,11 @@ static mrb_value GenR_nk_input_is_mouse_click_down_in_rect(mrb_state *mrb, mrb_v
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
-    enum nk_buttons a1 = (enum nk_buttons)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    enum nk_buttons a1 = (enum nk_buttons)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_rect a2;
     GenRead_nk_rect(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
-    nk_bool a3 = (nk_bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_bool a3 = (nk_bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_input_is_mouse_click_down_in_rect(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3079,8 +3079,8 @@ static mrb_value GenR_nk_input_is_mouse_click_in_rect(mrb_state *mrb, mrb_value 
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
-    enum nk_buttons a1 = (enum nk_buttons)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    enum nk_buttons a1 = (enum nk_buttons)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_rect a2;
     GenRead_nk_rect(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     nk_bool rv = nk_input_is_mouse_click_in_rect(a0, a1, a2);
@@ -3095,8 +3095,8 @@ static mrb_value GenR_nk_input_is_mouse_down(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
-    enum nk_buttons a1 = (enum nk_buttons)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    enum nk_buttons a1 = (enum nk_buttons)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_input_is_mouse_down(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3109,7 +3109,7 @@ static mrb_value GenR_nk_input_is_mouse_hovering_rect(mrb_state *mrb, mrb_value 
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_bool rv = nk_input_is_mouse_hovering_rect(a0, a1);
@@ -3124,7 +3124,7 @@ static mrb_value GenR_nk_input_is_mouse_moved(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
     nk_bool rv = nk_input_is_mouse_moved(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3137,8 +3137,8 @@ static mrb_value GenR_nk_input_is_mouse_pressed(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
-    enum nk_buttons a1 = (enum nk_buttons)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    enum nk_buttons a1 = (enum nk_buttons)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_input_is_mouse_pressed(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3151,7 +3151,7 @@ static mrb_value GenR_nk_input_is_mouse_prev_hovering_rect(mrb_state *mrb, mrb_v
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_bool rv = nk_input_is_mouse_prev_hovering_rect(a0, a1);
@@ -3166,8 +3166,8 @@ static mrb_value GenR_nk_input_is_mouse_released(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
-    enum nk_buttons a1 = (enum nk_buttons)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    enum nk_buttons a1 = (enum nk_buttons)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_input_is_mouse_released(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3180,9 +3180,9 @@ static mrb_value GenR_nk_input_key(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_keys a1 = (enum nk_keys)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_bool a2 = (nk_bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_keys a1 = (enum nk_keys)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_bool a2 = (nk_bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     nk_input_key(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -3195,9 +3195,9 @@ static mrb_value GenR_nk_input_motion(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_input_motion(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -3210,8 +3210,8 @@ static mrb_value GenR_nk_input_mouse_clicked(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_input *a0 = (const struct nk_input *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
-    enum nk_buttons a1 = (enum nk_buttons)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_input *a0 = (const struct nk_input *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_input");
+    enum nk_buttons a1 = (enum nk_buttons)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_rect a2;
     GenRead_nk_rect(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     nk_bool rv = nk_input_mouse_clicked(a0, a1, a2);
@@ -3226,7 +3226,7 @@ static mrb_value GenR_nk_input_scroll(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_vec2 a1;
     GenRead_nk_vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_input_scroll(a0, a1);
@@ -3241,8 +3241,8 @@ static mrb_value GenR_nk_input_unicode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    nk_rune a1 = (nk_rune)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    nk_rune a1 = (nk_rune)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_input_unicode(a0, a1);
     return mrb_nil_value();
     }
@@ -3255,7 +3255,7 @@ static mrb_value GenR_nk_item_is_any_active(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_bool rv = nk_item_is_any_active(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3268,13 +3268,13 @@ static mrb_value GenR_nk_knob_float(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float io2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    enum nk_heading a5 = (enum nk_heading)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    enum nk_heading a5 = (enum nk_heading)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     nk_bool rv = nk_knob_float(a0, a1, &io2, a3, a4, a5, a6);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -3290,13 +3290,13 @@ static mrb_value GenR_nk_knob_int(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    enum nk_heading a5 = (enum nk_heading)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    enum nk_heading a5 = (enum nk_heading)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     nk_bool rv = nk_knob_int(a0, a1, &io2, a3, a4, a5, a6);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -3312,9 +3312,9 @@ static mrb_value GenR_nk_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_flags a2 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_flags a2 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_label(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -3327,9 +3327,9 @@ static mrb_value GenR_nk_label_colored(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_flags a2 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_flags a2 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_color a3;
     GenRead_nk_color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     nk_label_colored(a0, a1, a2, a3);
@@ -3344,8 +3344,8 @@ static mrb_value GenR_nk_label_colored_wrap(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_color a2;
     GenRead_nk_color(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     nk_label_colored_wrap(a0, a1, a2);
@@ -3360,8 +3360,8 @@ static mrb_value GenR_nk_label_wrap(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_label_wrap(a0, a1);
     return mrb_nil_value();
     }
@@ -3374,8 +3374,8 @@ static mrb_value GenR_nk_layout_ratio_from_pixel(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     float rv = nk_layout_ratio_from_pixel(a0, a1);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -3388,7 +3388,7 @@ static mrb_value GenR_nk_layout_reset_min_row_height(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_layout_reset_min_row_height(a0);
     return mrb_nil_value();
     }
@@ -3401,10 +3401,10 @@ static mrb_value GenR_nk_layout_row_begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_layout_format a1 = (enum nk_layout_format)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_layout_format a1 = (enum nk_layout_format)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_layout_row_begin(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -3417,9 +3417,9 @@ static mrb_value GenR_nk_layout_row_dynamic(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_layout_row_dynamic(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -3432,7 +3432,7 @@ static mrb_value GenR_nk_layout_row_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_layout_row_end(a0);
     return mrb_nil_value();
     }
@@ -3445,8 +3445,8 @@ static mrb_value GenR_nk_layout_row_push(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_layout_row_push(a0, a1);
     return mrb_nil_value();
     }
@@ -3459,10 +3459,10 @@ static mrb_value GenR_nk_layout_row_static(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_layout_row_static(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -3475,8 +3475,8 @@ static mrb_value GenR_nk_layout_row_template_begin(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_layout_row_template_begin(a0, a1);
     return mrb_nil_value();
     }
@@ -3489,7 +3489,7 @@ static mrb_value GenR_nk_layout_row_template_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_layout_row_template_end(a0);
     return mrb_nil_value();
     }
@@ -3502,7 +3502,7 @@ static mrb_value GenR_nk_layout_row_template_push_dynamic(mrb_state *mrb, mrb_va
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_layout_row_template_push_dynamic(a0);
     return mrb_nil_value();
     }
@@ -3515,8 +3515,8 @@ static mrb_value GenR_nk_layout_row_template_push_static(mrb_state *mrb, mrb_val
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_layout_row_template_push_static(a0, a1);
     return mrb_nil_value();
     }
@@ -3529,8 +3529,8 @@ static mrb_value GenR_nk_layout_row_template_push_variable(mrb_state *mrb, mrb_v
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_layout_row_template_push_variable(a0, a1);
     return mrb_nil_value();
     }
@@ -3543,8 +3543,8 @@ static mrb_value GenR_nk_layout_set_min_row_height(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_layout_set_min_row_height(a0, a1);
     return mrb_nil_value();
     }
@@ -3557,10 +3557,10 @@ static mrb_value GenR_nk_layout_space_begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_layout_format a1 = (enum nk_layout_format)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_layout_format a1 = (enum nk_layout_format)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_layout_space_begin(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -3573,7 +3573,7 @@ static mrb_value GenR_nk_layout_space_bounds(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_rect rv = nk_layout_space_bounds(a0);
     return GenPush_nk_rect(mrb, &rv);
     }
@@ -3586,7 +3586,7 @@ static mrb_value GenR_nk_layout_space_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_layout_space_end(a0);
     return mrb_nil_value();
     }
@@ -3599,7 +3599,7 @@ static mrb_value GenR_nk_layout_space_push(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_layout_space_push(a0, a1);
@@ -3614,7 +3614,7 @@ static mrb_value GenR_nk_layout_space_rect_to_local(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     struct nk_rect rv = nk_layout_space_rect_to_local(a0, a1);
@@ -3629,7 +3629,7 @@ static mrb_value GenR_nk_layout_space_rect_to_screen(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     struct nk_rect rv = nk_layout_space_rect_to_screen(a0, a1);
@@ -3644,7 +3644,7 @@ static mrb_value GenR_nk_layout_space_to_local(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_vec2 a1;
     GenRead_nk_vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     struct nk_vec2 rv = nk_layout_space_to_local(a0, a1);
@@ -3659,7 +3659,7 @@ static mrb_value GenR_nk_layout_space_to_screen(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_vec2 a1;
     GenRead_nk_vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     struct nk_vec2 rv = nk_layout_space_to_screen(a0, a1);
@@ -3674,7 +3674,7 @@ static mrb_value GenR_nk_layout_widget_bounds(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_rect rv = nk_layout_widget_bounds(a0);
     return GenPush_nk_rect(mrb, &rv);
     }
@@ -3687,12 +3687,12 @@ static mrb_value GenR_nk_list_view_begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    struct nk_list_view *a1 = (struct nk_list_view *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_list_view");
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    int a5 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_list_view *a1 = (struct nk_list_view *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_list_view");
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    int a5 = (int)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     nk_bool rv = nk_list_view_begin(a0, a1, a2, a3, a4, a5);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3705,7 +3705,7 @@ static mrb_value GenR_nk_list_view_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_list_view *a0 = (struct nk_list_view *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_list_view");
+    struct nk_list_view *a0 = (struct nk_list_view *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_list_view");
     nk_list_view_end(a0);
     return mrb_nil_value();
     }
@@ -3718,9 +3718,9 @@ static mrb_value GenR_nk_menu_begin_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_flags a2 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_flags a2 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_vec2 a3;
     GenRead_nk_vec2(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     nk_bool rv = nk_menu_begin_label(a0, a1, a2, a3);
@@ -3735,9 +3735,9 @@ static mrb_value GenR_nk_menu_begin_symbol(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    enum nk_symbol_type a2 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    enum nk_symbol_type a2 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_vec2 a3;
     GenRead_nk_vec2(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     nk_bool rv = nk_menu_begin_symbol(a0, a1, a2, a3);
@@ -3752,10 +3752,10 @@ static mrb_value GenR_nk_menu_begin_symbol_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_flags a2 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    enum nk_symbol_type a3 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_flags a2 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    enum nk_symbol_type a3 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_vec2 a4;
     GenRead_nk_vec2(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
     nk_bool rv = nk_menu_begin_symbol_label(a0, a1, a2, a3, a4);
@@ -3770,11 +3770,11 @@ static mrb_value GenR_nk_menu_begin_symbol_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    enum nk_symbol_type a4 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    enum nk_symbol_type a4 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     struct nk_vec2 a5;
     GenRead_nk_vec2(mrb, (argc > 5 ? argv[5] : mrb_nil_value()), &a5);
     nk_bool rv = nk_menu_begin_symbol_text(a0, a1, a2, a3, a4, a5);
@@ -3789,10 +3789,10 @@ static mrb_value GenR_nk_menu_begin_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_vec2 a4;
     GenRead_nk_vec2(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
     nk_bool rv = nk_menu_begin_text(a0, a1, a2, a3, a4);
@@ -3807,7 +3807,7 @@ static mrb_value GenR_nk_menu_close(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_menu_close(a0);
     return mrb_nil_value();
     }
@@ -3820,7 +3820,7 @@ static mrb_value GenR_nk_menu_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_menu_end(a0);
     return mrb_nil_value();
     }
@@ -3833,9 +3833,9 @@ static mrb_value GenR_nk_menu_item_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_flags a2 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_flags a2 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_bool rv = nk_menu_item_label(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3848,10 +3848,10 @@ static mrb_value GenR_nk_menu_item_symbol_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_symbol_type a1 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_symbol_type a1 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_menu_item_symbol_label(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3864,11 +3864,11 @@ static mrb_value GenR_nk_menu_item_symbol_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_symbol_type a1 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_flags a4 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_symbol_type a1 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_flags a4 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_menu_item_symbol_text(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3881,10 +3881,10 @@ static mrb_value GenR_nk_menu_item_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_menu_item_text(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3897,7 +3897,7 @@ static mrb_value GenR_nk_menubar_begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_menubar_begin(a0);
     return mrb_nil_value();
     }
@@ -3910,7 +3910,7 @@ static mrb_value GenR_nk_menubar_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_menubar_end(a0);
     return mrb_nil_value();
     }
@@ -3924,8 +3924,8 @@ static mrb_value GenR_nk_murmur_hash(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     size_t len0 = 0;
-    const char *a0 = SDLStaticGen_RubyToBlob(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &len0);
-    nk_hash a2 = (nk_hash)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToBlob(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &len0);
+    nk_hash a2 = (nk_hash)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_hash rv = nk_murmur_hash((const void *)a0, (int)len0, a2);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3938,7 +3938,7 @@ static mrb_value GenR_nk_nine_slice_is_sub9slice(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_nine_slice *a0 = (const struct nk_nine_slice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_nine_slice");
+    const struct nk_nine_slice *a0 = (const struct nk_nine_slice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_nine_slice");
     int rv = nk_nine_slice_is_sub9slice(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3951,9 +3951,9 @@ static mrb_value GenR_nk_option_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_bool a2 = (nk_bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_bool a2 = (nk_bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     nk_bool rv = nk_option_label(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3966,11 +3966,11 @@ static mrb_value GenR_nk_option_label_align(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_bool a2 = (nk_bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_flags a4 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_bool a2 = (nk_bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_flags a4 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_option_label_align(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3983,10 +3983,10 @@ static mrb_value GenR_nk_option_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_bool a3 = (nk_bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_bool a3 = (nk_bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_option_text(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3999,12 +3999,12 @@ static mrb_value GenR_nk_option_text_align(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_bool a3 = (nk_bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_flags a4 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    nk_flags a5 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_bool a3 = (nk_bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_flags a4 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    nk_flags a5 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     nk_bool rv = nk_option_text_align(a0, a1, a2, a3, a4, a5);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -4017,10 +4017,10 @@ static mrb_value GenR_nk_popup_begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_popup_type a1 = (enum nk_popup_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_popup_type a1 = (enum nk_popup_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_rect a4;
     GenRead_nk_rect(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
     nk_bool rv = nk_popup_begin(a0, a1, a2, a3, a4);
@@ -4035,7 +4035,7 @@ static mrb_value GenR_nk_popup_close(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_popup_close(a0);
     return mrb_nil_value();
     }
@@ -4048,7 +4048,7 @@ static mrb_value GenR_nk_popup_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_popup_end(a0);
     return mrb_nil_value();
     }
@@ -4061,9 +4061,9 @@ static mrb_value GenR_nk_popup_get_scroll(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    nk_uint io1 = (nk_uint)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_uint io2 = (nk_uint)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    nk_uint io1 = (nk_uint)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_uint io2 = (nk_uint)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_popup_get_scroll(a0, &io1, &io2);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)io1);
@@ -4079,9 +4079,9 @@ static mrb_value GenR_nk_popup_set_scroll(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    nk_uint a1 = (nk_uint)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_uint a2 = (nk_uint)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    nk_uint a1 = (nk_uint)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_uint a2 = (nk_uint)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_popup_set_scroll(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -4094,10 +4094,10 @@ static mrb_value GenR_nk_prog(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    nk_size a1 = (nk_size)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_size a2 = (nk_size)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_bool a3 = (nk_bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    nk_size a1 = (nk_size)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_size a2 = (nk_size)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_bool a3 = (nk_bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     nk_size rv = nk_prog(a0, a1, a2, a3);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4110,10 +4110,10 @@ static mrb_value GenR_nk_progress(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    nk_size io1 = (nk_size)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_size a2 = (nk_size)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_bool a3 = (nk_bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    nk_size io1 = (nk_size)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_size a2 = (nk_size)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_bool a3 = (nk_bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_progress(a0, &io1, a2, a3);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4129,13 +4129,13 @@ static mrb_value GenR_nk_property_double(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    double a2 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    double io3 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    double a4 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    double a5 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    double a2 = (double)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    double io3 = (double)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    double a4 = (double)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    double a5 = (double)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     nk_bool rv = nk_property_double(a0, a1, a2, &io3, a4, a5, a6);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4151,13 +4151,13 @@ static mrb_value GenR_nk_property_float(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float io3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float io3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     nk_bool rv = nk_property_float(a0, a1, a2, &io3, a4, a5, a6);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4173,13 +4173,13 @@ static mrb_value GenR_nk_property_int(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int io3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    int a5 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int io3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    int a5 = (int)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     nk_bool rv = nk_property_int(a0, a1, a2, &io3, a4, a5, a6);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4195,13 +4195,13 @@ static mrb_value GenR_nk_propertyd(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    double a2 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    double a3 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    double a4 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    double a5 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    double a2 = (double)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    double a3 = (double)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    double a4 = (double)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    double a5 = (double)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     double rv = nk_propertyd(a0, a1, a2, a3, a4, a5, a6);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -4214,13 +4214,13 @@ static mrb_value GenR_nk_propertyf(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     float rv = nk_propertyf(a0, a1, a2, a3, a4, a5, a6);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -4233,13 +4233,13 @@ static mrb_value GenR_nk_propertyi(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    int a5 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    int a5 = (int)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     int rv = nk_propertyi(a0, a1, a2, a3, a4, a5, a6);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4252,7 +4252,7 @@ static mrb_value GenR_nk_push_scissor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_command_buffer *a0 = (struct nk_command_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
+    struct nk_command_buffer *a0 = (struct nk_command_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     nk_push_scissor(a0, a1);
@@ -4267,9 +4267,9 @@ static mrb_value GenR_nk_radio_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_bool io2 = (nk_bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_bool io2 = (nk_bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     nk_bool rv = nk_radio_label(a0, a1, &io2);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4285,11 +4285,11 @@ static mrb_value GenR_nk_radio_label_align(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_bool io2 = (nk_bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_flags a4 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_bool io2 = (nk_bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_flags a4 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_radio_label_align(a0, a1, &io2, a3, a4);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4305,10 +4305,10 @@ static mrb_value GenR_nk_radio_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_bool io3 = (nk_bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_bool io3 = (nk_bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_radio_text(a0, a1, a2, &io3);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4324,12 +4324,12 @@ static mrb_value GenR_nk_radio_text_align(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_bool io3 = (nk_bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_flags a4 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    nk_flags a5 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_bool io3 = (nk_bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_flags a4 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    nk_flags a5 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     nk_bool rv = nk_radio_text_align(a0, a1, a2, &io3, a4, a5);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4345,10 +4345,10 @@ static mrb_value GenR_nk_rect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_rect rv = nk_rect(a0, a1, a2, a3);
     return GenPush_nk_rect(mrb, &rv);
     }
@@ -4405,10 +4405,10 @@ static mrb_value GenR_nk_recti(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_rect rv = nk_recti(a0, a1, a2, a3);
     return GenPush_nk_rect(mrb, &rv);
     }
@@ -4421,9 +4421,9 @@ static mrb_value GenR_nk_rgb(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_color rv = nk_rgb(a0, a1, a2);
     return GenPush_nk_color(mrb, &rv);
     }
@@ -4450,9 +4450,9 @@ static mrb_value GenR_nk_rgb_f(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_color rv = nk_rgb_f(a0, a1, a2);
     return GenPush_nk_color(mrb, &rv);
     }
@@ -4467,7 +4467,7 @@ static mrb_value GenR_nk_rgb_factor(mrb_state *mrb, mrb_value self)
     {
     struct nk_color a0;
     GenRead_nk_color(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_color rv = nk_rgb_factor(a0, a1);
     return GenPush_nk_color(mrb, &rv);
     }
@@ -4480,7 +4480,7 @@ static mrb_value GenR_nk_rgb_hex(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     struct nk_color rv = nk_rgb_hex(a0);
     return GenPush_nk_color(mrb, &rv);
     }
@@ -4493,10 +4493,10 @@ static mrb_value GenR_nk_rgba(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_color rv = nk_rgba(a0, a1, a2, a3);
     return GenPush_nk_color(mrb, &rv);
     }
@@ -4523,10 +4523,10 @@ static mrb_value GenR_nk_rgba_f(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_color rv = nk_rgba_f(a0, a1, a2, a3);
     return GenPush_nk_color(mrb, &rv);
     }
@@ -4539,7 +4539,7 @@ static mrb_value GenR_nk_rgba_hex(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     struct nk_color rv = nk_rgba_hex(a0);
     return GenPush_nk_color(mrb, &rv);
     }
@@ -4552,7 +4552,7 @@ static mrb_value GenR_nk_rgba_u32(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    nk_uint a0 = (nk_uint)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    nk_uint a0 = (nk_uint)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     struct nk_color rv = nk_rgba_u32(a0);
     return GenPush_nk_color(mrb, &rv);
     }
@@ -4565,10 +4565,10 @@ static mrb_value GenR_nk_rule_horizontal(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_color a1;
     GenRead_nk_color(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    nk_bool a2 = (nk_bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_bool a2 = (nk_bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     nk_rule_horizontal(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -4581,10 +4581,10 @@ static mrb_value GenR_nk_select_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_flags a2 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_bool a3 = (nk_bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_flags a2 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_bool a3 = (nk_bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_select_label(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -4597,11 +4597,11 @@ static mrb_value GenR_nk_select_symbol_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_symbol_type a1 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_bool a4 = (nk_bool)SDLStaticGen_RubyToBool((argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_symbol_type a1 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_bool a4 = (nk_bool)GrappleGen_RubyToBool((argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_select_symbol_label(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -4614,12 +4614,12 @@ static mrb_value GenR_nk_select_symbol_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_symbol_type a1 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_flags a4 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    nk_bool a5 = (nk_bool)SDLStaticGen_RubyToBool((argc > 5 ? argv[5] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_symbol_type a1 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_flags a4 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    nk_bool a5 = (nk_bool)GrappleGen_RubyToBool((argc > 5 ? argv[5] : mrb_nil_value()));
     nk_bool rv = nk_select_symbol_text(a0, a1, a2, a3, a4, a5);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -4632,11 +4632,11 @@ static mrb_value GenR_nk_select_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_bool a4 = (nk_bool)SDLStaticGen_RubyToBool((argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_bool a4 = (nk_bool)GrappleGen_RubyToBool((argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_select_text(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -4649,10 +4649,10 @@ static mrb_value GenR_nk_selectable_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_flags a2 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_bool io3 = (nk_bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_flags a2 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_bool io3 = (nk_bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_selectable_label(a0, a1, a2, &io3);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4668,11 +4668,11 @@ static mrb_value GenR_nk_selectable_symbol_label(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_symbol_type a1 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_bool io4 = (nk_bool)SDLStaticGen_RubyToBool((argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_symbol_type a1 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_bool io4 = (nk_bool)GrappleGen_RubyToBool((argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_selectable_symbol_label(a0, a1, a2, a3, &io4);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4688,12 +4688,12 @@ static mrb_value GenR_nk_selectable_symbol_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_symbol_type a1 = (enum nk_symbol_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_flags a4 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    nk_bool io5 = (nk_bool)SDLStaticGen_RubyToBool((argc > 5 ? argv[5] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_symbol_type a1 = (enum nk_symbol_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_flags a4 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    nk_bool io5 = (nk_bool)GrappleGen_RubyToBool((argc > 5 ? argv[5] : mrb_nil_value()));
     nk_bool rv = nk_selectable_symbol_text(a0, a1, a2, a3, a4, &io5);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4709,11 +4709,11 @@ static mrb_value GenR_nk_selectable_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_bool io4 = (nk_bool)SDLStaticGen_RubyToBool((argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_bool io4 = (nk_bool)GrappleGen_RubyToBool((argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_selectable_text(a0, a1, a2, a3, &io4);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4729,11 +4729,11 @@ static mrb_value GenR_nk_slide_float(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     float rv = nk_slide_float(a0, a1, a2, a3, a4);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -4746,11 +4746,11 @@ static mrb_value GenR_nk_slide_int(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     int rv = nk_slide_int(a0, a1, a2, a3, a4);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4763,11 +4763,11 @@ static mrb_value GenR_nk_slider_float(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float io2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_slider_float(a0, a1, &io2, a3, a4);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4783,11 +4783,11 @@ static mrb_value GenR_nk_slider_int(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     nk_bool rv = nk_slider_int(a0, a1, &io2, a3, a4);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4803,7 +4803,7 @@ static mrb_value GenR_nk_spacer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_spacer(a0);
     return mrb_nil_value();
     }
@@ -4816,8 +4816,8 @@ static mrb_value GenR_nk_spacing(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_spacing(a0, a1);
     return mrb_nil_value();
     }
@@ -4830,8 +4830,8 @@ static mrb_value GenR_nk_str_append_str_char(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = nk_str_append_str_char(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4844,8 +4844,8 @@ static mrb_value GenR_nk_str_append_str_utf8(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = nk_str_append_str_utf8(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4858,9 +4858,9 @@ static mrb_value GenR_nk_str_append_text_char(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     int rv = nk_str_append_text_char(a0, a1, a2);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4873,9 +4873,9 @@ static mrb_value GenR_nk_str_append_text_utf8(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     int rv = nk_str_append_text_utf8(a0, a1, a2);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4888,8 +4888,8 @@ static mrb_value GenR_nk_str_at_char_const(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_str *a0 = (const struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_str *a0 = (const struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     const char * rv = nk_str_at_char_const(a0, a1);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4902,10 +4902,10 @@ static mrb_value GenR_nk_str_at_const(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_str *a0 = (const struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_rune io2 = (nk_rune)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int io3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    const struct nk_str *a0 = (const struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_rune io2 = (nk_rune)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int io3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     const char * rv = nk_str_at_const(a0, a1, &io2, &io3);
     mrb_value rets[3];
     rets[0] = (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
@@ -4922,7 +4922,7 @@ static mrb_value GenR_nk_str_clear(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
     nk_str_clear(a0);
     return mrb_nil_value();
     }
@@ -4935,9 +4935,9 @@ static mrb_value GenR_nk_str_delete_chars(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_str_delete_chars(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -4950,9 +4950,9 @@ static mrb_value GenR_nk_str_delete_runes(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_str_delete_runes(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -4965,7 +4965,7 @@ static mrb_value GenR_nk_str_free(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
     nk_str_free(a0);
     return mrb_nil_value();
     }
@@ -4978,7 +4978,7 @@ static mrb_value GenR_nk_str_get_const(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_str *a0 = (const struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    const struct nk_str *a0 = (const struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
     const char * rv = nk_str_get_const(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4991,9 +4991,9 @@ static mrb_value GenR_nk_str_init(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    const struct nk_allocator *a1 = (const struct nk_allocator *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_allocator");
-    nk_size a2 = (nk_size)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    const struct nk_allocator *a1 = (const struct nk_allocator *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_allocator");
+    nk_size a2 = (nk_size)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_str_init(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -5006,7 +5006,7 @@ static mrb_value GenR_nk_str_init_default(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
     nk_str_init_default(a0);
     return mrb_nil_value();
     }
@@ -5019,10 +5019,10 @@ static mrb_value GenR_nk_str_insert_at_char(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     int rv = nk_str_insert_at_char(a0, a1, a2, a3);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5035,10 +5035,10 @@ static mrb_value GenR_nk_str_insert_at_rune(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     int rv = nk_str_insert_at_rune(a0, a1, a2, a3);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5051,9 +5051,9 @@ static mrb_value GenR_nk_str_insert_str_char(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     int rv = nk_str_insert_str_char(a0, a1, a2);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5066,9 +5066,9 @@ static mrb_value GenR_nk_str_insert_str_utf8(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     int rv = nk_str_insert_str_utf8(a0, a1, a2);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5081,10 +5081,10 @@ static mrb_value GenR_nk_str_insert_text_char(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     int rv = nk_str_insert_text_char(a0, a1, a2, a3);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5097,10 +5097,10 @@ static mrb_value GenR_nk_str_insert_text_utf8(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     int rv = nk_str_insert_text_utf8(a0, a1, a2, a3);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5113,7 +5113,7 @@ static mrb_value GenR_nk_str_len(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_str *a0 = (const struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    const struct nk_str *a0 = (const struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
     int rv = nk_str_len(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5126,7 +5126,7 @@ static mrb_value GenR_nk_str_len_char(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_str *a0 = (const struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    const struct nk_str *a0 = (const struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
     int rv = nk_str_len_char(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5139,8 +5139,8 @@ static mrb_value GenR_nk_str_remove_chars(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_str_remove_chars(a0, a1);
     return mrb_nil_value();
     }
@@ -5153,8 +5153,8 @@ static mrb_value GenR_nk_str_remove_runes(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_str *a0 = (struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_str_remove_runes(a0, a1);
     return mrb_nil_value();
     }
@@ -5167,8 +5167,8 @@ static mrb_value GenR_nk_str_rune_at(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_str *a0 = (const struct nk_str *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_str *a0 = (const struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_rune rv = nk_str_rune_at(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5181,8 +5181,8 @@ static mrb_value GenR_nk_strfilter(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = nk_strfilter(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5195,8 +5195,8 @@ static mrb_value GenR_nk_stricmp(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = nk_stricmp(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5209,9 +5209,9 @@ static mrb_value GenR_nk_stricmpn(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     int rv = nk_stricmpn(a0, a1, a2);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5224,7 +5224,7 @@ static mrb_value GenR_nk_strlen(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     int rv = nk_strlen(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5237,9 +5237,9 @@ static mrb_value GenR_nk_strmatch_fuzzy_string(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     int rv = nk_strmatch_fuzzy_string(a0, a1, &io2);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -5255,10 +5255,10 @@ static mrb_value GenR_nk_strmatch_fuzzy_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int io3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int io3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     int rv = nk_strmatch_fuzzy_text(a0, a1, a2, &io3);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -5274,13 +5274,13 @@ static mrb_value GenR_nk_stroke_arc(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_command_buffer *a0 = (struct nk_command_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    struct nk_command_buffer *a0 = (struct nk_command_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     struct nk_color a7;
     GenRead_nk_color(mrb, (argc > 7 ? argv[7] : mrb_nil_value()), &a7);
     nk_stroke_arc(a0, a1, a2, a3, a4, a5, a6, a7);
@@ -5295,10 +5295,10 @@ static mrb_value GenR_nk_stroke_circle(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_command_buffer *a0 = (struct nk_command_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
+    struct nk_command_buffer *a0 = (struct nk_command_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_color a3;
     GenRead_nk_color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     nk_stroke_circle(a0, a1, a2, a3);
@@ -5313,16 +5313,16 @@ static mrb_value GenR_nk_stroke_curve(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_command_buffer *a0 = (struct nk_command_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
-    float a7 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 7 ? argv[7] : mrb_nil_value()));
-    float a8 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 8 ? argv[8] : mrb_nil_value()));
-    float a9 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 9 ? argv[9] : mrb_nil_value()));
+    struct nk_command_buffer *a0 = (struct nk_command_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    float a7 = (float)GrappleGen_RubyToNum(mrb, (argc > 7 ? argv[7] : mrb_nil_value()));
+    float a8 = (float)GrappleGen_RubyToNum(mrb, (argc > 8 ? argv[8] : mrb_nil_value()));
+    float a9 = (float)GrappleGen_RubyToNum(mrb, (argc > 9 ? argv[9] : mrb_nil_value()));
     struct nk_color a10;
     GenRead_nk_color(mrb, (argc > 10 ? argv[10] : mrb_nil_value()), &a10);
     nk_stroke_curve(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
@@ -5337,12 +5337,12 @@ static mrb_value GenR_nk_stroke_line(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_command_buffer *a0 = (struct nk_command_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    struct nk_command_buffer *a0 = (struct nk_command_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     struct nk_color a6;
     GenRead_nk_color(mrb, (argc > 6 ? argv[6] : mrb_nil_value()), &a6);
     nk_stroke_line(a0, a1, a2, a3, a4, a5, a6);
@@ -5357,11 +5357,11 @@ static mrb_value GenR_nk_stroke_rect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_command_buffer *a0 = (struct nk_command_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
+    struct nk_command_buffer *a0 = (struct nk_command_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_color a4;
     GenRead_nk_color(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
     nk_stroke_rect(a0, a1, a2, a3, a4);
@@ -5376,14 +5376,14 @@ static mrb_value GenR_nk_stroke_triangle(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_command_buffer *a0 = (struct nk_command_buffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
-    float a7 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 7 ? argv[7] : mrb_nil_value()));
+    struct nk_command_buffer *a0 = (struct nk_command_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_command_buffer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    float a7 = (float)GrappleGen_RubyToNum(mrb, (argc > 7 ? argv[7] : mrb_nil_value()));
     struct nk_color a8;
     GenRead_nk_color(mrb, (argc > 8 ? argv[8] : mrb_nil_value()), &a8);
     nk_stroke_triangle(a0, a1, a2, a3, a4, a5, a6, a7, a8);
@@ -5398,7 +5398,7 @@ static mrb_value GenR_nk_style_default(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_style_default(a0);
     return mrb_nil_value();
     }
@@ -5411,7 +5411,7 @@ static mrb_value GenR_nk_style_from_table(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_color tmp1;
     const struct nk_color *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -5430,7 +5430,7 @@ static mrb_value GenR_nk_style_get_color_by_name(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    enum nk_style_colors a0 = (enum nk_style_colors)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    enum nk_style_colors a0 = (enum nk_style_colors)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = nk_style_get_color_by_name(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -5443,7 +5443,7 @@ static mrb_value GenR_nk_style_hide_cursor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_style_hide_cursor(a0);
     return mrb_nil_value();
     }
@@ -5456,8 +5456,8 @@ static mrb_value GenR_nk_style_load_all_cursors(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const struct nk_cursor *a1 = (const struct nk_cursor *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_cursor");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_cursor *a1 = (const struct nk_cursor *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_cursor");
     nk_style_load_all_cursors(a0, a1);
     return mrb_nil_value();
     }
@@ -5470,9 +5470,9 @@ static mrb_value GenR_nk_style_load_cursor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_style_cursor a1 = (enum nk_style_cursor)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const struct nk_cursor *a2 = (const struct nk_cursor *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_cursor");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_style_cursor a1 = (enum nk_style_cursor)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_cursor *a2 = (const struct nk_cursor *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_cursor");
     nk_style_load_cursor(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -5485,7 +5485,7 @@ static mrb_value GenR_nk_style_pop_color(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_bool rv = nk_style_pop_color(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -5498,7 +5498,7 @@ static mrb_value GenR_nk_style_pop_flags(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_bool rv = nk_style_pop_flags(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -5511,7 +5511,7 @@ static mrb_value GenR_nk_style_pop_float(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_bool rv = nk_style_pop_float(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -5524,7 +5524,7 @@ static mrb_value GenR_nk_style_pop_font(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_bool rv = nk_style_pop_font(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -5537,7 +5537,7 @@ static mrb_value GenR_nk_style_pop_style_item(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_bool rv = nk_style_pop_style_item(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -5550,7 +5550,7 @@ static mrb_value GenR_nk_style_pop_vec2(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_bool rv = nk_style_pop_vec2(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -5563,7 +5563,7 @@ static mrb_value GenR_nk_style_push_color(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_color out1;
     memset(&out1, 0, sizeof(out1));
     struct nk_color a2;
@@ -5583,9 +5583,9 @@ static mrb_value GenR_nk_style_push_flags(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    nk_flags io1 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_flags a2 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    nk_flags io1 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_flags a2 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_bool rv = nk_style_push_flags(a0, &io1, a2);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -5601,9 +5601,9 @@ static mrb_value GenR_nk_style_push_float(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_bool rv = nk_style_push_float(a0, &io1, a2);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -5619,8 +5619,8 @@ static mrb_value GenR_nk_style_push_font(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const struct nk_user_font *a1 = (const struct nk_user_font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_user_font");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_user_font *a1 = (const struct nk_user_font *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_user_font");
     nk_bool rv = nk_style_push_font(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -5633,7 +5633,7 @@ static mrb_value GenR_nk_style_push_vec2(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_vec2 out1;
     memset(&out1, 0, sizeof(out1));
     struct nk_vec2 a2;
@@ -5653,8 +5653,8 @@ static mrb_value GenR_nk_style_set_cursor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_style_cursor a1 = (enum nk_style_cursor)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_style_cursor a1 = (enum nk_style_cursor)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_style_set_cursor(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -5667,8 +5667,8 @@ static mrb_value GenR_nk_style_set_font(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const struct nk_user_font *a1 = (const struct nk_user_font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_user_font");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_user_font *a1 = (const struct nk_user_font *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_user_font");
     nk_style_set_font(a0, a1);
     return mrb_nil_value();
     }
@@ -5681,7 +5681,7 @@ static mrb_value GenR_nk_style_show_cursor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_style_show_cursor(a0);
     return mrb_nil_value();
     }
@@ -5694,10 +5694,10 @@ static mrb_value GenR_nk_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_text(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -5710,10 +5710,10 @@ static mrb_value GenR_nk_text_colored(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_flags a3 = (nk_flags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_flags a3 = (nk_flags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     struct nk_color a4;
     GenRead_nk_color(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
     nk_text_colored(a0, a1, a2, a3, a4);
@@ -5728,9 +5728,9 @@ static mrb_value GenR_nk_text_wrap(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_text_wrap(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -5743,9 +5743,9 @@ static mrb_value GenR_nk_text_wrap_colored(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_color a3;
     GenRead_nk_color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     nk_text_wrap_colored(a0, a1, a2, a3);
@@ -5760,7 +5760,7 @@ static mrb_value GenR_nk_textedit_cut(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_text_edit *a0 = (struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    struct nk_text_edit *a0 = (struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
     nk_bool rv = nk_textedit_cut(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -5773,9 +5773,9 @@ static mrb_value GenR_nk_textedit_delete(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_text_edit *a0 = (struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_text_edit *a0 = (struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_textedit_delete(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -5788,7 +5788,7 @@ static mrb_value GenR_nk_textedit_delete_selection(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_text_edit *a0 = (struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    struct nk_text_edit *a0 = (struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
     nk_textedit_delete_selection(a0);
     return mrb_nil_value();
     }
@@ -5801,7 +5801,7 @@ static mrb_value GenR_nk_textedit_free(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_text_edit *a0 = (struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    struct nk_text_edit *a0 = (struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
     nk_textedit_free(a0);
     return mrb_nil_value();
     }
@@ -5814,9 +5814,9 @@ static mrb_value GenR_nk_textedit_init(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_text_edit *a0 = (struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
-    const struct nk_allocator *a1 = (const struct nk_allocator *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_allocator");
-    nk_size a2 = (nk_size)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_text_edit *a0 = (struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    const struct nk_allocator *a1 = (const struct nk_allocator *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_allocator");
+    nk_size a2 = (nk_size)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_textedit_init(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -5829,7 +5829,7 @@ static mrb_value GenR_nk_textedit_init_default(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_text_edit *a0 = (struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    struct nk_text_edit *a0 = (struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
     nk_textedit_init_default(a0);
     return mrb_nil_value();
     }
@@ -5842,9 +5842,9 @@ static mrb_value GenR_nk_textedit_paste(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_text_edit *a0 = (struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_text_edit *a0 = (struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_bool rv = nk_textedit_paste(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -5857,7 +5857,7 @@ static mrb_value GenR_nk_textedit_redo(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_text_edit *a0 = (struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    struct nk_text_edit *a0 = (struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
     nk_textedit_redo(a0);
     return mrb_nil_value();
     }
@@ -5870,7 +5870,7 @@ static mrb_value GenR_nk_textedit_select_all(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_text_edit *a0 = (struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    struct nk_text_edit *a0 = (struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
     nk_textedit_select_all(a0);
     return mrb_nil_value();
     }
@@ -5883,9 +5883,9 @@ static mrb_value GenR_nk_textedit_text(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_text_edit *a0 = (struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_text_edit *a0 = (struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_textedit_text(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -5898,7 +5898,7 @@ static mrb_value GenR_nk_textedit_undo(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_text_edit *a0 = (struct nk_text_edit *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    struct nk_text_edit *a0 = (struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
     nk_textedit_undo(a0);
     return mrb_nil_value();
     }
@@ -5911,8 +5911,8 @@ static mrb_value GenR_nk_tooltip(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_tooltip(a0, a1);
     return mrb_nil_value();
     }
@@ -5925,8 +5925,8 @@ static mrb_value GenR_nk_tooltip_begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_tooltip_begin(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -5939,9 +5939,9 @@ static mrb_value GenR_nk_tooltip_begin_offset(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    enum nk_tooltip_pos a2 = (enum nk_tooltip_pos)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    enum nk_tooltip_pos a2 = (enum nk_tooltip_pos)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_vec2 a3;
     GenRead_nk_vec2(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     nk_bool rv = nk_tooltip_begin_offset(a0, a1, a2, a3);
@@ -5956,7 +5956,7 @@ static mrb_value GenR_nk_tooltip_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_tooltip_end(a0);
     return mrb_nil_value();
     }
@@ -5969,9 +5969,9 @@ static mrb_value GenR_nk_tooltip_offset(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    enum nk_tooltip_pos a2 = (enum nk_tooltip_pos)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    enum nk_tooltip_pos a2 = (enum nk_tooltip_pos)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     struct nk_vec2 a3;
     GenRead_nk_vec2(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     nk_tooltip_offset(a0, a1, a2, a3);
@@ -5986,7 +5986,7 @@ static mrb_value GenR_nk_tree_element_pop(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_tree_element_pop(a0);
     return mrb_nil_value();
     }
@@ -5999,14 +5999,14 @@ static mrb_value GenR_nk_tree_element_push_hashed(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_tree_type a1 = (enum nk_tree_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    enum nk_collapse_states a3 = (enum nk_collapse_states)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    nk_bool io4 = (nk_bool)SDLStaticGen_RubyToBool((argc > 4 ? argv[4] : mrb_nil_value()));
-    const char *a5 = SDLStaticGen_RubyToStr(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    int a6 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
-    int a7 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 7 ? argv[7] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_tree_type a1 = (enum nk_tree_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    enum nk_collapse_states a3 = (enum nk_collapse_states)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    nk_bool io4 = (nk_bool)GrappleGen_RubyToBool((argc > 4 ? argv[4] : mrb_nil_value()));
+    const char *a5 = GrappleGen_RubyToStr(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    int a6 = (int)GrappleGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    int a7 = (int)GrappleGen_RubyToInt(mrb, (argc > 7 ? argv[7] : mrb_nil_value()));
     nk_bool rv = nk_tree_element_push_hashed(a0, a1, a2, a3, &io4, a5, a6, a7);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6022,7 +6022,7 @@ static mrb_value GenR_nk_tree_pop(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_tree_pop(a0);
     return mrb_nil_value();
     }
@@ -6035,13 +6035,13 @@ static mrb_value GenR_nk_tree_push_hashed(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_tree_type a1 = (enum nk_tree_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    enum nk_collapse_states a3 = (enum nk_collapse_states)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    const char *a4 = SDLStaticGen_RubyToStr(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    int a5 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    int a6 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_tree_type a1 = (enum nk_tree_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    enum nk_collapse_states a3 = (enum nk_collapse_states)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    const char *a4 = GrappleGen_RubyToStr(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    int a5 = (int)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    int a6 = (int)GrappleGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     nk_bool rv = nk_tree_push_hashed(a0, a1, a2, a3, a4, a5, a6);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -6054,7 +6054,7 @@ static mrb_value GenR_nk_tree_state_pop(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_tree_state_pop(a0);
     return mrb_nil_value();
     }
@@ -6067,10 +6067,10 @@ static mrb_value GenR_nk_tree_state_push(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_tree_type a1 = (enum nk_tree_type)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    enum nk_collapse_states io3 = (enum nk_collapse_states)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_tree_type a1 = (enum nk_tree_type)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    enum nk_collapse_states io3 = (enum nk_collapse_states)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_bool rv = nk_tree_state_push(a0, a1, a2, &io3);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6090,9 +6090,9 @@ static mrb_value GenR_nk_triangle_from_direction(mrb_state *mrb, mrb_value self)
     memset(&out0, 0, sizeof(out0));
     struct nk_rect a1;
     GenRead_nk_rect(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a1);
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    enum nk_heading a4 = (enum nk_heading)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    enum nk_heading a4 = (enum nk_heading)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_triangle_from_direction(&out0, a1, a2, a3, a4);
     return GenPush_nk_vec2(mrb, &out0);
     }
@@ -6105,11 +6105,11 @@ static mrb_value GenR_nk_utf_at(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    nk_rune io3 = (nk_rune)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int io4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    nk_rune io3 = (nk_rune)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int io4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     const char * rv = nk_utf_at(a0, a1, a2, &io3, &io4);
     mrb_value rets[3];
     rets[0] = (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
@@ -6126,9 +6126,9 @@ static mrb_value GenR_nk_utf_decode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    nk_rune io1 = (nk_rune)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    nk_rune io1 = (nk_rune)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     int rv = nk_utf_decode(a0, &io1, a2);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -6144,10 +6144,10 @@ static mrb_value GenR_nk_utf_encode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    nk_rune a0 = (nk_rune)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *src1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_rune a0 = (nk_rune)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *src1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     char *a1 = SDL_strdup(src1 != NULL ? src1 : "");
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     int rv = nk_utf_encode(a0, a1, a2);
     SDL_free(a1);
     return mrb_int_value(mrb, (mrb_int)rv);
@@ -6161,8 +6161,8 @@ static mrb_value GenR_nk_utf_len(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = nk_utf_len(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -6175,9 +6175,9 @@ static mrb_value GenR_nk_value_bool(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_value_bool(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -6190,8 +6190,8 @@ static mrb_value GenR_nk_value_color_byte(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_color a2;
     GenRead_nk_color(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     nk_value_color_byte(a0, a1, a2);
@@ -6206,8 +6206,8 @@ static mrb_value GenR_nk_value_color_float(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_color a2;
     GenRead_nk_color(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     nk_value_color_float(a0, a1, a2);
@@ -6222,8 +6222,8 @@ static mrb_value GenR_nk_value_color_hex(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_color a2;
     GenRead_nk_color(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     nk_value_color_hex(a0, a1, a2);
@@ -6238,9 +6238,9 @@ static mrb_value GenR_nk_value_float(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_value_float(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -6253,9 +6253,9 @@ static mrb_value GenR_nk_value_int(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_value_int(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -6268,9 +6268,9 @@ static mrb_value GenR_nk_value_uint(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    unsigned int a2 = (unsigned int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    unsigned int a2 = (unsigned int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_value_uint(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -6283,8 +6283,8 @@ static mrb_value GenR_nk_vec2(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_vec2 rv = nk_vec2(a0, a1);
     return GenPush_nk_vec2(mrb, &rv);
     }
@@ -6297,8 +6297,8 @@ static mrb_value GenR_nk_vec2i(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_vec2 rv = nk_vec2i(a0, a1);
     return GenPush_nk_vec2(mrb, &rv);
     }
@@ -6313,7 +6313,7 @@ static mrb_value GenR_nk_widget(mrb_state *mrb, mrb_value self)
     {
     struct nk_rect out0;
     memset(&out0, 0, sizeof(out0));
-    const struct nk_context *a1 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a1 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     enum nk_widget_layout_states rv = nk_widget(&out0, a1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -6329,7 +6329,7 @@ static mrb_value GenR_nk_widget_bounds(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_rect rv = nk_widget_bounds(a0);
     return GenPush_nk_rect(mrb, &rv);
     }
@@ -6342,7 +6342,7 @@ static mrb_value GenR_nk_widget_disable_begin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_widget_disable_begin(a0);
     return mrb_nil_value();
     }
@@ -6355,7 +6355,7 @@ static mrb_value GenR_nk_widget_disable_end(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_widget_disable_end(a0);
     return mrb_nil_value();
     }
@@ -6370,7 +6370,7 @@ static mrb_value GenR_nk_widget_fitting(mrb_state *mrb, mrb_value self)
     {
     struct nk_rect out0;
     memset(&out0, 0, sizeof(out0));
-    const struct nk_context *a1 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a1 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_vec2 a2;
     GenRead_nk_vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a2);
     enum nk_widget_layout_states rv = nk_widget_fitting(&out0, a1, a2);
@@ -6388,9 +6388,9 @@ static mrb_value GenR_nk_widget_has_mouse_click_down(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_buttons a1 = (enum nk_buttons)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_bool a2 = (nk_bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_buttons a1 = (enum nk_buttons)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_bool a2 = (nk_bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     nk_bool rv = nk_widget_has_mouse_click_down(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -6403,7 +6403,7 @@ static mrb_value GenR_nk_widget_height(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     float rv = nk_widget_height(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -6416,7 +6416,7 @@ static mrb_value GenR_nk_widget_is_hovered(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_bool rv = nk_widget_is_hovered(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -6429,8 +6429,8 @@ static mrb_value GenR_nk_widget_is_mouse_clicked(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    enum nk_buttons a1 = (enum nk_buttons)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    enum nk_buttons a1 = (enum nk_buttons)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_widget_is_mouse_clicked(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -6443,7 +6443,7 @@ static mrb_value GenR_nk_widget_position(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_vec2 rv = nk_widget_position(a0);
     return GenPush_nk_vec2(mrb, &rv);
     }
@@ -6456,7 +6456,7 @@ static mrb_value GenR_nk_widget_size(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_vec2 rv = nk_widget_size(a0);
     return GenPush_nk_vec2(mrb, &rv);
     }
@@ -6469,7 +6469,7 @@ static mrb_value GenR_nk_widget_width(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     float rv = nk_widget_width(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -6482,8 +6482,8 @@ static mrb_value GenR_nk_window_close(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_window_close(a0, a1);
     return mrb_nil_value();
     }
@@ -6496,9 +6496,9 @@ static mrb_value GenR_nk_window_collapse(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    enum nk_collapse_states a2 = (enum nk_collapse_states)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    enum nk_collapse_states a2 = (enum nk_collapse_states)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_window_collapse(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -6511,10 +6511,10 @@ static mrb_value GenR_nk_window_collapse_if(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    enum nk_collapse_states a2 = (enum nk_collapse_states)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    enum nk_collapse_states a2 = (enum nk_collapse_states)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_window_collapse_if(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -6527,10 +6527,10 @@ static mrb_value GenR_nk_window_find(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_window * rv = nk_window_find(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "nk_window");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_window");
     }
 }
 
@@ -6541,7 +6541,7 @@ static mrb_value GenR_nk_window_get_bounds(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_rect rv = nk_window_get_bounds(a0);
     return GenPush_nk_rect(mrb, &rv);
     }
@@ -6554,9 +6554,9 @@ static mrb_value GenR_nk_window_get_canvas(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_command_buffer * rv = nk_window_get_canvas(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "nk_command_buffer");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_command_buffer");
     }
 }
 
@@ -6567,7 +6567,7 @@ static mrb_value GenR_nk_window_get_content_region(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_rect rv = nk_window_get_content_region(a0);
     return GenPush_nk_rect(mrb, &rv);
     }
@@ -6580,7 +6580,7 @@ static mrb_value GenR_nk_window_get_content_region_max(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_vec2 rv = nk_window_get_content_region_max(a0);
     return GenPush_nk_vec2(mrb, &rv);
     }
@@ -6593,7 +6593,7 @@ static mrb_value GenR_nk_window_get_content_region_min(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_vec2 rv = nk_window_get_content_region_min(a0);
     return GenPush_nk_vec2(mrb, &rv);
     }
@@ -6606,7 +6606,7 @@ static mrb_value GenR_nk_window_get_content_region_size(mrb_state *mrb, mrb_valu
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_vec2 rv = nk_window_get_content_region_size(a0);
     return GenPush_nk_vec2(mrb, &rv);
     }
@@ -6619,7 +6619,7 @@ static mrb_value GenR_nk_window_get_height(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     float rv = nk_window_get_height(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -6632,9 +6632,9 @@ static mrb_value GenR_nk_window_get_panel(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_panel * rv = nk_window_get_panel(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "nk_panel");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_panel");
     }
 }
 
@@ -6645,7 +6645,7 @@ static mrb_value GenR_nk_window_get_position(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_vec2 rv = nk_window_get_position(a0);
     return GenPush_nk_vec2(mrb, &rv);
     }
@@ -6658,9 +6658,9 @@ static mrb_value GenR_nk_window_get_scroll(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    nk_uint io1 = (nk_uint)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_uint io2 = (nk_uint)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    nk_uint io1 = (nk_uint)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_uint io2 = (nk_uint)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_window_get_scroll(a0, &io1, &io2);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)io1);
@@ -6676,7 +6676,7 @@ static mrb_value GenR_nk_window_get_size(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     struct nk_vec2 rv = nk_window_get_size(a0);
     return GenPush_nk_vec2(mrb, &rv);
     }
@@ -6689,7 +6689,7 @@ static mrb_value GenR_nk_window_get_width(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     float rv = nk_window_get_width(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -6702,7 +6702,7 @@ static mrb_value GenR_nk_window_has_focus(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_bool rv = nk_window_has_focus(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -6715,8 +6715,8 @@ static mrb_value GenR_nk_window_is_active(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_window_is_active(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -6729,7 +6729,7 @@ static mrb_value GenR_nk_window_is_any_hovered(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_bool rv = nk_window_is_any_hovered(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -6742,8 +6742,8 @@ static mrb_value GenR_nk_window_is_closed(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_window_is_closed(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -6756,8 +6756,8 @@ static mrb_value GenR_nk_window_is_collapsed(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_window_is_collapsed(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -6770,8 +6770,8 @@ static mrb_value GenR_nk_window_is_hidden(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_bool rv = nk_window_is_hidden(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -6784,7 +6784,7 @@ static mrb_value GenR_nk_window_is_hovered(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const struct nk_context *a0 = (const struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const struct nk_context *a0 = (const struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     nk_bool rv = nk_window_is_hovered(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -6797,8 +6797,8 @@ static mrb_value GenR_nk_window_set_bounds(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_rect a2;
     GenRead_nk_rect(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     nk_window_set_bounds(a0, a1, a2);
@@ -6813,8 +6813,8 @@ static mrb_value GenR_nk_window_set_focus(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     nk_window_set_focus(a0, a1);
     return mrb_nil_value();
     }
@@ -6827,8 +6827,8 @@ static mrb_value GenR_nk_window_set_position(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_vec2 a2;
     GenRead_nk_vec2(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     nk_window_set_position(a0, a1, a2);
@@ -6843,9 +6843,9 @@ static mrb_value GenR_nk_window_set_scroll(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    nk_uint a1 = (nk_uint)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    nk_uint a2 = (nk_uint)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    nk_uint a1 = (nk_uint)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    nk_uint a2 = (nk_uint)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_window_set_scroll(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -6858,8 +6858,8 @@ static mrb_value GenR_nk_window_set_size(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     struct nk_vec2 a2;
     GenRead_nk_vec2(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     nk_window_set_size(a0, a1, a2);
@@ -6874,9 +6874,9 @@ static mrb_value GenR_nk_window_show(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    enum nk_show_states a2 = (enum nk_show_states)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    enum nk_show_states a2 = (enum nk_show_states)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     nk_window_show(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -6889,20 +6889,20 @@ static mrb_value GenR_nk_window_show_if(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    struct nk_context *a0 = (struct nk_context *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    enum nk_show_states a2 = (enum nk_show_states)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    enum nk_show_states a2 = (enum nk_show_states)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     nk_window_show_if(a0, a1, a2, a3);
     return mrb_nil_value();
     }
 }
 
-void SDLStaticGen_OpenRuby_nk(mrb_state *mrb);
-void SDLStaticGen_OpenRuby_nk(mrb_state *mrb)
+void GrappleGen_OpenRuby_nk(mrb_state *mrb);
+void GrappleGen_OpenRuby_nk(mrb_state *mrb)
 {
     struct RClass *mod;
-    SDLStaticGen_RubyEnsureHandleClass(mrb);
+    GrappleGen_RubyEnsureHandleClass(mrb);
     mod = mrb_define_module(mrb, "NK");
     mrb_define_module_function(mrb, mod, "_begin", GenR_nk__begin, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "_draw_begin", GenR_nk__draw_begin, MRB_ARGS_ANY());

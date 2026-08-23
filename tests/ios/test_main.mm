@@ -1,18 +1,18 @@
 /**
  * @file test_main.mm
- * @brief End-to-end iOS tests consuming the packaged SDL3-static-extensions XCFramework.
+ * @brief End-to-end iOS tests consuming the packaged grapple-beam XCFramework.
  */
 
 #import <UIKit/UIKit.h>
 #import <os/log.h>
 
-#include <SDL3_static_extensions/version.hpp>
+#include <grapple/version.hpp>
 
-#include <SDLStatic/engine.h>
-#include <SDLStatic/engine_actor.h>
-#include <SDLStatic/engine_config.h>
-#include <SDLStatic/bindings.h>
-#include <SDLStatic/lua.h>
+#include <grapple/engine.h>
+#include <grapple/engine_actor.h>
+#include <grapple/engine_config.h>
+#include <grapple/bindings.h>
+#include <grapple/lua.h>
 
 #include <SDL3/SDL.h>
 
@@ -55,57 +55,57 @@ class TestRun
 int RunTests()
 {
     TestRun run;
-    const std::string_view version = SDL3_static_extensions::Version();
-    run.Check(version == SDL3_STATIC_EXTENSIONS_EXPECTED_VERSION,
+    const std::string_view version = grapple::Version();
+    run.Check(version == GRAPPLE_BEAM_EXPECTED_VERSION,
               "XCFramework exports the VERSION-derived API");
-    const std::string major_prefix = std::to_string(SDL3_static_extensions::kVersionMajor) + ".";
+    const std::string major_prefix = std::to_string(grapple::kVersionMajor) + ".";
     run.Check(version.substr(0, major_prefix.size()) == major_prefix,
               "Version() matches the compiled major version");
-    run.Check(SDL3_static_extensions::kVersionMajor >= 0, "major version is non-negative");
+    run.Check(grapple::kVersionMajor >= 0, "major version is non-negative");
 
     // The engine, not just the version string. The XCFramework passed its
     // slice, architecture and version checks for months while containing
     // nothing but version.cpp — all three were true of an empty library.
-    SDLStatic_EngineConfig *config = SDLStatic_ConfigCreate();
+    Grapple_EngineConfig *config = Grapple_ConfigCreate();
     run.Check(config != nullptr, "the engine's builders are in the framework");
     if (config != nullptr)
     {
         // Headless with a manual clock: a simulator test has no window to
         // wait on and no real clock worth waiting for.
-        SDLStatic_ConfigSetHeadless(config, true);
-        SDLStatic_ConfigSetManualClock(config, true);
-        SDLStatic_ConfigSetAutoMount(config, false);
+        Grapple_ConfigSetHeadless(config, true);
+        Grapple_ConfigSetManualClock(config, true);
+        Grapple_ConfigSetAutoMount(config, false);
 
-        SDLStatic_Engine *engine = SDLStatic_CreateEngine(config);
-        SDLStatic_ConfigDestroy(config);
+        Grapple_Engine *engine = Grapple_CreateEngine(config);
+        Grapple_ConfigDestroy(config);
         run.Check(engine != nullptr, "an engine can be created on iOS");
         if (engine != nullptr)
         {
-            SDLStatic_ActorDef *def = SDLStatic_ActorDefCreate();
-            SDLStatic_ActorDefSetType(def, "ios");
-            const SDLStatic_ActorId actor = SDLStatic_ActorSpawn(engine, def);
-            SDLStatic_ActorDefDestroy(def);
-            run.Check(actor != SDLSTATIC_ACTOR_NONE, "an actor can be spawned");
+            Grapple_ActorDef *def = Grapple_ActorDefCreate();
+            Grapple_ActorDefSetType(def, "ios");
+            const Grapple_ActorId actor = Grapple_ActorSpawn(engine, def);
+            Grapple_ActorDefDestroy(def);
+            run.Check(actor != GRAPPLE_ACTOR_NONE, "an actor can be spawned");
 
             for (int i = 0; i < 5; ++i)
             {
-                SDLStatic_EngineAdvance(engine, 16666667);
-                SDLStatic_EngineTick(engine);
+                Grapple_EngineAdvance(engine, 16666667);
+                Grapple_EngineTick(engine);
             }
-            run.Check(SDLStatic_EngineFrameCount(engine) >= 5, "the loop runs frames");
-            run.Check(SDLStatic_ActorCount(engine) == 1, "the actor survived the frames");
-            SDLStatic_DestroyEngine(engine);
+            run.Check(Grapple_EngineFrameCount(engine) >= 5, "the loop runs frames");
+            run.Check(Grapple_ActorCount(engine) == 1, "the actor survived the frames");
+            Grapple_DestroyEngine(engine);
         }
     }
 
     // Lua, which is the component iOS nearly could not have: os.execute calls
     // system(), and iOS marks it unavailable. Upstream's LUA_USE_IOS turns it
     // into a stub, so the rest of the language is here.
-    lua_State *lua = SDLStatic_CreateLuaState();
+    lua_State *lua = Grapple_CreateLuaState();
     run.Check(lua != nullptr, "a Lua state can be created");
     if (lua != nullptr)
     {
-        run.Check(SDLStatic_OpenLuaBindings(lua), "the generated bindings load");
+        run.Check(Grapple_OpenLuaBindings(lua), "the generated bindings load");
         lua_close(lua);
     }
 
@@ -133,7 +133,7 @@ int RunTests()
 
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
       const int failures = RunTests();
-      os_log_info(TestLog(), "SDL3_STATIC_EXTENSIONS_IOS_TEST_RESULT: %{public}d", failures);
+      os_log_info(TestLog(), "GRAPPLE_BEAM_IOS_TEST_RESULT: %{public}d", failures);
     });
     return YES;
 }

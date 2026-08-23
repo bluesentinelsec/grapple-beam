@@ -1,0 +1,1292 @@
+/*
+ * grapple_gui.c — SDL3 backend for Nuklear (Grapple GUI).
+ *
+ * Original Grapple code (zlib). This is the single translation unit that
+ * compiles the vendored Nuklear implementation; everything else includes
+ * the grapple/nuklear.h wrapper for declarations only.
+ */
+/* Definition for the NK_DTOA hook declared in grapple/nuklear.h. It must
+ * exist before nuklear's implementation is expanded below. */
+#include <SDL3/SDL.h>
+
+char *Grapple_NuklearDtoa(char *buffer, double value)
+{
+    /* Nuklear's %f formatter scans the result for '.', so plain decimal
+     * notation is required (never exponent form). NK_MAX_NUMBER_BUFFER is
+     * 64; %.6f of a double needs at most ~320 chars in the pathological
+     * case, so clamp the magnitude the way nuklear's own printf does. */
+    if (value != value || value > 1.0e18 || value < -1.0e18)
+    {
+        SDL_strlcpy(buffer, "0.0", 4);
+        return buffer;
+    }
+    SDL_snprintf(buffer, 64, "%.6f", value);
+    return buffer;
+}
+
+#define NK_IMPLEMENTATION
+#include <grapple/nuklear.h>
+
+#include <grapple/gui.h>
+#include <grapple/dialog.h>
+#include <grapple/gui_grid.h>
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h> /* the web file button is driven with EM_ASM */
+#endif
+
+typedef struct GuiVertex
+{
+    float pos[2];
+    float uv[2];
+    float col[4]; /* SDL_FColor-compatible */
+} GuiVertex;
+
+struct Grapple_Gui
+{
+    SDL_Renderer *renderer;
+    struct nk_context ctx;
+    struct nk_font_atlas atlas;
+    struct nk_draw_null_texture tex_null;
+    struct nk_buffer cmds;
+    SDL_Texture *font_texture;
+    void *font_copy;
+    float scale;   /* window pixel density: UI/input work in pixels */
+    Uint8 style_kind[32]; /* 0 = style item, 1 = plain colour (pop order) */
+    int style_depth;
+    struct nk_font *fonts[3]; /* small / normal / large, baked together */
+    int font_depth;           /* nk_style_push_font nesting */
+    /* Tooltip dwell tracking: which widget the pointer is resting on, when
+     * it arrived, and where the pointer was, so movement re-arms the timer. */
+    struct nk_rect tip_rect;
+    Uint64 tip_since_ms;
+    float tip_mouse_x, tip_mouse_y;
+    int tip_delay_ms;
+    bool tip_tracking;
+    Grapple_GuiGrid grid;   /* the script-reachable grid */
+    float grid_weights[GRAPPLE_GUI_GRID_MAX_COLS];
+    bool grid_active;
+    /* Queued by Grapple_GuiDrawTextureOverlay, flushed after the GUI. */
+    struct
+    {
+        SDL_Texture *texture;
+        SDL_FRect rect;
+        Grapple_GuiImageMode mode;
+    } overlays[GRAPPLE_GUI_MAX_OVERLAYS];
+    int overlay_count;
+    int draw_commands; /* what the last frame cost */
+    int memory_used;
+    bool file_button_synced; /* a file-button overlay was placed this frame */
+    bool save_button_synced; /* a save-button overlay was placed this frame */
+    bool save_pending;       /* desktop: waiting on the native save dialog */
+    char *saved_path;        /* where the last save landed */
+    Uint8 pressed[(SDL_SCANCODE_COUNT + 7) / 8]; /* keys down this frame */
+};
+
+/* ------------------------------------------------------- clipboard ----- */
+
+static void ClipboardCopy(nk_handle usr, const char *text, int len)
+{
+    (void)usr;
+    char *owned = (char *)SDL_malloc((size_t)len + 1);
+    if (owned != NULL)
+    {
+        SDL_memcpy(owned, text, (size_t)len);
+        owned[len] = '\0';
+        SDL_SetClipboardText(owned);
+        SDL_free(owned);
+    }
+}
+
+static void ClipboardPaste(nk_handle usr, struct nk_text_edit *edit)
+{
+    (void)usr;
+    char *text = SDL_GetClipboardText();
+    if (text != NULL)
+    {
+        if (*text != '\0')
+        {
+            nk_textedit_paste(edit, text, nk_strlen(text));
+        }
+        SDL_free(text);
+    }
+}
+
+/* --------------------------------------------------------- lifetime ---- */
+
+/* Latin-1 plus the punctuation UI text actually contains: dashes, curly
+ * quotes, bullet, ellipsis, arrows, and the currency symbols a price tag
+ * needs. Without these an em dash bakes as the missing-glyph box. */
+static const nk_rune *PunctuationRanges(void)
+{
+    static const nk_rune ranges[] = {
+        0x0020, 0x00FF, /* Latin-1 */
+        0x2010, 0x2027, /* dashes, quotes, bullet, ellipsis */
+        0x2030, 0x205E, /* per-mille, primes, guillemets */
+        0x20A0, 0x20BF, /* currency */
+        0x2190, 0x21FF, /* arrows */
+        0x2713, 0x2716, /* check and cross marks */
+        0,
+    };
+    return ranges;
+}
+
+static const nk_rune *RangesFor(Grapple_GuiGlyphRange range)
+{
+    switch (range)
+    {
+    case GRAPPLE_GUI_GLYPHS_PUNCTUATION:
+        return PunctuationRanges();
+    case GRAPPLE_GUI_GLYPHS_CYRILLIC:
+        return nk_font_cyrillic_glyph_ranges();
+    case GRAPPLE_GUI_GLYPHS_CHINESE:
+        return nk_font_chinese_glyph_ranges();
+    case GRAPPLE_GUI_GLYPHS_KOREAN:
+        return nk_font_korean_glyph_ranges();
+    case GRAPPLE_GUI_GLYPHS_LATIN1:
+    default:
+        return NULL; /* Nuklear's own default: U+0020..U+00FF */
+    }
+}
+
+Grapple_Gui *Grapple_CreateGui(SDL_Renderer *renderer, const void *font_data, size_t font_len,
+                                   float font_size)
+{
+    return Grapple_CreateGuiWithGlyphs(renderer, font_data, font_len, font_size,
+                                         GRAPPLE_GUI_GLYPHS_LATIN1);
+}
+
+Grapple_Gui *Grapple_CreateGuiWithGlyphs(SDL_Renderer *renderer, const void *font_data,
+                                             size_t font_len, float font_size,
+                                             Grapple_GuiGlyphRange range)
+{
+    if (renderer == NULL)
+    {
+        SDL_InvalidParamError("renderer");
+        return NULL;
+    }
+    if (font_size <= 0.0f)
+    {
+        font_size = 13.0f;
+    }
+    /* High-DPI: an SDL_WINDOW_HIGH_PIXEL_DENSITY window renders into a
+     * backbuffer measured in pixels while events arrive in points. Bake the
+     * font at the pixel size and scale input to match, so the UI is crisp
+     * and hit-testing lines up. Windowless (software) renderers stay 1.0. */
+    float scale = 1.0f;
+    {
+        SDL_Window *window = SDL_GetRenderWindow(renderer);
+        if (window != NULL)
+        {
+            const float density = SDL_GetWindowPixelDensity(window);
+            if (density > 0.0f)
+            {
+                scale = density;
+            }
+        }
+    }
+    font_size *= scale;
+
+    Grapple_Gui *gui = (Grapple_Gui *)SDL_calloc(1, sizeof(Grapple_Gui));
+    if (gui == NULL)
+    {
+        return NULL;
+    }
+    gui->renderer = renderer;
+    gui->scale = scale;
+    gui->tip_delay_ms = 1000; /* desktop-style hover dwell */
+
+    if (!nk_init_default(&gui->ctx, NULL))
+    {
+        SDL_free(gui);
+        SDL_SetError("nk_init_default failed");
+        return NULL;
+    }
+    nk_buffer_init_default(&gui->cmds);
+
+    nk_font_atlas_init_default(&gui->atlas);
+    nk_font_atlas_begin(&gui->atlas);
+    /* Bake a small ladder of sizes in one atlas: Nuklear cannot add glyphs
+     * after baking, so a program that changes text size at runtime needs
+     * every size up front. See Grapple_GuiSetFont. */
+    static const float kSizeFactors[3] = {0.75f, 1.0f, 1.5f};
+    if (font_data != NULL && font_len > 0)
+    {
+        /* Nuklear reads the TTF during baking; keep an owned copy alive. */
+        gui->font_copy = SDL_malloc(font_len);
+        if (gui->font_copy != NULL)
+        {
+            SDL_memcpy(gui->font_copy, font_data, font_len);
+        }
+    }
+    const nk_rune *ranges = RangesFor(range);
+    for (int i = 0; i < 3; i++)
+    {
+        const float size = font_size * kSizeFactors[i];
+        /* A zeroed config means Nuklear's defaults; only the ranges differ,
+           and NULL ranges are themselves the default. */
+        struct nk_font_config config = nk_font_config(size);
+        config.range = ranges;
+        struct nk_font_config *config_ptr = (ranges != NULL) ? &config : NULL;
+        if (gui->font_copy != NULL)
+        {
+            gui->fonts[i] = nk_font_atlas_add_from_memory(
+                &gui->atlas, gui->font_copy, (nk_size)font_len, size, config_ptr);
+        }
+        if (gui->fonts[i] == NULL)
+        {
+            gui->fonts[i] = nk_font_atlas_add_default(&gui->atlas, size, config_ptr);
+        }
+    }
+    struct nk_font *font = gui->fonts[GRAPPLE_GUI_FONT_NORMAL];
+
+    int atlas_w = 0;
+    int atlas_h = 0;
+    const void *image = nk_font_atlas_bake(&gui->atlas, &atlas_w, &atlas_h, NK_FONT_ATLAS_RGBA32);
+    if (image == NULL || font == NULL)
+    {
+        Grapple_DestroyGui(gui);
+        SDL_SetError("font atlas baking failed");
+        return NULL;
+    }
+    gui->font_texture =
+        SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STATIC, atlas_w,
+                          atlas_h);
+    if (gui->font_texture == NULL ||
+        !SDL_UpdateTexture(gui->font_texture, NULL, image, atlas_w * 4))
+    {
+        Grapple_DestroyGui(gui);
+        return NULL;
+    }
+    SDL_SetTextureBlendMode(gui->font_texture, SDL_BLENDMODE_BLEND);
+    nk_font_atlas_end(&gui->atlas, nk_handle_ptr(gui->font_texture), &gui->tex_null);
+    nk_style_set_font(&gui->ctx, &font->handle);
+
+    gui->ctx.clip.copy = ClipboardCopy;
+    gui->ctx.clip.paste = ClipboardPaste;
+    gui->ctx.clip.userdata = nk_handle_ptr(gui);
+    return gui;
+}
+
+void Grapple_DestroyGui(Grapple_Gui *gui)
+{
+    if (gui == NULL)
+    {
+        return;
+    }
+    nk_font_atlas_clear(&gui->atlas);
+    nk_buffer_free(&gui->cmds);
+    nk_free(&gui->ctx);
+    if (gui->font_texture != NULL)
+    {
+        SDL_DestroyTexture(gui->font_texture);
+    }
+    SDL_free(gui->font_copy);
+    SDL_free(gui->saved_path);
+    SDL_free(gui);
+}
+
+struct nk_context *Grapple_GuiContext(Grapple_Gui *gui)
+{
+    return (gui != NULL) ? &gui->ctx : NULL;
+}
+
+/* ----------------------------------------------------------- input ----- */
+
+void Grapple_GuiInputBegin(Grapple_Gui *gui)
+{
+    if (gui != NULL)
+    {
+        SDL_memset(gui->pressed, 0, sizeof(gui->pressed));
+        nk_input_begin(&gui->ctx);
+    }
+}
+
+void Grapple_GuiInputEnd(Grapple_Gui *gui)
+{
+    if (gui != NULL)
+    {
+        nk_input_end(&gui->ctx);
+    }
+}
+
+bool Grapple_GuiWantsInput(Grapple_Gui *gui)
+{
+    return (gui != NULL) && nk_item_is_any_active(&gui->ctx);
+}
+
+void Grapple_GuiSetTooltipDelay(Grapple_Gui *gui, int delay_ms)
+{
+    if (gui != NULL)
+    {
+        gui->tip_delay_ms = (delay_ms < 0) ? 0 : delay_ms;
+    }
+}
+
+int Grapple_GuiTooltipDelay(Grapple_Gui *gui)
+{
+    return (gui != NULL) ? gui->tip_delay_ms : 0;
+}
+
+#ifdef __EMSCRIPTEN__
+/* Keep a transparent <input type="file"> parked over the button's on-screen
+ * rectangle. Clicking it is a genuine user gesture on the element itself,
+ * which is the only thing Safari accepts. Coordinates arrive in render
+ * pixels and are converted to CSS pixels through the canvas's own scale. */
+static void WebSyncFileButton(struct nk_rect bounds, const char *filter_pattern)
+{
+    EM_ASM(
+        {
+            var canvas = Module.canvas;
+            if (!canvas) return;
+            var input = Module.__grapple_file_button;
+            if (!input)
+            {
+                input = document.createElement('input');
+                input.type = 'file';
+                input.style.position = 'absolute';
+                input.style.opacity = '0';
+                input.style.zIndex = '10';
+                input.style.cursor = 'pointer';
+                input.addEventListener('change', function(event)
+                {
+                    var file = event.target.files && event.target.files[0];
+                    input.value = ''; /* allow re-picking the same file */
+                    if (!file)
+                    {
+                        Module.__grapple_dialog = ({state : 'cancelled'});
+                        return;
+                    }
+                    var reader = new FileReader();
+                    reader.onload = function()
+                    {
+                        try
+                        {
+                            FS.mkdir('/dialog');
+                        }
+                        catch (e)
+                        { /* already exists */
+                        }
+                        var path = '/dialog/' + file.name;
+                        FS.writeFile(path, new Uint8Array(reader.result));
+                        Module.__grapple_dialog = ({state : 'accepted', path : path});
+                    };
+                    reader.onerror = function()
+                    {
+                        Module.__grapple_dialog = ({state : 'error'});
+                    };
+                    reader.readAsArrayBuffer(file);
+                });
+                input.addEventListener('cancel', function()
+                {
+                    Module.__grapple_dialog = ({state : 'cancelled'});
+                });
+                document.body.appendChild(input);
+                Module.__grapple_file_button = input;
+            }
+            if ($4)
+            {
+                var pattern = UTF8ToString($4);
+                if (pattern !== '*')
+                {
+                    input.accept = pattern.split(';')
+                                       .map(function(ext) { return '.' + ext.trim(); })
+                                       .join(',');
+                }
+            }
+            var rect = canvas.getBoundingClientRect();
+            var sx = canvas.width ? (rect.width / canvas.width) : 1;
+            var sy = canvas.height ? (rect.height / canvas.height) : 1;
+            input.style.display = 'block';
+            input.style.left = (rect.left + window.scrollX + $0 * sx) + 'px';
+            input.style.top = (rect.top + window.scrollY + $1 * sy) + 'px';
+            input.style.width = ($2 * sx) + 'px';
+            input.style.height = ($3 * sy) + 'px';
+        },
+        bounds.x, bounds.y, bounds.w, bounds.h, filter_pattern);
+}
+
+static void WebHideFileButton(void)
+{
+    EM_ASM({
+        var input = Module.__grapple_file_button;
+        if (input) input.style.display = 'none';
+    });
+}
+
+/* The save overlay is an <a download> whose blob is refreshed only when the
+ * bytes change, so calling this every frame stays cheap. */
+static void WebSyncSaveButton(struct nk_rect bounds, const char *filename, const void *data,
+                              size_t len)
+{
+    EM_ASM(
+        {
+            var canvas = Module.canvas;
+            if (!canvas) return;
+            var link = Module.__grapple_save_button;
+            if (!link)
+            {
+                link = document.createElement('a');
+                link.style.position = 'absolute';
+                link.style.opacity = '0';
+                link.style.zIndex = '10';
+                link.style.cursor = 'pointer';
+                link.textContent = ' ';
+                link.addEventListener('click', function() { Module.__grapple_saved = 1; });
+                document.body.appendChild(link);
+                Module.__grapple_save_button = link;
+            }
+            var name = UTF8ToString($4);
+            var bytes = HEAPU8.slice($5, $5 + $6);
+            var changed = link.download !== name || !link.__bytes ||
+                          link.__bytes.length !== bytes.length;
+            if (!changed)
+            {
+                for (var i = 0; i < bytes.length; i++)
+                {
+                    if (link.__bytes[i] !== bytes[i])
+                    {
+                        changed = true;
+                        break;
+                    }
+                }
+            }
+            if (changed)
+            {
+                if (link.href) URL.revokeObjectURL(link.href);
+                link.__bytes = bytes;
+                link.download = name;
+                link.href =
+                    URL.createObjectURL(new Blob([bytes], ({type : 'application/octet-stream'})));
+            }
+            var rect = canvas.getBoundingClientRect();
+            var sx = canvas.width ? (rect.width / canvas.width) : 1;
+            var sy = canvas.height ? (rect.height / canvas.height) : 1;
+            link.style.display = 'block';
+            link.style.left = (rect.left + window.scrollX + $0 * sx) + 'px';
+            link.style.top = (rect.top + window.scrollY + $1 * sy) + 'px';
+            link.style.width = ($2 * sx) + 'px';
+            link.style.height = ($3 * sy) + 'px';
+        },
+        bounds.x, bounds.y, bounds.w, bounds.h, filename, data, (int)len);
+}
+
+static void WebHideSaveButton(void)
+{
+    EM_ASM({
+        var link = Module.__grapple_save_button;
+        if (link) link.style.display = 'none';
+    });
+}
+
+/* Did the user click the download link since the last call? */
+static int WebTakeSaved(void)
+{
+    return EM_ASM_INT({
+        var fired = Module.__grapple_saved ? 1 : 0;
+        Module.__grapple_saved = 0;
+        return fired;
+    });
+}
+#endif /* __EMSCRIPTEN__ */
+
+bool Grapple_GuiOpenFileButton(Grapple_Gui *gui, const char *label,
+                                 const char *filter_name, const char *filter_pattern)
+{
+    if (gui == NULL || label == NULL)
+    {
+        SDL_InvalidParamError("gui/label");
+        return false;
+    }
+    struct nk_context *ctx = &gui->ctx;
+    const struct nk_rect bounds = nk_widget_bounds(ctx);
+    const bool clicked = nk_button_label(ctx, label) != 0;
+
+#ifdef __EMSCRIPTEN__
+    (void)clicked; /* the overlay receives the click, not the canvas */
+    (void)filter_name;
+    WebSyncFileButton(bounds, filter_pattern);
+    gui->file_button_synced = true;
+    return false;
+#else
+    if (clicked)
+    {
+        return Grapple_ShowOpenFileDialog(SDL_GetRenderWindow(gui->renderer), filter_name,
+                                            filter_pattern, NULL);
+    }
+    return false;
+#endif
+}
+
+static void SetSavedPath(Grapple_Gui *gui, const char *path)
+{
+    SDL_free(gui->saved_path);
+    gui->saved_path = (path != NULL) ? SDL_strdup(path) : NULL;
+}
+
+bool Grapple_GuiSaveFileButton(Grapple_Gui *gui, const char *label, const char *filename,
+                                 const void *data, size_t len)
+{
+    if (gui == NULL || label == NULL || filename == NULL || (data == NULL && len != 0))
+    {
+        SDL_InvalidParamError("gui/label/filename/data");
+        return false;
+    }
+    struct nk_context *ctx = &gui->ctx;
+    const struct nk_rect bounds = nk_widget_bounds(ctx);
+    const bool clicked = nk_button_label(ctx, label) != 0;
+
+#ifdef __EMSCRIPTEN__
+    (void)clicked; /* the overlay receives the click, not the canvas */
+    WebSyncSaveButton(bounds, filename, data, len);
+    gui->save_button_synced = true;
+    if (WebTakeSaved())
+    {
+        SetSavedPath(gui, filename);
+        return true;
+    }
+    return false;
+#else
+    if (clicked && !gui->save_pending)
+    {
+        if (Grapple_ShowSaveFileDialog(SDL_GetRenderWindow(gui->renderer), NULL, NULL,
+                                         filename))
+        {
+            gui->save_pending = true;
+        }
+    }
+    if (!gui->save_pending)
+    {
+        return false;
+    }
+    switch (Grapple_DialogStatus())
+    {
+    case GRAPPLE_DIALOG_ACCEPTED:
+    {
+        /* Write what the caller passed this frame — the freshest bytes. */
+        const char *path = Grapple_DialogPath();
+        const bool ok = (path != NULL) && SDL_SaveFile(path, data, len);
+        if (ok)
+        {
+            SetSavedPath(gui, path);
+        }
+        gui->save_pending = false;
+        Grapple_DialogReset();
+        return ok;
+    }
+    case GRAPPLE_DIALOG_CANCELLED:
+    case GRAPPLE_DIALOG_ERROR:
+        gui->save_pending = false;
+        Grapple_DialogReset();
+        return false;
+    default:
+        return false;
+    }
+#endif
+}
+
+const char *Grapple_GuiSavedPath(Grapple_Gui *gui)
+{
+    return (gui != NULL) ? gui->saved_path : NULL;
+}
+
+bool Grapple_GuiTooltip(Grapple_Gui *gui, const char *text)
+{
+    if (gui == NULL || text == NULL)
+    {
+        return false;
+    }
+    struct nk_context *ctx = &gui->ctx;
+    const struct nk_rect bounds = nk_widget_bounds(ctx);
+    if (!nk_input_is_mouse_hovering_rect(&ctx->input, bounds))
+    {
+        return false;
+    }
+
+    const float mx = ctx->input.mouse.pos.x;
+    const float my = ctx->input.mouse.pos.y;
+    const Uint64 now = SDL_GetTicks();
+
+    /* A different widget, or a pointer that actually moved, restarts the
+     * dwell. The threshold ignores sub-pixel jitter but not real motion. */
+    const float move_threshold = 2.0f * gui->scale;
+    const bool same_widget = gui->tip_tracking && bounds.x == gui->tip_rect.x &&
+                             bounds.y == gui->tip_rect.y && bounds.w == gui->tip_rect.w &&
+                             bounds.h == gui->tip_rect.h;
+    const bool moved = !gui->tip_tracking ||
+                       SDL_fabsf(mx - gui->tip_mouse_x) > move_threshold ||
+                       SDL_fabsf(my - gui->tip_mouse_y) > move_threshold;
+
+    if (!same_widget || moved)
+    {
+        gui->tip_tracking = true;
+        gui->tip_rect = bounds;
+        gui->tip_mouse_x = mx;
+        gui->tip_mouse_y = my;
+        gui->tip_since_ms = now;
+        return false; /* re-armed: hidden until the pointer rests again */
+    }
+
+    if ((now - gui->tip_since_ms) < (Uint64)gui->tip_delay_ms)
+    {
+        return false; /* still counting down */
+    }
+    nk_tooltip(ctx, text);
+    return true;
+}
+
+bool Grapple_GuiGridWeight(Grapple_Gui *gui, int column, float weight)
+{
+    if (gui == NULL || column < 0 || column >= GRAPPLE_GUI_GRID_MAX_COLS ||
+        weight <= 0.0f)
+    {
+        SDL_InvalidParamError("column/weight");
+        return false;
+    }
+    gui->grid_weights[column] = weight;
+    return true;
+}
+
+bool Grapple_GuiGridBeginOwned(Grapple_Gui *gui, int columns, float row_height)
+{
+    if (gui == NULL)
+    {
+        SDL_InvalidParamError("gui");
+        return false;
+    }
+    for (int i = 0; i < GRAPPLE_GUI_GRID_MAX_COLS; i++)
+    {
+        if (gui->grid_weights[i] <= 0.0f)
+        {
+            gui->grid_weights[i] = 1.0f; /* default: equal columns */
+        }
+    }
+    gui->grid_active =
+        Grapple_GuiGridBegin(&gui->ctx, &gui->grid, columns, gui->grid_weights, row_height);
+    /* Weights are per-grid: reset so the next grid starts equal again. */
+    SDL_memset(gui->grid_weights, 0, sizeof(gui->grid_weights));
+    return gui->grid_active;
+}
+
+void Grapple_GuiGridCellOwned(Grapple_Gui *gui)
+{
+    if (gui != NULL && gui->grid_active)
+    {
+        Grapple_GuiGridCell(&gui->grid);
+    }
+}
+
+void Grapple_GuiGridCellSpanOwned(Grapple_Gui *gui, int span)
+{
+    if (gui != NULL && gui->grid_active)
+    {
+        Grapple_GuiGridCellSpan(&gui->grid, span);
+    }
+}
+
+void Grapple_GuiGridNextRowOwned(Grapple_Gui *gui)
+{
+    if (gui != NULL && gui->grid_active)
+    {
+        Grapple_GuiGridNextRow(&gui->grid);
+    }
+}
+
+void Grapple_GuiGridEndOwned(Grapple_Gui *gui)
+{
+    if (gui != NULL && gui->grid_active)
+    {
+        Grapple_GuiGridEnd(&gui->grid);
+        gui->grid_active = false;
+    }
+}
+
+/* Where a texture lands inside `slot` under a sizing mode. Shared by the
+ * widget-slot, explicit-rect and overlay paths so all three agree. */
+static bool FitTexture(SDL_Texture *texture, struct nk_rect slot, Grapple_GuiImageMode mode,
+                       struct nk_rect *out)
+{
+    float tex_w = 0.0f;
+    float tex_h = 0.0f;
+    if (!SDL_GetTextureSize(texture, &tex_w, &tex_h) || tex_w <= 0.0f || tex_h <= 0.0f)
+    {
+        return false;
+    }
+    struct nk_rect dst = slot;
+    if (mode != GRAPPLE_GUI_IMAGE_STRETCH)
+    {
+        float w = tex_w;
+        float h = tex_h;
+        if (mode == GRAPPLE_GUI_IMAGE_ZOOM || mode == GRAPPLE_GUI_IMAGE_FILL)
+        {
+            const float sx = slot.w / tex_w;
+            const float sy = slot.h / tex_h;
+            /* Zoom fits inside (min), Fill covers (max). */
+            const float scale = (mode == GRAPPLE_GUI_IMAGE_ZOOM) ? SDL_min(sx, sy)
+                                                                   : SDL_max(sx, sy);
+            w = tex_w * scale;
+            h = tex_h * scale;
+        }
+        dst.x = slot.x + (slot.w - w) * 0.5f;
+        dst.y = slot.y + (slot.h - h) * 0.5f;
+        dst.w = w;
+        dst.h = h;
+    }
+    *out = dst;
+    return true;
+}
+
+bool Grapple_GuiImage(Grapple_Gui *gui, SDL_Texture *texture,
+                        Grapple_GuiImageMode mode)
+{
+    if (gui == NULL || texture == NULL)
+    {
+        SDL_InvalidParamError("gui/texture");
+        return false;
+    }
+    struct nk_context *ctx = &gui->ctx;
+    struct nk_rect slot;
+    if (nk_widget(&slot, ctx) == NK_WIDGET_INVALID)
+    {
+        return false; /* scrolled out of view */
+    }
+
+    struct nk_rect dst;
+    if (!FitTexture(texture, slot, mode, &dst))
+    {
+        return false;
+    }
+
+    struct nk_command_buffer *canvas = nk_window_get_canvas(ctx);
+    if (canvas == NULL)
+    {
+        return false;
+    }
+    /* Fill and Center can exceed the slot; clip so the image never spills
+     * over neighbouring widgets. */
+    const bool needs_clip = (mode == GRAPPLE_GUI_IMAGE_FILL ||
+                             mode == GRAPPLE_GUI_IMAGE_CENTER);
+    if (needs_clip)
+    {
+        nk_push_scissor(canvas, slot);
+    }
+    struct nk_image img = nk_image_ptr(texture);
+    nk_draw_image(canvas, dst, &img, nk_rgb(255, 255, 255));
+    if (needs_clip)
+    {
+        nk_push_scissor(canvas, nk_null_rect);
+    }
+    return true;
+}
+
+bool Grapple_GuiDrawTexture(Grapple_Gui *gui, SDL_Texture *texture, SDL_FRect rect,
+                              Grapple_GuiImageMode mode)
+{
+    if (gui == NULL || texture == NULL)
+    {
+        SDL_InvalidParamError("gui/texture");
+        return false;
+    }
+    /* nk_window_get_canvas asserts on a NULL current window rather than
+     * returning NULL, so the check has to happen before the call. */
+    if (gui->ctx.current == NULL)
+    {
+        SDL_SetError("Grapple_GuiDrawTexture must be called inside a window");
+        return false;
+    }
+    struct nk_command_buffer *canvas = nk_window_get_canvas(&gui->ctx);
+    if (canvas == NULL)
+    {
+        SDL_SetError("Grapple_GuiDrawTexture must be called inside a window");
+        return false;
+    }
+    const struct nk_rect slot = nk_rect(rect.x, rect.y, rect.w, rect.h);
+    struct nk_rect dst;
+    if (!FitTexture(texture, slot, mode, &dst))
+    {
+        return false;
+    }
+    /* The caller gave an explicit rectangle, so honour it exactly: clip
+     * every mode that can exceed it rather than only the usual two. */
+    nk_push_scissor(canvas, slot);
+    struct nk_image img = nk_image_ptr(texture);
+    nk_draw_image(canvas, dst, &img, nk_rgb(255, 255, 255));
+    nk_push_scissor(canvas, nk_null_rect);
+    return true;
+}
+
+bool Grapple_GuiDrawTextureOverlay(Grapple_Gui *gui, SDL_Texture *texture, SDL_FRect rect,
+                                     Grapple_GuiImageMode mode)
+{
+    if (gui == NULL || texture == NULL)
+    {
+        SDL_InvalidParamError("gui/texture");
+        return false;
+    }
+    if (gui->overlay_count >= GRAPPLE_GUI_MAX_OVERLAYS)
+    {
+        SDL_SetError("at most %d overlay draws per frame", GRAPPLE_GUI_MAX_OVERLAYS);
+        return false;
+    }
+    gui->overlays[gui->overlay_count].texture = texture;
+    gui->overlays[gui->overlay_count].rect = rect;
+    gui->overlays[gui->overlay_count].mode = mode;
+    gui->overlay_count++;
+    return true;
+}
+
+int Grapple_GuiDrawCommandCount(Grapple_Gui *gui)
+{
+    return (gui != NULL) ? gui->draw_commands : 0;
+}
+
+int Grapple_GuiMemoryUsed(Grapple_Gui *gui)
+{
+    return (gui != NULL) ? gui->memory_used : 0;
+}
+
+static struct nk_font *FontFor(Grapple_Gui *gui, Grapple_GuiFontSize which)
+{
+    if (gui == NULL || which < GRAPPLE_GUI_FONT_SMALL || which > GRAPPLE_GUI_FONT_LARGE)
+    {
+        return NULL;
+    }
+    return gui->fonts[which];
+}
+
+bool Grapple_GuiSetFont(Grapple_Gui *gui, Grapple_GuiFontSize which)
+{
+    struct nk_font *font = FontFor(gui, which);
+    if (font == NULL)
+    {
+        SDL_InvalidParamError("which");
+        return false;
+    }
+    nk_style_set_font(&gui->ctx, &font->handle);
+    return true;
+}
+
+bool Grapple_GuiPushFont(Grapple_Gui *gui, Grapple_GuiFontSize which)
+{
+    struct nk_font *font = FontFor(gui, which);
+    if (font == NULL)
+    {
+        SDL_InvalidParamError("which");
+        return false;
+    }
+    if (!nk_style_push_font(&gui->ctx, &font->handle))
+    {
+        return false;
+    }
+    gui->font_depth++;
+    return true;
+}
+
+void Grapple_GuiPopFont(Grapple_Gui *gui, int count)
+{
+    if (gui == NULL)
+    {
+        return;
+    }
+    while (count-- > 0 && gui->font_depth > 0)
+    {
+        nk_style_pop_font(&gui->ctx);
+        gui->font_depth--;
+    }
+}
+
+float Grapple_GuiFontHeight(Grapple_Gui *gui)
+{
+    if (gui == NULL || gui->ctx.style.font == NULL)
+    {
+        return 0.0f;
+    }
+    return gui->ctx.style.font->height;
+}
+
+bool Grapple_GuiPushStyleColor(Grapple_Gui *gui, Grapple_GuiStyleColor which,
+                                 SDL_Color color)
+{
+    if (gui == NULL || gui->style_depth >= (int)SDL_arraysize(gui->style_kind))
+    {
+        return false;
+    }
+    struct nk_context *ctx = &gui->ctx;
+    const struct nk_color nkc = nk_rgba(color.r, color.g, color.b, color.a);
+    struct nk_style_item *item = NULL;
+    struct nk_color *plain = NULL;
+
+    switch (which)
+    {
+    case GRAPPLE_GUI_COLOR_WINDOW_BACKGROUND:
+        item = &ctx->style.window.fixed_background;
+        break;
+    case GRAPPLE_GUI_COLOR_BUTTON:
+        item = &ctx->style.button.normal;
+        break;
+    case GRAPPLE_GUI_COLOR_BUTTON_HOVER:
+        item = &ctx->style.button.hover;
+        break;
+    case GRAPPLE_GUI_COLOR_HEADER:
+        item = &ctx->style.window.header.normal;
+        break;
+    case GRAPPLE_GUI_COLOR_TEXT:
+        plain = &ctx->style.text.color;
+        break;
+    case GRAPPLE_GUI_COLOR_BUTTON_TEXT:
+        plain = &ctx->style.button.text_normal;
+        break;
+    default:
+        SDL_InvalidParamError("which");
+        return false;
+    }
+
+    if (item != NULL)
+    {
+        nk_style_push_style_item(ctx, item, nk_style_item_color(nkc));
+        gui->style_kind[gui->style_depth++] = 0;
+    }
+    else
+    {
+        nk_style_push_color(ctx, plain, nkc);
+        gui->style_kind[gui->style_depth++] = 1;
+    }
+    return true;
+}
+
+void Grapple_GuiPopStyleColor(Grapple_Gui *gui, int count)
+{
+    if (gui == NULL)
+    {
+        return;
+    }
+    while (count-- > 0 && gui->style_depth > 0)
+    {
+        gui->style_depth--;
+        if (gui->style_kind[gui->style_depth] == 0)
+        {
+            nk_style_pop_style_item(&gui->ctx);
+        }
+        else
+        {
+            nk_style_pop_color(&gui->ctx);
+        }
+    }
+}
+
+bool Grapple_GuiKeyPressed(Grapple_Gui *gui, int scancode)
+{
+    if (gui == NULL || scancode < 0 || scancode >= SDL_SCANCODE_COUNT)
+    {
+        return false;
+    }
+    return (gui->pressed[scancode / 8] & (Uint8)(1u << (scancode % 8))) != 0;
+}
+
+float Grapple_GuiScale(Grapple_Gui *gui)
+{
+    return (gui != NULL) ? gui->scale : 1.0f;
+}
+
+bool Grapple_GuiPumpEvents(Grapple_Gui *gui)
+{
+    bool keep_running = true;
+    SDL_Event event;
+
+    if (gui == NULL)
+    {
+        SDL_InvalidParamError("gui");
+        return false;
+    }
+    Grapple_GuiInputBegin(gui);
+    while (SDL_PollEvent(&event))
+    {
+        if (event.type == SDL_EVENT_QUIT ||
+            event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED)
+        {
+            keep_running = false;
+        }
+        Grapple_GuiProcessEvent(gui, &event);
+    }
+    Grapple_GuiInputEnd(gui);
+    return keep_running;
+}
+
+static void HandleKey(struct nk_context *ctx, const SDL_KeyboardEvent *key, bool down)
+{
+    const bool ctrl = (key->mod & SDL_KMOD_CTRL) != 0;
+    switch (key->key)
+    {
+    case SDLK_LSHIFT:
+    case SDLK_RSHIFT:
+        nk_input_key(ctx, NK_KEY_SHIFT, down);
+        break;
+    case SDLK_LCTRL:
+    case SDLK_RCTRL:
+        nk_input_key(ctx, NK_KEY_CTRL, down);
+        break;
+    case SDLK_DELETE:
+        nk_input_key(ctx, NK_KEY_DEL, down);
+        break;
+    case SDLK_RETURN:
+    case SDLK_KP_ENTER:
+        nk_input_key(ctx, NK_KEY_ENTER, down);
+        break;
+    case SDLK_TAB:
+        nk_input_key(ctx, NK_KEY_TAB, down);
+        break;
+    case SDLK_BACKSPACE:
+        nk_input_key(ctx, NK_KEY_BACKSPACE, down);
+        break;
+    case SDLK_HOME:
+        nk_input_key(ctx, NK_KEY_TEXT_START, down);
+        nk_input_key(ctx, NK_KEY_SCROLL_START, down);
+        break;
+    case SDLK_END:
+        nk_input_key(ctx, NK_KEY_TEXT_END, down);
+        nk_input_key(ctx, NK_KEY_SCROLL_END, down);
+        break;
+    case SDLK_PAGEUP:
+        nk_input_key(ctx, NK_KEY_SCROLL_UP, down);
+        break;
+    case SDLK_PAGEDOWN:
+        nk_input_key(ctx, NK_KEY_SCROLL_DOWN, down);
+        break;
+    case SDLK_UP:
+        nk_input_key(ctx, NK_KEY_UP, down);
+        break;
+    case SDLK_DOWN:
+        nk_input_key(ctx, NK_KEY_DOWN, down);
+        break;
+    case SDLK_LEFT:
+        nk_input_key(ctx, ctrl ? NK_KEY_TEXT_WORD_LEFT : NK_KEY_LEFT, down);
+        break;
+    case SDLK_RIGHT:
+        nk_input_key(ctx, ctrl ? NK_KEY_TEXT_WORD_RIGHT : NK_KEY_RIGHT, down);
+        break;
+    case SDLK_C:
+        if (ctrl)
+        {
+            nk_input_key(ctx, NK_KEY_COPY, down);
+        }
+        break;
+    case SDLK_V:
+        if (ctrl)
+        {
+            nk_input_key(ctx, NK_KEY_PASTE, down);
+        }
+        break;
+    case SDLK_X:
+        if (ctrl)
+        {
+            nk_input_key(ctx, NK_KEY_CUT, down);
+        }
+        break;
+    case SDLK_Z:
+        if (ctrl)
+        {
+            nk_input_key(ctx, NK_KEY_TEXT_UNDO, down);
+        }
+        break;
+    case SDLK_Y:
+        if (ctrl)
+        {
+            nk_input_key(ctx, NK_KEY_TEXT_REDO, down);
+        }
+        break;
+    case SDLK_A:
+        if (ctrl)
+        {
+            nk_input_key(ctx, NK_KEY_TEXT_SELECT_ALL, down);
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+bool Grapple_GuiProcessEvent(Grapple_Gui *gui, const SDL_Event *event)
+{
+    if (gui == NULL || event == NULL)
+    {
+        return false;
+    }
+    struct nk_context *ctx = &gui->ctx;
+    switch (event->type)
+    {
+    case SDL_EVENT_MOUSE_MOTION:
+        nk_input_motion(ctx, (int)(event->motion.x * gui->scale),
+                        (int)(event->motion.y * gui->scale));
+        return true;
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+    case SDL_EVENT_MOUSE_BUTTON_UP: {
+        const bool down = (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN);
+        const int x = (int)(event->button.x * gui->scale);
+        const int y = (int)(event->button.y * gui->scale);
+        enum nk_buttons button = NK_BUTTON_LEFT;
+        if (event->button.button == SDL_BUTTON_MIDDLE)
+        {
+            button = NK_BUTTON_MIDDLE;
+        }
+        else if (event->button.button == SDL_BUTTON_RIGHT)
+        {
+            button = NK_BUTTON_RIGHT;
+        }
+        if (button == NK_BUTTON_LEFT && down && event->button.clicks >= 2)
+        {
+            nk_input_button(ctx, NK_BUTTON_DOUBLE, x, y, nk_true);
+        }
+        nk_input_button(ctx, button, x, y, down ? nk_true : nk_false);
+        return true;
+    }
+    case SDL_EVENT_MOUSE_WHEEL:
+        nk_input_scroll(ctx, nk_vec2(event->wheel.x, event->wheel.y));
+        return true;
+    case SDL_EVENT_TEXT_INPUT: {
+        const char *text = event->text.text;
+        const int len = nk_strlen(text);
+        int at = 0;
+        while (at < len)
+        {
+            nk_rune rune = 0;
+            const int consumed = nk_utf_decode(text + at, &rune, len - at);
+            if (consumed <= 0)
+            {
+                break;
+            }
+            nk_input_unicode(ctx, rune);
+            at += consumed;
+        }
+        return true;
+    }
+    case SDL_EVENT_KEY_DOWN:
+        if (event->key.scancode >= 0 && event->key.scancode < SDL_SCANCODE_COUNT)
+        {
+            gui->pressed[event->key.scancode / 8] |=
+                (Uint8)(1u << (event->key.scancode % 8));
+        }
+        /* fall through to Nuklear key translation */
+        SDL_FALLTHROUGH;
+    case SDL_EVENT_KEY_UP:
+        HandleKey(ctx, &event->key, event->type == SDL_EVENT_KEY_DOWN);
+        return true;
+    default:
+        return false;
+    }
+}
+
+/* ---------------------------------------------------------- render ----- */
+
+bool Grapple_GuiRender(Grapple_Gui *gui)
+{
+    if (gui == NULL)
+    {
+        return SDL_InvalidParamError("gui");
+    }
+#ifdef __EMSCRIPTEN__
+    if (!gui->file_button_synced)
+    {
+        WebHideFileButton(); /* no file button this frame: stop intercepting */
+    }
+    if (!gui->save_button_synced)
+    {
+        WebHideSaveButton();
+    }
+    gui->file_button_synced = false;
+    gui->save_button_synced = false;
+#endif
+    static const struct nk_draw_vertex_layout_element vertex_layout[] = {
+        {NK_VERTEX_POSITION, NK_FORMAT_FLOAT, NK_OFFSETOF(GuiVertex, pos)},
+        {NK_VERTEX_TEXCOORD, NK_FORMAT_FLOAT, NK_OFFSETOF(GuiVertex, uv)},
+        {NK_VERTEX_COLOR, NK_FORMAT_R32G32B32A32_FLOAT, NK_OFFSETOF(GuiVertex, col)},
+        {NK_VERTEX_LAYOUT_END}};
+
+    struct nk_convert_config config;
+    NK_MEMSET(&config, 0, sizeof(config));
+    config.vertex_layout = vertex_layout;
+    config.vertex_size = sizeof(GuiVertex);
+    config.vertex_alignment = NK_ALIGNOF(GuiVertex);
+    config.tex_null = gui->tex_null;
+    config.circle_segment_count = 22;
+    config.curve_segment_count = 22;
+    config.arc_segment_count = 22;
+    config.global_alpha = 1.0f;
+    config.shape_AA = NK_ANTI_ALIASING_ON;
+    config.line_AA = NK_ANTI_ALIASING_ON;
+
+    struct nk_buffer verts;
+    struct nk_buffer idx;
+    nk_buffer_init_default(&verts);
+    nk_buffer_init_default(&idx);
+    const nk_flags rc = nk_convert(&gui->ctx, &gui->cmds, &verts, &idx, &config);
+    bool ok = (rc == NK_CONVERT_SUCCESS);
+    if (ok)
+    {
+        const GuiVertex *vertices = (const GuiVertex *)nk_buffer_memory_const(&verts);
+        const nk_draw_index *indices = (const nk_draw_index *)nk_buffer_memory_const(&idx);
+        const int vertex_count = (int)(verts.needed / sizeof(GuiVertex));
+
+        const struct nk_draw_command *cmd = NULL;
+        nk_size index_offset = 0;
+        int commands = 0;
+        nk_draw_foreach(cmd, &gui->ctx, &gui->cmds)
+        {
+            if (cmd->elem_count == 0)
+            {
+                continue;
+            }
+            commands++;
+            const SDL_Rect clip = {(int)cmd->clip_rect.x, (int)cmd->clip_rect.y,
+                                   (int)cmd->clip_rect.w, (int)cmd->clip_rect.h};
+            SDL_SetRenderClipRect(gui->renderer, &clip);
+            if (!SDL_RenderGeometryRaw(gui->renderer, (SDL_Texture *)cmd->texture.ptr,
+                                       &vertices->pos[0], (int)sizeof(GuiVertex),
+                                       (const SDL_FColor *)(const void *)&vertices->col[0],
+                                       (int)sizeof(GuiVertex), &vertices->uv[0],
+                                       (int)sizeof(GuiVertex), vertex_count,
+                                       indices + index_offset, (int)cmd->elem_count,
+                                       (int)sizeof(nk_draw_index)))
+            {
+                ok = false;
+                break;
+            }
+            index_offset += cmd->elem_count;
+        }
+        SDL_SetRenderClipRect(gui->renderer, NULL);
+        gui->draw_commands = commands;
+        gui->memory_used = (int)gui->ctx.memory.allocated;
+    }
+    else
+    {
+        SDL_SetError("nk_convert failed (0x%x)", (unsigned)rc);
+    }
+
+    /* Overlays are drawn straight through SDL after the GUI: queuing them
+     * into Nuklear's own overlay buffer would not survive, because
+     * nk_build re-initialises it for the mouse cursor every frame. */
+    for (int i = 0; i < gui->overlay_count; i++)
+    {
+        SDL_Texture *texture = gui->overlays[i].texture;
+        const SDL_FRect r = gui->overlays[i].rect;
+        struct nk_rect dst;
+        if (!FitTexture(texture, nk_rect(r.x, r.y, r.w, r.h), gui->overlays[i].mode, &dst))
+        {
+            continue;
+        }
+        const SDL_FRect out = {dst.x, dst.y, dst.w, dst.h};
+        const SDL_Rect clip = {(int)r.x, (int)r.y, (int)r.w, (int)r.h};
+        SDL_SetRenderClipRect(gui->renderer, &clip);
+        if (!SDL_RenderTexture(gui->renderer, texture, NULL, &out))
+        {
+            ok = false;
+        }
+    }
+    SDL_SetRenderClipRect(gui->renderer, NULL);
+    gui->overlay_count = 0;
+
+    nk_buffer_free(&verts);
+    nk_buffer_free(&idx);
+    nk_buffer_clear(&gui->cmds);
+    nk_clear(&gui->ctx);
+    return ok;
+}

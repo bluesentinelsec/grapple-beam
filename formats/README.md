@@ -1,4 +1,4 @@
-# SDLStatic::Formats
+# Grapple::Formats
 
 Static-only builds of the three data-format parsers games actually need —
 level files, configs, and everything ini-shaped:
@@ -14,7 +14,7 @@ on every platform, web included. The native upstream APIs are exposed
 unchanged; provenance in [`deps/formats.md`](../deps/formats.md).
 
 ```cmake
-target_link_libraries(your_game PRIVATE SDLStatic::Formats)
+target_link_libraries(your_game PRIVATE Grapple::Formats)
 ```
 
 ```c

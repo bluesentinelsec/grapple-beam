@@ -1,4 +1,4 @@
-# SDLStatic::Physics
+# Grapple::Physics
 
 A static-link-first build of [Box2D](https://github.com/erincatto/box2d)
 v3.1.1 — Erin Catto's canonical 2D physics engine, rewritten in pure C11
@@ -8,7 +8,7 @@ every platform including web. The full native `b2*` API ships unchanged.
 Provenance: [`deps/box2d.md`](../deps/box2d.md).
 
 ```cmake
-target_link_libraries(your_game PRIVATE SDLStatic::Physics)
+target_link_libraries(your_game PRIVATE Grapple::Physics)
 ```
 
 ```c
@@ -29,18 +29,18 @@ b2CreatePolygonShape(player, &shape_def, &box);
 b2World_Step(world, 1.0f / 60.0f, 4);   /* each frame */
 ```
 
-## Debug-draw overlay (SDLStatic extension)
+## Debug-draw overlay (Grapple extension)
 
-Original glue in `<SDLStatic/physics_draw.h>` renders a world's collision
-shapes through the SDLStatic::Gfx GPU primitives — one call, batched
+Original glue in `<grapple/physics_draw.h>` renders a world's collision
+shapes through the Grapple::Gfx GPU primitives — one call, batched
 `SDL_RenderGeometry` draws, meters-to-pixels mapping with y flipped:
 
 ```c
-SDLStatic_PhysicsDrawConfig cfg = {
+Grapple_PhysicsDrawConfig cfg = {
     .pixels_per_meter = 32.0f,
     .offset_x = 640.0f, .offset_y = 600.0f,
 };
-SDLStatic_DrawPhysicsWorld(world, renderer, &cfg);
+Grapple_DrawPhysicsWorld(world, renderer, &cfg);
 ```
 
 Tests (`tests/physics/`) assert simulation against analytical

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate an original General MIDI GUS patch set for the TiMidity backend.
 
-TiMidity (the statically linked MIDI soft-synth in SDLStatic::Mixer) needs
+TiMidity (the statically linked MIDI soft-synth in Grapple::Mixer) needs
 GF1/GUS instrument patches at runtime to render audio. Third-party patch
 collections carry licensing baggage, so — in the same spirit as the
 synthesized test corpus — this script *generates* a small, deterministic,

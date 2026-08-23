@@ -4,7 +4,7 @@
 # this links `SDKCxx` alone — no second library, no link order. If that ever
 # stops being true, this fails to link, which is the point.
 cmake_minimum_required(VERSION 3.20)
-project(sdlstatic_sdk_consumer_cxx LANGUAGES CXX)
+project(grapple_sdk_consumer_cxx LANGUAGES CXX)
 
 find_package(grapple-beam REQUIRED)
 

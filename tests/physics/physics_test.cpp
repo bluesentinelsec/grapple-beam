@@ -1,6 +1,6 @@
 /**
  * @file physics_test.cpp
- * @brief Tests for SDLStatic::Physics — vendored Box2D v3 + debug-draw glue.
+ * @brief Tests for Grapple::Physics — vendored Box2D v3 + debug-draw glue.
  *
  * Simulation correctness is asserted against analytical expectations: a
  * dropped box must come to rest exactly at its half-extent above the
@@ -11,7 +11,7 @@
  */
 
 #include <SDL3/SDL.h>
-#include <SDLStatic/physics_draw.h>
+#include <grapple/physics_draw.h>
 #include <box2d/box2d.h>
 #include <gtest/gtest.h>
 
@@ -279,11 +279,11 @@ TEST_F(PhysicsWorld, DebugDrawRendersShapesThroughGpuPrimitives)
     AddBox(0.0f, 0.5f); // resting on the ground at the origin
     Step(10);
 
-    SDLStatic_PhysicsDrawConfig config = {};
+    Grapple_PhysicsDrawConfig config = {};
     config.pixels_per_meter = 20.0f;
     config.offset_x = 100.0f; // world origin at screen center
     config.offset_y = 150.0f;
-    ASSERT_TRUE(SDLStatic_DrawPhysicsWorld(world_, renderer, &config)) << SDL_GetError();
+    ASSERT_TRUE(Grapple_DrawPhysicsWorld(world_, renderer, &config)) << SDL_GetError();
     SDL_FlushRenderer(renderer);
 
     // The box occupies world (-0.5..0.5, 0..1) -> screen (90..110, 130..150).
@@ -294,8 +294,8 @@ TEST_F(PhysicsWorld, DebugDrawRendersShapesThroughGpuPrimitives)
     EXPECT_EQ(r | g | b, 0) << "empty sky must stay empty";
 
     // Bad input paths.
-    EXPECT_FALSE(SDLStatic_DrawPhysicsWorld(world_, nullptr, &config));
-    EXPECT_FALSE(SDLStatic_DrawPhysicsWorld(b2_nullWorldId, renderer, &config));
+    EXPECT_FALSE(Grapple_DrawPhysicsWorld(world_, nullptr, &config));
+    EXPECT_FALSE(Grapple_DrawPhysicsWorld(b2_nullWorldId, renderer, &config));
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroySurface(surface);

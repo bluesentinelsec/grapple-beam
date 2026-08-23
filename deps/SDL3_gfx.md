@@ -29,7 +29,7 @@ delete-down.
 
 ## Original additions (not vendored)
 
-`gfx/src/sdlstatic_gpu_primitives.c` + `<SDLStatic/gpu_primitives.h>`:
+`gfx/src/grapple_gpu_primitives.c` + `<grapple/gpu_primitives.h>`:
 GPU-bound equivalents of the CPU primitives (same signatures, `gpu` prefix)
 that tessellate to triangles and render via one `SDL_RenderGeometry` call
 per primitive. See `gfx/README.md`.

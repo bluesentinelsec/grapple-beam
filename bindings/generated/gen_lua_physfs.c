@@ -48,7 +48,7 @@ static int GenL_PHYSFS_caseFold(lua_State *L)
 static int GenL_PHYSFS_close(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     int rv = PHYSFS_close(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -83,7 +83,7 @@ static int GenL_PHYSFS_deregisterArchiver(lua_State *L)
 static int GenL_PHYSFS_eof(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     int rv = PHYSFS_eof(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -101,7 +101,7 @@ static int GenL_PHYSFS_exists(lua_State *L)
 static int GenL_PHYSFS_fileLength(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_sint64 rv = PHYSFS_fileLength(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -110,7 +110,7 @@ static int GenL_PHYSFS_fileLength(lua_State *L)
 static int GenL_PHYSFS_flush(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     int rv = PHYSFS_flush(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -120,7 +120,7 @@ static int GenL_PHYSFS_getAllocator(lua_State *L)
 {
     (void)L;
     const PHYSFS_Allocator * rv = PHYSFS_getAllocator();
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "PHYSFS_Allocator");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "PHYSFS_Allocator");
     return 1;
 }
 
@@ -243,7 +243,7 @@ static int GenL_PHYSFS_mount(lua_State *L)
 static int GenL_PHYSFS_mountHandle(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checkstring(L, 3);
     int a3 = (int)luaL_checkinteger(L, 4);
@@ -255,7 +255,7 @@ static int GenL_PHYSFS_mountHandle(lua_State *L)
 static int GenL_PHYSFS_mountIo(lua_State *L)
 {
     (void)L;
-    PHYSFS_Io *a0 = (PHYSFS_Io *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_Io");
+    PHYSFS_Io *a0 = (PHYSFS_Io *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_Io");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checkstring(L, 3);
     int a3 = (int)luaL_checkinteger(L, 4);
@@ -269,7 +269,7 @@ static int GenL_PHYSFS_openAppend(lua_State *L)
     (void)L;
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
     PHYSFS_File * rv = PHYSFS_openAppend(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "PHYSFS_File");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "PHYSFS_File");
     return 1;
 }
 
@@ -278,7 +278,7 @@ static int GenL_PHYSFS_openRead(lua_State *L)
     (void)L;
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
     PHYSFS_File * rv = PHYSFS_openRead(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "PHYSFS_File");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "PHYSFS_File");
     return 1;
 }
 
@@ -287,7 +287,7 @@ static int GenL_PHYSFS_openWrite(lua_State *L)
     (void)L;
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
     PHYSFS_File * rv = PHYSFS_openWrite(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "PHYSFS_File");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "PHYSFS_File");
     return 1;
 }
 
@@ -302,7 +302,7 @@ static int GenL_PHYSFS_permitSymbolicLinks(lua_State *L)
 static int GenL_PHYSFS_readSBE16(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_sint16 io1 = (PHYSFS_sint16)luaL_optinteger(L, 2, 0);
     int rv = PHYSFS_readSBE16(a0, &io1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -313,7 +313,7 @@ static int GenL_PHYSFS_readSBE16(lua_State *L)
 static int GenL_PHYSFS_readSBE32(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_sint32 io1 = (PHYSFS_sint32)luaL_optinteger(L, 2, 0);
     int rv = PHYSFS_readSBE32(a0, &io1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -324,7 +324,7 @@ static int GenL_PHYSFS_readSBE32(lua_State *L)
 static int GenL_PHYSFS_readSBE64(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_sint64 io1 = (PHYSFS_sint64)luaL_optinteger(L, 2, 0);
     int rv = PHYSFS_readSBE64(a0, &io1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -335,7 +335,7 @@ static int GenL_PHYSFS_readSBE64(lua_State *L)
 static int GenL_PHYSFS_readSLE16(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_sint16 io1 = (PHYSFS_sint16)luaL_optinteger(L, 2, 0);
     int rv = PHYSFS_readSLE16(a0, &io1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -346,7 +346,7 @@ static int GenL_PHYSFS_readSLE16(lua_State *L)
 static int GenL_PHYSFS_readSLE32(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_sint32 io1 = (PHYSFS_sint32)luaL_optinteger(L, 2, 0);
     int rv = PHYSFS_readSLE32(a0, &io1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -357,7 +357,7 @@ static int GenL_PHYSFS_readSLE32(lua_State *L)
 static int GenL_PHYSFS_readSLE64(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_sint64 io1 = (PHYSFS_sint64)luaL_optinteger(L, 2, 0);
     int rv = PHYSFS_readSLE64(a0, &io1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -368,7 +368,7 @@ static int GenL_PHYSFS_readSLE64(lua_State *L)
 static int GenL_PHYSFS_readUBE16(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_uint16 io1 = (PHYSFS_uint16)luaL_optinteger(L, 2, 0);
     int rv = PHYSFS_readUBE16(a0, &io1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -379,7 +379,7 @@ static int GenL_PHYSFS_readUBE16(lua_State *L)
 static int GenL_PHYSFS_readUBE32(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_uint32 io1 = (PHYSFS_uint32)luaL_optinteger(L, 2, 0);
     int rv = PHYSFS_readUBE32(a0, &io1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -390,7 +390,7 @@ static int GenL_PHYSFS_readUBE32(lua_State *L)
 static int GenL_PHYSFS_readUBE64(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_uint64 io1 = (PHYSFS_uint64)luaL_optinteger(L, 2, 0);
     int rv = PHYSFS_readUBE64(a0, &io1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -401,7 +401,7 @@ static int GenL_PHYSFS_readUBE64(lua_State *L)
 static int GenL_PHYSFS_readULE16(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_uint16 io1 = (PHYSFS_uint16)luaL_optinteger(L, 2, 0);
     int rv = PHYSFS_readULE16(a0, &io1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -412,7 +412,7 @@ static int GenL_PHYSFS_readULE16(lua_State *L)
 static int GenL_PHYSFS_readULE32(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_uint32 io1 = (PHYSFS_uint32)luaL_optinteger(L, 2, 0);
     int rv = PHYSFS_readULE32(a0, &io1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -423,7 +423,7 @@ static int GenL_PHYSFS_readULE32(lua_State *L)
 static int GenL_PHYSFS_readULE64(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_uint64 io1 = (PHYSFS_uint64)luaL_optinteger(L, 2, 0);
     int rv = PHYSFS_readULE64(a0, &io1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -434,7 +434,7 @@ static int GenL_PHYSFS_readULE64(lua_State *L)
 static int GenL_PHYSFS_registerArchiver(lua_State *L)
 {
     (void)L;
-    const PHYSFS_Archiver *a0 = (const PHYSFS_Archiver *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_Archiver");
+    const PHYSFS_Archiver *a0 = (const PHYSFS_Archiver *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_Archiver");
     int rv = PHYSFS_registerArchiver(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -443,7 +443,7 @@ static int GenL_PHYSFS_registerArchiver(lua_State *L)
 static int GenL_PHYSFS_seek(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_uint64 a1 = (PHYSFS_uint64)luaL_checkinteger(L, 2);
     int rv = PHYSFS_seek(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -453,7 +453,7 @@ static int GenL_PHYSFS_seek(lua_State *L)
 static int GenL_PHYSFS_setAllocator(lua_State *L)
 {
     (void)L;
-    const PHYSFS_Allocator *a0 = (const PHYSFS_Allocator *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_Allocator");
+    const PHYSFS_Allocator *a0 = (const PHYSFS_Allocator *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_Allocator");
     int rv = PHYSFS_setAllocator(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -462,7 +462,7 @@ static int GenL_PHYSFS_setAllocator(lua_State *L)
 static int GenL_PHYSFS_setBuffer(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_uint64 a1 = (PHYSFS_uint64)luaL_checkinteger(L, 2);
     int rv = PHYSFS_setBuffer(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -640,7 +640,7 @@ static int GenL_PHYSFS_symbolicLinksPermitted(lua_State *L)
 static int GenL_PHYSFS_tell(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_sint64 rv = PHYSFS_tell(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -713,7 +713,7 @@ static int GenL_PHYSFS_utf8stricmp(lua_State *L)
 static int GenL_PHYSFS_writeBytes(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     size_t len1 = 0;
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checklstring(L, 2, &len1);
     PHYSFS_sint64 rv = PHYSFS_writeBytes(a0, (const void *)a1, (PHYSFS_uint64)len1);
@@ -724,7 +724,7 @@ static int GenL_PHYSFS_writeBytes(lua_State *L)
 static int GenL_PHYSFS_writeSBE16(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_sint16 a1 = (PHYSFS_sint16)luaL_checkinteger(L, 2);
     int rv = PHYSFS_writeSBE16(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -734,7 +734,7 @@ static int GenL_PHYSFS_writeSBE16(lua_State *L)
 static int GenL_PHYSFS_writeSBE32(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_sint32 a1 = (PHYSFS_sint32)luaL_checkinteger(L, 2);
     int rv = PHYSFS_writeSBE32(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -744,7 +744,7 @@ static int GenL_PHYSFS_writeSBE32(lua_State *L)
 static int GenL_PHYSFS_writeSBE64(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_sint64 a1 = (PHYSFS_sint64)luaL_checkinteger(L, 2);
     int rv = PHYSFS_writeSBE64(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -754,7 +754,7 @@ static int GenL_PHYSFS_writeSBE64(lua_State *L)
 static int GenL_PHYSFS_writeSLE16(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_sint16 a1 = (PHYSFS_sint16)luaL_checkinteger(L, 2);
     int rv = PHYSFS_writeSLE16(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -764,7 +764,7 @@ static int GenL_PHYSFS_writeSLE16(lua_State *L)
 static int GenL_PHYSFS_writeSLE32(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_sint32 a1 = (PHYSFS_sint32)luaL_checkinteger(L, 2);
     int rv = PHYSFS_writeSLE32(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -774,7 +774,7 @@ static int GenL_PHYSFS_writeSLE32(lua_State *L)
 static int GenL_PHYSFS_writeSLE64(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_sint64 a1 = (PHYSFS_sint64)luaL_checkinteger(L, 2);
     int rv = PHYSFS_writeSLE64(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -784,7 +784,7 @@ static int GenL_PHYSFS_writeSLE64(lua_State *L)
 static int GenL_PHYSFS_writeUBE16(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_uint16 a1 = (PHYSFS_uint16)luaL_checkinteger(L, 2);
     int rv = PHYSFS_writeUBE16(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -794,7 +794,7 @@ static int GenL_PHYSFS_writeUBE16(lua_State *L)
 static int GenL_PHYSFS_writeUBE32(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_uint32 a1 = (PHYSFS_uint32)luaL_checkinteger(L, 2);
     int rv = PHYSFS_writeUBE32(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -804,7 +804,7 @@ static int GenL_PHYSFS_writeUBE32(lua_State *L)
 static int GenL_PHYSFS_writeUBE64(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_uint64 a1 = (PHYSFS_uint64)luaL_checkinteger(L, 2);
     int rv = PHYSFS_writeUBE64(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -814,7 +814,7 @@ static int GenL_PHYSFS_writeUBE64(lua_State *L)
 static int GenL_PHYSFS_writeULE16(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_uint16 a1 = (PHYSFS_uint16)luaL_checkinteger(L, 2);
     int rv = PHYSFS_writeULE16(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -824,7 +824,7 @@ static int GenL_PHYSFS_writeULE16(lua_State *L)
 static int GenL_PHYSFS_writeULE32(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_uint32 a1 = (PHYSFS_uint32)luaL_checkinteger(L, 2);
     int rv = PHYSFS_writeULE32(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -834,15 +834,15 @@ static int GenL_PHYSFS_writeULE32(lua_State *L)
 static int GenL_PHYSFS_writeULE64(lua_State *L)
 {
     (void)L;
-    PHYSFS_File *a0 = (PHYSFS_File *)SDLStaticGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
     PHYSFS_uint64 a1 = (PHYSFS_uint64)luaL_checkinteger(L, 2);
     int rv = PHYSFS_writeULE64(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
 }
 
-int SDLStaticGen_OpenLua_physfs(lua_State *L);
-int SDLStaticGen_OpenLua_physfs(lua_State *L)
+int GrappleGen_OpenLua_physfs(lua_State *L);
+int GrappleGen_OpenLua_physfs(lua_State *L)
 {
     lua_createtable(L, 0, 83);
     lua_pushcfunction(L, GenL_PHYSFS_caseFold);

@@ -9,7 +9,7 @@ HTTP/S client + embedded server; C API (`<mog/mog_c.h>`) over a C++20
 core. Transports are platform-native (WinHTTP, NSURLSession, libcurl via
 dlopen on Linux); TLS via FetchContent'd mbedTLS, gzip via miniz — all
 static, so the link audit holds. mog's C API normally builds shared for
-FFI; SDLStatic::Http compiles those sources into a static lib against
+FFI; Grapple::Http compiles those sources into a static lib against
 mog_lib instead. Off on Emscripten (C API/server unsupported there).
 
 ## History

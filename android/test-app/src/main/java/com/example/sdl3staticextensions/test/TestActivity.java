@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.util.Log;
 
 public final class TestActivity extends Activity {
-    private static final String TAG = "SDL3-static-extensions-android-test";
+    private static final String TAG = "grapple-beam-android-test";
 
     static {
-        System.loadLibrary("SDL3_static_extensions_android_test");
+        System.loadLibrary("grapple_android_test");
     }
 
     private static native int runNativeTests();
@@ -19,12 +19,12 @@ public final class TestActivity extends Activity {
         Thread runner = new Thread(() -> {
             int failures = runNativeTests();
             if (failures == 0) {
-                Log.i(TAG, "SDL3_STATIC_EXTENSIONS_ANDROID_TESTS: PASS");
+                Log.i(TAG, "GRAPPLE_BEAM_ANDROID_TESTS: PASS");
             } else {
-                Log.e(TAG, "SDL3_STATIC_EXTENSIONS_ANDROID_TESTS: FAIL (" + failures + " failures)");
+                Log.e(TAG, "GRAPPLE_BEAM_ANDROID_TESTS: FAIL (" + failures + " failures)");
             }
             finishAndRemoveTask();
-        }, "SDL3-static-extensions-native-tests");
+        }, "grapple-beam-native-tests");
         runner.start();
     }
 }

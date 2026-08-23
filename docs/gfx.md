@@ -3,14 +3,14 @@ title: Gfx
 description: "2D drawing primitives: the classic SDL3_gfx CPU set plus original GPU-batched equivalents with the same API shape."
 ---
 
-# Gfx — `SDLStatic::Gfx`
+# Gfx — `Grapple::Gfx`
 
 SDL3_gfx v1.0.1 (the community SDL3 port of the classic SDL2_gfx),
 statically built, **plus an original GPU-primitives layer** with the same
 API shape.
 
 ```cmake
-target_link_libraries(your_game PRIVATE SDLStatic::Gfx)
+target_link_libraries(your_game PRIVATE Grapple::Gfx)
 ```
 
 ## What's inside
@@ -21,7 +21,7 @@ target_link_libraries(your_game PRIVATE SDLStatic::Gfx)
 | Rotozoom (`SDL3_gfx/SDL3_rotozoom.h`) | ✅ vendored | surface rotation/zoom |
 | Framerate manager (`SDL3_gfx/SDL3_framerate.h`) | ✅ vendored | |
 | Image filters | ❌ deleted | MMX-era byte-array filters, out of scope |
-| **GPU primitives** (`SDLStatic/gpu_primitives.h`) | ✅ original | see below |
+| **GPU primitives** (`grapple/gpu_primitives.h`) | ✅ original | see below |
 
 ## GPU-bound primitives
 

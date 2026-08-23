@@ -3,14 +3,14 @@ title: Net
 description: "TCP and UDP sockets via SDL3_net, statically built — the simplest port in the stack."
 ---
 
-# Net — `SDLStatic::Net`
+# Net — `Grapple::Net`
 
 SDL3_net 3.2.0 (the `NET_*` API), statically built. One portable C file
 over OS sockets with zero third-party dependencies; the full API surface
 ships unchanged. For HTTP/S, see the [mog HTTP client](http.html).
 
 ```cmake
-target_link_libraries(your_game PRIVATE SDLStatic::Net)
+target_link_libraries(your_game PRIVATE Grapple::Net)
 ```
 
 ```c
@@ -31,7 +31,7 @@ NET_StreamSocket *sock = NET_CreateClient(addr, 443, 0);
 | UDP datagram sockets | ✅ full |
 | Multi-socket wait (`NET_WaitUntilInputAvailable`) | ✅ full |
 | Windows | ✅ links OS-built-in `iphlpapi`/`ws2_32` only |
-| Web / Emscripten | ❌ not built — upstream ships only a stub there, and this project does not ship stubs; `SDLSTATIC_BUILD_NET` is forced OFF for web builds |
+| Web / Emscripten | ❌ not built — upstream ships only a stub there, and this project does not ship stubs; `GRAPPLE_BUILD_NET` is forced OFF for web builds |
 
 Tests are fully self-contained over 127.0.0.1: TCP echo both directions,
 UDP round-trips, multi-socket readiness, clean failure paths.

@@ -201,7 +201,7 @@ void cute_tiled_free_external_tileset(cute_tiled_tileset_t* tileset);
 #endif
 
 typedef struct cute_tiled_layer_t cute_tiled_layer_t;
-/* SDLStatic local fix: upstream forgot this typedef (every other struct has
+/* Grapple local fix: upstream forgot this typedef (every other struct has
    one), so the header fails to compile as C. */
 typedef struct cute_tiled_chunk_t cute_tiled_chunk_t;
 typedef struct cute_tiled_object_t cute_tiled_object_t;
@@ -3118,7 +3118,7 @@ cute_tiled_map_t* cute_tiled_load_map_from_memory(const void* memory, int size_i
 	cute_tiled_patch_interned_strings(m);
 	CUTE_TILED_REVERSE_LIST(cute_tiled_layer_t, m->map.layers);
 	CUTE_TILED_REVERSE_LIST(cute_tiled_tileset_t, m->map.tilesets);
-	// SDLStatic local fix: upstream captured these before parsing (both were
+	// Grapple local fix: upstream captured these before parsing (both were
 	// still NULL), so the object/chunk/tile-descriptor lists below were never
 	// reversed. Re-read the heads after the lists above have been reversed.
 	layer = m->map.layers;
@@ -3145,7 +3145,7 @@ cute_tiled_err:
 
 void cute_tiled_free_map(cute_tiled_map_t* map)
 {
-	// SDLStatic local fix: upstream computed this offset by dereferencing a
+	// Grapple local fix: upstream computed this offset by dereferencing a
 	// null pointer, which is undefined behavior (flagged by UBSan). Use the
 	// standard offsetof instead (stddef.h is already included above).
 	cute_tiled_map_internal_t* m = (cute_tiled_map_internal_t*)(((char*)map) - offsetof(cute_tiled_map_internal_t, map));

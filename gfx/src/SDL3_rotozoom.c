@@ -617,7 +617,7 @@ void _transformSurfaceRGBA(SDL_Surface * src, SDL_Surface * dst, int cx, int cy,
 	/*
 	* Variable setup 
 	*/
-	/* SDLStatic local fix: dst is larger than src for rotated output, so the
+	/* Grapple local fix: dst is larger than src for rotated output, so the
 	   difference is negative and left-shifting it is UB (caught by UBSan).
 	   Multiplication has defined semantics for negative operands. */
 	xd = (src->w - dst->w) * 32768;
@@ -736,7 +736,7 @@ void transformSurfaceY(SDL_Surface * src, SDL_Surface * dst, int cx, int cy, int
 	/*
 	* Variable setup 
 	*/
-	/* SDLStatic local fix: dst is larger than src for rotated output, so the
+	/* Grapple local fix: dst is larger than src for rotated output, so the
 	   difference is negative and left-shifting it is UB (caught by UBSan).
 	   Multiplication has defined semantics for negative operands. */
 	xd = (src->w - dst->w) * 32768;

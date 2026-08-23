@@ -1,4 +1,4 @@
-# AGENTS.md — working in `SDL3-static-extensions`
+# AGENTS.md — working in `grapple-beam`
 
 This file orients **human contributors and coding agents** to how this
 cppboot-generated C++ project is structured and how code should be written.
@@ -18,7 +18,7 @@ For day-to-day build commands, see [README.md](README.md).
 - **Onboard a component:** add the directory, list files in its `CMakeLists.txt`,
   then `add_subdirectory(...)` from the parent.
 
-Public headers live under `include/SDL3_static_extensions/` (directory tree matches the C++ namespace).
+Public headers live under `include/grapple/` (directory tree matches the C++ namespace).
 
 ## Preferred libraries
 
@@ -33,9 +33,9 @@ in CMake) instead of inventing a parallel stack:
 
 They are linked `PUBLIC` on the project library when enabled. Options:
 
-- `SDL3_STATIC_EXTENSIONS_WITH_CLI11` (default ON)
-- `SDL3_STATIC_EXTENSIONS_WITH_JSON` (default ON)
-- `SDL3_STATIC_EXTENSIONS_WITH_SPDLOG` (default ON)
+- `GRAPPLE_BEAM_WITH_CLI11` (default ON)
+- `GRAPPLE_BEAM_WITH_JSON` (default ON)
+- `GRAPPLE_BEAM_WITH_SPDLOG` (default ON)
 
 Do not add competing CLI/JSON/logging libraries unless there is a clear,
 documented reason. See `cmake/Dependencies.cmake` for pinned tags.
@@ -78,7 +78,7 @@ Prefer the Makefile (Unix) or `build.bat` (Windows) wrappers:
   and runs the tests in headless Chrome via `emrun`. Keep the game loop
   non-blocking — the browser owns frame pacing.
 - **Version:** edit the root **`VERSION`** file only. CMake generates
-  `SDL3_static_extensions::Version()` / CLI `--version` from `cmake/version.*.in`.
+  `grapple::Version()` / CLI `--version` from `cmake/version.*.in`.
   Ship releases with annotated tags `vX.Y.Z` matching `VERSION` (or
   workflow_dispatch); the release job fails on mismatch.
 - If present, `.devcontainer/` enables **GitHub Codespaces** / Dev Containers

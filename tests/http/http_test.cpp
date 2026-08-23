@@ -1,6 +1,6 @@
 /**
  * @file http_test.cpp
- * @brief Tests for SDLStatic::Http — the mog HTTP/S client + server C API.
+ * @brief Tests for Grapple::Http — the mog HTTP/S client + server C API.
  *
  * Entirely self-contained over loopback: the embedded mog server binds an
  * ephemeral 127.0.0.1 port and the mog client talks to it — full HTTP

@@ -1,19 +1,19 @@
 /*
- * repl — interactive shell / script runner for the SDLStatic interpreters.
+ * repl — interactive shell / script runner for the Grapple interpreters.
  *
- * Original SDLStatic code (zlib).
+ * Original Grapple code (zlib).
  *
  *   repl -l lua                      interactive Lua shell
  *   repl -l ruby                     interactive Ruby shell
  *   repl -l lua  -e 'print(1+2)'     evaluate a one-liner
  *   repl -l ruby script.rb a b      run a script (args in ARGV / arg)
  *
- * Both states come up with the game bindings (SDLStatic module) and
+ * Both states come up with the game bindings (Grapple module) and
  * VFS-aware require already installed; "." is on the Ruby $LOAD_PATH.
  */
-#include <SDLStatic/bindings.h>
-#include <SDLStatic/lua.h>
-#include <SDLStatic/ruby.h>
+#include <grapple/bindings.h>
+#include <grapple/lua.h>
+#include <grapple/ruby.h>
 
 #include <lauxlib.h>
 #include <lualib.h>
@@ -43,8 +43,8 @@ static int LuaReportError(lua_State *L)
 
 static int RunLua(const char *code, const char *script, int argc, char **argv)
 {
-    lua_State *L = SDLStatic_CreateLuaState();
-    if (L == NULL || !SDLStatic_OpenLuaBindings(L))
+    lua_State *L = Grapple_CreateLuaState();
+    if (L == NULL || !Grapple_OpenLuaBindings(L))
     {
         fprintf(stderr, "error: %s\n", SDL_GetError());
         return 1;
@@ -76,7 +76,7 @@ static int RunLua(const char *code, const char *script, int argc, char **argv)
     else
     {
         char line[2048];
-        printf("SDLStatic Lua %s — 'exit' to quit\n", LUA_VERSION_RELEASE);
+        printf("Grapple Lua %s — 'exit' to quit\n", LUA_VERSION_RELEASE);
         for (;;)
         {
             printf("lua> ");
@@ -118,13 +118,13 @@ static int RubyReportError(mrb_state *mrb)
 
 static int RunRuby(const char *code, const char *script, int argc, char **argv)
 {
-    mrb_state *mrb = SDLStatic_CreateRubyState();
-    if (mrb == NULL || !SDLStatic_OpenRubyBindings(mrb))
+    mrb_state *mrb = Grapple_CreateRubyState();
+    if (mrb == NULL || !Grapple_OpenRubyBindings(mrb))
     {
         fprintf(stderr, "error: %s\n", SDL_GetError());
         return 1;
     }
-    SDLStatic_RubyAddLoadPath(mrb, ".");
+    Grapple_RubyAddLoadPath(mrb, ".");
     mrb_value args = mrb_ary_new(mrb);
     for (int i = 0; i < argc; ++i)
     {
@@ -148,7 +148,7 @@ static int RunRuby(const char *code, const char *script, int argc, char **argv)
     else
     {
         char line[2048];
-        printf("SDLStatic mruby %s — 'exit' to quit\n", MRUBY_VERSION);
+        printf("Grapple mruby %s — 'exit' to quit\n", MRUBY_VERSION);
         for (;;)
         {
             printf("ruby> ");

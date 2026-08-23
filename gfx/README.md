@@ -1,4 +1,4 @@
-# SDLStatic::Gfx
+# Grapple::Gfx
 
 A static-link-first build of [SDL3_gfx](https://github.com/sabdul-khabir/SDL3_gfx)
 v1.0.1 (the community SDL3 port of the classic SDL2_gfx) **plus an original
@@ -15,12 +15,12 @@ Provenance and local fixes: [`deps/SDL3_gfx.md`](../deps/SDL3_gfx.md).
 | Rotozoom (`SDL3_gfx/SDL3_rotozoom.h`) | ✅ vendored | surface rotation/zoom (one UB fix, see ledger) |
 | Framerate manager (`SDL3_gfx/SDL3_framerate.h`) | ✅ vendored | returns `int` 0 on success (old convention) |
 | Image filters | ❌ deleted | MMX-era byte-array filters, out of scope |
-| **GPU primitives** (`SDLStatic/gpu_primitives.h`) | ✅ **original** | see below |
+| **GPU primitives** (`grapple/gpu_primitives.h`) | ✅ **original** | see below |
 
-## GPU-bound primitives (SDLStatic extension)
+## GPU-bound primitives (Grapple extension)
 
 The vendored primitives are CPU-bound: they compute every covered pixel on
-the CPU and submit point batches. `<SDLStatic/gpu_primitives.h>` provides
+the CPU and submit point batches. `<grapple/gpu_primitives.h>` provides
 equivalents with the **same API shape** — same names with a `gpu` prefix,
 same parameter order, same `bool` return — that tessellate each shape into
 triangles and issue **one `SDL_RenderGeometry` call**, so rasterization and

@@ -3,7 +3,7 @@ title: TTF
 description: "TrueType/OpenType text rendering via a minimal static FreeType, plus zero-setup debug text with an embedded font."
 ---
 
-# TTF — `SDLStatic::TTF`
+# TTF — `Grapple::TTF`
 
 A static-link-first port of SDL_ttf (upstream base 3.2.2) over a minimal
 static FreeType 2.14.3, with **vendored HarfBuzz shaping and SheenBidi
@@ -11,7 +11,7 @@ BiDi** — full international text, still zero shared-library dependencies
 (enforced in CI by a link audit).
 
 ```cmake
-target_link_libraries(your_game PRIVATE SDLStatic::TTF)
+target_link_libraries(your_game PRIVATE Grapple::TTF)
 ```
 
 ```c
@@ -51,10 +51,10 @@ Unicode BiDi Algorithm; the vendored SheenBidi (Apache-2.0) powers a
 one-call helper that splits a UTF-8 paragraph into visual-order runs:
 
 ```c
-#include <SDLStatic/bidi.h>
+#include <grapple/bidi.h>
 
 int n = 0;
-SDLStatic_BidiRun *runs = SDLStatic_BidiItemize(utf8, -1, &n);
+Grapple_BidiRun *runs = Grapple_BidiItemize(utf8, -1, &n);
 for (int i = 0; i < n; i++) {
     /* render runs[i].offset..+length with direction runs[i].direction */
 }
@@ -73,13 +73,13 @@ Removed APIs are deleted from the header — misuse fails at compile time.
 
 ## Debug text (original extension)
 
-`<SDLStatic/debug_text.h>` renders HUD/debug text on any `SDL_Renderer`
+`<grapple/debug_text.h>` renders HUD/debug text on any `SDL_Renderer`
 with **no font files at runtime** — an embedded ProggyClean font (~40 KB)
 is compiled in, rasterized DPI-aware, colored by the current draw color:
 
 ```c
 SDL_SetRenderDrawColor(renderer, 80, 250, 123, 255);
-SDLStatic_RenderDebugTextFormat(renderer, 8, 8, "FPS: %d", fps);
+Grapple_RenderDebugTextFormat(renderer, 8, 8, "FPS: %d", fps);
 ```
 
 Provenance:

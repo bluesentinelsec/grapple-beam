@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Pack a game asset folder for SDLStatic::VFS.
+"""Pack a game asset folder for Grapple::VFS.
 
 Pipeline: folder -> deterministic zip -> optional SSE1 encryption (the same
-container SDLStatic_EncryptData produces; mountable in C with
-SDLStatic_MountEncryptedArchive) -> optional C header for embedding.
+container Grapple_EncryptData produces; mountable in C with
+Grapple_MountEncryptedArchive) -> optional C header for embedding.
 
     pack_assets.py assets/ media.zip
     pack_assets.py assets/ media.bin --password "openSesame"

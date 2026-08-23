@@ -16,22 +16,22 @@ slim). Demos, docs, and build files were never imported.
 
 ## Configuration
 
-All translation units must include `<SDLStatic/nuklear.h>` — the wrapper
+All translation units must include `<grapple/nuklear.h>` — the wrapper
 that pins this project's `NK_INCLUDE_*` set (fixed types, default
 allocator, vertex-buffer output, font baking, default font) so the
 declarations always match the single implementation TU
-(`gui/src/sdlstatic_gui.c`). `NK_BUTTON_TRIGGER_ON_RELEASE` is defined:
+(`gui/src/grapple_gui.c`). `NK_BUTTON_TRIGGER_ON_RELEASE` is defined:
 buttons fire on release (standard desktop behavior), which also keeps
 clicks working if an event loop delivers press+release in one frame.
 
 ## Original additions (not vendored)
 
-- `gui/src/sdlstatic_gui.c` + `<SDLStatic/gui.h>` — the SDL3 backend:
+- `gui/src/grapple_gui.c` + `<grapple/gui.h>` — the SDL3 backend:
   font-atlas upload to an `SDL_Texture`, draw-list conversion to vertex
   buffers rendered via batched `SDL_RenderGeometryRaw` with scissor
   clipping, SDL event → Nuklear input translation (mouse, wheel, UTF-8
   text, keyboard incl. clipboard shortcuts), SDL clipboard wiring.
-- `gui/src/sdlstatic_gui_grid.c` + `<SDLStatic/gui_grid.h>` — weighted
+- `gui/src/grapple_gui_grid.c` + `<grapple/gui_grid.h>` — weighted
   grid layout helper: declare column weights once, place widgets cell by
   cell with auto-wrap and spans; all widths are weight-proportional to the
   window, so layouts scale with any display size (no hard-coded x/y).
@@ -54,8 +54,8 @@ the painted pixels.
 
 **`NK_DTOA` routed through SDL.** Upstream documents its built-in
 double-to-string conversion as "imprecise and possibly unsafe (does not
-handle nan or infinity!)". `SDLStatic/nuklear.h` points `NK_DTOA` at
-`SDLStatic_NuklearDtoa`, which uses `SDL_snprintf` and clamps
+handle nan or infinity!)". `grapple/nuklear.h` points `NK_DTOA` at
+`Grapple_NuklearDtoa`, which uses `SDL_snprintf` and clamps
 non-finite/huge magnitudes, so conversion is accurate and never emits
 exponent form (which the `%f` branch cannot parse).
 

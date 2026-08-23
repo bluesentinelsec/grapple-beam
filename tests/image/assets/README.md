@@ -11,4 +11,4 @@ Sources:
 
 The `sample.avif`, `sample.jxl`, `sample.tif`, and `rgbrgb.webp` files are the
 **negative** corpus: these formats were deliberately removed from
-SDLStatic::Image, and tests assert they no longer load.
+Grapple::Image, and tests assert they no longer load.

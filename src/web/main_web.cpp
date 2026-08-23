@@ -8,7 +8,7 @@
  * Replace the EM_JS canvas-2D renderer with WebGL2/SDL2 calls as needed.
  */
 
-#include <SDL3_static_extensions/version.hpp>
+#include <grapple/version.hpp>
 #include <emscripten.h>
 #include <emscripten/html5.h>
 #include <string>
@@ -18,7 +18,7 @@
 // clang-format off
 // The EM_JS body is JavaScript: clang-format must not touch it (it splits
 // JS operators like !== into invalid `!= =`).
-EM_JS(void, SDL3_static_extensions_draw_frame, (double x, double y, double size, const char *hud), {
+EM_JS(void, grapple_draw_frame, (double x, double y, double size, const char *hud), {
     const canvas = document.getElementById('canvas');
     const dpr = window.devicePixelRatio || 1;
     const width = canvas.clientWidth * dpr;
@@ -83,10 +83,10 @@ void Frame()
 
     Update(g_state, dt);
 
-    g_state.hud = std::string("SDL3-static-extensions ") +
-                  std::string(SDL3_static_extensions::Version()) + " — wasm game loop, frame " +
+    g_state.hud = std::string("grapple-beam ") +
+                  std::string(grapple::Version()) + " — wasm game loop, frame " +
                   std::to_string(static_cast<long>(g_state.frames));
-    SDL3_static_extensions_draw_frame(g_state.x, g_state.y, 48.0, g_state.hud.c_str());
+    grapple_draw_frame(g_state.x, g_state.y, 48.0, g_state.hud.c_str());
 }
 
 } // namespace

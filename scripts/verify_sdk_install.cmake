@@ -62,8 +62,8 @@ endforeach()
 # built but never installed would otherwise be discovered by whoever tried
 # to include it, which is the discovery this test exists to prevent.
 foreach(header
-    SDLStatic/engine.h SDLStatic/vfs.h SDLStatic/gui.h SDLStatic/lua.h
-    SDLStatic/ruby.h SDLStatic/bindings.h SDLStatic/tiled.h SDLStatic/regex.h
+    grapple/engine.h grapple/vfs.h grapple/gui.h grapple/lua.h
+    grapple/ruby.h grapple/bindings.h grapple/tiled.h grapple/regex.h
     SDL3_image/SDL_image.h SDL3_ttf/SDL_ttf.h SDL3_mixer/SDL_mixer.h
     SDL3_net/SDL_net.h SDL3_gfx/SDL3_gfxPrimitives.h
     box2d/box2d.h physfs.h lua.h mruby.h

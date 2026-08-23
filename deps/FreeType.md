@@ -8,7 +8,7 @@
 | Fetch | Official release tarball, SHA-256 pinned (see `cmake/Dependencies.cmake`) |
 | License | **FTL** (BSD-style; FreeType is dual FTL/GPLv2 — we take FTL) |
 
-The permanent glyph backend for `SDLStatic::TTF` (decision record in
+The permanent glyph backend for `Grapple::TTF` (decision record in
 `deps/SDL3_ttf.md`; the stb_truetype alternative was dropped from scope). Built static and **minimal** — every optional dependency
 disabled so it contributes zero shared-library dependencies:
 
@@ -25,7 +25,7 @@ acknowledge FreeType in their documentation/credits, e.g.:
 > Portions of this software are copyright © The FreeType Project
 > (www.freetype.org). All rights reserved.
 
-Consumers of SDLStatic::TTF inherit this obligation; it is called out in the
+Consumers of Grapple::TTF inherit this obligation; it is called out in the
 extension's README.
 
 Update procedure: bump the URL + `URL_HASH` in `cmake/Dependencies.cmake`,

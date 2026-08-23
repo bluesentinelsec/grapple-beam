@@ -1,7 +1,7 @@
 """mruby emitter: mirrors the Lua surface as Ruby modules.
 
 Module functions live on modules named after each library (SDL, MIX, ...,
-SDLStaticC), with enum enumerators as module constants. Same call/return
+Grapple), with enum enumerators as module constants. Same call/return
 convention as Lua: primary return first (nil for NULL), then out/in-out
 params; owned handles are GC-managed Data objects; bound destroy
 functions empty the box.
@@ -140,28 +140,28 @@ class _RubyEmitter:
         base = self.tt.resolve_base(f.type.base)
         if f.array_len is not None:
             self.w(f"    {{")
-            self.w(f"        mrb_value arr = SDLStaticGen_RubyFieldGet(mrb, h, \"{f.name}\");")
+            self.w(f"        mrb_value arr = GrappleGen_RubyFieldGet(mrb, h, \"{f.name}\");")
             self.w("        if (mrb_array_p(arr)) {")
             self.w(f"            for (mrb_int gi = 0; gi < (mrb_int)({f.array_len}) && gi < RARRAY_LEN(arr); ++gi) {{")
             self.w("                mrb_value el = mrb_ary_ref(mrb, arr, gi);")
             if kind == "pod":
                 self.w(f"                GenRead_{base}(mrb, el, &out->{f.name}[gi]);")
             elif kind == "num":
-                self.w(f"                out->{f.name}[gi] = ({f.type.base})SDLStaticGen_RubyToNum(mrb, el);")
+                self.w(f"                out->{f.name}[gi] = ({f.type.base})GrappleGen_RubyToNum(mrb, el);")
             else:
-                self.w(f"                out->{f.name}[gi] = ({f.type.base})SDLStaticGen_RubyToInt(mrb, el);")
+                self.w(f"                out->{f.name}[gi] = ({f.type.base})GrappleGen_RubyToInt(mrb, el);")
             self.w("            }")
             self.w("        }")
             self.w("    }")
             return
         if kind == "pod":
-            self.w(f"    GenRead_{base}(mrb, SDLStaticGen_RubyFieldGet(mrb, h, \"{f.name}\"), &out->{f.name});")
+            self.w(f"    GenRead_{base}(mrb, GrappleGen_RubyFieldGet(mrb, h, \"{f.name}\"), &out->{f.name});")
         elif kind == "num":
-            self.w(f"    out->{f.name} = ({f.type.base})SDLStaticGen_RubyFieldNum(mrb, h, \"{f.name}\");")
+            self.w(f"    out->{f.name} = ({f.type.base})GrappleGen_RubyFieldNum(mrb, h, \"{f.name}\");")
         elif kind == "bool":
-            self.w(f"    out->{f.name} = ({f.type.base})SDLStaticGen_RubyFieldBool(mrb, h, \"{f.name}\");")
+            self.w(f"    out->{f.name} = ({f.type.base})GrappleGen_RubyFieldBool(mrb, h, \"{f.name}\");")
         else:
-            self.w(f"    out->{f.name} = ({f.type.base})SDLStaticGen_RubyFieldInt(mrb, h, \"{f.name}\");")
+            self.w(f"    out->{f.name} = ({f.type.base})GrappleGen_RubyFieldInt(mrb, h, \"{f.name}\");")
 
     def _emit_field_push(self, f) -> None:
         kind = self._field_kind(f.type)
@@ -177,17 +177,17 @@ class _RubyEmitter:
             else:
                 self.w(f"            mrb_ary_push(mrb, arr, mrb_int_value(mrb, (mrb_int)in->{f.name}[gi]));")
             self.w("        }")
-            self.w(f"        SDLStaticGen_RubyHashSet(mrb, h, \"{f.name}\", arr);")
+            self.w(f"        GrappleGen_RubyHashSet(mrb, h, \"{f.name}\", arr);")
             self.w("    }")
             return
         if kind == "pod":
-            self.w(f"    SDLStaticGen_RubyHashSet(mrb, h, \"{f.name}\", GenPush_{base}(mrb, &in->{f.name}));")
+            self.w(f"    GrappleGen_RubyHashSet(mrb, h, \"{f.name}\", GenPush_{base}(mrb, &in->{f.name}));")
         elif kind == "num":
-            self.w(f"    SDLStaticGen_RubyHashSet(mrb, h, \"{f.name}\", mrb_float_value(mrb, (mrb_float)in->{f.name}));")
+            self.w(f"    GrappleGen_RubyHashSet(mrb, h, \"{f.name}\", mrb_float_value(mrb, (mrb_float)in->{f.name}));")
         elif kind == "bool":
-            self.w(f"    SDLStaticGen_RubyHashSet(mrb, h, \"{f.name}\", mrb_bool_value((mrb_bool)(in->{f.name} != 0)));")
+            self.w(f"    GrappleGen_RubyHashSet(mrb, h, \"{f.name}\", mrb_bool_value((mrb_bool)(in->{f.name} != 0)));")
         else:
-            self.w(f"    SDLStaticGen_RubyHashSet(mrb, h, \"{f.name}\", mrb_int_value(mrb, (mrb_int)in->{f.name}));")
+            self.w(f"    GrappleGen_RubyHashSet(mrb, h, \"{f.name}\", mrb_int_value(mrb, (mrb_int)in->{f.name}));")
 
     # -- dtor thunks -------------------------------------------------------
 
@@ -236,7 +236,7 @@ class _RubyEmitter:
             base = pp.info.base
             if pp.mode == "blob_in":
                 self.w(f"    size_t len{i} = 0;")
-                self.w(f"    const char *{v} = SDLStaticGen_RubyToBlob(mrb, {argval(arg_n)}, &len{i});")
+                self.w(f"    const char *{v} = GrappleGen_RubyToBlob(mrb, {argval(arg_n)}, &len{i});")
                 call_args[i] = f"(const void *){v}"
                 nxt = params[i + 1]
                 call_args[i + 1] = f"({nxt.type.spelling()})len{i}"
@@ -245,22 +245,22 @@ class _RubyEmitter:
                 continue
             if pp.mode == "in" and pp.info.kind in (TK.INT, TK.ENUM):
                 spell = self._enum_ref(pp.info.declared or base) if pp.info.kind == TK.ENUM else (pp.info.declared or base)
-                self.w(f"    {spell} {v} = ({spell})SDLStaticGen_RubyToInt(mrb, {argval(arg_n)});")
+                self.w(f"    {spell} {v} = ({spell})GrappleGen_RubyToInt(mrb, {argval(arg_n)});")
                 call_args[i] = v
             elif pp.mode == "in" and pp.info.kind == TK.FLOAT:
                 spell = pp.info.declared or base
-                self.w(f"    {spell} {v} = ({spell})SDLStaticGen_RubyToNum(mrb, {argval(arg_n)});")
+                self.w(f"    {spell} {v} = ({spell})GrappleGen_RubyToNum(mrb, {argval(arg_n)});")
                 call_args[i] = v
             elif pp.mode == "in" and pp.info.kind == TK.BOOL:
                 spell = pp.info.declared or base
-                self.w(f"    {spell} {v} = ({spell})SDLStaticGen_RubyToBool({argval(arg_n)});")
+                self.w(f"    {spell} {v} = ({spell})GrappleGen_RubyToBool({argval(arg_n)});")
                 call_args[i] = v
             elif pp.mode == "in" and pp.info.kind == TK.STRING:
-                self.w(f"    const char *{v} = SDLStaticGen_RubyToStr(mrb, {argval(arg_n)});")
+                self.w(f"    const char *{v} = GrappleGen_RubyToStr(mrb, {argval(arg_n)});")
                 call_args[i] = v
             elif pp.mode == "handle_in":
                 take = fn.name in self.destroys and i == 0
-                helper = "SDLStaticGen_RubyTakeHandle" if take else "SDLStaticGen_RubyCheckHandle"
+                helper = "GrappleGen_RubyTakeHandle" if take else "GrappleGen_RubyCheckHandle"
                 const = "const " if pp.info.is_const else ""
                 self.w(f"    {const}{self._handle_ref(base)} *{v} = "
                        f"({const}{self._handle_ref(base)} *){helper}(mrb, {argval(arg_n)}, \"{base}\");")
@@ -285,7 +285,7 @@ class _RubyEmitter:
                 i += 1
                 continue  # pure out-param: consumes no Ruby argument
             elif pp.mode == "mutstr_in":
-                self.w(f"    const char *src{i} = SDLStaticGen_RubyToStr(mrb, {argval(arg_n)});")
+                self.w(f"    const char *src{i} = GrappleGen_RubyToStr(mrb, {argval(arg_n)});")
                 self.w(f"    char *{v} = SDL_strdup(src{i} != NULL ? src{i} : \"\");")
                 call_args[i] = v
                 post.insert(0, f"FREE_MARK:{i}")
@@ -294,13 +294,13 @@ class _RubyEmitter:
                 if pp.info.kind == TK.ENUM:
                     decl = self._enum_ref(decl)
                 if pp.info.kind == TK.FLOAT:
-                    self.w(f"    {decl} io{i} = ({decl})SDLStaticGen_RubyToNum(mrb, {argval(arg_n)});")
+                    self.w(f"    {decl} io{i} = ({decl})GrappleGen_RubyToNum(mrb, {argval(arg_n)});")
                     post.append(f"mrb_float_value(mrb, (mrb_float)io{i})")
                 elif pp.info.kind == TK.BOOL:
-                    self.w(f"    {decl} io{i} = ({decl})SDLStaticGen_RubyToBool({argval(arg_n)});")
+                    self.w(f"    {decl} io{i} = ({decl})GrappleGen_RubyToBool({argval(arg_n)});")
                     post.append(f"mrb_bool_value((mrb_bool)(io{i} != 0))")
                 else:
-                    self.w(f"    {decl} io{i} = ({decl})SDLStaticGen_RubyToInt(mrb, {argval(arg_n)});")
+                    self.w(f"    {decl} io{i} = ({decl})GrappleGen_RubyToInt(mrb, {argval(arg_n)});")
                     post.append(f"mrb_int_value(mrb, (mrb_int)io{i})")
                 call_args[i] = f"&io{i}"
             else:
@@ -333,10 +333,10 @@ class _RubyEmitter:
         elif ret.kind == TK.HANDLE:
             if plan.owned_handle:
                 r = self.resources[plan.owned_resource_idx]
-                primary = (f"SDLStaticGen_RubyPushOwned(mrb, (void *)rv, \"{ret.base}\", "
+                primary = (f"GrappleGen_RubyPushOwned(mrb, (void *)rv, \"{ret.base}\", "
                            f"GenDtor_{r.destroy})")
             else:
-                primary = f"SDLStaticGen_RubyPushHandle(mrb, (void *)rv, \"{ret.base}\")"
+                primary = f"GrappleGen_RubyPushHandle(mrb, (void *)rv, \"{ret.base}\")"
 
         frees = [e for e in post if e.startswith("FREE_MARK:")]
         post = [e for e in post if not e.startswith("FREE_MARK:")]
@@ -397,9 +397,9 @@ def emit_ruby(manifest: Manifest, repo: Path) -> dict[str, dict[str, ScriptPlan]
         em.w()
         for inc in lib.includes:
             em.w(f"#include {inc}")
-        if lib.key == "sdlstatic":
+        if lib.key == "grapple":
             for header in sorted(set(library.header_names)):
-                em.w(f"#include <SDLStatic/{header}>")
+                em.w(f"#include <grapple/{header}>")
         em.w("#include <string.h>")
         em.w()
         bound = {n: p for n, p in plans.items() if p.ok}
@@ -411,11 +411,11 @@ def emit_ruby(manifest: Manifest, repo: Path) -> dict[str, dict[str, ScriptPlan]
             em.emit_stub(bound[name])
 
         taken: set[str] = set()
-        em.w(f"void SDLStaticGen_OpenRuby_{lib.key}(mrb_state *mrb);")
-        em.w(f"void SDLStaticGen_OpenRuby_{lib.key}(mrb_state *mrb)")
+        em.w(f"void GrappleGen_OpenRuby_{lib.key}(mrb_state *mrb);")
+        em.w(f"void GrappleGen_OpenRuby_{lib.key}(mrb_state *mrb)")
         em.w("{")
         em.w("    struct RClass *mod;")
-        em.w("    SDLStaticGen_RubyEnsureHandleClass(mrb);")
+        em.w("    GrappleGen_RubyEnsureHandleClass(mrb);")
         em.w(f"    mod = mrb_define_module(mrb, \"{lib.script_module}\");")
         for name in sorted(bound):
             reg = ruby_fn_name(name, lib.prefix, taken)
@@ -447,26 +447,26 @@ def emit_ruby(manifest: Manifest, repo: Path) -> dict[str, dict[str, ScriptPlan]
             em.w("#endif")
         em.w("}")
         (outdir / f"gen_ruby_{lib.key}.c").write_text("\n".join(em.out) + "\n", encoding="utf-8")
-        opens.append(f"SDLStaticGen_OpenRuby_{lib.key}")
+        opens.append(f"GrappleGen_OpenRuby_{lib.key}")
 
     reg = [
         "/* GENERATED FILE - DO NOT EDIT. Aggregate mruby registration.",
-        " * SDLSTATIC_GEN_DISABLE_<LIB> gates modules whose CMake option is",
+        " * GRAPPLE_GEN_DISABLE_<LIB> gates modules whose CMake option is",
         " * off on this platform (e.g. NET on Emscripten). */",
         "#include \"../src/gen_support_ruby.h\"",
         "",
     ]
     for lib, o in zip(LIBRARIES, opens):
-        guard = f"SDLSTATIC_GEN_DISABLE_{lib.key.upper()}"
+        guard = f"GRAPPLE_GEN_DISABLE_{lib.key.upper()}"
         reg.append(f"#ifndef {guard}")
         reg.append(f"extern void {o}(mrb_state *mrb);")
         reg.append(f"#endif")
     reg.append("")
-    reg.append("void SDLStatic_OpenGeneratedRubyBindings(mrb_state *mrb);")
-    reg.append("void SDLStatic_OpenGeneratedRubyBindings(mrb_state *mrb)")
+    reg.append("void Grapple_OpenGeneratedRubyBindings(mrb_state *mrb);")
+    reg.append("void Grapple_OpenGeneratedRubyBindings(mrb_state *mrb)")
     reg.append("{")
     for lib, o in zip(LIBRARIES, opens):
-        guard = f"SDLSTATIC_GEN_DISABLE_{lib.key.upper()}"
+        guard = f"GRAPPLE_GEN_DISABLE_{lib.key.upper()}"
         reg.append(f"#ifndef {guard}")
         reg.append(f"    {o}(mrb);")
         reg.append(f"#endif")

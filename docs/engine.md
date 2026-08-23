@@ -3,7 +3,7 @@ title: Engine
 description: "An opinionated game engine: a fixed-tick loop with interpolated rendering, design-resolution scaling, and a frame limiter."
 ---
 
-# Engine — `SDLStatic::Engine`
+# Engine — `Grapple::Engine`
 
 An opinionated game engine. Everything else in this project is a library
 that does one thing and leaves the shape of your program alone; the engine
@@ -17,7 +17,7 @@ It knows a frame has a duration and a simulation has a rate. It never knows
 what a goblin is.
 
 ```cmake
-target_link_libraries(your_game PRIVATE SDLStatic::Engine)
+target_link_libraries(your_game PRIVATE Grapple::Engine)
 ```
 
 This page covers the loop and time, presentation and scaling, scenes,
@@ -33,21 +33,21 @@ static void Render(void *user, float alpha)     { /* draw, interpolated */ }
 
 int main(void) {
     SDL_Init(SDL_INIT_VIDEO);
-    SDLStatic_Engine *engine = SDLStatic_CreateEngine(NULL);
+    Grapple_Engine *engine = Grapple_CreateEngine(NULL);
 
-    SDLStatic_GameHooks hooks = {0};
+    Grapple_GameHooks hooks = {0};
     hooks.fixed_update = FixedUpdate;
     hooks.render = Render;
-    SDLStatic_RunGame(engine, &hooks, &game);
+    Grapple_RunGame(engine, &hooks, &game);
 
-    SDLStatic_DestroyEngine(engine);
+    Grapple_DestroyEngine(engine);
 }
 ```
 
-`SDLStatic_RunGame` owns the loop, including on the web, where it hands
+`Grapple_RunGame` owns the loop, including on the web, where it hands
 control to the browser and returns immediately — so cleanup belongs in the
 `unload` hook, not after the call. A game that wants its own loop calls
-`SDLStatic_EngineTick` instead.
+`Grapple_EngineTick` instead.
 
 ### Why a fixed tick with interpolation
 
@@ -103,7 +103,7 @@ Two consequences worth knowing:
 
 - Rendering lags the simulation by up to one step (≤16.7 ms). Invisible for
   most games. For a fighting game or a twitch shooter, set
-  `interpolation = SDLSTATIC_INTERPOLATE_EXTRAPOLATE`, which predicts
+  `interpolation = GRAPPLE_INTERPOLATE_EXTRAPOLATE`, which predicts
   forward instead — no lag, at the cost of a small overshoot when something
   changes direction sharply.
 - A teleport must not be interpolated, or the object smears across the
@@ -128,7 +128,7 @@ Catch-up is capped at five steps per frame. Beyond that the engine drops the
 outstanding time and increments a counter:
 
 ```c
-if (SDLStatic_EngineOverloadFrames(engine) > last_seen) {
+if (Grapple_EngineOverloadFrames(engine) > last_seen) {
     LowerQuality();   /* fewer particles, half-resolution lighting */
 }
 ```
@@ -165,13 +165,13 @@ hardware. A 1920×1080 design renders natively at 4K.
 
 *Art* is the separate question. Scaling coordinates is free; scaling
 *images* is not, because a 1× sprite stretched to 4K is soft and a 4×
-sprite minified to a laptop shimmers. `SDLStatic_EngineAssetScale` returns
+sprite minified to a laptop shimmers. `Grapple_EngineAssetScale` returns
 1, 2 or 4 so a game that ships more than one art set can pick:
 
 ```c
 char path[256];
 SDL_snprintf(path, sizeof(path), "sprites/player@%dx.png",
-             SDLStatic_EngineAssetScale(engine));
+             Grapple_EngineAssetScale(engine));
 ```
 
 ## Presentation modes
@@ -188,22 +188,22 @@ the drawing code is identical in all six.
 At creation:
 
 ```c
-SDLStatic_EngineConfig config = {0};
+Grapple_EngineConfig config = {0};
 config.design_width = 1920;
 config.design_height = 1080;
-config.presentation = SDLSTATIC_PRESENT_LETTERBOX;   /* already the default */
+config.presentation = GRAPPLE_PRESENT_LETTERBOX;   /* already the default */
 
-SDLStatic_Engine *engine = SDLStatic_CreateEngine(&config);
+Grapple_Engine *engine = Grapple_CreateEngine(&config);
 ```
 
-`SDLSTATIC_PRESENT_LETTERBOX` is zero, so a zero-initialised config —
-including `SDLStatic_CreateEngine(NULL)` — gets it without asking.
+`GRAPPLE_PRESENT_LETTERBOX` is zero, so a zero-initialised config —
+including `Grapple_CreateEngine(NULL)` — gets it without asking.
 
 And at runtime, which is what an options menu needs:
 
 ```c
-SDLStatic_EngineSetPresentation(engine, SDLSTATIC_PRESENT_INTEGER);
-SDLStatic_EnginePresentation mode = SDLStatic_EnginePresentation_(engine);
+Grapple_EngineSetPresentation(engine, GRAPPLE_PRESENT_INTEGER);
+Grapple_EnginePresentation mode = Grapple_EnginePresentation_(engine);
 ```
 
 The change takes effect immediately: the view rect is correct on the very
@@ -249,8 +249,8 @@ The others are each a considered trade against that:
 Whichever you pick, these two calls describe what the player is seeing:
 
 ```c
-const SDL_FRect view = SDLStatic_EngineViewRect(engine);  /* all that is visible */
-const SDL_FRect safe = SDLStatic_EngineSafeRect(engine);  /* where you composed */
+const SDL_FRect view = Grapple_EngineViewRect(engine);  /* all that is visible */
+const SDL_FRect safe = Grapple_EngineSafeRect(engine);  /* where you composed */
 
 DrawBackdrop(view);                       /* fill everything, edge to edge */
 DrawHealthBar(safe.x + 40, safe.y + 40);  /* anchor UI to the safe area */
@@ -273,7 +273,7 @@ In `EXPAND` the view is recomputed whenever the window's pixel size
 changes, so dragging a window between a laptop screen and an ultrawide is
 handled without the game hearing about it.
 
-Both rects, and `SDLStatic_EngineRenderScale`, are read back out of SDL
+Both rects, and `Grapple_EngineRenderScale`, are read back out of SDL
 rather than derived from the mode — because the modes do not agree on what
 "the scale" is. `INTEGER` floors it, `OVERSCAN` scales *past* the window and
 crops, `STRETCH` uses a different factor per axis. So under `OVERSCAN` the
@@ -284,7 +284,7 @@ screen in the one mode that would otherwise push it off.
 > Capturing a frame: `SDL_RenderReadPixels` takes its rect in **pixels**,
 > not render coordinates, and `NULL` means the whole logical area. Under
 > `OVERSCAN` that is bigger than the window, and the driver returns rows
-> that are not in the framebuffer. Pass `SDLStatic_EnginePixelSize` instead.
+> that are not in the framebuffer. Pass `Grapple_EnginePixelSize` instead.
 
 ### One art set at every size
 
@@ -293,7 +293,7 @@ coordinate transform, so a single set holds up in both directions provided
 the art is authored at the largest size it will be drawn and drawn with
 linear filtering. Point sampling is what makes downscaled art sparkle, and
 that is a filter setting rather than an asset problem — reserve nearest for
-pixel art, ideally alongside `INTEGER`. `SDLStatic_EngineAssetScale` is
+pixel art, ideally alongside `INTEGER`. `Grapple_EngineAssetScale` is
 there for anyone who later wants a second set; it is not a prerequisite.
 
 ### Mouse and touch
@@ -302,7 +302,7 @@ SDL reports events in *window* coordinates, so they need converting:
 
 ```c
 float x, y;
-SDLStatic_EngineWindowToDesign(engine, event.motion.x, event.motion.y, &x, &y);
+Grapple_EngineWindowToDesign(engine, event.motion.x, event.motion.y, &x, &y);
 ```
 
 ## The frame limiter
@@ -318,15 +318,15 @@ refresh rate by default, or to `config.max_fps`, or not at all if you set a
 negative value. When vsync is already pacing things the remainder is zero
 and the limiter costs nothing.
 
-`SDLStatic_EngineSetMaxFps` changes it at runtime, because an options menu
+`Grapple_EngineSetMaxFps` changes it at runtime, because an options menu
 will want to.
 
 ## Time control
 
 ```c
-SDLStatic_EngineSetTimeScale(engine, 0.0f);  /* pause the world  */
-SDLStatic_EngineSetTimeScale(engine, 0.25f); /* slow motion      */
-SDLStatic_EngineSetTickRate(engine, 120);    /* from an options menu */
+Grapple_EngineSetTimeScale(engine, 0.0f);  /* pause the world  */
+Grapple_EngineSetTimeScale(engine, 0.25f); /* slow motion      */
+Grapple_EngineSetTickRate(engine, 120);    /* from an options menu */
 ```
 
 Time scale affects the simulation only: `update` and `render` keep running
@@ -339,12 +339,12 @@ carries the accumulated fraction across, so it does not stutter.
 headless with an injected clock:
 
 ```c
-SDLStatic_EngineConfig config = {0};
+Grapple_EngineConfig config = {0};
 config.headless = true;      /* software renderer, no window */
 config.manual_clock = true;  /* time only advances when told */
 
-SDLStatic_EngineAdvance(engine, 16666666);  /* one 60 Hz frame */
-SDLStatic_EngineTick(engine);
+Grapple_EngineAdvance(engine, 16666666);  /* one 60 Hz frame */
+Grapple_EngineTick(engine);
 ```
 
 That is what the module's own tests use to assert the properties that make
@@ -362,7 +362,7 @@ the level underneath intact, so popping it returns to exactly where the
 player was, with nothing to rebuild and no state to restore.
 
 ```c
-static SDLStatic_SceneDef kLevel = {
+static Grapple_SceneDef kLevel = {
     .name = "level",
     .state_size = sizeof(LevelState),
     .load = LevelLoad,           /* build the world; false aborts the push */
@@ -370,11 +370,11 @@ static SDLStatic_SceneDef kLevel = {
     .render = LevelRender,
 };
 
-SDLStatic_ScenePush(engine, &kLevel);
+Grapple_ScenePush(engine, &kLevel);
 ```
 
 `state_size` bytes are allocated with the scene and zeroed;
-`SDLStatic_SceneState` hands them back. That keeps a scene's data next to
+`Grapple_SceneState` hands them back. That keeps a scene's data next to
 its lifetime, so leaving the scene frees it and no game code has to
 remember. The definition itself is **copied**, so it may be a local, a
 temporary, or a table a script just built.
@@ -393,8 +393,8 @@ Two flags answer the two questions a stack has to answer:
 
 | Flag | Meaning |
 |---|---|
-| `SDLSTATIC_SCENE_UPDATE_WHEN_COVERED` | keep simulating underneath. Off by default — which is what "paused" means. On for a level running behind a dialogue box. |
-| `SDLSTATIC_SCENE_TRANSPARENT` | this scene does not fill the screen, so draw the one below it first. What makes a pause menu look like one. |
+| `GRAPPLE_SCENE_UPDATE_WHEN_COVERED` | keep simulating underneath. Off by default — which is what "paused" means. On for a level running behind a dialogue box. |
+| `GRAPPLE_SCENE_TRANSPARENT` | this scene does not fill the screen, so draw the one below it first. What makes a pause menu look like one. |
 
 An opaque scene means the scenes below are not drawn at all, which is the
 saving that makes a deep stack cheap.
@@ -409,7 +409,7 @@ changes in one frame is an error rather than a silent last-one-wins.
 ### Transitions
 
 ```c
-SDLStatic_SceneTransitionTo(engine, &kLevel, SDLSTATIC_TRANSITION_FADE, 0.35f);
+Grapple_SceneTransitionTo(engine, &kLevel, GRAPPLE_TRANSITION_FADE, 0.35f);
 ```
 
 A fade runs in two halves: the outgoing scene fades to the transition
@@ -424,12 +424,12 @@ level does not freeze as it leaves.
 Three ways, depending on the language, all supported deliberately.
 
 **C and C++ link the engine.** The engine is a library first: your program
-owns `main`, fills in the hooks and links `SDLStatic::Engine`. No plugin
+owns `main`, fills in the hooks and links `Grapple::Engine`. No plugin
 loading, no dynamic symbols — those fight static linking, and iOS and the
 web forbid them outright.
 
 **Lua and Ruby are run by the player binary.** The engine also ships as an
-executable that hosts a script — `sdlstatic-engine game.lua` — defaulting to
+executable that hosts a script — `grapple-engine game.lua` — defaulting to
 `main.lua` or `main.rb` in the current directory. This is the Love2D model
 and it is the fastest way to start a game.
 
@@ -444,36 +444,36 @@ independent of it.
 ## Graphics settings
 
 Everything a player can change lives in one struct,
-`SDLStatic_GraphicsSettings` — plain data, so it copies, compares and
-serialises. `<SDLStatic/engine_graphics.h>`.
+`Grapple_GraphicsSettings` — plain data, so it copies, compares and
+serialises. `<grapple/engine_graphics.h>`.
 
 ```c
-SDLStatic_GraphicsSettings gfx;
-SDLStatic_GraphicsResolve(&gfx, argc, argv, "acme", "mygame");
+Grapple_GraphicsSettings gfx;
+Grapple_GraphicsResolve(&gfx, argc, argv, "acme", "mygame");
 
-SDLStatic_EngineConfig config = {0};
+Grapple_EngineConfig config = {0};
 config.graphics = &gfx;
 config.argc = argc;                   /* so --media works */
 config.argv = argv;
-SDLStatic_Engine *engine = SDLStatic_CreateEngine(&config);
+Grapple_Engine *engine = Grapple_CreateEngine(&config);
 ```
 
 and an options screen is three lines:
 
 ```c
-SDLStatic_GraphicsSettings next = *SDLStatic_EngineGraphics(engine);
+Grapple_GraphicsSettings next = *Grapple_EngineGraphics(engine);
 next.bloom = slider;
-SDLStatic_EngineSetGraphics(engine, &next);       /* applies now */
-SDLStatic_GraphicsSave(&next, "acme", "mygame");  /* persists */
+Grapple_EngineSetGraphics(engine, &next);       /* applies now */
+Grapple_GraphicsSave(&next, "acme", "mygame");  /* persists */
 ```
 
 ### Where the values come from
 
-`SDLStatic_GraphicsResolve` walks five sources, each beating the one before:
+`Grapple_GraphicsResolve` walks five sources, each beating the one before:
 
 | | Source | |
 |---|---|---|
-| 1 | `SDLStatic_GraphicsDefaults()` | compiled in |
+| 1 | `Grapple_GraphicsDefaults()` | compiled in |
 | 2 | `media/config.toml` **inside the media archive** | what the game shipped with |
 | 3 | `media/config.toml` in the working directory | an installer's, or a server's |
 | 4 | `media/config.toml` in the pref directory | the player's saved settings |
@@ -486,9 +486,9 @@ search entirely: someone passing a path wants *that* file, not that file
 plus three others.
 
 Nothing here is fatal. A malformed file leaves the previous values in place
-and reports through `SDLStatic_GraphicsConfigError`; every value is clamped
+and reports through `Grapple_GraphicsConfigError`; every value is clamped
 on the way in, so a hand-edited `brightness = 40` cannot black out a game.
-`SDLStatic_GraphicsConfigPath` says which file was actually read, which is
+`Grapple_GraphicsConfigPath` says which file was actually read, which is
 worth logging at startup — "why is my config being ignored" is otherwise a
 long afternoon.
 
@@ -500,12 +500,12 @@ mounting it is the game's decision:
 ```c
 static bool ReadFromVfs(const char *path, char **text, void *user) {
     int size = 0;
-    unsigned char *data = SDLStatic_LoadVFSFile(path, &size);
+    unsigned char *data = Grapple_LoadVFSFile(path, &size);
     if (data == NULL) return false;
     *text = (char *)data;
     return true;
 }
-SDLStatic_GraphicsSetArchiveReader(ReadFromVfs, NULL);   /* before Resolve */
+Grapple_GraphicsSetArchiveReader(ReadFromVfs, NULL);   /* before Resolve */
 ```
 
 ### config.toml
@@ -571,7 +571,7 @@ chromatic aberration, FXAA, brightness/contrast/saturation, colour-blind
 correction — runs as GLSL over the finished frame, and the engine asks SDL
 for an OpenGL renderer by default so that it can. Without one they are
 skipped rather than fatal: a game must not fail to start because a player
-asked for scanlines. Ask `SDLStatic_EngineEffectsAvailable` and grey the
+asked for scanlines. Ask `Grapple_EngineEffectsAvailable` and grey the
 section out rather than offering sliders that do nothing.
 
 The chain runs *before* the `post_render` hook, so a HUD drawn there is not
@@ -585,15 +585,15 @@ a particle costs in your game, so it does not pretend to; it converts the
 player's choice into concrete numbers and leaves the spending to you:
 
 ```c
-const SDLStatic_GraphicsSettings *g = SDLStatic_EngineGraphics(engine);
+const Grapple_GraphicsSettings *g = Grapple_EngineGraphics(engine);
 
-int count = (int)(base * SDLStatic_GraphicsParticleDensity(g->particles));
-SDLStatic_SetLightMapScale(scene, SDLStatic_GraphicsLightMapScale(g->dynamic_lights));
-SDLStatic_SetLightShadowRays(scene, SDLStatic_GraphicsShadowRays(g->shadows));
-SDLStatic_SetLightShadowSoftness(scene, SDLStatic_GraphicsShadowSoftness(g->shadows));
+int count = (int)(base * Grapple_GraphicsParticleDensity(g->particles));
+Grapple_SetLightMapScale(scene, Grapple_GraphicsLightMapScale(g->dynamic_lights));
+Grapple_SetLightShadowRays(scene, Grapple_GraphicsShadowRays(g->shadows));
+Grapple_SetLightShadowSoftness(scene, Grapple_GraphicsShadowSoftness(g->shadows));
 ```
 
-Note `SDLStatic_GraphicsShadowSoftness` returns 0 below the top tier: soft
+Note `Grapple_GraphicsShadowSoftness` returns 0 below the top tier: soft
 edges need rays to look soft, and a penumbra built from 32 rays reads as
 banding rather than softness.
 
@@ -603,29 +603,29 @@ turns a bright frame into a flash.
 
 ## The camera
 
-`<SDLStatic/engine_camera.h>`. The camera maps **world** coordinates onto
+`<grapple/engine_camera.h>`. The camera maps **world** coordinates onto
 the design space; the presentation maps design onto pixels. A game with no
 camera is saying "the world is exactly one screen".
 
 ```c
-SDLStatic_Camera camera;
-SDLStatic_CameraInit(&camera, engine);
+Grapple_Camera camera;
+Grapple_CameraInit(&camera, engine);
 camera.bounds = (SDL_FRect){0, 0, 8000, 2000};   /* the level */
 camera.smoothing = 0.15f;                        /* seconds to catch up */
 camera.deadzone_w = 300.0f;                      /* design units */
 
 /* update */
-SDLStatic_CameraFollow(&camera, player.x, player.y);
-SDLStatic_CameraUpdate(&camera, engine, dt);
+Grapple_CameraFollow(&camera, player.x, player.y);
+Grapple_CameraUpdate(&camera, engine, dt);
 
 /* render */
-SDLStatic_CameraBegin(engine, &camera);
+Grapple_CameraBegin(engine, &camera);
 for (Entity *e = level; e; e = e->next) {
-    if (!SDLStatic_CameraVisible(&camera, e->box)) continue;   /* cull */
-    SDL_FRect dst = SDLStatic_CameraRect(&camera, e->box);
+    if (!Grapple_CameraVisible(&camera, e->box)) continue;   /* cull */
+    SDL_FRect dst = Grapple_CameraRect(&camera, e->box);
     SDL_RenderTexture(renderer, e->texture, NULL, &dst);
 }
-SDLStatic_CameraEnd(engine);
+Grapple_CameraEnd(engine);
 ```
 
 Update from the per-frame `update` hook, not `fixed_update`: camera movement
@@ -641,7 +641,7 @@ Four things worth knowing:
   zoom, so zooming in does not silently widen it. It is what stops a
   platformer's camera twitching every time the player hops.
 - **A level smaller than the view is centred**, not clamped to an edge.
-- **`SDLStatic_CameraRect` translates but does not scale.** The renderer is
+- **`Grapple_CameraRect` translates but does not scale.** The renderer is
   already scaled by the zoom; scaling here as well applies it twice.
 
 There is no rotation. SDL's renderer has no general transform, so a rotating
@@ -654,14 +654,14 @@ Four cameras are four viewports over the same world, so split screen is the
 same code:
 
 ```c
-SDLStatic_Camera cameras[SDLSTATIC_SPLIT_MAX];
-for (int i = 0; i < 4; i++) SDLStatic_CameraInit(&cameras[i], engine);
+Grapple_Camera cameras[GRAPPLE_SPLIT_MAX];
+for (int i = 0; i < 4; i++) Grapple_CameraInit(&cameras[i], engine);
 
-int n = SDLStatic_CameraSplit(engine, SDLSTATIC_SPLIT_HORIZONTAL, players, 6.0f, cameras);
+int n = Grapple_CameraSplit(engine, GRAPPLE_SPLIT_HORIZONTAL, players, 6.0f, cameras);
 for (int i = 0; i < n; i++) {
-    SDLStatic_CameraBegin(engine, &cameras[i]);
+    Grapple_CameraBegin(engine, &cameras[i]);
     DrawWorld(&cameras[i]);
-    SDLStatic_CameraEnd(engine);
+    Grapple_CameraEnd(engine);
 }
 ```
 
@@ -677,9 +677,9 @@ configure them once and re-split whenever somebody joins. The `gap` argument
 leaves a few design units of black between panes — without it two views abut
 and the eye cannot find the boundary.
 
-`SDLStatic_CameraBegin` clips as well as setting the viewport, so a sprite
+`Grapple_CameraBegin` clips as well as setting the viewport, so a sprite
 cannot spill into the other player's half, and
-`SDLStatic_CameraScreenToWorld` returns false outside its own viewport,
+`Grapple_CameraScreenToWorld` returns false outside its own viewport,
 which is how a game works out whose half was clicked.
 
 ## The renderer backend
@@ -689,7 +689,7 @@ native one: Metal on Apple, Direct3D on Windows, OpenGL elsewhere. **This
 engine asks for OpenGL, everywhere, by default.**
 
 ```c
-config.backend = SDLSTATIC_BACKEND_OPENGL;   /* already the default */
+config.backend = GRAPPLE_BACKEND_OPENGL;   /* already the default */
 ```
 
 The reason is that the post-processing chain and the lighting module are
@@ -706,9 +706,9 @@ game is very unlikely to measure any of it, but a game that does can say:
 
 | | |
 |---|---|
-| `SDLSTATIC_BACKEND_OPENGL` | the default; the shader effects work |
-| `SDLSTATIC_BACKEND_NATIVE` | Metal/Direct3D/Vulkan; no post-processing |
-| `SDLSTATIC_BACKEND_SOFTWARE` | for tools, and for a machine whose drivers are broken enough that nothing else starts |
+| `GRAPPLE_BACKEND_OPENGL` | the default; the shader effects work |
+| `GRAPPLE_BACKEND_NATIVE` | Metal/Direct3D/Vulkan; no post-processing |
+| `GRAPPLE_BACKEND_SOFTWARE` | for tools, and for a machine whose drivers are broken enough that nothing else starts |
 
 The hint is a preference, not a demand: on a machine with no working GL, SDL
 still returns a renderer and only the shader effects go missing. Better than
@@ -716,7 +716,7 @@ refusing to start.
 
 ## Assets
 
-The engine mounts the game's assets during `SDLStatic_CreateEngine`, before
+The engine mounts the game's assets during `Grapple_CreateEngine`, before
 anything asks for a file. There is no setup call, because an opinionated
 engine that made you write mounting code would not be one.
 
@@ -730,7 +730,7 @@ Search order, first match wins:
 | | Source | |
 |---|---|---|
 | 1 | `--media=PATH`, or `config.media_path` | replaces the search entirely |
-| 2 | an archive compiled into the executable | `SDLStatic_EngineEmbedMedia` |
+| 2 | an archive compiled into the executable | `Grapple_EngineEmbedMedia` |
 | 3 | `media.zip` beside the executable | possibly encrypted |
 | 4 | `media.dat` | the same, named so it does not invite a double-click |
 | 5 | `media/` | a plain directory: what you develop against |
@@ -745,17 +745,17 @@ directory comes last, so building a release archive changes what the game
 reads without anyone having to remember to delete it.
 
 ```c
-SDL_IOStream *io = SDLStatic_OpenVFSRead("assets/player.png");
+SDL_IOStream *io = Grapple_OpenVFSRead("assets/player.png");
 SDL_Texture *tex = IMG_LoadTexture_IO(renderer, io, true);
 ```
 
-`SDLStatic_EngineMediaSource` and `SDLStatic_EngineMediaPath` report what
+`Grapple_EngineMediaSource` and `Grapple_EngineMediaPath` report what
 was mounted — worth logging, since "which copy of my assets is this running
 against" is otherwise guesswork. A game that wants none of it sets
 `config.no_auto_mount`.
 
 Encrypted archives take a password from `--media-password` or
-`SDLStatic_EngineSetMediaPassword`. Embedding an encrypted archive with its
+`Grapple_EngineSetMediaPassword`. Embedding an encrypted archive with its
 password in the same binary is obfuscation rather than security: it stops
 casual extraction, not a determined person with a debugger.
 
@@ -786,10 +786,10 @@ somewhere that will.
 ## Multiple monitors
 
 ```c
-for (int i = 0; i < SDLStatic_EngineDisplayCount(); i++) {
-    printf("%d: %s\n", i, SDLStatic_EngineDisplayName(i));   /* "DELL U2720Q" */
+for (int i = 0; i < Grapple_EngineDisplayCount(); i++) {
+    printf("%d: %s\n", i, Grapple_EngineDisplayName(i));   /* "DELL U2720Q" */
 }
-SDLStatic_EngineSetDisplay(engine, chosen);
+Grapple_EngineSetDisplay(engine, chosen);
 ```
 
 or persist it: `display = 1` in `config.toml`, `--display=1` on the command
@@ -813,29 +813,29 @@ that is no longer there.
 An actor is a thing in the world with a position and a lifetime. The engine
 owns the structure — identity, parenting, transforms, when things are
 created and destroyed — and the game owns the meaning. The engine never
-learns what a goblin is. `<SDLStatic/engine_actor.h>`.
+learns what a goblin is. `<grapple/engine_actor.h>`.
 
 ```c
 typedef struct { int health; } Goblin;
 
-static bool GoblinSpawn(SDLStatic_Actor *actor) {
-    Goblin *g = SDLStatic_ActorState(actor);
+static bool GoblinSpawn(Grapple_Actor *actor) {
+    Goblin *g = Grapple_ActorState(actor);
     g->health = 20;
     return true;
 }
 
-static void GoblinThink(SDLStatic_Actor *actor, float step) {
-    SDLStatic_ActorMove(actor, 40.0f * step, 0.0f);
+static void GoblinThink(Grapple_Actor *actor, float step) {
+    Grapple_ActorMove(actor, 40.0f * step, 0.0f);
 }
 
-SDLStatic_ActorDef def = {0};
+Grapple_ActorDef def = {0};
 def.type = "goblin";
 def.state_size = sizeof(Goblin);
 def.spawn = GoblinSpawn;
 def.fixed_update = GoblinThink;
 def.x = 400.0f;
 
-SDLStatic_ActorId id = SDLStatic_ActorSpawn(engine, &def);
+Grapple_ActorId id = Grapple_ActorSpawn(engine, &def);
 ```
 
 `state_size` is all it takes: the engine allocates the bytes, zeroes them,
@@ -844,19 +844,19 @@ lifetime and nothing has to remember.
 
 ### Handles, not pointers
 
-`SDLStatic_ActorId` is a 48-bit handle — a 24-bit slot index and a 24-bit
+`Grapple_ActorId` is a 48-bit handle — a 24-bit slot index and a 24-bit
 generation. It is not a pointer, and that is the single most important
 decision in this subsystem.
 
-A game stores `SDLStatic_ActorId target` on an enemy. The player dies. With
+A game stores `Grapple_ActorId target` on an enemy. The player dies. With
 a pointer, the enemy's next dereference reads whatever was allocated in the
 player's place: usually another actor, so the enemy quietly starts chasing a
 door. With a handle, the slot's generation has advanced, so
-`SDLStatic_ActorGet` returns NULL and the enemy finds out its target is
+`Grapple_ActorGet` returns NULL and the enemy finds out its target is
 gone — which is the thing it needed to know.
 
 ```c
-SDLStatic_Actor *victim = SDLStatic_ActorGet(engine, target);
+Grapple_Actor *victim = Grapple_ActorGet(engine, target);
 if (victim == NULL) { GoIdle(self); return; }
 ```
 
@@ -867,7 +867,7 @@ of actors cannot change underneath code that is walking it. That removes the
 most common crash in a system like this — an actor killing another during an
 update it is inside — as a category rather than case by case.
 
-The handle from `SDLStatic_ActorSpawn` is valid immediately: you may store
+The handle from `Grapple_ActorSpawn` is valid immediately: you may store
 it, parent to it and set it up. The actor does not receive updates or appear
 in queries until the frame it was created in has finished, so a spawner
 cannot accidentally run its own children in the same tick that made them.
@@ -880,7 +880,7 @@ error would only mean every caller writes the same guard.
 ### Hierarchy
 
 ```c
-SDLStatic_ActorSetParent(sword, knight_id);   /* keeps its world position */
+Grapple_ActorSetParent(sword, knight_id);   /* keeps its world position */
 ```
 
 Transforms compose through parents, so moving, rotating or scaling a parent
@@ -897,20 +897,20 @@ every actor keeping its own `previous_x`:
 
 ```c
 static void Render(void *user, float alpha) {
-    SDLStatic_ActorTransform t = SDLStatic_ActorRenderTransform(actor, alpha);
+    Grapple_ActorTransform t = Grapple_ActorRenderTransform(actor, alpha);
     DrawSprite(t.x, t.y, t.rotation);
 }
 ```
 
-Use `SDLStatic_ActorTeleport` for a jump. A teleport that goes through
+Use `Grapple_ActorTeleport` for a jump. A teleport that goes through
 `SetPosition` is interpolated, and the actor smears across the screen from
 somewhere it never was.
 
 ### Queries
 
 ```c
-SDLStatic_ActorId enemies[64];
-int n = SDLStatic_ActorQuery(engine, NULL, kTagEnemy, enemies, 64);
+Grapple_ActorId enemies[64];
+int n = Grapple_ActorQuery(engine, NULL, kTagEnemy, enemies, 64);
 ```
 
 Filter by type, by tags, or both. Tags are a 32-bit mask the game assigns
@@ -919,17 +919,17 @@ comparison. Queries write into a caller's array rather than allocating,
 because they run every frame — a query that allocates is a query you end up
 caching by hand.
 
-`SDLStatic_ActorFindByName` is for the one actor a level needs to address
+`Grapple_ActorFindByName` is for the one actor a level needs to address
 directly: the boss, the exit door.
 
 ### Messages
 
 ```c
-SDLStatic_ActorMessage hit = {0};
+Grapple_ActorMessage hit = {0};
 hit.id = MSG_DAMAGE;
-hit.sender = SDLStatic_ActorGetId(self);
+hit.sender = Grapple_ActorGetId(self);
 hit.a = 7.0f;
-SDLStatic_ActorSend(engine, target, &hit);
+Grapple_ActorSend(engine, target, &hit);
 ```
 
 Messages are queued and delivered after all updates and before the frame is
@@ -951,25 +951,25 @@ it, which is what "it is gone" should mean.
 ## Rendering
 
 Give an actor a sprite and the engine draws it — ordered, culled, and at
-the interpolated position. `<SDLStatic/engine_render.h>`.
+the interpolated position. `<grapple/engine_render.h>`.
 
 ```c
-SDLStatic_Sprite sprite = SDLStatic_SpriteDefault();
+Grapple_Sprite sprite = Grapple_SpriteDefault();
 sprite.texture = goblin_texture;
 sprite.width = 64.0f;
 sprite.height = 96.0f;
 sprite.origin_y = 1.0f;        /* the position is where its feet are */
 sprite.layer = LAYER_ACTORS;
 sprite.sort_by_y = true;
-SDLStatic_ActorSetSprite(actor, &sprite);
+Grapple_ActorSetSprite(actor, &sprite);
 
 /* in the render hook */
-SDLStatic_RenderWorld(engine, &camera, alpha);
-SDLStatic_RenderOverlay(engine, alpha);
+Grapple_RenderWorld(engine, &camera, alpha);
+Grapple_RenderOverlay(engine, alpha);
 ```
 
 That is the whole draw loop for a 2D game. Start from
-`SDLStatic_SpriteDefault()` rather than a zeroed struct — a zeroed sprite
+`Grapple_SpriteDefault()` rather than a zeroed struct — a zeroed sprite
 would be invisible, fully transparent and pinned by its top-left corner,
 which is never what anybody meant.
 
@@ -999,7 +999,7 @@ so this turns "draw the level" from O(level) into O(screen). The demo draws
 viewport draws 32 and 37.
 
 ```c
-SDLStatic_RenderStats s = SDLStatic_RenderLastStats(engine);
+Grapple_RenderStats s = Grapple_RenderLastStats(engine);
 printf("considered %d, culled %d, drew %d\n", s.considered, s.culled, s.drawn);
 ```
 
@@ -1009,7 +1009,7 @@ is not working.
 A rotated sprite is culled against its circumscribed square rather than its
 rectangle, or a sprite near the screen edge would vanish as it turned.
 
-**Interpolation.** Sprites draw at `SDLStatic_ActorRenderTransform`, so
+**Interpolation.** Sprites draw at `Grapple_ActorRenderTransform`, so
 motion is smooth without any game writing its own `previous_x`.
 
 ### Origins
@@ -1023,8 +1023,8 @@ sprite pinned at its feet turns about its feet rather than its waist.
 
 ### World and screen
 
-`SDLStatic_RenderWorld` draws world sprites through a camera.
-`SDLStatic_RenderOverlay` draws sprites with `screen_space` set, in design
+`Grapple_RenderWorld` draws world sprites through a camera.
+`Grapple_RenderOverlay` draws sprites with `screen_space` set, in design
 coordinates, ignoring the camera.
 
 They are separate calls because a HUD belongs to the player, not to a
@@ -1033,8 +1033,8 @@ RenderOverlay once, at the end:
 
 ```c
 for (int i = 0; i < players; i++)
-    SDLStatic_RenderWorld(engine, &cameras[i], alpha);
-SDLStatic_RenderOverlay(engine, alpha);
+    Grapple_RenderWorld(engine, &cameras[i], alpha);
+Grapple_RenderOverlay(engine, alpha);
 ```
 
 ### What the engine does not do
@@ -1047,14 +1047,14 @@ makes both worse; asset streaming is its own subsystem.
 ## Input
 
 The engine pumps SDL's events once a frame and folds them into state the
-game **asks** for. `<SDLStatic/engine_input.h>`.
+game **asks** for. `<grapple/engine_input.h>`.
 
 ```c
-if (SDLStatic_KeyPressed(engine, SDL_SCANCODE_SPACE)) Jump();
-if (SDLStatic_GamepadButtonDown(engine, 0, SDLSTATIC_PAD_A)) Hold();
+if (Grapple_KeyPressed(engine, SDL_SCANCODE_SPACE)) Jump();
+if (Grapple_GamepadButtonDown(engine, 0, GRAPPLE_PAD_A)) Hold();
 
 float x, y;
-SDLStatic_GamepadStick(engine, 0, 0, &x, &y);
+Grapple_GamepadStick(engine, 0, 0, &x, &y);
 ```
 
 Polling rather than callbacks, because a game asks "is the player holding
@@ -1090,21 +1090,21 @@ displacing one of the four already playing.
 
 | | |
 |---|---|
-| **Keyboard** | scancodes (key *positions*, so WASD survives AZERTY), modifiers, and `SDLStatic_TextTyped` for text — the only correct way to read what an IME or layout produced |
+| **Keyboard** | scancodes (key *positions*, so WASD survives AZERTY), modifiers, and `Grapple_TextTyped` for text — the only correct way to read what an IME or layout produced |
 | **Mouse** | position and delta in **design coordinates**, left/middle/right plus two thumb buttons, and a wheel with vertical *and* horizontal movement, sign-corrected for natural scrolling |
 | **Gamepads** | four slots; every button on an Xbox pad including the share button, all four Elite paddles and the touchpad click; both sticks; both triggers as analog values *and* as buttons |
 | **Touch** | up to ten fingers in design coordinates, with `FingerInRect` and `FingerHeldInRect` as the building blocks for on-screen controls |
 | **Motion** | gyro and accelerometer, from a controller that has them or from the device itself |
 
-Rumble is `SDLStatic_GamepadRumble(engine, player, low, high, ms)` — the two
+Rumble is `Grapple_GamepadRumble(engine, player, low, high, ms)` — the two
 motors are different weights, so a hit wants low and a pickup wants high —
-plus `RumbleTriggers` on pads that have them. `SDLStatic_GamepadStopRumble`
+plus `RumbleTriggers` on pads that have them. `Grapple_GamepadStopRumble`
 exists because a controller left buzzing while the player is in a menu is a
 bug people remember.
 
 ### Sticks are round
 
-`SDLStatic_GamepadStick` applies a **radial** deadzone: it measures the
+`Grapple_GamepadStick` applies a **radial** deadzone: it measures the
 stick's distance from centre, ignores it below the threshold, and rescales
 the rest to a full 0..1.
 
@@ -1115,7 +1115,7 @@ distance straight up does not, and the player feels the corners.
 ### Sticks as buttons, for menus
 
 ```c
-if (SDLStatic_GamepadDirectionRepeat(engine, player, SDLSTATIC_DIR_DOWN)) SelectNext();
+if (Grapple_GamepadDirectionRepeat(engine, player, GRAPPLE_DIR_DOWN)) SelectNext();
 ```
 
 Navigating a menu with a stick is otherwise miserable: a raw threshold test
@@ -1128,18 +1128,18 @@ so a menu works with either without knowing which the player used.
 ## Actions
 
 Game code should say what it means, not which key means it.
-`<SDLStatic/engine_binding.h>`.
+`<grapple/engine_binding.h>`.
 
 ```c
-SDLStatic_ActionMap *map = SDLStatic_ActionMapCreate();
-SDLStatic_ActionBindKey(map, "jump", SDL_SCANCODE_SPACE);
-SDLStatic_ActionBindPad(map, "jump", SDLSTATIC_PAD_A);
-SDLStatic_ActionBindKeySigned(map, "move_x", SDL_SCANCODE_A, -1);
-SDLStatic_ActionBindKeySigned(map, "move_x", SDL_SCANCODE_D, +1);
-SDLStatic_ActionBindAxis(map, "move_x", SDLSTATIC_AXIS_LEFT_X, 0);
+Grapple_ActionMap *map = Grapple_ActionMapCreate();
+Grapple_ActionBindKey(map, "jump", SDL_SCANCODE_SPACE);
+Grapple_ActionBindPad(map, "jump", GRAPPLE_PAD_A);
+Grapple_ActionBindKeySigned(map, "move_x", SDL_SCANCODE_A, -1);
+Grapple_ActionBindKeySigned(map, "move_x", SDL_SCANCODE_D, +1);
+Grapple_ActionBindAxis(map, "move_x", GRAPPLE_AXIS_LEFT_X, 0);
 
-if (SDLStatic_ActionPressed(engine, map, player, "jump")) Jump();
-float move = SDLStatic_ActionValue(engine, map, player, "move_x");
+if (Grapple_ActionPressed(engine, map, player, "jump")) Jump();
+float move = Grapple_ActionValue(engine, map, player, "move_x");
 ```
 
 A game written against scancodes cannot be rebound without editing the game,
@@ -1154,23 +1154,23 @@ number whichever the player used. A boolean action cannot express a stick,
 so an engine with boolean actions grows a parallel axis API and every game
 ends up using both.
 
-`SDLStatic_ActionVector` normalises past unit length, so holding two keys
+`Grapple_ActionVector` normalises past unit length, so holding two keys
 does not move a player 41% faster diagonally.
 
 **Who is player 2:** gamepad bindings read the pad in the player's own slot.
 Keyboard and mouse bindings belong to whichever player
-`SDLStatic_ActionMapSetKeyboardPlayer` says — player 0 by default, or -1 for
+`Grapple_ActionMapSetKeyboardPlayer` says — player 0 by default, or -1 for
 a gamepad-only game — because there is one keyboard and four people cannot
 share it.
 
 ### Rebinding
 
 ```c
-SDLStatic_Binding pressed;
-if (SDLStatic_ActionCapture(engine, -1, &pressed)) {
-    SDLStatic_ActionClear(map, "jump");
-    SDLStatic_ActionBind(map, "jump", pressed);
-    SDLStatic_ActionMapSave(map, "acme", "mygame");
+Grapple_Binding pressed;
+if (Grapple_ActionCapture(engine, -1, &pressed)) {
+    Grapple_ActionClear(map, "jump");
+    Grapple_ActionBind(map, "jump", pressed);
+    Grapple_ActionMapSave(map, "acme", "mygame");
 }
 ```
 
@@ -1195,19 +1195,19 @@ skipped rather than being fatal.
 
 Give an actor a body and the engine simulates it, then writes the result
 back onto the actor's transform — so the sprite the renderer draws is
-already in the right place. `<SDLStatic/engine_physics.h>`.
+already in the right place. `<grapple/engine_physics.h>`.
 
 ```c
-SDLStatic_BodyDef def = SDLStatic_BodyDefault();
-def.shape = SDLSTATIC_SHAPE_CAPSULE;
+Grapple_BodyDef def = Grapple_BodyDefault();
+def.shape = GRAPPLE_SHAPE_CAPSULE;
 def.width = 46.0f;
 def.height = 88.0f;
 def.offset_y = -44.0f;      /* the actor stands at its feet */
 def.fixed_rotation = true;
-SDLStatic_ActorAddBody(actor, &def);
+Grapple_ActorAddBody(actor, &def);
 ```
 
-Start from `SDLStatic_BodyDefault()`: a zeroed def has no size and no
+Start from `Grapple_BodyDefault()`: a zeroed def has no size and no
 density, which is a body that falls through the world.
 
 ### It steps with the simulation, not with the frame
@@ -1258,17 +1258,17 @@ to spin lies down the first time it bumps into anything.
 ### Collisions
 
 ```c
-static void OnCollision(SDLStatic_Engine *engine, SDLStatic_ActorId a,
-                        SDLStatic_ActorId b, bool began, void *user) {
-    if (began && IsBullet(a)) SDLStatic_ActorDestroy(engine, a);
+static void OnCollision(Grapple_Engine *engine, Grapple_ActorId a,
+                        Grapple_ActorId b, bool began, void *user) {
+    if (began && IsBullet(a)) Grapple_ActorDestroy(engine, a);
 }
-SDLStatic_PhysicsSetCollisionCallback(engine, OnCollision, NULL);
+Grapple_PhysicsSetCollisionCallback(engine, OnCollision, NULL);
 ```
 
 Callbacks name **actors**, not shapes, and are delivered **after** the step
 rather than during it — the solver is mid-flight while it runs, and
 destroying a body from inside it corrupts the world. Since actor destruction
-is deferred to the end of the frame anyway, `SDLStatic_ActorDestroy` from a
+is deferred to the end of the frame anyway, `Grapple_ActorDestroy` from a
 handler is safe, which is the first thing every handler wants to do.
 
 Sensors report through the same callback, with the sensor always first. They
@@ -1281,11 +1281,11 @@ volume.
 
 ```c
 /* the ground check every platformer needs */
-SDLStatic_RayHit down = SDLStatic_PhysicsRaycast(engine, x, y, 0.0f, 12.0f, CAT_GROUND);
+Grapple_RayHit down = Grapple_PhysicsRaycast(engine, x, y, 0.0f, 12.0f, CAT_GROUND);
 bool grounded = down.hit;
 
-SDLStatic_ActorId nearby[32];
-int n = SDLStatic_PhysicsOverlap(engine, blast_area, CAT_ENEMY, nearby, 32);
+Grapple_ActorId nearby[32];
+int n = Grapple_PhysicsOverlap(engine, blast_area, CAT_ENEMY, nearby, 32);
 ```
 
 Both are in design units and return actor ids. Overlap writes one entry per
@@ -1303,28 +1303,28 @@ the player who fired it.
 
 Assets come out of the mounted media archive, so a path means the same file
 whether the game is running against a directory, a zip, or bytes compiled
-into the binary. `<SDLStatic/engine_assets.h>`.
+into the binary. `<grapple/engine_assets.h>`.
 
 ```c
-SDLStatic_TextureId hero = SDLStatic_LoadTexture(engine, "sprites/hero.png");
-sprite.texture = SDLStatic_Texture(engine, hero);
+Grapple_TextureId hero = Grapple_LoadTexture(engine, "sprites/hero.png");
+sprite.texture = Grapple_Texture(engine, hero);
 ```
 
 ### Two ways in, because games need both
 
-**`SDLStatic_LoadTexture` blocks** until the asset is there. That is what you
+**`Grapple_LoadTexture` blocks** until the asset is there. That is what you
 want in a `load` hook or anywhere the next line genuinely cannot proceed
 without the thing.
 
-**`SDLStatic_LoadTextureAsync` returns immediately** and loads on a worker.
+**`Grapple_LoadTextureAsync` returns immediately** and loads on a worker.
 That is what you want for a loading screen with a progress bar, or an open
 world streaming in what the player is walking towards.
 
 ```c
-SDLStatic_TextureId id = SDLStatic_LoadTextureAsync(engine, "level/tiles.png");
+Grapple_TextureId id = Grapple_LoadTextureAsync(engine, "level/tiles.png");
 /* ... later, in the loading scene ... */
-DrawProgressBar(SDLStatic_AssetsProgress(engine));
-if (SDLStatic_AssetsReady(engine)) StartLevel();
+DrawProgressBar(Grapple_AssetsProgress(engine));
+if (Grapple_AssetsReady(engine)) StartLevel();
 ```
 
 Both return the same kind of handle and **share one cache**, so a path
@@ -1336,13 +1336,13 @@ the other way round.
 Asking twice gives the same handle and loads once. That matters more than it
 sounds: forty actors of the same type asking for the same sprite is the
 normal case, not an edge case. Handles are reference counted —
-`SDLStatic_AssetRetain` for a second owner, `SDLStatic_AssetRelease` when
+`Grapple_AssetRetain` for a second owner, `Grapple_AssetRelease` when
 done — and the last release frees the texture, so a level that releases what
 it loaded gets its memory back without the engine guessing when.
 
 ### Nothing returns NULL
 
-`SDLStatic_Texture` on a handle that is still loading, or that failed,
+`Grapple_Texture` on a handle that is still loading, or that failed,
 returns the **placeholder**: magenta and black checks, chosen because they
 are impossible to mistake for art and impossible to miss in a screenshot.
 
@@ -1393,21 +1393,21 @@ re-checks the slot is live after dequeuing it.
 The lighting module knows how to light a scene. What it cannot know is
 where the camera is, which actors are carrying lights, or what the player
 set the quality slider to — so the engine supplies those.
-`<SDLStatic/engine_light.h>`.
+`<grapple/engine_light.h>`.
 
 ```c
-SDLStatic_LightSetPreset(engine, SDLSTATIC_LIGHT_NIGHT);
+Grapple_LightSetPreset(engine, GRAPPLE_LIGHT_NIGHT);
 
-SDLStatic_LightDef torch = SDLStatic_LightDefault();
+Grapple_LightDef torch = Grapple_LightDefault();
 torch.radius = 380.0f;
 torch.color = (SDL_FColor){1.0f, 0.72f, 0.36f, 1.0f};
 torch.flicker = 0.15f;
-SDLStatic_ActorAddLight(actor, &torch);
+Grapple_ActorAddLight(actor, &torch);
 
 /* in the render hook, after the world and before the HUD */
-SDLStatic_RenderWorld(engine, &camera, alpha);
-SDLStatic_LightRender(engine, &camera, alpha);
-SDLStatic_RenderOverlay(engine, alpha);
+Grapple_RenderWorld(engine, &camera, alpha);
+Grapple_LightRender(engine, &camera, alpha);
+Grapple_RenderOverlay(engine, alpha);
 ```
 
 Order matters: lighting multiplies over what is already drawn, so anything
@@ -1426,8 +1426,8 @@ A preset also sets the hour, so a game that later starts the clock carries
 on from a time that matches what is on screen.
 
 ```c
-SDLStatic_LightSetClock(engine, 6.0f, 0.05f);   /* dawn, a 20-minute day */
-if (SDLStatic_LightSunlight(engine) < 0.2f) LightTheStreetlamps();
+Grapple_LightSetClock(engine, 6.0f, 0.05f);   /* dawn, a 20-minute day */
+if (Grapple_LightSunlight(engine) < 0.2f) LightTheStreetlamps();
 ```
 
 Setting a custom ambient stops the clock driving it. A game that has said
@@ -1440,7 +1440,7 @@ for the actor's whole life — and disappears when the actor does. There is
 nothing to keep in sync, which is the entire reason it lives there rather
 than being submitted by hand.
 
-It is submitted at `SDLStatic_ActorRenderTransform`, the same place the
+It is submitted at `Grapple_ActorRenderTransform`, the same place the
 sprite is drawn. At the simulation position instead, a torch would lag its
 own flame by up to a tick: a shimmer that is maddening to look at and very
 hard to attribute to its cause.
@@ -1457,14 +1457,14 @@ single conditional.
 
 When the budget runs out the engine **stops** rather than thinning: a light
 that flickers in and out as the count drifts across the limit is far more
-distracting than one that is consistently absent. `SDLStatic_LightCount`
+distracting than one that is consistently absent. `Grapple_LightCount`
 reports what actually went in, which is how you notice a budget silently
 dropping half the scene.
 
 ### Walls
 
 ```c
-SDLStatic_LightAddOccluder(engine, wall_rect);
+Grapple_LightAddOccluder(engine, wall_rect);
 ```
 
 Occluders and dark zones are buffered and consumed by the next
@@ -1474,7 +1474,7 @@ silently when somebody calls it in the wrong place.
 
 **Static physics bodies are submitted automatically**, because a level's
 collision is usually exactly what should block light — off with
-`SDLStatic_LightSetAutoOccluders` for a game that disagrees. Only bodies
+`Grapple_LightSetAutoOccluders` for a game that disagrees. Only bodies
 near the camera go in: an occluder off screen cannot cast a shadow onto it,
 and the mask has a finite resolution to spend.
 
@@ -1482,14 +1482,14 @@ and the mask has a finite resolution to spend.
 
 The engine provides the primitives, not the data model. It knows how to put
 bytes somewhere safe and hand them back; it never learns what a save
-contains. `<SDLStatic/engine_save.h>`.
+contains. `<grapple/engine_save.h>`.
 
 ```c
-SDLStatic_SaveSetIdentity(engine, "acme", "mygame");
-SDLStatic_SaveWrite(engine, 1, &state, sizeof(state), "Cave of Ordeals");
+Grapple_SaveSetIdentity(engine, "acme", "mygame");
+Grapple_SaveWrite(engine, 1, &state, sizeof(state), "Cave of Ordeals");
 
 size_t size = 0;
-void *data = SDLStatic_SaveRead(engine, 1, &size);
+void *data = Grapple_SaveRead(engine, 1, &size);
 if (data != NULL && size == sizeof(state)) SDL_memcpy(&state, data, size);
 SDL_free(data);
 ```
@@ -1511,7 +1511,7 @@ piece of this that is genuinely worth an engine owning.
 
 ### Slots carry a label
 
-`SDLStatic_SaveInfoOf` returns existence, size, modification time and a
+`Grapple_SaveInfoOf` returns existence, size, modification time and a
 label without reading the payload — so a load menu can draw its rows without
 parsing saves it may not even be able to interpret, such as an older
 version's. Saves from a newer build are refused rather than misread.
@@ -1519,11 +1519,11 @@ version's. Saves from a newer build are refused rather than misread.
 ## Localisation
 
 ```c
-SDLStatic_TextLoadFile(engine, "fr");          /* lang/fr.toml from the archive */
-SDLStatic_TextSetLanguage(engine, "fr");
+Grapple_TextLoadFile(engine, "fr");          /* lang/fr.toml from the archive */
+Grapple_TextSetLanguage(engine, "fr");
 
-DrawText(SDLStatic_Text(engine, "menu.start"));
-DrawText(SDLStatic_TextFormat(engine, "hud.score", score));
+DrawText(Grapple_Text(engine, "menu.start"));
+DrawText(Grapple_TextFormat(engine, "hud.score", score));
 ```
 
 ```toml
@@ -1545,7 +1545,7 @@ place:
   purpose: obvious in a screenshot, and it names the thing that needs
   fixing.
 
-`SDLStatic_TextHas` reports whether a real translation exists, for a
+`Grapple_TextHas` reports whether a real translation exists, for a
 coverage tool — not for gameplay, which should just draw the string.
 
 ### Keys, not English text, are the identifiers
@@ -1560,6 +1560,6 @@ The looked-up string *is* the format, so `"Score: %d"` and `"%d points"` are
 both expressible. Word order differs between languages, and a translation
 that cannot move its own placeholders is not really a translation.
 
-`SDLStatic_TextFormat` returns one of a small rotating set of buffers, so
+`Grapple_TextFormat` returns one of a small rotating set of buffers, so
 several calls can appear in one expression without the second clobbering the
 first.

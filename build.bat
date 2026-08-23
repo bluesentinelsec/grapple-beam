@@ -8,8 +8,8 @@ rem   build.bat release
 rem   build.bat test
 rem   build.bat help
 
-set "PROJECT_NAME=SDL3-static-extensions"
-set "PROJECT_MACRO=SDL3_STATIC_EXTENSIONS"
+set "PROJECT_NAME=grapple-beam"
+set "PROJECT_MACRO=GRAPPLE_BEAM"
 set "BUILD_DEBUG=build\debug"
 set "BUILD_RELEASE=build\release"
 set "BUILD_SANITIZER=build\sanitizer"

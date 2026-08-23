@@ -1,6 +1,6 @@
 /**
  * @file gfx_test.cpp
- * @brief Tests for SDLStatic::Gfx — vendored SDL3_gfx (CPU) + the SDLStatic
+ * @brief Tests for Grapple::Gfx — vendored SDL3_gfx (CPU) + the Grapple
  *        GPU-primitives layer.
  *
  * Runs headless on software renderers backed by plain surfaces; pixels are
@@ -14,7 +14,7 @@
 #include <SDL3_gfx/SDL3_framerate.h>
 #include <SDL3_gfx/SDL3_gfxPrimitives.h>
 #include <SDL3_gfx/SDL3_rotozoom.h>
-#include <SDLStatic/gpu_primitives.h>
+#include <grapple/gpu_primitives.h>
 #include <gtest/gtest.h>
 
 #include <vector>
@@ -172,7 +172,7 @@ TEST_F(GfxFoundation, CpuStringRendersGlyphPixels)
 {
     GfxCanvas canvas;
     ASSERT_NE(canvas.renderer(), nullptr) << SDL_GetError();
-    ASSERT_TRUE(stringRGBA(canvas.renderer(), 8, 8, "SDLStatic", 255, 255, 255, 255));
+    ASSERT_TRUE(stringRGBA(canvas.renderer(), 8, 8, "Grapple", 255, 255, 255, 255));
     EXPECT_GT(Count(canvas.Coverage()), 50) << "text should light up pixels";
 }
 

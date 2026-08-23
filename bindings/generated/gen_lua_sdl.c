@@ -24,9 +24,9 @@ static void GenRead_SDL_AudioSpec(lua_State *L, int idx, SDL_AudioSpec *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->format = (SDL_AudioFormat)SDLStaticGen_LuaFieldInt(L, idx, "format");
-    out->channels = (int)SDLStaticGen_LuaFieldInt(L, idx, "channels");
-    out->freq = (int)SDLStaticGen_LuaFieldInt(L, idx, "freq");
+    out->format = (SDL_AudioFormat)GrappleGen_LuaFieldInt(L, idx, "format");
+    out->channels = (int)GrappleGen_LuaFieldInt(L, idx, "channels");
+    out->freq = (int)GrappleGen_LuaFieldInt(L, idx, "freq");
 }
 
 static void GenPush_SDL_AudioSpec(lua_State *L, const SDL_AudioSpec *in)
@@ -44,12 +44,12 @@ static void GenRead_SDL_CameraSpec(lua_State *L, int idx, SDL_CameraSpec *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->format = (SDL_PixelFormat)SDLStaticGen_LuaFieldInt(L, idx, "format");
-    out->colorspace = (SDL_Colorspace)SDLStaticGen_LuaFieldInt(L, idx, "colorspace");
-    out->width = (int)SDLStaticGen_LuaFieldInt(L, idx, "width");
-    out->height = (int)SDLStaticGen_LuaFieldInt(L, idx, "height");
-    out->framerate_numerator = (int)SDLStaticGen_LuaFieldInt(L, idx, "framerate_numerator");
-    out->framerate_denominator = (int)SDLStaticGen_LuaFieldInt(L, idx, "framerate_denominator");
+    out->format = (SDL_PixelFormat)GrappleGen_LuaFieldInt(L, idx, "format");
+    out->colorspace = (SDL_Colorspace)GrappleGen_LuaFieldInt(L, idx, "colorspace");
+    out->width = (int)GrappleGen_LuaFieldInt(L, idx, "width");
+    out->height = (int)GrappleGen_LuaFieldInt(L, idx, "height");
+    out->framerate_numerator = (int)GrappleGen_LuaFieldInt(L, idx, "framerate_numerator");
+    out->framerate_denominator = (int)GrappleGen_LuaFieldInt(L, idx, "framerate_denominator");
 }
 
 static void GenPush_SDL_CameraSpec(lua_State *L, const SDL_CameraSpec *in)
@@ -73,25 +73,25 @@ static void GenRead_SDL_Color(lua_State *L, int idx, SDL_Color *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->r = (Uint8)SDLStaticGen_LuaFieldInt(L, idx, "r");
-    out->g = (Uint8)SDLStaticGen_LuaFieldInt(L, idx, "g");
-    out->b = (Uint8)SDLStaticGen_LuaFieldInt(L, idx, "b");
-    out->a = (Uint8)SDLStaticGen_LuaFieldInt(L, idx, "a");
+    out->r = (Uint8)GrappleGen_LuaFieldInt(L, idx, "r");
+    out->g = (Uint8)GrappleGen_LuaFieldInt(L, idx, "g");
+    out->b = (Uint8)GrappleGen_LuaFieldInt(L, idx, "b");
+    out->a = (Uint8)GrappleGen_LuaFieldInt(L, idx, "a");
 }
 
 static void GenRead_SDL_DateTime(lua_State *L, int idx, SDL_DateTime *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->year = (int)SDLStaticGen_LuaFieldInt(L, idx, "year");
-    out->month = (int)SDLStaticGen_LuaFieldInt(L, idx, "month");
-    out->day = (int)SDLStaticGen_LuaFieldInt(L, idx, "day");
-    out->hour = (int)SDLStaticGen_LuaFieldInt(L, idx, "hour");
-    out->minute = (int)SDLStaticGen_LuaFieldInt(L, idx, "minute");
-    out->second = (int)SDLStaticGen_LuaFieldInt(L, idx, "second");
-    out->nanosecond = (int)SDLStaticGen_LuaFieldInt(L, idx, "nanosecond");
-    out->day_of_week = (int)SDLStaticGen_LuaFieldInt(L, idx, "day_of_week");
-    out->utc_offset = (int)SDLStaticGen_LuaFieldInt(L, idx, "utc_offset");
+    out->year = (int)GrappleGen_LuaFieldInt(L, idx, "year");
+    out->month = (int)GrappleGen_LuaFieldInt(L, idx, "month");
+    out->day = (int)GrappleGen_LuaFieldInt(L, idx, "day");
+    out->hour = (int)GrappleGen_LuaFieldInt(L, idx, "hour");
+    out->minute = (int)GrappleGen_LuaFieldInt(L, idx, "minute");
+    out->second = (int)GrappleGen_LuaFieldInt(L, idx, "second");
+    out->nanosecond = (int)GrappleGen_LuaFieldInt(L, idx, "nanosecond");
+    out->day_of_week = (int)GrappleGen_LuaFieldInt(L, idx, "day_of_week");
+    out->utc_offset = (int)GrappleGen_LuaFieldInt(L, idx, "utc_offset");
 }
 
 static void GenPush_SDL_DateTime(lua_State *L, const SDL_DateTime *in)
@@ -121,28 +121,28 @@ static void GenRead_SDL_FColor(lua_State *L, int idx, SDL_FColor *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->r = (float)SDLStaticGen_LuaFieldNum(L, idx, "r");
-    out->g = (float)SDLStaticGen_LuaFieldNum(L, idx, "g");
-    out->b = (float)SDLStaticGen_LuaFieldNum(L, idx, "b");
-    out->a = (float)SDLStaticGen_LuaFieldNum(L, idx, "a");
+    out->r = (float)GrappleGen_LuaFieldNum(L, idx, "r");
+    out->g = (float)GrappleGen_LuaFieldNum(L, idx, "g");
+    out->b = (float)GrappleGen_LuaFieldNum(L, idx, "b");
+    out->a = (float)GrappleGen_LuaFieldNum(L, idx, "a");
 }
 
 static void GenRead_SDL_FPoint(lua_State *L, int idx, SDL_FPoint *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->x = (float)SDLStaticGen_LuaFieldNum(L, idx, "x");
-    out->y = (float)SDLStaticGen_LuaFieldNum(L, idx, "y");
+    out->x = (float)GrappleGen_LuaFieldNum(L, idx, "x");
+    out->y = (float)GrappleGen_LuaFieldNum(L, idx, "y");
 }
 
 static void GenRead_SDL_FRect(lua_State *L, int idx, SDL_FRect *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->x = (float)SDLStaticGen_LuaFieldNum(L, idx, "x");
-    out->y = (float)SDLStaticGen_LuaFieldNum(L, idx, "y");
-    out->w = (float)SDLStaticGen_LuaFieldNum(L, idx, "w");
-    out->h = (float)SDLStaticGen_LuaFieldNum(L, idx, "h");
+    out->x = (float)GrappleGen_LuaFieldNum(L, idx, "x");
+    out->y = (float)GrappleGen_LuaFieldNum(L, idx, "y");
+    out->w = (float)GrappleGen_LuaFieldNum(L, idx, "w");
+    out->h = (float)GrappleGen_LuaFieldNum(L, idx, "h");
 }
 
 static void GenPush_SDL_FRect(lua_State *L, const SDL_FRect *in)
@@ -162,67 +162,67 @@ static void GenRead_SDL_GPUBufferCreateInfo(lua_State *L, int idx, SDL_GPUBuffer
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->usage = (SDL_GPUBufferUsageFlags)SDLStaticGen_LuaFieldInt(L, idx, "usage");
-    out->size = (Uint32)SDLStaticGen_LuaFieldInt(L, idx, "size");
-    out->props = (SDL_PropertiesID)SDLStaticGen_LuaFieldInt(L, idx, "props");
+    out->usage = (SDL_GPUBufferUsageFlags)GrappleGen_LuaFieldInt(L, idx, "usage");
+    out->size = (Uint32)GrappleGen_LuaFieldInt(L, idx, "size");
+    out->props = (SDL_PropertiesID)GrappleGen_LuaFieldInt(L, idx, "props");
 }
 
 static void GenRead_SDL_GPUSamplerCreateInfo(lua_State *L, int idx, SDL_GPUSamplerCreateInfo *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->min_filter = (SDL_GPUFilter)SDLStaticGen_LuaFieldInt(L, idx, "min_filter");
-    out->mag_filter = (SDL_GPUFilter)SDLStaticGen_LuaFieldInt(L, idx, "mag_filter");
-    out->mipmap_mode = (SDL_GPUSamplerMipmapMode)SDLStaticGen_LuaFieldInt(L, idx, "mipmap_mode");
-    out->address_mode_u = (SDL_GPUSamplerAddressMode)SDLStaticGen_LuaFieldInt(L, idx, "address_mode_u");
-    out->address_mode_v = (SDL_GPUSamplerAddressMode)SDLStaticGen_LuaFieldInt(L, idx, "address_mode_v");
-    out->address_mode_w = (SDL_GPUSamplerAddressMode)SDLStaticGen_LuaFieldInt(L, idx, "address_mode_w");
-    out->mip_lod_bias = (float)SDLStaticGen_LuaFieldNum(L, idx, "mip_lod_bias");
-    out->max_anisotropy = (float)SDLStaticGen_LuaFieldNum(L, idx, "max_anisotropy");
-    out->compare_op = (SDL_GPUCompareOp)SDLStaticGen_LuaFieldInt(L, idx, "compare_op");
-    out->min_lod = (float)SDLStaticGen_LuaFieldNum(L, idx, "min_lod");
-    out->max_lod = (float)SDLStaticGen_LuaFieldNum(L, idx, "max_lod");
-    out->enable_anisotropy = (bool)SDLStaticGen_LuaFieldBool(L, idx, "enable_anisotropy");
-    out->enable_compare = (bool)SDLStaticGen_LuaFieldBool(L, idx, "enable_compare");
-    out->padding1 = (Uint8)SDLStaticGen_LuaFieldInt(L, idx, "padding1");
-    out->padding2 = (Uint8)SDLStaticGen_LuaFieldInt(L, idx, "padding2");
-    out->props = (SDL_PropertiesID)SDLStaticGen_LuaFieldInt(L, idx, "props");
+    out->min_filter = (SDL_GPUFilter)GrappleGen_LuaFieldInt(L, idx, "min_filter");
+    out->mag_filter = (SDL_GPUFilter)GrappleGen_LuaFieldInt(L, idx, "mag_filter");
+    out->mipmap_mode = (SDL_GPUSamplerMipmapMode)GrappleGen_LuaFieldInt(L, idx, "mipmap_mode");
+    out->address_mode_u = (SDL_GPUSamplerAddressMode)GrappleGen_LuaFieldInt(L, idx, "address_mode_u");
+    out->address_mode_v = (SDL_GPUSamplerAddressMode)GrappleGen_LuaFieldInt(L, idx, "address_mode_v");
+    out->address_mode_w = (SDL_GPUSamplerAddressMode)GrappleGen_LuaFieldInt(L, idx, "address_mode_w");
+    out->mip_lod_bias = (float)GrappleGen_LuaFieldNum(L, idx, "mip_lod_bias");
+    out->max_anisotropy = (float)GrappleGen_LuaFieldNum(L, idx, "max_anisotropy");
+    out->compare_op = (SDL_GPUCompareOp)GrappleGen_LuaFieldInt(L, idx, "compare_op");
+    out->min_lod = (float)GrappleGen_LuaFieldNum(L, idx, "min_lod");
+    out->max_lod = (float)GrappleGen_LuaFieldNum(L, idx, "max_lod");
+    out->enable_anisotropy = (bool)GrappleGen_LuaFieldBool(L, idx, "enable_anisotropy");
+    out->enable_compare = (bool)GrappleGen_LuaFieldBool(L, idx, "enable_compare");
+    out->padding1 = (Uint8)GrappleGen_LuaFieldInt(L, idx, "padding1");
+    out->padding2 = (Uint8)GrappleGen_LuaFieldInt(L, idx, "padding2");
+    out->props = (SDL_PropertiesID)GrappleGen_LuaFieldInt(L, idx, "props");
 }
 
 static void GenRead_SDL_GPUTextureCreateInfo(lua_State *L, int idx, SDL_GPUTextureCreateInfo *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->type = (SDL_GPUTextureType)SDLStaticGen_LuaFieldInt(L, idx, "type");
-    out->format = (SDL_GPUTextureFormat)SDLStaticGen_LuaFieldInt(L, idx, "format");
-    out->usage = (SDL_GPUTextureUsageFlags)SDLStaticGen_LuaFieldInt(L, idx, "usage");
-    out->width = (Uint32)SDLStaticGen_LuaFieldInt(L, idx, "width");
-    out->height = (Uint32)SDLStaticGen_LuaFieldInt(L, idx, "height");
-    out->layer_count_or_depth = (Uint32)SDLStaticGen_LuaFieldInt(L, idx, "layer_count_or_depth");
-    out->num_levels = (Uint32)SDLStaticGen_LuaFieldInt(L, idx, "num_levels");
-    out->sample_count = (SDL_GPUSampleCount)SDLStaticGen_LuaFieldInt(L, idx, "sample_count");
-    out->props = (SDL_PropertiesID)SDLStaticGen_LuaFieldInt(L, idx, "props");
+    out->type = (SDL_GPUTextureType)GrappleGen_LuaFieldInt(L, idx, "type");
+    out->format = (SDL_GPUTextureFormat)GrappleGen_LuaFieldInt(L, idx, "format");
+    out->usage = (SDL_GPUTextureUsageFlags)GrappleGen_LuaFieldInt(L, idx, "usage");
+    out->width = (Uint32)GrappleGen_LuaFieldInt(L, idx, "width");
+    out->height = (Uint32)GrappleGen_LuaFieldInt(L, idx, "height");
+    out->layer_count_or_depth = (Uint32)GrappleGen_LuaFieldInt(L, idx, "layer_count_or_depth");
+    out->num_levels = (Uint32)GrappleGen_LuaFieldInt(L, idx, "num_levels");
+    out->sample_count = (SDL_GPUSampleCount)GrappleGen_LuaFieldInt(L, idx, "sample_count");
+    out->props = (SDL_PropertiesID)GrappleGen_LuaFieldInt(L, idx, "props");
 }
 
 static void GenRead_SDL_GPUTransferBufferCreateInfo(lua_State *L, int idx, SDL_GPUTransferBufferCreateInfo *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->usage = (SDL_GPUTransferBufferUsage)SDLStaticGen_LuaFieldInt(L, idx, "usage");
-    out->size = (Uint32)SDLStaticGen_LuaFieldInt(L, idx, "size");
-    out->props = (SDL_PropertiesID)SDLStaticGen_LuaFieldInt(L, idx, "props");
+    out->usage = (SDL_GPUTransferBufferUsage)GrappleGen_LuaFieldInt(L, idx, "usage");
+    out->size = (Uint32)GrappleGen_LuaFieldInt(L, idx, "size");
+    out->props = (SDL_PropertiesID)GrappleGen_LuaFieldInt(L, idx, "props");
 }
 
 static void GenRead_SDL_GPUViewport(lua_State *L, int idx, SDL_GPUViewport *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->x = (float)SDLStaticGen_LuaFieldNum(L, idx, "x");
-    out->y = (float)SDLStaticGen_LuaFieldNum(L, idx, "y");
-    out->w = (float)SDLStaticGen_LuaFieldNum(L, idx, "w");
-    out->h = (float)SDLStaticGen_LuaFieldNum(L, idx, "h");
-    out->min_depth = (float)SDLStaticGen_LuaFieldNum(L, idx, "min_depth");
-    out->max_depth = (float)SDLStaticGen_LuaFieldNum(L, idx, "max_depth");
+    out->x = (float)GrappleGen_LuaFieldNum(L, idx, "x");
+    out->y = (float)GrappleGen_LuaFieldNum(L, idx, "y");
+    out->w = (float)GrappleGen_LuaFieldNum(L, idx, "w");
+    out->h = (float)GrappleGen_LuaFieldNum(L, idx, "h");
+    out->min_depth = (float)GrappleGen_LuaFieldNum(L, idx, "min_depth");
+    out->max_depth = (float)GrappleGen_LuaFieldNum(L, idx, "max_depth");
 }
 
 static void GenRead_SDL_GUID(lua_State *L, int idx, SDL_GUID *out)
@@ -270,9 +270,9 @@ static void GenRead_SDL_PixelFormatDetails(lua_State *L, int idx, SDL_PixelForma
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->format = (SDL_PixelFormat)SDLStaticGen_LuaFieldInt(L, idx, "format");
-    out->bits_per_pixel = (Uint8)SDLStaticGen_LuaFieldInt(L, idx, "bits_per_pixel");
-    out->bytes_per_pixel = (Uint8)SDLStaticGen_LuaFieldInt(L, idx, "bytes_per_pixel");
+    out->format = (SDL_PixelFormat)GrappleGen_LuaFieldInt(L, idx, "format");
+    out->bits_per_pixel = (Uint8)GrappleGen_LuaFieldInt(L, idx, "bits_per_pixel");
+    out->bytes_per_pixel = (Uint8)GrappleGen_LuaFieldInt(L, idx, "bytes_per_pixel");
     lua_getfield(L, idx, "padding");
     if (lua_istable(L, -1)) {
         for (int gi = 0; gi < (int)(2); ++gi) {
@@ -282,36 +282,36 @@ static void GenRead_SDL_PixelFormatDetails(lua_State *L, int idx, SDL_PixelForma
         }
     }
     lua_pop(L, 1);
-    out->Rmask = (Uint32)SDLStaticGen_LuaFieldInt(L, idx, "Rmask");
-    out->Gmask = (Uint32)SDLStaticGen_LuaFieldInt(L, idx, "Gmask");
-    out->Bmask = (Uint32)SDLStaticGen_LuaFieldInt(L, idx, "Bmask");
-    out->Amask = (Uint32)SDLStaticGen_LuaFieldInt(L, idx, "Amask");
-    out->Rbits = (Uint8)SDLStaticGen_LuaFieldInt(L, idx, "Rbits");
-    out->Gbits = (Uint8)SDLStaticGen_LuaFieldInt(L, idx, "Gbits");
-    out->Bbits = (Uint8)SDLStaticGen_LuaFieldInt(L, idx, "Bbits");
-    out->Abits = (Uint8)SDLStaticGen_LuaFieldInt(L, idx, "Abits");
-    out->Rshift = (Uint8)SDLStaticGen_LuaFieldInt(L, idx, "Rshift");
-    out->Gshift = (Uint8)SDLStaticGen_LuaFieldInt(L, idx, "Gshift");
-    out->Bshift = (Uint8)SDLStaticGen_LuaFieldInt(L, idx, "Bshift");
-    out->Ashift = (Uint8)SDLStaticGen_LuaFieldInt(L, idx, "Ashift");
+    out->Rmask = (Uint32)GrappleGen_LuaFieldInt(L, idx, "Rmask");
+    out->Gmask = (Uint32)GrappleGen_LuaFieldInt(L, idx, "Gmask");
+    out->Bmask = (Uint32)GrappleGen_LuaFieldInt(L, idx, "Bmask");
+    out->Amask = (Uint32)GrappleGen_LuaFieldInt(L, idx, "Amask");
+    out->Rbits = (Uint8)GrappleGen_LuaFieldInt(L, idx, "Rbits");
+    out->Gbits = (Uint8)GrappleGen_LuaFieldInt(L, idx, "Gbits");
+    out->Bbits = (Uint8)GrappleGen_LuaFieldInt(L, idx, "Bbits");
+    out->Abits = (Uint8)GrappleGen_LuaFieldInt(L, idx, "Abits");
+    out->Rshift = (Uint8)GrappleGen_LuaFieldInt(L, idx, "Rshift");
+    out->Gshift = (Uint8)GrappleGen_LuaFieldInt(L, idx, "Gshift");
+    out->Bshift = (Uint8)GrappleGen_LuaFieldInt(L, idx, "Bshift");
+    out->Ashift = (Uint8)GrappleGen_LuaFieldInt(L, idx, "Ashift");
 }
 
 static void GenRead_SDL_Point(lua_State *L, int idx, SDL_Point *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->x = (int)SDLStaticGen_LuaFieldInt(L, idx, "x");
-    out->y = (int)SDLStaticGen_LuaFieldInt(L, idx, "y");
+    out->x = (int)GrappleGen_LuaFieldInt(L, idx, "x");
+    out->y = (int)GrappleGen_LuaFieldInt(L, idx, "y");
 }
 
 static void GenRead_SDL_Rect(lua_State *L, int idx, SDL_Rect *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->x = (int)SDLStaticGen_LuaFieldInt(L, idx, "x");
-    out->y = (int)SDLStaticGen_LuaFieldInt(L, idx, "y");
-    out->w = (int)SDLStaticGen_LuaFieldInt(L, idx, "w");
-    out->h = (int)SDLStaticGen_LuaFieldInt(L, idx, "h");
+    out->x = (int)GrappleGen_LuaFieldInt(L, idx, "x");
+    out->y = (int)GrappleGen_LuaFieldInt(L, idx, "y");
+    out->w = (int)GrappleGen_LuaFieldInt(L, idx, "w");
+    out->h = (int)GrappleGen_LuaFieldInt(L, idx, "h");
 }
 
 static void GenPush_SDL_Rect(lua_State *L, const SDL_Rect *in)
@@ -450,10 +450,10 @@ static void GenDtor_SDL_DestroyGPUDevice(void *p)
 static int GenL_SDL_AcquireCameraFrame(lua_State *L)
 {
     (void)L;
-    SDL_Camera *a0 = (SDL_Camera *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Camera");
+    SDL_Camera *a0 = (SDL_Camera *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Camera");
     Uint64 io1 = (Uint64)luaL_optinteger(L, 2, 0);
     SDL_Surface * rv = SDL_AcquireCameraFrame(a0, &io1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Surface");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Surface");
     lua_pushinteger(L, (lua_Integer)io1);
     return 2;
 }
@@ -461,9 +461,9 @@ static int GenL_SDL_AcquireCameraFrame(lua_State *L)
 static int GenL_SDL_AcquireGPUCommandBuffer(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
     SDL_GPUCommandBuffer * rv = SDL_AcquireGPUCommandBuffer(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_GPUCommandBuffer");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_GPUCommandBuffer");
     return 1;
 }
 
@@ -488,7 +488,7 @@ static int GenL_SDL_AddGamepadMappingsFromFile(lua_State *L)
 static int GenL_SDL_AddGamepadMappingsFromIO(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     bool a1 = (bool)lua_toboolean(L, 2);
     int rv = SDL_AddGamepadMappingsFromIO(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -498,8 +498,8 @@ static int GenL_SDL_AddGamepadMappingsFromIO(lua_State *L)
 static int GenL_SDL_AddSurfaceAlternateImage(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
-    SDL_Surface *a1 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a1 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Surface");
     bool rv = SDL_AddSurfaceAlternateImage(a0, a1);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -508,7 +508,7 @@ static int GenL_SDL_AddSurfaceAlternateImage(lua_State *L)
 static int GenL_SDL_AddVulkanRenderSemaphores(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Uint32 a1 = (Uint32)luaL_checkinteger(L, 2);
     Sint64 a2 = (Sint64)luaL_checkinteger(L, 3);
     Sint64 a3 = (Sint64)luaL_checkinteger(L, 4);
@@ -523,14 +523,14 @@ static int GenL_SDL_AsyncIOFromFile(lua_State *L)
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     SDL_AsyncIO * rv = SDL_AsyncIOFromFile(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_AsyncIO");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_AsyncIO");
     return 1;
 }
 
 static int GenL_SDL_AttachVirtualJoystick(lua_State *L)
 {
     (void)L;
-    const SDL_VirtualJoystickDesc *a0 = (const SDL_VirtualJoystickDesc *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_VirtualJoystickDesc");
+    const SDL_VirtualJoystickDesc *a0 = (const SDL_VirtualJoystickDesc *)GrappleGen_LuaCheckHandle(L, 1, "SDL_VirtualJoystickDesc");
     SDL_JoystickID rv = SDL_AttachVirtualJoystick(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -548,7 +548,7 @@ static int GenL_SDL_AudioDevicePaused(lua_State *L)
 static int GenL_SDL_AudioStreamDevicePaused(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     bool rv = SDL_AudioStreamDevicePaused(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -557,34 +557,34 @@ static int GenL_SDL_AudioStreamDevicePaused(lua_State *L)
 static int GenL_SDL_BeginGPUComputePass(lua_State *L)
 {
     (void)L;
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
-    const SDL_GPUStorageTextureReadWriteBinding *a1 = (const SDL_GPUStorageTextureReadWriteBinding *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUStorageTextureReadWriteBinding");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
+    const SDL_GPUStorageTextureReadWriteBinding *a1 = (const SDL_GPUStorageTextureReadWriteBinding *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUStorageTextureReadWriteBinding");
     Uint32 a2 = (Uint32)luaL_checkinteger(L, 3);
-    const SDL_GPUStorageBufferReadWriteBinding *a3 = (const SDL_GPUStorageBufferReadWriteBinding *)SDLStaticGen_LuaCheckHandle(L, 4, "SDL_GPUStorageBufferReadWriteBinding");
+    const SDL_GPUStorageBufferReadWriteBinding *a3 = (const SDL_GPUStorageBufferReadWriteBinding *)GrappleGen_LuaCheckHandle(L, 4, "SDL_GPUStorageBufferReadWriteBinding");
     Uint32 a4 = (Uint32)luaL_checkinteger(L, 5);
     SDL_GPUComputePass * rv = SDL_BeginGPUComputePass(a0, a1, a2, a3, a4);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_GPUComputePass");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_GPUComputePass");
     return 1;
 }
 
 static int GenL_SDL_BeginGPUCopyPass(lua_State *L)
 {
     (void)L;
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
     SDL_GPUCopyPass * rv = SDL_BeginGPUCopyPass(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_GPUCopyPass");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_GPUCopyPass");
     return 1;
 }
 
 static int GenL_SDL_BeginGPURenderPass(lua_State *L)
 {
     (void)L;
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
-    const SDL_GPUColorTargetInfo *a1 = (const SDL_GPUColorTargetInfo *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUColorTargetInfo");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
+    const SDL_GPUColorTargetInfo *a1 = (const SDL_GPUColorTargetInfo *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUColorTargetInfo");
     Uint32 a2 = (Uint32)luaL_checkinteger(L, 3);
-    const SDL_GPUDepthStencilTargetInfo *a3 = (const SDL_GPUDepthStencilTargetInfo *)SDLStaticGen_LuaCheckHandle(L, 4, "SDL_GPUDepthStencilTargetInfo");
+    const SDL_GPUDepthStencilTargetInfo *a3 = (const SDL_GPUDepthStencilTargetInfo *)GrappleGen_LuaCheckHandle(L, 4, "SDL_GPUDepthStencilTargetInfo");
     SDL_GPURenderPass * rv = SDL_BeginGPURenderPass(a0, a1, a2, a3);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_GPURenderPass");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_GPURenderPass");
     return 1;
 }
 
@@ -592,7 +592,7 @@ static int GenL_SDL_BindAudioStream(lua_State *L)
 {
     (void)L;
     SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)luaL_checkinteger(L, 1);
-    SDL_AudioStream *a1 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_AudioStream");
+    SDL_AudioStream *a1 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 2, "SDL_AudioStream");
     bool rv = SDL_BindAudioStream(a0, a1);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -601,8 +601,8 @@ static int GenL_SDL_BindAudioStream(lua_State *L)
 static int GenL_SDL_BindGPUComputePipeline(lua_State *L)
 {
     (void)L;
-    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUComputePass");
-    SDL_GPUComputePipeline *a1 = (SDL_GPUComputePipeline *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUComputePipeline");
+    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUComputePass");
+    SDL_GPUComputePipeline *a1 = (SDL_GPUComputePipeline *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUComputePipeline");
     SDL_BindGPUComputePipeline(a0, a1);
     return 0;
 }
@@ -610,9 +610,9 @@ static int GenL_SDL_BindGPUComputePipeline(lua_State *L)
 static int GenL_SDL_BindGPUComputeSamplers(lua_State *L)
 {
     (void)L;
-    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUComputePass");
+    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUComputePass");
     Uint32 a1 = (Uint32)luaL_checkinteger(L, 2);
-    const SDL_GPUTextureSamplerBinding *a2 = (const SDL_GPUTextureSamplerBinding *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_GPUTextureSamplerBinding");
+    const SDL_GPUTextureSamplerBinding *a2 = (const SDL_GPUTextureSamplerBinding *)GrappleGen_LuaCheckHandle(L, 3, "SDL_GPUTextureSamplerBinding");
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
     SDL_BindGPUComputeSamplers(a0, a1, a2, a3);
     return 0;
@@ -621,9 +621,9 @@ static int GenL_SDL_BindGPUComputeSamplers(lua_State *L)
 static int GenL_SDL_BindGPUFragmentSamplers(lua_State *L)
 {
     (void)L;
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
     Uint32 a1 = (Uint32)luaL_checkinteger(L, 2);
-    const SDL_GPUTextureSamplerBinding *a2 = (const SDL_GPUTextureSamplerBinding *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_GPUTextureSamplerBinding");
+    const SDL_GPUTextureSamplerBinding *a2 = (const SDL_GPUTextureSamplerBinding *)GrappleGen_LuaCheckHandle(L, 3, "SDL_GPUTextureSamplerBinding");
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
     SDL_BindGPUFragmentSamplers(a0, a1, a2, a3);
     return 0;
@@ -632,8 +632,8 @@ static int GenL_SDL_BindGPUFragmentSamplers(lua_State *L)
 static int GenL_SDL_BindGPUGraphicsPipeline(lua_State *L)
 {
     (void)L;
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
-    SDL_GPUGraphicsPipeline *a1 = (SDL_GPUGraphicsPipeline *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUGraphicsPipeline");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
+    SDL_GPUGraphicsPipeline *a1 = (SDL_GPUGraphicsPipeline *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUGraphicsPipeline");
     SDL_BindGPUGraphicsPipeline(a0, a1);
     return 0;
 }
@@ -641,8 +641,8 @@ static int GenL_SDL_BindGPUGraphicsPipeline(lua_State *L)
 static int GenL_SDL_BindGPUIndexBuffer(lua_State *L)
 {
     (void)L;
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
-    const SDL_GPUBufferBinding *a1 = (const SDL_GPUBufferBinding *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUBufferBinding");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
+    const SDL_GPUBufferBinding *a1 = (const SDL_GPUBufferBinding *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUBufferBinding");
     SDL_GPUIndexElementSize a2 = (SDL_GPUIndexElementSize)luaL_checkinteger(L, 3);
     SDL_BindGPUIndexBuffer(a0, a1, a2);
     return 0;
@@ -651,9 +651,9 @@ static int GenL_SDL_BindGPUIndexBuffer(lua_State *L)
 static int GenL_SDL_BindGPUVertexBuffers(lua_State *L)
 {
     (void)L;
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
     Uint32 a1 = (Uint32)luaL_checkinteger(L, 2);
-    const SDL_GPUBufferBinding *a2 = (const SDL_GPUBufferBinding *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_GPUBufferBinding");
+    const SDL_GPUBufferBinding *a2 = (const SDL_GPUBufferBinding *)GrappleGen_LuaCheckHandle(L, 3, "SDL_GPUBufferBinding");
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
     SDL_BindGPUVertexBuffers(a0, a1, a2, a3);
     return 0;
@@ -662,9 +662,9 @@ static int GenL_SDL_BindGPUVertexBuffers(lua_State *L)
 static int GenL_SDL_BindGPUVertexSamplers(lua_State *L)
 {
     (void)L;
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
     Uint32 a1 = (Uint32)luaL_checkinteger(L, 2);
-    const SDL_GPUTextureSamplerBinding *a2 = (const SDL_GPUTextureSamplerBinding *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_GPUTextureSamplerBinding");
+    const SDL_GPUTextureSamplerBinding *a2 = (const SDL_GPUTextureSamplerBinding *)GrappleGen_LuaCheckHandle(L, 3, "SDL_GPUTextureSamplerBinding");
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
     SDL_BindGPUVertexSamplers(a0, a1, a2, a3);
     return 0;
@@ -673,8 +673,8 @@ static int GenL_SDL_BindGPUVertexSamplers(lua_State *L)
 static int GenL_SDL_BlitGPUTexture(lua_State *L)
 {
     (void)L;
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
-    const SDL_GPUBlitInfo *a1 = (const SDL_GPUBlitInfo *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUBlitInfo");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
+    const SDL_GPUBlitInfo *a1 = (const SDL_GPUBlitInfo *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUBlitInfo");
     SDL_BlitGPUTexture(a0, a1);
     return 0;
 }
@@ -682,14 +682,14 @@ static int GenL_SDL_BlitGPUTexture(lua_State *L)
 static int GenL_SDL_BlitSurface(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
         GenRead_SDL_Rect(L, 2, &tmp1);
         a1 = &tmp1;
     }
-    SDL_Surface *a2 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_Surface");
+    SDL_Surface *a2 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 3, "SDL_Surface");
     SDL_Rect tmp3;
     const SDL_Rect *a3 = NULL;
     if (!lua_isnoneornil(L, 4)) {
@@ -704,7 +704,7 @@ static int GenL_SDL_BlitSurface(lua_State *L)
 static int GenL_SDL_BlitSurface9Grid(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -717,7 +717,7 @@ static int GenL_SDL_BlitSurface9Grid(lua_State *L)
     int a5 = (int)luaL_checkinteger(L, 6);
     float a6 = (float)luaL_checknumber(L, 7);
     SDL_ScaleMode a7 = (SDL_ScaleMode)luaL_checkinteger(L, 8);
-    SDL_Surface *a8 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 9, "SDL_Surface");
+    SDL_Surface *a8 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 9, "SDL_Surface");
     SDL_Rect tmp9;
     const SDL_Rect *a9 = NULL;
     if (!lua_isnoneornil(L, 10)) {
@@ -732,14 +732,14 @@ static int GenL_SDL_BlitSurface9Grid(lua_State *L)
 static int GenL_SDL_BlitSurfaceScaled(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
         GenRead_SDL_Rect(L, 2, &tmp1);
         a1 = &tmp1;
     }
-    SDL_Surface *a2 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_Surface");
+    SDL_Surface *a2 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 3, "SDL_Surface");
     SDL_Rect tmp3;
     const SDL_Rect *a3 = NULL;
     if (!lua_isnoneornil(L, 4)) {
@@ -755,14 +755,14 @@ static int GenL_SDL_BlitSurfaceScaled(lua_State *L)
 static int GenL_SDL_BlitSurfaceTiled(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
         GenRead_SDL_Rect(L, 2, &tmp1);
         a1 = &tmp1;
     }
-    SDL_Surface *a2 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_Surface");
+    SDL_Surface *a2 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 3, "SDL_Surface");
     SDL_Rect tmp3;
     const SDL_Rect *a3 = NULL;
     if (!lua_isnoneornil(L, 4)) {
@@ -777,7 +777,7 @@ static int GenL_SDL_BlitSurfaceTiled(lua_State *L)
 static int GenL_SDL_BlitSurfaceTiledWithScale(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -786,7 +786,7 @@ static int GenL_SDL_BlitSurfaceTiledWithScale(lua_State *L)
     }
     float a2 = (float)luaL_checknumber(L, 3);
     SDL_ScaleMode a3 = (SDL_ScaleMode)luaL_checkinteger(L, 4);
-    SDL_Surface *a4 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 5, "SDL_Surface");
+    SDL_Surface *a4 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 5, "SDL_Surface");
     SDL_Rect tmp5;
     const SDL_Rect *a5 = NULL;
     if (!lua_isnoneornil(L, 6)) {
@@ -801,14 +801,14 @@ static int GenL_SDL_BlitSurfaceTiledWithScale(lua_State *L)
 static int GenL_SDL_BlitSurfaceUnchecked(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
         GenRead_SDL_Rect(L, 2, &tmp1);
         a1 = &tmp1;
     }
-    SDL_Surface *a2 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_Surface");
+    SDL_Surface *a2 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 3, "SDL_Surface");
     SDL_Rect tmp3;
     const SDL_Rect *a3 = NULL;
     if (!lua_isnoneornil(L, 4)) {
@@ -823,14 +823,14 @@ static int GenL_SDL_BlitSurfaceUnchecked(lua_State *L)
 static int GenL_SDL_BlitSurfaceUncheckedScaled(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
         GenRead_SDL_Rect(L, 2, &tmp1);
         a1 = &tmp1;
     }
-    SDL_Surface *a2 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_Surface");
+    SDL_Surface *a2 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 3, "SDL_Surface");
     SDL_Rect tmp3;
     const SDL_Rect *a3 = NULL;
     if (!lua_isnoneornil(L, 4)) {
@@ -858,7 +858,7 @@ static int GenL_SDL_CalculateGPUTextureFormatSize(lua_State *L)
 static int GenL_SDL_CancelGPUCommandBuffer(lua_State *L)
 {
     (void)L;
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
     bool rv = SDL_CancelGPUCommandBuffer(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -876,8 +876,8 @@ static int GenL_SDL_CaptureMouse(lua_State *L)
 static int GenL_SDL_ClaimWindowForGPUDevice(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Window");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Window");
     bool rv = SDL_ClaimWindowForGPUDevice(a0, a1);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -886,7 +886,7 @@ static int GenL_SDL_ClaimWindowForGPUDevice(lua_State *L)
 static int GenL_SDL_ClearAudioStream(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     bool rv = SDL_ClearAudioStream(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -903,7 +903,7 @@ static int GenL_SDL_ClearClipboardData(lua_State *L)
 static int GenL_SDL_ClearComposition(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_ClearComposition(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -930,7 +930,7 @@ static int GenL_SDL_ClearProperty(lua_State *L)
 static int GenL_SDL_ClearSurface(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     float a1 = (float)luaL_checknumber(L, 2);
     float a2 = (float)luaL_checknumber(L, 3);
     float a3 = (float)luaL_checknumber(L, 4);
@@ -943,7 +943,7 @@ static int GenL_SDL_ClearSurface(lua_State *L)
 static int GenL_SDL_ClickTrayEntry(lua_State *L)
 {
     (void)L;
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
     SDL_ClickTrayEntry(a0);
     return 0;
 }
@@ -959,7 +959,7 @@ static int GenL_SDL_CloseAudioDevice(lua_State *L)
 static int GenL_SDL_CloseCamera(lua_State *L)
 {
     (void)L;
-    SDL_Camera *a0 = (SDL_Camera *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_Camera");
+    SDL_Camera *a0 = (SDL_Camera *)GrappleGen_LuaTakeHandle(L, 1, "SDL_Camera");
     SDL_CloseCamera(a0);
     return 0;
 }
@@ -967,7 +967,7 @@ static int GenL_SDL_CloseCamera(lua_State *L)
 static int GenL_SDL_CloseGamepad(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaTakeHandle(L, 1, "SDL_Gamepad");
     SDL_CloseGamepad(a0);
     return 0;
 }
@@ -975,7 +975,7 @@ static int GenL_SDL_CloseGamepad(lua_State *L)
 static int GenL_SDL_CloseHaptic(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaTakeHandle(L, 1, "SDL_Haptic");
     SDL_CloseHaptic(a0);
     return 0;
 }
@@ -983,7 +983,7 @@ static int GenL_SDL_CloseHaptic(lua_State *L)
 static int GenL_SDL_CloseIO(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaTakeHandle(L, 1, "SDL_IOStream");
     bool rv = SDL_CloseIO(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -992,7 +992,7 @@ static int GenL_SDL_CloseIO(lua_State *L)
 static int GenL_SDL_CloseJoystick(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaTakeHandle(L, 1, "SDL_Joystick");
     SDL_CloseJoystick(a0);
     return 0;
 }
@@ -1000,7 +1000,7 @@ static int GenL_SDL_CloseJoystick(lua_State *L)
 static int GenL_SDL_CloseSensor(lua_State *L)
 {
     (void)L;
-    SDL_Sensor *a0 = (SDL_Sensor *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_Sensor");
+    SDL_Sensor *a0 = (SDL_Sensor *)GrappleGen_LuaTakeHandle(L, 1, "SDL_Sensor");
     SDL_CloseSensor(a0);
     return 0;
 }
@@ -1008,7 +1008,7 @@ static int GenL_SDL_CloseSensor(lua_State *L)
 static int GenL_SDL_CloseStorage(lua_State *L)
 {
     (void)L;
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_Storage");
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_LuaTakeHandle(L, 1, "SDL_Storage");
     bool rv = SDL_CloseStorage(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -1057,8 +1057,8 @@ static int GenL_SDL_ComposeCustomBlendMode(lua_State *L)
 static int GenL_SDL_ConvertEventToRenderCoordinates(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
-    SDL_Event *a1 = (SDL_Event *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Event");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Event *a1 = (SDL_Event *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Event");
     bool rv = SDL_ConvertEventToRenderCoordinates(a0, a1);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -1067,23 +1067,23 @@ static int GenL_SDL_ConvertEventToRenderCoordinates(lua_State *L)
 static int GenL_SDL_ConvertSurface(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_PixelFormat a1 = (SDL_PixelFormat)luaL_checkinteger(L, 2);
     SDL_Surface * rv = SDL_ConvertSurface(a0, a1);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     return 1;
 }
 
 static int GenL_SDL_ConvertSurfaceAndColorspace(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_PixelFormat a1 = (SDL_PixelFormat)luaL_checkinteger(L, 2);
-    SDL_Palette *a2 = (SDL_Palette *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_Palette");
+    SDL_Palette *a2 = (SDL_Palette *)GrappleGen_LuaCheckHandle(L, 3, "SDL_Palette");
     SDL_Colorspace a3 = (SDL_Colorspace)luaL_checkinteger(L, 4);
     SDL_PropertiesID a4 = (SDL_PropertiesID)luaL_checkinteger(L, 5);
     SDL_Surface * rv = SDL_ConvertSurfaceAndColorspace(a0, a1, a2, a3, a4);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     return 1;
 }
 
@@ -1100,9 +1100,9 @@ static int GenL_SDL_CopyFile(lua_State *L)
 static int GenL_SDL_CopyGPUBufferToBuffer(lua_State *L)
 {
     (void)L;
-    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCopyPass");
-    const SDL_GPUBufferLocation *a1 = (const SDL_GPUBufferLocation *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUBufferLocation");
-    const SDL_GPUBufferLocation *a2 = (const SDL_GPUBufferLocation *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_GPUBufferLocation");
+    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCopyPass");
+    const SDL_GPUBufferLocation *a1 = (const SDL_GPUBufferLocation *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUBufferLocation");
+    const SDL_GPUBufferLocation *a2 = (const SDL_GPUBufferLocation *)GrappleGen_LuaCheckHandle(L, 3, "SDL_GPUBufferLocation");
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
     bool a4 = (bool)lua_toboolean(L, 5);
     SDL_CopyGPUBufferToBuffer(a0, a1, a2, a3, a4);
@@ -1112,9 +1112,9 @@ static int GenL_SDL_CopyGPUBufferToBuffer(lua_State *L)
 static int GenL_SDL_CopyGPUTextureToTexture(lua_State *L)
 {
     (void)L;
-    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCopyPass");
-    const SDL_GPUTextureLocation *a1 = (const SDL_GPUTextureLocation *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUTextureLocation");
-    const SDL_GPUTextureLocation *a2 = (const SDL_GPUTextureLocation *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_GPUTextureLocation");
+    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCopyPass");
+    const SDL_GPUTextureLocation *a1 = (const SDL_GPUTextureLocation *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUTextureLocation");
+    const SDL_GPUTextureLocation *a2 = (const SDL_GPUTextureLocation *)GrappleGen_LuaCheckHandle(L, 3, "SDL_GPUTextureLocation");
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
     Uint32 a4 = (Uint32)luaL_checkinteger(L, 5);
     Uint32 a5 = (Uint32)luaL_checkinteger(L, 6);
@@ -1136,7 +1136,7 @@ static int GenL_SDL_CopyProperties(lua_State *L)
 static int GenL_SDL_CopyStorageFile(lua_State *L)
 {
     (void)L;
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Storage");
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Storage");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checkstring(L, 3);
     bool rv = SDL_CopyStorageFile(a0, a1, a2);
@@ -1147,12 +1147,12 @@ static int GenL_SDL_CopyStorageFile(lua_State *L)
 static int GenL_SDL_CreateAnimatedCursor(lua_State *L)
 {
     (void)L;
-    SDL_CursorFrameInfo *a0 = (SDL_CursorFrameInfo *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_CursorFrameInfo");
+    SDL_CursorFrameInfo *a0 = (SDL_CursorFrameInfo *)GrappleGen_LuaCheckHandle(L, 1, "SDL_CursorFrameInfo");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     int a3 = (int)luaL_checkinteger(L, 4);
     SDL_Cursor * rv = SDL_CreateAnimatedCursor(a0, a1, a2, a3);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Cursor");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Cursor");
     return 1;
 }
 
@@ -1160,7 +1160,7 @@ static int GenL_SDL_CreateAsyncIOQueue(lua_State *L)
 {
     (void)L;
     SDL_AsyncIOQueue * rv = SDL_CreateAsyncIOQueue();
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_AsyncIOQueue", GenDtor_SDL_DestroyAsyncIOQueue);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_AsyncIOQueue", GenDtor_SDL_DestroyAsyncIOQueue);
     return 1;
 }
 
@@ -1180,18 +1180,18 @@ static int GenL_SDL_CreateAudioStream(lua_State *L)
         a1 = &tmp1;
     }
     SDL_AudioStream * rv = SDL_CreateAudioStream(a0, a1);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_AudioStream", GenDtor_SDL_DestroyAudioStream);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_AudioStream", GenDtor_SDL_DestroyAudioStream);
     return 1;
 }
 
 static int GenL_SDL_CreateColorCursor(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     SDL_Cursor * rv = SDL_CreateColorCursor(a0, a1, a2);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Cursor", GenDtor_SDL_DestroyCursor);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Cursor", GenDtor_SDL_DestroyCursor);
     return 1;
 }
 
@@ -1209,14 +1209,14 @@ static int GenL_SDL_CreateEnvironment(lua_State *L)
     (void)L;
     bool a0 = (bool)lua_toboolean(L, 1);
     SDL_Environment * rv = SDL_CreateEnvironment(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Environment", GenDtor_SDL_DestroyEnvironment);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Environment", GenDtor_SDL_DestroyEnvironment);
     return 1;
 }
 
 static int GenL_SDL_CreateGPUBuffer(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
     SDL_GPUBufferCreateInfo tmp1;
     const SDL_GPUBufferCreateInfo *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -1224,17 +1224,17 @@ static int GenL_SDL_CreateGPUBuffer(lua_State *L)
         a1 = &tmp1;
     }
     SDL_GPUBuffer * rv = SDL_CreateGPUBuffer(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_GPUBuffer");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_GPUBuffer");
     return 1;
 }
 
 static int GenL_SDL_CreateGPUComputePipeline(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    const SDL_GPUComputePipelineCreateInfo *a1 = (const SDL_GPUComputePipelineCreateInfo *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUComputePipelineCreateInfo");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    const SDL_GPUComputePipelineCreateInfo *a1 = (const SDL_GPUComputePipelineCreateInfo *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUComputePipelineCreateInfo");
     SDL_GPUComputePipeline * rv = SDL_CreateGPUComputePipeline(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_GPUComputePipeline");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_GPUComputePipeline");
     return 1;
 }
 
@@ -1245,7 +1245,7 @@ static int GenL_SDL_CreateGPUDevice(lua_State *L)
     bool a1 = (bool)lua_toboolean(L, 2);
     const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checkstring(L, 3);
     SDL_GPUDevice * rv = SDL_CreateGPUDevice(a0, a1, a2);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_GPUDevice", GenDtor_SDL_DestroyGPUDevice);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_GPUDevice", GenDtor_SDL_DestroyGPUDevice);
     return 1;
 }
 
@@ -1254,44 +1254,44 @@ static int GenL_SDL_CreateGPUDeviceWithProperties(lua_State *L)
     (void)L;
     SDL_PropertiesID a0 = (SDL_PropertiesID)luaL_checkinteger(L, 1);
     SDL_GPUDevice * rv = SDL_CreateGPUDeviceWithProperties(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_GPUDevice", GenDtor_SDL_DestroyGPUDevice);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_GPUDevice", GenDtor_SDL_DestroyGPUDevice);
     return 1;
 }
 
 static int GenL_SDL_CreateGPUGraphicsPipeline(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    const SDL_GPUGraphicsPipelineCreateInfo *a1 = (const SDL_GPUGraphicsPipelineCreateInfo *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUGraphicsPipelineCreateInfo");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    const SDL_GPUGraphicsPipelineCreateInfo *a1 = (const SDL_GPUGraphicsPipelineCreateInfo *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUGraphicsPipelineCreateInfo");
     SDL_GPUGraphicsPipeline * rv = SDL_CreateGPUGraphicsPipeline(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_GPUGraphicsPipeline");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_GPUGraphicsPipeline");
     return 1;
 }
 
 static int GenL_SDL_CreateGPURenderState(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
-    const SDL_GPURenderStateCreateInfo *a1 = (const SDL_GPURenderStateCreateInfo *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPURenderStateCreateInfo");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    const SDL_GPURenderStateCreateInfo *a1 = (const SDL_GPURenderStateCreateInfo *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPURenderStateCreateInfo");
     SDL_GPURenderState * rv = SDL_CreateGPURenderState(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_GPURenderState");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_GPURenderState");
     return 1;
 }
 
 static int GenL_SDL_CreateGPURenderer(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Window");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Window");
     SDL_Renderer * rv = SDL_CreateGPURenderer(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Renderer");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Renderer");
     return 1;
 }
 
 static int GenL_SDL_CreateGPUSampler(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
     SDL_GPUSamplerCreateInfo tmp1;
     const SDL_GPUSamplerCreateInfo *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -1299,24 +1299,24 @@ static int GenL_SDL_CreateGPUSampler(lua_State *L)
         a1 = &tmp1;
     }
     SDL_GPUSampler * rv = SDL_CreateGPUSampler(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_GPUSampler");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_GPUSampler");
     return 1;
 }
 
 static int GenL_SDL_CreateGPUShader(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    const SDL_GPUShaderCreateInfo *a1 = (const SDL_GPUShaderCreateInfo *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUShaderCreateInfo");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    const SDL_GPUShaderCreateInfo *a1 = (const SDL_GPUShaderCreateInfo *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUShaderCreateInfo");
     SDL_GPUShader * rv = SDL_CreateGPUShader(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_GPUShader");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_GPUShader");
     return 1;
 }
 
 static int GenL_SDL_CreateGPUTexture(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
     SDL_GPUTextureCreateInfo tmp1;
     const SDL_GPUTextureCreateInfo *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -1324,14 +1324,14 @@ static int GenL_SDL_CreateGPUTexture(lua_State *L)
         a1 = &tmp1;
     }
     SDL_GPUTexture * rv = SDL_CreateGPUTexture(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_GPUTexture");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_GPUTexture");
     return 1;
 }
 
 static int GenL_SDL_CreateGPUTransferBuffer(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
     SDL_GPUTransferBufferCreateInfo tmp1;
     const SDL_GPUTransferBufferCreateInfo *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -1339,15 +1339,15 @@ static int GenL_SDL_CreateGPUTransferBuffer(lua_State *L)
         a1 = &tmp1;
     }
     SDL_GPUTransferBuffer * rv = SDL_CreateGPUTransferBuffer(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_GPUTransferBuffer");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_GPUTransferBuffer");
     return 1;
 }
 
 static int GenL_SDL_CreateHapticEffect(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
-    const SDL_HapticEffect *a1 = (const SDL_HapticEffect *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_HapticEffect");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    const SDL_HapticEffect *a1 = (const SDL_HapticEffect *)GrappleGen_LuaCheckHandle(L, 2, "SDL_HapticEffect");
     SDL_HapticEffectID rv = SDL_CreateHapticEffect(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -1358,21 +1358,21 @@ static int GenL_SDL_CreatePalette(lua_State *L)
     (void)L;
     int a0 = (int)luaL_checkinteger(L, 1);
     SDL_Palette * rv = SDL_CreatePalette(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Palette", GenDtor_SDL_DestroyPalette);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Palette", GenDtor_SDL_DestroyPalette);
     return 1;
 }
 
 static int GenL_SDL_CreatePopupWindow(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     int a3 = (int)luaL_checkinteger(L, 4);
     int a4 = (int)luaL_checkinteger(L, 5);
     SDL_WindowFlags a5 = (SDL_WindowFlags)luaL_checkinteger(L, 6);
     SDL_Window * rv = SDL_CreatePopupWindow(a0, a1, a2, a3, a4, a5);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Window", GenDtor_SDL_DestroyWindow);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Window", GenDtor_SDL_DestroyWindow);
     return 1;
 }
 
@@ -1381,7 +1381,7 @@ static int GenL_SDL_CreateProcessWithProperties(lua_State *L)
     (void)L;
     SDL_PropertiesID a0 = (SDL_PropertiesID)luaL_checkinteger(L, 1);
     SDL_Process * rv = SDL_CreateProcessWithProperties(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Process", GenDtor_SDL_DestroyProcess);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Process", GenDtor_SDL_DestroyProcess);
     return 1;
 }
 
@@ -1396,10 +1396,10 @@ static int GenL_SDL_CreateProperties(lua_State *L)
 static int GenL_SDL_CreateRenderer(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     SDL_Renderer * rv = SDL_CreateRenderer(a0, a1);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Renderer", GenDtor_SDL_DestroyRenderer);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Renderer", GenDtor_SDL_DestroyRenderer);
     return 1;
 }
 
@@ -1408,23 +1408,23 @@ static int GenL_SDL_CreateRendererWithProperties(lua_State *L)
     (void)L;
     SDL_PropertiesID a0 = (SDL_PropertiesID)luaL_checkinteger(L, 1);
     SDL_Renderer * rv = SDL_CreateRendererWithProperties(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Renderer", GenDtor_SDL_DestroyRenderer);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Renderer", GenDtor_SDL_DestroyRenderer);
     return 1;
 }
 
 static int GenL_SDL_CreateSoftwareRenderer(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Renderer * rv = SDL_CreateSoftwareRenderer(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Renderer", GenDtor_SDL_DestroyRenderer);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Renderer", GenDtor_SDL_DestroyRenderer);
     return 1;
 }
 
 static int GenL_SDL_CreateStorageDirectory(lua_State *L)
 {
     (void)L;
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Storage");
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Storage");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     bool rv = SDL_CreateStorageDirectory(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -1438,16 +1438,16 @@ static int GenL_SDL_CreateSurface(lua_State *L)
     int a1 = (int)luaL_checkinteger(L, 2);
     SDL_PixelFormat a2 = (SDL_PixelFormat)luaL_checkinteger(L, 3);
     SDL_Surface * rv = SDL_CreateSurface(a0, a1, a2);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     return 1;
 }
 
 static int GenL_SDL_CreateSurfacePalette(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Palette * rv = SDL_CreateSurfacePalette(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Palette");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Palette");
     return 1;
 }
 
@@ -1456,68 +1456,68 @@ static int GenL_SDL_CreateSystemCursor(lua_State *L)
     (void)L;
     SDL_SystemCursor a0 = (SDL_SystemCursor)luaL_checkinteger(L, 1);
     SDL_Cursor * rv = SDL_CreateSystemCursor(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Cursor", GenDtor_SDL_DestroyCursor);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Cursor", GenDtor_SDL_DestroyCursor);
     return 1;
 }
 
 static int GenL_SDL_CreateTexture(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_PixelFormat a1 = (SDL_PixelFormat)luaL_checkinteger(L, 2);
     SDL_TextureAccess a2 = (SDL_TextureAccess)luaL_checkinteger(L, 3);
     int a3 = (int)luaL_checkinteger(L, 4);
     int a4 = (int)luaL_checkinteger(L, 5);
     SDL_Texture * rv = SDL_CreateTexture(a0, a1, a2, a3, a4);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Texture", GenDtor_SDL_DestroyTexture);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Texture", GenDtor_SDL_DestroyTexture);
     return 1;
 }
 
 static int GenL_SDL_CreateTextureFromSurface(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
-    SDL_Surface *a1 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Surface");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Surface *a1 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Surface");
     SDL_Texture * rv = SDL_CreateTextureFromSurface(a0, a1);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Texture", GenDtor_SDL_DestroyTexture);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Texture", GenDtor_SDL_DestroyTexture);
     return 1;
 }
 
 static int GenL_SDL_CreateTextureWithProperties(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_PropertiesID a1 = (SDL_PropertiesID)luaL_checkinteger(L, 2);
     SDL_Texture * rv = SDL_CreateTextureWithProperties(a0, a1);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Texture", GenDtor_SDL_DestroyTexture);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Texture", GenDtor_SDL_DestroyTexture);
     return 1;
 }
 
 static int GenL_SDL_CreateTray(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     SDL_Tray * rv = SDL_CreateTray(a0, a1);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Tray", GenDtor_SDL_DestroyTray);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Tray", GenDtor_SDL_DestroyTray);
     return 1;
 }
 
 static int GenL_SDL_CreateTrayMenu(lua_State *L)
 {
     (void)L;
-    SDL_Tray *a0 = (SDL_Tray *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Tray");
+    SDL_Tray *a0 = (SDL_Tray *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Tray");
     SDL_TrayMenu * rv = SDL_CreateTrayMenu(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_TrayMenu");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_TrayMenu");
     return 1;
 }
 
 static int GenL_SDL_CreateTraySubmenu(lua_State *L)
 {
     (void)L;
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
     SDL_TrayMenu * rv = SDL_CreateTraySubmenu(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_TrayMenu");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_TrayMenu");
     return 1;
 }
 
@@ -1529,7 +1529,7 @@ static int GenL_SDL_CreateWindow(lua_State *L)
     int a2 = (int)luaL_checkinteger(L, 3);
     SDL_WindowFlags a3 = (SDL_WindowFlags)luaL_checkinteger(L, 4);
     SDL_Window * rv = SDL_CreateWindow(a0, a1, a2, a3);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Window", GenDtor_SDL_DestroyWindow);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Window", GenDtor_SDL_DestroyWindow);
     return 1;
 }
 
@@ -1538,7 +1538,7 @@ static int GenL_SDL_CreateWindowWithProperties(lua_State *L)
     (void)L;
     SDL_PropertiesID a0 = (SDL_PropertiesID)luaL_checkinteger(L, 1);
     SDL_Window * rv = SDL_CreateWindowWithProperties(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Window", GenDtor_SDL_DestroyWindow);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Window", GenDtor_SDL_DestroyWindow);
     return 1;
 }
 
@@ -1593,7 +1593,7 @@ static int GenL_SDL_DelayPrecise(lua_State *L)
 static int GenL_SDL_DestroyAsyncIOQueue(lua_State *L)
 {
     (void)L;
-    SDL_AsyncIOQueue *a0 = (SDL_AsyncIOQueue *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_AsyncIOQueue");
+    SDL_AsyncIOQueue *a0 = (SDL_AsyncIOQueue *)GrappleGen_LuaTakeHandle(L, 1, "SDL_AsyncIOQueue");
     SDL_DestroyAsyncIOQueue(a0);
     return 0;
 }
@@ -1601,7 +1601,7 @@ static int GenL_SDL_DestroyAsyncIOQueue(lua_State *L)
 static int GenL_SDL_DestroyAudioStream(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaTakeHandle(L, 1, "SDL_AudioStream");
     SDL_DestroyAudioStream(a0);
     return 0;
 }
@@ -1609,7 +1609,7 @@ static int GenL_SDL_DestroyAudioStream(lua_State *L)
 static int GenL_SDL_DestroyCursor(lua_State *L)
 {
     (void)L;
-    SDL_Cursor *a0 = (SDL_Cursor *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_Cursor");
+    SDL_Cursor *a0 = (SDL_Cursor *)GrappleGen_LuaTakeHandle(L, 1, "SDL_Cursor");
     SDL_DestroyCursor(a0);
     return 0;
 }
@@ -1617,7 +1617,7 @@ static int GenL_SDL_DestroyCursor(lua_State *L)
 static int GenL_SDL_DestroyEnvironment(lua_State *L)
 {
     (void)L;
-    SDL_Environment *a0 = (SDL_Environment *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_Environment");
+    SDL_Environment *a0 = (SDL_Environment *)GrappleGen_LuaTakeHandle(L, 1, "SDL_Environment");
     SDL_DestroyEnvironment(a0);
     return 0;
 }
@@ -1625,7 +1625,7 @@ static int GenL_SDL_DestroyEnvironment(lua_State *L)
 static int GenL_SDL_DestroyGPUDevice(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaTakeHandle(L, 1, "SDL_GPUDevice");
     SDL_DestroyGPUDevice(a0);
     return 0;
 }
@@ -1633,7 +1633,7 @@ static int GenL_SDL_DestroyGPUDevice(lua_State *L)
 static int GenL_SDL_DestroyGPURenderState(lua_State *L)
 {
     (void)L;
-    SDL_GPURenderState *a0 = (SDL_GPURenderState *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPURenderState");
+    SDL_GPURenderState *a0 = (SDL_GPURenderState *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPURenderState");
     SDL_DestroyGPURenderState(a0);
     return 0;
 }
@@ -1641,7 +1641,7 @@ static int GenL_SDL_DestroyGPURenderState(lua_State *L)
 static int GenL_SDL_DestroyHapticEffect(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     SDL_HapticEffectID a1 = (SDL_HapticEffectID)luaL_checkinteger(L, 2);
     SDL_DestroyHapticEffect(a0, a1);
     return 0;
@@ -1650,7 +1650,7 @@ static int GenL_SDL_DestroyHapticEffect(lua_State *L)
 static int GenL_SDL_DestroyPalette(lua_State *L)
 {
     (void)L;
-    SDL_Palette *a0 = (SDL_Palette *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_Palette");
+    SDL_Palette *a0 = (SDL_Palette *)GrappleGen_LuaTakeHandle(L, 1, "SDL_Palette");
     SDL_DestroyPalette(a0);
     return 0;
 }
@@ -1658,7 +1658,7 @@ static int GenL_SDL_DestroyPalette(lua_State *L)
 static int GenL_SDL_DestroyProcess(lua_State *L)
 {
     (void)L;
-    SDL_Process *a0 = (SDL_Process *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_Process");
+    SDL_Process *a0 = (SDL_Process *)GrappleGen_LuaTakeHandle(L, 1, "SDL_Process");
     SDL_DestroyProcess(a0);
     return 0;
 }
@@ -1674,7 +1674,7 @@ static int GenL_SDL_DestroyProperties(lua_State *L)
 static int GenL_SDL_DestroyRenderer(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaTakeHandle(L, 1, "SDL_Renderer");
     SDL_DestroyRenderer(a0);
     return 0;
 }
@@ -1682,7 +1682,7 @@ static int GenL_SDL_DestroyRenderer(lua_State *L)
 static int GenL_SDL_DestroySurface(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaTakeHandle(L, 1, "SDL_Surface");
     SDL_DestroySurface(a0);
     return 0;
 }
@@ -1690,7 +1690,7 @@ static int GenL_SDL_DestroySurface(lua_State *L)
 static int GenL_SDL_DestroyTexture(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaTakeHandle(L, 1, "SDL_Texture");
     SDL_DestroyTexture(a0);
     return 0;
 }
@@ -1698,7 +1698,7 @@ static int GenL_SDL_DestroyTexture(lua_State *L)
 static int GenL_SDL_DestroyTray(lua_State *L)
 {
     (void)L;
-    SDL_Tray *a0 = (SDL_Tray *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_Tray");
+    SDL_Tray *a0 = (SDL_Tray *)GrappleGen_LuaTakeHandle(L, 1, "SDL_Tray");
     SDL_DestroyTray(a0);
     return 0;
 }
@@ -1706,7 +1706,7 @@ static int GenL_SDL_DestroyTray(lua_State *L)
 static int GenL_SDL_DestroyWindow(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaTakeHandle(L, 1, "SDL_Window");
     SDL_DestroyWindow(a0);
     return 0;
 }
@@ -1714,7 +1714,7 @@ static int GenL_SDL_DestroyWindow(lua_State *L)
 static int GenL_SDL_DestroyWindowSurface(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_DestroyWindowSurface(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -1740,7 +1740,7 @@ static int GenL_SDL_DisableScreenSaver(lua_State *L)
 static int GenL_SDL_DispatchGPUCompute(lua_State *L)
 {
     (void)L;
-    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUComputePass");
+    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUComputePass");
     Uint32 a1 = (Uint32)luaL_checkinteger(L, 2);
     Uint32 a2 = (Uint32)luaL_checkinteger(L, 3);
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
@@ -1751,8 +1751,8 @@ static int GenL_SDL_DispatchGPUCompute(lua_State *L)
 static int GenL_SDL_DispatchGPUComputeIndirect(lua_State *L)
 {
     (void)L;
-    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUComputePass");
-    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUBuffer");
+    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUComputePass");
+    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUBuffer");
     Uint32 a2 = (Uint32)luaL_checkinteger(L, 3);
     SDL_DispatchGPUComputeIndirect(a0, a1, a2);
     return 0;
@@ -1761,9 +1761,9 @@ static int GenL_SDL_DispatchGPUComputeIndirect(lua_State *L)
 static int GenL_SDL_DownloadFromGPUBuffer(lua_State *L)
 {
     (void)L;
-    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCopyPass");
-    const SDL_GPUBufferRegion *a1 = (const SDL_GPUBufferRegion *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUBufferRegion");
-    const SDL_GPUTransferBufferLocation *a2 = (const SDL_GPUTransferBufferLocation *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_GPUTransferBufferLocation");
+    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCopyPass");
+    const SDL_GPUBufferRegion *a1 = (const SDL_GPUBufferRegion *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUBufferRegion");
+    const SDL_GPUTransferBufferLocation *a2 = (const SDL_GPUTransferBufferLocation *)GrappleGen_LuaCheckHandle(L, 3, "SDL_GPUTransferBufferLocation");
     SDL_DownloadFromGPUBuffer(a0, a1, a2);
     return 0;
 }
@@ -1771,9 +1771,9 @@ static int GenL_SDL_DownloadFromGPUBuffer(lua_State *L)
 static int GenL_SDL_DownloadFromGPUTexture(lua_State *L)
 {
     (void)L;
-    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCopyPass");
-    const SDL_GPUTextureRegion *a1 = (const SDL_GPUTextureRegion *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUTextureRegion");
-    const SDL_GPUTextureTransferInfo *a2 = (const SDL_GPUTextureTransferInfo *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_GPUTextureTransferInfo");
+    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCopyPass");
+    const SDL_GPUTextureRegion *a1 = (const SDL_GPUTextureRegion *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUTextureRegion");
+    const SDL_GPUTextureTransferInfo *a2 = (const SDL_GPUTextureTransferInfo *)GrappleGen_LuaCheckHandle(L, 3, "SDL_GPUTextureTransferInfo");
     SDL_DownloadFromGPUTexture(a0, a1, a2);
     return 0;
 }
@@ -1781,7 +1781,7 @@ static int GenL_SDL_DownloadFromGPUTexture(lua_State *L)
 static int GenL_SDL_DrawGPUIndexedPrimitives(lua_State *L)
 {
     (void)L;
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
     Uint32 a1 = (Uint32)luaL_checkinteger(L, 2);
     Uint32 a2 = (Uint32)luaL_checkinteger(L, 3);
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
@@ -1794,8 +1794,8 @@ static int GenL_SDL_DrawGPUIndexedPrimitives(lua_State *L)
 static int GenL_SDL_DrawGPUIndexedPrimitivesIndirect(lua_State *L)
 {
     (void)L;
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
-    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUBuffer");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
+    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUBuffer");
     Uint32 a2 = (Uint32)luaL_checkinteger(L, 3);
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
     SDL_DrawGPUIndexedPrimitivesIndirect(a0, a1, a2, a3);
@@ -1805,7 +1805,7 @@ static int GenL_SDL_DrawGPUIndexedPrimitivesIndirect(lua_State *L)
 static int GenL_SDL_DrawGPUPrimitives(lua_State *L)
 {
     (void)L;
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
     Uint32 a1 = (Uint32)luaL_checkinteger(L, 2);
     Uint32 a2 = (Uint32)luaL_checkinteger(L, 3);
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
@@ -1817,8 +1817,8 @@ static int GenL_SDL_DrawGPUPrimitives(lua_State *L)
 static int GenL_SDL_DrawGPUPrimitivesIndirect(lua_State *L)
 {
     (void)L;
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
-    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUBuffer");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
+    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUBuffer");
     Uint32 a2 = (Uint32)luaL_checkinteger(L, 3);
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
     SDL_DrawGPUPrimitivesIndirect(a0, a1, a2, a3);
@@ -1828,9 +1828,9 @@ static int GenL_SDL_DrawGPUPrimitivesIndirect(lua_State *L)
 static int GenL_SDL_DuplicateSurface(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Surface * rv = SDL_DuplicateSurface(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     return 1;
 }
 
@@ -1845,7 +1845,7 @@ static int GenL_SDL_EnableScreenSaver(lua_State *L)
 static int GenL_SDL_EndGPUComputePass(lua_State *L)
 {
     (void)L;
-    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUComputePass");
+    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUComputePass");
     SDL_EndGPUComputePass(a0);
     return 0;
 }
@@ -1853,7 +1853,7 @@ static int GenL_SDL_EndGPUComputePass(lua_State *L)
 static int GenL_SDL_EndGPUCopyPass(lua_State *L)
 {
     (void)L;
-    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCopyPass");
+    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCopyPass");
     SDL_EndGPUCopyPass(a0);
     return 0;
 }
@@ -1861,7 +1861,7 @@ static int GenL_SDL_EndGPUCopyPass(lua_State *L)
 static int GenL_SDL_EndGPURenderPass(lua_State *L)
 {
     (void)L;
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
     SDL_EndGPURenderPass(a0);
     return 0;
 }
@@ -1878,7 +1878,7 @@ static int GenL_SDL_EventEnabled(lua_State *L)
 static int GenL_SDL_FillSurfaceRect(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -1894,7 +1894,7 @@ static int GenL_SDL_FillSurfaceRect(lua_State *L)
 static int GenL_SDL_FillSurfaceRects(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -1911,7 +1911,7 @@ static int GenL_SDL_FillSurfaceRects(lua_State *L)
 static int GenL_SDL_FlashWindow(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_FlashOperation a1 = (SDL_FlashOperation)luaL_checkinteger(L, 2);
     bool rv = SDL_FlashWindow(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -1921,7 +1921,7 @@ static int GenL_SDL_FlashWindow(lua_State *L)
 static int GenL_SDL_FlipSurface(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_FlipMode a1 = (SDL_FlipMode)luaL_checkinteger(L, 2);
     bool rv = SDL_FlipSurface(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -1931,7 +1931,7 @@ static int GenL_SDL_FlipSurface(lua_State *L)
 static int GenL_SDL_FlushAudioStream(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     bool rv = SDL_FlushAudioStream(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -1957,7 +1957,7 @@ static int GenL_SDL_FlushEvents(lua_State *L)
 static int GenL_SDL_FlushIO(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     bool rv = SDL_FlushIO(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -1966,7 +1966,7 @@ static int GenL_SDL_FlushIO(lua_State *L)
 static int GenL_SDL_FlushRenderer(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     bool rv = SDL_FlushRenderer(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -1996,7 +1996,7 @@ static int GenL_SDL_GL_GetCurrentWindow(lua_State *L)
 {
     (void)L;
     SDL_Window * rv = SDL_GL_GetCurrentWindow();
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Window");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Window");
     return 1;
 }
 
@@ -2048,7 +2048,7 @@ static int GenL_SDL_GL_SetSwapInterval(lua_State *L)
 static int GenL_SDL_GL_SwapWindow(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_GL_SwapWindow(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -2092,7 +2092,7 @@ static int GenL_SDL_GPUTextureFormatTexelBlockSize(lua_State *L)
 static int GenL_SDL_GPUTextureSupportsFormat(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
     SDL_GPUTextureFormat a1 = (SDL_GPUTextureFormat)luaL_checkinteger(L, 2);
     SDL_GPUTextureType a2 = (SDL_GPUTextureType)luaL_checkinteger(L, 3);
     SDL_GPUTextureUsageFlags a3 = (SDL_GPUTextureUsageFlags)luaL_checkinteger(L, 4);
@@ -2104,7 +2104,7 @@ static int GenL_SDL_GPUTextureSupportsFormat(lua_State *L)
 static int GenL_SDL_GPUTextureSupportsSampleCount(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
     SDL_GPUTextureFormat a1 = (SDL_GPUTextureFormat)luaL_checkinteger(L, 2);
     SDL_GPUSampleCount a2 = (SDL_GPUSampleCount)luaL_checkinteger(L, 3);
     bool rv = SDL_GPUTextureSupportsSampleCount(a0, a1, a2);
@@ -2128,7 +2128,7 @@ static int GenL_SDL_GUIDToString(lua_State *L)
 static int GenL_SDL_GamepadConnected(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     bool rv = SDL_GamepadConnected(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -2145,7 +2145,7 @@ static int GenL_SDL_GamepadEventsEnabled(lua_State *L)
 static int GenL_SDL_GamepadHasAxis(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_GamepadAxis a1 = (SDL_GamepadAxis)luaL_checkinteger(L, 2);
     bool rv = SDL_GamepadHasAxis(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -2155,7 +2155,7 @@ static int GenL_SDL_GamepadHasAxis(lua_State *L)
 static int GenL_SDL_GamepadHasButton(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_GamepadButton a1 = (SDL_GamepadButton)luaL_checkinteger(L, 2);
     bool rv = SDL_GamepadHasButton(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -2165,7 +2165,7 @@ static int GenL_SDL_GamepadHasButton(lua_State *L)
 static int GenL_SDL_GamepadHasSensor(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_SensorType a1 = (SDL_SensorType)luaL_checkinteger(L, 2);
     bool rv = SDL_GamepadHasSensor(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -2175,7 +2175,7 @@ static int GenL_SDL_GamepadHasSensor(lua_State *L)
 static int GenL_SDL_GamepadSensorEnabled(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_SensorType a1 = (SDL_SensorType)luaL_checkinteger(L, 2);
     bool rv = SDL_GamepadSensorEnabled(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -2185,8 +2185,8 @@ static int GenL_SDL_GamepadSensorEnabled(lua_State *L)
 static int GenL_SDL_GenerateMipmapsForGPUTexture(lua_State *L)
 {
     (void)L;
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
-    SDL_GPUTexture *a1 = (SDL_GPUTexture *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUTexture");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
+    SDL_GPUTexture *a1 = (SDL_GPUTexture *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUTexture");
     SDL_GenerateMipmapsForGPUTexture(a0, a1);
     return 0;
 }
@@ -2204,15 +2204,15 @@ static int GenL_SDL_GetAssertionReport(lua_State *L)
 {
     (void)L;
     const SDL_AssertData * rv = SDL_GetAssertionReport();
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_AssertData");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_AssertData");
     return 1;
 }
 
 static int GenL_SDL_GetAsyncIOResult(lua_State *L)
 {
     (void)L;
-    SDL_AsyncIOQueue *a0 = (SDL_AsyncIOQueue *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AsyncIOQueue");
-    SDL_AsyncIOOutcome *a1 = (SDL_AsyncIOOutcome *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_AsyncIOOutcome");
+    SDL_AsyncIOQueue *a0 = (SDL_AsyncIOQueue *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AsyncIOQueue");
+    SDL_AsyncIOOutcome *a1 = (SDL_AsyncIOOutcome *)GrappleGen_LuaCheckHandle(L, 2, "SDL_AsyncIOOutcome");
     bool rv = SDL_GetAsyncIOResult(a0, a1);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -2221,7 +2221,7 @@ static int GenL_SDL_GetAsyncIOResult(lua_State *L)
 static int GenL_SDL_GetAsyncIOSize(lua_State *L)
 {
     (void)L;
-    SDL_AsyncIO *a0 = (SDL_AsyncIO *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AsyncIO");
+    SDL_AsyncIO *a0 = (SDL_AsyncIO *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AsyncIO");
     Sint64 rv = SDL_GetAsyncIOSize(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2280,7 +2280,7 @@ static int GenL_SDL_GetAudioFormatName(lua_State *L)
 static int GenL_SDL_GetAudioStreamAvailable(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     int rv = SDL_GetAudioStreamAvailable(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2289,7 +2289,7 @@ static int GenL_SDL_GetAudioStreamAvailable(lua_State *L)
 static int GenL_SDL_GetAudioStreamDevice(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     SDL_AudioDeviceID rv = SDL_GetAudioStreamDevice(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2298,7 +2298,7 @@ static int GenL_SDL_GetAudioStreamDevice(lua_State *L)
 static int GenL_SDL_GetAudioStreamFormat(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     SDL_AudioSpec out1;
     memset(&out1, 0, sizeof(out1));
     SDL_AudioSpec out2;
@@ -2313,7 +2313,7 @@ static int GenL_SDL_GetAudioStreamFormat(lua_State *L)
 static int GenL_SDL_GetAudioStreamFrequencyRatio(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     float rv = SDL_GetAudioStreamFrequencyRatio(a0);
     lua_pushnumber(L, (lua_Number)rv);
     return 1;
@@ -2322,7 +2322,7 @@ static int GenL_SDL_GetAudioStreamFrequencyRatio(lua_State *L)
 static int GenL_SDL_GetAudioStreamGain(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     float rv = SDL_GetAudioStreamGain(a0);
     lua_pushnumber(L, (lua_Number)rv);
     return 1;
@@ -2331,7 +2331,7 @@ static int GenL_SDL_GetAudioStreamGain(lua_State *L)
 static int GenL_SDL_GetAudioStreamProperties(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     SDL_PropertiesID rv = SDL_GetAudioStreamProperties(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2340,7 +2340,7 @@ static int GenL_SDL_GetAudioStreamProperties(lua_State *L)
 static int GenL_SDL_GetAudioStreamQueued(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     int rv = SDL_GetAudioStreamQueued(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2385,7 +2385,7 @@ static int GenL_SDL_GetCameraDriver(lua_State *L)
 static int GenL_SDL_GetCameraFormat(lua_State *L)
 {
     (void)L;
-    SDL_Camera *a0 = (SDL_Camera *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Camera");
+    SDL_Camera *a0 = (SDL_Camera *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Camera");
     SDL_CameraSpec out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetCameraFormat(a0, &out1);
@@ -2397,7 +2397,7 @@ static int GenL_SDL_GetCameraFormat(lua_State *L)
 static int GenL_SDL_GetCameraID(lua_State *L)
 {
     (void)L;
-    SDL_Camera *a0 = (SDL_Camera *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Camera");
+    SDL_Camera *a0 = (SDL_Camera *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Camera");
     SDL_CameraID rv = SDL_GetCameraID(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2415,7 +2415,7 @@ static int GenL_SDL_GetCameraName(lua_State *L)
 static int GenL_SDL_GetCameraPermissionState(lua_State *L)
 {
     (void)L;
-    SDL_Camera *a0 = (SDL_Camera *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Camera");
+    SDL_Camera *a0 = (SDL_Camera *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Camera");
     SDL_CameraPermissionState rv = SDL_GetCameraPermissionState(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2433,7 +2433,7 @@ static int GenL_SDL_GetCameraPosition(lua_State *L)
 static int GenL_SDL_GetCameraProperties(lua_State *L)
 {
     (void)L;
-    SDL_Camera *a0 = (SDL_Camera *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Camera");
+    SDL_Camera *a0 = (SDL_Camera *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Camera");
     SDL_PropertiesID rv = SDL_GetCameraProperties(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2456,7 +2456,7 @@ static int GenL_SDL_GetClosestFullscreenDisplayMode(lua_State *L)
     int a2 = (int)luaL_checkinteger(L, 3);
     float a3 = (float)luaL_checknumber(L, 4);
     bool a4 = (bool)lua_toboolean(L, 5);
-    SDL_DisplayMode *a5 = (SDL_DisplayMode *)SDLStaticGen_LuaCheckHandle(L, 6, "SDL_DisplayMode");
+    SDL_DisplayMode *a5 = (SDL_DisplayMode *)GrappleGen_LuaCheckHandle(L, 6, "SDL_DisplayMode");
     bool rv = SDL_GetClosestFullscreenDisplayMode(a0, a1, a2, a3, a4, a5);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -2492,7 +2492,7 @@ static int GenL_SDL_GetCurrentDisplayMode(lua_State *L)
     (void)L;
     SDL_DisplayID a0 = (SDL_DisplayID)luaL_checkinteger(L, 1);
     const SDL_DisplayMode * rv = SDL_GetCurrentDisplayMode(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_DisplayMode");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_DisplayMode");
     return 1;
 }
 
@@ -2508,7 +2508,7 @@ static int GenL_SDL_GetCurrentDisplayOrientation(lua_State *L)
 static int GenL_SDL_GetCurrentRenderOutputSize(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     int io1 = (int)luaL_optinteger(L, 2, 0);
     int io2 = (int)luaL_optinteger(L, 3, 0);
     bool rv = SDL_GetCurrentRenderOutputSize(a0, &io1, &io2);
@@ -2540,7 +2540,7 @@ static int GenL_SDL_GetCursor(lua_State *L)
 {
     (void)L;
     SDL_Cursor * rv = SDL_GetCursor();
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Cursor");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Cursor");
     return 1;
 }
 
@@ -2592,14 +2592,14 @@ static int GenL_SDL_GetDefaultCursor(lua_State *L)
 {
     (void)L;
     SDL_Cursor * rv = SDL_GetDefaultCursor();
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Cursor");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Cursor");
     return 1;
 }
 
 static int GenL_SDL_GetDefaultTextureScaleMode(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_ScaleMode io1 = (SDL_ScaleMode)luaL_optinteger(L, 2, 0);
     bool rv = SDL_GetDefaultTextureScaleMode(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -2612,7 +2612,7 @@ static int GenL_SDL_GetDesktopDisplayMode(lua_State *L)
     (void)L;
     SDL_DisplayID a0 = (SDL_DisplayID)luaL_checkinteger(L, 1);
     const SDL_DisplayMode * rv = SDL_GetDesktopDisplayMode(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_DisplayMode");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_DisplayMode");
     return 1;
 }
 
@@ -2668,7 +2668,7 @@ static int GenL_SDL_GetDisplayForRect(lua_State *L)
 static int GenL_SDL_GetDisplayForWindow(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_DisplayID rv = SDL_GetDisplayForWindow(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2708,14 +2708,14 @@ static int GenL_SDL_GetEnvironment(lua_State *L)
 {
     (void)L;
     SDL_Environment * rv = SDL_GetEnvironment();
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Environment");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Environment");
     return 1;
 }
 
 static int GenL_SDL_GetEnvironmentVariable(lua_State *L)
 {
     (void)L;
-    SDL_Environment *a0 = (SDL_Environment *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Environment");
+    SDL_Environment *a0 = (SDL_Environment *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Environment");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     const char * rv = SDL_GetEnvironmentVariable(a0, a1);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
@@ -2733,7 +2733,7 @@ static int GenL_SDL_GetError(lua_State *L)
 static int GenL_SDL_GetEventDescription(lua_State *L)
 {
     (void)L;
-    const SDL_Event *a0 = (const SDL_Event *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Event");
+    const SDL_Event *a0 = (const SDL_Event *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Event");
     const char *src1 = lua_isnoneornil(L, 2) ? "" : luaL_checkstring(L, 2);
     char *a1 = SDL_strdup(src1);
     int a2 = (int)luaL_checkinteger(L, 3);
@@ -2757,7 +2757,7 @@ static int GenL_SDL_GetFloatProperty(lua_State *L)
 static int GenL_SDL_GetGPUDeviceDriver(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
     const char * rv = SDL_GetGPUDeviceDriver(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     return 1;
@@ -2766,7 +2766,7 @@ static int GenL_SDL_GetGPUDeviceDriver(lua_State *L)
 static int GenL_SDL_GetGPUDeviceProperties(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
     SDL_PropertiesID rv = SDL_GetGPUDeviceProperties(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2784,16 +2784,16 @@ static int GenL_SDL_GetGPUDriver(lua_State *L)
 static int GenL_SDL_GetGPURendererDevice(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_GPUDevice * rv = SDL_GetGPURendererDevice(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_GPUDevice");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_GPUDevice");
     return 1;
 }
 
 static int GenL_SDL_GetGPUShaderFormats(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
     SDL_GPUShaderFormat rv = SDL_GetGPUShaderFormats(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2802,8 +2802,8 @@ static int GenL_SDL_GetGPUShaderFormats(lua_State *L)
 static int GenL_SDL_GetGPUSwapchainTextureFormat(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Window");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Window");
     SDL_GPUTextureFormat rv = SDL_GetGPUSwapchainTextureFormat(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2821,7 +2821,7 @@ static int GenL_SDL_GetGPUTextureFormatFromPixelFormat(lua_State *L)
 static int GenL_SDL_GetGamepadAppleSFSymbolsNameForAxis(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_GamepadAxis a1 = (SDL_GamepadAxis)luaL_checkinteger(L, 2);
     const char * rv = SDL_GetGamepadAppleSFSymbolsNameForAxis(a0, a1);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
@@ -2831,7 +2831,7 @@ static int GenL_SDL_GetGamepadAppleSFSymbolsNameForAxis(lua_State *L)
 static int GenL_SDL_GetGamepadAppleSFSymbolsNameForButton(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_GamepadButton a1 = (SDL_GamepadButton)luaL_checkinteger(L, 2);
     const char * rv = SDL_GetGamepadAppleSFSymbolsNameForButton(a0, a1);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
@@ -2841,7 +2841,7 @@ static int GenL_SDL_GetGamepadAppleSFSymbolsNameForButton(lua_State *L)
 static int GenL_SDL_GetGamepadAxis(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_GamepadAxis a1 = (SDL_GamepadAxis)luaL_checkinteger(L, 2);
     Sint16 rv = SDL_GetGamepadAxis(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -2860,7 +2860,7 @@ static int GenL_SDL_GetGamepadAxisFromString(lua_State *L)
 static int GenL_SDL_GetGamepadButton(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_GamepadButton a1 = (SDL_GamepadButton)luaL_checkinteger(L, 2);
     bool rv = SDL_GetGamepadButton(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -2879,7 +2879,7 @@ static int GenL_SDL_GetGamepadButtonFromString(lua_State *L)
 static int GenL_SDL_GetGamepadButtonLabel(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_GamepadButton a1 = (SDL_GamepadButton)luaL_checkinteger(L, 2);
     SDL_GamepadButtonLabel rv = SDL_GetGamepadButtonLabel(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -2899,7 +2899,7 @@ static int GenL_SDL_GetGamepadButtonLabelForType(lua_State *L)
 static int GenL_SDL_GetGamepadConnectionState(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_JoystickConnectionState rv = SDL_GetGamepadConnectionState(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2908,7 +2908,7 @@ static int GenL_SDL_GetGamepadConnectionState(lua_State *L)
 static int GenL_SDL_GetGamepadFirmwareVersion(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     Uint16 rv = SDL_GetGamepadFirmwareVersion(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2919,7 +2919,7 @@ static int GenL_SDL_GetGamepadFromID(lua_State *L)
     (void)L;
     SDL_JoystickID a0 = (SDL_JoystickID)luaL_checkinteger(L, 1);
     SDL_Gamepad * rv = SDL_GetGamepadFromID(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Gamepad");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Gamepad");
     return 1;
 }
 
@@ -2928,7 +2928,7 @@ static int GenL_SDL_GetGamepadFromPlayerIndex(lua_State *L)
     (void)L;
     int a0 = (int)luaL_checkinteger(L, 1);
     SDL_Gamepad * rv = SDL_GetGamepadFromPlayerIndex(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Gamepad");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Gamepad");
     return 1;
 }
 
@@ -2944,7 +2944,7 @@ static int GenL_SDL_GetGamepadGUIDForID(lua_State *L)
 static int GenL_SDL_GetGamepadID(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_JoystickID rv = SDL_GetGamepadID(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2953,16 +2953,16 @@ static int GenL_SDL_GetGamepadID(lua_State *L)
 static int GenL_SDL_GetGamepadJoystick(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_Joystick * rv = SDL_GetGamepadJoystick(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Joystick");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Joystick");
     return 1;
 }
 
 static int GenL_SDL_GetGamepadMapping(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     char * rv = SDL_GetGamepadMapping(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     if (rv != NULL) { SDL_free(rv); }
@@ -2993,7 +2993,7 @@ static int GenL_SDL_GetGamepadMappingForID(lua_State *L)
 static int GenL_SDL_GetGamepadName(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     const char * rv = SDL_GetGamepadName(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     return 1;
@@ -3011,7 +3011,7 @@ static int GenL_SDL_GetGamepadNameForID(lua_State *L)
 static int GenL_SDL_GetGamepadPath(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     const char * rv = SDL_GetGamepadPath(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     return 1;
@@ -3029,7 +3029,7 @@ static int GenL_SDL_GetGamepadPathForID(lua_State *L)
 static int GenL_SDL_GetGamepadPlayerIndex(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     int rv = SDL_GetGamepadPlayerIndex(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3047,7 +3047,7 @@ static int GenL_SDL_GetGamepadPlayerIndexForID(lua_State *L)
 static int GenL_SDL_GetGamepadPowerInfo(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     int io1 = (int)luaL_optinteger(L, 2, 0);
     SDL_PowerState rv = SDL_GetGamepadPowerInfo(a0, &io1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -3058,7 +3058,7 @@ static int GenL_SDL_GetGamepadPowerInfo(lua_State *L)
 static int GenL_SDL_GetGamepadProduct(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     Uint16 rv = SDL_GetGamepadProduct(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3076,7 +3076,7 @@ static int GenL_SDL_GetGamepadProductForID(lua_State *L)
 static int GenL_SDL_GetGamepadProductVersion(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     Uint16 rv = SDL_GetGamepadProductVersion(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3094,7 +3094,7 @@ static int GenL_SDL_GetGamepadProductVersionForID(lua_State *L)
 static int GenL_SDL_GetGamepadProperties(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_PropertiesID rv = SDL_GetGamepadProperties(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3103,7 +3103,7 @@ static int GenL_SDL_GetGamepadProperties(lua_State *L)
 static int GenL_SDL_GetGamepadSensorData(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_SensorType a1 = (SDL_SensorType)luaL_checkinteger(L, 2);
     float io2 = (float)luaL_optnumber(L, 3, 0);
     int a3 = (int)luaL_checkinteger(L, 4);
@@ -3116,7 +3116,7 @@ static int GenL_SDL_GetGamepadSensorData(lua_State *L)
 static int GenL_SDL_GetGamepadSensorDataRate(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_SensorType a1 = (SDL_SensorType)luaL_checkinteger(L, 2);
     float rv = SDL_GetGamepadSensorDataRate(a0, a1);
     lua_pushnumber(L, (lua_Number)rv);
@@ -3126,7 +3126,7 @@ static int GenL_SDL_GetGamepadSensorDataRate(lua_State *L)
 static int GenL_SDL_GetGamepadSerial(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     const char * rv = SDL_GetGamepadSerial(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     return 1;
@@ -3135,7 +3135,7 @@ static int GenL_SDL_GetGamepadSerial(lua_State *L)
 static int GenL_SDL_GetGamepadSteamHandle(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     Uint64 rv = SDL_GetGamepadSteamHandle(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3171,7 +3171,7 @@ static int GenL_SDL_GetGamepadStringForType(lua_State *L)
 static int GenL_SDL_GetGamepadTouchpadFinger(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     bool io3 = (bool)lua_toboolean(L, 4);
@@ -3190,7 +3190,7 @@ static int GenL_SDL_GetGamepadTouchpadFinger(lua_State *L)
 static int GenL_SDL_GetGamepadType(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_GamepadType rv = SDL_GetGamepadType(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3217,7 +3217,7 @@ static int GenL_SDL_GetGamepadTypeFromString(lua_State *L)
 static int GenL_SDL_GetGamepadVendor(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     Uint16 rv = SDL_GetGamepadVendor(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3256,14 +3256,14 @@ static int GenL_SDL_GetGrabbedWindow(lua_State *L)
 {
     (void)L;
     SDL_Window * rv = SDL_GetGrabbedWindow();
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Window");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Window");
     return 1;
 }
 
 static int GenL_SDL_GetHapticEffectStatus(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     SDL_HapticEffectID a1 = (SDL_HapticEffectID)luaL_checkinteger(L, 2);
     bool rv = SDL_GetHapticEffectStatus(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -3273,7 +3273,7 @@ static int GenL_SDL_GetHapticEffectStatus(lua_State *L)
 static int GenL_SDL_GetHapticFeatures(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     Uint32 rv = SDL_GetHapticFeatures(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3284,14 +3284,14 @@ static int GenL_SDL_GetHapticFromID(lua_State *L)
     (void)L;
     SDL_HapticID a0 = (SDL_HapticID)luaL_checkinteger(L, 1);
     SDL_Haptic * rv = SDL_GetHapticFromID(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Haptic");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Haptic");
     return 1;
 }
 
 static int GenL_SDL_GetHapticID(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     SDL_HapticID rv = SDL_GetHapticID(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3300,7 +3300,7 @@ static int GenL_SDL_GetHapticID(lua_State *L)
 static int GenL_SDL_GetHapticName(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     const char * rv = SDL_GetHapticName(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     return 1;
@@ -3337,7 +3337,7 @@ static int GenL_SDL_GetHintBoolean(lua_State *L)
 static int GenL_SDL_GetIOProperties(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     SDL_PropertiesID rv = SDL_GetIOProperties(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3346,7 +3346,7 @@ static int GenL_SDL_GetIOProperties(lua_State *L)
 static int GenL_SDL_GetIOSize(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint64 rv = SDL_GetIOSize(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3355,7 +3355,7 @@ static int GenL_SDL_GetIOSize(lua_State *L)
 static int GenL_SDL_GetIOStatus(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     SDL_IOStatus rv = SDL_GetIOStatus(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3364,7 +3364,7 @@ static int GenL_SDL_GetIOStatus(lua_State *L)
 static int GenL_SDL_GetJoystickAxis(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int a1 = (int)luaL_checkinteger(L, 2);
     Sint16 rv = SDL_GetJoystickAxis(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -3374,7 +3374,7 @@ static int GenL_SDL_GetJoystickAxis(lua_State *L)
 static int GenL_SDL_GetJoystickAxisInitialState(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int a1 = (int)luaL_checkinteger(L, 2);
     Sint16 io2 = (Sint16)luaL_optinteger(L, 3, 0);
     bool rv = SDL_GetJoystickAxisInitialState(a0, a1, &io2);
@@ -3386,7 +3386,7 @@ static int GenL_SDL_GetJoystickAxisInitialState(lua_State *L)
 static int GenL_SDL_GetJoystickBall(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int a1 = (int)luaL_checkinteger(L, 2);
     int io2 = (int)luaL_optinteger(L, 3, 0);
     int io3 = (int)luaL_optinteger(L, 4, 0);
@@ -3400,7 +3400,7 @@ static int GenL_SDL_GetJoystickBall(lua_State *L)
 static int GenL_SDL_GetJoystickButton(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int a1 = (int)luaL_checkinteger(L, 2);
     bool rv = SDL_GetJoystickButton(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -3410,7 +3410,7 @@ static int GenL_SDL_GetJoystickButton(lua_State *L)
 static int GenL_SDL_GetJoystickConnectionState(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     SDL_JoystickConnectionState rv = SDL_GetJoystickConnectionState(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3419,7 +3419,7 @@ static int GenL_SDL_GetJoystickConnectionState(lua_State *L)
 static int GenL_SDL_GetJoystickFirmwareVersion(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     Uint16 rv = SDL_GetJoystickFirmwareVersion(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3430,7 +3430,7 @@ static int GenL_SDL_GetJoystickFromID(lua_State *L)
     (void)L;
     SDL_JoystickID a0 = (SDL_JoystickID)luaL_checkinteger(L, 1);
     SDL_Joystick * rv = SDL_GetJoystickFromID(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Joystick");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Joystick");
     return 1;
 }
 
@@ -3439,14 +3439,14 @@ static int GenL_SDL_GetJoystickFromPlayerIndex(lua_State *L)
     (void)L;
     int a0 = (int)luaL_checkinteger(L, 1);
     SDL_Joystick * rv = SDL_GetJoystickFromPlayerIndex(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Joystick");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Joystick");
     return 1;
 }
 
 static int GenL_SDL_GetJoystickGUID(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     SDL_GUID rv = SDL_GetJoystickGUID(a0);
     GenPush_SDL_GUID(L, &rv);
     return 1;
@@ -3481,7 +3481,7 @@ static int GenL_SDL_GetJoystickGUIDInfo(lua_State *L)
 static int GenL_SDL_GetJoystickHat(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int a1 = (int)luaL_checkinteger(L, 2);
     Uint8 rv = SDL_GetJoystickHat(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -3491,7 +3491,7 @@ static int GenL_SDL_GetJoystickHat(lua_State *L)
 static int GenL_SDL_GetJoystickID(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     SDL_JoystickID rv = SDL_GetJoystickID(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3500,7 +3500,7 @@ static int GenL_SDL_GetJoystickID(lua_State *L)
 static int GenL_SDL_GetJoystickName(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     const char * rv = SDL_GetJoystickName(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     return 1;
@@ -3518,7 +3518,7 @@ static int GenL_SDL_GetJoystickNameForID(lua_State *L)
 static int GenL_SDL_GetJoystickPath(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     const char * rv = SDL_GetJoystickPath(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     return 1;
@@ -3536,7 +3536,7 @@ static int GenL_SDL_GetJoystickPathForID(lua_State *L)
 static int GenL_SDL_GetJoystickPlayerIndex(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int rv = SDL_GetJoystickPlayerIndex(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3554,7 +3554,7 @@ static int GenL_SDL_GetJoystickPlayerIndexForID(lua_State *L)
 static int GenL_SDL_GetJoystickPowerInfo(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int io1 = (int)luaL_optinteger(L, 2, 0);
     SDL_PowerState rv = SDL_GetJoystickPowerInfo(a0, &io1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -3565,7 +3565,7 @@ static int GenL_SDL_GetJoystickPowerInfo(lua_State *L)
 static int GenL_SDL_GetJoystickProduct(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     Uint16 rv = SDL_GetJoystickProduct(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3583,7 +3583,7 @@ static int GenL_SDL_GetJoystickProductForID(lua_State *L)
 static int GenL_SDL_GetJoystickProductVersion(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     Uint16 rv = SDL_GetJoystickProductVersion(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3601,7 +3601,7 @@ static int GenL_SDL_GetJoystickProductVersionForID(lua_State *L)
 static int GenL_SDL_GetJoystickProperties(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     SDL_PropertiesID rv = SDL_GetJoystickProperties(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3610,7 +3610,7 @@ static int GenL_SDL_GetJoystickProperties(lua_State *L)
 static int GenL_SDL_GetJoystickSerial(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     const char * rv = SDL_GetJoystickSerial(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     return 1;
@@ -3619,7 +3619,7 @@ static int GenL_SDL_GetJoystickSerial(lua_State *L)
 static int GenL_SDL_GetJoystickType(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     SDL_JoystickType rv = SDL_GetJoystickType(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3637,7 +3637,7 @@ static int GenL_SDL_GetJoystickTypeForID(lua_State *L)
 static int GenL_SDL_GetJoystickVendor(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     Uint16 rv = SDL_GetJoystickVendor(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3685,7 +3685,7 @@ static int GenL_SDL_GetKeyboardFocus(lua_State *L)
 {
     (void)L;
     SDL_Window * rv = SDL_GetKeyboardFocus();
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Window");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Window");
     return 1;
 }
 
@@ -3729,7 +3729,7 @@ static int GenL_SDL_GetMasksForPixelFormat(lua_State *L)
 static int GenL_SDL_GetMaxHapticEffects(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     int rv = SDL_GetMaxHapticEffects(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3738,7 +3738,7 @@ static int GenL_SDL_GetMaxHapticEffects(lua_State *L)
 static int GenL_SDL_GetMaxHapticEffectsPlaying(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     int rv = SDL_GetMaxHapticEffectsPlaying(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3756,7 +3756,7 @@ static int GenL_SDL_GetMouseFocus(lua_State *L)
 {
     (void)L;
     SDL_Window * rv = SDL_GetMouseFocus();
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Window");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Window");
     return 1;
 }
 
@@ -3825,7 +3825,7 @@ static int GenL_SDL_GetNumGPUDrivers(lua_State *L)
 static int GenL_SDL_GetNumGamepadTouchpadFingers(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     int a1 = (int)luaL_checkinteger(L, 2);
     int rv = SDL_GetNumGamepadTouchpadFingers(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -3835,7 +3835,7 @@ static int GenL_SDL_GetNumGamepadTouchpadFingers(lua_State *L)
 static int GenL_SDL_GetNumGamepadTouchpads(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     int rv = SDL_GetNumGamepadTouchpads(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3844,7 +3844,7 @@ static int GenL_SDL_GetNumGamepadTouchpads(lua_State *L)
 static int GenL_SDL_GetNumHapticAxes(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     int rv = SDL_GetNumHapticAxes(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3853,7 +3853,7 @@ static int GenL_SDL_GetNumHapticAxes(lua_State *L)
 static int GenL_SDL_GetNumJoystickAxes(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int rv = SDL_GetNumJoystickAxes(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3862,7 +3862,7 @@ static int GenL_SDL_GetNumJoystickAxes(lua_State *L)
 static int GenL_SDL_GetNumJoystickBalls(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int rv = SDL_GetNumJoystickBalls(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3871,7 +3871,7 @@ static int GenL_SDL_GetNumJoystickBalls(lua_State *L)
 static int GenL_SDL_GetNumJoystickButtons(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int rv = SDL_GetNumJoystickButtons(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -3880,7 +3880,7 @@ static int GenL_SDL_GetNumJoystickButtons(lua_State *L)
 static int GenL_SDL_GetNumJoystickHats(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int rv = SDL_GetNumJoystickHats(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -4040,25 +4040,25 @@ static int GenL_SDL_GetPrimarySelectionText(lua_State *L)
 static int GenL_SDL_GetProcessInput(lua_State *L)
 {
     (void)L;
-    SDL_Process *a0 = (SDL_Process *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Process");
+    SDL_Process *a0 = (SDL_Process *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Process");
     SDL_IOStream * rv = SDL_GetProcessInput(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_IOStream");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_IOStream");
     return 1;
 }
 
 static int GenL_SDL_GetProcessOutput(lua_State *L)
 {
     (void)L;
-    SDL_Process *a0 = (SDL_Process *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Process");
+    SDL_Process *a0 = (SDL_Process *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Process");
     SDL_IOStream * rv = SDL_GetProcessOutput(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_IOStream");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_IOStream");
     return 1;
 }
 
 static int GenL_SDL_GetProcessProperties(lua_State *L)
 {
     (void)L;
-    SDL_Process *a0 = (SDL_Process *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Process");
+    SDL_Process *a0 = (SDL_Process *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Process");
     SDL_PropertiesID rv = SDL_GetProcessProperties(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -4084,7 +4084,7 @@ static int GenL_SDL_GetRGB(lua_State *L)
         GenRead_SDL_PixelFormatDetails(L, 2, &tmp1);
         a1 = &tmp1;
     }
-    const SDL_Palette *a2 = (const SDL_Palette *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_Palette");
+    const SDL_Palette *a2 = (const SDL_Palette *)GrappleGen_LuaCheckHandle(L, 3, "SDL_Palette");
     Uint8 io3 = (Uint8)luaL_optinteger(L, 4, 0);
     Uint8 io4 = (Uint8)luaL_optinteger(L, 5, 0);
     Uint8 io5 = (Uint8)luaL_optinteger(L, 6, 0);
@@ -4105,7 +4105,7 @@ static int GenL_SDL_GetRGBA(lua_State *L)
         GenRead_SDL_PixelFormatDetails(L, 2, &tmp1);
         a1 = &tmp1;
     }
-    const SDL_Palette *a2 = (const SDL_Palette *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_Palette");
+    const SDL_Palette *a2 = (const SDL_Palette *)GrappleGen_LuaCheckHandle(L, 3, "SDL_Palette");
     Uint8 io3 = (Uint8)luaL_optinteger(L, 4, 0);
     Uint8 io4 = (Uint8)luaL_optinteger(L, 5, 0);
     Uint8 io5 = (Uint8)luaL_optinteger(L, 6, 0);
@@ -4121,7 +4121,7 @@ static int GenL_SDL_GetRGBA(lua_State *L)
 static int GenL_SDL_GetRealGamepadType(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_GamepadType rv = SDL_GetRealGamepadType(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -4335,7 +4335,7 @@ static int GenL_SDL_GetRelativeMouseState(lua_State *L)
 static int GenL_SDL_GetRenderClipRect(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_Rect out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetRenderClipRect(a0, &out1);
@@ -4347,7 +4347,7 @@ static int GenL_SDL_GetRenderClipRect(lua_State *L)
 static int GenL_SDL_GetRenderColorScale(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     float io1 = (float)luaL_optnumber(L, 2, 0);
     bool rv = SDL_GetRenderColorScale(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -4358,7 +4358,7 @@ static int GenL_SDL_GetRenderColorScale(lua_State *L)
 static int GenL_SDL_GetRenderDrawBlendMode(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_BlendMode io1 = (SDL_BlendMode)luaL_optinteger(L, 2, 0);
     bool rv = SDL_GetRenderDrawBlendMode(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -4369,7 +4369,7 @@ static int GenL_SDL_GetRenderDrawBlendMode(lua_State *L)
 static int GenL_SDL_GetRenderDrawColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Uint8 io1 = (Uint8)luaL_optinteger(L, 2, 0);
     Uint8 io2 = (Uint8)luaL_optinteger(L, 3, 0);
     Uint8 io3 = (Uint8)luaL_optinteger(L, 4, 0);
@@ -4386,7 +4386,7 @@ static int GenL_SDL_GetRenderDrawColor(lua_State *L)
 static int GenL_SDL_GetRenderDrawColorFloat(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     float io1 = (float)luaL_optnumber(L, 2, 0);
     float io2 = (float)luaL_optnumber(L, 3, 0);
     float io3 = (float)luaL_optnumber(L, 4, 0);
@@ -4412,7 +4412,7 @@ static int GenL_SDL_GetRenderDriver(lua_State *L)
 static int GenL_SDL_GetRenderLogicalPresentation(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     int io1 = (int)luaL_optinteger(L, 2, 0);
     int io2 = (int)luaL_optinteger(L, 3, 0);
     SDL_RendererLogicalPresentation io3 = (SDL_RendererLogicalPresentation)luaL_optinteger(L, 4, 0);
@@ -4427,7 +4427,7 @@ static int GenL_SDL_GetRenderLogicalPresentation(lua_State *L)
 static int GenL_SDL_GetRenderLogicalPresentationRect(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_FRect out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetRenderLogicalPresentationRect(a0, &out1);
@@ -4439,7 +4439,7 @@ static int GenL_SDL_GetRenderLogicalPresentationRect(lua_State *L)
 static int GenL_SDL_GetRenderOutputSize(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     int io1 = (int)luaL_optinteger(L, 2, 0);
     int io2 = (int)luaL_optinteger(L, 3, 0);
     bool rv = SDL_GetRenderOutputSize(a0, &io1, &io2);
@@ -4452,7 +4452,7 @@ static int GenL_SDL_GetRenderOutputSize(lua_State *L)
 static int GenL_SDL_GetRenderSafeArea(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_Rect out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetRenderSafeArea(a0, &out1);
@@ -4464,7 +4464,7 @@ static int GenL_SDL_GetRenderSafeArea(lua_State *L)
 static int GenL_SDL_GetRenderScale(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     float io1 = (float)luaL_optnumber(L, 2, 0);
     float io2 = (float)luaL_optnumber(L, 3, 0);
     bool rv = SDL_GetRenderScale(a0, &io1, &io2);
@@ -4477,16 +4477,16 @@ static int GenL_SDL_GetRenderScale(lua_State *L)
 static int GenL_SDL_GetRenderTarget(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_Texture * rv = SDL_GetRenderTarget(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Texture");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Texture");
     return 1;
 }
 
 static int GenL_SDL_GetRenderTextureAddressMode(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_TextureAddressMode io1 = (SDL_TextureAddressMode)luaL_optinteger(L, 2, 0);
     SDL_TextureAddressMode io2 = (SDL_TextureAddressMode)luaL_optinteger(L, 3, 0);
     bool rv = SDL_GetRenderTextureAddressMode(a0, &io1, &io2);
@@ -4499,7 +4499,7 @@ static int GenL_SDL_GetRenderTextureAddressMode(lua_State *L)
 static int GenL_SDL_GetRenderVSync(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     int io1 = (int)luaL_optinteger(L, 2, 0);
     bool rv = SDL_GetRenderVSync(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -4510,7 +4510,7 @@ static int GenL_SDL_GetRenderVSync(lua_State *L)
 static int GenL_SDL_GetRenderViewport(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_Rect out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetRenderViewport(a0, &out1);
@@ -4522,34 +4522,34 @@ static int GenL_SDL_GetRenderViewport(lua_State *L)
 static int GenL_SDL_GetRenderWindow(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_Window * rv = SDL_GetRenderWindow(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Window");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Window");
     return 1;
 }
 
 static int GenL_SDL_GetRenderer(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_Renderer * rv = SDL_GetRenderer(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Renderer");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Renderer");
     return 1;
 }
 
 static int GenL_SDL_GetRendererFromTexture(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     SDL_Renderer * rv = SDL_GetRendererFromTexture(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Renderer");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Renderer");
     return 1;
 }
 
 static int GenL_SDL_GetRendererName(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     const char * rv = SDL_GetRendererName(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     return 1;
@@ -4558,7 +4558,7 @@ static int GenL_SDL_GetRendererName(lua_State *L)
 static int GenL_SDL_GetRendererProperties(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_PropertiesID rv = SDL_GetRendererProperties(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -4620,7 +4620,7 @@ static int GenL_SDL_GetScancodeName(lua_State *L)
 static int GenL_SDL_GetSensorData(lua_State *L)
 {
     (void)L;
-    SDL_Sensor *a0 = (SDL_Sensor *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Sensor");
+    SDL_Sensor *a0 = (SDL_Sensor *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Sensor");
     float io1 = (float)luaL_optnumber(L, 2, 0);
     int a2 = (int)luaL_checkinteger(L, 3);
     bool rv = SDL_GetSensorData(a0, &io1, a2);
@@ -4634,14 +4634,14 @@ static int GenL_SDL_GetSensorFromID(lua_State *L)
     (void)L;
     SDL_SensorID a0 = (SDL_SensorID)luaL_checkinteger(L, 1);
     SDL_Sensor * rv = SDL_GetSensorFromID(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Sensor");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Sensor");
     return 1;
 }
 
 static int GenL_SDL_GetSensorID(lua_State *L)
 {
     (void)L;
-    SDL_Sensor *a0 = (SDL_Sensor *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Sensor");
+    SDL_Sensor *a0 = (SDL_Sensor *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Sensor");
     SDL_SensorID rv = SDL_GetSensorID(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -4650,7 +4650,7 @@ static int GenL_SDL_GetSensorID(lua_State *L)
 static int GenL_SDL_GetSensorName(lua_State *L)
 {
     (void)L;
-    SDL_Sensor *a0 = (SDL_Sensor *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Sensor");
+    SDL_Sensor *a0 = (SDL_Sensor *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Sensor");
     const char * rv = SDL_GetSensorName(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     return 1;
@@ -4668,7 +4668,7 @@ static int GenL_SDL_GetSensorNameForID(lua_State *L)
 static int GenL_SDL_GetSensorNonPortableType(lua_State *L)
 {
     (void)L;
-    SDL_Sensor *a0 = (SDL_Sensor *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Sensor");
+    SDL_Sensor *a0 = (SDL_Sensor *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Sensor");
     int rv = SDL_GetSensorNonPortableType(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -4686,7 +4686,7 @@ static int GenL_SDL_GetSensorNonPortableTypeForID(lua_State *L)
 static int GenL_SDL_GetSensorProperties(lua_State *L)
 {
     (void)L;
-    SDL_Sensor *a0 = (SDL_Sensor *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Sensor");
+    SDL_Sensor *a0 = (SDL_Sensor *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Sensor");
     SDL_PropertiesID rv = SDL_GetSensorProperties(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -4695,7 +4695,7 @@ static int GenL_SDL_GetSensorProperties(lua_State *L)
 static int GenL_SDL_GetSensorType(lua_State *L)
 {
     (void)L;
-    SDL_Sensor *a0 = (SDL_Sensor *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Sensor");
+    SDL_Sensor *a0 = (SDL_Sensor *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Sensor");
     SDL_SensorType rv = SDL_GetSensorType(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -4722,7 +4722,7 @@ static int GenL_SDL_GetSilenceValueForFormat(lua_State *L)
 static int GenL_SDL_GetStorageFileSize(lua_State *L)
 {
     (void)L;
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Storage");
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Storage");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     Uint64 io2 = (Uint64)luaL_optinteger(L, 3, 0);
     bool rv = SDL_GetStorageFileSize(a0, a1, &io2);
@@ -4734,7 +4734,7 @@ static int GenL_SDL_GetStorageFileSize(lua_State *L)
 static int GenL_SDL_GetStoragePathInfo(lua_State *L)
 {
     (void)L;
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Storage");
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Storage");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     SDL_PathInfo out2;
     memset(&out2, 0, sizeof(out2));
@@ -4747,7 +4747,7 @@ static int GenL_SDL_GetStoragePathInfo(lua_State *L)
 static int GenL_SDL_GetStorageSpaceRemaining(lua_State *L)
 {
     (void)L;
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Storage");
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Storage");
     Uint64 rv = SDL_GetStorageSpaceRemaining(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -4767,7 +4767,7 @@ static int GenL_SDL_GetStringProperty(lua_State *L)
 static int GenL_SDL_GetSurfaceAlphaMod(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     Uint8 io1 = (Uint8)luaL_optinteger(L, 2, 0);
     bool rv = SDL_GetSurfaceAlphaMod(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -4778,7 +4778,7 @@ static int GenL_SDL_GetSurfaceAlphaMod(lua_State *L)
 static int GenL_SDL_GetSurfaceBlendMode(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_BlendMode io1 = (SDL_BlendMode)luaL_optinteger(L, 2, 0);
     bool rv = SDL_GetSurfaceBlendMode(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -4789,7 +4789,7 @@ static int GenL_SDL_GetSurfaceBlendMode(lua_State *L)
 static int GenL_SDL_GetSurfaceClipRect(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Rect out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetSurfaceClipRect(a0, &out1);
@@ -4801,7 +4801,7 @@ static int GenL_SDL_GetSurfaceClipRect(lua_State *L)
 static int GenL_SDL_GetSurfaceColorKey(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     Uint32 io1 = (Uint32)luaL_optinteger(L, 2, 0);
     bool rv = SDL_GetSurfaceColorKey(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -4812,7 +4812,7 @@ static int GenL_SDL_GetSurfaceColorKey(lua_State *L)
 static int GenL_SDL_GetSurfaceColorMod(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     Uint8 io1 = (Uint8)luaL_optinteger(L, 2, 0);
     Uint8 io2 = (Uint8)luaL_optinteger(L, 3, 0);
     Uint8 io3 = (Uint8)luaL_optinteger(L, 4, 0);
@@ -4827,7 +4827,7 @@ static int GenL_SDL_GetSurfaceColorMod(lua_State *L)
 static int GenL_SDL_GetSurfaceColorspace(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Colorspace rv = SDL_GetSurfaceColorspace(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -4836,16 +4836,16 @@ static int GenL_SDL_GetSurfaceColorspace(lua_State *L)
 static int GenL_SDL_GetSurfacePalette(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Palette * rv = SDL_GetSurfacePalette(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Palette");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Palette");
     return 1;
 }
 
 static int GenL_SDL_GetSurfaceProperties(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_PropertiesID rv = SDL_GetSurfaceProperties(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -4878,7 +4878,7 @@ static int GenL_SDL_GetSystemTheme(lua_State *L)
 static int GenL_SDL_GetTextInputArea(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_Rect out1;
     memset(&out1, 0, sizeof(out1));
     int io2 = (int)luaL_optinteger(L, 2, 0);
@@ -4892,7 +4892,7 @@ static int GenL_SDL_GetTextInputArea(lua_State *L)
 static int GenL_SDL_GetTextureAlphaMod(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     Uint8 io1 = (Uint8)luaL_optinteger(L, 2, 0);
     bool rv = SDL_GetTextureAlphaMod(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -4903,7 +4903,7 @@ static int GenL_SDL_GetTextureAlphaMod(lua_State *L)
 static int GenL_SDL_GetTextureAlphaModFloat(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     float io1 = (float)luaL_optnumber(L, 2, 0);
     bool rv = SDL_GetTextureAlphaModFloat(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -4914,7 +4914,7 @@ static int GenL_SDL_GetTextureAlphaModFloat(lua_State *L)
 static int GenL_SDL_GetTextureBlendMode(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     SDL_BlendMode io1 = (SDL_BlendMode)luaL_optinteger(L, 2, 0);
     bool rv = SDL_GetTextureBlendMode(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -4925,7 +4925,7 @@ static int GenL_SDL_GetTextureBlendMode(lua_State *L)
 static int GenL_SDL_GetTextureColorMod(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     Uint8 io1 = (Uint8)luaL_optinteger(L, 2, 0);
     Uint8 io2 = (Uint8)luaL_optinteger(L, 3, 0);
     Uint8 io3 = (Uint8)luaL_optinteger(L, 4, 0);
@@ -4940,7 +4940,7 @@ static int GenL_SDL_GetTextureColorMod(lua_State *L)
 static int GenL_SDL_GetTextureColorModFloat(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     float io1 = (float)luaL_optnumber(L, 2, 0);
     float io2 = (float)luaL_optnumber(L, 3, 0);
     float io3 = (float)luaL_optnumber(L, 4, 0);
@@ -4955,16 +4955,16 @@ static int GenL_SDL_GetTextureColorModFloat(lua_State *L)
 static int GenL_SDL_GetTexturePalette(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     SDL_Palette * rv = SDL_GetTexturePalette(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Palette");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Palette");
     return 1;
 }
 
 static int GenL_SDL_GetTextureProperties(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     SDL_PropertiesID rv = SDL_GetTextureProperties(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -4973,7 +4973,7 @@ static int GenL_SDL_GetTextureProperties(lua_State *L)
 static int GenL_SDL_GetTextureScaleMode(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     SDL_ScaleMode io1 = (SDL_ScaleMode)luaL_optinteger(L, 2, 0);
     bool rv = SDL_GetTextureScaleMode(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -4984,7 +4984,7 @@ static int GenL_SDL_GetTextureScaleMode(lua_State *L)
 static int GenL_SDL_GetTextureSize(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     float io1 = (float)luaL_optnumber(L, 2, 0);
     float io2 = (float)luaL_optnumber(L, 3, 0);
     bool rv = SDL_GetTextureSize(a0, &io1, &io2);
@@ -5031,7 +5031,7 @@ static int GenL_SDL_GetTouchDeviceType(lua_State *L)
 static int GenL_SDL_GetTrayEntryChecked(lua_State *L)
 {
     (void)L;
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
     bool rv = SDL_GetTrayEntryChecked(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -5040,7 +5040,7 @@ static int GenL_SDL_GetTrayEntryChecked(lua_State *L)
 static int GenL_SDL_GetTrayEntryEnabled(lua_State *L)
 {
     (void)L;
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
     bool rv = SDL_GetTrayEntryEnabled(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -5049,7 +5049,7 @@ static int GenL_SDL_GetTrayEntryEnabled(lua_State *L)
 static int GenL_SDL_GetTrayEntryLabel(lua_State *L)
 {
     (void)L;
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
     const char * rv = SDL_GetTrayEntryLabel(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     return 1;
@@ -5058,45 +5058,45 @@ static int GenL_SDL_GetTrayEntryLabel(lua_State *L)
 static int GenL_SDL_GetTrayEntryParent(lua_State *L)
 {
     (void)L;
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
     SDL_TrayMenu * rv = SDL_GetTrayEntryParent(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_TrayMenu");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_TrayMenu");
     return 1;
 }
 
 static int GenL_SDL_GetTrayMenu(lua_State *L)
 {
     (void)L;
-    SDL_Tray *a0 = (SDL_Tray *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Tray");
+    SDL_Tray *a0 = (SDL_Tray *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Tray");
     SDL_TrayMenu * rv = SDL_GetTrayMenu(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_TrayMenu");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_TrayMenu");
     return 1;
 }
 
 static int GenL_SDL_GetTrayMenuParentEntry(lua_State *L)
 {
     (void)L;
-    SDL_TrayMenu *a0 = (SDL_TrayMenu *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_TrayMenu");
+    SDL_TrayMenu *a0 = (SDL_TrayMenu *)GrappleGen_LuaCheckHandle(L, 1, "SDL_TrayMenu");
     SDL_TrayEntry * rv = SDL_GetTrayMenuParentEntry(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_TrayEntry");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_TrayEntry");
     return 1;
 }
 
 static int GenL_SDL_GetTrayMenuParentTray(lua_State *L)
 {
     (void)L;
-    SDL_TrayMenu *a0 = (SDL_TrayMenu *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_TrayMenu");
+    SDL_TrayMenu *a0 = (SDL_TrayMenu *)GrappleGen_LuaCheckHandle(L, 1, "SDL_TrayMenu");
     SDL_Tray * rv = SDL_GetTrayMenuParentTray(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Tray");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Tray");
     return 1;
 }
 
 static int GenL_SDL_GetTraySubmenu(lua_State *L)
 {
     (void)L;
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
     SDL_TrayMenu * rv = SDL_GetTraySubmenu(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_TrayMenu");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_TrayMenu");
     return 1;
 }
 
@@ -5129,7 +5129,7 @@ static int GenL_SDL_GetVideoDriver(lua_State *L)
 static int GenL_SDL_GetWindowAspectRatio(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     float io1 = (float)luaL_optnumber(L, 2, 0);
     float io2 = (float)luaL_optnumber(L, 3, 0);
     bool rv = SDL_GetWindowAspectRatio(a0, &io1, &io2);
@@ -5142,7 +5142,7 @@ static int GenL_SDL_GetWindowAspectRatio(lua_State *L)
 static int GenL_SDL_GetWindowBordersSize(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     int io1 = (int)luaL_optinteger(L, 2, 0);
     int io2 = (int)luaL_optinteger(L, 3, 0);
     int io3 = (int)luaL_optinteger(L, 4, 0);
@@ -5159,7 +5159,7 @@ static int GenL_SDL_GetWindowBordersSize(lua_State *L)
 static int GenL_SDL_GetWindowDisplayScale(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     float rv = SDL_GetWindowDisplayScale(a0);
     lua_pushnumber(L, (lua_Number)rv);
     return 1;
@@ -5168,7 +5168,7 @@ static int GenL_SDL_GetWindowDisplayScale(lua_State *L)
 static int GenL_SDL_GetWindowFlags(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_WindowFlags rv = SDL_GetWindowFlags(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -5177,9 +5177,9 @@ static int GenL_SDL_GetWindowFlags(lua_State *L)
 static int GenL_SDL_GetWindowFromEvent(lua_State *L)
 {
     (void)L;
-    const SDL_Event *a0 = (const SDL_Event *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Event");
+    const SDL_Event *a0 = (const SDL_Event *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Event");
     SDL_Window * rv = SDL_GetWindowFromEvent(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Window");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Window");
     return 1;
 }
 
@@ -5188,23 +5188,23 @@ static int GenL_SDL_GetWindowFromID(lua_State *L)
     (void)L;
     SDL_WindowID a0 = (SDL_WindowID)luaL_checkinteger(L, 1);
     SDL_Window * rv = SDL_GetWindowFromID(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Window");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Window");
     return 1;
 }
 
 static int GenL_SDL_GetWindowFullscreenMode(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     const SDL_DisplayMode * rv = SDL_GetWindowFullscreenMode(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_DisplayMode");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_DisplayMode");
     return 1;
 }
 
 static int GenL_SDL_GetWindowID(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_WindowID rv = SDL_GetWindowID(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -5213,7 +5213,7 @@ static int GenL_SDL_GetWindowID(lua_State *L)
 static int GenL_SDL_GetWindowKeyboardGrab(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_GetWindowKeyboardGrab(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -5222,7 +5222,7 @@ static int GenL_SDL_GetWindowKeyboardGrab(lua_State *L)
 static int GenL_SDL_GetWindowMaximumSize(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     int io1 = (int)luaL_optinteger(L, 2, 0);
     int io2 = (int)luaL_optinteger(L, 3, 0);
     bool rv = SDL_GetWindowMaximumSize(a0, &io1, &io2);
@@ -5235,7 +5235,7 @@ static int GenL_SDL_GetWindowMaximumSize(lua_State *L)
 static int GenL_SDL_GetWindowMinimumSize(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     int io1 = (int)luaL_optinteger(L, 2, 0);
     int io2 = (int)luaL_optinteger(L, 3, 0);
     bool rv = SDL_GetWindowMinimumSize(a0, &io1, &io2);
@@ -5248,7 +5248,7 @@ static int GenL_SDL_GetWindowMinimumSize(lua_State *L)
 static int GenL_SDL_GetWindowMouseGrab(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_GetWindowMouseGrab(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -5257,7 +5257,7 @@ static int GenL_SDL_GetWindowMouseGrab(lua_State *L)
 static int GenL_SDL_GetWindowOpacity(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     float rv = SDL_GetWindowOpacity(a0);
     lua_pushnumber(L, (lua_Number)rv);
     return 1;
@@ -5266,16 +5266,16 @@ static int GenL_SDL_GetWindowOpacity(lua_State *L)
 static int GenL_SDL_GetWindowParent(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_Window * rv = SDL_GetWindowParent(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Window");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Window");
     return 1;
 }
 
 static int GenL_SDL_GetWindowPixelDensity(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     float rv = SDL_GetWindowPixelDensity(a0);
     lua_pushnumber(L, (lua_Number)rv);
     return 1;
@@ -5284,7 +5284,7 @@ static int GenL_SDL_GetWindowPixelDensity(lua_State *L)
 static int GenL_SDL_GetWindowPixelFormat(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_PixelFormat rv = SDL_GetWindowPixelFormat(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -5293,7 +5293,7 @@ static int GenL_SDL_GetWindowPixelFormat(lua_State *L)
 static int GenL_SDL_GetWindowPosition(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     int io1 = (int)luaL_optinteger(L, 2, 0);
     int io2 = (int)luaL_optinteger(L, 3, 0);
     bool rv = SDL_GetWindowPosition(a0, &io1, &io2);
@@ -5306,7 +5306,7 @@ static int GenL_SDL_GetWindowPosition(lua_State *L)
 static int GenL_SDL_GetWindowProgressState(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_ProgressState rv = SDL_GetWindowProgressState(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -5315,7 +5315,7 @@ static int GenL_SDL_GetWindowProgressState(lua_State *L)
 static int GenL_SDL_GetWindowProgressValue(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     float rv = SDL_GetWindowProgressValue(a0);
     lua_pushnumber(L, (lua_Number)rv);
     return 1;
@@ -5324,7 +5324,7 @@ static int GenL_SDL_GetWindowProgressValue(lua_State *L)
 static int GenL_SDL_GetWindowProperties(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_PropertiesID rv = SDL_GetWindowProperties(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -5333,7 +5333,7 @@ static int GenL_SDL_GetWindowProperties(lua_State *L)
 static int GenL_SDL_GetWindowRelativeMouseMode(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_GetWindowRelativeMouseMode(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -5342,7 +5342,7 @@ static int GenL_SDL_GetWindowRelativeMouseMode(lua_State *L)
 static int GenL_SDL_GetWindowSafeArea(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_Rect out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetWindowSafeArea(a0, &out1);
@@ -5354,7 +5354,7 @@ static int GenL_SDL_GetWindowSafeArea(lua_State *L)
 static int GenL_SDL_GetWindowSize(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     int io1 = (int)luaL_optinteger(L, 2, 0);
     int io2 = (int)luaL_optinteger(L, 3, 0);
     bool rv = SDL_GetWindowSize(a0, &io1, &io2);
@@ -5367,7 +5367,7 @@ static int GenL_SDL_GetWindowSize(lua_State *L)
 static int GenL_SDL_GetWindowSizeInPixels(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     int io1 = (int)luaL_optinteger(L, 2, 0);
     int io2 = (int)luaL_optinteger(L, 3, 0);
     bool rv = SDL_GetWindowSizeInPixels(a0, &io1, &io2);
@@ -5380,16 +5380,16 @@ static int GenL_SDL_GetWindowSizeInPixels(lua_State *L)
 static int GenL_SDL_GetWindowSurface(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_Surface * rv = SDL_GetWindowSurface(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Surface");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Surface");
     return 1;
 }
 
 static int GenL_SDL_GetWindowSurfaceVSync(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     int io1 = (int)luaL_optinteger(L, 2, 0);
     bool rv = SDL_GetWindowSurfaceVSync(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -5400,7 +5400,7 @@ static int GenL_SDL_GetWindowSurfaceVSync(lua_State *L)
 static int GenL_SDL_GetWindowTitle(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     const char * rv = SDL_GetWindowTitle(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     return 1;
@@ -5409,8 +5409,8 @@ static int GenL_SDL_GetWindowTitle(lua_State *L)
 static int GenL_SDL_HapticEffectSupported(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
-    const SDL_HapticEffect *a1 = (const SDL_HapticEffect *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_HapticEffect");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    const SDL_HapticEffect *a1 = (const SDL_HapticEffect *)GrappleGen_LuaCheckHandle(L, 2, "SDL_HapticEffect");
     bool rv = SDL_HapticEffectSupported(a0, a1);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -5419,7 +5419,7 @@ static int GenL_SDL_HapticEffectSupported(lua_State *L)
 static int GenL_SDL_HapticRumbleSupported(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     bool rv = SDL_HapticRumbleSupported(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -5682,7 +5682,7 @@ static int GenL_SDL_HideCursor(lua_State *L)
 static int GenL_SDL_HideWindow(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_HideWindow(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -5694,7 +5694,7 @@ static int GenL_SDL_IOFromConstMem(lua_State *L)
     size_t len0 = 0;
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checklstring(L, 1, &len0);
     SDL_IOStream * rv = SDL_IOFromConstMem((const void *)a0, (size_t)len0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_IOStream", GenDtor_SDL_CloseIO);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_IOStream", GenDtor_SDL_CloseIO);
     return 1;
 }
 
@@ -5702,7 +5702,7 @@ static int GenL_SDL_IOFromDynamicMem(lua_State *L)
 {
     (void)L;
     SDL_IOStream * rv = SDL_IOFromDynamicMem();
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_IOStream", GenDtor_SDL_CloseIO);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_IOStream", GenDtor_SDL_CloseIO);
     return 1;
 }
 
@@ -5712,7 +5712,7 @@ static int GenL_SDL_IOFromFile(lua_State *L)
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     SDL_IOStream * rv = SDL_IOFromFile(a0, a1);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_IOStream", GenDtor_SDL_CloseIO);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_IOStream", GenDtor_SDL_CloseIO);
     return 1;
 }
 
@@ -5728,7 +5728,7 @@ static int GenL_SDL_Init(lua_State *L)
 static int GenL_SDL_InitHapticRumble(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     bool rv = SDL_InitHapticRumble(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -5746,7 +5746,7 @@ static int GenL_SDL_InitSubSystem(lua_State *L)
 static int GenL_SDL_InsertGPUDebugLabel(lua_State *L)
 {
     (void)L;
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     SDL_InsertGPUDebugLabel(a0, a1);
     return 0;
@@ -5755,12 +5755,12 @@ static int GenL_SDL_InsertGPUDebugLabel(lua_State *L)
 static int GenL_SDL_InsertTrayEntryAt(lua_State *L)
 {
     (void)L;
-    SDL_TrayMenu *a0 = (SDL_TrayMenu *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_TrayMenu");
+    SDL_TrayMenu *a0 = (SDL_TrayMenu *)GrappleGen_LuaCheckHandle(L, 1, "SDL_TrayMenu");
     int a1 = (int)luaL_checkinteger(L, 2);
     const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checkstring(L, 3);
     SDL_TrayEntryFlags a3 = (SDL_TrayEntryFlags)luaL_checkinteger(L, 4);
     SDL_TrayEntry * rv = SDL_InsertTrayEntryAt(a0, a1, a2, a3);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_TrayEntry");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_TrayEntry");
     return 1;
 }
 
@@ -5794,7 +5794,7 @@ static int GenL_SDL_IsGamepad(lua_State *L)
 static int GenL_SDL_IsJoystickHaptic(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     bool rv = SDL_IsJoystickHaptic(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -5844,7 +5844,7 @@ static int GenL_SDL_IsTablet(lua_State *L)
 static int GenL_SDL_JoystickConnected(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     bool rv = SDL_JoystickConnected(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -5861,7 +5861,7 @@ static int GenL_SDL_JoystickEventsEnabled(lua_State *L)
 static int GenL_SDL_KillProcess(lua_State *L)
 {
     (void)L;
-    SDL_Process *a0 = (SDL_Process *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Process");
+    SDL_Process *a0 = (SDL_Process *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Process");
     bool a1 = (bool)lua_toboolean(L, 2);
     bool rv = SDL_KillProcess(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -5873,17 +5873,17 @@ static int GenL_SDL_LoadBMP(lua_State *L)
     (void)L;
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
     SDL_Surface * rv = SDL_LoadBMP(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     return 1;
 }
 
 static int GenL_SDL_LoadBMP_IO(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     bool a1 = (bool)lua_toboolean(L, 2);
     SDL_Surface * rv = SDL_LoadBMP_IO(a0, a1);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     return 1;
 }
 
@@ -5892,7 +5892,7 @@ static int GenL_SDL_LoadObject(lua_State *L)
     (void)L;
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
     SDL_SharedObject * rv = SDL_LoadObject(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_SharedObject", GenDtor_SDL_UnloadObject);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_SharedObject", GenDtor_SDL_UnloadObject);
     return 1;
 }
 
@@ -5901,17 +5901,17 @@ static int GenL_SDL_LoadPNG(lua_State *L)
     (void)L;
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
     SDL_Surface * rv = SDL_LoadPNG(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Surface");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Surface");
     return 1;
 }
 
 static int GenL_SDL_LoadPNG_IO(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     bool a1 = (bool)lua_toboolean(L, 2);
     SDL_Surface * rv = SDL_LoadPNG_IO(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Surface");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Surface");
     return 1;
 }
 
@@ -5920,24 +5920,24 @@ static int GenL_SDL_LoadSurface(lua_State *L)
     (void)L;
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
     SDL_Surface * rv = SDL_LoadSurface(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Surface");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Surface");
     return 1;
 }
 
 static int GenL_SDL_LoadSurface_IO(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     bool a1 = (bool)lua_toboolean(L, 2);
     SDL_Surface * rv = SDL_LoadSurface_IO(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Surface");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Surface");
     return 1;
 }
 
 static int GenL_SDL_LockAudioStream(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     bool rv = SDL_LockAudioStream(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -5964,7 +5964,7 @@ static int GenL_SDL_LockSpinlock(lua_State *L)
 static int GenL_SDL_LockSurface(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     bool rv = SDL_LockSurface(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -5979,7 +5979,7 @@ static int GenL_SDL_MapRGB(lua_State *L)
         GenRead_SDL_PixelFormatDetails(L, 1, &tmp0);
         a0 = &tmp0;
     }
-    const SDL_Palette *a1 = (const SDL_Palette *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Palette");
+    const SDL_Palette *a1 = (const SDL_Palette *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Palette");
     Uint8 a2 = (Uint8)luaL_checkinteger(L, 3);
     Uint8 a3 = (Uint8)luaL_checkinteger(L, 4);
     Uint8 a4 = (Uint8)luaL_checkinteger(L, 5);
@@ -5997,7 +5997,7 @@ static int GenL_SDL_MapRGBA(lua_State *L)
         GenRead_SDL_PixelFormatDetails(L, 1, &tmp0);
         a0 = &tmp0;
     }
-    const SDL_Palette *a1 = (const SDL_Palette *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Palette");
+    const SDL_Palette *a1 = (const SDL_Palette *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Palette");
     Uint8 a2 = (Uint8)luaL_checkinteger(L, 3);
     Uint8 a3 = (Uint8)luaL_checkinteger(L, 4);
     Uint8 a4 = (Uint8)luaL_checkinteger(L, 5);
@@ -6010,7 +6010,7 @@ static int GenL_SDL_MapRGBA(lua_State *L)
 static int GenL_SDL_MapSurfaceRGB(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     Uint8 a1 = (Uint8)luaL_checkinteger(L, 2);
     Uint8 a2 = (Uint8)luaL_checkinteger(L, 3);
     Uint8 a3 = (Uint8)luaL_checkinteger(L, 4);
@@ -6022,7 +6022,7 @@ static int GenL_SDL_MapSurfaceRGB(lua_State *L)
 static int GenL_SDL_MapSurfaceRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     Uint8 a1 = (Uint8)luaL_checkinteger(L, 2);
     Uint8 a2 = (Uint8)luaL_checkinteger(L, 3);
     Uint8 a3 = (Uint8)luaL_checkinteger(L, 4);
@@ -6035,7 +6035,7 @@ static int GenL_SDL_MapSurfaceRGBA(lua_State *L)
 static int GenL_SDL_MaximizeWindow(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_MaximizeWindow(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -6044,7 +6044,7 @@ static int GenL_SDL_MaximizeWindow(lua_State *L)
 static int GenL_SDL_MinimizeWindow(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_MinimizeWindow(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -6118,7 +6118,7 @@ static int GenL_SDL_OpenCamera(lua_State *L)
         a1 = &tmp1;
     }
     SDL_Camera * rv = SDL_OpenCamera(a0, a1);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Camera", GenDtor_SDL_CloseCamera);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Camera", GenDtor_SDL_CloseCamera);
     return 1;
 }
 
@@ -6127,7 +6127,7 @@ static int GenL_SDL_OpenFileStorage(lua_State *L)
     (void)L;
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
     SDL_Storage * rv = SDL_OpenFileStorage(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Storage", GenDtor_SDL_CloseStorage);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Storage", GenDtor_SDL_CloseStorage);
     return 1;
 }
 
@@ -6136,7 +6136,7 @@ static int GenL_SDL_OpenGamepad(lua_State *L)
     (void)L;
     SDL_JoystickID a0 = (SDL_JoystickID)luaL_checkinteger(L, 1);
     SDL_Gamepad * rv = SDL_OpenGamepad(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Gamepad", GenDtor_SDL_CloseGamepad);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Gamepad", GenDtor_SDL_CloseGamepad);
     return 1;
 }
 
@@ -6145,16 +6145,16 @@ static int GenL_SDL_OpenHaptic(lua_State *L)
     (void)L;
     SDL_HapticID a0 = (SDL_HapticID)luaL_checkinteger(L, 1);
     SDL_Haptic * rv = SDL_OpenHaptic(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Haptic", GenDtor_SDL_CloseHaptic);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Haptic", GenDtor_SDL_CloseHaptic);
     return 1;
 }
 
 static int GenL_SDL_OpenHapticFromJoystick(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     SDL_Haptic * rv = SDL_OpenHapticFromJoystick(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Haptic", GenDtor_SDL_CloseHaptic);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Haptic", GenDtor_SDL_CloseHaptic);
     return 1;
 }
 
@@ -6162,7 +6162,7 @@ static int GenL_SDL_OpenHapticFromMouse(lua_State *L)
 {
     (void)L;
     SDL_Haptic * rv = SDL_OpenHapticFromMouse();
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Haptic", GenDtor_SDL_CloseHaptic);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Haptic", GenDtor_SDL_CloseHaptic);
     return 1;
 }
 
@@ -6171,7 +6171,7 @@ static int GenL_SDL_OpenJoystick(lua_State *L)
     (void)L;
     SDL_JoystickID a0 = (SDL_JoystickID)luaL_checkinteger(L, 1);
     SDL_Joystick * rv = SDL_OpenJoystick(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Joystick", GenDtor_SDL_CloseJoystick);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Joystick", GenDtor_SDL_CloseJoystick);
     return 1;
 }
 
@@ -6180,7 +6180,7 @@ static int GenL_SDL_OpenSensor(lua_State *L)
     (void)L;
     SDL_SensorID a0 = (SDL_SensorID)luaL_checkinteger(L, 1);
     SDL_Sensor * rv = SDL_OpenSensor(a0);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Sensor", GenDtor_SDL_CloseSensor);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Sensor", GenDtor_SDL_CloseSensor);
     return 1;
 }
 
@@ -6190,7 +6190,7 @@ static int GenL_SDL_OpenTitleStorage(lua_State *L)
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
     SDL_PropertiesID a1 = (SDL_PropertiesID)luaL_checkinteger(L, 2);
     SDL_Storage * rv = SDL_OpenTitleStorage(a0, a1);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Storage", GenDtor_SDL_CloseStorage);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Storage", GenDtor_SDL_CloseStorage);
     return 1;
 }
 
@@ -6210,7 +6210,7 @@ static int GenL_SDL_OpenUserStorage(lua_State *L)
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     SDL_PropertiesID a2 = (SDL_PropertiesID)luaL_checkinteger(L, 3);
     SDL_Storage * rv = SDL_OpenUserStorage(a0, a1, a2);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Storage", GenDtor_SDL_CloseStorage);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Storage", GenDtor_SDL_CloseStorage);
     return 1;
 }
 
@@ -6234,7 +6234,7 @@ static int GenL_SDL_PauseAudioDevice(lua_State *L)
 static int GenL_SDL_PauseAudioStreamDevice(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     bool rv = SDL_PauseAudioStreamDevice(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -6243,7 +6243,7 @@ static int GenL_SDL_PauseAudioStreamDevice(lua_State *L)
 static int GenL_SDL_PauseHaptic(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     bool rv = SDL_PauseHaptic(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -6252,7 +6252,7 @@ static int GenL_SDL_PauseHaptic(lua_State *L)
 static int GenL_SDL_PeepEvents(lua_State *L)
 {
     (void)L;
-    SDL_Event *a0 = (SDL_Event *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Event");
+    SDL_Event *a0 = (SDL_Event *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Event");
     int a1 = (int)luaL_checkinteger(L, 2);
     SDL_EventAction a2 = (SDL_EventAction)luaL_checkinteger(L, 3);
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
@@ -6265,7 +6265,7 @@ static int GenL_SDL_PeepEvents(lua_State *L)
 static int GenL_SDL_PlayHapticRumble(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     float a1 = (float)luaL_checknumber(L, 2);
     Uint32 a2 = (Uint32)luaL_checkinteger(L, 3);
     bool rv = SDL_PlayHapticRumble(a0, a1, a2);
@@ -6276,7 +6276,7 @@ static int GenL_SDL_PlayHapticRumble(lua_State *L)
 static int GenL_SDL_PollEvent(lua_State *L)
 {
     (void)L;
-    SDL_Event *a0 = (SDL_Event *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Event");
+    SDL_Event *a0 = (SDL_Event *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Event");
     bool rv = SDL_PollEvent(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -6285,7 +6285,7 @@ static int GenL_SDL_PollEvent(lua_State *L)
 static int GenL_SDL_PopGPUDebugGroup(lua_State *L)
 {
     (void)L;
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
     SDL_PopGPUDebugGroup(a0);
     return 0;
 }
@@ -6293,7 +6293,7 @@ static int GenL_SDL_PopGPUDebugGroup(lua_State *L)
 static int GenL_SDL_PremultiplySurfaceAlpha(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     bool a1 = (bool)lua_toboolean(L, 2);
     bool rv = SDL_PremultiplySurfaceAlpha(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -6310,7 +6310,7 @@ static int GenL_SDL_PumpEvents(lua_State *L)
 static int GenL_SDL_PushEvent(lua_State *L)
 {
     (void)L;
-    SDL_Event *a0 = (SDL_Event *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Event");
+    SDL_Event *a0 = (SDL_Event *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Event");
     bool rv = SDL_PushEvent(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -6319,7 +6319,7 @@ static int GenL_SDL_PushEvent(lua_State *L)
 static int GenL_SDL_PushGPUComputeUniformData(lua_State *L)
 {
     (void)L;
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
     Uint32 a1 = (Uint32)luaL_checkinteger(L, 2);
     size_t len2 = 0;
     const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checklstring(L, 3, &len2);
@@ -6330,7 +6330,7 @@ static int GenL_SDL_PushGPUComputeUniformData(lua_State *L)
 static int GenL_SDL_PushGPUDebugGroup(lua_State *L)
 {
     (void)L;
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     SDL_PushGPUDebugGroup(a0, a1);
     return 0;
@@ -6339,7 +6339,7 @@ static int GenL_SDL_PushGPUDebugGroup(lua_State *L)
 static int GenL_SDL_PushGPUFragmentUniformData(lua_State *L)
 {
     (void)L;
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
     Uint32 a1 = (Uint32)luaL_checkinteger(L, 2);
     size_t len2 = 0;
     const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checklstring(L, 3, &len2);
@@ -6350,7 +6350,7 @@ static int GenL_SDL_PushGPUFragmentUniformData(lua_State *L)
 static int GenL_SDL_PushGPUVertexUniformData(lua_State *L)
 {
     (void)L;
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
     Uint32 a1 = (Uint32)luaL_checkinteger(L, 2);
     size_t len2 = 0;
     const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checklstring(L, 3, &len2);
@@ -6361,7 +6361,7 @@ static int GenL_SDL_PushGPUVertexUniformData(lua_State *L)
 static int GenL_SDL_PutAudioStreamData(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     size_t len1 = 0;
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checklstring(L, 2, &len1);
     bool rv = SDL_PutAudioStreamData(a0, (const void *)a1, (int)len1);
@@ -6372,8 +6372,8 @@ static int GenL_SDL_PutAudioStreamData(lua_State *L)
 static int GenL_SDL_QueryGPUFence(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_GPUFence *a1 = (SDL_GPUFence *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUFence");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUFence *a1 = (SDL_GPUFence *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUFence");
     bool rv = SDL_QueryGPUFence(a0, a1);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -6397,7 +6397,7 @@ static int GenL_SDL_QuitSubSystem(lua_State *L)
 static int GenL_SDL_RaiseWindow(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_RaiseWindow(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -6406,7 +6406,7 @@ static int GenL_SDL_RaiseWindow(lua_State *L)
 static int GenL_SDL_ReadS16BE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint16 io1 = (Sint16)luaL_optinteger(L, 2, 0);
     bool rv = SDL_ReadS16BE(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -6417,7 +6417,7 @@ static int GenL_SDL_ReadS16BE(lua_State *L)
 static int GenL_SDL_ReadS16LE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint16 io1 = (Sint16)luaL_optinteger(L, 2, 0);
     bool rv = SDL_ReadS16LE(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -6428,7 +6428,7 @@ static int GenL_SDL_ReadS16LE(lua_State *L)
 static int GenL_SDL_ReadS32BE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint32 io1 = (Sint32)luaL_optinteger(L, 2, 0);
     bool rv = SDL_ReadS32BE(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -6439,7 +6439,7 @@ static int GenL_SDL_ReadS32BE(lua_State *L)
 static int GenL_SDL_ReadS32LE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint32 io1 = (Sint32)luaL_optinteger(L, 2, 0);
     bool rv = SDL_ReadS32LE(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -6450,7 +6450,7 @@ static int GenL_SDL_ReadS32LE(lua_State *L)
 static int GenL_SDL_ReadS64BE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint64 io1 = (Sint64)luaL_optinteger(L, 2, 0);
     bool rv = SDL_ReadS64BE(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -6461,7 +6461,7 @@ static int GenL_SDL_ReadS64BE(lua_State *L)
 static int GenL_SDL_ReadS64LE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint64 io1 = (Sint64)luaL_optinteger(L, 2, 0);
     bool rv = SDL_ReadS64LE(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -6472,7 +6472,7 @@ static int GenL_SDL_ReadS64LE(lua_State *L)
 static int GenL_SDL_ReadS8(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint8 io1 = (Sint8)luaL_optinteger(L, 2, 0);
     bool rv = SDL_ReadS8(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -6483,7 +6483,7 @@ static int GenL_SDL_ReadS8(lua_State *L)
 static int GenL_SDL_ReadSurfacePixel(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     Uint8 io3 = (Uint8)luaL_optinteger(L, 4, 0);
@@ -6502,7 +6502,7 @@ static int GenL_SDL_ReadSurfacePixel(lua_State *L)
 static int GenL_SDL_ReadSurfacePixelFloat(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     float io3 = (float)luaL_optnumber(L, 4, 0);
@@ -6521,7 +6521,7 @@ static int GenL_SDL_ReadSurfacePixelFloat(lua_State *L)
 static int GenL_SDL_ReadU16BE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Uint16 io1 = (Uint16)luaL_optinteger(L, 2, 0);
     bool rv = SDL_ReadU16BE(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -6532,7 +6532,7 @@ static int GenL_SDL_ReadU16BE(lua_State *L)
 static int GenL_SDL_ReadU16LE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Uint16 io1 = (Uint16)luaL_optinteger(L, 2, 0);
     bool rv = SDL_ReadU16LE(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -6543,7 +6543,7 @@ static int GenL_SDL_ReadU16LE(lua_State *L)
 static int GenL_SDL_ReadU32BE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Uint32 io1 = (Uint32)luaL_optinteger(L, 2, 0);
     bool rv = SDL_ReadU32BE(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -6554,7 +6554,7 @@ static int GenL_SDL_ReadU32BE(lua_State *L)
 static int GenL_SDL_ReadU32LE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Uint32 io1 = (Uint32)luaL_optinteger(L, 2, 0);
     bool rv = SDL_ReadU32LE(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -6565,7 +6565,7 @@ static int GenL_SDL_ReadU32LE(lua_State *L)
 static int GenL_SDL_ReadU64BE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Uint64 io1 = (Uint64)luaL_optinteger(L, 2, 0);
     bool rv = SDL_ReadU64BE(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -6576,7 +6576,7 @@ static int GenL_SDL_ReadU64BE(lua_State *L)
 static int GenL_SDL_ReadU64LE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Uint64 io1 = (Uint64)luaL_optinteger(L, 2, 0);
     bool rv = SDL_ReadU64LE(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -6587,7 +6587,7 @@ static int GenL_SDL_ReadU64LE(lua_State *L)
 static int GenL_SDL_ReadU8(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Uint8 io1 = (Uint8)luaL_optinteger(L, 2, 0);
     bool rv = SDL_ReadU8(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -6607,8 +6607,8 @@ static int GenL_SDL_RegisterEvents(lua_State *L)
 static int GenL_SDL_ReleaseCameraFrame(lua_State *L)
 {
     (void)L;
-    SDL_Camera *a0 = (SDL_Camera *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Camera");
-    SDL_Surface *a1 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Surface");
+    SDL_Camera *a0 = (SDL_Camera *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Camera");
+    SDL_Surface *a1 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Surface");
     SDL_ReleaseCameraFrame(a0, a1);
     return 0;
 }
@@ -6616,8 +6616,8 @@ static int GenL_SDL_ReleaseCameraFrame(lua_State *L)
 static int GenL_SDL_ReleaseGPUBuffer(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUBuffer");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUBuffer");
     SDL_ReleaseGPUBuffer(a0, a1);
     return 0;
 }
@@ -6625,8 +6625,8 @@ static int GenL_SDL_ReleaseGPUBuffer(lua_State *L)
 static int GenL_SDL_ReleaseGPUComputePipeline(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_GPUComputePipeline *a1 = (SDL_GPUComputePipeline *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUComputePipeline");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUComputePipeline *a1 = (SDL_GPUComputePipeline *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUComputePipeline");
     SDL_ReleaseGPUComputePipeline(a0, a1);
     return 0;
 }
@@ -6634,8 +6634,8 @@ static int GenL_SDL_ReleaseGPUComputePipeline(lua_State *L)
 static int GenL_SDL_ReleaseGPUFence(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_GPUFence *a1 = (SDL_GPUFence *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUFence");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUFence *a1 = (SDL_GPUFence *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUFence");
     SDL_ReleaseGPUFence(a0, a1);
     return 0;
 }
@@ -6643,8 +6643,8 @@ static int GenL_SDL_ReleaseGPUFence(lua_State *L)
 static int GenL_SDL_ReleaseGPUGraphicsPipeline(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_GPUGraphicsPipeline *a1 = (SDL_GPUGraphicsPipeline *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUGraphicsPipeline");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUGraphicsPipeline *a1 = (SDL_GPUGraphicsPipeline *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUGraphicsPipeline");
     SDL_ReleaseGPUGraphicsPipeline(a0, a1);
     return 0;
 }
@@ -6652,8 +6652,8 @@ static int GenL_SDL_ReleaseGPUGraphicsPipeline(lua_State *L)
 static int GenL_SDL_ReleaseGPUSampler(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_GPUSampler *a1 = (SDL_GPUSampler *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUSampler");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUSampler *a1 = (SDL_GPUSampler *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUSampler");
     SDL_ReleaseGPUSampler(a0, a1);
     return 0;
 }
@@ -6661,8 +6661,8 @@ static int GenL_SDL_ReleaseGPUSampler(lua_State *L)
 static int GenL_SDL_ReleaseGPUShader(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_GPUShader *a1 = (SDL_GPUShader *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUShader");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUShader *a1 = (SDL_GPUShader *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUShader");
     SDL_ReleaseGPUShader(a0, a1);
     return 0;
 }
@@ -6670,8 +6670,8 @@ static int GenL_SDL_ReleaseGPUShader(lua_State *L)
 static int GenL_SDL_ReleaseGPUTexture(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_GPUTexture *a1 = (SDL_GPUTexture *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUTexture");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUTexture *a1 = (SDL_GPUTexture *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUTexture");
     SDL_ReleaseGPUTexture(a0, a1);
     return 0;
 }
@@ -6679,8 +6679,8 @@ static int GenL_SDL_ReleaseGPUTexture(lua_State *L)
 static int GenL_SDL_ReleaseGPUTransferBuffer(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_GPUTransferBuffer *a1 = (SDL_GPUTransferBuffer *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUTransferBuffer");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUTransferBuffer *a1 = (SDL_GPUTransferBuffer *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUTransferBuffer");
     SDL_ReleaseGPUTransferBuffer(a0, a1);
     return 0;
 }
@@ -6688,8 +6688,8 @@ static int GenL_SDL_ReleaseGPUTransferBuffer(lua_State *L)
 static int GenL_SDL_ReleaseWindowFromGPUDevice(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Window");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Window");
     SDL_ReleaseWindowFromGPUDevice(a0, a1);
     return 0;
 }
@@ -6714,7 +6714,7 @@ static int GenL_SDL_RemovePath(lua_State *L)
 static int GenL_SDL_RemoveStoragePath(lua_State *L)
 {
     (void)L;
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Storage");
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Storage");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     bool rv = SDL_RemoveStoragePath(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -6724,7 +6724,7 @@ static int GenL_SDL_RemoveStoragePath(lua_State *L)
 static int GenL_SDL_RemoveSurfaceAlternateImages(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_RemoveSurfaceAlternateImages(a0);
     return 0;
 }
@@ -6741,7 +6741,7 @@ static int GenL_SDL_RemoveTimer(lua_State *L)
 static int GenL_SDL_RemoveTrayEntry(lua_State *L)
 {
     (void)L;
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
     SDL_RemoveTrayEntry(a0);
     return 0;
 }
@@ -6759,7 +6759,7 @@ static int GenL_SDL_RenamePath(lua_State *L)
 static int GenL_SDL_RenameStoragePath(lua_State *L)
 {
     (void)L;
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Storage");
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Storage");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checkstring(L, 3);
     bool rv = SDL_RenameStoragePath(a0, a1, a2);
@@ -6770,7 +6770,7 @@ static int GenL_SDL_RenameStoragePath(lua_State *L)
 static int GenL_SDL_RenderClear(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     bool rv = SDL_RenderClear(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -6779,7 +6779,7 @@ static int GenL_SDL_RenderClear(lua_State *L)
 static int GenL_SDL_RenderClipEnabled(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     bool rv = SDL_RenderClipEnabled(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -6788,7 +6788,7 @@ static int GenL_SDL_RenderClipEnabled(lua_State *L)
 static int GenL_SDL_RenderCoordinatesFromWindow(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     float a1 = (float)luaL_checknumber(L, 2);
     float a2 = (float)luaL_checknumber(L, 3);
     float io3 = (float)luaL_optnumber(L, 4, 0);
@@ -6803,7 +6803,7 @@ static int GenL_SDL_RenderCoordinatesFromWindow(lua_State *L)
 static int GenL_SDL_RenderCoordinatesToWindow(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     float a1 = (float)luaL_checknumber(L, 2);
     float a2 = (float)luaL_checknumber(L, 3);
     float io3 = (float)luaL_optnumber(L, 4, 0);
@@ -6818,7 +6818,7 @@ static int GenL_SDL_RenderCoordinatesToWindow(lua_State *L)
 static int GenL_SDL_RenderDebugText(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     float a1 = (float)luaL_checknumber(L, 2);
     float a2 = (float)luaL_checknumber(L, 3);
     const char *a3 = lua_isnoneornil(L, 4) ? NULL : luaL_checkstring(L, 4);
@@ -6830,7 +6830,7 @@ static int GenL_SDL_RenderDebugText(lua_State *L)
 static int GenL_SDL_RenderFillRect(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_FRect tmp1;
     const SDL_FRect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -6845,7 +6845,7 @@ static int GenL_SDL_RenderFillRect(lua_State *L)
 static int GenL_SDL_RenderFillRects(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_FRect tmp1;
     const SDL_FRect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -6861,7 +6861,7 @@ static int GenL_SDL_RenderFillRects(lua_State *L)
 static int GenL_SDL_RenderLine(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     float a1 = (float)luaL_checknumber(L, 2);
     float a2 = (float)luaL_checknumber(L, 3);
     float a3 = (float)luaL_checknumber(L, 4);
@@ -6874,7 +6874,7 @@ static int GenL_SDL_RenderLine(lua_State *L)
 static int GenL_SDL_RenderLines(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_FPoint tmp1;
     const SDL_FPoint *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -6890,7 +6890,7 @@ static int GenL_SDL_RenderLines(lua_State *L)
 static int GenL_SDL_RenderPoint(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     float a1 = (float)luaL_checknumber(L, 2);
     float a2 = (float)luaL_checknumber(L, 3);
     bool rv = SDL_RenderPoint(a0, a1, a2);
@@ -6901,7 +6901,7 @@ static int GenL_SDL_RenderPoint(lua_State *L)
 static int GenL_SDL_RenderPoints(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_FPoint tmp1;
     const SDL_FPoint *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -6917,7 +6917,7 @@ static int GenL_SDL_RenderPoints(lua_State *L)
 static int GenL_SDL_RenderPresent(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     bool rv = SDL_RenderPresent(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -6926,7 +6926,7 @@ static int GenL_SDL_RenderPresent(lua_State *L)
 static int GenL_SDL_RenderReadPixels(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -6934,14 +6934,14 @@ static int GenL_SDL_RenderReadPixels(lua_State *L)
         a1 = &tmp1;
     }
     SDL_Surface * rv = SDL_RenderReadPixels(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Surface");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Surface");
     return 1;
 }
 
 static int GenL_SDL_RenderRect(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_FRect tmp1;
     const SDL_FRect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -6956,7 +6956,7 @@ static int GenL_SDL_RenderRect(lua_State *L)
 static int GenL_SDL_RenderRects(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_FRect tmp1;
     const SDL_FRect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -6972,8 +6972,8 @@ static int GenL_SDL_RenderRects(lua_State *L)
 static int GenL_SDL_RenderTexture(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
-    SDL_Texture *a1 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Texture");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Texture");
     SDL_FRect tmp2;
     const SDL_FRect *a2 = NULL;
     if (!lua_isnoneornil(L, 3)) {
@@ -6994,8 +6994,8 @@ static int GenL_SDL_RenderTexture(lua_State *L)
 static int GenL_SDL_RenderTexture9Grid(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
-    SDL_Texture *a1 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Texture");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Texture");
     SDL_FRect tmp2;
     const SDL_FRect *a2 = NULL;
     if (!lua_isnoneornil(L, 3)) {
@@ -7021,8 +7021,8 @@ static int GenL_SDL_RenderTexture9Grid(lua_State *L)
 static int GenL_SDL_RenderTexture9GridTiled(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
-    SDL_Texture *a1 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Texture");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Texture");
     SDL_FRect tmp2;
     const SDL_FRect *a2 = NULL;
     if (!lua_isnoneornil(L, 3)) {
@@ -7049,8 +7049,8 @@ static int GenL_SDL_RenderTexture9GridTiled(lua_State *L)
 static int GenL_SDL_RenderTextureAffine(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
-    SDL_Texture *a1 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Texture");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Texture");
     SDL_FRect tmp2;
     const SDL_FRect *a2 = NULL;
     if (!lua_isnoneornil(L, 3)) {
@@ -7083,8 +7083,8 @@ static int GenL_SDL_RenderTextureAffine(lua_State *L)
 static int GenL_SDL_RenderTextureRotated(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
-    SDL_Texture *a1 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Texture");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Texture");
     SDL_FRect tmp2;
     const SDL_FRect *a2 = NULL;
     if (!lua_isnoneornil(L, 3)) {
@@ -7113,8 +7113,8 @@ static int GenL_SDL_RenderTextureRotated(lua_State *L)
 static int GenL_SDL_RenderTextureTiled(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
-    SDL_Texture *a1 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Texture");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Texture");
     SDL_FRect tmp2;
     const SDL_FRect *a2 = NULL;
     if (!lua_isnoneornil(L, 3)) {
@@ -7136,7 +7136,7 @@ static int GenL_SDL_RenderTextureTiled(lua_State *L)
 static int GenL_SDL_RenderViewportSet(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     bool rv = SDL_RenderViewportSet(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -7182,7 +7182,7 @@ static int GenL_SDL_ResetLogPriorities(lua_State *L)
 static int GenL_SDL_RestoreWindow(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_RestoreWindow(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -7200,7 +7200,7 @@ static int GenL_SDL_ResumeAudioDevice(lua_State *L)
 static int GenL_SDL_ResumeAudioStreamDevice(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     bool rv = SDL_ResumeAudioStreamDevice(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -7209,7 +7209,7 @@ static int GenL_SDL_ResumeAudioStreamDevice(lua_State *L)
 static int GenL_SDL_ResumeHaptic(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     bool rv = SDL_ResumeHaptic(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -7218,17 +7218,17 @@ static int GenL_SDL_ResumeHaptic(lua_State *L)
 static int GenL_SDL_RotateSurface(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     float a1 = (float)luaL_checknumber(L, 2);
     SDL_Surface * rv = SDL_RotateSurface(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_Surface");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Surface");
     return 1;
 }
 
 static int GenL_SDL_RumbleGamepad(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     Uint16 a1 = (Uint16)luaL_checkinteger(L, 2);
     Uint16 a2 = (Uint16)luaL_checkinteger(L, 3);
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
@@ -7240,7 +7240,7 @@ static int GenL_SDL_RumbleGamepad(lua_State *L)
 static int GenL_SDL_RumbleGamepadTriggers(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     Uint16 a1 = (Uint16)luaL_checkinteger(L, 2);
     Uint16 a2 = (Uint16)luaL_checkinteger(L, 3);
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
@@ -7252,7 +7252,7 @@ static int GenL_SDL_RumbleGamepadTriggers(lua_State *L)
 static int GenL_SDL_RumbleJoystick(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     Uint16 a1 = (Uint16)luaL_checkinteger(L, 2);
     Uint16 a2 = (Uint16)luaL_checkinteger(L, 3);
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
@@ -7264,7 +7264,7 @@ static int GenL_SDL_RumbleJoystick(lua_State *L)
 static int GenL_SDL_RumbleJoystickTriggers(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     Uint16 a1 = (Uint16)luaL_checkinteger(L, 2);
     Uint16 a2 = (Uint16)luaL_checkinteger(L, 3);
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
@@ -7276,7 +7276,7 @@ static int GenL_SDL_RumbleJoystickTriggers(lua_State *L)
 static int GenL_SDL_RunHapticEffect(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     SDL_HapticEffectID a1 = (SDL_HapticEffectID)luaL_checkinteger(L, 2);
     Uint32 a2 = (Uint32)luaL_checkinteger(L, 3);
     bool rv = SDL_RunHapticEffect(a0, a1, a2);
@@ -7287,7 +7287,7 @@ static int GenL_SDL_RunHapticEffect(lua_State *L)
 static int GenL_SDL_SaveBMP(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     bool rv = SDL_SaveBMP(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -7297,8 +7297,8 @@ static int GenL_SDL_SaveBMP(lua_State *L)
 static int GenL_SDL_SaveBMP_IO(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
-    SDL_IOStream *a1 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_IOStream");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_IOStream *a1 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 2, "SDL_IOStream");
     bool a2 = (bool)lua_toboolean(L, 3);
     bool rv = SDL_SaveBMP_IO(a0, a1, a2);
     lua_pushboolean(L, (int)rv);
@@ -7319,7 +7319,7 @@ static int GenL_SDL_SaveFile(lua_State *L)
 static int GenL_SDL_SaveFile_IO(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     size_t len1 = 0;
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checklstring(L, 2, &len1);
     bool a3 = (bool)lua_toboolean(L, 3);
@@ -7331,7 +7331,7 @@ static int GenL_SDL_SaveFile_IO(lua_State *L)
 static int GenL_SDL_SavePNG(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     bool rv = SDL_SavePNG(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -7341,8 +7341,8 @@ static int GenL_SDL_SavePNG(lua_State *L)
 static int GenL_SDL_SavePNG_IO(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
-    SDL_IOStream *a1 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_IOStream");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_IOStream *a1 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 2, "SDL_IOStream");
     bool a2 = (bool)lua_toboolean(L, 3);
     bool rv = SDL_SavePNG_IO(a0, a1, a2);
     lua_pushboolean(L, (int)rv);
@@ -7352,19 +7352,19 @@ static int GenL_SDL_SavePNG_IO(lua_State *L)
 static int GenL_SDL_ScaleSurface(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     SDL_ScaleMode a3 = (SDL_ScaleMode)luaL_checkinteger(L, 4);
     SDL_Surface * rv = SDL_ScaleSurface(a0, a1, a2, a3);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     return 1;
 }
 
 static int GenL_SDL_ScreenKeyboardShown(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_ScreenKeyboardShown(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -7381,7 +7381,7 @@ static int GenL_SDL_ScreenSaverEnabled(lua_State *L)
 static int GenL_SDL_SeekIO(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint64 a1 = (Sint64)luaL_checkinteger(L, 2);
     SDL_IOWhence a2 = (SDL_IOWhence)luaL_checkinteger(L, 3);
     Sint64 rv = SDL_SeekIO(a0, a1, a2);
@@ -7392,7 +7392,7 @@ static int GenL_SDL_SeekIO(lua_State *L)
 static int GenL_SDL_SendGamepadEffect(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     size_t len1 = 0;
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checklstring(L, 2, &len1);
     bool rv = SDL_SendGamepadEffect(a0, (const void *)a1, (int)len1);
@@ -7403,7 +7403,7 @@ static int GenL_SDL_SendGamepadEffect(lua_State *L)
 static int GenL_SDL_SendJoystickEffect(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     size_t len1 = 0;
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checklstring(L, 2, &len1);
     bool rv = SDL_SendJoystickEffect(a0, (const void *)a1, (int)len1);
@@ -7445,7 +7445,7 @@ static int GenL_SDL_SetAudioDeviceGain(lua_State *L)
 static int GenL_SDL_SetAudioStreamFormat(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     SDL_AudioSpec tmp1;
     const SDL_AudioSpec *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -7466,7 +7466,7 @@ static int GenL_SDL_SetAudioStreamFormat(lua_State *L)
 static int GenL_SDL_SetAudioStreamFrequencyRatio(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     float a1 = (float)luaL_checknumber(L, 2);
     bool rv = SDL_SetAudioStreamFrequencyRatio(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -7476,7 +7476,7 @@ static int GenL_SDL_SetAudioStreamFrequencyRatio(lua_State *L)
 static int GenL_SDL_SetAudioStreamGain(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     float a1 = (float)luaL_checknumber(L, 2);
     bool rv = SDL_SetAudioStreamGain(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -7506,7 +7506,7 @@ static int GenL_SDL_SetClipboardText(lua_State *L)
 static int GenL_SDL_SetCursor(lua_State *L)
 {
     (void)L;
-    SDL_Cursor *a0 = (SDL_Cursor *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Cursor");
+    SDL_Cursor *a0 = (SDL_Cursor *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Cursor");
     bool rv = SDL_SetCursor(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -7515,7 +7515,7 @@ static int GenL_SDL_SetCursor(lua_State *L)
 static int GenL_SDL_SetDefaultTextureScaleMode(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_ScaleMode a1 = (SDL_ScaleMode)luaL_checkinteger(L, 2);
     bool rv = SDL_SetDefaultTextureScaleMode(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -7525,7 +7525,7 @@ static int GenL_SDL_SetDefaultTextureScaleMode(lua_State *L)
 static int GenL_SDL_SetEnvironmentVariable(lua_State *L)
 {
     (void)L;
-    SDL_Environment *a0 = (SDL_Environment *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Environment");
+    SDL_Environment *a0 = (SDL_Environment *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Environment");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checkstring(L, 3);
     bool a3 = (bool)lua_toboolean(L, 4);
@@ -7557,7 +7557,7 @@ static int GenL_SDL_SetFloatProperty(lua_State *L)
 static int GenL_SDL_SetGPUAllowedFramesInFlight(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
     Uint32 a1 = (Uint32)luaL_checkinteger(L, 2);
     bool rv = SDL_SetGPUAllowedFramesInFlight(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -7567,7 +7567,7 @@ static int GenL_SDL_SetGPUAllowedFramesInFlight(lua_State *L)
 static int GenL_SDL_SetGPUBlendConstants(lua_State *L)
 {
     (void)L;
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
     SDL_FColor a1;
     GenRead_SDL_FColor(L, 2, &a1);
     SDL_SetGPUBlendConstants(a0, a1);
@@ -7577,8 +7577,8 @@ static int GenL_SDL_SetGPUBlendConstants(lua_State *L)
 static int GenL_SDL_SetGPUBufferName(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUBuffer");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUBuffer");
     const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checkstring(L, 3);
     SDL_SetGPUBufferName(a0, a1, a2);
     return 0;
@@ -7587,8 +7587,8 @@ static int GenL_SDL_SetGPUBufferName(lua_State *L)
 static int GenL_SDL_SetGPURenderState(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
-    SDL_GPURenderState *a1 = (SDL_GPURenderState *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPURenderState");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_GPURenderState *a1 = (SDL_GPURenderState *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPURenderState");
     bool rv = SDL_SetGPURenderState(a0, a1);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -7597,7 +7597,7 @@ static int GenL_SDL_SetGPURenderState(lua_State *L)
 static int GenL_SDL_SetGPURenderStateFragmentUniforms(lua_State *L)
 {
     (void)L;
-    SDL_GPURenderState *a0 = (SDL_GPURenderState *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPURenderState");
+    SDL_GPURenderState *a0 = (SDL_GPURenderState *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPURenderState");
     Uint32 a1 = (Uint32)luaL_checkinteger(L, 2);
     size_t len2 = 0;
     const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checklstring(L, 3, &len2);
@@ -7609,7 +7609,7 @@ static int GenL_SDL_SetGPURenderStateFragmentUniforms(lua_State *L)
 static int GenL_SDL_SetGPUScissor(lua_State *L)
 {
     (void)L;
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -7623,7 +7623,7 @@ static int GenL_SDL_SetGPUScissor(lua_State *L)
 static int GenL_SDL_SetGPUStencilReference(lua_State *L)
 {
     (void)L;
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
     Uint8 a1 = (Uint8)luaL_checkinteger(L, 2);
     SDL_SetGPUStencilReference(a0, a1);
     return 0;
@@ -7632,8 +7632,8 @@ static int GenL_SDL_SetGPUStencilReference(lua_State *L)
 static int GenL_SDL_SetGPUSwapchainParameters(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Window");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Window");
     SDL_GPUSwapchainComposition a2 = (SDL_GPUSwapchainComposition)luaL_checkinteger(L, 3);
     SDL_GPUPresentMode a3 = (SDL_GPUPresentMode)luaL_checkinteger(L, 4);
     bool rv = SDL_SetGPUSwapchainParameters(a0, a1, a2, a3);
@@ -7644,8 +7644,8 @@ static int GenL_SDL_SetGPUSwapchainParameters(lua_State *L)
 static int GenL_SDL_SetGPUTextureName(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_GPUTexture *a1 = (SDL_GPUTexture *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUTexture");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUTexture *a1 = (SDL_GPUTexture *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUTexture");
     const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checkstring(L, 3);
     SDL_SetGPUTextureName(a0, a1, a2);
     return 0;
@@ -7654,7 +7654,7 @@ static int GenL_SDL_SetGPUTextureName(lua_State *L)
 static int GenL_SDL_SetGPUViewport(lua_State *L)
 {
     (void)L;
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPURenderPass");
     SDL_GPUViewport tmp1;
     const SDL_GPUViewport *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -7676,7 +7676,7 @@ static int GenL_SDL_SetGamepadEventsEnabled(lua_State *L)
 static int GenL_SDL_SetGamepadLED(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     Uint8 a1 = (Uint8)luaL_checkinteger(L, 2);
     Uint8 a2 = (Uint8)luaL_checkinteger(L, 3);
     Uint8 a3 = (Uint8)luaL_checkinteger(L, 4);
@@ -7698,7 +7698,7 @@ static int GenL_SDL_SetGamepadMapping(lua_State *L)
 static int GenL_SDL_SetGamepadPlayerIndex(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     int a1 = (int)luaL_checkinteger(L, 2);
     bool rv = SDL_SetGamepadPlayerIndex(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -7708,7 +7708,7 @@ static int GenL_SDL_SetGamepadPlayerIndex(lua_State *L)
 static int GenL_SDL_SetGamepadSensorEnabled(lua_State *L)
 {
     (void)L;
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Gamepad");
     SDL_SensorType a1 = (SDL_SensorType)luaL_checkinteger(L, 2);
     bool a2 = (bool)lua_toboolean(L, 3);
     bool rv = SDL_SetGamepadSensorEnabled(a0, a1, a2);
@@ -7719,7 +7719,7 @@ static int GenL_SDL_SetGamepadSensorEnabled(lua_State *L)
 static int GenL_SDL_SetHapticAutocenter(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     int a1 = (int)luaL_checkinteger(L, 2);
     bool rv = SDL_SetHapticAutocenter(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -7729,7 +7729,7 @@ static int GenL_SDL_SetHapticAutocenter(lua_State *L)
 static int GenL_SDL_SetHapticGain(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     int a1 = (int)luaL_checkinteger(L, 2);
     bool rv = SDL_SetHapticGain(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -7760,7 +7760,7 @@ static int GenL_SDL_SetHintWithPriority(lua_State *L)
 static int GenL_SDL_SetInitialized(lua_State *L)
 {
     (void)L;
-    SDL_InitState *a0 = (SDL_InitState *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_InitState");
+    SDL_InitState *a0 = (SDL_InitState *)GrappleGen_LuaCheckHandle(L, 1, "SDL_InitState");
     bool a1 = (bool)lua_toboolean(L, 2);
     SDL_SetInitialized(a0, a1);
     return 0;
@@ -7777,7 +7777,7 @@ static int GenL_SDL_SetJoystickEventsEnabled(lua_State *L)
 static int GenL_SDL_SetJoystickLED(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     Uint8 a1 = (Uint8)luaL_checkinteger(L, 2);
     Uint8 a2 = (Uint8)luaL_checkinteger(L, 3);
     Uint8 a3 = (Uint8)luaL_checkinteger(L, 4);
@@ -7789,7 +7789,7 @@ static int GenL_SDL_SetJoystickLED(lua_State *L)
 static int GenL_SDL_SetJoystickPlayerIndex(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int a1 = (int)luaL_checkinteger(L, 2);
     bool rv = SDL_SetJoystickPlayerIndex(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -7799,7 +7799,7 @@ static int GenL_SDL_SetJoystickPlayerIndex(lua_State *L)
 static int GenL_SDL_SetJoystickVirtualAxis(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int a1 = (int)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     bool rv = SDL_SetJoystickVirtualAxis(a0, a1, a2);
@@ -7810,7 +7810,7 @@ static int GenL_SDL_SetJoystickVirtualAxis(lua_State *L)
 static int GenL_SDL_SetJoystickVirtualBall(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int a1 = (int)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -7822,7 +7822,7 @@ static int GenL_SDL_SetJoystickVirtualBall(lua_State *L)
 static int GenL_SDL_SetJoystickVirtualButton(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int a1 = (int)luaL_checkinteger(L, 2);
     bool a2 = (bool)lua_toboolean(L, 3);
     bool rv = SDL_SetJoystickVirtualButton(a0, a1, a2);
@@ -7833,7 +7833,7 @@ static int GenL_SDL_SetJoystickVirtualButton(lua_State *L)
 static int GenL_SDL_SetJoystickVirtualHat(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int a1 = (int)luaL_checkinteger(L, 2);
     Uint8 a2 = (Uint8)luaL_checkinteger(L, 3);
     bool rv = SDL_SetJoystickVirtualHat(a0, a1, a2);
@@ -7844,7 +7844,7 @@ static int GenL_SDL_SetJoystickVirtualHat(lua_State *L)
 static int GenL_SDL_SetJoystickVirtualTouchpad(lua_State *L)
 {
     (void)L;
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Joystick");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     bool a3 = (bool)lua_toboolean(L, 4);
@@ -7905,7 +7905,7 @@ static int GenL_SDL_SetNumberProperty(lua_State *L)
 static int GenL_SDL_SetPaletteColors(lua_State *L)
 {
     (void)L;
-    SDL_Palette *a0 = (SDL_Palette *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Palette");
+    SDL_Palette *a0 = (SDL_Palette *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Palette");
     SDL_Color tmp1;
     const SDL_Color *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -7931,7 +7931,7 @@ static int GenL_SDL_SetPrimarySelectionText(lua_State *L)
 static int GenL_SDL_SetRenderClipRect(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -7946,7 +7946,7 @@ static int GenL_SDL_SetRenderClipRect(lua_State *L)
 static int GenL_SDL_SetRenderColorScale(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     float a1 = (float)luaL_checknumber(L, 2);
     bool rv = SDL_SetRenderColorScale(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -7956,7 +7956,7 @@ static int GenL_SDL_SetRenderColorScale(lua_State *L)
 static int GenL_SDL_SetRenderDrawBlendMode(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_BlendMode a1 = (SDL_BlendMode)luaL_checkinteger(L, 2);
     bool rv = SDL_SetRenderDrawBlendMode(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -7966,7 +7966,7 @@ static int GenL_SDL_SetRenderDrawBlendMode(lua_State *L)
 static int GenL_SDL_SetRenderDrawColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Uint8 a1 = (Uint8)luaL_checkinteger(L, 2);
     Uint8 a2 = (Uint8)luaL_checkinteger(L, 3);
     Uint8 a3 = (Uint8)luaL_checkinteger(L, 4);
@@ -7979,7 +7979,7 @@ static int GenL_SDL_SetRenderDrawColor(lua_State *L)
 static int GenL_SDL_SetRenderDrawColorFloat(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     float a1 = (float)luaL_checknumber(L, 2);
     float a2 = (float)luaL_checknumber(L, 3);
     float a3 = (float)luaL_checknumber(L, 4);
@@ -7992,7 +7992,7 @@ static int GenL_SDL_SetRenderDrawColorFloat(lua_State *L)
 static int GenL_SDL_SetRenderLogicalPresentation(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     SDL_RendererLogicalPresentation a3 = (SDL_RendererLogicalPresentation)luaL_checkinteger(L, 4);
@@ -8004,7 +8004,7 @@ static int GenL_SDL_SetRenderLogicalPresentation(lua_State *L)
 static int GenL_SDL_SetRenderScale(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     float a1 = (float)luaL_checknumber(L, 2);
     float a2 = (float)luaL_checknumber(L, 3);
     bool rv = SDL_SetRenderScale(a0, a1, a2);
@@ -8015,8 +8015,8 @@ static int GenL_SDL_SetRenderScale(lua_State *L)
 static int GenL_SDL_SetRenderTarget(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
-    SDL_Texture *a1 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Texture");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Texture");
     bool rv = SDL_SetRenderTarget(a0, a1);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8025,7 +8025,7 @@ static int GenL_SDL_SetRenderTarget(lua_State *L)
 static int GenL_SDL_SetRenderTextureAddressMode(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_TextureAddressMode a1 = (SDL_TextureAddressMode)luaL_checkinteger(L, 2);
     SDL_TextureAddressMode a2 = (SDL_TextureAddressMode)luaL_checkinteger(L, 3);
     bool rv = SDL_SetRenderTextureAddressMode(a0, a1, a2);
@@ -8036,7 +8036,7 @@ static int GenL_SDL_SetRenderTextureAddressMode(lua_State *L)
 static int GenL_SDL_SetRenderVSync(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     int a1 = (int)luaL_checkinteger(L, 2);
     bool rv = SDL_SetRenderVSync(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8046,7 +8046,7 @@ static int GenL_SDL_SetRenderVSync(lua_State *L)
 static int GenL_SDL_SetRenderViewport(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -8082,7 +8082,7 @@ static int GenL_SDL_SetStringProperty(lua_State *L)
 static int GenL_SDL_SetSurfaceAlphaMod(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     Uint8 a1 = (Uint8)luaL_checkinteger(L, 2);
     bool rv = SDL_SetSurfaceAlphaMod(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8092,7 +8092,7 @@ static int GenL_SDL_SetSurfaceAlphaMod(lua_State *L)
 static int GenL_SDL_SetSurfaceBlendMode(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_BlendMode a1 = (SDL_BlendMode)luaL_checkinteger(L, 2);
     bool rv = SDL_SetSurfaceBlendMode(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8102,7 +8102,7 @@ static int GenL_SDL_SetSurfaceBlendMode(lua_State *L)
 static int GenL_SDL_SetSurfaceClipRect(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -8117,7 +8117,7 @@ static int GenL_SDL_SetSurfaceClipRect(lua_State *L)
 static int GenL_SDL_SetSurfaceColorKey(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     bool a1 = (bool)lua_toboolean(L, 2);
     Uint32 a2 = (Uint32)luaL_checkinteger(L, 3);
     bool rv = SDL_SetSurfaceColorKey(a0, a1, a2);
@@ -8128,7 +8128,7 @@ static int GenL_SDL_SetSurfaceColorKey(lua_State *L)
 static int GenL_SDL_SetSurfaceColorMod(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     Uint8 a1 = (Uint8)luaL_checkinteger(L, 2);
     Uint8 a2 = (Uint8)luaL_checkinteger(L, 3);
     Uint8 a3 = (Uint8)luaL_checkinteger(L, 4);
@@ -8140,7 +8140,7 @@ static int GenL_SDL_SetSurfaceColorMod(lua_State *L)
 static int GenL_SDL_SetSurfaceColorspace(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Colorspace a1 = (SDL_Colorspace)luaL_checkinteger(L, 2);
     bool rv = SDL_SetSurfaceColorspace(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8150,8 +8150,8 @@ static int GenL_SDL_SetSurfaceColorspace(lua_State *L)
 static int GenL_SDL_SetSurfacePalette(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
-    SDL_Palette *a1 = (SDL_Palette *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Palette");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Palette *a1 = (SDL_Palette *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Palette");
     bool rv = SDL_SetSurfacePalette(a0, a1);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8160,7 +8160,7 @@ static int GenL_SDL_SetSurfacePalette(lua_State *L)
 static int GenL_SDL_SetSurfaceRLE(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     bool a1 = (bool)lua_toboolean(L, 2);
     bool rv = SDL_SetSurfaceRLE(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8170,7 +8170,7 @@ static int GenL_SDL_SetSurfaceRLE(lua_State *L)
 static int GenL_SDL_SetTextInputArea(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -8186,7 +8186,7 @@ static int GenL_SDL_SetTextInputArea(lua_State *L)
 static int GenL_SDL_SetTextureAlphaMod(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     Uint8 a1 = (Uint8)luaL_checkinteger(L, 2);
     bool rv = SDL_SetTextureAlphaMod(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8196,7 +8196,7 @@ static int GenL_SDL_SetTextureAlphaMod(lua_State *L)
 static int GenL_SDL_SetTextureAlphaModFloat(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     float a1 = (float)luaL_checknumber(L, 2);
     bool rv = SDL_SetTextureAlphaModFloat(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8206,7 +8206,7 @@ static int GenL_SDL_SetTextureAlphaModFloat(lua_State *L)
 static int GenL_SDL_SetTextureBlendMode(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     SDL_BlendMode a1 = (SDL_BlendMode)luaL_checkinteger(L, 2);
     bool rv = SDL_SetTextureBlendMode(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8216,7 +8216,7 @@ static int GenL_SDL_SetTextureBlendMode(lua_State *L)
 static int GenL_SDL_SetTextureColorMod(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     Uint8 a1 = (Uint8)luaL_checkinteger(L, 2);
     Uint8 a2 = (Uint8)luaL_checkinteger(L, 3);
     Uint8 a3 = (Uint8)luaL_checkinteger(L, 4);
@@ -8228,7 +8228,7 @@ static int GenL_SDL_SetTextureColorMod(lua_State *L)
 static int GenL_SDL_SetTextureColorModFloat(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     float a1 = (float)luaL_checknumber(L, 2);
     float a2 = (float)luaL_checknumber(L, 3);
     float a3 = (float)luaL_checknumber(L, 4);
@@ -8240,8 +8240,8 @@ static int GenL_SDL_SetTextureColorModFloat(lua_State *L)
 static int GenL_SDL_SetTexturePalette(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
-    SDL_Palette *a1 = (SDL_Palette *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Palette");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Palette *a1 = (SDL_Palette *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Palette");
     bool rv = SDL_SetTexturePalette(a0, a1);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8250,7 +8250,7 @@ static int GenL_SDL_SetTexturePalette(lua_State *L)
 static int GenL_SDL_SetTextureScaleMode(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     SDL_ScaleMode a1 = (SDL_ScaleMode)luaL_checkinteger(L, 2);
     bool rv = SDL_SetTextureScaleMode(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8260,7 +8260,7 @@ static int GenL_SDL_SetTextureScaleMode(lua_State *L)
 static int GenL_SDL_SetTrayEntryChecked(lua_State *L)
 {
     (void)L;
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
     bool a1 = (bool)lua_toboolean(L, 2);
     SDL_SetTrayEntryChecked(a0, a1);
     return 0;
@@ -8269,7 +8269,7 @@ static int GenL_SDL_SetTrayEntryChecked(lua_State *L)
 static int GenL_SDL_SetTrayEntryEnabled(lua_State *L)
 {
     (void)L;
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
     bool a1 = (bool)lua_toboolean(L, 2);
     SDL_SetTrayEntryEnabled(a0, a1);
     return 0;
@@ -8278,7 +8278,7 @@ static int GenL_SDL_SetTrayEntryEnabled(lua_State *L)
 static int GenL_SDL_SetTrayEntryLabel(lua_State *L)
 {
     (void)L;
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_LuaCheckHandle(L, 1, "SDL_TrayEntry");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     SDL_SetTrayEntryLabel(a0, a1);
     return 0;
@@ -8287,8 +8287,8 @@ static int GenL_SDL_SetTrayEntryLabel(lua_State *L)
 static int GenL_SDL_SetTrayIcon(lua_State *L)
 {
     (void)L;
-    SDL_Tray *a0 = (SDL_Tray *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Tray");
-    SDL_Surface *a1 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Surface");
+    SDL_Tray *a0 = (SDL_Tray *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Tray");
+    SDL_Surface *a1 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Surface");
     SDL_SetTrayIcon(a0, a1);
     return 0;
 }
@@ -8296,7 +8296,7 @@ static int GenL_SDL_SetTrayIcon(lua_State *L)
 static int GenL_SDL_SetTrayTooltip(lua_State *L)
 {
     (void)L;
-    SDL_Tray *a0 = (SDL_Tray *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Tray");
+    SDL_Tray *a0 = (SDL_Tray *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Tray");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     SDL_SetTrayTooltip(a0, a1);
     return 0;
@@ -8305,7 +8305,7 @@ static int GenL_SDL_SetTrayTooltip(lua_State *L)
 static int GenL_SDL_SetWindowAlwaysOnTop(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool a1 = (bool)lua_toboolean(L, 2);
     bool rv = SDL_SetWindowAlwaysOnTop(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8315,7 +8315,7 @@ static int GenL_SDL_SetWindowAlwaysOnTop(lua_State *L)
 static int GenL_SDL_SetWindowAspectRatio(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     float a1 = (float)luaL_checknumber(L, 2);
     float a2 = (float)luaL_checknumber(L, 3);
     bool rv = SDL_SetWindowAspectRatio(a0, a1, a2);
@@ -8326,7 +8326,7 @@ static int GenL_SDL_SetWindowAspectRatio(lua_State *L)
 static int GenL_SDL_SetWindowBordered(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool a1 = (bool)lua_toboolean(L, 2);
     bool rv = SDL_SetWindowBordered(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8336,7 +8336,7 @@ static int GenL_SDL_SetWindowBordered(lua_State *L)
 static int GenL_SDL_SetWindowFillDocument(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool a1 = (bool)lua_toboolean(L, 2);
     bool rv = SDL_SetWindowFillDocument(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8346,7 +8346,7 @@ static int GenL_SDL_SetWindowFillDocument(lua_State *L)
 static int GenL_SDL_SetWindowFocusable(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool a1 = (bool)lua_toboolean(L, 2);
     bool rv = SDL_SetWindowFocusable(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8356,7 +8356,7 @@ static int GenL_SDL_SetWindowFocusable(lua_State *L)
 static int GenL_SDL_SetWindowFullscreen(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool a1 = (bool)lua_toboolean(L, 2);
     bool rv = SDL_SetWindowFullscreen(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8366,8 +8366,8 @@ static int GenL_SDL_SetWindowFullscreen(lua_State *L)
 static int GenL_SDL_SetWindowFullscreenMode(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
-    const SDL_DisplayMode *a1 = (const SDL_DisplayMode *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_DisplayMode");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
+    const SDL_DisplayMode *a1 = (const SDL_DisplayMode *)GrappleGen_LuaCheckHandle(L, 2, "SDL_DisplayMode");
     bool rv = SDL_SetWindowFullscreenMode(a0, a1);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8376,8 +8376,8 @@ static int GenL_SDL_SetWindowFullscreenMode(lua_State *L)
 static int GenL_SDL_SetWindowIcon(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
-    SDL_Surface *a1 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Surface");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Surface *a1 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Surface");
     bool rv = SDL_SetWindowIcon(a0, a1);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8386,7 +8386,7 @@ static int GenL_SDL_SetWindowIcon(lua_State *L)
 static int GenL_SDL_SetWindowKeyboardGrab(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool a1 = (bool)lua_toboolean(L, 2);
     bool rv = SDL_SetWindowKeyboardGrab(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8396,7 +8396,7 @@ static int GenL_SDL_SetWindowKeyboardGrab(lua_State *L)
 static int GenL_SDL_SetWindowMaximumSize(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     bool rv = SDL_SetWindowMaximumSize(a0, a1, a2);
@@ -8407,7 +8407,7 @@ static int GenL_SDL_SetWindowMaximumSize(lua_State *L)
 static int GenL_SDL_SetWindowMinimumSize(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     bool rv = SDL_SetWindowMinimumSize(a0, a1, a2);
@@ -8418,7 +8418,7 @@ static int GenL_SDL_SetWindowMinimumSize(lua_State *L)
 static int GenL_SDL_SetWindowModal(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool a1 = (bool)lua_toboolean(L, 2);
     bool rv = SDL_SetWindowModal(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8428,7 +8428,7 @@ static int GenL_SDL_SetWindowModal(lua_State *L)
 static int GenL_SDL_SetWindowMouseGrab(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool a1 = (bool)lua_toboolean(L, 2);
     bool rv = SDL_SetWindowMouseGrab(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8438,7 +8438,7 @@ static int GenL_SDL_SetWindowMouseGrab(lua_State *L)
 static int GenL_SDL_SetWindowMouseRect(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -8453,7 +8453,7 @@ static int GenL_SDL_SetWindowMouseRect(lua_State *L)
 static int GenL_SDL_SetWindowOpacity(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     float a1 = (float)luaL_checknumber(L, 2);
     bool rv = SDL_SetWindowOpacity(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8463,8 +8463,8 @@ static int GenL_SDL_SetWindowOpacity(lua_State *L)
 static int GenL_SDL_SetWindowParent(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Window");
     bool rv = SDL_SetWindowParent(a0, a1);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8473,7 +8473,7 @@ static int GenL_SDL_SetWindowParent(lua_State *L)
 static int GenL_SDL_SetWindowPosition(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     bool rv = SDL_SetWindowPosition(a0, a1, a2);
@@ -8484,7 +8484,7 @@ static int GenL_SDL_SetWindowPosition(lua_State *L)
 static int GenL_SDL_SetWindowProgressState(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_ProgressState a1 = (SDL_ProgressState)luaL_checkinteger(L, 2);
     bool rv = SDL_SetWindowProgressState(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8494,7 +8494,7 @@ static int GenL_SDL_SetWindowProgressState(lua_State *L)
 static int GenL_SDL_SetWindowProgressValue(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     float a1 = (float)luaL_checknumber(L, 2);
     bool rv = SDL_SetWindowProgressValue(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8504,7 +8504,7 @@ static int GenL_SDL_SetWindowProgressValue(lua_State *L)
 static int GenL_SDL_SetWindowRelativeMouseMode(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool a1 = (bool)lua_toboolean(L, 2);
     bool rv = SDL_SetWindowRelativeMouseMode(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8514,7 +8514,7 @@ static int GenL_SDL_SetWindowRelativeMouseMode(lua_State *L)
 static int GenL_SDL_SetWindowResizable(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool a1 = (bool)lua_toboolean(L, 2);
     bool rv = SDL_SetWindowResizable(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8524,8 +8524,8 @@ static int GenL_SDL_SetWindowResizable(lua_State *L)
 static int GenL_SDL_SetWindowShape(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
-    SDL_Surface *a1 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Surface");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Surface *a1 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Surface");
     bool rv = SDL_SetWindowShape(a0, a1);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8534,7 +8534,7 @@ static int GenL_SDL_SetWindowShape(lua_State *L)
 static int GenL_SDL_SetWindowSize(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     bool rv = SDL_SetWindowSize(a0, a1, a2);
@@ -8545,7 +8545,7 @@ static int GenL_SDL_SetWindowSize(lua_State *L)
 static int GenL_SDL_SetWindowSurfaceVSync(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     int a1 = (int)luaL_checkinteger(L, 2);
     bool rv = SDL_SetWindowSurfaceVSync(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8555,7 +8555,7 @@ static int GenL_SDL_SetWindowSurfaceVSync(lua_State *L)
 static int GenL_SDL_SetWindowTitle(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     bool rv = SDL_SetWindowTitle(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8565,7 +8565,7 @@ static int GenL_SDL_SetWindowTitle(lua_State *L)
 static int GenL_SDL_ShouldInit(lua_State *L)
 {
     (void)L;
-    SDL_InitState *a0 = (SDL_InitState *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_InitState");
+    SDL_InitState *a0 = (SDL_InitState *)GrappleGen_LuaCheckHandle(L, 1, "SDL_InitState");
     bool rv = SDL_ShouldInit(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8574,7 +8574,7 @@ static int GenL_SDL_ShouldInit(lua_State *L)
 static int GenL_SDL_ShouldQuit(lua_State *L)
 {
     (void)L;
-    SDL_InitState *a0 = (SDL_InitState *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_InitState");
+    SDL_InitState *a0 = (SDL_InitState *)GrappleGen_LuaCheckHandle(L, 1, "SDL_InitState");
     bool rv = SDL_ShouldQuit(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8591,7 +8591,7 @@ static int GenL_SDL_ShowCursor(lua_State *L)
 static int GenL_SDL_ShowMessageBox(lua_State *L)
 {
     (void)L;
-    const SDL_MessageBoxData *a0 = (const SDL_MessageBoxData *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_MessageBoxData");
+    const SDL_MessageBoxData *a0 = (const SDL_MessageBoxData *)GrappleGen_LuaCheckHandle(L, 1, "SDL_MessageBoxData");
     int io1 = (int)luaL_optinteger(L, 2, 0);
     bool rv = SDL_ShowMessageBox(a0, &io1);
     lua_pushboolean(L, (int)rv);
@@ -8605,7 +8605,7 @@ static int GenL_SDL_ShowSimpleMessageBox(lua_State *L)
     SDL_MessageBoxFlags a0 = (SDL_MessageBoxFlags)luaL_checkinteger(L, 1);
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checkstring(L, 3);
-    SDL_Window *a3 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 4, "SDL_Window");
+    SDL_Window *a3 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 4, "SDL_Window");
     bool rv = SDL_ShowSimpleMessageBox(a0, a1, a2, a3);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8614,7 +8614,7 @@ static int GenL_SDL_ShowSimpleMessageBox(lua_State *L)
 static int GenL_SDL_ShowWindow(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_ShowWindow(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8623,7 +8623,7 @@ static int GenL_SDL_ShowWindow(lua_State *L)
 static int GenL_SDL_ShowWindowSystemMenu(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     bool rv = SDL_ShowWindowSystemMenu(a0, a1, a2);
@@ -8634,7 +8634,7 @@ static int GenL_SDL_ShowWindowSystemMenu(lua_State *L)
 static int GenL_SDL_SignalAsyncIOQueue(lua_State *L)
 {
     (void)L;
-    SDL_AsyncIOQueue *a0 = (SDL_AsyncIOQueue *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AsyncIOQueue");
+    SDL_AsyncIOQueue *a0 = (SDL_AsyncIOQueue *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AsyncIOQueue");
     SDL_SignalAsyncIOQueue(a0);
     return 0;
 }
@@ -8642,7 +8642,7 @@ static int GenL_SDL_SignalAsyncIOQueue(lua_State *L)
 static int GenL_SDL_StartTextInput(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_StartTextInput(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8651,7 +8651,7 @@ static int GenL_SDL_StartTextInput(lua_State *L)
 static int GenL_SDL_StartTextInputWithProperties(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_PropertiesID a1 = (SDL_PropertiesID)luaL_checkinteger(L, 2);
     bool rv = SDL_StartTextInputWithProperties(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8661,7 +8661,7 @@ static int GenL_SDL_StartTextInputWithProperties(lua_State *L)
 static int GenL_SDL_StopHapticEffect(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     SDL_HapticEffectID a1 = (SDL_HapticEffectID)luaL_checkinteger(L, 2);
     bool rv = SDL_StopHapticEffect(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8671,7 +8671,7 @@ static int GenL_SDL_StopHapticEffect(lua_State *L)
 static int GenL_SDL_StopHapticEffects(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     bool rv = SDL_StopHapticEffects(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8680,7 +8680,7 @@ static int GenL_SDL_StopHapticEffects(lua_State *L)
 static int GenL_SDL_StopHapticRumble(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     bool rv = SDL_StopHapticRumble(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8689,7 +8689,7 @@ static int GenL_SDL_StopHapticRumble(lua_State *L)
 static int GenL_SDL_StopTextInput(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_StopTextInput(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8698,7 +8698,7 @@ static int GenL_SDL_StopTextInput(lua_State *L)
 static int GenL_SDL_StorageReady(lua_State *L)
 {
     (void)L;
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Storage");
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Storage");
     bool rv = SDL_StorageReady(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8707,14 +8707,14 @@ static int GenL_SDL_StorageReady(lua_State *L)
 static int GenL_SDL_StretchSurface(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
         GenRead_SDL_Rect(L, 2, &tmp1);
         a1 = &tmp1;
     }
-    SDL_Surface *a2 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_Surface");
+    SDL_Surface *a2 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 3, "SDL_Surface");
     SDL_Rect tmp3;
     const SDL_Rect *a3 = NULL;
     if (!lua_isnoneornil(L, 4)) {
@@ -8739,7 +8739,7 @@ static int GenL_SDL_StringToGUID(lua_State *L)
 static int GenL_SDL_SubmitGPUCommandBuffer(lua_State *L)
 {
     (void)L;
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
     bool rv = SDL_SubmitGPUCommandBuffer(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8748,16 +8748,16 @@ static int GenL_SDL_SubmitGPUCommandBuffer(lua_State *L)
 static int GenL_SDL_SubmitGPUCommandBufferAndAcquireFence(lua_State *L)
 {
     (void)L;
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCommandBuffer");
     SDL_GPUFence * rv = SDL_SubmitGPUCommandBufferAndAcquireFence(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_GPUFence");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_GPUFence");
     return 1;
 }
 
 static int GenL_SDL_SurfaceHasAlternateImages(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     bool rv = SDL_SurfaceHasAlternateImages(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8766,7 +8766,7 @@ static int GenL_SDL_SurfaceHasAlternateImages(lua_State *L)
 static int GenL_SDL_SurfaceHasColorKey(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     bool rv = SDL_SurfaceHasColorKey(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8775,7 +8775,7 @@ static int GenL_SDL_SurfaceHasColorKey(lua_State *L)
 static int GenL_SDL_SurfaceHasRLE(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     bool rv = SDL_SurfaceHasRLE(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8784,7 +8784,7 @@ static int GenL_SDL_SurfaceHasRLE(lua_State *L)
 static int GenL_SDL_SyncWindow(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_SyncWindow(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8793,7 +8793,7 @@ static int GenL_SDL_SyncWindow(lua_State *L)
 static int GenL_SDL_TellIO(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint64 rv = SDL_TellIO(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -8802,7 +8802,7 @@ static int GenL_SDL_TellIO(lua_State *L)
 static int GenL_SDL_TextInputActive(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_TextInputActive(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8869,7 +8869,7 @@ static int GenL_SDL_UCS4ToUTF8(lua_State *L)
 static int GenL_SDL_UnbindAudioStream(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     SDL_UnbindAudioStream(a0);
     return 0;
 }
@@ -8877,7 +8877,7 @@ static int GenL_SDL_UnbindAudioStream(lua_State *L)
 static int GenL_SDL_UnloadObject(lua_State *L)
 {
     (void)L;
-    SDL_SharedObject *a0 = (SDL_SharedObject *)SDLStaticGen_LuaTakeHandle(L, 1, "SDL_SharedObject");
+    SDL_SharedObject *a0 = (SDL_SharedObject *)GrappleGen_LuaTakeHandle(L, 1, "SDL_SharedObject");
     SDL_UnloadObject(a0);
     return 0;
 }
@@ -8885,7 +8885,7 @@ static int GenL_SDL_UnloadObject(lua_State *L)
 static int GenL_SDL_UnlockAudioStream(lua_State *L)
 {
     (void)L;
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
     bool rv = SDL_UnlockAudioStream(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8911,7 +8911,7 @@ static int GenL_SDL_UnlockSpinlock(lua_State *L)
 static int GenL_SDL_UnlockSurface(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     SDL_UnlockSurface(a0);
     return 0;
 }
@@ -8919,7 +8919,7 @@ static int GenL_SDL_UnlockSurface(lua_State *L)
 static int GenL_SDL_UnlockTexture(lua_State *L)
 {
     (void)L;
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Texture");
     SDL_UnlockTexture(a0);
     return 0;
 }
@@ -8927,8 +8927,8 @@ static int GenL_SDL_UnlockTexture(lua_State *L)
 static int GenL_SDL_UnmapGPUTransferBuffer(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_GPUTransferBuffer *a1 = (SDL_GPUTransferBuffer *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUTransferBuffer");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUTransferBuffer *a1 = (SDL_GPUTransferBuffer *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUTransferBuffer");
     SDL_UnmapGPUTransferBuffer(a0, a1);
     return 0;
 }
@@ -8936,7 +8936,7 @@ static int GenL_SDL_UnmapGPUTransferBuffer(lua_State *L)
 static int GenL_SDL_UnsetEnvironmentVariable(lua_State *L)
 {
     (void)L;
-    SDL_Environment *a0 = (SDL_Environment *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Environment");
+    SDL_Environment *a0 = (SDL_Environment *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Environment");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     bool rv = SDL_UnsetEnvironmentVariable(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -8953,9 +8953,9 @@ static int GenL_SDL_UpdateGamepads(lua_State *L)
 static int GenL_SDL_UpdateHapticEffect(lua_State *L)
 {
     (void)L;
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Haptic");
     SDL_HapticEffectID a1 = (SDL_HapticEffectID)luaL_checkinteger(L, 2);
-    const SDL_HapticEffect *a2 = (const SDL_HapticEffect *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_HapticEffect");
+    const SDL_HapticEffect *a2 = (const SDL_HapticEffect *)GrappleGen_LuaCheckHandle(L, 3, "SDL_HapticEffect");
     bool rv = SDL_UpdateHapticEffect(a0, a1, a2);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8985,7 +8985,7 @@ static int GenL_SDL_UpdateTrays(lua_State *L)
 static int GenL_SDL_UpdateWindowSurface(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_UpdateWindowSurface(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -8994,7 +8994,7 @@ static int GenL_SDL_UpdateWindowSurface(lua_State *L)
 static int GenL_SDL_UpdateWindowSurfaceRects(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (!lua_isnoneornil(L, 2)) {
@@ -9010,9 +9010,9 @@ static int GenL_SDL_UpdateWindowSurfaceRects(lua_State *L)
 static int GenL_SDL_UploadToGPUBuffer(lua_State *L)
 {
     (void)L;
-    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCopyPass");
-    const SDL_GPUTransferBufferLocation *a1 = (const SDL_GPUTransferBufferLocation *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUTransferBufferLocation");
-    const SDL_GPUBufferRegion *a2 = (const SDL_GPUBufferRegion *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_GPUBufferRegion");
+    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCopyPass");
+    const SDL_GPUTransferBufferLocation *a1 = (const SDL_GPUTransferBufferLocation *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUTransferBufferLocation");
+    const SDL_GPUBufferRegion *a2 = (const SDL_GPUBufferRegion *)GrappleGen_LuaCheckHandle(L, 3, "SDL_GPUBufferRegion");
     bool a3 = (bool)lua_toboolean(L, 4);
     SDL_UploadToGPUBuffer(a0, a1, a2, a3);
     return 0;
@@ -9021,9 +9021,9 @@ static int GenL_SDL_UploadToGPUBuffer(lua_State *L)
 static int GenL_SDL_UploadToGPUTexture(lua_State *L)
 {
     (void)L;
-    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUCopyPass");
-    const SDL_GPUTextureTransferInfo *a1 = (const SDL_GPUTextureTransferInfo *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_GPUTextureTransferInfo");
-    const SDL_GPUTextureRegion *a2 = (const SDL_GPUTextureRegion *)SDLStaticGen_LuaCheckHandle(L, 3, "SDL_GPUTextureRegion");
+    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUCopyPass");
+    const SDL_GPUTextureTransferInfo *a1 = (const SDL_GPUTextureTransferInfo *)GrappleGen_LuaCheckHandle(L, 2, "SDL_GPUTextureTransferInfo");
+    const SDL_GPUTextureRegion *a2 = (const SDL_GPUTextureRegion *)GrappleGen_LuaCheckHandle(L, 3, "SDL_GPUTextureRegion");
     bool a3 = (bool)lua_toboolean(L, 4);
     SDL_UploadToGPUTexture(a0, a1, a2, a3);
     return 0;
@@ -9032,8 +9032,8 @@ static int GenL_SDL_UploadToGPUTexture(lua_State *L)
 static int GenL_SDL_WaitAsyncIOResult(lua_State *L)
 {
     (void)L;
-    SDL_AsyncIOQueue *a0 = (SDL_AsyncIOQueue *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_AsyncIOQueue");
-    SDL_AsyncIOOutcome *a1 = (SDL_AsyncIOOutcome *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_AsyncIOOutcome");
+    SDL_AsyncIOQueue *a0 = (SDL_AsyncIOQueue *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AsyncIOQueue");
+    SDL_AsyncIOOutcome *a1 = (SDL_AsyncIOOutcome *)GrappleGen_LuaCheckHandle(L, 2, "SDL_AsyncIOOutcome");
     Sint32 a2 = (Sint32)luaL_checkinteger(L, 3);
     bool rv = SDL_WaitAsyncIOResult(a0, a1, a2);
     lua_pushboolean(L, (int)rv);
@@ -9043,7 +9043,7 @@ static int GenL_SDL_WaitAsyncIOResult(lua_State *L)
 static int GenL_SDL_WaitEvent(lua_State *L)
 {
     (void)L;
-    SDL_Event *a0 = (SDL_Event *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Event");
+    SDL_Event *a0 = (SDL_Event *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Event");
     bool rv = SDL_WaitEvent(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -9052,7 +9052,7 @@ static int GenL_SDL_WaitEvent(lua_State *L)
 static int GenL_SDL_WaitEventTimeout(lua_State *L)
 {
     (void)L;
-    SDL_Event *a0 = (SDL_Event *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Event");
+    SDL_Event *a0 = (SDL_Event *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Event");
     Sint32 a1 = (Sint32)luaL_checkinteger(L, 2);
     bool rv = SDL_WaitEventTimeout(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -9062,7 +9062,7 @@ static int GenL_SDL_WaitEventTimeout(lua_State *L)
 static int GenL_SDL_WaitForGPUIdle(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
     bool rv = SDL_WaitForGPUIdle(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -9071,8 +9071,8 @@ static int GenL_SDL_WaitForGPUIdle(lua_State *L)
 static int GenL_SDL_WaitForGPUSwapchain(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Window");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Window");
     bool rv = SDL_WaitForGPUSwapchain(a0, a1);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -9081,7 +9081,7 @@ static int GenL_SDL_WaitForGPUSwapchain(lua_State *L)
 static int GenL_SDL_WaitProcess(lua_State *L)
 {
     (void)L;
-    SDL_Process *a0 = (SDL_Process *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Process");
+    SDL_Process *a0 = (SDL_Process *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Process");
     bool a1 = (bool)lua_toboolean(L, 2);
     int io2 = (int)luaL_optinteger(L, 3, 0);
     bool rv = SDL_WaitProcess(a0, a1, &io2);
@@ -9103,7 +9103,7 @@ static int GenL_SDL_WarpMouseGlobal(lua_State *L)
 static int GenL_SDL_WarpMouseInWindow(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     float a1 = (float)luaL_checknumber(L, 2);
     float a2 = (float)luaL_checknumber(L, 3);
     SDL_WarpMouseInWindow(a0, a1, a2);
@@ -9122,7 +9122,7 @@ static int GenL_SDL_WasInit(lua_State *L)
 static int GenL_SDL_WindowHasSurface(lua_State *L)
 {
     (void)L;
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
     bool rv = SDL_WindowHasSurface(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -9131,8 +9131,8 @@ static int GenL_SDL_WindowHasSurface(lua_State *L)
 static int GenL_SDL_WindowSupportsGPUPresentMode(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Window");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Window");
     SDL_GPUPresentMode a2 = (SDL_GPUPresentMode)luaL_checkinteger(L, 3);
     bool rv = SDL_WindowSupportsGPUPresentMode(a0, a1, a2);
     lua_pushboolean(L, (int)rv);
@@ -9142,8 +9142,8 @@ static int GenL_SDL_WindowSupportsGPUPresentMode(lua_State *L)
 static int GenL_SDL_WindowSupportsGPUSwapchainComposition(lua_State *L)
 {
     (void)L;
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_LuaCheckHandle(L, 2, "SDL_Window");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_LuaCheckHandle(L, 1, "SDL_GPUDevice");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Window");
     SDL_GPUSwapchainComposition a2 = (SDL_GPUSwapchainComposition)luaL_checkinteger(L, 3);
     bool rv = SDL_WindowSupportsGPUSwapchainComposition(a0, a1, a2);
     lua_pushboolean(L, (int)rv);
@@ -9153,7 +9153,7 @@ static int GenL_SDL_WindowSupportsGPUSwapchainComposition(lua_State *L)
 static int GenL_SDL_WriteIO(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     size_t len1 = 0;
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checklstring(L, 2, &len1);
     size_t rv = SDL_WriteIO(a0, (const void *)a1, (size_t)len1);
@@ -9164,7 +9164,7 @@ static int GenL_SDL_WriteIO(lua_State *L)
 static int GenL_SDL_WriteS16BE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     bool rv = SDL_WriteS16BE(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -9174,7 +9174,7 @@ static int GenL_SDL_WriteS16BE(lua_State *L)
 static int GenL_SDL_WriteS16LE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     bool rv = SDL_WriteS16LE(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -9184,7 +9184,7 @@ static int GenL_SDL_WriteS16LE(lua_State *L)
 static int GenL_SDL_WriteS32BE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint32 a1 = (Sint32)luaL_checkinteger(L, 2);
     bool rv = SDL_WriteS32BE(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -9194,7 +9194,7 @@ static int GenL_SDL_WriteS32BE(lua_State *L)
 static int GenL_SDL_WriteS32LE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint32 a1 = (Sint32)luaL_checkinteger(L, 2);
     bool rv = SDL_WriteS32LE(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -9204,7 +9204,7 @@ static int GenL_SDL_WriteS32LE(lua_State *L)
 static int GenL_SDL_WriteS64BE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint64 a1 = (Sint64)luaL_checkinteger(L, 2);
     bool rv = SDL_WriteS64BE(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -9214,7 +9214,7 @@ static int GenL_SDL_WriteS64BE(lua_State *L)
 static int GenL_SDL_WriteS64LE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint64 a1 = (Sint64)luaL_checkinteger(L, 2);
     bool rv = SDL_WriteS64LE(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -9224,7 +9224,7 @@ static int GenL_SDL_WriteS64LE(lua_State *L)
 static int GenL_SDL_WriteS8(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Sint8 a1 = (Sint8)luaL_checkinteger(L, 2);
     bool rv = SDL_WriteS8(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -9234,7 +9234,7 @@ static int GenL_SDL_WriteS8(lua_State *L)
 static int GenL_SDL_WriteStorageFile(lua_State *L)
 {
     (void)L;
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Storage");
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Storage");
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     size_t len2 = 0;
     const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checklstring(L, 3, &len2);
@@ -9246,7 +9246,7 @@ static int GenL_SDL_WriteStorageFile(lua_State *L)
 static int GenL_SDL_WriteSurfacePixel(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     Uint8 a3 = (Uint8)luaL_checkinteger(L, 4);
@@ -9261,7 +9261,7 @@ static int GenL_SDL_WriteSurfacePixel(lua_State *L)
 static int GenL_SDL_WriteSurfacePixelFloat(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     float a3 = (float)luaL_checknumber(L, 4);
@@ -9276,7 +9276,7 @@ static int GenL_SDL_WriteSurfacePixelFloat(lua_State *L)
 static int GenL_SDL_WriteU16BE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Uint16 a1 = (Uint16)luaL_checkinteger(L, 2);
     bool rv = SDL_WriteU16BE(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -9286,7 +9286,7 @@ static int GenL_SDL_WriteU16BE(lua_State *L)
 static int GenL_SDL_WriteU16LE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Uint16 a1 = (Uint16)luaL_checkinteger(L, 2);
     bool rv = SDL_WriteU16LE(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -9296,7 +9296,7 @@ static int GenL_SDL_WriteU16LE(lua_State *L)
 static int GenL_SDL_WriteU32BE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Uint32 a1 = (Uint32)luaL_checkinteger(L, 2);
     bool rv = SDL_WriteU32BE(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -9306,7 +9306,7 @@ static int GenL_SDL_WriteU32BE(lua_State *L)
 static int GenL_SDL_WriteU32LE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Uint32 a1 = (Uint32)luaL_checkinteger(L, 2);
     bool rv = SDL_WriteU32LE(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -9316,7 +9316,7 @@ static int GenL_SDL_WriteU32LE(lua_State *L)
 static int GenL_SDL_WriteU64BE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Uint64 a1 = (Uint64)luaL_checkinteger(L, 2);
     bool rv = SDL_WriteU64BE(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -9326,7 +9326,7 @@ static int GenL_SDL_WriteU64BE(lua_State *L)
 static int GenL_SDL_WriteU64LE(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Uint64 a1 = (Uint64)luaL_checkinteger(L, 2);
     bool rv = SDL_WriteU64LE(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -9336,7 +9336,7 @@ static int GenL_SDL_WriteU64LE(lua_State *L)
 static int GenL_SDL_WriteU8(lua_State *L)
 {
     (void)L;
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
     Uint8 a1 = (Uint8)luaL_checkinteger(L, 2);
     bool rv = SDL_WriteU8(a0, a1);
     lua_pushboolean(L, (int)rv);
@@ -9372,7 +9372,7 @@ static int GenL_SDL_hid_ble_scan(lua_State *L)
 static int GenL_SDL_hid_close(lua_State *L)
 {
     (void)L;
-    SDL_hid_device *a0 = (SDL_hid_device *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_hid_device");
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_LuaCheckHandle(L, 1, "SDL_hid_device");
     int rv = SDL_hid_close(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -9392,7 +9392,7 @@ static int GenL_SDL_hid_enumerate(lua_State *L)
     unsigned short a0 = (unsigned short)luaL_checkinteger(L, 1);
     unsigned short a1 = (unsigned short)luaL_checkinteger(L, 2);
     SDL_hid_device_info * rv = SDL_hid_enumerate(a0, a1);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_hid_device_info");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_hid_device_info");
     return 1;
 }
 
@@ -9407,7 +9407,7 @@ static int GenL_SDL_hid_exit(lua_State *L)
 static int GenL_SDL_hid_free_enumeration(lua_State *L)
 {
     (void)L;
-    SDL_hid_device_info *a0 = (SDL_hid_device_info *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_hid_device_info");
+    SDL_hid_device_info *a0 = (SDL_hid_device_info *)GrappleGen_LuaCheckHandle(L, 1, "SDL_hid_device_info");
     SDL_hid_free_enumeration(a0);
     return 0;
 }
@@ -9415,16 +9415,16 @@ static int GenL_SDL_hid_free_enumeration(lua_State *L)
 static int GenL_SDL_hid_get_device_info(lua_State *L)
 {
     (void)L;
-    SDL_hid_device *a0 = (SDL_hid_device *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_hid_device");
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_LuaCheckHandle(L, 1, "SDL_hid_device");
     SDL_hid_device_info * rv = SDL_hid_get_device_info(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_hid_device_info");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_hid_device_info");
     return 1;
 }
 
 static int GenL_SDL_hid_get_properties(lua_State *L)
 {
     (void)L;
-    SDL_hid_device *a0 = (SDL_hid_device *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_hid_device");
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_LuaCheckHandle(L, 1, "SDL_hid_device");
     SDL_PropertiesID rv = SDL_hid_get_properties(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -9443,14 +9443,14 @@ static int GenL_SDL_hid_open_path(lua_State *L)
     (void)L;
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
     SDL_hid_device * rv = SDL_hid_open_path(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "SDL_hid_device");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_hid_device");
     return 1;
 }
 
 static int GenL_SDL_hid_send_feature_report(lua_State *L)
 {
     (void)L;
-    SDL_hid_device *a0 = (SDL_hid_device *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_hid_device");
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_LuaCheckHandle(L, 1, "SDL_hid_device");
     size_t len1 = 0;
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checklstring(L, 2, &len1);
     int rv = SDL_hid_send_feature_report(a0, (const void *)a1, (size_t)len1);
@@ -9461,7 +9461,7 @@ static int GenL_SDL_hid_send_feature_report(lua_State *L)
 static int GenL_SDL_hid_set_nonblocking(lua_State *L)
 {
     (void)L;
-    SDL_hid_device *a0 = (SDL_hid_device *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_hid_device");
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_LuaCheckHandle(L, 1, "SDL_hid_device");
     int a1 = (int)luaL_checkinteger(L, 2);
     int rv = SDL_hid_set_nonblocking(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -9471,7 +9471,7 @@ static int GenL_SDL_hid_set_nonblocking(lua_State *L)
 static int GenL_SDL_hid_write(lua_State *L)
 {
     (void)L;
-    SDL_hid_device *a0 = (SDL_hid_device *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_hid_device");
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_LuaCheckHandle(L, 1, "SDL_hid_device");
     size_t len1 = 0;
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checklstring(L, 2, &len1);
     int rv = SDL_hid_write(a0, (const void *)a1, (size_t)len1);
@@ -9531,8 +9531,8 @@ static int GenL_SDL_utf8strnlen(lua_State *L)
     return 1;
 }
 
-int SDLStaticGen_OpenLua_sdl(lua_State *L);
-int SDLStaticGen_OpenLua_sdl(lua_State *L)
+int GrappleGen_OpenLua_sdl(lua_State *L);
+int GrappleGen_OpenLua_sdl(lua_State *L)
 {
     lua_createtable(L, 0, 874);
     lua_pushcfunction(L, GenL_SDL_AcquireCameraFrame);

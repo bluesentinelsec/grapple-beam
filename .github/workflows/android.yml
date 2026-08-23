@@ -35,32 +35,32 @@ jobs:
 
       - name: Build Debug AAR and consumer APK
         run: |
-          bash android/gradlew -p android --no-daemon :SDL3_static_extensions:assembleDebug
+          bash android/gradlew -p android --no-daemon :grapple:assembleDebug
           bash android/gradlew -p android --no-daemon :test-app:assembleDebug
 
       - name: Build Release AAR and consumer APK
         run: |
-          bash android/gradlew -p android --no-daemon :SDL3_static_extensions:assembleRelease
+          bash android/gradlew -p android --no-daemon :grapple:assembleRelease
           bash android/gradlew -p android --no-daemon :test-app:assembleRelease
 
       - name: Verify Release AAR
         run: |
           set -euo pipefail
-          aar=android/SDL3_static_extensions/build/outputs/aar/SDL3_static_extensions-release.aar
+          aar=android/grapple/build/outputs/aar/grapple-release.aar
           test -f "${aar}"
           unzip -Z1 "${aar}" > aar-entries.txt
           for abi in armeabi-v7a arm64-v8a x86_64; do
-            grep -qx "prefab/modules/SDL3_static_extensions/libs/android.${abi}/libSDL3_static_extensions.so" aar-entries.txt
-            grep -qx "jni/${abi}/libSDL3_static_extensions.so" aar-entries.txt
+            grep -qx "prefab/modules/grapple/libs/android.${abi}/libgrapple.so" aar-entries.txt
+            grep -qx "jni/${abi}/libgrapple.so" aar-entries.txt
           done
-          grep -qx "prefab/modules/SDL3_static_extensions/include/SDL3_static_extensions/version.hpp" aar-entries.txt
+          grep -qx "prefab/modules/grapple/include/grapple/version.hpp" aar-entries.txt
           version="$(tr -d '[:space:]' < VERSION | sed 's/^v//;s/^V//;s/#.*//')"
           unzip -p "${aar}" prefab/prefab.json | grep -q "\"version\"[[:space:]]*:[[:space:]]*\"${version}\""
 
           # The headers a consumer actually includes. Shipping only
           # version.hpp is why nobody noticed the library was empty.
-          for header in SDLStatic/engine.h SDLStatic/bindings.h SDL3/SDL.h; do
-            grep -qx "prefab/modules/SDL3_static_extensions/include/${header}" aar-entries.txt
+          for header in grapple/engine.h grapple/bindings.h SDL3/SDL.h; do
+            grep -qx "prefab/modules/grapple/include/${header}" aar-entries.txt
           done
 
           # SDL3's Java glue. Without org.libsdl.app.SDLActivity in the AAR,
@@ -78,15 +78,15 @@ jobs:
           # And the engine itself. ABIs, paths and version were all true of a
           # library containing one object file, so check for the code.
           mkdir -p aar-check && unzip -o -q "${aar}" -d aar-check
-          so="aar-check/jni/arm64-v8a/libSDL3_static_extensions.so"
+          so="aar-check/jni/arm64-v8a/libgrapple.so"
           size="$(stat -c%s "${so}")"
           if [ "${size}" -lt 5000000 ]; then
             echo "${so} is ${size} bytes — that is a placeholder, not the SDK" >&2
             exit 1
           fi
           nm -D --defined-only "${so}" > aar-symbols.txt
-          for symbol in SDLStatic_CreateEngine SDLStatic_ActorSpawn \
-                        SDLStatic_OpenLuaBindings SDLStatic_CreateGui SDL_CreateWindow; do
+          for symbol in Grapple_CreateEngine Grapple_ActorSpawn \
+                        Grapple_OpenLuaBindings Grapple_CreateGui SDL_CreateWindow; do
             if ! grep -qw "${symbol}" aar-symbols.txt; then
               echo "Missing ${symbol} — the AAR is not carrying the engine" >&2
               exit 1
@@ -113,9 +113,9 @@ jobs:
         run: |
           set -euo pipefail
           version="$(tr -d '[:space:]' < VERSION | sed 's/^v//;s/^V//;s/#.*//')"
-          stem="SDL3-static-extensions-android-release-${version}"
+          stem="grapple-beam-android-release-${version}"
           mkdir -p dist
-          cp android/SDL3_static_extensions/build/outputs/aar/SDL3_static_extensions-release.aar "dist/${stem}.aar"
+          cp android/grapple/build/outputs/aar/grapple-release.aar "dist/${stem}.aar"
           echo "artifact_name=${stem}" >> "${GITHUB_OUTPUT}"
           echo "artifact_path=dist/${stem}.aar" >> "${GITHUB_OUTPUT}"
 

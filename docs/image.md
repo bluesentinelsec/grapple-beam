@@ -3,7 +3,7 @@ title: Image
 description: "Image loading and saving for 13 formats with fully static codecs — SDL3_image without the shared-library tail."
 ---
 
-# Image — `SDLStatic::Image`
+# Image — `Grapple::Image`
 
 A static-link-first port of SDL3_image (upstream base 3.4.4). The API is
 SDL3_image-compatible for everything supported; removed APIs are deleted
@@ -11,7 +11,7 @@ from the header so unsupported usage fails at **compile time**, never at
 runtime.
 
 ```cmake
-target_link_libraries(your_game PRIVATE SDLStatic::Image)
+target_link_libraries(your_game PRIVATE Grapple::Image)
 ```
 
 ```c
@@ -22,7 +22,7 @@ SDL_Texture *tex  = IMG_LoadTexture(renderer, "tiles.png");
 IMG_SavePNG(screenshot, "shot.png");
 
 /* from a VFS-mounted archive: */
-SDL_Surface *s = IMG_Load_IO(SDLStatic_OpenVFSRead("/assets/hero.png"), true);
+SDL_Surface *s = IMG_Load_IO(Grapple_OpenVFSRead("/assets/hero.png"), true);
 ```
 
 ## Format support

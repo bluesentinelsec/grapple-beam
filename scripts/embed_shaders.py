@@ -39,14 +39,14 @@ BUNDLES = (
     Bundle(
         source_dir=REPO / "light" / "shaders",
         output=REPO / "light" / "src" / "light_shaders.h",
-        guard="SDLSTATIC_LIGHT_SHADERS_H",
+        guard="GRAPPLE_LIGHT_SHADERS_H",
         blurb="The GLSL sources in light/shaders/ as string literals, so a game ships\n"
         " * one binary with no shader files beside it.",
     ),
     Bundle(
         source_dir=REPO / "engine" / "shaders",
         output=REPO / "engine" / "src" / "post_shaders.h",
-        guard="SDLSTATIC_ENGINE_POST_SHADERS_H",
+        guard="GRAPPLE_ENGINE_POST_SHADERS_H",
         blurb="The GLSL sources in engine/shaders/ as string literals: the\n"
         " * post-processing chain that bloom, CRT, chromatic aberration and FXAA\n"
         " * are made of.",

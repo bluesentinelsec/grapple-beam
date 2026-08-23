@@ -5,7 +5,7 @@ repo, three ways:
 
 | Surface | Output | What you get |
 |---|---|---|
-| C++ | `cpp/include/sdlstatic/gen/*.h` | RAII owners for every resource with a create/destroy pair, `Status`/`Result` wrappers for fallible functions, namespace aliases for everything else — 100% of the parsed API accounted for, `namespace sdlstatic::{sdl,mix,img,ttf,net,vfs,b2,nk,json,ext}` |
+| C++ | `cpp/include/grapple/gen/*.h` | RAII owners for every resource with a create/destroy pair, `Status`/`Result` wrappers for fallible functions, namespace aliases for everything else — 100% of the parsed API accounted for, `namespace grapple::{sdl,mix,img,ttf,net,vfs,b2,nk,json,ext}` |
 | Lua | `bindings/generated/gen_lua_*.c` | Flat global tables mirroring C names minus prefixes (`SDL.CreateSurface`, `B2.World_Step`, `JSON.Parse`) plus enum constants; owned handles are GC-managed userdata |
 | Ruby | `bindings/generated/gen_ruby_*.c` | Same surface as Lua on mruby modules; owned handles are GC-managed Data objects |
 
@@ -34,11 +34,11 @@ never depend on Python, and diffs are reviewable.
 
 - `parse.py` — regex scanner for the rigid per-library declaration
   macros (`SDL_DECLSPEC`/`SDLCALL`, `PHYSFS_DECL`, `B2_API`, `NK_API`,
-  `CJSON_PUBLIC`, plain `extern` for SDLStatic modules). Tracks
+  `CJSON_PUBLIC`, plain `extern` for Grapple modules). Tracks
   `#if` nesting so platform-gated declarations and Nuklear config
   sections outside our pinned `NK_INCLUDE_*` set are dropped
   (`check_nk_config` fails generation if the tool's model of that set
-  drifts from `gui/include/SDLStatic/nuklear.h`).
+  drifts from `gui/include/grapple/nuklear.h`).
 - `classify.py` — resolves typedefs, categorizes every type
   (scalar/enum/string/handle/POD/callback), and produces one plan per
   function per surface. Lua and Ruby share the same plans, so their
@@ -60,7 +60,7 @@ never depend on Python, and diffs are reviewable.
 - Every other pointer is **borrowed** — valid as long as its owner.
 - Box2D's by-value ids marshal as plain tables/hashes; destroy them
   explicitly (`B2.DestroyWorld`), exactly as in C. The C++ wrappers and
-  the curated `SDLStatic` layer provide RAII/GC alternatives.
+  the curated `Grapple` layer provide RAII/GC alternatives.
 
 ## Skipped functions
 
@@ -68,6 +68,6 @@ Scripts skip (with the reason recorded in COVERAGE.md): callbacks,
 varargs, raw-memory/threading families (deliberate policy — scripts get
 crashes, not data races), and types that cannot round-trip a script
 boundary (unions like `SDL_Event`, pointer-to-pointer, sized output
-buffers). The curated hand-written `SDLStatic` module covers the
+buffers). The curated hand-written `Grapple` module covers the
 game-loop essentials among those (event polling, input); the full C API
 remains available to C and C++.

@@ -1,7 +1,7 @@
 """C++ emitter: RAII classes + Status wrappers + aliases per library.
 
-Output: cpp/include/sdlstatic/gen/<key>.h under namespace
-sdlstatic::<ns>. Generated classes never collide with the hand-written
+Output: cpp/include/grapple/gen/<key>.h under namespace
+grapple::<ns>. Generated classes never collide with the hand-written
 ergonomic layer (different namespaces); the C API stays fully reachable.
 
 Everything is emitted from the parsed headers' own raw declaration text,
@@ -31,7 +31,7 @@ NAMESPACES = {
     "yaml": "yaml",
     "mog": "mog",
     "cjson": "json",
-    "sdlstatic": "ext",
+    "grapple": "ext",
 }
 
 _CPP_KEYWORDS = {
@@ -216,7 +216,7 @@ class _ClassBuilder:
 
 def emit_cpp(manifest: Manifest, repo: Path) -> dict[str, dict[str, CppPlan]]:
     tt = TypeTable(manifest)
-    outdir = repo / "cpp" / "include" / "sdlstatic" / "gen"
+    outdir = repo / "cpp" / "include" / "grapple" / "gen"
     outdir.mkdir(parents=True, exist_ok=True)
     outcomes: dict[str, dict[str, CppPlan]] = {}
     umbrella_includes: list[str] = []
@@ -248,20 +248,20 @@ def emit_cpp(manifest: Manifest, repo: Path) -> dict[str, dict[str, CppPlan]]:
         w("// Regenerate: python3 -m tools.bindgen (see tools/bindgen/README.md)")
         w(f"// Library: {lib.title}")
         w("// clang-format off")
-        guard = f"SDLSTATIC_CPP_GEN_{lib.key.upper()}_H_"
+        guard = f"GRAPPLE_CPP_GEN_{lib.key.upper()}_H_"
         w(f"#ifndef {guard}")
         w(f"#define {guard}")
         w("")
         for inc in ["<SDL3/SDL.h>"] + lib.includes:
             if inc != "<SDL3/SDL.h>" or lib.key == "sdl":
                 w(f"#include {inc}")
-        if lib.key == "sdlstatic":
-            for header in sorted(_sdlstatic_headers(manifest)):
-                w(f"#include <SDLStatic/{header}>")
+        if lib.key == "grapple":
+            for header in sorted(_grapple_headers(manifest)):
+                w(f"#include <grapple/{header}>")
         w("")
-        w('#include "sdlstatic/status.h"')
+        w('#include "grapple/status.h"')
         w("")
-        w("namespace sdlstatic {")
+        w("namespace grapple {")
         w(f"namespace {ns} {{")
         w("")
         for b in builders:
@@ -287,13 +287,13 @@ def emit_cpp(manifest: Manifest, repo: Path) -> dict[str, dict[str, CppPlan]]:
                 w(f"inline constexpr auto& {fname} = ::{fn.name};")
             w("")
         w(f"}}  // namespace {ns}")
-        w("}  // namespace sdlstatic")
+        w("}  // namespace grapple")
         w("")
         w(f"#endif  // {guard}")
         w("// clang-format on")
         w("")
         (outdir / f"{lib.key}.h").write_text("\n".join(lines), encoding="utf-8")
-        umbrella_includes.append(f'#include "sdlstatic/gen/{lib.key}.h"')
+        umbrella_includes.append(f'#include "grapple/gen/{lib.key}.h"')
 
     guarded = []
     for inc in umbrella_includes:
@@ -303,7 +303,7 @@ def emit_cpp(manifest: Manifest, repo: Path) -> dict[str, dict[str, CppPlan]]:
             guarded.append(inc)
             guarded.append("#endif")
         elif "/mog.h" in inc:
-            # HTTP is optional (SDLSTATIC_BUILD_HTTP).
+            # HTTP is optional (GRAPPLE_BUILD_HTTP).
             guarded.append("#if __has_include(<mog/mog_c.h>)")
             guarded.append(inc)
             guarded.append("#endif")
@@ -313,21 +313,21 @@ def emit_cpp(manifest: Manifest, repo: Path) -> dict[str, dict[str, CppPlan]]:
         "// GENERATED FILE - DO NOT EDIT.",
         "// Umbrella for the generated C++ surface: every parsed C API,",
         "// as RAII owners, Status wrappers, or namespace aliases.",
-        "#ifndef SDLSTATIC_CPP_GEN_GEN_H_",
-        "#define SDLSTATIC_CPP_GEN_GEN_H_",
+        "#ifndef GRAPPLE_CPP_GEN_GEN_H_",
+        "#define GRAPPLE_CPP_GEN_GEN_H_",
         "",
         *guarded,
         "",
-        "#endif  // SDLSTATIC_CPP_GEN_GEN_H_",
+        "#endif  // GRAPPLE_CPP_GEN_GEN_H_",
         "",
     ]
     (outdir / "gen.h").write_text("\n".join(umbrella), encoding="utf-8")
     return outcomes
 
 
-def _sdlstatic_headers(manifest: Manifest) -> set[str]:
+def _grapple_headers(manifest: Manifest) -> set[str]:
     return {
         fn.header
-        for fn in manifest.libraries["sdlstatic"].functions.values()
+        for fn in manifest.libraries["grapple"].functions.values()
         if fn.header
     }

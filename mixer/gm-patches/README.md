@@ -1,6 +1,6 @@
 # Generated General MIDI patch set
 
-TiMidity — the statically linked MIDI soft-synth in `SDLStatic::Mixer` —
+TiMidity — the statically linked MIDI soft-synth in `Grapple::Mixer` —
 needs GF1/GUS instrument patches at runtime to render audio. Third-party
 patch collections (freepats, eawpats) carry GPL or unclear licensing, so
 this set is **generated from scratch** by `scripts/gen_gus_patches.py`:

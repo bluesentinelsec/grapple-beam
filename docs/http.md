@@ -14,13 +14,13 @@ verifies even in a `FROM scratch` container.
 
 Two ways to use it:
 
-## C API — `SDLStatic::Http`
+## C API — `Grapple::Http`
 
 mog's C API sources are compiled straight into a static library against
 the static mog core:
 
 ```cmake
-target_link_libraries(your_game PRIVATE SDLStatic::Http)
+target_link_libraries(your_game PRIVATE Grapple::Http)
 ```
 
 ```c
@@ -30,7 +30,7 @@ mog_response *resp = mog_get("https://api.example.com/leaderboard");
 if (resp != NULL && mog_response_ok(resp) && mog_response_status(resp) == 200) {
     size_t len = 0;
     const char *body = mog_response_body(resp, &len);
-    /* parse with SDLStatic::Formats (cJSON) */
+    /* parse with Grapple::Formats (cJSON) */
 }
 mog_response_free(resp);
 ```

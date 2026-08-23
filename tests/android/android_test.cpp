@@ -1,15 +1,15 @@
 /**
  * @file android_test.cpp
- * @brief End-to-end Android tests consuming the SDL3-static-extensions Prefab package.
+ * @brief End-to-end Android tests consuming the grapple-beam Prefab package.
  */
 
-#include <SDL3_static_extensions/version.hpp>
+#include <grapple/version.hpp>
 
-#include <SDLStatic/engine.h>
-#include <SDLStatic/engine_actor.h>
-#include <SDLStatic/engine_config.h>
-#include <SDLStatic/bindings.h>
-#include <SDLStatic/lua.h>
+#include <grapple/engine.h>
+#include <grapple/engine_actor.h>
+#include <grapple/engine_config.h>
+#include <grapple/bindings.h>
+#include <grapple/lua.h>
 
 #include <SDL3/SDL.h>
 
@@ -21,7 +21,7 @@
 namespace
 {
 
-constexpr const char *kLogTag = "SDL3-static-extensions-android-test";
+constexpr const char *kLogTag = "grapple-beam-android-test";
 
 class TestRun
 {
@@ -51,12 +51,12 @@ class TestRun
 int RunTests()
 {
     TestRun run;
-    const std::string_view version = SDL3_static_extensions::Version();
+    const std::string_view version = grapple::Version();
     run.Check(!version.empty(), "Prefab package exports the generated version API");
-    const std::string major_prefix = std::to_string(SDL3_static_extensions::kVersionMajor) + ".";
+    const std::string major_prefix = std::to_string(grapple::kVersionMajor) + ".";
     run.Check(version.substr(0, major_prefix.size()) == major_prefix,
               "Version() matches the compiled major version");
-    run.Check(SDL3_static_extensions::kVersionMajor >= 0, "major version is non-negative");
+    run.Check(grapple::kVersionMajor >= 0, "major version is non-negative");
 
     // The engine's surface, called rather than merely linked. Checking the
     // version string alone is how this test passed for months against an
@@ -65,36 +65,36 @@ int RunTests()
     // What it deliberately does not do is create an engine. SDL's Android
     // backend expects to be driven by org.libsdl.app.SDLActivity — it owns
     // the surface, the looper and the main thread — and this harness is a
-    // plain Activity calling in over JNI, where SDLStatic_CreateEngine
+    // plain Activity calling in over JNI, where Grapple_CreateEngine
     // blocks waiting for plumbing that is not there. A game shipping this
     // AAR would subclass SDLActivity and be fine; proving that needs an
     // SDLActivity-based harness, which is its own piece of work.
-    SDLStatic_EngineConfig *config = SDLStatic_ConfigCreate();
+    Grapple_EngineConfig *config = Grapple_ConfigCreate();
     run.Check(config != nullptr, "the engine's builders are in the package");
     if (config != nullptr)
     {
-        SDLStatic_ConfigSetHeadless(config, true);
-        SDLStatic_ConfigSetDesignSize(config, 640, 360);
-        SDLStatic_ConfigSetTitle(config, "android");
-        SDLStatic_ConfigDestroy(config);
+        Grapple_ConfigSetHeadless(config, true);
+        Grapple_ConfigSetDesignSize(config, 640, 360);
+        Grapple_ConfigSetTitle(config, "android");
+        Grapple_ConfigDestroy(config);
     }
 
-    SDLStatic_ActorDef *def = SDLStatic_ActorDefCreate();
+    Grapple_ActorDef *def = Grapple_ActorDefCreate();
     run.Check(def != nullptr, "actor definitions can be built");
     if (def != nullptr)
     {
-        SDLStatic_ActorDefSetType(def, "android");
-        SDLStatic_ActorDefDestroy(def);
+        Grapple_ActorDefSetType(def, "android");
+        Grapple_ActorDefDestroy(def);
     }
 
     // The script surface: Lua and its bindings are a large part of what the
     // package is for, and the largest part of what a link error would drop.
     // None of it needs a window.
-    lua_State *lua = SDLStatic_CreateLuaState();
+    lua_State *lua = Grapple_CreateLuaState();
     run.Check(lua != nullptr, "a Lua state can be created");
     if (lua != nullptr)
     {
-        run.Check(SDLStatic_OpenLuaBindings(lua), "the generated bindings load");
+        run.Check(Grapple_OpenLuaBindings(lua), "the generated bindings load");
         lua_close(lua);
     }
 

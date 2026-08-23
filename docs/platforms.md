@@ -27,7 +27,7 @@ executable picks up a non-OS shared dependency.
 
 ## Platform-specific notes
 
-- **Web:** `SDLStatic::Net` does not exist in Emscripten builds
+- **Web:** `Grapple::Net` does not exist in Emscripten builds
   (upstream SDL3_net only offers a stub there, and this project does not
   ship stubs). Use [mog](http.html) for browser-side HTTP via Fetch.
   Box2D builds with SIMD (`-msimd128`).
@@ -44,7 +44,7 @@ executable picks up a non-OS shared dependency.
   SDL_SetWindowSize(window, w, h);
   ```
 - **File dialogs on web:** SDL has no Emscripten dialog backend;
-  [`SDLStatic::Extras`](extras.html) supplies one over browser APIs. Opening
+  [`Grapple::Extras`](extras.html) supplies one over browser APIs. Opening
   works through a file input; saving downloads the file, since a page cannot
   write to disk.
 - **Android:** consumed as a Prefab AAR; the emulator CI job runs the

@@ -17,7 +17,7 @@ were not imported.
 ## Build configuration
 
 Unity build: the single `Source/SheenBidi.c` TU with
-`SB_CONFIG_UNITY=1`, compiled inside `SDLStatic_TTF` with
+`SB_CONFIG_UNITY=1`, compiled inside `Grapple_TTF` with
 `Headers/` and `Source/` on the private include path.
 
 ## Why
@@ -25,8 +25,8 @@ Unity build: the single `Source/SheenBidi.c` TU with
 Implements the Unicode Bidirectional Algorithm (UAX #9). HarfBuzz
 shapes one directional run at a time; SheenBidi splits mixed
 right-to-left / left-to-right paragraphs into those runs. Exposed
-through the original `<SDLStatic/bidi.h>` helper
-(`SDLStatic_BidiItemize`, `SDLStatic_BidiBaseIsRTL`), which returns
+through the original `<grapple/bidi.h>` helper
+(`Grapple_BidiItemize`, `Grapple_BidiBaseIsRTL`), which returns
 visual-order runs ready to feed `TTF_SetTextDirection`.
 
 Chosen over FriBidi specifically for licensing: FriBidi is LGPL, which

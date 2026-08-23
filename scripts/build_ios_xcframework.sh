@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build SDL3-static-extensions.xcframework: static device (arm64) and simulator
+# Build grapple-beam.xcframework: static device (arm64) and simulator
 # (arm64/x86_64) libraries plus public headers and the generated version.hpp.
 set -euo pipefail
 
@@ -7,10 +7,10 @@ repository_root="$(cd "$(dirname "$0")/.." && pwd)"
 configuration="${1:-Release}"
 configuration_lower="$(printf '%s' "${configuration}" | tr '[:upper:]' '[:lower:]')"
 output_root="${2:-${repository_root}/build/ios/${configuration_lower}}"
-deployment_target="${SDL3_STATIC_EXTENSIONS_IOS_DEPLOYMENT_TARGET:-13.0}"
+deployment_target="${GRAPPLE_BEAM_IOS_DEPLOYMENT_TARGET:-13.0}"
 # Simulator architectures. Release/packaging builds keep the fat default;
 # CI iteration overrides to arm64-only for speed (see .github/workflows/ios.yml).
-simulator_archs="${SDL3_STATIC_EXTENSIONS_IOS_SIMULATOR_ARCHS:-arm64;x86_64}"
+simulator_archs="${GRAPPLE_BEAM_IOS_SIMULATOR_ARCHS:-arm64;x86_64}"
 
 case "${configuration}" in
     Debug|Release) ;;
@@ -29,8 +29,8 @@ device_build="${output_root}/iphoneos"
 simulator_build="${output_root}/iphonesimulator"
 combined_root="${output_root}/combined"
 headers_root="${output_root}/headers"
-xcframework="${output_root}/SDL3-static-extensions.xcframework"
-archive="${output_root}/SDL3-static-extensions-ios-xcframework-${configuration_lower}-${version}.zip"
+xcframework="${output_root}/grapple-beam.xcframework"
+archive="${output_root}/grapple-beam-ios-xcframework-${configuration_lower}-${version}.zip"
 
 for tool in cmake xcodebuild xcrun libtool lipo ditto; do
     command -v "${tool}" >/dev/null 2>&1 || {
@@ -56,12 +56,12 @@ configure_and_build() {
         -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO \
         -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED=NO \
         -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY= \
-        -DSDL3_STATIC_EXTENSIONS_BUILD_APP=OFF \
-        -DSDL3_STATIC_EXTENSIONS_BUILD_TESTS=OFF \
-        -DSDL3_STATIC_EXTENSIONS_BUILD_BENCHMARKS=OFF \
-        -DSDL3_STATIC_EXTENSIONS_WITH_CLI11=OFF \
-        -DSDL3_STATIC_EXTENSIONS_WITH_JSON=OFF \
-        -DSDL3_STATIC_EXTENSIONS_WITH_SPDLOG=OFF
+        -DGRAPPLE_BEAM_BUILD_APP=OFF \
+        -DGRAPPLE_BEAM_BUILD_TESTS=OFF \
+        -DGRAPPLE_BEAM_BUILD_BENCHMARKS=OFF \
+        -DGRAPPLE_BEAM_WITH_CLI11=OFF \
+        -DGRAPPLE_BEAM_WITH_JSON=OFF \
+        -DGRAPPLE_BEAM_WITH_SPDLOG=OFF
 
     # Both SDKs. The XCFramework packages the C++ one, because it contains
     # the C API as well and Apple's idiom is a single framework rather than a
@@ -70,7 +70,7 @@ configure_and_build() {
     # defines. Building only one target is what broke this after the C++ SDK
     # was added — the install then looked for an archive nobody had built.
     cmake --build "${build_dir}" --config "${configuration}" \
-        --target "SDLStatic_SDK" "SDLStatic_SDK_Cxx" --parallel
+        --target "Grapple_SDK" "Grapple_SDK_Cxx" --parallel
 }
 
 combine_archives() {
@@ -79,9 +79,9 @@ combine_archives() {
     local candidate
 
     # The C++ archive: it holds the C API too, so one framework serves both.
-    candidate="$(find "${build_dir}" -type f -name "libSDL3_static_extensions_sdk_cxx.a" -path "*/${configuration}*" -print -quit)"
+    candidate="$(find "${build_dir}" -type f -name "libgrapple_sdk_cxx.a" -path "*/${configuration}*" -print -quit)"
     if [[ -z "${candidate}" ]]; then
-        echo "Missing libSDL3_static_extensions_sdk_cxx.a in ${build_dir}" >&2
+        echo "Missing libgrapple_sdk_cxx.a in ${build_dir}" >&2
         exit 1
     fi
 
@@ -91,11 +91,11 @@ combine_archives() {
 configure_and_build iphoneos arm64 "${device_build}"
 configure_and_build iphonesimulator "${simulator_archs}" "${simulator_build}"
 
-combine_archives "${device_build}" "${combined_root}/libSDL3_static_extensions-iphoneos.a"
-combine_archives "${simulator_build}" "${combined_root}/libSDL3_static_extensions-iphonesimulator.a"
+combine_archives "${device_build}" "${combined_root}/libgrapple-iphoneos.a"
+combine_archives "${simulator_build}" "${combined_root}/libgrapple-iphonesimulator.a"
 
-cmake -E make_directory "${headers_root}/SDL3_static_extensions"
-cmake -E copy_directory "${repository_root}/include/SDL3_static_extensions" "${headers_root}/SDL3_static_extensions"
+cmake -E make_directory "${headers_root}/grapple"
+cmake -E copy_directory "${repository_root}/include/grapple" "${headers_root}/grapple"
 
 # Every component's headers, and SDL3's, since our public headers include
 # them. Taken from the install tree so this cannot drift from what the
@@ -104,14 +104,14 @@ cmake --install "${simulator_build}" --config "${configuration}" \
     --prefix "${headers_root}/staged" >/dev/null
 cmake -E copy_directory "${headers_root}/staged/include" "${headers_root}"
 cmake -E rm -rf "${headers_root}/staged"
-cmake -E rm -f "${headers_root}/SDL3_static_extensions/.gitkeep"
-cmake -E copy "${device_build}/generated/include/SDL3_static_extensions/version.hpp" \
-    "${headers_root}/SDL3_static_extensions/version.hpp"
+cmake -E rm -f "${headers_root}/grapple/.gitkeep"
+cmake -E copy "${device_build}/generated/include/grapple/version.hpp" \
+    "${headers_root}/grapple/version.hpp"
 
 xcodebuild -create-xcframework \
-    -library "${combined_root}/libSDL3_static_extensions-iphoneos.a" \
+    -library "${combined_root}/libgrapple-iphoneos.a" \
     -headers "${headers_root}" \
-    -library "${combined_root}/libSDL3_static_extensions-iphonesimulator.a" \
+    -library "${combined_root}/libgrapple-iphonesimulator.a" \
     -headers "${headers_root}" \
     -output "${xcframework}"
 

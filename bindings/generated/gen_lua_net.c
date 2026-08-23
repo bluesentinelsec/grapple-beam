@@ -27,8 +27,8 @@ static void GenDtor_NET_DestroyDatagramSocket(void *p)
 static int GenL_NET_CompareAddresses(lua_State *L)
 {
     (void)L;
-    const NET_Address *a0 = (const NET_Address *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_Address");
-    const NET_Address *a1 = (const NET_Address *)SDLStaticGen_LuaCheckHandle(L, 2, "NET_Address");
+    const NET_Address *a0 = (const NET_Address *)GrappleGen_LuaCheckHandle(L, 1, "NET_Address");
+    const NET_Address *a1 = (const NET_Address *)GrappleGen_LuaCheckHandle(L, 2, "NET_Address");
     int rv = NET_CompareAddresses(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -37,40 +37,40 @@ static int GenL_NET_CompareAddresses(lua_State *L)
 static int GenL_NET_CreateClient(lua_State *L)
 {
     (void)L;
-    NET_Address *a0 = (NET_Address *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_Address");
+    NET_Address *a0 = (NET_Address *)GrappleGen_LuaCheckHandle(L, 1, "NET_Address");
     Uint16 a1 = (Uint16)luaL_checkinteger(L, 2);
     SDL_PropertiesID a2 = (SDL_PropertiesID)luaL_checkinteger(L, 3);
     NET_StreamSocket * rv = NET_CreateClient(a0, a1, a2);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "NET_StreamSocket", GenDtor_NET_DestroyStreamSocket);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "NET_StreamSocket", GenDtor_NET_DestroyStreamSocket);
     return 1;
 }
 
 static int GenL_NET_CreateDatagramSocket(lua_State *L)
 {
     (void)L;
-    NET_Address *a0 = (NET_Address *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_Address");
+    NET_Address *a0 = (NET_Address *)GrappleGen_LuaCheckHandle(L, 1, "NET_Address");
     Uint16 a1 = (Uint16)luaL_checkinteger(L, 2);
     SDL_PropertiesID a2 = (SDL_PropertiesID)luaL_checkinteger(L, 3);
     NET_DatagramSocket * rv = NET_CreateDatagramSocket(a0, a1, a2);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "NET_DatagramSocket", GenDtor_NET_DestroyDatagramSocket);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "NET_DatagramSocket", GenDtor_NET_DestroyDatagramSocket);
     return 1;
 }
 
 static int GenL_NET_CreateServer(lua_State *L)
 {
     (void)L;
-    NET_Address *a0 = (NET_Address *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_Address");
+    NET_Address *a0 = (NET_Address *)GrappleGen_LuaCheckHandle(L, 1, "NET_Address");
     Uint16 a1 = (Uint16)luaL_checkinteger(L, 2);
     SDL_PropertiesID a2 = (SDL_PropertiesID)luaL_checkinteger(L, 3);
     NET_Server * rv = NET_CreateServer(a0, a1, a2);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "NET_Server", GenDtor_NET_DestroyServer);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "NET_Server", GenDtor_NET_DestroyServer);
     return 1;
 }
 
 static int GenL_NET_DestroyDatagram(lua_State *L)
 {
     (void)L;
-    NET_Datagram *a0 = (NET_Datagram *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_Datagram");
+    NET_Datagram *a0 = (NET_Datagram *)GrappleGen_LuaCheckHandle(L, 1, "NET_Datagram");
     NET_DestroyDatagram(a0);
     return 0;
 }
@@ -78,7 +78,7 @@ static int GenL_NET_DestroyDatagram(lua_State *L)
 static int GenL_NET_DestroyDatagramSocket(lua_State *L)
 {
     (void)L;
-    NET_DatagramSocket *a0 = (NET_DatagramSocket *)SDLStaticGen_LuaTakeHandle(L, 1, "NET_DatagramSocket");
+    NET_DatagramSocket *a0 = (NET_DatagramSocket *)GrappleGen_LuaTakeHandle(L, 1, "NET_DatagramSocket");
     NET_DestroyDatagramSocket(a0);
     return 0;
 }
@@ -86,7 +86,7 @@ static int GenL_NET_DestroyDatagramSocket(lua_State *L)
 static int GenL_NET_DestroyServer(lua_State *L)
 {
     (void)L;
-    NET_Server *a0 = (NET_Server *)SDLStaticGen_LuaTakeHandle(L, 1, "NET_Server");
+    NET_Server *a0 = (NET_Server *)GrappleGen_LuaTakeHandle(L, 1, "NET_Server");
     NET_DestroyServer(a0);
     return 0;
 }
@@ -94,7 +94,7 @@ static int GenL_NET_DestroyServer(lua_State *L)
 static int GenL_NET_DestroyStreamSocket(lua_State *L)
 {
     (void)L;
-    NET_StreamSocket *a0 = (NET_StreamSocket *)SDLStaticGen_LuaTakeHandle(L, 1, "NET_StreamSocket");
+    NET_StreamSocket *a0 = (NET_StreamSocket *)GrappleGen_LuaTakeHandle(L, 1, "NET_StreamSocket");
     NET_DestroyStreamSocket(a0);
     return 0;
 }
@@ -102,7 +102,7 @@ static int GenL_NET_DestroyStreamSocket(lua_State *L)
 static int GenL_NET_GetAddressStatus(lua_State *L)
 {
     (void)L;
-    NET_Address *a0 = (NET_Address *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_Address");
+    NET_Address *a0 = (NET_Address *)GrappleGen_LuaCheckHandle(L, 1, "NET_Address");
     NET_Status rv = NET_GetAddressStatus(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -111,7 +111,7 @@ static int GenL_NET_GetAddressStatus(lua_State *L)
 static int GenL_NET_GetAddressString(lua_State *L)
 {
     (void)L;
-    NET_Address *a0 = (NET_Address *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_Address");
+    NET_Address *a0 = (NET_Address *)GrappleGen_LuaCheckHandle(L, 1, "NET_Address");
     const char * rv = NET_GetAddressString(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     return 1;
@@ -120,7 +120,7 @@ static int GenL_NET_GetAddressString(lua_State *L)
 static int GenL_NET_GetConnectionStatus(lua_State *L)
 {
     (void)L;
-    NET_StreamSocket *a0 = (NET_StreamSocket *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_StreamSocket");
+    NET_StreamSocket *a0 = (NET_StreamSocket *)GrappleGen_LuaCheckHandle(L, 1, "NET_StreamSocket");
     NET_Status rv = NET_GetConnectionStatus(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -129,16 +129,16 @@ static int GenL_NET_GetConnectionStatus(lua_State *L)
 static int GenL_NET_GetStreamSocketAddress(lua_State *L)
 {
     (void)L;
-    NET_StreamSocket *a0 = (NET_StreamSocket *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_StreamSocket");
+    NET_StreamSocket *a0 = (NET_StreamSocket *)GrappleGen_LuaCheckHandle(L, 1, "NET_StreamSocket");
     NET_Address * rv = NET_GetStreamSocketAddress(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "NET_Address");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "NET_Address");
     return 1;
 }
 
 static int GenL_NET_GetStreamSocketPendingWrites(lua_State *L)
 {
     (void)L;
-    NET_StreamSocket *a0 = (NET_StreamSocket *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_StreamSocket");
+    NET_StreamSocket *a0 = (NET_StreamSocket *)GrappleGen_LuaCheckHandle(L, 1, "NET_StreamSocket");
     int rv = NET_GetStreamSocketPendingWrites(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -162,9 +162,9 @@ static int GenL_NET_Quit(lua_State *L)
 static int GenL_NET_RefAddress(lua_State *L)
 {
     (void)L;
-    NET_Address *a0 = (NET_Address *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_Address");
+    NET_Address *a0 = (NET_Address *)GrappleGen_LuaCheckHandle(L, 1, "NET_Address");
     NET_Address * rv = NET_RefAddress(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "NET_Address");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "NET_Address");
     return 1;
 }
 
@@ -173,15 +173,15 @@ static int GenL_NET_ResolveHostname(lua_State *L)
     (void)L;
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
     NET_Address * rv = NET_ResolveHostname(a0);
-    SDLStaticGen_LuaPushHandle(L, (void *)rv, "NET_Address");
+    GrappleGen_LuaPushHandle(L, (void *)rv, "NET_Address");
     return 1;
 }
 
 static int GenL_NET_SendDatagram(lua_State *L)
 {
     (void)L;
-    NET_DatagramSocket *a0 = (NET_DatagramSocket *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_DatagramSocket");
-    NET_Address *a1 = (NET_Address *)SDLStaticGen_LuaCheckHandle(L, 2, "NET_Address");
+    NET_DatagramSocket *a0 = (NET_DatagramSocket *)GrappleGen_LuaCheckHandle(L, 1, "NET_DatagramSocket");
+    NET_Address *a1 = (NET_Address *)GrappleGen_LuaCheckHandle(L, 2, "NET_Address");
     Uint16 a2 = (Uint16)luaL_checkinteger(L, 3);
     size_t len3 = 0;
     const char *a3 = lua_isnoneornil(L, 4) ? NULL : luaL_checklstring(L, 4, &len3);
@@ -201,7 +201,7 @@ static int GenL_NET_SimulateAddressResolutionLoss(lua_State *L)
 static int GenL_NET_SimulateDatagramPacketLoss(lua_State *L)
 {
     (void)L;
-    NET_DatagramSocket *a0 = (NET_DatagramSocket *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_DatagramSocket");
+    NET_DatagramSocket *a0 = (NET_DatagramSocket *)GrappleGen_LuaCheckHandle(L, 1, "NET_DatagramSocket");
     int a1 = (int)luaL_checkinteger(L, 2);
     NET_SimulateDatagramPacketLoss(a0, a1);
     return 0;
@@ -210,7 +210,7 @@ static int GenL_NET_SimulateDatagramPacketLoss(lua_State *L)
 static int GenL_NET_SimulateStreamPacketLoss(lua_State *L)
 {
     (void)L;
-    NET_StreamSocket *a0 = (NET_StreamSocket *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_StreamSocket");
+    NET_StreamSocket *a0 = (NET_StreamSocket *)GrappleGen_LuaCheckHandle(L, 1, "NET_StreamSocket");
     int a1 = (int)luaL_checkinteger(L, 2);
     NET_SimulateStreamPacketLoss(a0, a1);
     return 0;
@@ -219,7 +219,7 @@ static int GenL_NET_SimulateStreamPacketLoss(lua_State *L)
 static int GenL_NET_UnrefAddress(lua_State *L)
 {
     (void)L;
-    NET_Address *a0 = (NET_Address *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_Address");
+    NET_Address *a0 = (NET_Address *)GrappleGen_LuaCheckHandle(L, 1, "NET_Address");
     NET_UnrefAddress(a0);
     return 0;
 }
@@ -235,7 +235,7 @@ static int GenL_NET_Version(lua_State *L)
 static int GenL_NET_WaitUntilConnected(lua_State *L)
 {
     (void)L;
-    NET_StreamSocket *a0 = (NET_StreamSocket *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_StreamSocket");
+    NET_StreamSocket *a0 = (NET_StreamSocket *)GrappleGen_LuaCheckHandle(L, 1, "NET_StreamSocket");
     Sint32 a1 = (Sint32)luaL_checkinteger(L, 2);
     NET_Status rv = NET_WaitUntilConnected(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -245,7 +245,7 @@ static int GenL_NET_WaitUntilConnected(lua_State *L)
 static int GenL_NET_WaitUntilResolved(lua_State *L)
 {
     (void)L;
-    NET_Address *a0 = (NET_Address *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_Address");
+    NET_Address *a0 = (NET_Address *)GrappleGen_LuaCheckHandle(L, 1, "NET_Address");
     Sint32 a1 = (Sint32)luaL_checkinteger(L, 2);
     NET_Status rv = NET_WaitUntilResolved(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -255,7 +255,7 @@ static int GenL_NET_WaitUntilResolved(lua_State *L)
 static int GenL_NET_WaitUntilStreamSocketDrained(lua_State *L)
 {
     (void)L;
-    NET_StreamSocket *a0 = (NET_StreamSocket *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_StreamSocket");
+    NET_StreamSocket *a0 = (NET_StreamSocket *)GrappleGen_LuaCheckHandle(L, 1, "NET_StreamSocket");
     Sint32 a1 = (Sint32)luaL_checkinteger(L, 2);
     int rv = NET_WaitUntilStreamSocketDrained(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -265,7 +265,7 @@ static int GenL_NET_WaitUntilStreamSocketDrained(lua_State *L)
 static int GenL_NET_WriteToStreamSocket(lua_State *L)
 {
     (void)L;
-    NET_StreamSocket *a0 = (NET_StreamSocket *)SDLStaticGen_LuaCheckHandle(L, 1, "NET_StreamSocket");
+    NET_StreamSocket *a0 = (NET_StreamSocket *)GrappleGen_LuaCheckHandle(L, 1, "NET_StreamSocket");
     size_t len1 = 0;
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checklstring(L, 2, &len1);
     bool rv = NET_WriteToStreamSocket(a0, (const void *)a1, (int)len1);
@@ -273,8 +273,8 @@ static int GenL_NET_WriteToStreamSocket(lua_State *L)
     return 1;
 }
 
-int SDLStaticGen_OpenLua_net(lua_State *L);
-int SDLStaticGen_OpenLua_net(lua_State *L)
+int GrappleGen_OpenLua_net(lua_State *L);
+int GrappleGen_OpenLua_net(lua_State *L)
 {
     lua_createtable(L, 0, 27);
     lua_pushcfunction(L, GenL_NET_CompareAddresses);

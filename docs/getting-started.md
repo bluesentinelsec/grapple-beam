@@ -22,11 +22,11 @@ and link it. A desktop release ships three things:
 
 | | |
 |---|---|
-| `lib/libSDL3_static_extensions_sdk.a` | the C API: every module, SDL3, and the vendored libraries |
-| `lib/libSDL3_static_extensions_sdk_cxx.a` | all of that **plus** the C++ wrapper |
+| `lib/libgrapple_sdk.a` | the C API: every module, SDL3, and the vendored libraries |
+| `lib/libgrapple_sdk_cxx.a` | all of that **plus** the C++ wrapper |
 | `bin/grapple` | the runner: plays a Lua or Ruby game with no toolchain installed |
-| `lib/libSDL3_static_extensions.{so,dylib,dll}` | the C API as a shared library |
-| `lib/libSDL3_static_extensions_cxx.{so,dylib,dll}` | the C++ API as a shared library |
+| `lib/libgrapple.{so,dylib,dll}` | the C API as a shared library |
+| `lib/libgrapple_cxx.{so,dylib,dll}` | the C++ API as a shared library |
 | `share/doc/…` | this documentation, offline, plus the generated API references |
 | `tags`, `share/…/editor/` | ctags and script completions |
 
@@ -58,9 +58,9 @@ target_link_libraries(my_game PRIVATE grapple-beam::SDKCxx)
 ```
 
 ```cpp
-#include <sdlstatic/sdlstatic.h>
+#include <grapple/grapple.h>
 
-auto engine = sdlstatic::Engine::Create(config);
+auto engine = grapple::Engine::Create(config);
 while (engine->Tick()) { /* ... */ }
 ```
 
@@ -87,17 +87,17 @@ cmake_minimum_required(VERSION 3.20)
 project(my_game C)
 
 include(FetchContent)
-FetchContent_Declare(SDL3_static_extensions
+FetchContent_Declare(grapple
   GIT_REPOSITORY https://github.com/bluesentinelsec/grapple-beam.git
   GIT_TAG        v0.2.0)
-FetchContent_MakeAvailable(SDL3_static_extensions)
+FetchContent_MakeAvailable(grapple)
 
 add_executable(my_game main.c)
 target_link_libraries(my_game PRIVATE
   SDL3::SDL3
-  SDLStatic::Mixer
-  SDLStatic::Gfx
-  SDLStatic::Extras)
+  Grapple::Mixer
+  Grapple::Gfx
+  Grapple::Extras)
 ```
 
 Link only what you use — each module is its own static library. The full
@@ -108,8 +108,8 @@ your executable with no shared-library footprint.
 To trim configure/compile time you can switch off whole modules:
 
 ```cmake
-set(SDLSTATIC_BUILD_GUI OFF)      # before MakeAvailable
-set(SDLSTATIC_BUILD_RUBY OFF)
+set(GRAPPLE_BUILD_GUI OFF)      # before MakeAvailable
+set(GRAPPLE_BUILD_RUBY OFF)
 ```
 
 Everything is `ON` by default. Some options imply others (the C++ and
@@ -156,7 +156,7 @@ on the [C++ page](cpp.html). Prefer a scripting language? The
 
 ```bash
 git clone https://github.com/bluesentinelsec/grapple-beam.git
-cd SDL3-static-extensions
+cd grapple-beam
 cmake -B build/debug -DCMAKE_BUILD_TYPE=Debug
 cmake --build build/debug --parallel
 ctest --test-dir build/debug
@@ -196,7 +196,7 @@ so it can drive the opinionated loop or write its own. See
 
 ## Where to go next
 
-- [Modules](modules.html) — what each `SDLStatic::*` target gives you
+- [Modules](modules.html) — what each `Grapple::*` target gives you
 - [C++ bindings](cpp.html) — RAII, `Status`/`Result`, no exceptions
 - [Lua &amp; Ruby](scripting.html) — embedded scripting, require-from-zip
 - [Platforms](platforms.html) — Android, iOS, and WebAssembly specifics

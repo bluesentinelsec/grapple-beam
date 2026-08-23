@@ -1,6 +1,6 @@
 /**
  * @file script_test.cpp
- * @brief Tests for SDLStatic::Lua, SDLStatic::Ruby, and the game bindings.
+ * @brief Tests for Grapple::Lua, Grapple::Ruby, and the game bindings.
  *
  * The require/import story is exercised for real: module chains load from a
  * zip archive mounted through the VFS (plain and encrypted), circular
@@ -10,10 +10,10 @@
  */
 
 #include <SDL3/SDL.h>
-#include <SDLStatic/bindings.h>
-#include <SDLStatic/lua.h>
-#include <SDLStatic/vfs.h>
-#include <SDLStatic/ruby.h>
+#include <grapple/bindings.h>
+#include <grapple/lua.h>
+#include <grapple/vfs.h>
+#include <grapple/ruby.h>
 #include <gtest/gtest.h>
 #include <physfs.h>
 
@@ -55,7 +55,7 @@ class ScriptVfs : public ::testing::Test
 
 TEST_F(ScriptVfs, LuaRequiresModuleChainFromZipArchive)
 {
-    lua_State *L = SDLStatic_CreateLuaState();
+    lua_State *L = Grapple_CreateLuaState();
     ASSERT_NE(L, nullptr);
     ASSERT_EQ(luaL_dostring(L, "local g = require('geometry')\n"
                                "result = g.diagonal(3, 4)"),
@@ -73,13 +73,13 @@ TEST_F(ScriptVfs, LuaRequiresModuleChainFromZipArchive)
 
 TEST_F(ScriptVfs, LuaReportsMissingModulesAndSyntaxErrors)
 {
-    lua_State *L = SDLStatic_CreateLuaState();
+    lua_State *L = Grapple_CreateLuaState();
     ASSERT_NE(L, nullptr);
     EXPECT_NE(luaL_dostring(L, "require('no.such.module')"), LUA_OK);
     lua_pop(L, 1);
     EXPECT_NE(luaL_dostring(L, "this is not lua"), LUA_OK);
     lua_pop(L, 1);
-    EXPECT_FALSE(SDLStatic_LuaRunVFSScript(L, "missing.lua"));
+    EXPECT_FALSE(Grapple_LuaRunVFSScript(L, "missing.lua"));
     lua_close(L);
 }
 
@@ -91,9 +91,9 @@ class RubyVfs : public ScriptVfs
     void SetUp() override
     {
         ScriptVfs::SetUp();
-        mrb_ = SDLStatic_CreateRubyState();
+        mrb_ = Grapple_CreateRubyState();
         ASSERT_NE(mrb_, nullptr);
-        ASSERT_TRUE(SDLStatic_RubyAddLoadPath(mrb_, "."));
+        ASSERT_TRUE(Grapple_RubyAddLoadPath(mrb_, "."));
     }
     void TearDown() override
     {
@@ -150,17 +150,17 @@ TEST_F(RubyVfs, MissingModulesAndSyntaxErrorsRaise)
     EXPECT_NE(ErrorText().find("cannot load such file"), std::string::npos);
     mrb_load_string(mrb_, "require 'geometry.lua'"); // exists but Lua, not .rb
     ErrorText();                                     // just must not crash
-    EXPECT_FALSE(SDLStatic_RubyRunVFSScript(mrb_, "missing.rb"));
+    EXPECT_FALSE(Grapple_RubyRunVFSScript(mrb_, "missing.rb"));
 }
 
 TEST(RubyEncrypted, RequireWorksFromEncryptedArchive)
 {
     ASSERT_TRUE(PHYSFS_init(nullptr));
-    ASSERT_TRUE(SDLStatic_MountEncryptedArchiveFile(AssetPath("scripts_encrypted.bin").c_str(),
+    ASSERT_TRUE(Grapple_MountEncryptedArchiveFile(AssetPath("scripts_encrypted.bin").c_str(),
                                                     "scriptKey", nullptr));
-    mrb_state *mrb = SDLStatic_CreateRubyState();
+    mrb_state *mrb = Grapple_CreateRubyState();
     ASSERT_NE(mrb, nullptr);
-    SDLStatic_RubyAddLoadPath(mrb, ".");
+    Grapple_RubyAddLoadPath(mrb, ".");
     mrb_value result = mrb_load_string(mrb, "require 'lib_a'; LIB_A");
     ASSERT_EQ(mrb->exc, nullptr);
     EXPECT_EQ(mrb_integer(result), 142);
@@ -171,9 +171,9 @@ TEST(RubyEncrypted, RequireWorksFromEncryptedArchive)
 TEST(LuaEncrypted, RequireWorksFromEncryptedArchive)
 {
     ASSERT_TRUE(PHYSFS_init(nullptr));
-    ASSERT_TRUE(SDLStatic_MountEncryptedArchiveFile(AssetPath("scripts_encrypted.bin").c_str(),
+    ASSERT_TRUE(Grapple_MountEncryptedArchiveFile(AssetPath("scripts_encrypted.bin").c_str(),
                                                     "scriptKey", nullptr));
-    lua_State *L = SDLStatic_CreateLuaState();
+    lua_State *L = Grapple_CreateLuaState();
     ASSERT_NE(L, nullptr);
     ASSERT_EQ(luaL_dostring(L, "d = require('geometry').diagonal(6, 8)"), LUA_OK)
         << lua_tostring(L, -1);
@@ -187,22 +187,22 @@ TEST(LuaEncrypted, RequireWorksFromEncryptedArchive)
 
 TEST(BindingsLua, PhysicsAndUtilsDriveFromScriptWithGc)
 {
-    lua_State *L = SDLStatic_CreateLuaState();
+    lua_State *L = Grapple_CreateLuaState();
     ASSERT_NE(L, nullptr);
-    ASSERT_TRUE(SDLStatic_OpenLuaBindings(L));
+    ASSERT_TRUE(Grapple_OpenLuaBindings(L));
     const char *script =
-        "local w = SDLStatic.world(0, -10)\n"
+        "local w = Grapple.world(0, -10)\n"
         "local ground = w:box(0, 0, 50, 1, false)\n"
         "local ball = w:circle(0, 10, 0.5, true)\n"
         "for i = 1, 120 do w:step() end\n"
         "local x, y = ball:position()\n"
         "assert(y < 9, 'ball must fall, y=' .. y)\n"
-        "assert(SDLStatic.sha256('abc'):sub(1, 8) == 'ba7816bf')\n"
-        "local blob = SDLStatic.compress(string.rep('data', 200))\n"
-        "assert(#SDLStatic.decompress(blob) == 800)\n"
-        "local enc = SDLStatic.encrypt('secret', 'pw')\n"
-        "assert(SDLStatic.decrypt(enc, 'pw') == 'secret')\n"
-        "assert(SDLStatic.b64decode(SDLStatic.b64encode('hi')) == 'hi')\n"
+        "assert(Grapple.sha256('abc'):sub(1, 8) == 'ba7816bf')\n"
+        "local blob = Grapple.compress(string.rep('data', 200))\n"
+        "assert(#Grapple.decompress(blob) == 800)\n"
+        "local enc = Grapple.encrypt('secret', 'pw')\n"
+        "assert(Grapple.decrypt(enc, 'pw') == 'secret')\n"
+        "assert(Grapple.b64decode(Grapple.b64encode('hi')) == 'hi')\n"
         "ball = nil; ground = nil; w = nil\n"
         "collectgarbage('collect'); collectgarbage('collect')\n";
     ASSERT_EQ(luaL_dostring(L, script), LUA_OK) << lua_tostring(L, -1);
@@ -211,22 +211,22 @@ TEST(BindingsLua, PhysicsAndUtilsDriveFromScriptWithGc)
 
 TEST(BindingsRuby, PhysicsAndUtilsDriveFromScriptWithGc)
 {
-    mrb_state *mrb = SDLStatic_CreateRubyState();
+    mrb_state *mrb = Grapple_CreateRubyState();
     ASSERT_NE(mrb, nullptr);
-    ASSERT_TRUE(SDLStatic_OpenRubyBindings(mrb));
+    ASSERT_TRUE(Grapple_OpenRubyBindings(mrb));
     const char *script =
-        "w = SDLStatic.world(0.0, -10.0)\n"
+        "w = Grapple.world(0.0, -10.0)\n"
         "ground = w.box(0.0, 0.0, 50.0, 1.0, false)\n"
         "ball = w.circle(0.0, 10.0, 0.5, true)\n"
         "120.times { w.step }\n"
         "x, y = ball.position\n"
         "raise 'ball must fall' unless y < 9\n"
-        "raise 'sha' unless SDLStatic.sha256('abc').start_with?('ba7816bf')\n"
-        "blob = SDLStatic.compress('data' * 200)\n"
-        "raise 'zip' unless SDLStatic.decompress(blob).length == 800\n"
-        "enc = SDLStatic.encrypt('secret', 'pw')\n"
-        "raise 'crypt' unless SDLStatic.decrypt(enc, 'pw') == 'secret'\n"
-        "raise 'b64' unless SDLStatic.b64decode(SDLStatic.b64encode('hi')) == 'hi'\n"
+        "raise 'sha' unless Grapple.sha256('abc').start_with?('ba7816bf')\n"
+        "blob = Grapple.compress('data' * 200)\n"
+        "raise 'zip' unless Grapple.decompress(blob).length == 800\n"
+        "enc = Grapple.encrypt('secret', 'pw')\n"
+        "raise 'crypt' unless Grapple.decrypt(enc, 'pw') == 'secret'\n"
+        "raise 'b64' unless Grapple.b64decode(Grapple.b64encode('hi')) == 'hi'\n"
         "ball = nil; ground = nil; w = nil\n"
         "GC.start\n";
     mrb_load_string(mrb, script);
@@ -240,12 +240,12 @@ TEST(BindingsRuby, PhysicsAndUtilsDriveFromScriptWithGc)
 
 TEST(BindingsLua, BodyPinsWorldSoGcOrderIsAlwaysSafe)
 {
-    lua_State *L = SDLStatic_CreateLuaState();
+    lua_State *L = Grapple_CreateLuaState();
     ASSERT_NE(L, nullptr);
-    ASSERT_TRUE(SDLStatic_OpenLuaBindings(L));
+    ASSERT_TRUE(Grapple_OpenLuaBindings(L));
     // A live body handle pins its world through a uservalue: dropping the
     // world reference and forcing GC must NOT invalidate the body.
-    EXPECT_EQ(luaL_dostring(L, "b = SDLStatic.world():box(0, 0, 1, 1, true)\n"
+    EXPECT_EQ(luaL_dostring(L, "b = Grapple.world():box(0, 0, 1, 1, true)\n"
                                "collectgarbage('collect'); collectgarbage('collect')\n"
                                "local x, y = b:position()\n"
                                "assert(type(x) == 'number')\n"
@@ -257,14 +257,14 @@ TEST(BindingsLua, BodyPinsWorldSoGcOrderIsAlwaysSafe)
 }
 
 
-// mruby has no regex engine of its own; SDLStatic::Regex supplies one and
+// mruby has no regex engine of its own; Grapple::Regex supplies one and
 // the Ruby layer turns it into the real class, so /re/ literals, $1 and $~
 // — which mruby's compiler already emits code for — start working.
 TEST(BindingsRuby, RegexpLiteralsAndStringMethods)
 {
-    mrb_state *mrb = SDLStatic_CreateRubyState();
+    mrb_state *mrb = Grapple_CreateRubyState();
     ASSERT_NE(mrb, nullptr);
-    ASSERT_TRUE(SDLStatic_OpenRubyBindings(mrb));
+    ASSERT_TRUE(Grapple_OpenRubyBindings(mrb));
     const char *script =
         "m = 'on 2026-08-14'.match(/(?<year>\\d{4})-(?<mon>\\d{2})/)\n"
         "raise 'whole' unless m[0] == '2026-08'\n"
@@ -311,9 +311,9 @@ TEST(BindingsRuby, RegexpLiteralsAndStringMethods)
 // Lua has patterns, not regular expressions; the Regex module adds them.
 TEST(BindingsLua, RegexModuleMatchesReplacesAndIterates)
 {
-    lua_State *L = SDLStatic_CreateLuaState();
+    lua_State *L = Grapple_CreateLuaState();
     ASSERT_NE(L, nullptr);
-    ASSERT_TRUE(SDLStatic_OpenLuaBindings(L));
+    ASSERT_TRUE(Grapple_OpenLuaBindings(L));
     const char *script =
         "local re = Regex.new('(\\\\w+)@(\\\\w+)')\n"
         "local m = re:match('mail bob@example now')\n"

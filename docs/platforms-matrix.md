@@ -62,13 +62,13 @@ Desktop ships both linkages, in both APIs:
 
 | | |
 |---|---|
-| `libSDL3_static_extensions.{so,dylib,dll}` | the C API |
-| `libSDL3_static_extensions_cxx.{so,dylib,dll}` | the C++ API, containing the C one |
+| `libgrapple.{so,dylib,dll}` | the C API |
+| `libgrapple_cxx.{so,dylib,dll}` | the C++ API, containing the C one |
 
 with a SONAME (`libfoo.so.0`), an `@rpath` install name on macOS, and an
 import library on Windows.
 
-Exports are filtered to the public prefixes — `SDLStatic_`, `SDL_`, `b2`,
+Exports are filtered to the public prefixes — `Grapple_`, `SDL_`, `b2`,
 `lua_`, `mrb_`, `nk_` and the rest — so every vendored library's internal
 helpers stay inside rather than becoming part of an ABI we would then owe
 compatibility to.
@@ -116,7 +116,7 @@ distinction matters more than it looks:
 - Android runs the same app minus the engine. SDL's Android backend expects
   to be driven by `org.libsdl.app.SDLActivity`, which owns the surface, the
   looper and the main thread; a plain Activity calling in over JNI blocks in
-  `SDLStatic_CreateEngine` waiting for plumbing that is not there. A game
+  `Grapple_CreateEngine` waiting for plumbing that is not there. A game
   subclassing `SDLActivity` is unaffected — proving that needs an
   SDLActivity-based harness, which is its own work.
 - Web runs version, browser-environment and image-decoding tests in headless

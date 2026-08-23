@@ -19,10 +19,10 @@ static mrb_value GenR_cJSON_AddArrayToObject(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON * rv = cJSON_AddArrayToObject(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -33,11 +33,11 @@ static mrb_value GenR_cJSON_AddBoolToObject(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    cJSON_bool a2 = (cJSON_bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON_bool a2 = (cJSON_bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     cJSON * rv = cJSON_AddBoolToObject(a0, a1, a2);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -48,10 +48,10 @@ static mrb_value GenR_cJSON_AddFalseToObject(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON * rv = cJSON_AddFalseToObject(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -62,8 +62,8 @@ static mrb_value GenR_cJSON_AddItemReferenceToArray(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    cJSON *a1 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "cJSON");
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    cJSON *a1 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_AddItemReferenceToArray(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -76,9 +76,9 @@ static mrb_value GenR_cJSON_AddItemReferenceToObject(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    cJSON *a2 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "cJSON");
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a2 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_AddItemReferenceToObject(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -91,8 +91,8 @@ static mrb_value GenR_cJSON_AddItemToArray(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    cJSON *a1 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "cJSON");
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    cJSON *a1 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_AddItemToArray(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -105,9 +105,9 @@ static mrb_value GenR_cJSON_AddItemToObject(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    cJSON *a2 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "cJSON");
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a2 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_AddItemToObject(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -120,9 +120,9 @@ static mrb_value GenR_cJSON_AddItemToObjectCS(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    cJSON *a2 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "cJSON");
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a2 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_AddItemToObjectCS(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -135,10 +135,10 @@ static mrb_value GenR_cJSON_AddNullToObject(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON * rv = cJSON_AddNullToObject(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -149,11 +149,11 @@ static mrb_value GenR_cJSON_AddNumberToObject(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    double a2 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    double a2 = (double)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     cJSON * rv = cJSON_AddNumberToObject(a0, a1, a2);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -164,10 +164,10 @@ static mrb_value GenR_cJSON_AddObjectToObject(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON * rv = cJSON_AddObjectToObject(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -178,11 +178,11 @@ static mrb_value GenR_cJSON_AddRawToObject(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     cJSON * rv = cJSON_AddRawToObject(a0, a1, a2);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -193,11 +193,11 @@ static mrb_value GenR_cJSON_AddStringToObject(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     cJSON * rv = cJSON_AddStringToObject(a0, a1, a2);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -208,10 +208,10 @@ static mrb_value GenR_cJSON_AddTrueToObject(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON * rv = cJSON_AddTrueToObject(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -222,9 +222,9 @@ static mrb_value GenR_cJSON_Compare(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const cJSON *a1 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "cJSON");
-    cJSON_bool a2 = (cJSON_bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a1 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "cJSON");
+    cJSON_bool a2 = (cJSON_bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     cJSON_bool rv = cJSON_Compare(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -238,7 +238,7 @@ static mrb_value GenR_cJSON_CreateArray(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     cJSON * rv = cJSON_CreateArray();
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "cJSON", GenDtor_cJSON_Delete);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "cJSON", GenDtor_cJSON_Delete);
     }
 }
 
@@ -249,9 +249,9 @@ static mrb_value GenR_cJSON_CreateArrayReference(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     cJSON * rv = cJSON_CreateArrayReference(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -262,9 +262,9 @@ static mrb_value GenR_cJSON_CreateBool(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON_bool a0 = (cJSON_bool)SDLStaticGen_RubyToBool((argc > 0 ? argv[0] : mrb_nil_value()));
+    cJSON_bool a0 = (cJSON_bool)GrappleGen_RubyToBool((argc > 0 ? argv[0] : mrb_nil_value()));
     cJSON * rv = cJSON_CreateBool(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -276,7 +276,7 @@ static mrb_value GenR_cJSON_CreateFalse(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     cJSON * rv = cJSON_CreateFalse();
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -288,7 +288,7 @@ static mrb_value GenR_cJSON_CreateNull(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     cJSON * rv = cJSON_CreateNull();
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -299,9 +299,9 @@ static mrb_value GenR_cJSON_CreateNumber(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    double a0 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    double a0 = (double)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     cJSON * rv = cJSON_CreateNumber(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -313,7 +313,7 @@ static mrb_value GenR_cJSON_CreateObject(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     cJSON * rv = cJSON_CreateObject();
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "cJSON", GenDtor_cJSON_Delete);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "cJSON", GenDtor_cJSON_Delete);
     }
 }
 
@@ -324,9 +324,9 @@ static mrb_value GenR_cJSON_CreateObjectReference(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     cJSON * rv = cJSON_CreateObjectReference(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -337,9 +337,9 @@ static mrb_value GenR_cJSON_CreateRaw(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     cJSON * rv = cJSON_CreateRaw(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -350,9 +350,9 @@ static mrb_value GenR_cJSON_CreateString(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     cJSON * rv = cJSON_CreateString(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -363,9 +363,9 @@ static mrb_value GenR_cJSON_CreateStringReference(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     cJSON * rv = cJSON_CreateStringReference(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -377,7 +377,7 @@ static mrb_value GenR_cJSON_CreateTrue(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     cJSON * rv = cJSON_CreateTrue();
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -388,7 +388,7 @@ static mrb_value GenR_cJSON_Delete(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    cJSON *a0 = (cJSON *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     cJSON_Delete(a0);
     return mrb_nil_value();
     }
@@ -401,8 +401,8 @@ static mrb_value GenR_cJSON_DeleteItemFromArray(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON_DeleteItemFromArray(a0, a1);
     return mrb_nil_value();
     }
@@ -415,8 +415,8 @@ static mrb_value GenR_cJSON_DeleteItemFromObject(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON_DeleteItemFromObject(a0, a1);
     return mrb_nil_value();
     }
@@ -429,8 +429,8 @@ static mrb_value GenR_cJSON_DeleteItemFromObjectCaseSensitive(mrb_state *mrb, mr
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON_DeleteItemFromObjectCaseSensitive(a0, a1);
     return mrb_nil_value();
     }
@@ -443,10 +443,10 @@ static mrb_value GenR_cJSON_DetachItemFromArray(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON * rv = cJSON_DetachItemFromArray(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -457,10 +457,10 @@ static mrb_value GenR_cJSON_DetachItemFromObject(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON * rv = cJSON_DetachItemFromObject(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -471,10 +471,10 @@ static mrb_value GenR_cJSON_DetachItemFromObjectCaseSensitive(mrb_state *mrb, mr
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON * rv = cJSON_DetachItemFromObjectCaseSensitive(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -485,10 +485,10 @@ static mrb_value GenR_cJSON_DetachItemViaPointer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    cJSON *a1 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "cJSON");
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    cJSON *a1 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "cJSON");
     cJSON * rv = cJSON_DetachItemViaPointer(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -499,10 +499,10 @@ static mrb_value GenR_cJSON_Duplicate(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    cJSON_bool a1 = (cJSON_bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    cJSON_bool a1 = (cJSON_bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON * rv = cJSON_Duplicate(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -513,10 +513,10 @@ static mrb_value GenR_cJSON_GetArrayItem(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON * rv = cJSON_GetArrayItem(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -527,7 +527,7 @@ static mrb_value GenR_cJSON_GetArraySize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     int rv = cJSON_GetArraySize(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -552,7 +552,7 @@ static mrb_value GenR_cJSON_GetNumberValue(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     double rv = cJSON_GetNumberValue(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -565,10 +565,10 @@ static mrb_value GenR_cJSON_GetObjectItem(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON * rv = cJSON_GetObjectItem(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -579,10 +579,10 @@ static mrb_value GenR_cJSON_GetObjectItemCaseSensitive(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON * rv = cJSON_GetObjectItemCaseSensitive(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "cJSON");
     }
 }
 
@@ -593,7 +593,7 @@ static mrb_value GenR_cJSON_GetStringValue(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     char * rv = cJSON_GetStringValue(a0);
     mrb_value rstr = rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv);
     if (rv != NULL) { cJSON_free(rv); }
@@ -608,8 +608,8 @@ static mrb_value GenR_cJSON_HasObjectItem(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON_bool rv = cJSON_HasObjectItem(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -622,7 +622,7 @@ static mrb_value GenR_cJSON_InitHooks(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON_Hooks *a0 = (cJSON_Hooks *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON_Hooks");
+    cJSON_Hooks *a0 = (cJSON_Hooks *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON_Hooks");
     cJSON_InitHooks(a0);
     return mrb_nil_value();
     }
@@ -635,9 +635,9 @@ static mrb_value GenR_cJSON_InsertItemInArray(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    cJSON *a2 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "cJSON");
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a2 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_InsertItemInArray(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -650,7 +650,7 @@ static mrb_value GenR_cJSON_IsArray(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_IsArray(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -663,7 +663,7 @@ static mrb_value GenR_cJSON_IsBool(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_IsBool(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -676,7 +676,7 @@ static mrb_value GenR_cJSON_IsFalse(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_IsFalse(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -689,7 +689,7 @@ static mrb_value GenR_cJSON_IsInvalid(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_IsInvalid(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -702,7 +702,7 @@ static mrb_value GenR_cJSON_IsNull(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_IsNull(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -715,7 +715,7 @@ static mrb_value GenR_cJSON_IsNumber(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_IsNumber(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -728,7 +728,7 @@ static mrb_value GenR_cJSON_IsObject(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_IsObject(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -741,7 +741,7 @@ static mrb_value GenR_cJSON_IsRaw(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_IsRaw(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -754,7 +754,7 @@ static mrb_value GenR_cJSON_IsString(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_IsString(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -767,7 +767,7 @@ static mrb_value GenR_cJSON_IsTrue(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_IsTrue(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -780,7 +780,7 @@ static mrb_value GenR_cJSON_Minify(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *src0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *src0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     char *a0 = SDL_strdup(src0 != NULL ? src0 : "");
     cJSON_Minify(a0);
     SDL_free(a0);
@@ -795,9 +795,9 @@ static mrb_value GenR_cJSON_Parse(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     cJSON * rv = cJSON_Parse(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "cJSON", GenDtor_cJSON_Delete);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "cJSON", GenDtor_cJSON_Delete);
     }
 }
 
@@ -808,10 +808,10 @@ static mrb_value GenR_cJSON_ParseWithLength(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    size_t a1 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    size_t a1 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     cJSON * rv = cJSON_ParseWithLength(a0, a1);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "cJSON", GenDtor_cJSON_Delete);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "cJSON", GenDtor_cJSON_Delete);
     }
 }
 
@@ -822,7 +822,7 @@ static mrb_value GenR_cJSON_Print(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     char * rv = cJSON_Print(a0);
     mrb_value rstr = rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv);
     if (rv != NULL) { cJSON_free(rv); }
@@ -837,9 +837,9 @@ static mrb_value GenR_cJSON_PrintBuffered(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    cJSON_bool a2 = (cJSON_bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON_bool a2 = (cJSON_bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     char * rv = cJSON_PrintBuffered(a0, a1, a2);
     mrb_value rstr = rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv);
     if (rv != NULL) { cJSON_free(rv); }
@@ -854,11 +854,11 @@ static mrb_value GenR_cJSON_PrintPreallocated(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *src1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *src1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     char *a1 = SDL_strdup(src1 != NULL ? src1 : "");
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    cJSON_bool a3 = (cJSON_bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    cJSON_bool a3 = (cJSON_bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     cJSON_bool rv = cJSON_PrintPreallocated(a0, a1, a2, a3);
     SDL_free(a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
@@ -872,7 +872,7 @@ static mrb_value GenR_cJSON_PrintUnformatted(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const cJSON *a0 = (const cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const cJSON *a0 = (const cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
     char * rv = cJSON_PrintUnformatted(a0);
     mrb_value rstr = rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv);
     if (rv != NULL) { cJSON_free(rv); }
@@ -887,9 +887,9 @@ static mrb_value GenR_cJSON_ReplaceItemInArray(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    cJSON *a2 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "cJSON");
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a2 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_ReplaceItemInArray(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -902,9 +902,9 @@ static mrb_value GenR_cJSON_ReplaceItemInObject(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    cJSON *a2 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "cJSON");
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a2 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_ReplaceItemInObject(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -917,9 +917,9 @@ static mrb_value GenR_cJSON_ReplaceItemInObjectCaseSensitive(mrb_state *mrb, mrb
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    cJSON *a2 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "cJSON");
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a2 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_ReplaceItemInObjectCaseSensitive(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -932,9 +932,9 @@ static mrb_value GenR_cJSON_ReplaceItemViaPointer(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    cJSON *a1 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "cJSON");
-    cJSON *a2 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "cJSON");
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    cJSON *a1 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "cJSON");
+    cJSON *a2 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "cJSON");
     cJSON_bool rv = cJSON_ReplaceItemViaPointer(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -947,8 +947,8 @@ static mrb_value GenR_cJSON_SetNumberHelper(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    double a1 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    double a1 = (double)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     double rv = cJSON_SetNumberHelper(a0, a1);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -961,8 +961,8 @@ static mrb_value GenR_cJSON_SetValuestring(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    cJSON *a0 = (cJSON *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    cJSON *a0 = (cJSON *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "cJSON");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     char * rv = cJSON_SetValuestring(a0, a1);
     mrb_value rstr = rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv);
     if (rv != NULL) { cJSON_free(rv); }
@@ -982,11 +982,11 @@ static mrb_value GenR_cJSON_Version(mrb_state *mrb, mrb_value self)
     }
 }
 
-void SDLStaticGen_OpenRuby_cjson(mrb_state *mrb);
-void SDLStaticGen_OpenRuby_cjson(mrb_state *mrb)
+void GrappleGen_OpenRuby_cjson(mrb_state *mrb);
+void GrappleGen_OpenRuby_cjson(mrb_state *mrb)
 {
     struct RClass *mod;
-    SDLStaticGen_RubyEnsureHandleClass(mrb);
+    GrappleGen_RubyEnsureHandleClass(mrb);
     mod = mrb_define_module(mrb, "JSON");
     mrb_define_module_function(mrb, mod, "AddArrayToObject", GenR_cJSON_AddArrayToObject, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "AddBoolToObject", GenR_cJSON_AddBoolToObject, MRB_ARGS_ANY());

@@ -3,7 +3,7 @@ title: Formats
 description: "JSON, TOML, and YAML parsing — the three data formats games actually need, statically built with their native APIs unchanged."
 ---
 
-# Formats — `SDLStatic::Formats`
+# Formats — `Grapple::Formats`
 
 Static-only builds of the three data-format parsers games actually use —
 level files, configs, and everything ini-shaped. All plain C, MIT, zero
@@ -17,7 +17,7 @@ exposed unchanged.
 | YAML | libyaml | 0.2.5 | `<yaml.h>` |
 
 ```cmake
-target_link_libraries(your_game PRIVATE SDLStatic::Formats)
+target_link_libraries(your_game PRIVATE Grapple::Formats)
 ```
 
 ```c

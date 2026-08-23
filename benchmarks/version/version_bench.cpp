@@ -1,9 +1,9 @@
 /**
  * @file version_bench.cpp
- * @brief Microbenchmarks for SDL3_static_extensions::Version.
+ * @brief Microbenchmarks for grapple::Version.
  */
 
-#include "SDL3_static_extensions/version.hpp"
+#include "grapple/version.hpp"
 
 #include <benchmark/benchmark.h>
 #include <string_view>
@@ -16,7 +16,7 @@ void BM_Version(benchmark::State &state)
     for (auto _ : state)
     {
         // Mutable lvalue required: const-ref DoNotOptimize is deprecated under -Werror.
-        std::string_view version = SDL3_static_extensions::Version();
+        std::string_view version = grapple::Version();
         benchmark::DoNotOptimize(version);
     }
 }

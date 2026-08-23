@@ -1,6 +1,6 @@
 /**
  * @file mixer_test.cpp
- * @brief Tests for SDLStatic::Mixer (vendored SDL_mixer, static decoders only).
+ * @brief Tests for Grapple::Mixer (vendored SDL_mixer, static decoders only).
  *
  * Runs fully headless: MIX_CreateMixer needs no audio device, and
  * MIX_Generate pulls mixed samples on demand, so decode and playback

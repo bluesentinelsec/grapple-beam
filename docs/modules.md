@@ -1,11 +1,11 @@
 ---
 title: Modules
-description: "Every SDLStatic module: CMake target, what it provides, and what is vendored underneath."
+description: "Every Grapple module: CMake target, what it provides, and what is vendored underneath."
 ---
 
 # Modules
 
-Every module is a static library with a `SDLStatic::` CMake alias target.
+Every module is a static library with a `Grapple::` CMake alias target.
 Link what you need; each page below covers the API surface, examples, and
 the exact upstream provenance. Deeper reference material lives with the
 code in each module's `README.md` and in the [`deps/`
@@ -14,24 +14,24 @@ which record every vendored version, checksum, deletion, and local fix.
 
 | Target | Page | Provides |
 |--------|------|----------|
-| `SDLStatic::Mixer` | [Mixer](mixer.html) | audio mixing, music, sound effects, MIDI, chiptune synthesis |
-| `SDLStatic::Gfx` | [Gfx](gfx.html) | CPU drawing primitives, rotozoom, framerate manager, GPU-batched primitives |
-| `SDLStatic::Image` | [Image](image.html) | loading/saving 13 image formats, animations |
-| `SDLStatic::TTF` | [TTF](ttf.html) | TrueType/OpenType rendering, complex-script shaping (HarfBuzz), BiDi (SheenBidi) |
-| `SDLStatic::Net` | [Net](net.html) | TCP/UDP sockets (SDL3_net) |
+| `Grapple::Mixer` | [Mixer](mixer.html) | audio mixing, music, sound effects, MIDI, chiptune synthesis |
+| `Grapple::Gfx` | [Gfx](gfx.html) | CPU drawing primitives, rotozoom, framerate manager, GPU-batched primitives |
+| `Grapple::Image` | [Image](image.html) | loading/saving 13 image formats, animations |
+| `Grapple::TTF` | [TTF](ttf.html) | TrueType/OpenType rendering, complex-script shaping (HarfBuzz), BiDi (SheenBidi) |
+| `Grapple::Net` | [Net](net.html) | TCP/UDP sockets (SDL3_net) |
 | `mog::mog` | [HTTP/S](http.html) | HTTP/S client (mog), statically linked |
-| `SDLStatic::Physics` | [Physics](physics.html) | Box2D v3 rigid-body physics |
-| `SDLStatic::GUI` | [GUI](gui.html) | Nuklear immediate-mode GUI, SDL3 backend, grid layout |
-| `SDLStatic::Tiled` | [Tiled](tiled.html) | Tiled map (.tmj) parsing, VFS-aware |
-| `SDLStatic::Regex` | [Regex](regex.html) | regular expressions (Oniguruma), Ruby syntax, `Regexp` for mruby |
-| `SDLStatic::Light` | [Lighting](lighting.html) | dynamic 2D lighting: day/night ambient, coloured lights, hard shadows |
-| `SDLStatic::Engine` | [Engine](engine.html) | opinionated game engine: loop, scenes, actors, assets |
-| `SDLStatic::VFS` | [VFS](vfs.html) | PhysFS virtual filesystem, encrypted-zip mounting, asset packing |
-| `SDLStatic::Extras` | [Extras](extras.html) | password crypto, DEFLATE compression, base64, signals/events |
-| `SDLStatic::Formats` | [Formats](formats.html) | JSON (cJSON), TOML (tomlc99), YAML (libyaml) |
-| `SDLStatic::Lua` / `SDLStatic::Ruby` | [Lua &amp; Ruby](scripting.html) | embedded Lua 5.4.8 and mruby 4.0.0 |
-| `SDLStatic::Bindings` | [Lua &amp; Ruby](scripting.html) | curated game API + generated full-API bindings for both languages |
-| `SDLStatic::Cpp` | [C++](cpp.html) | Google-style RAII wrappers, `Status`/`Result`, generated full-API surface |
+| `Grapple::Physics` | [Physics](physics.html) | Box2D v3 rigid-body physics |
+| `Grapple::GUI` | [GUI](gui.html) | Nuklear immediate-mode GUI, SDL3 backend, grid layout |
+| `Grapple::Tiled` | [Tiled](tiled.html) | Tiled map (.tmj) parsing, VFS-aware |
+| `Grapple::Regex` | [Regex](regex.html) | regular expressions (Oniguruma), Ruby syntax, `Regexp` for mruby |
+| `Grapple::Light` | [Lighting](lighting.html) | dynamic 2D lighting: day/night ambient, coloured lights, hard shadows |
+| `Grapple::Engine` | [Engine](engine.html) | opinionated game engine: loop, scenes, actors, assets |
+| `Grapple::VFS` | [VFS](vfs.html) | PhysFS virtual filesystem, encrypted-zip mounting, asset packing |
+| `Grapple::Extras` | [Extras](extras.html) | password crypto, DEFLATE compression, base64, signals/events |
+| `Grapple::Formats` | [Formats](formats.html) | JSON (cJSON), TOML (tomlc99), YAML (libyaml) |
+| `Grapple::Lua` / `Grapple::Ruby` | [Lua &amp; Ruby](scripting.html) | embedded Lua 5.4.8 and mruby 4.0.0 |
+| `Grapple::Bindings` | [Lua &amp; Ruby](scripting.html) | curated game API + generated full-API bindings for both languages |
+| `Grapple::Cpp` | [C++](cpp.html) | Google-style RAII wrappers, `Status`/`Result`, generated full-API surface |
 
 ## Design rules shared by every module
 

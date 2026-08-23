@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 3.20)
 # C only, deliberately. The SDK contains C++ objects, and a project that
 # enabled CXX would link through the C++ driver and pick up its runtime by
 # accident — hiding the exact failure this is meant to catch.
-project(sdlstatic_sdk_consumer LANGUAGES C)
+project(grapple_sdk_consumer LANGUAGES C)
 
 find_package(grapple-beam REQUIRED)
 

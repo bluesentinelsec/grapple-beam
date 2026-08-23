@@ -1,12 +1,12 @@
 # SDK.cmake — the single static library we ship, and the rules that install it.
 #
-# The component targets (SDLStatic::Engine, ::Bindings, ::TTF, …) are how the
+# The component targets (Grapple::Engine, ::Bindings, ::TTF, …) are how the
 # source tree is organised; they are not how anyone wants to consume it. A
 # game that had to name twenty archives in dependency order, plus SDL3 and
 # every vendored dependency, would be paying for our directory layout.
 #
 # So one archive holds the lot: every component, SDL3 itself, and the
-# third-party static libraries the components need. `-lSDL3_static_extensions_sdk`
+# third-party static libraries the components need. `-lgrapple_sdk`
 # and an include path is the whole link line, which is the promise a project
 # called *static extensions* ought to be making.
 #
@@ -18,7 +18,7 @@
 # Fold a target's objects into the SDK, if that target exists in this build.
 # Optional components and platform-specific dependencies mean half of these
 # are absent in any given configuration.
-function(sdlstatic_sdk_collect out_var)
+function(grapple_sdk_collect out_var)
   set(collected "")
   foreach(candidate IN LISTS ARGN)
     if(TARGET ${candidate})
@@ -40,11 +40,11 @@ endfunction()
 # someone adds a module, forgets the list, and the SDK ships without it —
 # silently, because everything still builds and every in-tree test passes.
 # Walking the build system means a component is in the SDK because it exists.
-function(sdlstatic_sdk_find_components dir out_var)
+function(grapple_sdk_find_components dir out_var)
   set(found "")
   get_property(targets DIRECTORY "${dir}" PROPERTY BUILDSYSTEM_TARGETS)
   foreach(target IN LISTS targets)
-    if(target MATCHES "^SDLStatic_")
+    if(target MATCHES "^Grapple_")
       get_target_property(type ${target} TYPE)
       if(type STREQUAL "STATIC_LIBRARY")
         list(APPEND found ${target})
@@ -53,25 +53,25 @@ function(sdlstatic_sdk_find_components dir out_var)
   endforeach()
   get_property(subdirs DIRECTORY "${dir}" PROPERTY SUBDIRECTORIES)
   foreach(subdir IN LISTS subdirs)
-    sdlstatic_sdk_find_components("${subdir}" _sub)
+    grapple_sdk_find_components("${subdir}" _sub)
     list(APPEND found ${_sub})
   endforeach()
   set(${out_var} "${found}" PARENT_SCOPE)
 endfunction()
 
-sdlstatic_sdk_find_components("${CMAKE_CURRENT_SOURCE_DIR}" SDLSTATIC_SDK_COMPONENTS)
+grapple_sdk_find_components("${CMAKE_CURRENT_SOURCE_DIR}" GRAPPLE_SDK_COMPONENTS)
 
 # The C++ wrapper is the one component that separates the two SDKs. Everything
 # else is C API — implemented in C or C++, but called from C — and belongs in
 # both.
-set(SDLSTATIC_SDK_CXX_ONLY SDLStatic_Cpp)
-list(REMOVE_ITEM SDLSTATIC_SDK_COMPONENTS ${SDLSTATIC_SDK_CXX_ONLY})
+set(GRAPPLE_SDK_CXX_ONLY Grapple_Cpp)
+list(REMOVE_ITEM GRAPPLE_SDK_COMPONENTS ${GRAPPLE_SDK_CXX_ONLY})
 # The scaffold library carries the version API, which is public surface.
-list(APPEND SDLSTATIC_SDK_COMPONENTS ${PROJECT_NAME}_lib)
+list(APPEND GRAPPLE_SDK_COMPONENTS ${PROJECT_NAME}_lib)
 # The SDK itself must not try to absorb itself if this file is re-included.
-list(REMOVE_ITEM SDLSTATIC_SDK_COMPONENTS SDLStatic_SDK)
-list(REMOVE_DUPLICATES SDLSTATIC_SDK_COMPONENTS)
-message(STATUS "SDK: ${CMAKE_PROJECT_NAME} components folded in: ${SDLSTATIC_SDK_COMPONENTS}")
+list(REMOVE_ITEM GRAPPLE_SDK_COMPONENTS Grapple_SDK)
+list(REMOVE_DUPLICATES GRAPPLE_SDK_COMPONENTS)
+message(STATUS "SDK: ${CMAKE_PROJECT_NAME} components folded in: ${GRAPPLE_SDK_COMPONENTS}")
 
 # Third-party code the components need. SDL3 is included deliberately: an
 # extensions library that made you find and match your own SDL3 build would
@@ -80,7 +80,7 @@ message(STATUS "SDK: ${CMAKE_PROJECT_NAME} components folded in: ${SDLSTATIC_SDK
 # mog's C++ core is `mog_lib`, while `mog` is its own Android shared library
 # and has no objects to give. Getting that wrong is silent — the collector
 # skips what it cannot use — so the check below fails the build instead.
-set(SDLSTATIC_SDK_VENDORED
+set(GRAPPLE_SDK_VENDORED
   SDL3-static
   freetype
   mbedtls mbedx509 mbedcrypto everest p256m
@@ -88,15 +88,15 @@ set(SDLSTATIC_SDK_VENDORED
   mog_lib
 )
 
-sdlstatic_sdk_collect(_sdk_component_objects ${SDLSTATIC_SDK_COMPONENTS})
-sdlstatic_sdk_collect(_sdk_vendored_objects ${SDLSTATIC_SDK_VENDORED})
+grapple_sdk_collect(_sdk_component_objects ${GRAPPLE_SDK_COMPONENTS})
+grapple_sdk_collect(_sdk_vendored_objects ${GRAPPLE_SDK_VENDORED})
 
 # A vendored dependency that is built but not folded in produces an archive
 # that links for anyone who does not happen to call it — which is how the
 # HTTP core went missing without a single test noticing. If a component is
 # enabled, the library underneath it has to be in the archive.
 set(_folded "")
-foreach(candidate IN LISTS SDLSTATIC_SDK_VENDORED)
+foreach(candidate IN LISTS GRAPPLE_SDK_VENDORED)
   list(FIND _sdk_vendored_objects "$<TARGET_OBJECTS:${candidate}>" _at)
   if(NOT _at EQUAL -1)
     list(APPEND _folded ${candidate})
@@ -134,32 +134,32 @@ enable_language(C)
 # The anchor source is not optional: see cmake/sdk_anchor.c. A static library
 # built purely from other targets' objects produces no archive under the
 # Xcode generator, and reports success while doing it.
-sdlstatic_sdk_collect(_sdk_cxx_objects ${SDLSTATIC_SDK_CXX_ONLY})
+grapple_sdk_collect(_sdk_cxx_objects ${GRAPPLE_SDK_CXX_ONLY})
 
-add_library(SDLStatic_SDK STATIC
+add_library(Grapple_SDK STATIC
   ${CMAKE_CURRENT_LIST_DIR}/sdk_anchor.c
   ${_sdk_component_objects}
   ${_sdk_vendored_objects}
 )
-add_library(SDLStatic::SDK ALIAS SDLStatic_SDK)
-add_library(${PROJECT_NAME}::SDK ALIAS SDLStatic_SDK)
+add_library(Grapple::SDK ALIAS Grapple_SDK)
+add_library(${PROJECT_NAME}::SDK ALIAS Grapple_SDK)
 
-add_library(SDLStatic_SDK_Cxx STATIC
+add_library(Grapple_SDK_Cxx STATIC
   ${CMAKE_CURRENT_LIST_DIR}/sdk_anchor.c
   ${_sdk_component_objects}
   ${_sdk_vendored_objects}
   ${_sdk_cxx_objects}
 )
-add_library(SDLStatic::SDKCxx ALIAS SDLStatic_SDK_Cxx)
-add_library(${PROJECT_NAME}::SDKCxx ALIAS SDLStatic_SDK_Cxx)
+add_library(Grapple::SDKCxx ALIAS Grapple_SDK_Cxx)
+add_library(${PROJECT_NAME}::SDKCxx ALIAS Grapple_SDK_Cxx)
 
-set_target_properties(SDLStatic_SDK PROPERTIES
+set_target_properties(Grapple_SDK PROPERTIES
   OUTPUT_NAME grapple_sdk
   EXPORT_NAME SDK
   POSITION_INDEPENDENT_CODE ON
   LINKER_LANGUAGE CXX
 )
-set_target_properties(SDLStatic_SDK_Cxx PROPERTIES
+set_target_properties(Grapple_SDK_Cxx PROPERTIES
   OUTPUT_NAME grapple_sdk_cxx
   EXPORT_NAME SDKCxx
   POSITION_INDEPENDENT_CODE ON
@@ -168,7 +168,7 @@ set_target_properties(SDLStatic_SDK_Cxx PROPERTIES
 
 # Everything below applies to both. The C++ SDK differs only in what it
 # contains, not in how it is used.
-set(SDLSTATIC_SDK_TARGETS SDLStatic_SDK SDLStatic_SDK_Cxx)
+set(GRAPPLE_SDK_TARGETS Grapple_SDK Grapple_SDK_Cxx)
 
 # The headers a consumer includes. Under BUILD_INTERFACE these are the source
 # directories; from an install they are one flattened include tree, which is
@@ -178,8 +178,8 @@ set(SDLSTATIC_SDK_TARGETS SDLStatic_SDK SDLStatic_SDK_Cxx)
 # build tree, so anything not already a generator expression is wrapped:
 # these directories exist while building, and after an install the headers
 # are somewhere else entirely.
-function(sdlstatic_sdk_add_includes)
-  foreach(sdk IN LISTS SDLSTATIC_SDK_TARGETS)
+function(grapple_sdk_add_includes)
+  foreach(sdk IN LISTS GRAPPLE_SDK_TARGETS)
     foreach(dir IN LISTS ARGN)
       if(dir MATCHES "^\\$<")
         target_include_directories(${sdk} INTERFACE "${dir}")
@@ -190,15 +190,15 @@ function(sdlstatic_sdk_add_includes)
   endforeach()
 endfunction()
 
-foreach(component IN LISTS SDLSTATIC_SDK_COMPONENTS SDLSTATIC_SDK_CXX_ONLY)
+foreach(component IN LISTS GRAPPLE_SDK_COMPONENTS GRAPPLE_SDK_CXX_ONLY)
   if(TARGET ${component})
     get_target_property(dirs ${component} INTERFACE_INCLUDE_DIRECTORIES)
     if(dirs)
-      sdlstatic_sdk_add_includes(${dirs})
+      grapple_sdk_add_includes(${dirs})
     endif()
   endif()
 endforeach()
-foreach(sdk IN LISTS SDLSTATIC_SDK_TARGETS)
+foreach(sdk IN LISTS GRAPPLE_SDK_TARGETS)
   target_include_directories(${sdk} INTERFACE
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
@@ -222,10 +222,10 @@ endforeach()
 if(CMAKE_GENERATOR STREQUAL "Xcode")
   # Each SDK gets the archives it is made of: the C one everything except the
   # C++ wrapper, the C++ one everything.
-  foreach(sdk IN LISTS SDLSTATIC_SDK_TARGETS)
-    set(_sdk_sources ${SDLSTATIC_SDK_COMPONENTS} ${SDLSTATIC_SDK_VENDORED})
-    if(sdk STREQUAL "SDLStatic_SDK_Cxx")
-      list(APPEND _sdk_sources ${SDLSTATIC_SDK_CXX_ONLY})
+  foreach(sdk IN LISTS GRAPPLE_SDK_TARGETS)
+    set(_sdk_sources ${GRAPPLE_SDK_COMPONENTS} ${GRAPPLE_SDK_VENDORED})
+    if(sdk STREQUAL "Grapple_SDK_Cxx")
+      list(APPEND _sdk_sources ${GRAPPLE_SDK_CXX_ONLY})
     endif()
 
     set(_sdk_archives "")
@@ -255,7 +255,7 @@ if(CMAKE_GENERATOR STREQUAL "Xcode")
   endforeach()
 endif()
 
-# SDL3's headers are part of our public surface — <SDLStatic/engine.h> opens
+# SDL3's headers are part of our public surface — <grapple/engine.h> opens
 # with #include <SDL3/SDL.h> — so a consumer needs them whether or not they
 # call SDL3 directly.
 # SDL3 keeps its headers on a separate interface target (SDL3::Headers)
@@ -268,7 +268,7 @@ if(NOT _sdl3_includes AND DEFINED sdl3_SOURCE_DIR)
   set(_sdl3_includes "${sdl3_SOURCE_DIR}/include")
 endif()
 if(_sdl3_includes)
-  sdlstatic_sdk_add_includes(${_sdl3_includes})
+  grapple_sdk_add_includes(${_sdl3_includes})
 endif()
 
 # ---------------------------------------------------------------------------
@@ -299,7 +299,7 @@ endif()
 # — so they are unwrapped here. Frameworks become plain `-framework X`
 # flags: the LINK_LIBRARY form needs CMake 3.24, and an installed SDK should
 # not impose a newer CMake on its consumers than the project itself requires.
-function(sdlstatic_sdk_system_libs out_var)
+function(grapple_sdk_system_libs out_var)
   set(collected "")
   foreach(target IN LISTS ARGN)
     if(NOT TARGET ${target})
@@ -353,8 +353,8 @@ function(sdlstatic_sdk_system_libs out_var)
   set(${out_var} "${collected}" PARENT_SCOPE)
 endfunction()
 
-sdlstatic_sdk_system_libs(SDLSTATIC_SDK_SYSTEM_LIBS
-  ${SDLSTATIC_SDK_COMPONENTS} ${SDLSTATIC_SDK_CXX_ONLY} ${SDLSTATIC_SDK_VENDORED}
+grapple_sdk_system_libs(GRAPPLE_SDK_SYSTEM_LIBS
+  ${GRAPPLE_SDK_COMPONENTS} ${GRAPPLE_SDK_CXX_ONLY} ${GRAPPLE_SDK_VENDORED}
   SDL3::SDL3)
 
 # The C++ runtime. The archive holds C++ objects — the C++ wrapper, Box2D's
@@ -368,16 +368,16 @@ sdlstatic_sdk_system_libs(SDLSTATIC_SDK_SYSTEM_LIBS
 # to prevent. Ask the toolchain what it links C++ programs against instead.
 foreach(implicit IN LISTS CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
   if(implicit MATCHES "^(std)?c\\+\\+$")
-    list(APPEND SDLSTATIC_SDK_SYSTEM_LIBS "${implicit}")
+    list(APPEND GRAPPLE_SDK_SYSTEM_LIBS "${implicit}")
   endif()
 endforeach()
 
-if(SDLSTATIC_SDK_SYSTEM_LIBS)
-  list(REMOVE_DUPLICATES SDLSTATIC_SDK_SYSTEM_LIBS)
+if(GRAPPLE_SDK_SYSTEM_LIBS)
+  list(REMOVE_DUPLICATES GRAPPLE_SDK_SYSTEM_LIBS)
 endif()
-message(STATUS "SDK: system libraries a consumer still links: ${SDLSTATIC_SDK_SYSTEM_LIBS}")
-foreach(sdk IN LISTS SDLSTATIC_SDK_TARGETS)
-  target_link_libraries(${sdk} INTERFACE ${SDLSTATIC_SDK_SYSTEM_LIBS})
+message(STATUS "SDK: system libraries a consumer still links: ${GRAPPLE_SDK_SYSTEM_LIBS}")
+foreach(sdk IN LISTS GRAPPLE_SDK_TARGETS)
+  target_link_libraries(${sdk} INTERFACE ${GRAPPLE_SDK_SYSTEM_LIBS})
 endforeach()
 
 # ---------------------------------------------------------------------------
@@ -391,7 +391,7 @@ endforeach()
 # $<BUILD_INTERFACE:...> wrapper, drop anything else expressed as a
 # generator expression (it describes where headers are *going*, not where
 # they are), and keep what exists on disk.
-function(sdlstatic_sdk_real_dirs out_var)
+function(grapple_sdk_real_dirs out_var)
   set(dirs "")
   foreach(dir IN LISTS ARGN)
     if(dir MATCHES "\\$<BUILD_INTERFACE:(.+)>")
@@ -418,7 +418,7 @@ set(_interface_dirs "")
 # The C++ wrapper's headers too: it is not in the C SDK's object list, but
 # its headers ship with the prefix either way — a C++ consumer includes them
 # and the C++ archive is built from them.
-foreach(component IN LISTS SDLSTATIC_SDK_COMPONENTS SDLSTATIC_SDK_CXX_ONLY)
+foreach(component IN LISTS GRAPPLE_SDK_COMPONENTS GRAPPLE_SDK_CXX_ONLY)
   if(TARGET ${component})
     get_target_property(dirs ${component} INTERFACE_INCLUDE_DIRECTORIES)
     if(dirs)
@@ -426,8 +426,8 @@ foreach(component IN LISTS SDLSTATIC_SDK_COMPONENTS SDLSTATIC_SDK_CXX_ONLY)
     endif()
   endif()
 endforeach()
-sdlstatic_sdk_real_dirs(_installed_include_dirs ${_interface_dirs})
-sdlstatic_sdk_real_dirs(_sdl3_header_dirs ${_sdl3_includes})
+grapple_sdk_real_dirs(_installed_include_dirs ${_interface_dirs})
+grapple_sdk_real_dirs(_sdl3_header_dirs ${_sdl3_includes})
 foreach(dir IN LISTS _installed_include_dirs)
   install(DIRECTORY "${dir}/"
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
@@ -452,7 +452,7 @@ endforeach()
 set(_editor_dir "${CMAKE_CURRENT_LIST_DIR}/../bindings/generated/editor")
 if(EXISTS "${_editor_dir}/tags")
   install(FILES "${_editor_dir}/tags" DESTINATION .)
-  install(FILES "${_editor_dir}/sdlstatic.lua" "${_editor_dir}/sdlstatic.rbs"
+  install(FILES "${_editor_dir}/grapple.lua" "${_editor_dir}/grapple.rbs"
           DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/editor)
 endif()
 
@@ -483,7 +483,7 @@ foreach(top README.md LICENSE)
   endif()
 endforeach()
 
-install(TARGETS ${SDLSTATIC_SDK_TARGETS}
+install(TARGETS ${GRAPPLE_SDK_TARGETS}
   EXPORT ${PROJECT_NAME}Targets
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
@@ -506,12 +506,12 @@ install(TARGETS ${SDLSTATIC_SDK_TARGETS}
 # Java on its own schedule, and a source directory that fills in later is a
 # source directory that was empty when it mattered.
 # ---------------------------------------------------------------------------
-if(ANDROID AND SDLSTATIC_ANDROID_JAVA_DIR AND DEFINED sdl3_SOURCE_DIR)
+if(ANDROID AND GRAPPLE_ANDROID_JAVA_DIR AND DEFINED sdl3_SOURCE_DIR)
   set(_sdl_java "${sdl3_SOURCE_DIR}/android-project/app/src/main/java")
   if(IS_DIRECTORY "${_sdl_java}")
-    file(COPY "${_sdl_java}/" DESTINATION "${SDLSTATIC_ANDROID_JAVA_DIR}"
+    file(COPY "${_sdl_java}/" DESTINATION "${GRAPPLE_ANDROID_JAVA_DIR}"
          FILES_MATCHING PATTERN "*.java")
-    message(STATUS "SDK: staged SDL3's Java classes into ${SDLSTATIC_ANDROID_JAVA_DIR}")
+    message(STATUS "SDK: staged SDL3's Java classes into ${GRAPPLE_ANDROID_JAVA_DIR}")
   else()
     message(FATAL_ERROR
       "SDL3's Android Java sources are missing from ${_sdl_java}. An AAR "
@@ -531,24 +531,24 @@ endif()
 # from the same directory list the desktop SDK installs, so the two cannot
 # drift apart.
 # ---------------------------------------------------------------------------
-if(ANDROID AND SDLSTATIC_ANDROID_PREFAB_HEADERS AND TARGET SDL3_static_extensions)
+if(ANDROID AND GRAPPLE_ANDROID_PREFAB_HEADERS AND TARGET grapple)
   set(_stage_commands "")
   foreach(dir IN LISTS _installed_include_dirs _sdl3_header_dirs)
     list(APPEND _stage_commands
       COMMAND ${CMAKE_COMMAND} -E copy_directory
-              "${dir}" "${SDLSTATIC_ANDROID_PREFAB_HEADERS}")
+              "${dir}" "${GRAPPLE_ANDROID_PREFAB_HEADERS}")
   endforeach()
   if(_stage_commands)
     # A custom target rather than POST_BUILD: add_custom_command(TARGET ...)
     # only works in the directory that created the target, and the Android
     # library is created in src/android while the header list is only known
     # here, after every component has been added.
-    add_custom_target(sdlstatic_stage_prefab_headers
+    add_custom_target(grapple_stage_prefab_headers
       ${_stage_commands}
       COMMENT "Staging public headers into the Prefab package"
       VERBATIM
     )
-    add_dependencies(SDL3_static_extensions sdlstatic_stage_prefab_headers)
+    add_dependencies(grapple grapple_stage_prefab_headers)
   endif()
 endif()
 
@@ -565,7 +565,7 @@ endif()
 # controlled at the link line instead of in 718 places. The public surface is
 # a set of prefixes, which is what our headers actually publish:
 #
-#   SDLStatic_*   the engine and every component
+#   Grapple_*   the engine and every component
 #   SDL_*         SDL3 itself, plus IMG_/TTF_/Mix_/NET_ for its satellites
 #   b2*           Box2D
 #   lua*/mrb_*    the interpreters, for a host embedding them
@@ -576,24 +576,24 @@ endif()
 # it is why the Android .so (built with --whole-archive, which publishes
 # everything) is not the same thing and is tracked separately.
 # ---------------------------------------------------------------------------
-if(SDLSTATIC_BUILD_SHARED_SDK)
-  set(SDLSTATIC_SDK_EXPORT_PREFIXES
-      SDLStatic_ SDL_ IMG_ TTF_ Mix_ NET_ b2 lua_ luaL_ luaopen_ mrb_ mrbc_
+if(GRAPPLE_BUILD_SHARED_SDK)
+  set(GRAPPLE_SDK_EXPORT_PREFIXES
+      Grapple_ SDL_ IMG_ TTF_ Mix_ NET_ b2 lua_ luaL_ luaopen_ mrb_ mrbc_
       PHYSFS_ nk_ toml_ cJSON_ cJSON yaml_ mog_)
 
   # The C++ API adds mangled names, which no prefix list can express
-  # readably; `sdlstatic` appears in every one of them because that is the
+  # readably; `grapple` appears in every one of them because that is the
   # namespace.
-  set(SDLSTATIC_SDK_CXX_EXPORT_PATTERNS "*sdlstatic*" "*SDL3_static_extensions*")
+  set(GRAPPLE_SDK_CXX_EXPORT_PATTERNS "*grapple*")
 
   # Turn the prefixes into whatever the platform's linker wants.
-  function(sdlstatic_sdk_export_script target out_var)
+  function(grapple_sdk_export_script target out_var)
     set(patterns "")
-    foreach(prefix IN LISTS SDLSTATIC_SDK_EXPORT_PREFIXES)
+    foreach(prefix IN LISTS GRAPPLE_SDK_EXPORT_PREFIXES)
       list(APPEND patterns "${prefix}*")
     endforeach()
     if(target STREQUAL "cxx")
-      list(APPEND patterns ${SDLSTATIC_SDK_CXX_EXPORT_PATTERNS})
+      list(APPEND patterns ${GRAPPLE_SDK_CXX_EXPORT_PATTERNS})
     endif()
 
     if(APPLE)
@@ -608,7 +608,7 @@ if(SDLSTATIC_BUILD_SHARED_SDK)
     elseif(UNIX)
       # A version script, which also names the ABI version.
       set(path "${CMAKE_CURRENT_BINARY_DIR}/sdk_exports_${target}.map")
-      set(content "SDLSTATIC_${PROJECT_VERSION_MAJOR} {\n  global:\n")
+      set(content "GRAPPLE_${PROJECT_VERSION_MAJOR} {\n  global:\n")
       foreach(pattern IN LISTS patterns)
         string(APPEND content "    ${pattern};\n")
       endforeach()
@@ -629,37 +629,37 @@ if(SDLSTATIC_BUILD_SHARED_SDK)
       set(full "${CMAKE_CURRENT_BINARY_DIR}/sdk_all_${target}.def")
       set(path "${CMAKE_CURRENT_BINARY_DIR}/sdk_exports_${target}.def")
       set(${out_var} "${path}" PARENT_SCOPE)
-      set(SDLSTATIC_SDK_DEF_${target} "${path}" PARENT_SCOPE)
-      set(SDLSTATIC_SDK_DEF_OBJECTS_${target} "${objects}" PARENT_SCOPE)
-      set(SDLSTATIC_SDK_DEF_FULL_${target} "${full}" PARENT_SCOPE)
-      set(SDLSTATIC_SDK_DEF_PATTERNS_${target} "${patterns}" PARENT_SCOPE)
+      set(GRAPPLE_SDK_DEF_${target} "${path}" PARENT_SCOPE)
+      set(GRAPPLE_SDK_DEF_OBJECTS_${target} "${objects}" PARENT_SCOPE)
+      set(GRAPPLE_SDK_DEF_FULL_${target} "${full}" PARENT_SCOPE)
+      set(GRAPPLE_SDK_DEF_PATTERNS_${target} "${patterns}" PARENT_SCOPE)
     endif()
   endfunction()
 
-  add_library(SDLStatic_SDK_Shared SHARED
+  add_library(Grapple_SDK_Shared SHARED
     ${CMAKE_CURRENT_LIST_DIR}/sdk_anchor.c
     ${_sdk_component_objects}
     ${_sdk_vendored_objects}
   )
-  add_library(SDLStatic::SDKShared ALIAS SDLStatic_SDK_Shared)
-  add_library(${PROJECT_NAME}::SDKShared ALIAS SDLStatic_SDK_Shared)
+  add_library(Grapple::SDKShared ALIAS Grapple_SDK_Shared)
+  add_library(${PROJECT_NAME}::SDKShared ALIAS Grapple_SDK_Shared)
 
-  add_library(SDLStatic_SDK_Cxx_Shared SHARED
+  add_library(Grapple_SDK_Cxx_Shared SHARED
     ${CMAKE_CURRENT_LIST_DIR}/sdk_anchor.c
     ${_sdk_component_objects}
     ${_sdk_vendored_objects}
     ${_sdk_cxx_objects}
   )
-  add_library(SDLStatic::SDKCxxShared ALIAS SDLStatic_SDK_Cxx_Shared)
-  add_library(${PROJECT_NAME}::SDKCxxShared ALIAS SDLStatic_SDK_Cxx_Shared)
+  add_library(Grapple::SDKCxxShared ALIAS Grapple_SDK_Cxx_Shared)
+  add_library(${PROJECT_NAME}::SDKCxxShared ALIAS Grapple_SDK_Cxx_Shared)
 
-  set(SDLSTATIC_SDK_SHARED_TARGETS SDLStatic_SDK_Shared SDLStatic_SDK_Cxx_Shared)
+  set(GRAPPLE_SDK_SHARED_TARGETS Grapple_SDK_Shared Grapple_SDK_Cxx_Shared)
 
-  sdlstatic_sdk_export_script(c _c_exports)
-  sdlstatic_sdk_export_script(cxx _cxx_exports)
+  grapple_sdk_export_script(c _c_exports)
+  grapple_sdk_export_script(cxx _cxx_exports)
 
-  foreach(sdk IN LISTS SDLSTATIC_SDK_SHARED_TARGETS)
-    if(sdk STREQUAL "SDLStatic_SDK_Shared")
+  foreach(sdk IN LISTS GRAPPLE_SDK_SHARED_TARGETS)
+    if(sdk STREQUAL "Grapple_SDK_Shared")
       set(_output_name grapple)
       set(_export_name SDKShared)
       set(_exports "${_c_exports}")
@@ -685,7 +685,7 @@ if(SDLSTATIC_BUILD_SHARED_SDK)
       # The object list is written at generate time, when the generator
       # expressions resolve; the .def is produced just before the link,
       # because that is the first moment the objects exist.
-      if(sdk STREQUAL "SDLStatic_SDK_Shared")
+      if(sdk STREQUAL "Grapple_SDK_Shared")
         set(_which c)
       else()
         set(_which cxx)
@@ -705,36 +705,36 @@ if(SDLSTATIC_BUILD_SHARED_SDK)
       # real objects — freetype contributes ftver.rc.res — and __create_def
       # reads them as "unrecognized file format". A .res holds version
       # metadata and exports nothing, so dropping it costs nothing.
-      file(GENERATE OUTPUT "${SDLSTATIC_SDK_DEF_OBJECTS_${_which}}"
+      file(GENERATE OUTPUT "${GRAPPLE_SDK_DEF_OBJECTS_${_which}}"
            CONTENT "$<JOIN:$<FILTER:${_def_objects},EXCLUDE,\\.res$>,\n>\n")
 
       add_custom_command(TARGET ${sdk} PRE_LINK
         COMMAND ${CMAKE_COMMAND} -E __create_def
-                "${SDLSTATIC_SDK_DEF_FULL_${_which}}"
-                "${SDLSTATIC_SDK_DEF_OBJECTS_${_which}}"
+                "${GRAPPLE_SDK_DEF_FULL_${_which}}"
+                "${GRAPPLE_SDK_DEF_OBJECTS_${_which}}"
         COMMAND ${CMAKE_COMMAND}
-                -DINPUT=${SDLSTATIC_SDK_DEF_FULL_${_which}}
-                -DOUTPUT=${SDLSTATIC_SDK_DEF_${_which}}
-                "-DPREFIXES=${SDLSTATIC_SDK_EXPORT_PREFIXES}"
-                "-DPATTERNS=${SDLSTATIC_SDK_DEF_PATTERNS_${_which}}"
+                -DINPUT=${GRAPPLE_SDK_DEF_FULL_${_which}}
+                -DOUTPUT=${GRAPPLE_SDK_DEF_${_which}}
+                "-DPREFIXES=${GRAPPLE_SDK_EXPORT_PREFIXES}"
+                "-DPATTERNS=${GRAPPLE_SDK_DEF_PATTERNS_${_which}}"
                 -P "${CMAKE_CURRENT_LIST_DIR}/FilterExportDef.cmake"
         COMMENT "Filtering the export list for ${sdk}"
         VERBATIM
       )
-      target_link_options(${sdk} PRIVATE "/DEF:${SDLSTATIC_SDK_DEF_${_which}}")
+      target_link_options(${sdk} PRIVATE "/DEF:${GRAPPLE_SDK_DEF_${_which}}")
       set_target_properties(${sdk} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS OFF)
     elseif(_exports)
       target_link_options(${sdk} PRIVATE ${_exports})
     endif()
-    target_link_libraries(${sdk} PRIVATE ${SDLSTATIC_SDK_SYSTEM_LIBS})
+    target_link_libraries(${sdk} PRIVATE ${GRAPPLE_SDK_SYSTEM_LIBS})
 
-    get_target_property(_iface SDLStatic_SDK INTERFACE_INCLUDE_DIRECTORIES)
+    get_target_property(_iface Grapple_SDK INTERFACE_INCLUDE_DIRECTORIES)
     if(_iface)
       target_include_directories(${sdk} INTERFACE ${_iface})
     endif()
   endforeach()
 
-  install(TARGETS ${SDLSTATIC_SDK_SHARED_TARGETS}
+  install(TARGETS ${GRAPPLE_SDK_SHARED_TARGETS}
     EXPORT ${PROJECT_NAME}Targets
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

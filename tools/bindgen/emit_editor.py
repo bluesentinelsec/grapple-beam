@@ -2,7 +2,7 @@
 
 A script author's largest complaint about an embedded API is not that it is
 missing something — it is that the editor knows nothing about it.
-`SDLStaticC.` offers no completions, a typo in a function name is a runtime
+`Grapple.` offers no completions, a typo in a function name is a runtime
 error three minutes later, and the argument list lives in a browser tab.
 
 Everything needed to fix that is already here. The generator knows every
@@ -10,8 +10,8 @@ bound function and the signature the *script* sees, which is not always the
 C signature; that is what SCRIPT_API.md is written from. The same manifest
 produces:
 
-  sdlstatic.lua   ---@meta definitions for lua-language-server
-  sdlstatic.rbs   RBS signatures for Steep, Solargraph and friends
+  grapple.lua   ---@meta definitions for lua-language-server
+  grapple.rbs   RBS signatures for Steep, Solargraph and friends
   tags            a ctags file for the C and C++ headers
 
 Generated from the bindings rather than maintained beside them, so they
@@ -164,7 +164,7 @@ def _emit_lua(manifest: Manifest, outcomes: dict) -> str:
     w("--")
     w("-- Point your editor at this file — in .luarc.json:")
     w("--")
-    w('--     { "workspace": { "library": ["path/to/sdlstatic.lua"] } }')
+    w('--     { "workspace": { "library": ["path/to/grapple.lua"] } }')
     w("--")
     w("-- Signatures are the ones a script sees, which differ from C where a")
     w("-- (data, len) pair collapses into one string and where out-parameters")
@@ -267,7 +267,7 @@ def _header_paths(repo: Path, deps: Path) -> dict[str, str]:
 
     The parser records only the file name, which is all the binding emitters
     need. A tags file needs somewhere to jump to, and `engine.h` is not a
-    path anyone can open — `SDLStatic/engine.h` is, and that is exactly where
+    path anyone can open — `grapple/engine.h` is, and that is exactly where
     the SDK installs it. The rule is the same for our headers and for SDL's:
     whatever follows the nearest `include/` directory.
     """
@@ -334,7 +334,7 @@ def _emit_tags(manifest: Manifest, header_paths: dict[str, str]) -> str:
     lines = [
         "!_TAG_FILE_FORMAT\t2\t/extended format/",
         "!_TAG_FILE_SORTED\t1\t/0=unsorted, 1=sorted/",
-        "!_TAG_PROGRAM_NAME\tsdlstatic-bindgen\t//",
+        "!_TAG_PROGRAM_NAME\tgrapple-bindgen\t//",
         "!_TAG_PROGRAM_URL\thttps://github.com/bluesentinelsec/grapple-beam\t//",
     ]
     seen: set[tuple[str, str]] = set()
@@ -359,7 +359,7 @@ def emit_editor(manifest: Manifest, outcomes: dict, target: Path, deps: Path,
     """
     out_dir = target / "bindings" / "generated" / "editor"
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "sdlstatic.lua").write_text(_emit_lua(manifest, outcomes), encoding="utf-8")
-    (out_dir / "sdlstatic.rbs").write_text(_emit_rbs(manifest, outcomes), encoding="utf-8")
+    (out_dir / "grapple.lua").write_text(_emit_lua(manifest, outcomes), encoding="utf-8")
+    (out_dir / "grapple.rbs").write_text(_emit_rbs(manifest, outcomes), encoding="utf-8")
     (out_dir / "tags").write_text(
         _emit_tags(manifest, _header_paths(source_root, deps)), encoding="utf-8")

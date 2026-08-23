@@ -3,7 +3,7 @@ title: Regex
 description: "Real regular expressions in C, C++, Lua and Ruby — Ruby syntax, statically linked, via vendored Oniguruma."
 ---
 
-# Regex — `SDLStatic::Regex`
+# Regex — `Grapple::Regex`
 
 Regular expressions with Ruby syntax and Ruby semantics, over vendored
 [Oniguruma](https://github.com/kkos/oniguruma) (BSD-2, pure C, no external
@@ -11,7 +11,7 @@ dependencies — provenance in `deps/oniguruma.md`). It links statically
 everywhere the rest of the project does, web included.
 
 ```cmake
-target_link_libraries(your_game PRIVATE SDLStatic::Regex)
+target_link_libraries(your_game PRIVATE Grapple::Regex)
 ```
 
 This module exists because the scripting languages could not do the job
@@ -24,44 +24,44 @@ Patterns are compiled with `ONIG_SYNTAX_RUBY` against UTF-8 subjects, so
 named captures, lookaround, non-greedy quantifiers and `\p{...}` classes all
 behave the way a Ruby programmer expects.
 
-## C — `<SDLStatic/regex.h>`
+## C — `<grapple/regex.h>`
 
 ```c
-SDLStatic_Regex *re = SDLStatic_CompileRegex("(\\w+)@(\\w+)", "i");
+Grapple_Regex *re = Grapple_CompileRegex("(\\w+)@(\\w+)", "i");
 if (re == NULL) {
     SDL_Log("bad pattern: %s", SDL_GetError());
 }
-if (SDLStatic_RegexSearch(re, "mail bob@example now", 0)) {
-    SDL_Log("%s at %d", SDLStatic_RegexGroup(re, 1),
-            SDLStatic_RegexGroupBegin(re, 1));   /* bob at 5 */
+if (Grapple_RegexSearch(re, "mail bob@example now", 0)) {
+    SDL_Log("%s at %d", Grapple_RegexGroup(re, 1),
+            Grapple_RegexGroupBegin(re, 1));   /* bob at 5 */
 }
-SDLStatic_DestroyRegex(re);
+Grapple_DestroyRegex(re);
 ```
 
 A compiled pattern is also a **cursor**: it holds the most recent match, and
 the group accessors always describe that match. The strings it returns stay
 valid until the next search on the same object, which makes scanning cheap
-but means one `SDLStatic_Regex` must not be shared between threads
+but means one `Grapple_Regex` must not be shared between threads
 mid-search. Compile once at load time and reuse — compiling is the expensive
 part.
 
 | Function | What it does |
 |---|---|
-| `SDLStatic_CompileRegex(pattern, flags)` | compile; `flags` is any of `i`, `m`, `x` |
-| `SDLStatic_RegexSearch(re, text, start)` | first match at or after `start` |
-| `SDLStatic_RegexMatchAt(re, text, start)` | anchored: does it match *here* |
-| `SDLStatic_RegexGroupCount(re)` | groups in the last match, including group 0 |
-| `SDLStatic_RegexGroup(re, n)` | group text, or NULL if it did not participate |
-| `SDLStatic_RegexGroupBegin/End(re, n)` | byte offsets, or -1 |
-| `SDLStatic_RegexNamedGroup(re, name)` | index of `(?<name>…)`, or -1 |
-| `SDLStatic_RegexNamedGroupCount/Name(re, i)` | enumerate names, in declaration order |
-| `SDLStatic_RegexReplace(re, text, repl, all)` | substitute, `\1`..`\9` for groups |
-| `SDLStatic_RegexEscape(text)` | quote metacharacters; free with `SDL_free` |
+| `Grapple_CompileRegex(pattern, flags)` | compile; `flags` is any of `i`, `m`, `x` |
+| `Grapple_RegexSearch(re, text, start)` | first match at or after `start` |
+| `Grapple_RegexMatchAt(re, text, start)` | anchored: does it match *here* |
+| `Grapple_RegexGroupCount(re)` | groups in the last match, including group 0 |
+| `Grapple_RegexGroup(re, n)` | group text, or NULL if it did not participate |
+| `Grapple_RegexGroupBegin/End(re, n)` | byte offsets, or -1 |
+| `Grapple_RegexNamedGroup(re, name)` | index of `(?<name>…)`, or -1 |
+| `Grapple_RegexNamedGroupCount/Name(re, i)` | enumerate names, in declaration order |
+| `Grapple_RegexReplace(re, text, repl, all)` | substitute, `\1`..`\9` for groups |
+| `Grapple_RegexEscape(text)` | quote metacharacters; free with `SDL_free` |
 
 Two things to keep in mind. `m` is *Ruby's* `/m` — dot matches newline — not
 Perl's; Ruby's `^` and `$` are always per-line, so there is no flag for
 that. And offsets are **byte** offsets, because UTF-8 characters are not all
-one byte wide; feed them straight back into `SDLStatic_RegexSearch` and they
+one byte wide; feed them straight back into `Grapple_RegexSearch` and they
 line up.
 
 A failed search returns false without setting an error — no match is an
@@ -135,10 +135,10 @@ Methods: `:match`, `:match_at`, `:gmatch`, `:gsub`, `:split`, `:test`,
 
 ## C++
 
-The generated RAII owner is `sdlstatic::gen::RegexHandle`:
+The generated RAII owner is `grapple::gen::RegexHandle`:
 
 ```cpp
-auto re = sdlstatic::gen::RegexHandle::CompileRegex("(\\w+)@(\\w+)", nullptr);
+auto re = grapple::gen::RegexHandle::CompileRegex("(\\w+)@(\\w+)", nullptr);
 if (re) {
     if (re->RegexSearch("bob@example", 0)) { /* ... */ }
 }
@@ -148,6 +148,6 @@ if (re) {
 
 The Release archive is about 0.7 MB. In a full web build of the REPL —
 both interpreters, every module — the engine adds roughly 8% to the wasm
-(5.65 → 6.12 MB, or 1.92 → 2.06 MB gzipped). `-DSDLSTATIC_BUILD_REGEX=OFF`
-drops it from C-only builds; `SDLSTATIC_BUILD_LUA`/`_RUBY` require it,
+(5.65 → 6.12 MB, or 1.92 → 2.06 MB gzipped). `-DGRAPPLE_BUILD_REGEX=OFF`
+drops it from C-only builds; `GRAPPLE_BUILD_LUA`/`_RUBY` require it,
 because Ruby's `Regexp` is built on it.

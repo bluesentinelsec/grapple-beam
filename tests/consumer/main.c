@@ -6,12 +6,12 @@
  * is the case that fails with a wall of missing std:: symbols if the package
  * forgets to name the C++ runtime — and a C++ test would never notice.
  */
-#include <SDLStatic/engine.h>
-#include <SDLStatic/engine_actor.h>
-#include <SDLStatic/engine_config.h>
-#include <SDLStatic/bindings.h>
-#include <SDLStatic/lua.h>
-#include <SDLStatic/vfs.h>
+#include <grapple/engine.h>
+#include <grapple/engine_actor.h>
+#include <grapple/engine_config.h>
+#include <grapple/bindings.h>
+#include <grapple/lua.h>
+#include <grapple/vfs.h>
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
@@ -25,18 +25,18 @@ int main(void)
 {
     /* Headless with a manual clock: no window, no GPU, no wall-clock waiting
        — this has to run on a CI machine with no display. */
-    SDLStatic_EngineConfig *config = SDLStatic_ConfigCreate();
+    Grapple_EngineConfig *config = Grapple_ConfigCreate();
     if (config == NULL)
     {
         fprintf(stderr, "ConfigCreate failed: %s\n", SDL_GetError());
         return 1;
     }
-    SDLStatic_ConfigSetHeadless(config, true);
-    SDLStatic_ConfigSetManualClock(config, true);
-    SDLStatic_ConfigSetAutoMount(config, false);
+    Grapple_ConfigSetHeadless(config, true);
+    Grapple_ConfigSetManualClock(config, true);
+    Grapple_ConfigSetAutoMount(config, false);
 
-    SDLStatic_Engine *engine = SDLStatic_CreateEngine(config);
-    SDLStatic_ConfigDestroy(config);
+    Grapple_Engine *engine = Grapple_CreateEngine(config);
+    Grapple_ConfigDestroy(config);
     if (engine == NULL)
     {
         fprintf(stderr, "CreateEngine failed: %s\n", SDL_GetError());
@@ -45,26 +45,26 @@ int main(void)
 
     /* Spawn an actor and run frames: enough to prove the engine's own objects
        are in the archive, not merely that it linked. */
-    SDLStatic_ActorDef *def = SDLStatic_ActorDefCreate();
-    SDLStatic_ActorDefSetType(def, "consumer");
-    const SDLStatic_ActorId actor = SDLStatic_ActorSpawn(engine, def);
-    SDLStatic_ActorDefDestroy(def);
-    if (actor == SDLSTATIC_ACTOR_NONE)
+    Grapple_ActorDef *def = Grapple_ActorDefCreate();
+    Grapple_ActorDefSetType(def, "consumer");
+    const Grapple_ActorId actor = Grapple_ActorSpawn(engine, def);
+    Grapple_ActorDefDestroy(def);
+    if (actor == GRAPPLE_ACTOR_NONE)
     {
         fprintf(stderr, "ActorSpawn failed: %s\n", SDL_GetError());
-        SDLStatic_DestroyEngine(engine);
+        Grapple_DestroyEngine(engine);
         return 1;
     }
 
     for (int i = 0; i < 5; ++i)
     {
-        SDLStatic_EngineAdvance(engine, 16666667);
-        SDLStatic_EngineTick(engine);
+        Grapple_EngineAdvance(engine, 16666667);
+        Grapple_EngineTick(engine);
     }
 
-    const Uint64 frames = SDLStatic_EngineFrameCount(engine);
-    const int actors = SDLStatic_ActorCount(engine);
-    SDLStatic_DestroyEngine(engine);
+    const Uint64 frames = Grapple_EngineFrameCount(engine);
+    const int actors = Grapple_ActorCount(engine);
+    Grapple_DestroyEngine(engine);
 
     if (frames < 5 || actors != 1)
     {
@@ -76,7 +76,7 @@ int main(void)
        engine alone does not: the HTTP core was missing from the archive
        entirely and this test still passed, because nothing it called needed
        it. A consumer discovers that at link time, in their project. */
-    /* SDLStatic::Http has no headers of its own — it re-exports mog's C API,
+    /* Grapple::Http has no headers of its own — it re-exports mog's C API,
        and mog's C++ core is the archive's largest vendored piece. */
     mog_request *request = mog_request_new("GET", "http://127.0.0.1:1/");
     if (mog_version() == NULL || request == NULL)
@@ -99,8 +99,8 @@ int main(void)
         return 1;
     }
 
-    lua_State *lua = SDLStatic_CreateLuaState();
-    if (lua == NULL || !SDLStatic_OpenLuaBindings(lua))
+    lua_State *lua = Grapple_CreateLuaState();
+    if (lua == NULL || !Grapple_OpenLuaBindings(lua))
     {
         fprintf(stderr, "the Lua bindings are not linked: %s\n", SDL_GetError());
         return 1;

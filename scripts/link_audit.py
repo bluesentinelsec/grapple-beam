@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Link audit: prove binaries carry no non-OS shared-library dependencies.
 
-The core promise of SDL3-static-extensions is that consumers link statically
+The core promise of grapple-beam is that consumers link statically
 and ship without bundling shared codec/font libraries. This script inspects a
 built binary's dynamic dependencies and fails if anything outside the
 OS-built-in allowlist appears — and fails loudly if any known codec/font

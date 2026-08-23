@@ -1,4 +1,4 @@
-# SDLStatic::Image
+# Grapple::Image
 
 A static-link-first port of [SDL3_image](https://github.com/libsdl-org/SDL_image)
 (upstream base: **3.4.4**; full provenance and change ledger in

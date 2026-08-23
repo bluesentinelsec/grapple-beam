@@ -1,6 +1,6 @@
 /**
  * @file formats_test.cpp
- * @brief Tests for SDLStatic::Formats — vendored cJSON, tomlc99, libyaml.
+ * @brief Tests for Grapple::Formats — vendored cJSON, tomlc99, libyaml.
  *
  * Each parser gets a realistic game-shaped document with value-exact
  * assertions, a serialization/round-trip check where the library supports

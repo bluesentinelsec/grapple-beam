@@ -3,13 +3,13 @@
 set -euo pipefail
 
 app="${APP:-}"
-app_name="${APP_NAME:-SDL3_static_extensions_ios_test.app}"
+app_name="${APP_NAME:-grapple_ios_test.app}"
 build_dir="${BUILD_DIR:-build/ios/consumer/iphonesimulator}"
 bundle_id="${BUNDLE_ID:-com.example.sdl3staticextensions.test}"
 log_subsystem="${LOG_SUBSYSTEM:-com.example.sdl3staticextensions.test}"
-sentinel="${SENTINEL:-SDL3_STATIC_EXTENSIONS_IOS_TEST_RESULT}"
-timeout_seconds="${SDL3_STATIC_EXTENSIONS_IOS_TEST_TIMEOUT:-180}"
-simulator_name="${SIM_NAME:-SDL3-static-extensions iOS Tests}"
+sentinel="${SENTINEL:-GRAPPLE_BEAM_IOS_TEST_RESULT}"
+timeout_seconds="${GRAPPLE_BEAM_IOS_TEST_TIMEOUT:-180}"
+simulator_name="${SIM_NAME:-grapple-beam iOS Tests}"
 
 simulator_udid=""
 launch_pid=""

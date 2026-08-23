@@ -1,7 +1,7 @@
 # cJSON / tomlc99 / libyaml (vendored under `formats/`)
 
 All three are plain C, MIT-licensed, and have zero external dependencies —
-they don't even use SDL — so `SDLStatic::Formats` is inherently
+they don't even use SDL — so `Grapple::Formats` is inherently
 static-link friendly on every platform including web. Native upstream APIs
 are exposed directly (`<cJSON.h>`, `<toml.h>`, `<yaml.h>`).
 

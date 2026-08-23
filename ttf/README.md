@@ -1,4 +1,4 @@
-# SDLStatic::TTF
+# Grapple::TTF
 
 A static-link-first port of [SDL_ttf](https://github.com/libsdl-org/SDL_ttf)
 (upstream base: **3.2.2**; provenance and change ledger in
@@ -31,20 +31,20 @@ unsupported usage fails at **compile time**.
 
 Text direction is LTR. `TTF_Direction` remains as an inert type.
 
-## SDLStatic additions
+## Grapple additions
 
-`SDLStatic/debug_text.h` — zero-setup debug/HUD text for any `SDL_Renderer`:
+`grapple/debug_text.h` — zero-setup debug/HUD text for any `SDL_Renderer`:
 
 ```c
 SDL_SetRenderDrawColor(renderer, 80, 250, 123, 255);   /* text color */
-SDLStatic_RenderDebugTextFormat(renderer, 8, 8, "FPS: %d", fps);
+Grapple_RenderDebugTextFormat(renderer, 8, 8, "FPS: %d", fps);
 ```
 
 Backed by an **embedded ProggyClean** font (MIT, ~40KB, license reproduced in
-`src/sdlstatic_debug_font.h`) — no font files needed at runtime. DPI-aware
+`src/grapple_debug_font.h`) — no font files needed at runtime. DPI-aware
 (rasterized at the window's pixel density, drawn 1:1), color follows the
-renderer draw color, rendered strings are cached. `SDLStatic_SetDebugTextSize`
-adjusts size; call `SDLStatic_QuitDebugText` at shutdown.
+renderer draw color, rendered strings are cached. `Grapple_SetDebugTextSize`
+adjusts size; call `Grapple_QuitDebugText` at shutdown.
 
 ## Attribution requirement
 

@@ -64,13 +64,13 @@ for spec in LIBRARIES:
 # stays unreachable on purpose: reporting these as gaps would be wrong, and
 # silently dropping them would hide a real one that appeared later.
 SUPERSEDED = {
-    "SDLStatic_SceneDef":
-        "SDLStaticC.SceneDefine/SceneOn + ScriptScenePush — a scene is its "
+    "Grapple_SceneDef":
+        "GrappleC.SceneDefine/SceneOn + ScriptScenePush — a scene is its "
         "callbacks, so it needs a bridge rather than a builder",
     "SDL_GPUStorageBufferReadWriteBinding":
-        "SDLStatic_GPUComputeBindingsAddBuffer + GPUBeginComputePass",
+        "Grapple_GPUComputeBindingsAddBuffer + GPUBeginComputePass",
     "SDL_GPUStorageTextureReadWriteBinding":
-        "SDLStatic_GPUComputeBindingsAddTexture + GPUBeginComputePass",
+        "Grapple_GPUComputeBindingsAddTexture + GPUBeginComputePass",
 }
 
 missing = {b: u for b, u in consumed.items() if b not in produced}

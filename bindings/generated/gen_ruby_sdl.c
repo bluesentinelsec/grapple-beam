@@ -9,14 +9,14 @@
 static mrb_value GenPush_SDL_AtomicInt(mrb_state *mrb, const SDL_AtomicInt *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "value", mrb_int_value(mrb, (mrb_int)in->value));
+    GrappleGen_RubyHashSet(mrb, h, "value", mrb_int_value(mrb, (mrb_int)in->value));
     return h;
 }
 
 static mrb_value GenPush_SDL_AtomicU32(mrb_state *mrb, const SDL_AtomicU32 *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "value", mrb_int_value(mrb, (mrb_int)in->value));
+    GrappleGen_RubyHashSet(mrb, h, "value", mrb_int_value(mrb, (mrb_int)in->value));
     return h;
 }
 
@@ -24,17 +24,17 @@ static void GenRead_SDL_AudioSpec(mrb_state *mrb, mrb_value h, SDL_AudioSpec *ou
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->format = (SDL_AudioFormat)SDLStaticGen_RubyFieldInt(mrb, h, "format");
-    out->channels = (int)SDLStaticGen_RubyFieldInt(mrb, h, "channels");
-    out->freq = (int)SDLStaticGen_RubyFieldInt(mrb, h, "freq");
+    out->format = (SDL_AudioFormat)GrappleGen_RubyFieldInt(mrb, h, "format");
+    out->channels = (int)GrappleGen_RubyFieldInt(mrb, h, "channels");
+    out->freq = (int)GrappleGen_RubyFieldInt(mrb, h, "freq");
 }
 
 static mrb_value GenPush_SDL_AudioSpec(mrb_state *mrb, const SDL_AudioSpec *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "format", mrb_int_value(mrb, (mrb_int)in->format));
-    SDLStaticGen_RubyHashSet(mrb, h, "channels", mrb_int_value(mrb, (mrb_int)in->channels));
-    SDLStaticGen_RubyHashSet(mrb, h, "freq", mrb_int_value(mrb, (mrb_int)in->freq));
+    GrappleGen_RubyHashSet(mrb, h, "format", mrb_int_value(mrb, (mrb_int)in->format));
+    GrappleGen_RubyHashSet(mrb, h, "channels", mrb_int_value(mrb, (mrb_int)in->channels));
+    GrappleGen_RubyHashSet(mrb, h, "freq", mrb_int_value(mrb, (mrb_int)in->freq));
     return h;
 }
 
@@ -42,23 +42,23 @@ static void GenRead_SDL_CameraSpec(mrb_state *mrb, mrb_value h, SDL_CameraSpec *
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->format = (SDL_PixelFormat)SDLStaticGen_RubyFieldInt(mrb, h, "format");
-    out->colorspace = (SDL_Colorspace)SDLStaticGen_RubyFieldInt(mrb, h, "colorspace");
-    out->width = (int)SDLStaticGen_RubyFieldInt(mrb, h, "width");
-    out->height = (int)SDLStaticGen_RubyFieldInt(mrb, h, "height");
-    out->framerate_numerator = (int)SDLStaticGen_RubyFieldInt(mrb, h, "framerate_numerator");
-    out->framerate_denominator = (int)SDLStaticGen_RubyFieldInt(mrb, h, "framerate_denominator");
+    out->format = (SDL_PixelFormat)GrappleGen_RubyFieldInt(mrb, h, "format");
+    out->colorspace = (SDL_Colorspace)GrappleGen_RubyFieldInt(mrb, h, "colorspace");
+    out->width = (int)GrappleGen_RubyFieldInt(mrb, h, "width");
+    out->height = (int)GrappleGen_RubyFieldInt(mrb, h, "height");
+    out->framerate_numerator = (int)GrappleGen_RubyFieldInt(mrb, h, "framerate_numerator");
+    out->framerate_denominator = (int)GrappleGen_RubyFieldInt(mrb, h, "framerate_denominator");
 }
 
 static mrb_value GenPush_SDL_CameraSpec(mrb_state *mrb, const SDL_CameraSpec *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "format", mrb_int_value(mrb, (mrb_int)in->format));
-    SDLStaticGen_RubyHashSet(mrb, h, "colorspace", mrb_int_value(mrb, (mrb_int)in->colorspace));
-    SDLStaticGen_RubyHashSet(mrb, h, "width", mrb_int_value(mrb, (mrb_int)in->width));
-    SDLStaticGen_RubyHashSet(mrb, h, "height", mrb_int_value(mrb, (mrb_int)in->height));
-    SDLStaticGen_RubyHashSet(mrb, h, "framerate_numerator", mrb_int_value(mrb, (mrb_int)in->framerate_numerator));
-    SDLStaticGen_RubyHashSet(mrb, h, "framerate_denominator", mrb_int_value(mrb, (mrb_int)in->framerate_denominator));
+    GrappleGen_RubyHashSet(mrb, h, "format", mrb_int_value(mrb, (mrb_int)in->format));
+    GrappleGen_RubyHashSet(mrb, h, "colorspace", mrb_int_value(mrb, (mrb_int)in->colorspace));
+    GrappleGen_RubyHashSet(mrb, h, "width", mrb_int_value(mrb, (mrb_int)in->width));
+    GrappleGen_RubyHashSet(mrb, h, "height", mrb_int_value(mrb, (mrb_int)in->height));
+    GrappleGen_RubyHashSet(mrb, h, "framerate_numerator", mrb_int_value(mrb, (mrb_int)in->framerate_numerator));
+    GrappleGen_RubyHashSet(mrb, h, "framerate_denominator", mrb_int_value(mrb, (mrb_int)in->framerate_denominator));
     return h;
 }
 
@@ -66,39 +66,39 @@ static void GenRead_SDL_Color(mrb_state *mrb, mrb_value h, SDL_Color *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->r = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "r");
-    out->g = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "g");
-    out->b = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "b");
-    out->a = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "a");
+    out->r = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "r");
+    out->g = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "g");
+    out->b = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "b");
+    out->a = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "a");
 }
 
 static void GenRead_SDL_DateTime(mrb_state *mrb, mrb_value h, SDL_DateTime *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->year = (int)SDLStaticGen_RubyFieldInt(mrb, h, "year");
-    out->month = (int)SDLStaticGen_RubyFieldInt(mrb, h, "month");
-    out->day = (int)SDLStaticGen_RubyFieldInt(mrb, h, "day");
-    out->hour = (int)SDLStaticGen_RubyFieldInt(mrb, h, "hour");
-    out->minute = (int)SDLStaticGen_RubyFieldInt(mrb, h, "minute");
-    out->second = (int)SDLStaticGen_RubyFieldInt(mrb, h, "second");
-    out->nanosecond = (int)SDLStaticGen_RubyFieldInt(mrb, h, "nanosecond");
-    out->day_of_week = (int)SDLStaticGen_RubyFieldInt(mrb, h, "day_of_week");
-    out->utc_offset = (int)SDLStaticGen_RubyFieldInt(mrb, h, "utc_offset");
+    out->year = (int)GrappleGen_RubyFieldInt(mrb, h, "year");
+    out->month = (int)GrappleGen_RubyFieldInt(mrb, h, "month");
+    out->day = (int)GrappleGen_RubyFieldInt(mrb, h, "day");
+    out->hour = (int)GrappleGen_RubyFieldInt(mrb, h, "hour");
+    out->minute = (int)GrappleGen_RubyFieldInt(mrb, h, "minute");
+    out->second = (int)GrappleGen_RubyFieldInt(mrb, h, "second");
+    out->nanosecond = (int)GrappleGen_RubyFieldInt(mrb, h, "nanosecond");
+    out->day_of_week = (int)GrappleGen_RubyFieldInt(mrb, h, "day_of_week");
+    out->utc_offset = (int)GrappleGen_RubyFieldInt(mrb, h, "utc_offset");
 }
 
 static mrb_value GenPush_SDL_DateTime(mrb_state *mrb, const SDL_DateTime *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "year", mrb_int_value(mrb, (mrb_int)in->year));
-    SDLStaticGen_RubyHashSet(mrb, h, "month", mrb_int_value(mrb, (mrb_int)in->month));
-    SDLStaticGen_RubyHashSet(mrb, h, "day", mrb_int_value(mrb, (mrb_int)in->day));
-    SDLStaticGen_RubyHashSet(mrb, h, "hour", mrb_int_value(mrb, (mrb_int)in->hour));
-    SDLStaticGen_RubyHashSet(mrb, h, "minute", mrb_int_value(mrb, (mrb_int)in->minute));
-    SDLStaticGen_RubyHashSet(mrb, h, "second", mrb_int_value(mrb, (mrb_int)in->second));
-    SDLStaticGen_RubyHashSet(mrb, h, "nanosecond", mrb_int_value(mrb, (mrb_int)in->nanosecond));
-    SDLStaticGen_RubyHashSet(mrb, h, "day_of_week", mrb_int_value(mrb, (mrb_int)in->day_of_week));
-    SDLStaticGen_RubyHashSet(mrb, h, "utc_offset", mrb_int_value(mrb, (mrb_int)in->utc_offset));
+    GrappleGen_RubyHashSet(mrb, h, "year", mrb_int_value(mrb, (mrb_int)in->year));
+    GrappleGen_RubyHashSet(mrb, h, "month", mrb_int_value(mrb, (mrb_int)in->month));
+    GrappleGen_RubyHashSet(mrb, h, "day", mrb_int_value(mrb, (mrb_int)in->day));
+    GrappleGen_RubyHashSet(mrb, h, "hour", mrb_int_value(mrb, (mrb_int)in->hour));
+    GrappleGen_RubyHashSet(mrb, h, "minute", mrb_int_value(mrb, (mrb_int)in->minute));
+    GrappleGen_RubyHashSet(mrb, h, "second", mrb_int_value(mrb, (mrb_int)in->second));
+    GrappleGen_RubyHashSet(mrb, h, "nanosecond", mrb_int_value(mrb, (mrb_int)in->nanosecond));
+    GrappleGen_RubyHashSet(mrb, h, "day_of_week", mrb_int_value(mrb, (mrb_int)in->day_of_week));
+    GrappleGen_RubyHashSet(mrb, h, "utc_offset", mrb_int_value(mrb, (mrb_int)in->utc_offset));
     return h;
 }
 
@@ -106,37 +106,37 @@ static void GenRead_SDL_FColor(mrb_state *mrb, mrb_value h, SDL_FColor *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->r = (float)SDLStaticGen_RubyFieldNum(mrb, h, "r");
-    out->g = (float)SDLStaticGen_RubyFieldNum(mrb, h, "g");
-    out->b = (float)SDLStaticGen_RubyFieldNum(mrb, h, "b");
-    out->a = (float)SDLStaticGen_RubyFieldNum(mrb, h, "a");
+    out->r = (float)GrappleGen_RubyFieldNum(mrb, h, "r");
+    out->g = (float)GrappleGen_RubyFieldNum(mrb, h, "g");
+    out->b = (float)GrappleGen_RubyFieldNum(mrb, h, "b");
+    out->a = (float)GrappleGen_RubyFieldNum(mrb, h, "a");
 }
 
 static void GenRead_SDL_FPoint(mrb_state *mrb, mrb_value h, SDL_FPoint *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->x = (float)SDLStaticGen_RubyFieldNum(mrb, h, "x");
-    out->y = (float)SDLStaticGen_RubyFieldNum(mrb, h, "y");
+    out->x = (float)GrappleGen_RubyFieldNum(mrb, h, "x");
+    out->y = (float)GrappleGen_RubyFieldNum(mrb, h, "y");
 }
 
 static void GenRead_SDL_FRect(mrb_state *mrb, mrb_value h, SDL_FRect *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->x = (float)SDLStaticGen_RubyFieldNum(mrb, h, "x");
-    out->y = (float)SDLStaticGen_RubyFieldNum(mrb, h, "y");
-    out->w = (float)SDLStaticGen_RubyFieldNum(mrb, h, "w");
-    out->h = (float)SDLStaticGen_RubyFieldNum(mrb, h, "h");
+    out->x = (float)GrappleGen_RubyFieldNum(mrb, h, "x");
+    out->y = (float)GrappleGen_RubyFieldNum(mrb, h, "y");
+    out->w = (float)GrappleGen_RubyFieldNum(mrb, h, "w");
+    out->h = (float)GrappleGen_RubyFieldNum(mrb, h, "h");
 }
 
 static mrb_value GenPush_SDL_FRect(mrb_state *mrb, const SDL_FRect *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "x", mrb_float_value(mrb, (mrb_float)in->x));
-    SDLStaticGen_RubyHashSet(mrb, h, "y", mrb_float_value(mrb, (mrb_float)in->y));
-    SDLStaticGen_RubyHashSet(mrb, h, "w", mrb_float_value(mrb, (mrb_float)in->w));
-    SDLStaticGen_RubyHashSet(mrb, h, "h", mrb_float_value(mrb, (mrb_float)in->h));
+    GrappleGen_RubyHashSet(mrb, h, "x", mrb_float_value(mrb, (mrb_float)in->x));
+    GrappleGen_RubyHashSet(mrb, h, "y", mrb_float_value(mrb, (mrb_float)in->y));
+    GrappleGen_RubyHashSet(mrb, h, "w", mrb_float_value(mrb, (mrb_float)in->w));
+    GrappleGen_RubyHashSet(mrb, h, "h", mrb_float_value(mrb, (mrb_float)in->h));
     return h;
 }
 
@@ -144,67 +144,67 @@ static void GenRead_SDL_GPUBufferCreateInfo(mrb_state *mrb, mrb_value h, SDL_GPU
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->usage = (SDL_GPUBufferUsageFlags)SDLStaticGen_RubyFieldInt(mrb, h, "usage");
-    out->size = (Uint32)SDLStaticGen_RubyFieldInt(mrb, h, "size");
-    out->props = (SDL_PropertiesID)SDLStaticGen_RubyFieldInt(mrb, h, "props");
+    out->usage = (SDL_GPUBufferUsageFlags)GrappleGen_RubyFieldInt(mrb, h, "usage");
+    out->size = (Uint32)GrappleGen_RubyFieldInt(mrb, h, "size");
+    out->props = (SDL_PropertiesID)GrappleGen_RubyFieldInt(mrb, h, "props");
 }
 
 static void GenRead_SDL_GPUSamplerCreateInfo(mrb_state *mrb, mrb_value h, SDL_GPUSamplerCreateInfo *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->min_filter = (SDL_GPUFilter)SDLStaticGen_RubyFieldInt(mrb, h, "min_filter");
-    out->mag_filter = (SDL_GPUFilter)SDLStaticGen_RubyFieldInt(mrb, h, "mag_filter");
-    out->mipmap_mode = (SDL_GPUSamplerMipmapMode)SDLStaticGen_RubyFieldInt(mrb, h, "mipmap_mode");
-    out->address_mode_u = (SDL_GPUSamplerAddressMode)SDLStaticGen_RubyFieldInt(mrb, h, "address_mode_u");
-    out->address_mode_v = (SDL_GPUSamplerAddressMode)SDLStaticGen_RubyFieldInt(mrb, h, "address_mode_v");
-    out->address_mode_w = (SDL_GPUSamplerAddressMode)SDLStaticGen_RubyFieldInt(mrb, h, "address_mode_w");
-    out->mip_lod_bias = (float)SDLStaticGen_RubyFieldNum(mrb, h, "mip_lod_bias");
-    out->max_anisotropy = (float)SDLStaticGen_RubyFieldNum(mrb, h, "max_anisotropy");
-    out->compare_op = (SDL_GPUCompareOp)SDLStaticGen_RubyFieldInt(mrb, h, "compare_op");
-    out->min_lod = (float)SDLStaticGen_RubyFieldNum(mrb, h, "min_lod");
-    out->max_lod = (float)SDLStaticGen_RubyFieldNum(mrb, h, "max_lod");
-    out->enable_anisotropy = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "enable_anisotropy");
-    out->enable_compare = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "enable_compare");
-    out->padding1 = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "padding1");
-    out->padding2 = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "padding2");
-    out->props = (SDL_PropertiesID)SDLStaticGen_RubyFieldInt(mrb, h, "props");
+    out->min_filter = (SDL_GPUFilter)GrappleGen_RubyFieldInt(mrb, h, "min_filter");
+    out->mag_filter = (SDL_GPUFilter)GrappleGen_RubyFieldInt(mrb, h, "mag_filter");
+    out->mipmap_mode = (SDL_GPUSamplerMipmapMode)GrappleGen_RubyFieldInt(mrb, h, "mipmap_mode");
+    out->address_mode_u = (SDL_GPUSamplerAddressMode)GrappleGen_RubyFieldInt(mrb, h, "address_mode_u");
+    out->address_mode_v = (SDL_GPUSamplerAddressMode)GrappleGen_RubyFieldInt(mrb, h, "address_mode_v");
+    out->address_mode_w = (SDL_GPUSamplerAddressMode)GrappleGen_RubyFieldInt(mrb, h, "address_mode_w");
+    out->mip_lod_bias = (float)GrappleGen_RubyFieldNum(mrb, h, "mip_lod_bias");
+    out->max_anisotropy = (float)GrappleGen_RubyFieldNum(mrb, h, "max_anisotropy");
+    out->compare_op = (SDL_GPUCompareOp)GrappleGen_RubyFieldInt(mrb, h, "compare_op");
+    out->min_lod = (float)GrappleGen_RubyFieldNum(mrb, h, "min_lod");
+    out->max_lod = (float)GrappleGen_RubyFieldNum(mrb, h, "max_lod");
+    out->enable_anisotropy = (bool)GrappleGen_RubyFieldBool(mrb, h, "enable_anisotropy");
+    out->enable_compare = (bool)GrappleGen_RubyFieldBool(mrb, h, "enable_compare");
+    out->padding1 = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "padding1");
+    out->padding2 = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "padding2");
+    out->props = (SDL_PropertiesID)GrappleGen_RubyFieldInt(mrb, h, "props");
 }
 
 static void GenRead_SDL_GPUTextureCreateInfo(mrb_state *mrb, mrb_value h, SDL_GPUTextureCreateInfo *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->type = (SDL_GPUTextureType)SDLStaticGen_RubyFieldInt(mrb, h, "type");
-    out->format = (SDL_GPUTextureFormat)SDLStaticGen_RubyFieldInt(mrb, h, "format");
-    out->usage = (SDL_GPUTextureUsageFlags)SDLStaticGen_RubyFieldInt(mrb, h, "usage");
-    out->width = (Uint32)SDLStaticGen_RubyFieldInt(mrb, h, "width");
-    out->height = (Uint32)SDLStaticGen_RubyFieldInt(mrb, h, "height");
-    out->layer_count_or_depth = (Uint32)SDLStaticGen_RubyFieldInt(mrb, h, "layer_count_or_depth");
-    out->num_levels = (Uint32)SDLStaticGen_RubyFieldInt(mrb, h, "num_levels");
-    out->sample_count = (SDL_GPUSampleCount)SDLStaticGen_RubyFieldInt(mrb, h, "sample_count");
-    out->props = (SDL_PropertiesID)SDLStaticGen_RubyFieldInt(mrb, h, "props");
+    out->type = (SDL_GPUTextureType)GrappleGen_RubyFieldInt(mrb, h, "type");
+    out->format = (SDL_GPUTextureFormat)GrappleGen_RubyFieldInt(mrb, h, "format");
+    out->usage = (SDL_GPUTextureUsageFlags)GrappleGen_RubyFieldInt(mrb, h, "usage");
+    out->width = (Uint32)GrappleGen_RubyFieldInt(mrb, h, "width");
+    out->height = (Uint32)GrappleGen_RubyFieldInt(mrb, h, "height");
+    out->layer_count_or_depth = (Uint32)GrappleGen_RubyFieldInt(mrb, h, "layer_count_or_depth");
+    out->num_levels = (Uint32)GrappleGen_RubyFieldInt(mrb, h, "num_levels");
+    out->sample_count = (SDL_GPUSampleCount)GrappleGen_RubyFieldInt(mrb, h, "sample_count");
+    out->props = (SDL_PropertiesID)GrappleGen_RubyFieldInt(mrb, h, "props");
 }
 
 static void GenRead_SDL_GPUTransferBufferCreateInfo(mrb_state *mrb, mrb_value h, SDL_GPUTransferBufferCreateInfo *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->usage = (SDL_GPUTransferBufferUsage)SDLStaticGen_RubyFieldInt(mrb, h, "usage");
-    out->size = (Uint32)SDLStaticGen_RubyFieldInt(mrb, h, "size");
-    out->props = (SDL_PropertiesID)SDLStaticGen_RubyFieldInt(mrb, h, "props");
+    out->usage = (SDL_GPUTransferBufferUsage)GrappleGen_RubyFieldInt(mrb, h, "usage");
+    out->size = (Uint32)GrappleGen_RubyFieldInt(mrb, h, "size");
+    out->props = (SDL_PropertiesID)GrappleGen_RubyFieldInt(mrb, h, "props");
 }
 
 static void GenRead_SDL_GPUViewport(mrb_state *mrb, mrb_value h, SDL_GPUViewport *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->x = (float)SDLStaticGen_RubyFieldNum(mrb, h, "x");
-    out->y = (float)SDLStaticGen_RubyFieldNum(mrb, h, "y");
-    out->w = (float)SDLStaticGen_RubyFieldNum(mrb, h, "w");
-    out->h = (float)SDLStaticGen_RubyFieldNum(mrb, h, "h");
-    out->min_depth = (float)SDLStaticGen_RubyFieldNum(mrb, h, "min_depth");
-    out->max_depth = (float)SDLStaticGen_RubyFieldNum(mrb, h, "max_depth");
+    out->x = (float)GrappleGen_RubyFieldNum(mrb, h, "x");
+    out->y = (float)GrappleGen_RubyFieldNum(mrb, h, "y");
+    out->w = (float)GrappleGen_RubyFieldNum(mrb, h, "w");
+    out->h = (float)GrappleGen_RubyFieldNum(mrb, h, "h");
+    out->min_depth = (float)GrappleGen_RubyFieldNum(mrb, h, "min_depth");
+    out->max_depth = (float)GrappleGen_RubyFieldNum(mrb, h, "max_depth");
 }
 
 static void GenRead_SDL_GUID(mrb_state *mrb, mrb_value h, SDL_GUID *out)
@@ -212,11 +212,11 @@ static void GenRead_SDL_GUID(mrb_state *mrb, mrb_value h, SDL_GUID *out)
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
     {
-        mrb_value arr = SDLStaticGen_RubyFieldGet(mrb, h, "data");
+        mrb_value arr = GrappleGen_RubyFieldGet(mrb, h, "data");
         if (mrb_array_p(arr)) {
             for (mrb_int gi = 0; gi < (mrb_int)(16) && gi < RARRAY_LEN(arr); ++gi) {
                 mrb_value el = mrb_ary_ref(mrb, arr, gi);
-                out->data[gi] = (Uint8)SDLStaticGen_RubyToInt(mrb, el);
+                out->data[gi] = (Uint8)GrappleGen_RubyToInt(mrb, el);
             }
         }
     }
@@ -230,7 +230,7 @@ static mrb_value GenPush_SDL_GUID(mrb_state *mrb, const SDL_GUID *in)
         for (mrb_int gi = 0; gi < (mrb_int)(16); ++gi) {
             mrb_ary_push(mrb, arr, mrb_int_value(mrb, (mrb_int)in->data[gi]));
         }
-        SDLStaticGen_RubyHashSet(mrb, h, "data", arr);
+        GrappleGen_RubyHashSet(mrb, h, "data", arr);
     }
     return h;
 }
@@ -238,11 +238,11 @@ static mrb_value GenPush_SDL_GUID(mrb_state *mrb, const SDL_GUID *in)
 static mrb_value GenPush_SDL_PathInfo(mrb_state *mrb, const SDL_PathInfo *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "type", mrb_int_value(mrb, (mrb_int)in->type));
-    SDLStaticGen_RubyHashSet(mrb, h, "size", mrb_int_value(mrb, (mrb_int)in->size));
-    SDLStaticGen_RubyHashSet(mrb, h, "create_time", mrb_int_value(mrb, (mrb_int)in->create_time));
-    SDLStaticGen_RubyHashSet(mrb, h, "modify_time", mrb_int_value(mrb, (mrb_int)in->modify_time));
-    SDLStaticGen_RubyHashSet(mrb, h, "access_time", mrb_int_value(mrb, (mrb_int)in->access_time));
+    GrappleGen_RubyHashSet(mrb, h, "type", mrb_int_value(mrb, (mrb_int)in->type));
+    GrappleGen_RubyHashSet(mrb, h, "size", mrb_int_value(mrb, (mrb_int)in->size));
+    GrappleGen_RubyHashSet(mrb, h, "create_time", mrb_int_value(mrb, (mrb_int)in->create_time));
+    GrappleGen_RubyHashSet(mrb, h, "modify_time", mrb_int_value(mrb, (mrb_int)in->modify_time));
+    GrappleGen_RubyHashSet(mrb, h, "access_time", mrb_int_value(mrb, (mrb_int)in->access_time));
     return h;
 }
 
@@ -250,57 +250,57 @@ static void GenRead_SDL_PixelFormatDetails(mrb_state *mrb, mrb_value h, SDL_Pixe
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->format = (SDL_PixelFormat)SDLStaticGen_RubyFieldInt(mrb, h, "format");
-    out->bits_per_pixel = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "bits_per_pixel");
-    out->bytes_per_pixel = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "bytes_per_pixel");
+    out->format = (SDL_PixelFormat)GrappleGen_RubyFieldInt(mrb, h, "format");
+    out->bits_per_pixel = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "bits_per_pixel");
+    out->bytes_per_pixel = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "bytes_per_pixel");
     {
-        mrb_value arr = SDLStaticGen_RubyFieldGet(mrb, h, "padding");
+        mrb_value arr = GrappleGen_RubyFieldGet(mrb, h, "padding");
         if (mrb_array_p(arr)) {
             for (mrb_int gi = 0; gi < (mrb_int)(2) && gi < RARRAY_LEN(arr); ++gi) {
                 mrb_value el = mrb_ary_ref(mrb, arr, gi);
-                out->padding[gi] = (Uint8)SDLStaticGen_RubyToInt(mrb, el);
+                out->padding[gi] = (Uint8)GrappleGen_RubyToInt(mrb, el);
             }
         }
     }
-    out->Rmask = (Uint32)SDLStaticGen_RubyFieldInt(mrb, h, "Rmask");
-    out->Gmask = (Uint32)SDLStaticGen_RubyFieldInt(mrb, h, "Gmask");
-    out->Bmask = (Uint32)SDLStaticGen_RubyFieldInt(mrb, h, "Bmask");
-    out->Amask = (Uint32)SDLStaticGen_RubyFieldInt(mrb, h, "Amask");
-    out->Rbits = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "Rbits");
-    out->Gbits = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "Gbits");
-    out->Bbits = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "Bbits");
-    out->Abits = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "Abits");
-    out->Rshift = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "Rshift");
-    out->Gshift = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "Gshift");
-    out->Bshift = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "Bshift");
-    out->Ashift = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "Ashift");
+    out->Rmask = (Uint32)GrappleGen_RubyFieldInt(mrb, h, "Rmask");
+    out->Gmask = (Uint32)GrappleGen_RubyFieldInt(mrb, h, "Gmask");
+    out->Bmask = (Uint32)GrappleGen_RubyFieldInt(mrb, h, "Bmask");
+    out->Amask = (Uint32)GrappleGen_RubyFieldInt(mrb, h, "Amask");
+    out->Rbits = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "Rbits");
+    out->Gbits = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "Gbits");
+    out->Bbits = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "Bbits");
+    out->Abits = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "Abits");
+    out->Rshift = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "Rshift");
+    out->Gshift = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "Gshift");
+    out->Bshift = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "Bshift");
+    out->Ashift = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "Ashift");
 }
 
 static void GenRead_SDL_Point(mrb_state *mrb, mrb_value h, SDL_Point *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->x = (int)SDLStaticGen_RubyFieldInt(mrb, h, "x");
-    out->y = (int)SDLStaticGen_RubyFieldInt(mrb, h, "y");
+    out->x = (int)GrappleGen_RubyFieldInt(mrb, h, "x");
+    out->y = (int)GrappleGen_RubyFieldInt(mrb, h, "y");
 }
 
 static void GenRead_SDL_Rect(mrb_state *mrb, mrb_value h, SDL_Rect *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->x = (int)SDLStaticGen_RubyFieldInt(mrb, h, "x");
-    out->y = (int)SDLStaticGen_RubyFieldInt(mrb, h, "y");
-    out->w = (int)SDLStaticGen_RubyFieldInt(mrb, h, "w");
-    out->h = (int)SDLStaticGen_RubyFieldInt(mrb, h, "h");
+    out->x = (int)GrappleGen_RubyFieldInt(mrb, h, "x");
+    out->y = (int)GrappleGen_RubyFieldInt(mrb, h, "y");
+    out->w = (int)GrappleGen_RubyFieldInt(mrb, h, "w");
+    out->h = (int)GrappleGen_RubyFieldInt(mrb, h, "h");
 }
 
 static mrb_value GenPush_SDL_Rect(mrb_state *mrb, const SDL_Rect *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "x", mrb_int_value(mrb, (mrb_int)in->x));
-    SDLStaticGen_RubyHashSet(mrb, h, "y", mrb_int_value(mrb, (mrb_int)in->y));
-    SDLStaticGen_RubyHashSet(mrb, h, "w", mrb_int_value(mrb, (mrb_int)in->w));
-    SDLStaticGen_RubyHashSet(mrb, h, "h", mrb_int_value(mrb, (mrb_int)in->h));
+    GrappleGen_RubyHashSet(mrb, h, "x", mrb_int_value(mrb, (mrb_int)in->x));
+    GrappleGen_RubyHashSet(mrb, h, "y", mrb_int_value(mrb, (mrb_int)in->y));
+    GrappleGen_RubyHashSet(mrb, h, "w", mrb_int_value(mrb, (mrb_int)in->w));
+    GrappleGen_RubyHashSet(mrb, h, "h", mrb_int_value(mrb, (mrb_int)in->h));
     return h;
 }
 
@@ -431,11 +431,11 @@ static mrb_value GenR_SDL_AcquireCameraFrame(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Camera *a0 = (SDL_Camera *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Camera");
-    Uint64 io1 = (Uint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Camera *a0 = (SDL_Camera *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Camera");
+    Uint64 io1 = (Uint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Surface * rv = SDL_AcquireCameraFrame(a0, &io1);
     mrb_value rets[2];
-    rets[0] = SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
+    rets[0] = GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
     rets[1] = mrb_int_value(mrb, (mrb_int)io1);
     return mrb_ary_new_from_values(mrb, 2, rets);
     }
@@ -448,9 +448,9 @@ static mrb_value GenR_SDL_AcquireGPUCommandBuffer(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
     SDL_GPUCommandBuffer * rv = SDL_AcquireGPUCommandBuffer(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUCommandBuffer");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUCommandBuffer");
     }
 }
 
@@ -461,7 +461,7 @@ static mrb_value GenR_SDL_AddGamepadMapping(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     int rv = SDL_AddGamepadMapping(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -474,7 +474,7 @@ static mrb_value GenR_SDL_AddGamepadMappingsFromFile(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     int rv = SDL_AddGamepadMappingsFromFile(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -487,8 +487,8 @@ static mrb_value GenR_SDL_AddGamepadMappingsFromIO(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = SDL_AddGamepadMappingsFromIO(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -501,8 +501,8 @@ static mrb_value GenR_SDL_AddSurfaceAlternateImage(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    SDL_Surface *a1 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a1 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Surface");
     bool rv = SDL_AddSurfaceAlternateImage(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -515,10 +515,10 @@ static mrb_value GenR_SDL_AddVulkanRenderSemaphores(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Sint64 a2 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Sint64 a3 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Sint64 a2 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Sint64 a3 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_AddVulkanRenderSemaphores(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -531,10 +531,10 @@ static mrb_value GenR_SDL_AsyncIOFromFile(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_AsyncIO * rv = SDL_AsyncIOFromFile(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_AsyncIO");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_AsyncIO");
     }
 }
 
@@ -545,7 +545,7 @@ static mrb_value GenR_SDL_AttachVirtualJoystick(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const SDL_VirtualJoystickDesc *a0 = (const SDL_VirtualJoystickDesc *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_VirtualJoystickDesc");
+    const SDL_VirtualJoystickDesc *a0 = (const SDL_VirtualJoystickDesc *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_VirtualJoystickDesc");
     SDL_JoystickID rv = SDL_AttachVirtualJoystick(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -558,7 +558,7 @@ static mrb_value GenR_SDL_AudioDevicePaused(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_AudioDevicePaused(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -571,7 +571,7 @@ static mrb_value GenR_SDL_AudioStreamDevicePaused(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     bool rv = SDL_AudioStreamDevicePaused(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -584,13 +584,13 @@ static mrb_value GenR_SDL_BeginGPUComputePass(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
-    const SDL_GPUStorageTextureReadWriteBinding *a1 = (const SDL_GPUStorageTextureReadWriteBinding *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUStorageTextureReadWriteBinding");
-    Uint32 a2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    const SDL_GPUStorageBufferReadWriteBinding *a3 = (const SDL_GPUStorageBufferReadWriteBinding *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "SDL_GPUStorageBufferReadWriteBinding");
-    Uint32 a4 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
+    const SDL_GPUStorageTextureReadWriteBinding *a1 = (const SDL_GPUStorageTextureReadWriteBinding *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUStorageTextureReadWriteBinding");
+    Uint32 a2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const SDL_GPUStorageBufferReadWriteBinding *a3 = (const SDL_GPUStorageBufferReadWriteBinding *)GrappleGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "SDL_GPUStorageBufferReadWriteBinding");
+    Uint32 a4 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     SDL_GPUComputePass * rv = SDL_BeginGPUComputePass(a0, a1, a2, a3, a4);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUComputePass");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUComputePass");
     }
 }
 
@@ -601,9 +601,9 @@ static mrb_value GenR_SDL_BeginGPUCopyPass(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
     SDL_GPUCopyPass * rv = SDL_BeginGPUCopyPass(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUCopyPass");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUCopyPass");
     }
 }
 
@@ -614,12 +614,12 @@ static mrb_value GenR_SDL_BeginGPURenderPass(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
-    const SDL_GPUColorTargetInfo *a1 = (const SDL_GPUColorTargetInfo *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUColorTargetInfo");
-    Uint32 a2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    const SDL_GPUDepthStencilTargetInfo *a3 = (const SDL_GPUDepthStencilTargetInfo *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "SDL_GPUDepthStencilTargetInfo");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
+    const SDL_GPUColorTargetInfo *a1 = (const SDL_GPUColorTargetInfo *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUColorTargetInfo");
+    Uint32 a2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const SDL_GPUDepthStencilTargetInfo *a3 = (const SDL_GPUDepthStencilTargetInfo *)GrappleGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "SDL_GPUDepthStencilTargetInfo");
     SDL_GPURenderPass * rv = SDL_BeginGPURenderPass(a0, a1, a2, a3);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPURenderPass");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPURenderPass");
     }
 }
 
@@ -630,8 +630,8 @@ static mrb_value GenR_SDL_BindAudioStream(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    SDL_AudioStream *a1 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_AudioStream *a1 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_AudioStream");
     bool rv = SDL_BindAudioStream(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -644,8 +644,8 @@ static mrb_value GenR_SDL_BindGPUComputePipeline(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUComputePass");
-    SDL_GPUComputePipeline *a1 = (SDL_GPUComputePipeline *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUComputePipeline");
+    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUComputePass");
+    SDL_GPUComputePipeline *a1 = (SDL_GPUComputePipeline *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUComputePipeline");
     SDL_BindGPUComputePipeline(a0, a1);
     return mrb_nil_value();
     }
@@ -658,10 +658,10 @@ static mrb_value GenR_SDL_BindGPUComputeSamplers(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUComputePass");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const SDL_GPUTextureSamplerBinding *a2 = (const SDL_GPUTextureSamplerBinding *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUTextureSamplerBinding");
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUComputePass");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const SDL_GPUTextureSamplerBinding *a2 = (const SDL_GPUTextureSamplerBinding *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUTextureSamplerBinding");
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     SDL_BindGPUComputeSamplers(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -674,10 +674,10 @@ static mrb_value GenR_SDL_BindGPUFragmentSamplers(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const SDL_GPUTextureSamplerBinding *a2 = (const SDL_GPUTextureSamplerBinding *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUTextureSamplerBinding");
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const SDL_GPUTextureSamplerBinding *a2 = (const SDL_GPUTextureSamplerBinding *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUTextureSamplerBinding");
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     SDL_BindGPUFragmentSamplers(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -690,8 +690,8 @@ static mrb_value GenR_SDL_BindGPUGraphicsPipeline(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
-    SDL_GPUGraphicsPipeline *a1 = (SDL_GPUGraphicsPipeline *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUGraphicsPipeline");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
+    SDL_GPUGraphicsPipeline *a1 = (SDL_GPUGraphicsPipeline *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUGraphicsPipeline");
     SDL_BindGPUGraphicsPipeline(a0, a1);
     return mrb_nil_value();
     }
@@ -704,9 +704,9 @@ static mrb_value GenR_SDL_BindGPUIndexBuffer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
-    const SDL_GPUBufferBinding *a1 = (const SDL_GPUBufferBinding *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBufferBinding");
-    SDL_GPUIndexElementSize a2 = (SDL_GPUIndexElementSize)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
+    const SDL_GPUBufferBinding *a1 = (const SDL_GPUBufferBinding *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBufferBinding");
+    SDL_GPUIndexElementSize a2 = (SDL_GPUIndexElementSize)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_BindGPUIndexBuffer(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -719,10 +719,10 @@ static mrb_value GenR_SDL_BindGPUVertexBuffers(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const SDL_GPUBufferBinding *a2 = (const SDL_GPUBufferBinding *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUBufferBinding");
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const SDL_GPUBufferBinding *a2 = (const SDL_GPUBufferBinding *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUBufferBinding");
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     SDL_BindGPUVertexBuffers(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -735,10 +735,10 @@ static mrb_value GenR_SDL_BindGPUVertexSamplers(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const SDL_GPUTextureSamplerBinding *a2 = (const SDL_GPUTextureSamplerBinding *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUTextureSamplerBinding");
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const SDL_GPUTextureSamplerBinding *a2 = (const SDL_GPUTextureSamplerBinding *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUTextureSamplerBinding");
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     SDL_BindGPUVertexSamplers(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -751,8 +751,8 @@ static mrb_value GenR_SDL_BlitGPUTexture(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
-    const SDL_GPUBlitInfo *a1 = (const SDL_GPUBlitInfo *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBlitInfo");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
+    const SDL_GPUBlitInfo *a1 = (const SDL_GPUBlitInfo *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBlitInfo");
     SDL_BlitGPUTexture(a0, a1);
     return mrb_nil_value();
     }
@@ -765,14 +765,14 @@ static mrb_value GenR_SDL_BlitSurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_Rect(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    SDL_Surface *a2 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a2 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp3;
     const SDL_Rect *a3 = NULL;
     if (argc > 3 && mrb_hash_p(argv[3])) {
@@ -791,20 +791,20 @@ static mrb_value GenR_SDL_BlitSurface9Grid(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_Rect(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    int a5 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
-    SDL_ScaleMode a7 = (SDL_ScaleMode)SDLStaticGen_RubyToInt(mrb, (argc > 7 ? argv[7] : mrb_nil_value()));
-    SDL_Surface *a8 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 8 ? argv[8] : mrb_nil_value()), "SDL_Surface");
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    int a5 = (int)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    SDL_ScaleMode a7 = (SDL_ScaleMode)GrappleGen_RubyToInt(mrb, (argc > 7 ? argv[7] : mrb_nil_value()));
+    SDL_Surface *a8 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 8 ? argv[8] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp9;
     const SDL_Rect *a9 = NULL;
     if (argc > 9 && mrb_hash_p(argv[9])) {
@@ -823,21 +823,21 @@ static mrb_value GenR_SDL_BlitSurfaceScaled(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_Rect(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    SDL_Surface *a2 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a2 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp3;
     const SDL_Rect *a3 = NULL;
     if (argc > 3 && mrb_hash_p(argv[3])) {
         GenRead_SDL_Rect(mrb, argv[3], &tmp3);
         a3 = &tmp3;
     }
-    SDL_ScaleMode a4 = (SDL_ScaleMode)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_ScaleMode a4 = (SDL_ScaleMode)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = SDL_BlitSurfaceScaled(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -850,14 +850,14 @@ static mrb_value GenR_SDL_BlitSurfaceTiled(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_Rect(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    SDL_Surface *a2 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a2 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp3;
     const SDL_Rect *a3 = NULL;
     if (argc > 3 && mrb_hash_p(argv[3])) {
@@ -876,16 +876,16 @@ static mrb_value GenR_SDL_BlitSurfaceTiledWithScale(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_Rect(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    SDL_ScaleMode a3 = (SDL_ScaleMode)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    SDL_Surface *a4 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), "SDL_Surface");
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_ScaleMode a3 = (SDL_ScaleMode)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Surface *a4 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp5;
     const SDL_Rect *a5 = NULL;
     if (argc > 5 && mrb_hash_p(argv[5])) {
@@ -904,14 +904,14 @@ static mrb_value GenR_SDL_BlitSurfaceUnchecked(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_Rect(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    SDL_Surface *a2 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a2 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp3;
     const SDL_Rect *a3 = NULL;
     if (argc > 3 && mrb_hash_p(argv[3])) {
@@ -930,21 +930,21 @@ static mrb_value GenR_SDL_BlitSurfaceUncheckedScaled(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_Rect(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    SDL_Surface *a2 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a2 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp3;
     const SDL_Rect *a3 = NULL;
     if (argc > 3 && mrb_hash_p(argv[3])) {
         GenRead_SDL_Rect(mrb, argv[3], &tmp3);
         a3 = &tmp3;
     }
-    SDL_ScaleMode a4 = (SDL_ScaleMode)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_ScaleMode a4 = (SDL_ScaleMode)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = SDL_BlitSurfaceUncheckedScaled(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -957,10 +957,10 @@ static mrb_value GenR_SDL_CalculateGPUTextureFormatSize(mrb_state *mrb, mrb_valu
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUTextureFormat a0 = (SDL_GPUTextureFormat)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint32 a2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_GPUTextureFormat a0 = (SDL_GPUTextureFormat)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 a2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     Uint32 rv = SDL_CalculateGPUTextureFormatSize(a0, a1, a2, a3);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -973,7 +973,7 @@ static mrb_value GenR_SDL_CancelGPUCommandBuffer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
     bool rv = SDL_CancelGPUCommandBuffer(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -986,7 +986,7 @@ static mrb_value GenR_SDL_CaptureMouse(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    bool a0 = (bool)SDLStaticGen_RubyToBool((argc > 0 ? argv[0] : mrb_nil_value()));
+    bool a0 = (bool)GrappleGen_RubyToBool((argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_CaptureMouse(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -999,8 +999,8 @@ static mrb_value GenR_SDL_ClaimWindowForGPUDevice(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_ClaimWindowForGPUDevice(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1013,7 +1013,7 @@ static mrb_value GenR_SDL_ClearAudioStream(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     bool rv = SDL_ClearAudioStream(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1038,7 +1038,7 @@ static mrb_value GenR_SDL_ClearComposition(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_ClearComposition(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1063,8 +1063,8 @@ static mrb_value GenR_SDL_ClearProperty(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_ClearProperty(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1077,11 +1077,11 @@ static mrb_value GenR_SDL_ClearSurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = SDL_ClearSurface(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1094,7 +1094,7 @@ static mrb_value GenR_SDL_ClickTrayEntry(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
     SDL_ClickTrayEntry(a0);
     return mrb_nil_value();
     }
@@ -1107,7 +1107,7 @@ static mrb_value GenR_SDL_CloseAudioDevice(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_CloseAudioDevice(a0);
     return mrb_nil_value();
     }
@@ -1120,7 +1120,7 @@ static mrb_value GenR_SDL_CloseCamera(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Camera *a0 = (SDL_Camera *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Camera");
+    SDL_Camera *a0 = (SDL_Camera *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Camera");
     SDL_CloseCamera(a0);
     return mrb_nil_value();
     }
@@ -1133,7 +1133,7 @@ static mrb_value GenR_SDL_CloseGamepad(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     SDL_CloseGamepad(a0);
     return mrb_nil_value();
     }
@@ -1146,7 +1146,7 @@ static mrb_value GenR_SDL_CloseHaptic(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
     SDL_CloseHaptic(a0);
     return mrb_nil_value();
     }
@@ -1159,7 +1159,7 @@ static mrb_value GenR_SDL_CloseIO(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
     bool rv = SDL_CloseIO(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1172,7 +1172,7 @@ static mrb_value GenR_SDL_CloseJoystick(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     SDL_CloseJoystick(a0);
     return mrb_nil_value();
     }
@@ -1185,7 +1185,7 @@ static mrb_value GenR_SDL_CloseSensor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Sensor *a0 = (SDL_Sensor *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Sensor");
+    SDL_Sensor *a0 = (SDL_Sensor *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Sensor");
     SDL_CloseSensor(a0);
     return mrb_nil_value();
     }
@@ -1198,7 +1198,7 @@ static mrb_value GenR_SDL_CloseStorage(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
     bool rv = SDL_CloseStorage(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1213,8 +1213,8 @@ static mrb_value GenR_SDL_CompareAndSwapAtomicInt(mrb_state *mrb, mrb_value self
     {
     SDL_AtomicInt out0;
     memset(&out0, 0, sizeof(out0));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_CompareAndSwapAtomicInt(&out0, a1, a2);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -1232,8 +1232,8 @@ static mrb_value GenR_SDL_CompareAndSwapAtomicU32(mrb_state *mrb, mrb_value self
     {
     SDL_AtomicU32 out0;
     memset(&out0, 0, sizeof(out0));
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    Uint32 a2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Uint32 a2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_CompareAndSwapAtomicU32(&out0, a1, a2);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -1249,12 +1249,12 @@ static mrb_value GenR_SDL_ComposeCustomBlendMode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_BlendFactor a0 = (SDL_BlendFactor)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    SDL_BlendFactor a1 = (SDL_BlendFactor)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    SDL_BlendOperation a2 = (SDL_BlendOperation)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    SDL_BlendFactor a3 = (SDL_BlendFactor)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    SDL_BlendFactor a4 = (SDL_BlendFactor)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    SDL_BlendOperation a5 = (SDL_BlendOperation)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    SDL_BlendFactor a0 = (SDL_BlendFactor)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_BlendFactor a1 = (SDL_BlendFactor)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_BlendOperation a2 = (SDL_BlendOperation)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_BlendFactor a3 = (SDL_BlendFactor)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_BlendFactor a4 = (SDL_BlendFactor)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_BlendOperation a5 = (SDL_BlendOperation)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     SDL_BlendMode rv = SDL_ComposeCustomBlendMode(a0, a1, a2, a3, a4, a5);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1267,8 +1267,8 @@ static mrb_value GenR_SDL_ConvertEventToRenderCoordinates(mrb_state *mrb, mrb_va
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_Event *a1 = (SDL_Event *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Event");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Event *a1 = (SDL_Event *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Event");
     bool rv = SDL_ConvertEventToRenderCoordinates(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1281,10 +1281,10 @@ static mrb_value GenR_SDL_ConvertSurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    SDL_PixelFormat a1 = (SDL_PixelFormat)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_PixelFormat a1 = (SDL_PixelFormat)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Surface * rv = SDL_ConvertSurface(a0, a1);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -1295,13 +1295,13 @@ static mrb_value GenR_SDL_ConvertSurfaceAndColorspace(mrb_state *mrb, mrb_value 
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    SDL_PixelFormat a1 = (SDL_PixelFormat)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    SDL_Palette *a2 = (SDL_Palette *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Palette");
-    SDL_Colorspace a3 = (SDL_Colorspace)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    SDL_PropertiesID a4 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_PixelFormat a1 = (SDL_PixelFormat)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Palette *a2 = (SDL_Palette *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Palette");
+    SDL_Colorspace a3 = (SDL_Colorspace)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_PropertiesID a4 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     SDL_Surface * rv = SDL_ConvertSurfaceAndColorspace(a0, a1, a2, a3, a4);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -1312,8 +1312,8 @@ static mrb_value GenR_SDL_CopyFile(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_CopyFile(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1326,11 +1326,11 @@ static mrb_value GenR_SDL_CopyGPUBufferToBuffer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCopyPass");
-    const SDL_GPUBufferLocation *a1 = (const SDL_GPUBufferLocation *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBufferLocation");
-    const SDL_GPUBufferLocation *a2 = (const SDL_GPUBufferLocation *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUBufferLocation");
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    bool a4 = (bool)SDLStaticGen_RubyToBool((argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCopyPass");
+    const SDL_GPUBufferLocation *a1 = (const SDL_GPUBufferLocation *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBufferLocation");
+    const SDL_GPUBufferLocation *a2 = (const SDL_GPUBufferLocation *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUBufferLocation");
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    bool a4 = (bool)GrappleGen_RubyToBool((argc > 4 ? argv[4] : mrb_nil_value()));
     SDL_CopyGPUBufferToBuffer(a0, a1, a2, a3, a4);
     return mrb_nil_value();
     }
@@ -1343,13 +1343,13 @@ static mrb_value GenR_SDL_CopyGPUTextureToTexture(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCopyPass");
-    const SDL_GPUTextureLocation *a1 = (const SDL_GPUTextureLocation *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTextureLocation");
-    const SDL_GPUTextureLocation *a2 = (const SDL_GPUTextureLocation *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUTextureLocation");
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint32 a4 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    Uint32 a5 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    bool a6 = (bool)SDLStaticGen_RubyToBool((argc > 6 ? argv[6] : mrb_nil_value()));
+    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCopyPass");
+    const SDL_GPUTextureLocation *a1 = (const SDL_GPUTextureLocation *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTextureLocation");
+    const SDL_GPUTextureLocation *a2 = (const SDL_GPUTextureLocation *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUTextureLocation");
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint32 a4 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    Uint32 a5 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    bool a6 = (bool)GrappleGen_RubyToBool((argc > 6 ? argv[6] : mrb_nil_value()));
     SDL_CopyGPUTextureToTexture(a0, a1, a2, a3, a4, a5, a6);
     return mrb_nil_value();
     }
@@ -1362,8 +1362,8 @@ static mrb_value GenR_SDL_CopyProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    SDL_PropertiesID a1 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PropertiesID a1 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_CopyProperties(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1376,9 +1376,9 @@ static mrb_value GenR_SDL_CopyStorageFile(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_CopyStorageFile(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1391,12 +1391,12 @@ static mrb_value GenR_SDL_CreateAnimatedCursor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_CursorFrameInfo *a0 = (SDL_CursorFrameInfo *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_CursorFrameInfo");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_CursorFrameInfo *a0 = (SDL_CursorFrameInfo *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_CursorFrameInfo");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     SDL_Cursor * rv = SDL_CreateAnimatedCursor(a0, a1, a2, a3);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Cursor");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Cursor");
     }
 }
 
@@ -1408,7 +1408,7 @@ static mrb_value GenR_SDL_CreateAsyncIOQueue(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     SDL_AsyncIOQueue * rv = SDL_CreateAsyncIOQueue();
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_AsyncIOQueue", GenDtor_SDL_DestroyAsyncIOQueue);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_AsyncIOQueue", GenDtor_SDL_DestroyAsyncIOQueue);
     }
 }
 
@@ -1432,7 +1432,7 @@ static mrb_value GenR_SDL_CreateAudioStream(mrb_state *mrb, mrb_value self)
         a1 = &tmp1;
     }
     SDL_AudioStream * rv = SDL_CreateAudioStream(a0, a1);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_AudioStream", GenDtor_SDL_DestroyAudioStream);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_AudioStream", GenDtor_SDL_DestroyAudioStream);
     }
 }
 
@@ -1443,11 +1443,11 @@ static mrb_value GenR_SDL_CreateColorCursor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_Cursor * rv = SDL_CreateColorCursor(a0, a1, a2);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Cursor", GenDtor_SDL_DestroyCursor);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Cursor", GenDtor_SDL_DestroyCursor);
     }
 }
 
@@ -1458,7 +1458,7 @@ static mrb_value GenR_SDL_CreateDirectory(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_CreateDirectory(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1471,9 +1471,9 @@ static mrb_value GenR_SDL_CreateEnvironment(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    bool a0 = (bool)SDLStaticGen_RubyToBool((argc > 0 ? argv[0] : mrb_nil_value()));
+    bool a0 = (bool)GrappleGen_RubyToBool((argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Environment * rv = SDL_CreateEnvironment(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Environment", GenDtor_SDL_DestroyEnvironment);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Environment", GenDtor_SDL_DestroyEnvironment);
     }
 }
 
@@ -1484,7 +1484,7 @@ static mrb_value GenR_SDL_CreateGPUBuffer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
     SDL_GPUBufferCreateInfo tmp1;
     const SDL_GPUBufferCreateInfo *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -1492,7 +1492,7 @@ static mrb_value GenR_SDL_CreateGPUBuffer(mrb_state *mrb, mrb_value self)
         a1 = &tmp1;
     }
     SDL_GPUBuffer * rv = SDL_CreateGPUBuffer(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUBuffer");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUBuffer");
     }
 }
 
@@ -1503,10 +1503,10 @@ static mrb_value GenR_SDL_CreateGPUComputePipeline(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    const SDL_GPUComputePipelineCreateInfo *a1 = (const SDL_GPUComputePipelineCreateInfo *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUComputePipelineCreateInfo");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    const SDL_GPUComputePipelineCreateInfo *a1 = (const SDL_GPUComputePipelineCreateInfo *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUComputePipelineCreateInfo");
     SDL_GPUComputePipeline * rv = SDL_CreateGPUComputePipeline(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUComputePipeline");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUComputePipeline");
     }
 }
 
@@ -1517,11 +1517,11 @@ static mrb_value GenR_SDL_CreateGPUDevice(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUShaderFormat a0 = (SDL_GPUShaderFormat)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_GPUShaderFormat a0 = (SDL_GPUShaderFormat)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_GPUDevice * rv = SDL_CreateGPUDevice(a0, a1, a2);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_GPUDevice", GenDtor_SDL_DestroyGPUDevice);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_GPUDevice", GenDtor_SDL_DestroyGPUDevice);
     }
 }
 
@@ -1532,9 +1532,9 @@ static mrb_value GenR_SDL_CreateGPUDeviceWithProperties(mrb_state *mrb, mrb_valu
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_GPUDevice * rv = SDL_CreateGPUDeviceWithProperties(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_GPUDevice", GenDtor_SDL_DestroyGPUDevice);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_GPUDevice", GenDtor_SDL_DestroyGPUDevice);
     }
 }
 
@@ -1545,10 +1545,10 @@ static mrb_value GenR_SDL_CreateGPUGraphicsPipeline(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    const SDL_GPUGraphicsPipelineCreateInfo *a1 = (const SDL_GPUGraphicsPipelineCreateInfo *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUGraphicsPipelineCreateInfo");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    const SDL_GPUGraphicsPipelineCreateInfo *a1 = (const SDL_GPUGraphicsPipelineCreateInfo *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUGraphicsPipelineCreateInfo");
     SDL_GPUGraphicsPipeline * rv = SDL_CreateGPUGraphicsPipeline(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUGraphicsPipeline");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUGraphicsPipeline");
     }
 }
 
@@ -1559,10 +1559,10 @@ static mrb_value GenR_SDL_CreateGPURenderState(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    const SDL_GPURenderStateCreateInfo *a1 = (const SDL_GPURenderStateCreateInfo *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPURenderStateCreateInfo");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    const SDL_GPURenderStateCreateInfo *a1 = (const SDL_GPURenderStateCreateInfo *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPURenderStateCreateInfo");
     SDL_GPURenderState * rv = SDL_CreateGPURenderState(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPURenderState");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPURenderState");
     }
 }
 
@@ -1573,10 +1573,10 @@ static mrb_value GenR_SDL_CreateGPURenderer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
     SDL_Renderer * rv = SDL_CreateGPURenderer(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Renderer");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Renderer");
     }
 }
 
@@ -1587,7 +1587,7 @@ static mrb_value GenR_SDL_CreateGPUSampler(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
     SDL_GPUSamplerCreateInfo tmp1;
     const SDL_GPUSamplerCreateInfo *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -1595,7 +1595,7 @@ static mrb_value GenR_SDL_CreateGPUSampler(mrb_state *mrb, mrb_value self)
         a1 = &tmp1;
     }
     SDL_GPUSampler * rv = SDL_CreateGPUSampler(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUSampler");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUSampler");
     }
 }
 
@@ -1606,10 +1606,10 @@ static mrb_value GenR_SDL_CreateGPUShader(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    const SDL_GPUShaderCreateInfo *a1 = (const SDL_GPUShaderCreateInfo *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUShaderCreateInfo");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    const SDL_GPUShaderCreateInfo *a1 = (const SDL_GPUShaderCreateInfo *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUShaderCreateInfo");
     SDL_GPUShader * rv = SDL_CreateGPUShader(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUShader");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUShader");
     }
 }
 
@@ -1620,7 +1620,7 @@ static mrb_value GenR_SDL_CreateGPUTexture(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
     SDL_GPUTextureCreateInfo tmp1;
     const SDL_GPUTextureCreateInfo *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -1628,7 +1628,7 @@ static mrb_value GenR_SDL_CreateGPUTexture(mrb_state *mrb, mrb_value self)
         a1 = &tmp1;
     }
     SDL_GPUTexture * rv = SDL_CreateGPUTexture(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUTexture");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUTexture");
     }
 }
 
@@ -1639,7 +1639,7 @@ static mrb_value GenR_SDL_CreateGPUTransferBuffer(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
     SDL_GPUTransferBufferCreateInfo tmp1;
     const SDL_GPUTransferBufferCreateInfo *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -1647,7 +1647,7 @@ static mrb_value GenR_SDL_CreateGPUTransferBuffer(mrb_state *mrb, mrb_value self
         a1 = &tmp1;
     }
     SDL_GPUTransferBuffer * rv = SDL_CreateGPUTransferBuffer(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUTransferBuffer");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUTransferBuffer");
     }
 }
 
@@ -1658,8 +1658,8 @@ static mrb_value GenR_SDL_CreateHapticEffect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
-    const SDL_HapticEffect *a1 = (const SDL_HapticEffect *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_HapticEffect");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    const SDL_HapticEffect *a1 = (const SDL_HapticEffect *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_HapticEffect");
     SDL_HapticEffectID rv = SDL_CreateHapticEffect(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1672,9 +1672,9 @@ static mrb_value GenR_SDL_CreatePalette(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Palette * rv = SDL_CreatePalette(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Palette", GenDtor_SDL_DestroyPalette);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Palette", GenDtor_SDL_DestroyPalette);
     }
 }
 
@@ -1685,14 +1685,14 @@ static mrb_value GenR_SDL_CreatePopupWindow(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    SDL_WindowFlags a5 = (SDL_WindowFlags)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_WindowFlags a5 = (SDL_WindowFlags)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     SDL_Window * rv = SDL_CreatePopupWindow(a0, a1, a2, a3, a4, a5);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Window", GenDtor_SDL_DestroyWindow);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Window", GenDtor_SDL_DestroyWindow);
     }
 }
 
@@ -1703,9 +1703,9 @@ static mrb_value GenR_SDL_CreateProcessWithProperties(mrb_state *mrb, mrb_value 
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Process * rv = SDL_CreateProcessWithProperties(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Process", GenDtor_SDL_DestroyProcess);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Process", GenDtor_SDL_DestroyProcess);
     }
 }
 
@@ -1728,10 +1728,10 @@ static mrb_value GenR_SDL_CreateRenderer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Renderer * rv = SDL_CreateRenderer(a0, a1);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Renderer", GenDtor_SDL_DestroyRenderer);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Renderer", GenDtor_SDL_DestroyRenderer);
     }
 }
 
@@ -1742,9 +1742,9 @@ static mrb_value GenR_SDL_CreateRendererWithProperties(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Renderer * rv = SDL_CreateRendererWithProperties(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Renderer", GenDtor_SDL_DestroyRenderer);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Renderer", GenDtor_SDL_DestroyRenderer);
     }
 }
 
@@ -1755,9 +1755,9 @@ static mrb_value GenR_SDL_CreateSoftwareRenderer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Renderer * rv = SDL_CreateSoftwareRenderer(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Renderer", GenDtor_SDL_DestroyRenderer);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Renderer", GenDtor_SDL_DestroyRenderer);
     }
 }
 
@@ -1768,8 +1768,8 @@ static mrb_value GenR_SDL_CreateStorageDirectory(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_CreateStorageDirectory(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1782,11 +1782,11 @@ static mrb_value GenR_SDL_CreateSurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    SDL_PixelFormat a2 = (SDL_PixelFormat)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_PixelFormat a2 = (SDL_PixelFormat)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_Surface * rv = SDL_CreateSurface(a0, a1, a2);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -1797,9 +1797,9 @@ static mrb_value GenR_SDL_CreateSurfacePalette(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Palette * rv = SDL_CreateSurfacePalette(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Palette");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Palette");
     }
 }
 
@@ -1810,9 +1810,9 @@ static mrb_value GenR_SDL_CreateSystemCursor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_SystemCursor a0 = (SDL_SystemCursor)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_SystemCursor a0 = (SDL_SystemCursor)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Cursor * rv = SDL_CreateSystemCursor(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Cursor", GenDtor_SDL_DestroyCursor);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Cursor", GenDtor_SDL_DestroyCursor);
     }
 }
 
@@ -1823,13 +1823,13 @@ static mrb_value GenR_SDL_CreateTexture(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_PixelFormat a1 = (SDL_PixelFormat)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    SDL_TextureAccess a2 = (SDL_TextureAccess)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_PixelFormat a1 = (SDL_PixelFormat)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_TextureAccess a2 = (SDL_TextureAccess)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     SDL_Texture * rv = SDL_CreateTexture(a0, a1, a2, a3, a4);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Texture", GenDtor_SDL_DestroyTexture);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Texture", GenDtor_SDL_DestroyTexture);
     }
 }
 
@@ -1840,10 +1840,10 @@ static mrb_value GenR_SDL_CreateTextureFromSurface(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_Surface *a1 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Surface");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Surface *a1 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Surface");
     SDL_Texture * rv = SDL_CreateTextureFromSurface(a0, a1);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Texture", GenDtor_SDL_DestroyTexture);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Texture", GenDtor_SDL_DestroyTexture);
     }
 }
 
@@ -1854,10 +1854,10 @@ static mrb_value GenR_SDL_CreateTextureWithProperties(mrb_state *mrb, mrb_value 
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_PropertiesID a1 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_PropertiesID a1 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Texture * rv = SDL_CreateTextureWithProperties(a0, a1);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Texture", GenDtor_SDL_DestroyTexture);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Texture", GenDtor_SDL_DestroyTexture);
     }
 }
 
@@ -1868,10 +1868,10 @@ static mrb_value GenR_SDL_CreateTray(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Tray * rv = SDL_CreateTray(a0, a1);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Tray", GenDtor_SDL_DestroyTray);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Tray", GenDtor_SDL_DestroyTray);
     }
 }
 
@@ -1882,9 +1882,9 @@ static mrb_value GenR_SDL_CreateTrayMenu(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Tray *a0 = (SDL_Tray *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Tray");
+    SDL_Tray *a0 = (SDL_Tray *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Tray");
     SDL_TrayMenu * rv = SDL_CreateTrayMenu(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_TrayMenu");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_TrayMenu");
     }
 }
 
@@ -1895,9 +1895,9 @@ static mrb_value GenR_SDL_CreateTraySubmenu(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
     SDL_TrayMenu * rv = SDL_CreateTraySubmenu(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_TrayMenu");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_TrayMenu");
     }
 }
 
@@ -1908,12 +1908,12 @@ static mrb_value GenR_SDL_CreateWindow(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    SDL_WindowFlags a3 = (SDL_WindowFlags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_WindowFlags a3 = (SDL_WindowFlags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     SDL_Window * rv = SDL_CreateWindow(a0, a1, a2, a3);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Window", GenDtor_SDL_DestroyWindow);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Window", GenDtor_SDL_DestroyWindow);
     }
 }
 
@@ -1924,9 +1924,9 @@ static mrb_value GenR_SDL_CreateWindowWithProperties(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Window * rv = SDL_CreateWindowWithProperties(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Window", GenDtor_SDL_DestroyWindow);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Window", GenDtor_SDL_DestroyWindow);
     }
 }
 
@@ -1955,7 +1955,7 @@ static mrb_value GenR_SDL_DateTimeToTime(mrb_state *mrb, mrb_value self)
         GenRead_SDL_DateTime(mrb, argv[0], &tmp0);
         a0 = &tmp0;
     }
-    SDL_Time io1 = (SDL_Time)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Time io1 = (SDL_Time)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_DateTimeToTime(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -1971,7 +1971,7 @@ static mrb_value GenR_SDL_Delay(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    Uint32 a0 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Uint32 a0 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Delay(a0);
     return mrb_nil_value();
     }
@@ -1984,7 +1984,7 @@ static mrb_value GenR_SDL_DelayNS(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    Uint64 a0 = (Uint64)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Uint64 a0 = (Uint64)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_DelayNS(a0);
     return mrb_nil_value();
     }
@@ -1997,7 +1997,7 @@ static mrb_value GenR_SDL_DelayPrecise(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    Uint64 a0 = (Uint64)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Uint64 a0 = (Uint64)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_DelayPrecise(a0);
     return mrb_nil_value();
     }
@@ -2010,7 +2010,7 @@ static mrb_value GenR_SDL_DestroyAsyncIOQueue(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AsyncIOQueue *a0 = (SDL_AsyncIOQueue *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AsyncIOQueue");
+    SDL_AsyncIOQueue *a0 = (SDL_AsyncIOQueue *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AsyncIOQueue");
     SDL_DestroyAsyncIOQueue(a0);
     return mrb_nil_value();
     }
@@ -2023,7 +2023,7 @@ static mrb_value GenR_SDL_DestroyAudioStream(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     SDL_DestroyAudioStream(a0);
     return mrb_nil_value();
     }
@@ -2036,7 +2036,7 @@ static mrb_value GenR_SDL_DestroyCursor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Cursor *a0 = (SDL_Cursor *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Cursor");
+    SDL_Cursor *a0 = (SDL_Cursor *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Cursor");
     SDL_DestroyCursor(a0);
     return mrb_nil_value();
     }
@@ -2049,7 +2049,7 @@ static mrb_value GenR_SDL_DestroyEnvironment(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Environment *a0 = (SDL_Environment *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Environment");
+    SDL_Environment *a0 = (SDL_Environment *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Environment");
     SDL_DestroyEnvironment(a0);
     return mrb_nil_value();
     }
@@ -2062,7 +2062,7 @@ static mrb_value GenR_SDL_DestroyGPUDevice(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
     SDL_DestroyGPUDevice(a0);
     return mrb_nil_value();
     }
@@ -2075,7 +2075,7 @@ static mrb_value GenR_SDL_DestroyGPURenderState(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPURenderState *a0 = (SDL_GPURenderState *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderState");
+    SDL_GPURenderState *a0 = (SDL_GPURenderState *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderState");
     SDL_DestroyGPURenderState(a0);
     return mrb_nil_value();
     }
@@ -2088,8 +2088,8 @@ static mrb_value GenR_SDL_DestroyHapticEffect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
-    SDL_HapticEffectID a1 = (SDL_HapticEffectID)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_HapticEffectID a1 = (SDL_HapticEffectID)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_DestroyHapticEffect(a0, a1);
     return mrb_nil_value();
     }
@@ -2102,7 +2102,7 @@ static mrb_value GenR_SDL_DestroyPalette(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Palette *a0 = (SDL_Palette *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Palette");
+    SDL_Palette *a0 = (SDL_Palette *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Palette");
     SDL_DestroyPalette(a0);
     return mrb_nil_value();
     }
@@ -2115,7 +2115,7 @@ static mrb_value GenR_SDL_DestroyProcess(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Process *a0 = (SDL_Process *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Process");
+    SDL_Process *a0 = (SDL_Process *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Process");
     SDL_DestroyProcess(a0);
     return mrb_nil_value();
     }
@@ -2128,7 +2128,7 @@ static mrb_value GenR_SDL_DestroyProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_DestroyProperties(a0);
     return mrb_nil_value();
     }
@@ -2141,7 +2141,7 @@ static mrb_value GenR_SDL_DestroyRenderer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_DestroyRenderer(a0);
     return mrb_nil_value();
     }
@@ -2154,7 +2154,7 @@ static mrb_value GenR_SDL_DestroySurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_DestroySurface(a0);
     return mrb_nil_value();
     }
@@ -2167,7 +2167,7 @@ static mrb_value GenR_SDL_DestroyTexture(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
     SDL_DestroyTexture(a0);
     return mrb_nil_value();
     }
@@ -2180,7 +2180,7 @@ static mrb_value GenR_SDL_DestroyTray(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Tray *a0 = (SDL_Tray *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Tray");
+    SDL_Tray *a0 = (SDL_Tray *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Tray");
     SDL_DestroyTray(a0);
     return mrb_nil_value();
     }
@@ -2193,7 +2193,7 @@ static mrb_value GenR_SDL_DestroyWindow(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     SDL_DestroyWindow(a0);
     return mrb_nil_value();
     }
@@ -2206,7 +2206,7 @@ static mrb_value GenR_SDL_DestroyWindowSurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_DestroyWindowSurface(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2219,7 +2219,7 @@ static mrb_value GenR_SDL_DetachVirtualJoystick(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_DetachVirtualJoystick(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2244,10 +2244,10 @@ static mrb_value GenR_SDL_DispatchGPUCompute(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUComputePass");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint32 a2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUComputePass");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 a2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     SDL_DispatchGPUCompute(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -2260,9 +2260,9 @@ static mrb_value GenR_SDL_DispatchGPUComputeIndirect(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUComputePass");
-    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBuffer");
-    Uint32 a2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUComputePass");
+    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBuffer");
+    Uint32 a2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_DispatchGPUComputeIndirect(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -2275,9 +2275,9 @@ static mrb_value GenR_SDL_DownloadFromGPUBuffer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCopyPass");
-    const SDL_GPUBufferRegion *a1 = (const SDL_GPUBufferRegion *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBufferRegion");
-    const SDL_GPUTransferBufferLocation *a2 = (const SDL_GPUTransferBufferLocation *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUTransferBufferLocation");
+    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCopyPass");
+    const SDL_GPUBufferRegion *a1 = (const SDL_GPUBufferRegion *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBufferRegion");
+    const SDL_GPUTransferBufferLocation *a2 = (const SDL_GPUTransferBufferLocation *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUTransferBufferLocation");
     SDL_DownloadFromGPUBuffer(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -2290,9 +2290,9 @@ static mrb_value GenR_SDL_DownloadFromGPUTexture(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCopyPass");
-    const SDL_GPUTextureRegion *a1 = (const SDL_GPUTextureRegion *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTextureRegion");
-    const SDL_GPUTextureTransferInfo *a2 = (const SDL_GPUTextureTransferInfo *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUTextureTransferInfo");
+    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCopyPass");
+    const SDL_GPUTextureRegion *a1 = (const SDL_GPUTextureRegion *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTextureRegion");
+    const SDL_GPUTextureTransferInfo *a2 = (const SDL_GPUTextureTransferInfo *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUTextureTransferInfo");
     SDL_DownloadFromGPUTexture(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -2305,12 +2305,12 @@ static mrb_value GenR_SDL_DrawGPUIndexedPrimitives(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint32 a2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Sint32 a4 = (Sint32)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    Uint32 a5 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 a2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Sint32 a4 = (Sint32)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    Uint32 a5 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     SDL_DrawGPUIndexedPrimitives(a0, a1, a2, a3, a4, a5);
     return mrb_nil_value();
     }
@@ -2323,10 +2323,10 @@ static mrb_value GenR_SDL_DrawGPUIndexedPrimitivesIndirect(mrb_state *mrb, mrb_v
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
-    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBuffer");
-    Uint32 a2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
+    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBuffer");
+    Uint32 a2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     SDL_DrawGPUIndexedPrimitivesIndirect(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -2339,11 +2339,11 @@ static mrb_value GenR_SDL_DrawGPUPrimitives(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint32 a2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint32 a4 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 a2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint32 a4 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     SDL_DrawGPUPrimitives(a0, a1, a2, a3, a4);
     return mrb_nil_value();
     }
@@ -2356,10 +2356,10 @@ static mrb_value GenR_SDL_DrawGPUPrimitivesIndirect(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
-    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBuffer");
-    Uint32 a2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
+    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBuffer");
+    Uint32 a2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     SDL_DrawGPUPrimitivesIndirect(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -2372,9 +2372,9 @@ static mrb_value GenR_SDL_DuplicateSurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Surface * rv = SDL_DuplicateSurface(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -2397,7 +2397,7 @@ static mrb_value GenR_SDL_EndGPUComputePass(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUComputePass");
+    SDL_GPUComputePass *a0 = (SDL_GPUComputePass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUComputePass");
     SDL_EndGPUComputePass(a0);
     return mrb_nil_value();
     }
@@ -2410,7 +2410,7 @@ static mrb_value GenR_SDL_EndGPUCopyPass(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCopyPass");
+    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCopyPass");
     SDL_EndGPUCopyPass(a0);
     return mrb_nil_value();
     }
@@ -2423,7 +2423,7 @@ static mrb_value GenR_SDL_EndGPURenderPass(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
     SDL_EndGPURenderPass(a0);
     return mrb_nil_value();
     }
@@ -2436,7 +2436,7 @@ static mrb_value GenR_SDL_EventEnabled(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    Uint32 a0 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Uint32 a0 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_EventEnabled(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2449,14 +2449,14 @@ static mrb_value GenR_SDL_FillSurfaceRect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_Rect(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    Uint32 a2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint32 a2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_FillSurfaceRect(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2469,15 +2469,15 @@ static mrb_value GenR_SDL_FillSurfaceRects(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_Rect(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_FillSurfaceRects(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2490,8 +2490,8 @@ static mrb_value GenR_SDL_FlashWindow(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    SDL_FlashOperation a1 = (SDL_FlashOperation)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_FlashOperation a1 = (SDL_FlashOperation)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_FlashWindow(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2504,8 +2504,8 @@ static mrb_value GenR_SDL_FlipSurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    SDL_FlipMode a1 = (SDL_FlipMode)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_FlipMode a1 = (SDL_FlipMode)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_FlipSurface(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2518,7 +2518,7 @@ static mrb_value GenR_SDL_FlushAudioStream(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     bool rv = SDL_FlushAudioStream(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2531,7 +2531,7 @@ static mrb_value GenR_SDL_FlushEvent(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    Uint32 a0 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Uint32 a0 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_FlushEvent(a0);
     return mrb_nil_value();
     }
@@ -2544,8 +2544,8 @@ static mrb_value GenR_SDL_FlushEvents(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    Uint32 a0 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 a0 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_FlushEvents(a0, a1);
     return mrb_nil_value();
     }
@@ -2558,7 +2558,7 @@ static mrb_value GenR_SDL_FlushIO(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
     bool rv = SDL_FlushIO(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2571,7 +2571,7 @@ static mrb_value GenR_SDL_FlushRenderer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     bool rv = SDL_FlushRenderer(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2584,7 +2584,7 @@ static mrb_value GenR_SDL_GL_ExtensionSupported(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_GL_ExtensionSupported(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2597,8 +2597,8 @@ static mrb_value GenR_SDL_GL_GetAttribute(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GLAttr a0 = (SDL_GLAttr)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_GLAttr a0 = (SDL_GLAttr)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GL_GetAttribute(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -2615,7 +2615,7 @@ static mrb_value GenR_SDL_GL_GetCurrentWindow(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     SDL_Window * rv = SDL_GL_GetCurrentWindow();
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Window");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Window");
     }
 }
 
@@ -2626,7 +2626,7 @@ static mrb_value GenR_SDL_GL_GetSwapInterval(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int io0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int io0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_GL_GetSwapInterval(&io0);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -2642,7 +2642,7 @@ static mrb_value GenR_SDL_GL_LoadLibrary(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_GL_LoadLibrary(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2667,8 +2667,8 @@ static mrb_value GenR_SDL_GL_SetAttribute(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GLAttr a0 = (SDL_GLAttr)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_GLAttr a0 = (SDL_GLAttr)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GL_SetAttribute(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2681,7 +2681,7 @@ static mrb_value GenR_SDL_GL_SetSwapInterval(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_GL_SetSwapInterval(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2694,7 +2694,7 @@ static mrb_value GenR_SDL_GL_SwapWindow(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_GL_SwapWindow(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2719,7 +2719,7 @@ static mrb_value GenR_SDL_GPUSupportsProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_GPUSupportsProperties(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2732,8 +2732,8 @@ static mrb_value GenR_SDL_GPUSupportsShaderFormats(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUShaderFormat a0 = (SDL_GPUShaderFormat)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_GPUShaderFormat a0 = (SDL_GPUShaderFormat)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GPUSupportsShaderFormats(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2746,7 +2746,7 @@ static mrb_value GenR_SDL_GPUTextureFormatTexelBlockSize(mrb_state *mrb, mrb_val
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUTextureFormat a0 = (SDL_GPUTextureFormat)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_GPUTextureFormat a0 = (SDL_GPUTextureFormat)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     Uint32 rv = SDL_GPUTextureFormatTexelBlockSize(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -2759,10 +2759,10 @@ static mrb_value GenR_SDL_GPUTextureSupportsFormat(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_GPUTextureFormat a1 = (SDL_GPUTextureFormat)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    SDL_GPUTextureType a2 = (SDL_GPUTextureType)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    SDL_GPUTextureUsageFlags a3 = (SDL_GPUTextureUsageFlags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUTextureFormat a1 = (SDL_GPUTextureFormat)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_GPUTextureType a2 = (SDL_GPUTextureType)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_GPUTextureUsageFlags a3 = (SDL_GPUTextureUsageFlags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_GPUTextureSupportsFormat(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2775,9 +2775,9 @@ static mrb_value GenR_SDL_GPUTextureSupportsSampleCount(mrb_state *mrb, mrb_valu
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_GPUTextureFormat a1 = (SDL_GPUTextureFormat)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    SDL_GPUSampleCount a2 = (SDL_GPUSampleCount)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUTextureFormat a1 = (SDL_GPUTextureFormat)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_GPUSampleCount a2 = (SDL_GPUSampleCount)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_GPUTextureSupportsSampleCount(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2792,9 +2792,9 @@ static mrb_value GenR_SDL_GUIDToString(mrb_state *mrb, mrb_value self)
     {
     SDL_GUID a0;
     GenRead_SDL_GUID(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    const char *src1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *src1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     char *a1 = SDL_strdup(src1 != NULL ? src1 : "");
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_GUIDToString(a0, a1, a2);
     SDL_free(a1);
     return mrb_nil_value();
@@ -2808,7 +2808,7 @@ static mrb_value GenR_SDL_GamepadConnected(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     bool rv = SDL_GamepadConnected(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2833,8 +2833,8 @@ static mrb_value GenR_SDL_GamepadHasAxis(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    SDL_GamepadAxis a1 = (SDL_GamepadAxis)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_GamepadAxis a1 = (SDL_GamepadAxis)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GamepadHasAxis(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2847,8 +2847,8 @@ static mrb_value GenR_SDL_GamepadHasButton(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    SDL_GamepadButton a1 = (SDL_GamepadButton)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_GamepadButton a1 = (SDL_GamepadButton)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GamepadHasButton(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2861,8 +2861,8 @@ static mrb_value GenR_SDL_GamepadHasSensor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    SDL_SensorType a1 = (SDL_SensorType)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_SensorType a1 = (SDL_SensorType)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GamepadHasSensor(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2875,8 +2875,8 @@ static mrb_value GenR_SDL_GamepadSensorEnabled(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    SDL_SensorType a1 = (SDL_SensorType)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_SensorType a1 = (SDL_SensorType)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GamepadSensorEnabled(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2889,8 +2889,8 @@ static mrb_value GenR_SDL_GenerateMipmapsForGPUTexture(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
-    SDL_GPUTexture *a1 = (SDL_GPUTexture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTexture");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
+    SDL_GPUTexture *a1 = (SDL_GPUTexture *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTexture");
     SDL_GenerateMipmapsForGPUTexture(a0, a1);
     return mrb_nil_value();
     }
@@ -2903,7 +2903,7 @@ static mrb_value GenR_SDL_GetAppMetadataProperty(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetAppMetadataProperty(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -2917,7 +2917,7 @@ static mrb_value GenR_SDL_GetAssertionReport(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     const SDL_AssertData * rv = SDL_GetAssertionReport();
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_AssertData");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_AssertData");
     }
 }
 
@@ -2928,8 +2928,8 @@ static mrb_value GenR_SDL_GetAsyncIOResult(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AsyncIOQueue *a0 = (SDL_AsyncIOQueue *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AsyncIOQueue");
-    SDL_AsyncIOOutcome *a1 = (SDL_AsyncIOOutcome *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_AsyncIOOutcome");
+    SDL_AsyncIOQueue *a0 = (SDL_AsyncIOQueue *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AsyncIOQueue");
+    SDL_AsyncIOOutcome *a1 = (SDL_AsyncIOOutcome *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_AsyncIOOutcome");
     bool rv = SDL_GetAsyncIOResult(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -2942,7 +2942,7 @@ static mrb_value GenR_SDL_GetAsyncIOSize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AsyncIO *a0 = (SDL_AsyncIO *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AsyncIO");
+    SDL_AsyncIO *a0 = (SDL_AsyncIO *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AsyncIO");
     Sint64 rv = SDL_GetAsyncIOSize(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -2955,10 +2955,10 @@ static mrb_value GenR_SDL_GetAudioDeviceFormat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_AudioSpec out1;
     memset(&out1, 0, sizeof(out1));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetAudioDeviceFormat(a0, &out1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -2975,7 +2975,7 @@ static mrb_value GenR_SDL_GetAudioDeviceGain(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     float rv = SDL_GetAudioDeviceGain(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -2988,7 +2988,7 @@ static mrb_value GenR_SDL_GetAudioDeviceName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetAudioDeviceName(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -3001,7 +3001,7 @@ static mrb_value GenR_SDL_GetAudioDriver(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetAudioDriver(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -3014,7 +3014,7 @@ static mrb_value GenR_SDL_GetAudioFormatName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioFormat a0 = (SDL_AudioFormat)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_AudioFormat a0 = (SDL_AudioFormat)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetAudioFormatName(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -3027,7 +3027,7 @@ static mrb_value GenR_SDL_GetAudioStreamAvailable(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     int rv = SDL_GetAudioStreamAvailable(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3040,7 +3040,7 @@ static mrb_value GenR_SDL_GetAudioStreamDevice(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     SDL_AudioDeviceID rv = SDL_GetAudioStreamDevice(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3053,7 +3053,7 @@ static mrb_value GenR_SDL_GetAudioStreamFormat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     SDL_AudioSpec out1;
     memset(&out1, 0, sizeof(out1));
     SDL_AudioSpec out2;
@@ -3074,7 +3074,7 @@ static mrb_value GenR_SDL_GetAudioStreamFrequencyRatio(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     float rv = SDL_GetAudioStreamFrequencyRatio(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -3087,7 +3087,7 @@ static mrb_value GenR_SDL_GetAudioStreamGain(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     float rv = SDL_GetAudioStreamGain(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -3100,7 +3100,7 @@ static mrb_value GenR_SDL_GetAudioStreamProperties(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     SDL_PropertiesID rv = SDL_GetAudioStreamProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3113,7 +3113,7 @@ static mrb_value GenR_SDL_GetAudioStreamQueued(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     int rv = SDL_GetAudioStreamQueued(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3138,9 +3138,9 @@ static mrb_value GenR_SDL_GetBooleanProperty(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_GetBooleanProperty(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3165,7 +3165,7 @@ static mrb_value GenR_SDL_GetCameraDriver(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetCameraDriver(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -3178,7 +3178,7 @@ static mrb_value GenR_SDL_GetCameraFormat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Camera *a0 = (SDL_Camera *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Camera");
+    SDL_Camera *a0 = (SDL_Camera *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Camera");
     SDL_CameraSpec out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetCameraFormat(a0, &out1);
@@ -3196,7 +3196,7 @@ static mrb_value GenR_SDL_GetCameraID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Camera *a0 = (SDL_Camera *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Camera");
+    SDL_Camera *a0 = (SDL_Camera *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Camera");
     SDL_CameraID rv = SDL_GetCameraID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3209,7 +3209,7 @@ static mrb_value GenR_SDL_GetCameraName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_CameraID a0 = (SDL_CameraID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_CameraID a0 = (SDL_CameraID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetCameraName(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -3222,7 +3222,7 @@ static mrb_value GenR_SDL_GetCameraPermissionState(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Camera *a0 = (SDL_Camera *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Camera");
+    SDL_Camera *a0 = (SDL_Camera *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Camera");
     SDL_CameraPermissionState rv = SDL_GetCameraPermissionState(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3235,7 +3235,7 @@ static mrb_value GenR_SDL_GetCameraPosition(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_CameraID a0 = (SDL_CameraID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_CameraID a0 = (SDL_CameraID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_CameraPosition rv = SDL_GetCameraPosition(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3248,7 +3248,7 @@ static mrb_value GenR_SDL_GetCameraProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Camera *a0 = (SDL_Camera *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Camera");
+    SDL_Camera *a0 = (SDL_Camera *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Camera");
     SDL_PropertiesID rv = SDL_GetCameraProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3275,12 +3275,12 @@ static mrb_value GenR_SDL_GetClosestFullscreenDisplayMode(mrb_state *mrb, mrb_va
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_DisplayID a0 = (SDL_DisplayID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    bool a4 = (bool)SDLStaticGen_RubyToBool((argc > 4 ? argv[4] : mrb_nil_value()));
-    SDL_DisplayMode *a5 = (SDL_DisplayMode *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 5 ? argv[5] : mrb_nil_value()), "SDL_DisplayMode");
+    SDL_DisplayID a0 = (SDL_DisplayID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    bool a4 = (bool)GrappleGen_RubyToBool((argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_DisplayMode *a5 = (SDL_DisplayMode *)GrappleGen_RubyCheckHandle(mrb, (argc > 5 ? argv[5] : mrb_nil_value()), "SDL_DisplayMode");
     bool rv = SDL_GetClosestFullscreenDisplayMode(a0, a1, a2, a3, a4, a5);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3331,9 +3331,9 @@ static mrb_value GenR_SDL_GetCurrentDisplayMode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_DisplayID a0 = (SDL_DisplayID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_DisplayID a0 = (SDL_DisplayID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const SDL_DisplayMode * rv = SDL_GetCurrentDisplayMode(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_DisplayMode");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_DisplayMode");
     }
 }
 
@@ -3344,7 +3344,7 @@ static mrb_value GenR_SDL_GetCurrentDisplayOrientation(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_DisplayID a0 = (SDL_DisplayID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_DisplayID a0 = (SDL_DisplayID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_DisplayOrientation rv = SDL_GetCurrentDisplayOrientation(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3357,9 +3357,9 @@ static mrb_value GenR_SDL_GetCurrentRenderOutputSize(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_GetCurrentRenderOutputSize(a0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -3376,7 +3376,7 @@ static mrb_value GenR_SDL_GetCurrentTime(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Time io0 = (SDL_Time)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_Time io0 = (SDL_Time)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_GetCurrentTime(&io0);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -3405,7 +3405,7 @@ static mrb_value GenR_SDL_GetCursor(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     SDL_Cursor * rv = SDL_GetCursor();
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Cursor");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Cursor");
     }
 }
 
@@ -3416,8 +3416,8 @@ static mrb_value GenR_SDL_GetDateTimeLocalePreferences(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_DateFormat io0 = (SDL_DateFormat)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    SDL_TimeFormat io1 = (SDL_TimeFormat)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_DateFormat io0 = (SDL_DateFormat)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_TimeFormat io1 = (SDL_TimeFormat)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetDateTimeLocalePreferences(&io0, &io1);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -3434,9 +3434,9 @@ static mrb_value GenR_SDL_GetDayOfWeek(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     int rv = SDL_GetDayOfWeek(a0, a1, a2);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3449,9 +3449,9 @@ static mrb_value GenR_SDL_GetDayOfYear(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     int rv = SDL_GetDayOfYear(a0, a1, a2);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3464,8 +3464,8 @@ static mrb_value GenR_SDL_GetDaysInMonth(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = SDL_GetDaysInMonth(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3479,7 +3479,7 @@ static mrb_value GenR_SDL_GetDefaultCursor(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     SDL_Cursor * rv = SDL_GetDefaultCursor();
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Cursor");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Cursor");
     }
 }
 
@@ -3490,8 +3490,8 @@ static mrb_value GenR_SDL_GetDefaultTextureScaleMode(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_ScaleMode io1 = (SDL_ScaleMode)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_ScaleMode io1 = (SDL_ScaleMode)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetDefaultTextureScaleMode(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -3507,9 +3507,9 @@ static mrb_value GenR_SDL_GetDesktopDisplayMode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_DisplayID a0 = (SDL_DisplayID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_DisplayID a0 = (SDL_DisplayID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const SDL_DisplayMode * rv = SDL_GetDesktopDisplayMode(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_DisplayMode");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_DisplayMode");
     }
 }
 
@@ -3520,7 +3520,7 @@ static mrb_value GenR_SDL_GetDisplayBounds(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_DisplayID a0 = (SDL_DisplayID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_DisplayID a0 = (SDL_DisplayID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Rect out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetDisplayBounds(a0, &out1);
@@ -3538,7 +3538,7 @@ static mrb_value GenR_SDL_GetDisplayContentScale(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_DisplayID a0 = (SDL_DisplayID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_DisplayID a0 = (SDL_DisplayID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     float rv = SDL_GetDisplayContentScale(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -3587,7 +3587,7 @@ static mrb_value GenR_SDL_GetDisplayForWindow(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     SDL_DisplayID rv = SDL_GetDisplayForWindow(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3600,7 +3600,7 @@ static mrb_value GenR_SDL_GetDisplayName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_DisplayID a0 = (SDL_DisplayID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_DisplayID a0 = (SDL_DisplayID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetDisplayName(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -3613,7 +3613,7 @@ static mrb_value GenR_SDL_GetDisplayProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_DisplayID a0 = (SDL_DisplayID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_DisplayID a0 = (SDL_DisplayID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_PropertiesID rv = SDL_GetDisplayProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3626,7 +3626,7 @@ static mrb_value GenR_SDL_GetDisplayUsableBounds(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_DisplayID a0 = (SDL_DisplayID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_DisplayID a0 = (SDL_DisplayID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Rect out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetDisplayUsableBounds(a0, &out1);
@@ -3645,7 +3645,7 @@ static mrb_value GenR_SDL_GetEnvironment(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     SDL_Environment * rv = SDL_GetEnvironment();
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Environment");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Environment");
     }
 }
 
@@ -3656,8 +3656,8 @@ static mrb_value GenR_SDL_GetEnvironmentVariable(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Environment *a0 = (SDL_Environment *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Environment");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Environment *a0 = (SDL_Environment *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Environment");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     const char * rv = SDL_GetEnvironmentVariable(a0, a1);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -3682,10 +3682,10 @@ static mrb_value GenR_SDL_GetEventDescription(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const SDL_Event *a0 = (const SDL_Event *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Event");
-    const char *src1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const SDL_Event *a0 = (const SDL_Event *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Event");
+    const char *src1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     char *a1 = SDL_strdup(src1 != NULL ? src1 : "");
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     int rv = SDL_GetEventDescription(a0, a1, a2);
     SDL_free(a1);
     return mrb_int_value(mrb, (mrb_int)rv);
@@ -3699,9 +3699,9 @@ static mrb_value GenR_SDL_GetFloatProperty(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     float rv = SDL_GetFloatProperty(a0, a1, a2);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -3714,7 +3714,7 @@ static mrb_value GenR_SDL_GetGPUDeviceDriver(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
     const char * rv = SDL_GetGPUDeviceDriver(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -3727,7 +3727,7 @@ static mrb_value GenR_SDL_GetGPUDeviceProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
     SDL_PropertiesID rv = SDL_GetGPUDeviceProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3740,7 +3740,7 @@ static mrb_value GenR_SDL_GetGPUDriver(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetGPUDriver(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -3753,9 +3753,9 @@ static mrb_value GenR_SDL_GetGPURendererDevice(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_GPUDevice * rv = SDL_GetGPURendererDevice(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUDevice");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUDevice");
     }
 }
 
@@ -3766,7 +3766,7 @@ static mrb_value GenR_SDL_GetGPUShaderFormats(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
     SDL_GPUShaderFormat rv = SDL_GetGPUShaderFormats(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3779,8 +3779,8 @@ static mrb_value GenR_SDL_GetGPUSwapchainTextureFormat(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
     SDL_GPUTextureFormat rv = SDL_GetGPUSwapchainTextureFormat(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3793,7 +3793,7 @@ static mrb_value GenR_SDL_GetGPUTextureFormatFromPixelFormat(mrb_state *mrb, mrb
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PixelFormat a0 = (SDL_PixelFormat)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PixelFormat a0 = (SDL_PixelFormat)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_GPUTextureFormat rv = SDL_GetGPUTextureFormatFromPixelFormat(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3806,8 +3806,8 @@ static mrb_value GenR_SDL_GetGamepadAppleSFSymbolsNameForAxis(mrb_state *mrb, mr
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    SDL_GamepadAxis a1 = (SDL_GamepadAxis)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_GamepadAxis a1 = (SDL_GamepadAxis)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     const char * rv = SDL_GetGamepadAppleSFSymbolsNameForAxis(a0, a1);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -3820,8 +3820,8 @@ static mrb_value GenR_SDL_GetGamepadAppleSFSymbolsNameForButton(mrb_state *mrb, 
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    SDL_GamepadButton a1 = (SDL_GamepadButton)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_GamepadButton a1 = (SDL_GamepadButton)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     const char * rv = SDL_GetGamepadAppleSFSymbolsNameForButton(a0, a1);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -3834,8 +3834,8 @@ static mrb_value GenR_SDL_GetGamepadAxis(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    SDL_GamepadAxis a1 = (SDL_GamepadAxis)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_GamepadAxis a1 = (SDL_GamepadAxis)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     Sint16 rv = SDL_GetGamepadAxis(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3848,7 +3848,7 @@ static mrb_value GenR_SDL_GetGamepadAxisFromString(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_GamepadAxis rv = SDL_GetGamepadAxisFromString(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3861,8 +3861,8 @@ static mrb_value GenR_SDL_GetGamepadButton(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    SDL_GamepadButton a1 = (SDL_GamepadButton)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_GamepadButton a1 = (SDL_GamepadButton)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetGamepadButton(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3875,7 +3875,7 @@ static mrb_value GenR_SDL_GetGamepadButtonFromString(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_GamepadButton rv = SDL_GetGamepadButtonFromString(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3888,8 +3888,8 @@ static mrb_value GenR_SDL_GetGamepadButtonLabel(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    SDL_GamepadButton a1 = (SDL_GamepadButton)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_GamepadButton a1 = (SDL_GamepadButton)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_GamepadButtonLabel rv = SDL_GetGamepadButtonLabel(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3902,8 +3902,8 @@ static mrb_value GenR_SDL_GetGamepadButtonLabelForType(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GamepadType a0 = (SDL_GamepadType)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    SDL_GamepadButton a1 = (SDL_GamepadButton)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_GamepadType a0 = (SDL_GamepadType)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_GamepadButton a1 = (SDL_GamepadButton)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_GamepadButtonLabel rv = SDL_GetGamepadButtonLabelForType(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3916,7 +3916,7 @@ static mrb_value GenR_SDL_GetGamepadConnectionState(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     SDL_JoystickConnectionState rv = SDL_GetGamepadConnectionState(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3929,7 +3929,7 @@ static mrb_value GenR_SDL_GetGamepadFirmwareVersion(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     Uint16 rv = SDL_GetGamepadFirmwareVersion(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3942,9 +3942,9 @@ static mrb_value GenR_SDL_GetGamepadFromID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Gamepad * rv = SDL_GetGamepadFromID(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Gamepad");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Gamepad");
     }
 }
 
@@ -3955,9 +3955,9 @@ static mrb_value GenR_SDL_GetGamepadFromPlayerIndex(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Gamepad * rv = SDL_GetGamepadFromPlayerIndex(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Gamepad");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Gamepad");
     }
 }
 
@@ -3968,7 +3968,7 @@ static mrb_value GenR_SDL_GetGamepadGUIDForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_GUID rv = SDL_GetGamepadGUIDForID(a0);
     return GenPush_SDL_GUID(mrb, &rv);
     }
@@ -3981,7 +3981,7 @@ static mrb_value GenR_SDL_GetGamepadID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     SDL_JoystickID rv = SDL_GetGamepadID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3994,9 +3994,9 @@ static mrb_value GenR_SDL_GetGamepadJoystick(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     SDL_Joystick * rv = SDL_GetGamepadJoystick(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Joystick");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Joystick");
     }
 }
 
@@ -4007,7 +4007,7 @@ static mrb_value GenR_SDL_GetGamepadMapping(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     char * rv = SDL_GetGamepadMapping(a0);
     mrb_value rstr = rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv);
     if (rv != NULL) { SDL_free(rv); }
@@ -4038,7 +4038,7 @@ static mrb_value GenR_SDL_GetGamepadMappingForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     char * rv = SDL_GetGamepadMappingForID(a0);
     mrb_value rstr = rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv);
     if (rv != NULL) { SDL_free(rv); }
@@ -4053,7 +4053,7 @@ static mrb_value GenR_SDL_GetGamepadName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     const char * rv = SDL_GetGamepadName(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4066,7 +4066,7 @@ static mrb_value GenR_SDL_GetGamepadNameForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetGamepadNameForID(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4079,7 +4079,7 @@ static mrb_value GenR_SDL_GetGamepadPath(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     const char * rv = SDL_GetGamepadPath(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4092,7 +4092,7 @@ static mrb_value GenR_SDL_GetGamepadPathForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetGamepadPathForID(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4105,7 +4105,7 @@ static mrb_value GenR_SDL_GetGamepadPlayerIndex(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     int rv = SDL_GetGamepadPlayerIndex(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4118,7 +4118,7 @@ static mrb_value GenR_SDL_GetGamepadPlayerIndexForID(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     int rv = SDL_GetGamepadPlayerIndexForID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4131,8 +4131,8 @@ static mrb_value GenR_SDL_GetGamepadPowerInfo(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_PowerState rv = SDL_GetGamepadPowerInfo(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -4148,7 +4148,7 @@ static mrb_value GenR_SDL_GetGamepadProduct(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     Uint16 rv = SDL_GetGamepadProduct(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4161,7 +4161,7 @@ static mrb_value GenR_SDL_GetGamepadProductForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     Uint16 rv = SDL_GetGamepadProductForID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4174,7 +4174,7 @@ static mrb_value GenR_SDL_GetGamepadProductVersion(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     Uint16 rv = SDL_GetGamepadProductVersion(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4187,7 +4187,7 @@ static mrb_value GenR_SDL_GetGamepadProductVersionForID(mrb_state *mrb, mrb_valu
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     Uint16 rv = SDL_GetGamepadProductVersionForID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4200,7 +4200,7 @@ static mrb_value GenR_SDL_GetGamepadProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     SDL_PropertiesID rv = SDL_GetGamepadProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4213,10 +4213,10 @@ static mrb_value GenR_SDL_GetGamepadSensorData(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    SDL_SensorType a1 = (SDL_SensorType)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float io2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_SensorType a1 = (SDL_SensorType)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_GetGamepadSensorData(a0, a1, &io2, a3);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4232,8 +4232,8 @@ static mrb_value GenR_SDL_GetGamepadSensorDataRate(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    SDL_SensorType a1 = (SDL_SensorType)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_SensorType a1 = (SDL_SensorType)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     float rv = SDL_GetGamepadSensorDataRate(a0, a1);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -4246,7 +4246,7 @@ static mrb_value GenR_SDL_GetGamepadSerial(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     const char * rv = SDL_GetGamepadSerial(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4259,7 +4259,7 @@ static mrb_value GenR_SDL_GetGamepadSteamHandle(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     Uint64 rv = SDL_GetGamepadSteamHandle(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4272,7 +4272,7 @@ static mrb_value GenR_SDL_GetGamepadStringForAxis(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GamepadAxis a0 = (SDL_GamepadAxis)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_GamepadAxis a0 = (SDL_GamepadAxis)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetGamepadStringForAxis(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4285,7 +4285,7 @@ static mrb_value GenR_SDL_GetGamepadStringForButton(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GamepadButton a0 = (SDL_GamepadButton)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_GamepadButton a0 = (SDL_GamepadButton)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetGamepadStringForButton(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4298,7 +4298,7 @@ static mrb_value GenR_SDL_GetGamepadStringForType(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GamepadType a0 = (SDL_GamepadType)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_GamepadType a0 = (SDL_GamepadType)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetGamepadStringForType(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4311,13 +4311,13 @@ static mrb_value GenR_SDL_GetGamepadTouchpadFinger(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    bool io3 = (bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
-    float io4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float io5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float io6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    bool io3 = (bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    float io4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float io5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float io6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     bool rv = SDL_GetGamepadTouchpadFinger(a0, a1, a2, &io3, &io4, &io5, &io6);
     mrb_value rets[5];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4336,7 +4336,7 @@ static mrb_value GenR_SDL_GetGamepadType(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     SDL_GamepadType rv = SDL_GetGamepadType(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4349,7 +4349,7 @@ static mrb_value GenR_SDL_GetGamepadTypeForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_GamepadType rv = SDL_GetGamepadTypeForID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4362,7 +4362,7 @@ static mrb_value GenR_SDL_GetGamepadTypeFromString(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_GamepadType rv = SDL_GetGamepadTypeFromString(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4375,7 +4375,7 @@ static mrb_value GenR_SDL_GetGamepadVendor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     Uint16 rv = SDL_GetGamepadVendor(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4388,7 +4388,7 @@ static mrb_value GenR_SDL_GetGamepadVendorForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     Uint16 rv = SDL_GetGamepadVendorForID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4401,8 +4401,8 @@ static mrb_value GenR_SDL_GetGlobalMouseState(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float io0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_MouseButtonFlags rv = SDL_GetGlobalMouseState(&io0, &io1);
     mrb_value rets[3];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -4432,7 +4432,7 @@ static mrb_value GenR_SDL_GetGrabbedWindow(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     SDL_Window * rv = SDL_GetGrabbedWindow();
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Window");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Window");
     }
 }
 
@@ -4443,8 +4443,8 @@ static mrb_value GenR_SDL_GetHapticEffectStatus(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
-    SDL_HapticEffectID a1 = (SDL_HapticEffectID)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_HapticEffectID a1 = (SDL_HapticEffectID)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetHapticEffectStatus(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -4457,7 +4457,7 @@ static mrb_value GenR_SDL_GetHapticFeatures(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
     Uint32 rv = SDL_GetHapticFeatures(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4470,9 +4470,9 @@ static mrb_value GenR_SDL_GetHapticFromID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_HapticID a0 = (SDL_HapticID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_HapticID a0 = (SDL_HapticID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Haptic * rv = SDL_GetHapticFromID(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Haptic");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Haptic");
     }
 }
 
@@ -4483,7 +4483,7 @@ static mrb_value GenR_SDL_GetHapticID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
     SDL_HapticID rv = SDL_GetHapticID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4496,7 +4496,7 @@ static mrb_value GenR_SDL_GetHapticName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
     const char * rv = SDL_GetHapticName(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4509,7 +4509,7 @@ static mrb_value GenR_SDL_GetHapticNameForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_HapticID a0 = (SDL_HapticID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_HapticID a0 = (SDL_HapticID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetHapticNameForID(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4522,7 +4522,7 @@ static mrb_value GenR_SDL_GetHint(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetHint(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4535,8 +4535,8 @@ static mrb_value GenR_SDL_GetHintBoolean(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetHintBoolean(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -4549,7 +4549,7 @@ static mrb_value GenR_SDL_GetIOProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
     SDL_PropertiesID rv = SDL_GetIOProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4562,7 +4562,7 @@ static mrb_value GenR_SDL_GetIOSize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
     Sint64 rv = SDL_GetIOSize(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4575,7 +4575,7 @@ static mrb_value GenR_SDL_GetIOStatus(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
     SDL_IOStatus rv = SDL_GetIOStatus(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4588,8 +4588,8 @@ static mrb_value GenR_SDL_GetJoystickAxis(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     Sint16 rv = SDL_GetJoystickAxis(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4602,9 +4602,9 @@ static mrb_value GenR_SDL_GetJoystickAxisInitialState(mrb_state *mrb, mrb_value 
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Sint16 io2 = (Sint16)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Sint16 io2 = (Sint16)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_GetJoystickAxisInitialState(a0, a1, &io2);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4620,10 +4620,10 @@ static mrb_value GenR_SDL_GetJoystickBall(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int io3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int io3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_GetJoystickBall(a0, a1, &io2, &io3);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -4640,8 +4640,8 @@ static mrb_value GenR_SDL_GetJoystickButton(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetJoystickButton(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -4654,7 +4654,7 @@ static mrb_value GenR_SDL_GetJoystickConnectionState(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     SDL_JoystickConnectionState rv = SDL_GetJoystickConnectionState(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4667,7 +4667,7 @@ static mrb_value GenR_SDL_GetJoystickFirmwareVersion(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     Uint16 rv = SDL_GetJoystickFirmwareVersion(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4680,9 +4680,9 @@ static mrb_value GenR_SDL_GetJoystickFromID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Joystick * rv = SDL_GetJoystickFromID(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Joystick");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Joystick");
     }
 }
 
@@ -4693,9 +4693,9 @@ static mrb_value GenR_SDL_GetJoystickFromPlayerIndex(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Joystick * rv = SDL_GetJoystickFromPlayerIndex(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Joystick");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Joystick");
     }
 }
 
@@ -4706,7 +4706,7 @@ static mrb_value GenR_SDL_GetJoystickGUID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     SDL_GUID rv = SDL_GetJoystickGUID(a0);
     return GenPush_SDL_GUID(mrb, &rv);
     }
@@ -4719,7 +4719,7 @@ static mrb_value GenR_SDL_GetJoystickGUIDForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_GUID rv = SDL_GetJoystickGUIDForID(a0);
     return GenPush_SDL_GUID(mrb, &rv);
     }
@@ -4734,10 +4734,10 @@ static mrb_value GenR_SDL_GetJoystickGUIDInfo(mrb_state *mrb, mrb_value self)
     {
     SDL_GUID a0;
     GenRead_SDL_GUID(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    Uint16 io1 = (Uint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint16 io2 = (Uint16)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint16 io3 = (Uint16)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint16 io4 = (Uint16)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    Uint16 io1 = (Uint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint16 io2 = (Uint16)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint16 io3 = (Uint16)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint16 io4 = (Uint16)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     SDL_GetJoystickGUIDInfo(a0, &io1, &io2, &io3, &io4);
     mrb_value rets[4];
     rets[0] = mrb_int_value(mrb, (mrb_int)io1);
@@ -4755,8 +4755,8 @@ static mrb_value GenR_SDL_GetJoystickHat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     Uint8 rv = SDL_GetJoystickHat(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4769,7 +4769,7 @@ static mrb_value GenR_SDL_GetJoystickID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     SDL_JoystickID rv = SDL_GetJoystickID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4782,7 +4782,7 @@ static mrb_value GenR_SDL_GetJoystickName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     const char * rv = SDL_GetJoystickName(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4795,7 +4795,7 @@ static mrb_value GenR_SDL_GetJoystickNameForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetJoystickNameForID(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4808,7 +4808,7 @@ static mrb_value GenR_SDL_GetJoystickPath(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     const char * rv = SDL_GetJoystickPath(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4821,7 +4821,7 @@ static mrb_value GenR_SDL_GetJoystickPathForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetJoystickPathForID(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4834,7 +4834,7 @@ static mrb_value GenR_SDL_GetJoystickPlayerIndex(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     int rv = SDL_GetJoystickPlayerIndex(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4847,7 +4847,7 @@ static mrb_value GenR_SDL_GetJoystickPlayerIndexForID(mrb_state *mrb, mrb_value 
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     int rv = SDL_GetJoystickPlayerIndexForID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4860,8 +4860,8 @@ static mrb_value GenR_SDL_GetJoystickPowerInfo(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_PowerState rv = SDL_GetJoystickPowerInfo(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -4877,7 +4877,7 @@ static mrb_value GenR_SDL_GetJoystickProduct(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     Uint16 rv = SDL_GetJoystickProduct(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4890,7 +4890,7 @@ static mrb_value GenR_SDL_GetJoystickProductForID(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     Uint16 rv = SDL_GetJoystickProductForID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4903,7 +4903,7 @@ static mrb_value GenR_SDL_GetJoystickProductVersion(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     Uint16 rv = SDL_GetJoystickProductVersion(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4916,7 +4916,7 @@ static mrb_value GenR_SDL_GetJoystickProductVersionForID(mrb_state *mrb, mrb_val
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     Uint16 rv = SDL_GetJoystickProductVersionForID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4929,7 +4929,7 @@ static mrb_value GenR_SDL_GetJoystickProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     SDL_PropertiesID rv = SDL_GetJoystickProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4942,7 +4942,7 @@ static mrb_value GenR_SDL_GetJoystickSerial(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     const char * rv = SDL_GetJoystickSerial(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -4955,7 +4955,7 @@ static mrb_value GenR_SDL_GetJoystickType(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     SDL_JoystickType rv = SDL_GetJoystickType(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4968,7 +4968,7 @@ static mrb_value GenR_SDL_GetJoystickTypeForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_JoystickType rv = SDL_GetJoystickTypeForID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4981,7 +4981,7 @@ static mrb_value GenR_SDL_GetJoystickVendor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     Uint16 rv = SDL_GetJoystickVendor(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -4994,7 +4994,7 @@ static mrb_value GenR_SDL_GetJoystickVendorForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     Uint16 rv = SDL_GetJoystickVendorForID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5007,7 +5007,7 @@ static mrb_value GenR_SDL_GetKeyFromName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Keycode rv = SDL_GetKeyFromName(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5020,9 +5020,9 @@ static mrb_value GenR_SDL_GetKeyFromScancode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Scancode a0 = (SDL_Scancode)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    SDL_Keymod a1 = (SDL_Keymod)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Scancode a0 = (SDL_Scancode)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_Keymod a1 = (SDL_Keymod)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_Keycode rv = SDL_GetKeyFromScancode(a0, a1, a2);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5035,7 +5035,7 @@ static mrb_value GenR_SDL_GetKeyName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Keycode a0 = (SDL_Keycode)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_Keycode a0 = (SDL_Keycode)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetKeyName(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -5049,7 +5049,7 @@ static mrb_value GenR_SDL_GetKeyboardFocus(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     SDL_Window * rv = SDL_GetKeyboardFocus();
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Window");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Window");
     }
 }
 
@@ -5060,7 +5060,7 @@ static mrb_value GenR_SDL_GetKeyboardNameForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_KeyboardID a0 = (SDL_KeyboardID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_KeyboardID a0 = (SDL_KeyboardID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetKeyboardNameForID(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -5073,7 +5073,7 @@ static mrb_value GenR_SDL_GetLogPriority(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_LogPriority rv = SDL_GetLogPriority(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5086,12 +5086,12 @@ static mrb_value GenR_SDL_GetMasksForPixelFormat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PixelFormat a0 = (SDL_PixelFormat)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint32 io2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint32 io3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint32 io4 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    Uint32 io5 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    SDL_PixelFormat a0 = (SDL_PixelFormat)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 io2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint32 io3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint32 io4 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    Uint32 io5 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     bool rv = SDL_GetMasksForPixelFormat(a0, &io1, &io2, &io3, &io4, &io5);
     mrb_value rets[6];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -5111,7 +5111,7 @@ static mrb_value GenR_SDL_GetMaxHapticEffects(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
     int rv = SDL_GetMaxHapticEffects(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5124,7 +5124,7 @@ static mrb_value GenR_SDL_GetMaxHapticEffectsPlaying(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
     int rv = SDL_GetMaxHapticEffectsPlaying(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5150,7 +5150,7 @@ static mrb_value GenR_SDL_GetMouseFocus(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     SDL_Window * rv = SDL_GetMouseFocus();
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Window");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Window");
     }
 }
 
@@ -5161,7 +5161,7 @@ static mrb_value GenR_SDL_GetMouseNameForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_MouseID a0 = (SDL_MouseID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_MouseID a0 = (SDL_MouseID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetMouseNameForID(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -5174,8 +5174,8 @@ static mrb_value GenR_SDL_GetMouseState(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float io0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_MouseButtonFlags rv = SDL_GetMouseState(&io0, &io1);
     mrb_value rets[3];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -5192,7 +5192,7 @@ static mrb_value GenR_SDL_GetNaturalDisplayOrientation(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_DisplayID a0 = (SDL_DisplayID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_DisplayID a0 = (SDL_DisplayID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_DisplayOrientation rv = SDL_GetNaturalDisplayOrientation(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5253,8 +5253,8 @@ static mrb_value GenR_SDL_GetNumGamepadTouchpadFingers(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = SDL_GetNumGamepadTouchpadFingers(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5267,7 +5267,7 @@ static mrb_value GenR_SDL_GetNumGamepadTouchpads(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     int rv = SDL_GetNumGamepadTouchpads(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5280,7 +5280,7 @@ static mrb_value GenR_SDL_GetNumHapticAxes(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
     int rv = SDL_GetNumHapticAxes(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5293,7 +5293,7 @@ static mrb_value GenR_SDL_GetNumJoystickAxes(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     int rv = SDL_GetNumJoystickAxes(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5306,7 +5306,7 @@ static mrb_value GenR_SDL_GetNumJoystickBalls(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     int rv = SDL_GetNumJoystickBalls(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5319,7 +5319,7 @@ static mrb_value GenR_SDL_GetNumJoystickButtons(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     int rv = SDL_GetNumJoystickButtons(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5332,7 +5332,7 @@ static mrb_value GenR_SDL_GetNumJoystickHats(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     int rv = SDL_GetNumJoystickHats(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5381,9 +5381,9 @@ static mrb_value GenR_SDL_GetNumberProperty(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Sint64 a2 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Sint64 a2 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     Sint64 rv = SDL_GetNumberProperty(a0, a1, a2);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5396,7 +5396,7 @@ static mrb_value GenR_SDL_GetPathInfo(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_PathInfo out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetPathInfo(a0, &out1);
@@ -5414,7 +5414,7 @@ static mrb_value GenR_SDL_GetPenDeviceType(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PenID a0 = (SDL_PenID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PenID a0 = (SDL_PenID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_PenDeviceType rv = SDL_GetPenDeviceType(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5451,11 +5451,11 @@ static mrb_value GenR_SDL_GetPixelFormatForMasks(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint32 a2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint32 a4 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 a2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint32 a4 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     SDL_PixelFormat rv = SDL_GetPixelFormatForMasks(a0, a1, a2, a3, a4);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5468,7 +5468,7 @@ static mrb_value GenR_SDL_GetPixelFormatFromGPUTextureFormat(mrb_state *mrb, mrb
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUTextureFormat a0 = (SDL_GPUTextureFormat)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_GPUTextureFormat a0 = (SDL_GPUTextureFormat)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_PixelFormat rv = SDL_GetPixelFormatFromGPUTextureFormat(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5481,7 +5481,7 @@ static mrb_value GenR_SDL_GetPixelFormatName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PixelFormat a0 = (SDL_PixelFormat)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PixelFormat a0 = (SDL_PixelFormat)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetPixelFormatName(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -5506,8 +5506,8 @@ static mrb_value GenR_SDL_GetPowerInfo(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int io0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_PowerState rv = SDL_GetPowerInfo(&io0, &io1);
     mrb_value rets[3];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -5524,8 +5524,8 @@ static mrb_value GenR_SDL_GetPrefPath(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     char * rv = SDL_GetPrefPath(a0, a1);
     mrb_value rstr = rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv);
     if (rv != NULL) { SDL_free(rv); }
@@ -5566,9 +5566,9 @@ static mrb_value GenR_SDL_GetProcessInput(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Process *a0 = (SDL_Process *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Process");
+    SDL_Process *a0 = (SDL_Process *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Process");
     SDL_IOStream * rv = SDL_GetProcessInput(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_IOStream");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_IOStream");
     }
 }
 
@@ -5579,9 +5579,9 @@ static mrb_value GenR_SDL_GetProcessOutput(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Process *a0 = (SDL_Process *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Process");
+    SDL_Process *a0 = (SDL_Process *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Process");
     SDL_IOStream * rv = SDL_GetProcessOutput(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_IOStream");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_IOStream");
     }
 }
 
@@ -5592,7 +5592,7 @@ static mrb_value GenR_SDL_GetProcessProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Process *a0 = (SDL_Process *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Process");
+    SDL_Process *a0 = (SDL_Process *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Process");
     SDL_PropertiesID rv = SDL_GetProcessProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5605,8 +5605,8 @@ static mrb_value GenR_SDL_GetPropertyType(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_PropertyType rv = SDL_GetPropertyType(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5619,17 +5619,17 @@ static mrb_value GenR_SDL_GetRGB(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    Uint32 a0 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Uint32 a0 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_PixelFormatDetails tmp1;
     const SDL_PixelFormatDetails *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_PixelFormatDetails(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    const SDL_Palette *a2 = (const SDL_Palette *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Palette");
-    Uint8 io3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint8 io4 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    Uint8 io5 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    const SDL_Palette *a2 = (const SDL_Palette *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Palette");
+    Uint8 io3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint8 io4 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    Uint8 io5 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     SDL_GetRGB(a0, a1, a2, &io3, &io4, &io5);
     mrb_value rets[3];
     rets[0] = mrb_int_value(mrb, (mrb_int)io3);
@@ -5646,18 +5646,18 @@ static mrb_value GenR_SDL_GetRGBA(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    Uint32 a0 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Uint32 a0 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_PixelFormatDetails tmp1;
     const SDL_PixelFormatDetails *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_PixelFormatDetails(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    const SDL_Palette *a2 = (const SDL_Palette *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Palette");
-    Uint8 io3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint8 io4 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    Uint8 io5 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    Uint8 io6 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    const SDL_Palette *a2 = (const SDL_Palette *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Palette");
+    Uint8 io3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint8 io4 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    Uint8 io5 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    Uint8 io6 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     SDL_GetRGBA(a0, a1, a2, &io3, &io4, &io5, &io6);
     mrb_value rets[4];
     rets[0] = mrb_int_value(mrb, (mrb_int)io3);
@@ -5675,7 +5675,7 @@ static mrb_value GenR_SDL_GetRealGamepadType(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     SDL_GamepadType rv = SDL_GetRealGamepadType(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5688,7 +5688,7 @@ static mrb_value GenR_SDL_GetRealGamepadTypeForID(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_GamepadType rv = SDL_GetRealGamepadTypeForID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -5707,10 +5707,10 @@ static mrb_value GenR_SDL_GetRectAndLineIntersection(mrb_state *mrb, mrb_value s
         GenRead_SDL_Rect(mrb, argv[0], &tmp0);
         a0 = &tmp0;
     }
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int io3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int io4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int io3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int io4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = SDL_GetRectAndLineIntersection(a0, &io1, &io2, &io3, &io4);
     mrb_value rets[5];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -5735,10 +5735,10 @@ static mrb_value GenR_SDL_GetRectAndLineIntersectionFloat(mrb_state *mrb, mrb_va
         GenRead_SDL_FRect(mrb, argv[0], &tmp0);
         a0 = &tmp0;
     }
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float io2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float io3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float io4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float io3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float io4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = SDL_GetRectAndLineIntersectionFloat(a0, &io1, &io2, &io3, &io4);
     mrb_value rets[5];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -5763,7 +5763,7 @@ static mrb_value GenR_SDL_GetRectEnclosingPoints(mrb_state *mrb, mrb_value self)
         GenRead_SDL_Point(mrb, argv[0], &tmp0);
         a0 = &tmp0;
     }
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Rect tmp2;
     const SDL_Rect *a2 = NULL;
     if (argc > 2 && mrb_hash_p(argv[2])) {
@@ -5793,7 +5793,7 @@ static mrb_value GenR_SDL_GetRectEnclosingPointsFloat(mrb_state *mrb, mrb_value 
         GenRead_SDL_FPoint(mrb, argv[0], &tmp0);
         a0 = &tmp0;
     }
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_FRect tmp2;
     const SDL_FRect *a2 = NULL;
     if (argc > 2 && mrb_hash_p(argv[2])) {
@@ -5933,8 +5933,8 @@ static mrb_value GenR_SDL_GetRelativeMouseState(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float io0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_MouseButtonFlags rv = SDL_GetRelativeMouseState(&io0, &io1);
     mrb_value rets[3];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -5951,7 +5951,7 @@ static mrb_value GenR_SDL_GetRenderClipRect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_Rect out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetRenderClipRect(a0, &out1);
@@ -5969,8 +5969,8 @@ static mrb_value GenR_SDL_GetRenderColorScale(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetRenderColorScale(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -5986,8 +5986,8 @@ static mrb_value GenR_SDL_GetRenderDrawBlendMode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_BlendMode io1 = (SDL_BlendMode)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_BlendMode io1 = (SDL_BlendMode)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetRenderDrawBlendMode(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6003,11 +6003,11 @@ static mrb_value GenR_SDL_GetRenderDrawColor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    Uint8 io1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint8 io2 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint8 io3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint8 io4 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    Uint8 io1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint8 io2 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint8 io3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint8 io4 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = SDL_GetRenderDrawColor(a0, &io1, &io2, &io3, &io4);
     mrb_value rets[5];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6026,11 +6026,11 @@ static mrb_value GenR_SDL_GetRenderDrawColorFloat(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float io2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float io3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float io4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float io3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float io4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = SDL_GetRenderDrawColorFloat(a0, &io1, &io2, &io3, &io4);
     mrb_value rets[5];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6049,7 +6049,7 @@ static mrb_value GenR_SDL_GetRenderDriver(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetRenderDriver(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -6062,10 +6062,10 @@ static mrb_value GenR_SDL_GetRenderLogicalPresentation(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    SDL_RendererLogicalPresentation io3 = (SDL_RendererLogicalPresentation)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_RendererLogicalPresentation io3 = (SDL_RendererLogicalPresentation)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_GetRenderLogicalPresentation(a0, &io1, &io2, &io3);
     mrb_value rets[4];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6083,7 +6083,7 @@ static mrb_value GenR_SDL_GetRenderLogicalPresentationRect(mrb_state *mrb, mrb_v
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_FRect out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetRenderLogicalPresentationRect(a0, &out1);
@@ -6101,9 +6101,9 @@ static mrb_value GenR_SDL_GetRenderOutputSize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_GetRenderOutputSize(a0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6120,7 +6120,7 @@ static mrb_value GenR_SDL_GetRenderSafeArea(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_Rect out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetRenderSafeArea(a0, &out1);
@@ -6138,9 +6138,9 @@ static mrb_value GenR_SDL_GetRenderScale(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float io2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_GetRenderScale(a0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6157,9 +6157,9 @@ static mrb_value GenR_SDL_GetRenderTarget(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_Texture * rv = SDL_GetRenderTarget(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Texture");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Texture");
     }
 }
 
@@ -6170,9 +6170,9 @@ static mrb_value GenR_SDL_GetRenderTextureAddressMode(mrb_state *mrb, mrb_value 
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_TextureAddressMode io1 = (SDL_TextureAddressMode)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    SDL_TextureAddressMode io2 = (SDL_TextureAddressMode)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_TextureAddressMode io1 = (SDL_TextureAddressMode)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_TextureAddressMode io2 = (SDL_TextureAddressMode)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_GetRenderTextureAddressMode(a0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6189,8 +6189,8 @@ static mrb_value GenR_SDL_GetRenderVSync(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetRenderVSync(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6206,7 +6206,7 @@ static mrb_value GenR_SDL_GetRenderViewport(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_Rect out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetRenderViewport(a0, &out1);
@@ -6224,9 +6224,9 @@ static mrb_value GenR_SDL_GetRenderWindow(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_Window * rv = SDL_GetRenderWindow(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Window");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Window");
     }
 }
 
@@ -6237,9 +6237,9 @@ static mrb_value GenR_SDL_GetRenderer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     SDL_Renderer * rv = SDL_GetRenderer(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Renderer");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Renderer");
     }
 }
 
@@ -6250,9 +6250,9 @@ static mrb_value GenR_SDL_GetRendererFromTexture(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
     SDL_Renderer * rv = SDL_GetRendererFromTexture(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Renderer");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Renderer");
     }
 }
 
@@ -6263,7 +6263,7 @@ static mrb_value GenR_SDL_GetRendererName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     const char * rv = SDL_GetRendererName(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -6276,7 +6276,7 @@ static mrb_value GenR_SDL_GetRendererProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_PropertiesID rv = SDL_GetRendererProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -6325,8 +6325,8 @@ static mrb_value GenR_SDL_GetScancodeFromKey(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Keycode a0 = (SDL_Keycode)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    SDL_Keymod io1 = (SDL_Keymod)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Keycode a0 = (SDL_Keycode)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_Keymod io1 = (SDL_Keymod)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Scancode rv = SDL_GetScancodeFromKey(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -6342,7 +6342,7 @@ static mrb_value GenR_SDL_GetScancodeFromName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Scancode rv = SDL_GetScancodeFromName(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -6355,7 +6355,7 @@ static mrb_value GenR_SDL_GetScancodeName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Scancode a0 = (SDL_Scancode)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_Scancode a0 = (SDL_Scancode)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetScancodeName(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -6368,9 +6368,9 @@ static mrb_value GenR_SDL_GetSensorData(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Sensor *a0 = (SDL_Sensor *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Sensor");
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Sensor *a0 = (SDL_Sensor *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Sensor");
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_GetSensorData(a0, &io1, a2);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6386,9 +6386,9 @@ static mrb_value GenR_SDL_GetSensorFromID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_SensorID a0 = (SDL_SensorID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_SensorID a0 = (SDL_SensorID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Sensor * rv = SDL_GetSensorFromID(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Sensor");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Sensor");
     }
 }
 
@@ -6399,7 +6399,7 @@ static mrb_value GenR_SDL_GetSensorID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Sensor *a0 = (SDL_Sensor *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Sensor");
+    SDL_Sensor *a0 = (SDL_Sensor *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Sensor");
     SDL_SensorID rv = SDL_GetSensorID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -6412,7 +6412,7 @@ static mrb_value GenR_SDL_GetSensorName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Sensor *a0 = (SDL_Sensor *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Sensor");
+    SDL_Sensor *a0 = (SDL_Sensor *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Sensor");
     const char * rv = SDL_GetSensorName(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -6425,7 +6425,7 @@ static mrb_value GenR_SDL_GetSensorNameForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_SensorID a0 = (SDL_SensorID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_SensorID a0 = (SDL_SensorID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetSensorNameForID(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -6438,7 +6438,7 @@ static mrb_value GenR_SDL_GetSensorNonPortableType(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Sensor *a0 = (SDL_Sensor *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Sensor");
+    SDL_Sensor *a0 = (SDL_Sensor *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Sensor");
     int rv = SDL_GetSensorNonPortableType(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -6451,7 +6451,7 @@ static mrb_value GenR_SDL_GetSensorNonPortableTypeForID(mrb_state *mrb, mrb_valu
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_SensorID a0 = (SDL_SensorID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_SensorID a0 = (SDL_SensorID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     int rv = SDL_GetSensorNonPortableTypeForID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -6464,7 +6464,7 @@ static mrb_value GenR_SDL_GetSensorProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Sensor *a0 = (SDL_Sensor *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Sensor");
+    SDL_Sensor *a0 = (SDL_Sensor *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Sensor");
     SDL_PropertiesID rv = SDL_GetSensorProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -6477,7 +6477,7 @@ static mrb_value GenR_SDL_GetSensorType(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Sensor *a0 = (SDL_Sensor *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Sensor");
+    SDL_Sensor *a0 = (SDL_Sensor *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Sensor");
     SDL_SensorType rv = SDL_GetSensorType(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -6490,7 +6490,7 @@ static mrb_value GenR_SDL_GetSensorTypeForID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_SensorID a0 = (SDL_SensorID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_SensorID a0 = (SDL_SensorID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_SensorType rv = SDL_GetSensorTypeForID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -6503,7 +6503,7 @@ static mrb_value GenR_SDL_GetSilenceValueForFormat(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioFormat a0 = (SDL_AudioFormat)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_AudioFormat a0 = (SDL_AudioFormat)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     int rv = SDL_GetSilenceValueForFormat(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -6516,9 +6516,9 @@ static mrb_value GenR_SDL_GetStorageFileSize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint64 io2 = (Uint64)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint64 io2 = (Uint64)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_GetStorageFileSize(a0, a1, &io2);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6534,8 +6534,8 @@ static mrb_value GenR_SDL_GetStoragePathInfo(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_PathInfo out2;
     memset(&out2, 0, sizeof(out2));
     bool rv = SDL_GetStoragePathInfo(a0, a1, &out2);
@@ -6553,7 +6553,7 @@ static mrb_value GenR_SDL_GetStorageSpaceRemaining(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
     Uint64 rv = SDL_GetStorageSpaceRemaining(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -6566,9 +6566,9 @@ static mrb_value GenR_SDL_GetStringProperty(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     const char * rv = SDL_GetStringProperty(a0, a1, a2);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -6581,8 +6581,8 @@ static mrb_value GenR_SDL_GetSurfaceAlphaMod(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    Uint8 io1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    Uint8 io1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetSurfaceAlphaMod(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6598,8 +6598,8 @@ static mrb_value GenR_SDL_GetSurfaceBlendMode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    SDL_BlendMode io1 = (SDL_BlendMode)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_BlendMode io1 = (SDL_BlendMode)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetSurfaceBlendMode(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6615,7 +6615,7 @@ static mrb_value GenR_SDL_GetSurfaceClipRect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetSurfaceClipRect(a0, &out1);
@@ -6633,8 +6633,8 @@ static mrb_value GenR_SDL_GetSurfaceColorKey(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    Uint32 io1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    Uint32 io1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetSurfaceColorKey(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6650,10 +6650,10 @@ static mrb_value GenR_SDL_GetSurfaceColorMod(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    Uint8 io1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint8 io2 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint8 io3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    Uint8 io1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint8 io2 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint8 io3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_GetSurfaceColorMod(a0, &io1, &io2, &io3);
     mrb_value rets[4];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6671,7 +6671,7 @@ static mrb_value GenR_SDL_GetSurfaceColorspace(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Colorspace rv = SDL_GetSurfaceColorspace(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -6684,9 +6684,9 @@ static mrb_value GenR_SDL_GetSurfacePalette(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Palette * rv = SDL_GetSurfacePalette(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Palette");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Palette");
     }
 }
 
@@ -6697,7 +6697,7 @@ static mrb_value GenR_SDL_GetSurfaceProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_PropertiesID rv = SDL_GetSurfaceProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -6746,10 +6746,10 @@ static mrb_value GenR_SDL_GetTextInputArea(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     SDL_Rect out1;
     memset(&out1, 0, sizeof(out1));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetTextInputArea(a0, &out1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6766,8 +6766,8 @@ static mrb_value GenR_SDL_GetTextureAlphaMod(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
-    Uint8 io1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    Uint8 io1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetTextureAlphaMod(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6783,8 +6783,8 @@ static mrb_value GenR_SDL_GetTextureAlphaModFloat(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetTextureAlphaModFloat(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6800,8 +6800,8 @@ static mrb_value GenR_SDL_GetTextureBlendMode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
-    SDL_BlendMode io1 = (SDL_BlendMode)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    SDL_BlendMode io1 = (SDL_BlendMode)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetTextureBlendMode(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6817,10 +6817,10 @@ static mrb_value GenR_SDL_GetTextureColorMod(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
-    Uint8 io1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint8 io2 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint8 io3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    Uint8 io1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint8 io2 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint8 io3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_GetTextureColorMod(a0, &io1, &io2, &io3);
     mrb_value rets[4];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6838,10 +6838,10 @@ static mrb_value GenR_SDL_GetTextureColorModFloat(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float io2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float io3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float io3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_GetTextureColorModFloat(a0, &io1, &io2, &io3);
     mrb_value rets[4];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6859,9 +6859,9 @@ static mrb_value GenR_SDL_GetTexturePalette(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
     SDL_Palette * rv = SDL_GetTexturePalette(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Palette");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Palette");
     }
 }
 
@@ -6872,7 +6872,7 @@ static mrb_value GenR_SDL_GetTextureProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
     SDL_PropertiesID rv = SDL_GetTextureProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -6885,8 +6885,8 @@ static mrb_value GenR_SDL_GetTextureScaleMode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
-    SDL_ScaleMode io1 = (SDL_ScaleMode)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    SDL_ScaleMode io1 = (SDL_ScaleMode)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetTextureScaleMode(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6902,9 +6902,9 @@ static mrb_value GenR_SDL_GetTextureSize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float io2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_GetTextureSize(a0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -6945,7 +6945,7 @@ static mrb_value GenR_SDL_GetTouchDeviceName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TouchID a0 = (SDL_TouchID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_TouchID a0 = (SDL_TouchID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetTouchDeviceName(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -6958,7 +6958,7 @@ static mrb_value GenR_SDL_GetTouchDeviceType(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TouchID a0 = (SDL_TouchID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_TouchID a0 = (SDL_TouchID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_TouchDeviceType rv = SDL_GetTouchDeviceType(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -6971,7 +6971,7 @@ static mrb_value GenR_SDL_GetTrayEntryChecked(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
     bool rv = SDL_GetTrayEntryChecked(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -6984,7 +6984,7 @@ static mrb_value GenR_SDL_GetTrayEntryEnabled(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
     bool rv = SDL_GetTrayEntryEnabled(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -6997,7 +6997,7 @@ static mrb_value GenR_SDL_GetTrayEntryLabel(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
     const char * rv = SDL_GetTrayEntryLabel(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -7010,9 +7010,9 @@ static mrb_value GenR_SDL_GetTrayEntryParent(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
     SDL_TrayMenu * rv = SDL_GetTrayEntryParent(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_TrayMenu");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_TrayMenu");
     }
 }
 
@@ -7023,9 +7023,9 @@ static mrb_value GenR_SDL_GetTrayMenu(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Tray *a0 = (SDL_Tray *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Tray");
+    SDL_Tray *a0 = (SDL_Tray *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Tray");
     SDL_TrayMenu * rv = SDL_GetTrayMenu(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_TrayMenu");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_TrayMenu");
     }
 }
 
@@ -7036,9 +7036,9 @@ static mrb_value GenR_SDL_GetTrayMenuParentEntry(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TrayMenu *a0 = (SDL_TrayMenu *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayMenu");
+    SDL_TrayMenu *a0 = (SDL_TrayMenu *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayMenu");
     SDL_TrayEntry * rv = SDL_GetTrayMenuParentEntry(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_TrayEntry");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_TrayEntry");
     }
 }
 
@@ -7049,9 +7049,9 @@ static mrb_value GenR_SDL_GetTrayMenuParentTray(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TrayMenu *a0 = (SDL_TrayMenu *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayMenu");
+    SDL_TrayMenu *a0 = (SDL_TrayMenu *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayMenu");
     SDL_Tray * rv = SDL_GetTrayMenuParentTray(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Tray");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Tray");
     }
 }
 
@@ -7062,9 +7062,9 @@ static mrb_value GenR_SDL_GetTraySubmenu(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
     SDL_TrayMenu * rv = SDL_GetTraySubmenu(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_TrayMenu");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_TrayMenu");
     }
 }
 
@@ -7075,7 +7075,7 @@ static mrb_value GenR_SDL_GetUserFolder(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Folder a0 = (SDL_Folder)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_Folder a0 = (SDL_Folder)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetUserFolder(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -7100,7 +7100,7 @@ static mrb_value GenR_SDL_GetVideoDriver(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_GetVideoDriver(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -7113,9 +7113,9 @@ static mrb_value GenR_SDL_GetWindowAspectRatio(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float io2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_GetWindowAspectRatio(a0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -7132,11 +7132,11 @@ static mrb_value GenR_SDL_GetWindowBordersSize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int io3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int io4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int io3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int io4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = SDL_GetWindowBordersSize(a0, &io1, &io2, &io3, &io4);
     mrb_value rets[5];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -7155,7 +7155,7 @@ static mrb_value GenR_SDL_GetWindowDisplayScale(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     float rv = SDL_GetWindowDisplayScale(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -7168,7 +7168,7 @@ static mrb_value GenR_SDL_GetWindowFlags(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     SDL_WindowFlags rv = SDL_GetWindowFlags(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -7181,9 +7181,9 @@ static mrb_value GenR_SDL_GetWindowFromEvent(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const SDL_Event *a0 = (const SDL_Event *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Event");
+    const SDL_Event *a0 = (const SDL_Event *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Event");
     SDL_Window * rv = SDL_GetWindowFromEvent(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Window");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Window");
     }
 }
 
@@ -7194,9 +7194,9 @@ static mrb_value GenR_SDL_GetWindowFromID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_WindowID a0 = (SDL_WindowID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_WindowID a0 = (SDL_WindowID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Window * rv = SDL_GetWindowFromID(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Window");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Window");
     }
 }
 
@@ -7207,9 +7207,9 @@ static mrb_value GenR_SDL_GetWindowFullscreenMode(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     const SDL_DisplayMode * rv = SDL_GetWindowFullscreenMode(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_DisplayMode");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_DisplayMode");
     }
 }
 
@@ -7220,7 +7220,7 @@ static mrb_value GenR_SDL_GetWindowID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     SDL_WindowID rv = SDL_GetWindowID(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -7233,7 +7233,7 @@ static mrb_value GenR_SDL_GetWindowKeyboardGrab(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_GetWindowKeyboardGrab(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -7246,9 +7246,9 @@ static mrb_value GenR_SDL_GetWindowMaximumSize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_GetWindowMaximumSize(a0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -7265,9 +7265,9 @@ static mrb_value GenR_SDL_GetWindowMinimumSize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_GetWindowMinimumSize(a0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -7284,7 +7284,7 @@ static mrb_value GenR_SDL_GetWindowMouseGrab(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_GetWindowMouseGrab(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -7297,7 +7297,7 @@ static mrb_value GenR_SDL_GetWindowOpacity(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     float rv = SDL_GetWindowOpacity(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -7310,9 +7310,9 @@ static mrb_value GenR_SDL_GetWindowParent(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     SDL_Window * rv = SDL_GetWindowParent(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Window");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Window");
     }
 }
 
@@ -7323,7 +7323,7 @@ static mrb_value GenR_SDL_GetWindowPixelDensity(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     float rv = SDL_GetWindowPixelDensity(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -7336,7 +7336,7 @@ static mrb_value GenR_SDL_GetWindowPixelFormat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     SDL_PixelFormat rv = SDL_GetWindowPixelFormat(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -7349,9 +7349,9 @@ static mrb_value GenR_SDL_GetWindowPosition(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_GetWindowPosition(a0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -7368,7 +7368,7 @@ static mrb_value GenR_SDL_GetWindowProgressState(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     SDL_ProgressState rv = SDL_GetWindowProgressState(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -7381,7 +7381,7 @@ static mrb_value GenR_SDL_GetWindowProgressValue(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     float rv = SDL_GetWindowProgressValue(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -7394,7 +7394,7 @@ static mrb_value GenR_SDL_GetWindowProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     SDL_PropertiesID rv = SDL_GetWindowProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -7407,7 +7407,7 @@ static mrb_value GenR_SDL_GetWindowRelativeMouseMode(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_GetWindowRelativeMouseMode(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -7420,7 +7420,7 @@ static mrb_value GenR_SDL_GetWindowSafeArea(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     SDL_Rect out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = SDL_GetWindowSafeArea(a0, &out1);
@@ -7438,9 +7438,9 @@ static mrb_value GenR_SDL_GetWindowSize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_GetWindowSize(a0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -7457,9 +7457,9 @@ static mrb_value GenR_SDL_GetWindowSizeInPixels(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_GetWindowSizeInPixels(a0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -7476,9 +7476,9 @@ static mrb_value GenR_SDL_GetWindowSurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     SDL_Surface * rv = SDL_GetWindowSurface(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
     }
 }
 
@@ -7489,8 +7489,8 @@ static mrb_value GenR_SDL_GetWindowSurfaceVSync(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_GetWindowSurfaceVSync(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -7506,7 +7506,7 @@ static mrb_value GenR_SDL_GetWindowTitle(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     const char * rv = SDL_GetWindowTitle(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -7519,8 +7519,8 @@ static mrb_value GenR_SDL_HapticEffectSupported(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
-    const SDL_HapticEffect *a1 = (const SDL_HapticEffect *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_HapticEffect");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    const SDL_HapticEffect *a1 = (const SDL_HapticEffect *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_HapticEffect");
     bool rv = SDL_HapticEffectSupported(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -7533,7 +7533,7 @@ static mrb_value GenR_SDL_HapticRumbleSupported(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
     bool rv = SDL_HapticRumbleSupported(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -7606,7 +7606,7 @@ static mrb_value GenR_SDL_HasClipboardData(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_HasClipboardData(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -7631,7 +7631,7 @@ static mrb_value GenR_SDL_HasEvent(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    Uint32 a0 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Uint32 a0 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_HasEvent(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -7644,8 +7644,8 @@ static mrb_value GenR_SDL_HasEvents(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    Uint32 a0 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 a0 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_HasEvents(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -7766,8 +7766,8 @@ static mrb_value GenR_SDL_HasProperty(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_HasProperty(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -7912,7 +7912,7 @@ static mrb_value GenR_SDL_HideWindow(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_HideWindow(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -7926,9 +7926,9 @@ static mrb_value GenR_SDL_IOFromConstMem(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     size_t len0 = 0;
-    const char *a0 = SDLStaticGen_RubyToBlob(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &len0);
+    const char *a0 = GrappleGen_RubyToBlob(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &len0);
     SDL_IOStream * rv = SDL_IOFromConstMem((const void *)a0, (size_t)len0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_IOStream", GenDtor_SDL_CloseIO);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_IOStream", GenDtor_SDL_CloseIO);
     }
 }
 
@@ -7940,7 +7940,7 @@ static mrb_value GenR_SDL_IOFromDynamicMem(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     SDL_IOStream * rv = SDL_IOFromDynamicMem();
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_IOStream", GenDtor_SDL_CloseIO);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_IOStream", GenDtor_SDL_CloseIO);
     }
 }
 
@@ -7951,10 +7951,10 @@ static mrb_value GenR_SDL_IOFromFile(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_IOStream * rv = SDL_IOFromFile(a0, a1);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_IOStream", GenDtor_SDL_CloseIO);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_IOStream", GenDtor_SDL_CloseIO);
     }
 }
 
@@ -7965,7 +7965,7 @@ static mrb_value GenR_SDL_Init(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_InitFlags a0 = (SDL_InitFlags)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_InitFlags a0 = (SDL_InitFlags)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_Init(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -7978,7 +7978,7 @@ static mrb_value GenR_SDL_InitHapticRumble(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
     bool rv = SDL_InitHapticRumble(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -7991,7 +7991,7 @@ static mrb_value GenR_SDL_InitSubSystem(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_InitFlags a0 = (SDL_InitFlags)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_InitFlags a0 = (SDL_InitFlags)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_InitSubSystem(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8004,8 +8004,8 @@ static mrb_value GenR_SDL_InsertGPUDebugLabel(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_InsertGPUDebugLabel(a0, a1);
     return mrb_nil_value();
     }
@@ -8018,12 +8018,12 @@ static mrb_value GenR_SDL_InsertTrayEntryAt(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TrayMenu *a0 = (SDL_TrayMenu *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayMenu");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    SDL_TrayEntryFlags a3 = (SDL_TrayEntryFlags)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_TrayMenu *a0 = (SDL_TrayMenu *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayMenu");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_TrayEntryFlags a3 = (SDL_TrayEntryFlags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     SDL_TrayEntry * rv = SDL_InsertTrayEntryAt(a0, a1, a2, a3);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_TrayEntry");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_TrayEntry");
     }
 }
 
@@ -8034,7 +8034,7 @@ static mrb_value GenR_SDL_IsAudioDevicePhysical(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_IsAudioDevicePhysical(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8047,7 +8047,7 @@ static mrb_value GenR_SDL_IsAudioDevicePlayback(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_IsAudioDevicePlayback(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8060,7 +8060,7 @@ static mrb_value GenR_SDL_IsGamepad(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_IsGamepad(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8073,7 +8073,7 @@ static mrb_value GenR_SDL_IsJoystickHaptic(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     bool rv = SDL_IsJoystickHaptic(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8086,7 +8086,7 @@ static mrb_value GenR_SDL_IsJoystickVirtual(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_IsJoystickVirtual(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8147,7 +8147,7 @@ static mrb_value GenR_SDL_JoystickConnected(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     bool rv = SDL_JoystickConnected(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8172,8 +8172,8 @@ static mrb_value GenR_SDL_KillProcess(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Process *a0 = (SDL_Process *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Process");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Process *a0 = (SDL_Process *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Process");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_KillProcess(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8186,9 +8186,9 @@ static mrb_value GenR_SDL_LoadBMP(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Surface * rv = SDL_LoadBMP(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -8199,10 +8199,10 @@ static mrb_value GenR_SDL_LoadBMP_IO(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Surface * rv = SDL_LoadBMP_IO(a0, a1);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -8213,9 +8213,9 @@ static mrb_value GenR_SDL_LoadObject(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_SharedObject * rv = SDL_LoadObject(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_SharedObject", GenDtor_SDL_UnloadObject);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_SharedObject", GenDtor_SDL_UnloadObject);
     }
 }
 
@@ -8226,9 +8226,9 @@ static mrb_value GenR_SDL_LoadPNG(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Surface * rv = SDL_LoadPNG(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
     }
 }
 
@@ -8239,10 +8239,10 @@ static mrb_value GenR_SDL_LoadPNG_IO(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Surface * rv = SDL_LoadPNG_IO(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
     }
 }
 
@@ -8253,9 +8253,9 @@ static mrb_value GenR_SDL_LoadSurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Surface * rv = SDL_LoadSurface(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
     }
 }
 
@@ -8266,10 +8266,10 @@ static mrb_value GenR_SDL_LoadSurface_IO(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Surface * rv = SDL_LoadSurface_IO(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
     }
 }
 
@@ -8280,7 +8280,7 @@ static mrb_value GenR_SDL_LockAudioStream(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     bool rv = SDL_LockAudioStream(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8293,7 +8293,7 @@ static mrb_value GenR_SDL_LockProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_LockProperties(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8306,7 +8306,7 @@ static mrb_value GenR_SDL_LockSpinlock(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_SpinLock io0 = (SDL_SpinLock)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_SpinLock io0 = (SDL_SpinLock)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_LockSpinlock(&io0);
     return mrb_int_value(mrb, (mrb_int)io0);
     }
@@ -8319,7 +8319,7 @@ static mrb_value GenR_SDL_LockSurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     bool rv = SDL_LockSurface(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8338,10 +8338,10 @@ static mrb_value GenR_SDL_MapRGB(mrb_state *mrb, mrb_value self)
         GenRead_SDL_PixelFormatDetails(mrb, argv[0], &tmp0);
         a0 = &tmp0;
     }
-    const SDL_Palette *a1 = (const SDL_Palette *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Palette");
-    Uint8 a2 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint8 a3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint8 a4 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    const SDL_Palette *a1 = (const SDL_Palette *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Palette");
+    Uint8 a2 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint8 a3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint8 a4 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     Uint32 rv = SDL_MapRGB(a0, a1, a2, a3, a4);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -8360,11 +8360,11 @@ static mrb_value GenR_SDL_MapRGBA(mrb_state *mrb, mrb_value self)
         GenRead_SDL_PixelFormatDetails(mrb, argv[0], &tmp0);
         a0 = &tmp0;
     }
-    const SDL_Palette *a1 = (const SDL_Palette *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Palette");
-    Uint8 a2 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint8 a3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint8 a4 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    Uint8 a5 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    const SDL_Palette *a1 = (const SDL_Palette *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Palette");
+    Uint8 a2 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint8 a3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint8 a4 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    Uint8 a5 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     Uint32 rv = SDL_MapRGBA(a0, a1, a2, a3, a4, a5);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -8377,10 +8377,10 @@ static mrb_value GenR_SDL_MapSurfaceRGB(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    Uint8 a1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint8 a2 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint8 a3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    Uint8 a1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint8 a2 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint8 a3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     Uint32 rv = SDL_MapSurfaceRGB(a0, a1, a2, a3);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -8393,11 +8393,11 @@ static mrb_value GenR_SDL_MapSurfaceRGBA(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    Uint8 a1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint8 a2 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint8 a3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint8 a4 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    Uint8 a1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint8 a2 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint8 a3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint8 a4 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     Uint32 rv = SDL_MapSurfaceRGBA(a0, a1, a2, a3, a4);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -8410,7 +8410,7 @@ static mrb_value GenR_SDL_MaximizeWindow(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_MaximizeWindow(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8423,7 +8423,7 @@ static mrb_value GenR_SDL_MinimizeWindow(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_MinimizeWindow(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8508,7 +8508,7 @@ static mrb_value GenR_SDL_OpenAudioDevice(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_AudioSpec tmp1;
     const SDL_AudioSpec *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -8527,7 +8527,7 @@ static mrb_value GenR_SDL_OpenCamera(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_CameraID a0 = (SDL_CameraID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_CameraID a0 = (SDL_CameraID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_CameraSpec tmp1;
     const SDL_CameraSpec *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -8535,7 +8535,7 @@ static mrb_value GenR_SDL_OpenCamera(mrb_state *mrb, mrb_value self)
         a1 = &tmp1;
     }
     SDL_Camera * rv = SDL_OpenCamera(a0, a1);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Camera", GenDtor_SDL_CloseCamera);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Camera", GenDtor_SDL_CloseCamera);
     }
 }
 
@@ -8546,9 +8546,9 @@ static mrb_value GenR_SDL_OpenFileStorage(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Storage * rv = SDL_OpenFileStorage(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Storage", GenDtor_SDL_CloseStorage);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Storage", GenDtor_SDL_CloseStorage);
     }
 }
 
@@ -8559,9 +8559,9 @@ static mrb_value GenR_SDL_OpenGamepad(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Gamepad * rv = SDL_OpenGamepad(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Gamepad", GenDtor_SDL_CloseGamepad);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Gamepad", GenDtor_SDL_CloseGamepad);
     }
 }
 
@@ -8572,9 +8572,9 @@ static mrb_value GenR_SDL_OpenHaptic(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_HapticID a0 = (SDL_HapticID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_HapticID a0 = (SDL_HapticID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Haptic * rv = SDL_OpenHaptic(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Haptic", GenDtor_SDL_CloseHaptic);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Haptic", GenDtor_SDL_CloseHaptic);
     }
 }
 
@@ -8585,9 +8585,9 @@ static mrb_value GenR_SDL_OpenHapticFromJoystick(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     SDL_Haptic * rv = SDL_OpenHapticFromJoystick(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Haptic", GenDtor_SDL_CloseHaptic);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Haptic", GenDtor_SDL_CloseHaptic);
     }
 }
 
@@ -8599,7 +8599,7 @@ static mrb_value GenR_SDL_OpenHapticFromMouse(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     SDL_Haptic * rv = SDL_OpenHapticFromMouse();
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Haptic", GenDtor_SDL_CloseHaptic);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Haptic", GenDtor_SDL_CloseHaptic);
     }
 }
 
@@ -8610,9 +8610,9 @@ static mrb_value GenR_SDL_OpenJoystick(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Joystick * rv = SDL_OpenJoystick(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Joystick", GenDtor_SDL_CloseJoystick);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Joystick", GenDtor_SDL_CloseJoystick);
     }
 }
 
@@ -8623,9 +8623,9 @@ static mrb_value GenR_SDL_OpenSensor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_SensorID a0 = (SDL_SensorID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_SensorID a0 = (SDL_SensorID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_Sensor * rv = SDL_OpenSensor(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Sensor", GenDtor_SDL_CloseSensor);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Sensor", GenDtor_SDL_CloseSensor);
     }
 }
 
@@ -8636,10 +8636,10 @@ static mrb_value GenR_SDL_OpenTitleStorage(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    SDL_PropertiesID a1 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PropertiesID a1 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Storage * rv = SDL_OpenTitleStorage(a0, a1);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Storage", GenDtor_SDL_CloseStorage);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Storage", GenDtor_SDL_CloseStorage);
     }
 }
 
@@ -8650,7 +8650,7 @@ static mrb_value GenR_SDL_OpenURL(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_OpenURL(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8663,11 +8663,11 @@ static mrb_value GenR_SDL_OpenUserStorage(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    SDL_PropertiesID a2 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_PropertiesID a2 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_Storage * rv = SDL_OpenUserStorage(a0, a1, a2);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Storage", GenDtor_SDL_CloseStorage);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Storage", GenDtor_SDL_CloseStorage);
     }
 }
 
@@ -8690,7 +8690,7 @@ static mrb_value GenR_SDL_PauseAudioDevice(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_PauseAudioDevice(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8703,7 +8703,7 @@ static mrb_value GenR_SDL_PauseAudioStreamDevice(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     bool rv = SDL_PauseAudioStreamDevice(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8716,7 +8716,7 @@ static mrb_value GenR_SDL_PauseHaptic(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
     bool rv = SDL_PauseHaptic(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8729,11 +8729,11 @@ static mrb_value GenR_SDL_PeepEvents(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Event *a0 = (SDL_Event *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Event");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    SDL_EventAction a2 = (SDL_EventAction)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint32 a4 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_Event *a0 = (SDL_Event *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Event");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_EventAction a2 = (SDL_EventAction)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint32 a4 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     int rv = SDL_PeepEvents(a0, a1, a2, a3, a4);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -8746,9 +8746,9 @@ static mrb_value GenR_SDL_PlayHapticRumble(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint32 a2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 a2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_PlayHapticRumble(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8761,7 +8761,7 @@ static mrb_value GenR_SDL_PollEvent(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Event *a0 = (SDL_Event *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Event");
+    SDL_Event *a0 = (SDL_Event *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Event");
     bool rv = SDL_PollEvent(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8774,7 +8774,7 @@ static mrb_value GenR_SDL_PopGPUDebugGroup(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
     SDL_PopGPUDebugGroup(a0);
     return mrb_nil_value();
     }
@@ -8787,8 +8787,8 @@ static mrb_value GenR_SDL_PremultiplySurfaceAlpha(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_PremultiplySurfaceAlpha(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8813,7 +8813,7 @@ static mrb_value GenR_SDL_PushEvent(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Event *a0 = (SDL_Event *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Event");
+    SDL_Event *a0 = (SDL_Event *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Event");
     bool rv = SDL_PushEvent(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8826,10 +8826,10 @@ static mrb_value GenR_SDL_PushGPUComputeUniformData(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     size_t len2 = 0;
-    const char *a2 = SDLStaticGen_RubyToBlob(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &len2);
+    const char *a2 = GrappleGen_RubyToBlob(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &len2);
     SDL_PushGPUComputeUniformData(a0, a1, (const void *)a2, (Uint32)len2);
     return mrb_nil_value();
     }
@@ -8842,8 +8842,8 @@ static mrb_value GenR_SDL_PushGPUDebugGroup(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_PushGPUDebugGroup(a0, a1);
     return mrb_nil_value();
     }
@@ -8856,10 +8856,10 @@ static mrb_value GenR_SDL_PushGPUFragmentUniformData(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     size_t len2 = 0;
-    const char *a2 = SDLStaticGen_RubyToBlob(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &len2);
+    const char *a2 = GrappleGen_RubyToBlob(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &len2);
     SDL_PushGPUFragmentUniformData(a0, a1, (const void *)a2, (Uint32)len2);
     return mrb_nil_value();
     }
@@ -8872,10 +8872,10 @@ static mrb_value GenR_SDL_PushGPUVertexUniformData(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     size_t len2 = 0;
-    const char *a2 = SDLStaticGen_RubyToBlob(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &len2);
+    const char *a2 = GrappleGen_RubyToBlob(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &len2);
     SDL_PushGPUVertexUniformData(a0, a1, (const void *)a2, (Uint32)len2);
     return mrb_nil_value();
     }
@@ -8888,9 +8888,9 @@ static mrb_value GenR_SDL_PutAudioStreamData(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     size_t len1 = 0;
-    const char *a1 = SDLStaticGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
+    const char *a1 = GrappleGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
     bool rv = SDL_PutAudioStreamData(a0, (const void *)a1, (int)len1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8903,8 +8903,8 @@ static mrb_value GenR_SDL_QueryGPUFence(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_GPUFence *a1 = (SDL_GPUFence *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUFence");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUFence *a1 = (SDL_GPUFence *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUFence");
     bool rv = SDL_QueryGPUFence(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8929,7 +8929,7 @@ static mrb_value GenR_SDL_QuitSubSystem(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_InitFlags a0 = (SDL_InitFlags)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_InitFlags a0 = (SDL_InitFlags)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_QuitSubSystem(a0);
     return mrb_nil_value();
     }
@@ -8942,7 +8942,7 @@ static mrb_value GenR_SDL_RaiseWindow(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_RaiseWindow(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -8955,8 +8955,8 @@ static mrb_value GenR_SDL_ReadS16BE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Sint16 io1 = (Sint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Sint16 io1 = (Sint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_ReadS16BE(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -8972,8 +8972,8 @@ static mrb_value GenR_SDL_ReadS16LE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Sint16 io1 = (Sint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Sint16 io1 = (Sint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_ReadS16LE(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -8989,8 +8989,8 @@ static mrb_value GenR_SDL_ReadS32BE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Sint32 io1 = (Sint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Sint32 io1 = (Sint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_ReadS32BE(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -9006,8 +9006,8 @@ static mrb_value GenR_SDL_ReadS32LE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Sint32 io1 = (Sint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Sint32 io1 = (Sint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_ReadS32LE(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -9023,8 +9023,8 @@ static mrb_value GenR_SDL_ReadS64BE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Sint64 io1 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Sint64 io1 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_ReadS64BE(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -9040,8 +9040,8 @@ static mrb_value GenR_SDL_ReadS64LE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Sint64 io1 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Sint64 io1 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_ReadS64LE(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -9057,8 +9057,8 @@ static mrb_value GenR_SDL_ReadS8(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Sint8 io1 = (Sint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Sint8 io1 = (Sint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_ReadS8(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -9074,13 +9074,13 @@ static mrb_value GenR_SDL_ReadSurfacePixel(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint8 io3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint8 io4 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    Uint8 io5 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    Uint8 io6 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint8 io3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint8 io4 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    Uint8 io5 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    Uint8 io6 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     bool rv = SDL_ReadSurfacePixel(a0, a1, a2, &io3, &io4, &io5, &io6);
     mrb_value rets[5];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -9099,13 +9099,13 @@ static mrb_value GenR_SDL_ReadSurfacePixelFloat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float io3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float io4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float io5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float io6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float io3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float io4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float io5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float io6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     bool rv = SDL_ReadSurfacePixelFloat(a0, a1, a2, &io3, &io4, &io5, &io6);
     mrb_value rets[5];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -9124,8 +9124,8 @@ static mrb_value GenR_SDL_ReadU16BE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Uint16 io1 = (Uint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Uint16 io1 = (Uint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_ReadU16BE(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -9141,8 +9141,8 @@ static mrb_value GenR_SDL_ReadU16LE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Uint16 io1 = (Uint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Uint16 io1 = (Uint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_ReadU16LE(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -9158,8 +9158,8 @@ static mrb_value GenR_SDL_ReadU32BE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Uint32 io1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Uint32 io1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_ReadU32BE(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -9175,8 +9175,8 @@ static mrb_value GenR_SDL_ReadU32LE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Uint32 io1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Uint32 io1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_ReadU32LE(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -9192,8 +9192,8 @@ static mrb_value GenR_SDL_ReadU64BE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Uint64 io1 = (Uint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Uint64 io1 = (Uint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_ReadU64BE(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -9209,8 +9209,8 @@ static mrb_value GenR_SDL_ReadU64LE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Uint64 io1 = (Uint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Uint64 io1 = (Uint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_ReadU64LE(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -9226,8 +9226,8 @@ static mrb_value GenR_SDL_ReadU8(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Uint8 io1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Uint8 io1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_ReadU8(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -9243,7 +9243,7 @@ static mrb_value GenR_SDL_RegisterEvents(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     Uint32 rv = SDL_RegisterEvents(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -9256,8 +9256,8 @@ static mrb_value GenR_SDL_ReleaseCameraFrame(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Camera *a0 = (SDL_Camera *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Camera");
-    SDL_Surface *a1 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Surface");
+    SDL_Camera *a0 = (SDL_Camera *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Camera");
+    SDL_Surface *a1 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Surface");
     SDL_ReleaseCameraFrame(a0, a1);
     return mrb_nil_value();
     }
@@ -9270,8 +9270,8 @@ static mrb_value GenR_SDL_ReleaseGPUBuffer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBuffer");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBuffer");
     SDL_ReleaseGPUBuffer(a0, a1);
     return mrb_nil_value();
     }
@@ -9284,8 +9284,8 @@ static mrb_value GenR_SDL_ReleaseGPUComputePipeline(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_GPUComputePipeline *a1 = (SDL_GPUComputePipeline *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUComputePipeline");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUComputePipeline *a1 = (SDL_GPUComputePipeline *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUComputePipeline");
     SDL_ReleaseGPUComputePipeline(a0, a1);
     return mrb_nil_value();
     }
@@ -9298,8 +9298,8 @@ static mrb_value GenR_SDL_ReleaseGPUFence(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_GPUFence *a1 = (SDL_GPUFence *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUFence");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUFence *a1 = (SDL_GPUFence *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUFence");
     SDL_ReleaseGPUFence(a0, a1);
     return mrb_nil_value();
     }
@@ -9312,8 +9312,8 @@ static mrb_value GenR_SDL_ReleaseGPUGraphicsPipeline(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_GPUGraphicsPipeline *a1 = (SDL_GPUGraphicsPipeline *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUGraphicsPipeline");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUGraphicsPipeline *a1 = (SDL_GPUGraphicsPipeline *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUGraphicsPipeline");
     SDL_ReleaseGPUGraphicsPipeline(a0, a1);
     return mrb_nil_value();
     }
@@ -9326,8 +9326,8 @@ static mrb_value GenR_SDL_ReleaseGPUSampler(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_GPUSampler *a1 = (SDL_GPUSampler *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUSampler");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUSampler *a1 = (SDL_GPUSampler *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUSampler");
     SDL_ReleaseGPUSampler(a0, a1);
     return mrb_nil_value();
     }
@@ -9340,8 +9340,8 @@ static mrb_value GenR_SDL_ReleaseGPUShader(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_GPUShader *a1 = (SDL_GPUShader *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUShader");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUShader *a1 = (SDL_GPUShader *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUShader");
     SDL_ReleaseGPUShader(a0, a1);
     return mrb_nil_value();
     }
@@ -9354,8 +9354,8 @@ static mrb_value GenR_SDL_ReleaseGPUTexture(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_GPUTexture *a1 = (SDL_GPUTexture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTexture");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUTexture *a1 = (SDL_GPUTexture *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTexture");
     SDL_ReleaseGPUTexture(a0, a1);
     return mrb_nil_value();
     }
@@ -9368,8 +9368,8 @@ static mrb_value GenR_SDL_ReleaseGPUTransferBuffer(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_GPUTransferBuffer *a1 = (SDL_GPUTransferBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTransferBuffer");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUTransferBuffer *a1 = (SDL_GPUTransferBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTransferBuffer");
     SDL_ReleaseGPUTransferBuffer(a0, a1);
     return mrb_nil_value();
     }
@@ -9382,8 +9382,8 @@ static mrb_value GenR_SDL_ReleaseWindowFromGPUDevice(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
     SDL_ReleaseWindowFromGPUDevice(a0, a1);
     return mrb_nil_value();
     }
@@ -9408,7 +9408,7 @@ static mrb_value GenR_SDL_RemovePath(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_RemovePath(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9421,8 +9421,8 @@ static mrb_value GenR_SDL_RemoveStoragePath(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_RemoveStoragePath(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9435,7 +9435,7 @@ static mrb_value GenR_SDL_RemoveSurfaceAlternateImages(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_RemoveSurfaceAlternateImages(a0);
     return mrb_nil_value();
     }
@@ -9448,7 +9448,7 @@ static mrb_value GenR_SDL_RemoveTimer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TimerID a0 = (SDL_TimerID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_TimerID a0 = (SDL_TimerID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_RemoveTimer(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9461,7 +9461,7 @@ static mrb_value GenR_SDL_RemoveTrayEntry(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
     SDL_RemoveTrayEntry(a0);
     return mrb_nil_value();
     }
@@ -9474,8 +9474,8 @@ static mrb_value GenR_SDL_RenamePath(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_RenamePath(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9488,9 +9488,9 @@ static mrb_value GenR_SDL_RenameStoragePath(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_RenameStoragePath(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9503,7 +9503,7 @@ static mrb_value GenR_SDL_RenderClear(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     bool rv = SDL_RenderClear(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9516,7 +9516,7 @@ static mrb_value GenR_SDL_RenderClipEnabled(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     bool rv = SDL_RenderClipEnabled(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9529,11 +9529,11 @@ static mrb_value GenR_SDL_RenderCoordinatesFromWindow(mrb_state *mrb, mrb_value 
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float io3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float io4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float io3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float io4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = SDL_RenderCoordinatesFromWindow(a0, a1, a2, &io3, &io4);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -9550,11 +9550,11 @@ static mrb_value GenR_SDL_RenderCoordinatesToWindow(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float io3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float io4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float io3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float io4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = SDL_RenderCoordinatesToWindow(a0, a1, a2, &io3, &io4);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -9571,10 +9571,10 @@ static mrb_value GenR_SDL_RenderDebugText(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    const char *a3 = SDLStaticGen_RubyToStr(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a3 = GrappleGen_RubyToStr(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_RenderDebugText(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9587,7 +9587,7 @@ static mrb_value GenR_SDL_RenderFillRect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_FRect tmp1;
     const SDL_FRect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -9606,14 +9606,14 @@ static mrb_value GenR_SDL_RenderFillRects(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_FRect tmp1;
     const SDL_FRect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_FRect(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_RenderFillRects(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9626,11 +9626,11 @@ static mrb_value GenR_SDL_RenderLine(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = SDL_RenderLine(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9643,14 +9643,14 @@ static mrb_value GenR_SDL_RenderLines(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_FPoint tmp1;
     const SDL_FPoint *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_FPoint(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_RenderLines(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9663,9 +9663,9 @@ static mrb_value GenR_SDL_RenderPoint(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_RenderPoint(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9678,14 +9678,14 @@ static mrb_value GenR_SDL_RenderPoints(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_FPoint tmp1;
     const SDL_FPoint *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_FPoint(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_RenderPoints(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9698,7 +9698,7 @@ static mrb_value GenR_SDL_RenderPresent(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     bool rv = SDL_RenderPresent(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9711,7 +9711,7 @@ static mrb_value GenR_SDL_RenderReadPixels(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -9719,7 +9719,7 @@ static mrb_value GenR_SDL_RenderReadPixels(mrb_state *mrb, mrb_value self)
         a1 = &tmp1;
     }
     SDL_Surface * rv = SDL_RenderReadPixels(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
     }
 }
 
@@ -9730,7 +9730,7 @@ static mrb_value GenR_SDL_RenderRect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_FRect tmp1;
     const SDL_FRect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -9749,14 +9749,14 @@ static mrb_value GenR_SDL_RenderRects(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_FRect tmp1;
     const SDL_FRect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_FRect(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_RenderRects(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9769,8 +9769,8 @@ static mrb_value GenR_SDL_RenderTexture(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_Texture *a1 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
     SDL_FRect tmp2;
     const SDL_FRect *a2 = NULL;
     if (argc > 2 && mrb_hash_p(argv[2])) {
@@ -9795,19 +9795,19 @@ static mrb_value GenR_SDL_RenderTexture9Grid(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_Texture *a1 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
     SDL_FRect tmp2;
     const SDL_FRect *a2 = NULL;
     if (argc > 2 && mrb_hash_p(argv[2])) {
         GenRead_SDL_FRect(mrb, argv[2], &tmp2);
         a2 = &tmp2;
     }
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
-    float a7 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 7 ? argv[7] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    float a7 = (float)GrappleGen_RubyToNum(mrb, (argc > 7 ? argv[7] : mrb_nil_value()));
     SDL_FRect tmp8;
     const SDL_FRect *a8 = NULL;
     if (argc > 8 && mrb_hash_p(argv[8])) {
@@ -9826,26 +9826,26 @@ static mrb_value GenR_SDL_RenderTexture9GridTiled(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_Texture *a1 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
     SDL_FRect tmp2;
     const SDL_FRect *a2 = NULL;
     if (argc > 2 && mrb_hash_p(argv[2])) {
         GenRead_SDL_FRect(mrb, argv[2], &tmp2);
         a2 = &tmp2;
     }
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
-    float a7 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 7 ? argv[7] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    float a7 = (float)GrappleGen_RubyToNum(mrb, (argc > 7 ? argv[7] : mrb_nil_value()));
     SDL_FRect tmp8;
     const SDL_FRect *a8 = NULL;
     if (argc > 8 && mrb_hash_p(argv[8])) {
         GenRead_SDL_FRect(mrb, argv[8], &tmp8);
         a8 = &tmp8;
     }
-    float a9 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 9 ? argv[9] : mrb_nil_value()));
+    float a9 = (float)GrappleGen_RubyToNum(mrb, (argc > 9 ? argv[9] : mrb_nil_value()));
     bool rv = SDL_RenderTexture9GridTiled(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9858,8 +9858,8 @@ static mrb_value GenR_SDL_RenderTextureAffine(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_Texture *a1 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
     SDL_FRect tmp2;
     const SDL_FRect *a2 = NULL;
     if (argc > 2 && mrb_hash_p(argv[2])) {
@@ -9896,8 +9896,8 @@ static mrb_value GenR_SDL_RenderTextureRotated(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_Texture *a1 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
     SDL_FRect tmp2;
     const SDL_FRect *a2 = NULL;
     if (argc > 2 && mrb_hash_p(argv[2])) {
@@ -9910,14 +9910,14 @@ static mrb_value GenR_SDL_RenderTextureRotated(mrb_state *mrb, mrb_value self)
         GenRead_SDL_FRect(mrb, argv[3], &tmp3);
         a3 = &tmp3;
     }
-    double a4 = (double)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    double a4 = (double)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     SDL_FPoint tmp5;
     const SDL_FPoint *a5 = NULL;
     if (argc > 5 && mrb_hash_p(argv[5])) {
         GenRead_SDL_FPoint(mrb, argv[5], &tmp5);
         a5 = &tmp5;
     }
-    SDL_FlipMode a6 = (SDL_FlipMode)SDLStaticGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    SDL_FlipMode a6 = (SDL_FlipMode)GrappleGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     bool rv = SDL_RenderTextureRotated(a0, a1, a2, a3, a4, a5, a6);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9930,15 +9930,15 @@ static mrb_value GenR_SDL_RenderTextureTiled(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_Texture *a1 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
     SDL_FRect tmp2;
     const SDL_FRect *a2 = NULL;
     if (argc > 2 && mrb_hash_p(argv[2])) {
         GenRead_SDL_FRect(mrb, argv[2], &tmp2);
         a2 = &tmp2;
     }
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     SDL_FRect tmp4;
     const SDL_FRect *a4 = NULL;
     if (argc > 4 && mrb_hash_p(argv[4])) {
@@ -9957,7 +9957,7 @@ static mrb_value GenR_SDL_RenderViewportSet(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     bool rv = SDL_RenderViewportSet(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -9982,7 +9982,7 @@ static mrb_value GenR_SDL_ResetHint(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_ResetHint(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10031,7 +10031,7 @@ static mrb_value GenR_SDL_RestoreWindow(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_RestoreWindow(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10044,7 +10044,7 @@ static mrb_value GenR_SDL_ResumeAudioDevice(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_ResumeAudioDevice(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10057,7 +10057,7 @@ static mrb_value GenR_SDL_ResumeAudioStreamDevice(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     bool rv = SDL_ResumeAudioStreamDevice(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10070,7 +10070,7 @@ static mrb_value GenR_SDL_ResumeHaptic(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
     bool rv = SDL_ResumeHaptic(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10083,10 +10083,10 @@ static mrb_value GenR_SDL_RotateSurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Surface * rv = SDL_RotateSurface(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
     }
 }
 
@@ -10097,10 +10097,10 @@ static mrb_value GenR_SDL_RumbleGamepad(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    Uint16 a1 = (Uint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint16 a2 = (Uint16)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    Uint16 a1 = (Uint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint16 a2 = (Uint16)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_RumbleGamepad(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10113,10 +10113,10 @@ static mrb_value GenR_SDL_RumbleGamepadTriggers(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    Uint16 a1 = (Uint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint16 a2 = (Uint16)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    Uint16 a1 = (Uint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint16 a2 = (Uint16)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_RumbleGamepadTriggers(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10129,10 +10129,10 @@ static mrb_value GenR_SDL_RumbleJoystick(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
-    Uint16 a1 = (Uint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint16 a2 = (Uint16)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    Uint16 a1 = (Uint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint16 a2 = (Uint16)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_RumbleJoystick(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10145,10 +10145,10 @@ static mrb_value GenR_SDL_RumbleJoystickTriggers(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
-    Uint16 a1 = (Uint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint16 a2 = (Uint16)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint32 a3 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    Uint16 a1 = (Uint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint16 a2 = (Uint16)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint32 a3 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_RumbleJoystickTriggers(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10161,9 +10161,9 @@ static mrb_value GenR_SDL_RunHapticEffect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
-    SDL_HapticEffectID a1 = (SDL_HapticEffectID)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint32 a2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_HapticEffectID a1 = (SDL_HapticEffectID)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 a2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_RunHapticEffect(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10176,8 +10176,8 @@ static mrb_value GenR_SDL_SaveBMP(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SaveBMP(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10190,9 +10190,9 @@ static mrb_value GenR_SDL_SaveBMP_IO(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    SDL_IOStream *a1 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_IOStream");
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_IOStream *a1 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_IOStream");
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SaveBMP_IO(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10205,9 +10205,9 @@ static mrb_value GenR_SDL_SaveFile(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     size_t len1 = 0;
-    const char *a1 = SDLStaticGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
+    const char *a1 = GrappleGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
     bool rv = SDL_SaveFile(a0, (const void *)a1, (size_t)len1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10220,10 +10220,10 @@ static mrb_value GenR_SDL_SaveFile_IO(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
     size_t len1 = 0;
-    const char *a1 = SDLStaticGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
-    bool a3 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
+    bool a3 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SaveFile_IO(a0, (const void *)a1, (size_t)len1, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10236,8 +10236,8 @@ static mrb_value GenR_SDL_SavePNG(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SavePNG(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10250,9 +10250,9 @@ static mrb_value GenR_SDL_SavePNG_IO(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    SDL_IOStream *a1 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_IOStream");
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_IOStream *a1 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_IOStream");
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SavePNG_IO(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10265,12 +10265,12 @@ static mrb_value GenR_SDL_ScaleSurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    SDL_ScaleMode a3 = (SDL_ScaleMode)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_ScaleMode a3 = (SDL_ScaleMode)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     SDL_Surface * rv = SDL_ScaleSurface(a0, a1, a2, a3);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -10281,7 +10281,7 @@ static mrb_value GenR_SDL_ScreenKeyboardShown(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_ScreenKeyboardShown(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10306,9 +10306,9 @@ static mrb_value GenR_SDL_SeekIO(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Sint64 a1 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    SDL_IOWhence a2 = (SDL_IOWhence)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Sint64 a1 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOWhence a2 = (SDL_IOWhence)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     Sint64 rv = SDL_SeekIO(a0, a1, a2);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -10321,9 +10321,9 @@ static mrb_value GenR_SDL_SendGamepadEffect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
     size_t len1 = 0;
-    const char *a1 = SDLStaticGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
+    const char *a1 = GrappleGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
     bool rv = SDL_SendGamepadEffect(a0, (const void *)a1, (int)len1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10336,9 +10336,9 @@ static mrb_value GenR_SDL_SendJoystickEffect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
     size_t len1 = 0;
-    const char *a1 = SDLStaticGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
+    const char *a1 = GrappleGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
     bool rv = SDL_SendJoystickEffect(a0, (const void *)a1, (int)len1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10351,9 +10351,9 @@ static mrb_value GenR_SDL_SetAppMetadata(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetAppMetadata(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10366,8 +10366,8 @@ static mrb_value GenR_SDL_SetAppMetadataProperty(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetAppMetadataProperty(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10380,8 +10380,8 @@ static mrb_value GenR_SDL_SetAudioDeviceGain(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetAudioDeviceGain(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10394,7 +10394,7 @@ static mrb_value GenR_SDL_SetAudioStreamFormat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     SDL_AudioSpec tmp1;
     const SDL_AudioSpec *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -10419,8 +10419,8 @@ static mrb_value GenR_SDL_SetAudioStreamFrequencyRatio(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetAudioStreamFrequencyRatio(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10433,8 +10433,8 @@ static mrb_value GenR_SDL_SetAudioStreamGain(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetAudioStreamGain(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10447,9 +10447,9 @@ static mrb_value GenR_SDL_SetBooleanProperty(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetBooleanProperty(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10462,7 +10462,7 @@ static mrb_value GenR_SDL_SetClipboardText(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_SetClipboardText(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10475,7 +10475,7 @@ static mrb_value GenR_SDL_SetCursor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Cursor *a0 = (SDL_Cursor *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Cursor");
+    SDL_Cursor *a0 = (SDL_Cursor *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Cursor");
     bool rv = SDL_SetCursor(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10488,8 +10488,8 @@ static mrb_value GenR_SDL_SetDefaultTextureScaleMode(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_ScaleMode a1 = (SDL_ScaleMode)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_ScaleMode a1 = (SDL_ScaleMode)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetDefaultTextureScaleMode(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10502,10 +10502,10 @@ static mrb_value GenR_SDL_SetEnvironmentVariable(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Environment *a0 = (SDL_Environment *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Environment");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    bool a3 = (bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Environment *a0 = (SDL_Environment *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Environment");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    bool a3 = (bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_SetEnvironmentVariable(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10518,8 +10518,8 @@ static mrb_value GenR_SDL_SetEventEnabled(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    Uint32 a0 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 a0 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_SetEventEnabled(a0, a1);
     return mrb_nil_value();
     }
@@ -10532,9 +10532,9 @@ static mrb_value GenR_SDL_SetFloatProperty(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetFloatProperty(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10547,8 +10547,8 @@ static mrb_value GenR_SDL_SetGPUAllowedFramesInFlight(mrb_state *mrb, mrb_value 
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetGPUAllowedFramesInFlight(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10561,7 +10561,7 @@ static mrb_value GenR_SDL_SetGPUBlendConstants(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
     SDL_FColor a1;
     GenRead_SDL_FColor(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     SDL_SetGPUBlendConstants(a0, a1);
@@ -10576,9 +10576,9 @@ static mrb_value GenR_SDL_SetGPUBufferName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBuffer");
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUBuffer *a1 = (SDL_GPUBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUBuffer");
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_SetGPUBufferName(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -10591,8 +10591,8 @@ static mrb_value GenR_SDL_SetGPURenderState(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_GPURenderState *a1 = (SDL_GPURenderState *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPURenderState");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_GPURenderState *a1 = (SDL_GPURenderState *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPURenderState");
     bool rv = SDL_SetGPURenderState(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10605,10 +10605,10 @@ static mrb_value GenR_SDL_SetGPURenderStateFragmentUniforms(mrb_state *mrb, mrb_
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPURenderState *a0 = (SDL_GPURenderState *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderState");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_GPURenderState *a0 = (SDL_GPURenderState *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderState");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     size_t len2 = 0;
-    const char *a2 = SDLStaticGen_RubyToBlob(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &len2);
+    const char *a2 = GrappleGen_RubyToBlob(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &len2);
     bool rv = SDL_SetGPURenderStateFragmentUniforms(a0, a1, (const void *)a2, (Uint32)len2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10621,7 +10621,7 @@ static mrb_value GenR_SDL_SetGPUScissor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -10640,8 +10640,8 @@ static mrb_value GenR_SDL_SetGPUStencilReference(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
-    Uint8 a1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
+    Uint8 a1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_SetGPUStencilReference(a0, a1);
     return mrb_nil_value();
     }
@@ -10654,10 +10654,10 @@ static mrb_value GenR_SDL_SetGPUSwapchainParameters(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
-    SDL_GPUSwapchainComposition a2 = (SDL_GPUSwapchainComposition)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    SDL_GPUPresentMode a3 = (SDL_GPUPresentMode)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
+    SDL_GPUSwapchainComposition a2 = (SDL_GPUSwapchainComposition)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_GPUPresentMode a3 = (SDL_GPUPresentMode)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_SetGPUSwapchainParameters(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10670,9 +10670,9 @@ static mrb_value GenR_SDL_SetGPUTextureName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_GPUTexture *a1 = (SDL_GPUTexture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTexture");
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUTexture *a1 = (SDL_GPUTexture *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTexture");
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_SetGPUTextureName(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -10685,7 +10685,7 @@ static mrb_value GenR_SDL_SetGPUViewport(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
+    SDL_GPURenderPass *a0 = (SDL_GPURenderPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPURenderPass");
     SDL_GPUViewport tmp1;
     const SDL_GPUViewport *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -10704,7 +10704,7 @@ static mrb_value GenR_SDL_SetGamepadEventsEnabled(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    bool a0 = (bool)SDLStaticGen_RubyToBool((argc > 0 ? argv[0] : mrb_nil_value()));
+    bool a0 = (bool)GrappleGen_RubyToBool((argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_SetGamepadEventsEnabled(a0);
     return mrb_nil_value();
     }
@@ -10717,10 +10717,10 @@ static mrb_value GenR_SDL_SetGamepadLED(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    Uint8 a1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint8 a2 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint8 a3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    Uint8 a1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint8 a2 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint8 a3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_SetGamepadLED(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10733,8 +10733,8 @@ static mrb_value GenR_SDL_SetGamepadMapping(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_JoystickID a0 = (SDL_JoystickID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_JoystickID a0 = (SDL_JoystickID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetGamepadMapping(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10747,8 +10747,8 @@ static mrb_value GenR_SDL_SetGamepadPlayerIndex(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetGamepadPlayerIndex(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10761,9 +10761,9 @@ static mrb_value GenR_SDL_SetGamepadSensorEnabled(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Gamepad *a0 = (SDL_Gamepad *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
-    SDL_SensorType a1 = (SDL_SensorType)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Gamepad *a0 = (SDL_Gamepad *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Gamepad");
+    SDL_SensorType a1 = (SDL_SensorType)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetGamepadSensorEnabled(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10776,8 +10776,8 @@ static mrb_value GenR_SDL_SetHapticAutocenter(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetHapticAutocenter(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10790,8 +10790,8 @@ static mrb_value GenR_SDL_SetHapticGain(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetHapticGain(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10804,8 +10804,8 @@ static mrb_value GenR_SDL_SetHint(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetHint(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10818,9 +10818,9 @@ static mrb_value GenR_SDL_SetHintWithPriority(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    SDL_HintPriority a2 = (SDL_HintPriority)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_HintPriority a2 = (SDL_HintPriority)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetHintWithPriority(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10833,8 +10833,8 @@ static mrb_value GenR_SDL_SetInitialized(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_InitState *a0 = (SDL_InitState *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_InitState");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_InitState *a0 = (SDL_InitState *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_InitState");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_SetInitialized(a0, a1);
     return mrb_nil_value();
     }
@@ -10847,7 +10847,7 @@ static mrb_value GenR_SDL_SetJoystickEventsEnabled(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    bool a0 = (bool)SDLStaticGen_RubyToBool((argc > 0 ? argv[0] : mrb_nil_value()));
+    bool a0 = (bool)GrappleGen_RubyToBool((argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_SetJoystickEventsEnabled(a0);
     return mrb_nil_value();
     }
@@ -10860,10 +10860,10 @@ static mrb_value GenR_SDL_SetJoystickLED(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
-    Uint8 a1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint8 a2 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint8 a3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    Uint8 a1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint8 a2 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint8 a3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_SetJoystickLED(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10876,8 +10876,8 @@ static mrb_value GenR_SDL_SetJoystickPlayerIndex(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetJoystickPlayerIndex(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10890,9 +10890,9 @@ static mrb_value GenR_SDL_SetJoystickVirtualAxis(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Sint16 a2 = (Sint16)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Sint16 a2 = (Sint16)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetJoystickVirtualAxis(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10905,10 +10905,10 @@ static mrb_value GenR_SDL_SetJoystickVirtualBall(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Sint16 a2 = (Sint16)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Sint16 a3 = (Sint16)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Sint16 a2 = (Sint16)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Sint16 a3 = (Sint16)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_SetJoystickVirtualBall(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10921,9 +10921,9 @@ static mrb_value GenR_SDL_SetJoystickVirtualButton(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetJoystickVirtualButton(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10936,9 +10936,9 @@ static mrb_value GenR_SDL_SetJoystickVirtualHat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint8 a2 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint8 a2 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetJoystickVirtualHat(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10951,13 +10951,13 @@ static mrb_value GenR_SDL_SetJoystickVirtualTouchpad(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Joystick *a0 = (SDL_Joystick *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    bool a3 = (bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    SDL_Joystick *a0 = (SDL_Joystick *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Joystick");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    bool a3 = (bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     bool rv = SDL_SetJoystickVirtualTouchpad(a0, a1, a2, a3, a4, a5, a6);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -10970,7 +10970,7 @@ static mrb_value GenR_SDL_SetLogPriorities(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_LogPriority a0 = (SDL_LogPriority)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_LogPriority a0 = (SDL_LogPriority)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_SetLogPriorities(a0);
     return mrb_nil_value();
     }
@@ -10983,8 +10983,8 @@ static mrb_value GenR_SDL_SetLogPriority(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    SDL_LogPriority a1 = (SDL_LogPriority)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_LogPriority a1 = (SDL_LogPriority)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_SetLogPriority(a0, a1);
     return mrb_nil_value();
     }
@@ -10997,8 +10997,8 @@ static mrb_value GenR_SDL_SetLogPriorityPrefix(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_LogPriority a0 = (SDL_LogPriority)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_LogPriority a0 = (SDL_LogPriority)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetLogPriorityPrefix(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11011,7 +11011,7 @@ static mrb_value GenR_SDL_SetModState(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Keymod a0 = (SDL_Keymod)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_Keymod a0 = (SDL_Keymod)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_SetModState(a0);
     return mrb_nil_value();
     }
@@ -11024,9 +11024,9 @@ static mrb_value GenR_SDL_SetNumberProperty(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Sint64 a2 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Sint64 a2 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetNumberProperty(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11039,15 +11039,15 @@ static mrb_value GenR_SDL_SetPaletteColors(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Palette *a0 = (SDL_Palette *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Palette");
+    SDL_Palette *a0 = (SDL_Palette *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Palette");
     SDL_Color tmp1;
     const SDL_Color *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_Color(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_SetPaletteColors(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11060,7 +11060,7 @@ static mrb_value GenR_SDL_SetPrimarySelectionText(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_SetPrimarySelectionText(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11073,7 +11073,7 @@ static mrb_value GenR_SDL_SetRenderClipRect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -11092,8 +11092,8 @@ static mrb_value GenR_SDL_SetRenderColorScale(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetRenderColorScale(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11106,8 +11106,8 @@ static mrb_value GenR_SDL_SetRenderDrawBlendMode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_BlendMode a1 = (SDL_BlendMode)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_BlendMode a1 = (SDL_BlendMode)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetRenderDrawBlendMode(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11120,11 +11120,11 @@ static mrb_value GenR_SDL_SetRenderDrawColor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    Uint8 a1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint8 a2 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint8 a3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint8 a4 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    Uint8 a1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint8 a2 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint8 a3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint8 a4 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = SDL_SetRenderDrawColor(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11137,11 +11137,11 @@ static mrb_value GenR_SDL_SetRenderDrawColorFloat(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = SDL_SetRenderDrawColorFloat(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11154,10 +11154,10 @@ static mrb_value GenR_SDL_SetRenderLogicalPresentation(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    SDL_RendererLogicalPresentation a3 = (SDL_RendererLogicalPresentation)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_RendererLogicalPresentation a3 = (SDL_RendererLogicalPresentation)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_SetRenderLogicalPresentation(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11170,9 +11170,9 @@ static mrb_value GenR_SDL_SetRenderScale(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetRenderScale(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11185,8 +11185,8 @@ static mrb_value GenR_SDL_SetRenderTarget(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_Texture *a1 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
     bool rv = SDL_SetRenderTarget(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11199,9 +11199,9 @@ static mrb_value GenR_SDL_SetRenderTextureAddressMode(mrb_state *mrb, mrb_value 
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    SDL_TextureAddressMode a1 = (SDL_TextureAddressMode)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    SDL_TextureAddressMode a2 = (SDL_TextureAddressMode)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_TextureAddressMode a1 = (SDL_TextureAddressMode)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_TextureAddressMode a2 = (SDL_TextureAddressMode)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetRenderTextureAddressMode(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11214,8 +11214,8 @@ static mrb_value GenR_SDL_SetRenderVSync(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetRenderVSync(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11228,7 +11228,7 @@ static mrb_value GenR_SDL_SetRenderViewport(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -11247,8 +11247,8 @@ static mrb_value GenR_SDL_SetScancodeName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Scancode a0 = (SDL_Scancode)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Scancode a0 = (SDL_Scancode)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetScancodeName(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11261,9 +11261,9 @@ static mrb_value GenR_SDL_SetStringProperty(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetStringProperty(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11276,8 +11276,8 @@ static mrb_value GenR_SDL_SetSurfaceAlphaMod(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    Uint8 a1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    Uint8 a1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetSurfaceAlphaMod(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11290,8 +11290,8 @@ static mrb_value GenR_SDL_SetSurfaceBlendMode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    SDL_BlendMode a1 = (SDL_BlendMode)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_BlendMode a1 = (SDL_BlendMode)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetSurfaceBlendMode(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11304,7 +11304,7 @@ static mrb_value GenR_SDL_SetSurfaceClipRect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -11323,9 +11323,9 @@ static mrb_value GenR_SDL_SetSurfaceColorKey(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint32 a2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 a2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetSurfaceColorKey(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11338,10 +11338,10 @@ static mrb_value GenR_SDL_SetSurfaceColorMod(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    Uint8 a1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint8 a2 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint8 a3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    Uint8 a1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint8 a2 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint8 a3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_SetSurfaceColorMod(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11354,8 +11354,8 @@ static mrb_value GenR_SDL_SetSurfaceColorspace(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    SDL_Colorspace a1 = (SDL_Colorspace)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Colorspace a1 = (SDL_Colorspace)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetSurfaceColorspace(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11368,8 +11368,8 @@ static mrb_value GenR_SDL_SetSurfacePalette(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    SDL_Palette *a1 = (SDL_Palette *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Palette");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Palette *a1 = (SDL_Palette *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Palette");
     bool rv = SDL_SetSurfacePalette(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11382,8 +11382,8 @@ static mrb_value GenR_SDL_SetSurfaceRLE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetSurfaceRLE(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11396,14 +11396,14 @@ static mrb_value GenR_SDL_SetTextInputArea(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_Rect(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetTextInputArea(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11416,8 +11416,8 @@ static mrb_value GenR_SDL_SetTextureAlphaMod(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
-    Uint8 a1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    Uint8 a1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetTextureAlphaMod(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11430,8 +11430,8 @@ static mrb_value GenR_SDL_SetTextureAlphaModFloat(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetTextureAlphaModFloat(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11444,8 +11444,8 @@ static mrb_value GenR_SDL_SetTextureBlendMode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
-    SDL_BlendMode a1 = (SDL_BlendMode)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    SDL_BlendMode a1 = (SDL_BlendMode)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetTextureBlendMode(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11458,10 +11458,10 @@ static mrb_value GenR_SDL_SetTextureColorMod(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
-    Uint8 a1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint8 a2 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint8 a3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    Uint8 a1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint8 a2 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint8 a3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_SetTextureColorMod(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11474,10 +11474,10 @@ static mrb_value GenR_SDL_SetTextureColorModFloat(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = SDL_SetTextureColorModFloat(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11490,8 +11490,8 @@ static mrb_value GenR_SDL_SetTexturePalette(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
-    SDL_Palette *a1 = (SDL_Palette *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Palette");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    SDL_Palette *a1 = (SDL_Palette *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Palette");
     bool rv = SDL_SetTexturePalette(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11504,8 +11504,8 @@ static mrb_value GenR_SDL_SetTextureScaleMode(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
-    SDL_ScaleMode a1 = (SDL_ScaleMode)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    SDL_ScaleMode a1 = (SDL_ScaleMode)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetTextureScaleMode(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11518,8 +11518,8 @@ static mrb_value GenR_SDL_SetTrayEntryChecked(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_SetTrayEntryChecked(a0, a1);
     return mrb_nil_value();
     }
@@ -11532,8 +11532,8 @@ static mrb_value GenR_SDL_SetTrayEntryEnabled(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_SetTrayEntryEnabled(a0, a1);
     return mrb_nil_value();
     }
@@ -11546,8 +11546,8 @@ static mrb_value GenR_SDL_SetTrayEntryLabel(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_TrayEntry *a0 = (SDL_TrayEntry *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_TrayEntry *a0 = (SDL_TrayEntry *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_TrayEntry");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_SetTrayEntryLabel(a0, a1);
     return mrb_nil_value();
     }
@@ -11560,8 +11560,8 @@ static mrb_value GenR_SDL_SetTrayIcon(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Tray *a0 = (SDL_Tray *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Tray");
-    SDL_Surface *a1 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Surface");
+    SDL_Tray *a0 = (SDL_Tray *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Tray");
+    SDL_Surface *a1 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Surface");
     SDL_SetTrayIcon(a0, a1);
     return mrb_nil_value();
     }
@@ -11574,8 +11574,8 @@ static mrb_value GenR_SDL_SetTrayTooltip(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Tray *a0 = (SDL_Tray *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Tray");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Tray *a0 = (SDL_Tray *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Tray");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_SetTrayTooltip(a0, a1);
     return mrb_nil_value();
     }
@@ -11588,8 +11588,8 @@ static mrb_value GenR_SDL_SetWindowAlwaysOnTop(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetWindowAlwaysOnTop(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11602,9 +11602,9 @@ static mrb_value GenR_SDL_SetWindowAspectRatio(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetWindowAspectRatio(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11617,8 +11617,8 @@ static mrb_value GenR_SDL_SetWindowBordered(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetWindowBordered(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11631,8 +11631,8 @@ static mrb_value GenR_SDL_SetWindowFillDocument(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetWindowFillDocument(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11645,8 +11645,8 @@ static mrb_value GenR_SDL_SetWindowFocusable(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetWindowFocusable(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11659,8 +11659,8 @@ static mrb_value GenR_SDL_SetWindowFullscreen(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetWindowFullscreen(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11673,8 +11673,8 @@ static mrb_value GenR_SDL_SetWindowFullscreenMode(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    const SDL_DisplayMode *a1 = (const SDL_DisplayMode *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_DisplayMode");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    const SDL_DisplayMode *a1 = (const SDL_DisplayMode *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_DisplayMode");
     bool rv = SDL_SetWindowFullscreenMode(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11687,8 +11687,8 @@ static mrb_value GenR_SDL_SetWindowIcon(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    SDL_Surface *a1 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Surface");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Surface *a1 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Surface");
     bool rv = SDL_SetWindowIcon(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11701,8 +11701,8 @@ static mrb_value GenR_SDL_SetWindowKeyboardGrab(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetWindowKeyboardGrab(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11715,9 +11715,9 @@ static mrb_value GenR_SDL_SetWindowMaximumSize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetWindowMaximumSize(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11730,9 +11730,9 @@ static mrb_value GenR_SDL_SetWindowMinimumSize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetWindowMinimumSize(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11745,8 +11745,8 @@ static mrb_value GenR_SDL_SetWindowModal(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetWindowModal(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11759,8 +11759,8 @@ static mrb_value GenR_SDL_SetWindowMouseGrab(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetWindowMouseGrab(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11773,7 +11773,7 @@ static mrb_value GenR_SDL_SetWindowMouseRect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -11792,8 +11792,8 @@ static mrb_value GenR_SDL_SetWindowOpacity(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetWindowOpacity(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11806,8 +11806,8 @@ static mrb_value GenR_SDL_SetWindowParent(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_SetWindowParent(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11820,9 +11820,9 @@ static mrb_value GenR_SDL_SetWindowPosition(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetWindowPosition(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11835,8 +11835,8 @@ static mrb_value GenR_SDL_SetWindowProgressState(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    SDL_ProgressState a1 = (SDL_ProgressState)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_ProgressState a1 = (SDL_ProgressState)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetWindowProgressState(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11849,8 +11849,8 @@ static mrb_value GenR_SDL_SetWindowProgressValue(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetWindowProgressValue(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11863,8 +11863,8 @@ static mrb_value GenR_SDL_SetWindowRelativeMouseMode(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetWindowRelativeMouseMode(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11877,8 +11877,8 @@ static mrb_value GenR_SDL_SetWindowResizable(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetWindowResizable(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11891,8 +11891,8 @@ static mrb_value GenR_SDL_SetWindowShape(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    SDL_Surface *a1 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Surface");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Surface *a1 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Surface");
     bool rv = SDL_SetWindowShape(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11905,9 +11905,9 @@ static mrb_value GenR_SDL_SetWindowSize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_SetWindowSize(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11920,8 +11920,8 @@ static mrb_value GenR_SDL_SetWindowSurfaceVSync(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetWindowSurfaceVSync(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11934,8 +11934,8 @@ static mrb_value GenR_SDL_SetWindowTitle(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_SetWindowTitle(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11948,7 +11948,7 @@ static mrb_value GenR_SDL_ShouldInit(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_InitState *a0 = (SDL_InitState *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_InitState");
+    SDL_InitState *a0 = (SDL_InitState *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_InitState");
     bool rv = SDL_ShouldInit(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11961,7 +11961,7 @@ static mrb_value GenR_SDL_ShouldQuit(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_InitState *a0 = (SDL_InitState *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_InitState");
+    SDL_InitState *a0 = (SDL_InitState *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_InitState");
     bool rv = SDL_ShouldQuit(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -11986,8 +11986,8 @@ static mrb_value GenR_SDL_ShowMessageBox(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const SDL_MessageBoxData *a0 = (const SDL_MessageBoxData *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_MessageBoxData");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const SDL_MessageBoxData *a0 = (const SDL_MessageBoxData *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_MessageBoxData");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_ShowMessageBox(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -12003,10 +12003,10 @@ static mrb_value GenR_SDL_ShowSimpleMessageBox(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_MessageBoxFlags a0 = (SDL_MessageBoxFlags)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    SDL_Window *a3 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "SDL_Window");
+    SDL_MessageBoxFlags a0 = (SDL_MessageBoxFlags)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Window *a3 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_ShowSimpleMessageBox(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12019,7 +12019,7 @@ static mrb_value GenR_SDL_ShowWindow(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_ShowWindow(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12032,9 +12032,9 @@ static mrb_value GenR_SDL_ShowWindowSystemMenu(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_ShowWindowSystemMenu(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12047,7 +12047,7 @@ static mrb_value GenR_SDL_SignalAsyncIOQueue(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AsyncIOQueue *a0 = (SDL_AsyncIOQueue *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AsyncIOQueue");
+    SDL_AsyncIOQueue *a0 = (SDL_AsyncIOQueue *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AsyncIOQueue");
     SDL_SignalAsyncIOQueue(a0);
     return mrb_nil_value();
     }
@@ -12060,7 +12060,7 @@ static mrb_value GenR_SDL_StartTextInput(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_StartTextInput(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12073,8 +12073,8 @@ static mrb_value GenR_SDL_StartTextInputWithProperties(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    SDL_PropertiesID a1 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_PropertiesID a1 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_StartTextInputWithProperties(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12087,8 +12087,8 @@ static mrb_value GenR_SDL_StopHapticEffect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
-    SDL_HapticEffectID a1 = (SDL_HapticEffectID)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_HapticEffectID a1 = (SDL_HapticEffectID)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_StopHapticEffect(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12101,7 +12101,7 @@ static mrb_value GenR_SDL_StopHapticEffects(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
     bool rv = SDL_StopHapticEffects(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12114,7 +12114,7 @@ static mrb_value GenR_SDL_StopHapticRumble(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
     bool rv = SDL_StopHapticRumble(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12127,7 +12127,7 @@ static mrb_value GenR_SDL_StopTextInput(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_StopTextInput(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12140,7 +12140,7 @@ static mrb_value GenR_SDL_StorageReady(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
     bool rv = SDL_StorageReady(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12153,21 +12153,21 @@ static mrb_value GenR_SDL_StretchSurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_Rect(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    SDL_Surface *a2 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a2 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_Surface");
     SDL_Rect tmp3;
     const SDL_Rect *a3 = NULL;
     if (argc > 3 && mrb_hash_p(argv[3])) {
         GenRead_SDL_Rect(mrb, argv[3], &tmp3);
         a3 = &tmp3;
     }
-    SDL_ScaleMode a4 = (SDL_ScaleMode)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    SDL_ScaleMode a4 = (SDL_ScaleMode)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = SDL_StretchSurface(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12180,7 +12180,7 @@ static mrb_value GenR_SDL_StringToGUID(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_GUID rv = SDL_StringToGUID(a0);
     return GenPush_SDL_GUID(mrb, &rv);
     }
@@ -12193,7 +12193,7 @@ static mrb_value GenR_SDL_SubmitGPUCommandBuffer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
     bool rv = SDL_SubmitGPUCommandBuffer(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12206,9 +12206,9 @@ static mrb_value GenR_SDL_SubmitGPUCommandBufferAndAcquireFence(mrb_state *mrb, 
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
+    SDL_GPUCommandBuffer *a0 = (SDL_GPUCommandBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCommandBuffer");
     SDL_GPUFence * rv = SDL_SubmitGPUCommandBufferAndAcquireFence(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUFence");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_GPUFence");
     }
 }
 
@@ -12219,7 +12219,7 @@ static mrb_value GenR_SDL_SurfaceHasAlternateImages(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     bool rv = SDL_SurfaceHasAlternateImages(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12232,7 +12232,7 @@ static mrb_value GenR_SDL_SurfaceHasColorKey(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     bool rv = SDL_SurfaceHasColorKey(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12245,7 +12245,7 @@ static mrb_value GenR_SDL_SurfaceHasRLE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     bool rv = SDL_SurfaceHasRLE(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12258,7 +12258,7 @@ static mrb_value GenR_SDL_SyncWindow(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_SyncWindow(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12271,7 +12271,7 @@ static mrb_value GenR_SDL_TellIO(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
     Sint64 rv = SDL_TellIO(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -12284,7 +12284,7 @@ static mrb_value GenR_SDL_TextInputActive(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_TextInputActive(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12297,8 +12297,8 @@ static mrb_value GenR_SDL_TimeFromWindows(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    Uint32 a0 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 a0 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Time rv = SDL_TimeFromWindows(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -12311,10 +12311,10 @@ static mrb_value GenR_SDL_TimeToDateTime(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Time a0 = (SDL_Time)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_Time a0 = (SDL_Time)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_DateTime out1;
     memset(&out1, 0, sizeof(out1));
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_TimeToDateTime(a0, &out1, a2);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -12330,9 +12330,9 @@ static mrb_value GenR_SDL_TimeToWindows(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Time a0 = (SDL_Time)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    Uint32 io1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint32 io2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Time a0 = (SDL_Time)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Uint32 io1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 io2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_TimeToWindows(a0, &io1, &io2);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)io1);
@@ -12348,7 +12348,7 @@ static mrb_value GenR_SDL_TryLockSpinlock(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_SpinLock io0 = (SDL_SpinLock)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_SpinLock io0 = (SDL_SpinLock)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = SDL_TryLockSpinlock(&io0);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -12364,8 +12364,8 @@ static mrb_value GenR_SDL_UCS4ToUTF8(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    Uint32 a0 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *src1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 a0 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *src1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     char *a1 = SDL_strdup(src1 != NULL ? src1 : "");
     char * rv = SDL_UCS4ToUTF8(a0, a1);
     mrb_value rstr = rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv);
@@ -12382,7 +12382,7 @@ static mrb_value GenR_SDL_UnbindAudioStream(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     SDL_UnbindAudioStream(a0);
     return mrb_nil_value();
     }
@@ -12395,7 +12395,7 @@ static mrb_value GenR_SDL_UnloadObject(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_SharedObject *a0 = (SDL_SharedObject *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_SharedObject");
+    SDL_SharedObject *a0 = (SDL_SharedObject *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_SharedObject");
     SDL_UnloadObject(a0);
     return mrb_nil_value();
     }
@@ -12408,7 +12408,7 @@ static mrb_value GenR_SDL_UnlockAudioStream(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioStream *a0 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
     bool rv = SDL_UnlockAudioStream(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12421,7 +12421,7 @@ static mrb_value GenR_SDL_UnlockProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_UnlockProperties(a0);
     return mrb_nil_value();
     }
@@ -12434,7 +12434,7 @@ static mrb_value GenR_SDL_UnlockSpinlock(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_SpinLock io0 = (SDL_SpinLock)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_SpinLock io0 = (SDL_SpinLock)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_UnlockSpinlock(&io0);
     return mrb_int_value(mrb, (mrb_int)io0);
     }
@@ -12447,7 +12447,7 @@ static mrb_value GenR_SDL_UnlockSurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
     SDL_UnlockSurface(a0);
     return mrb_nil_value();
     }
@@ -12460,7 +12460,7 @@ static mrb_value GenR_SDL_UnlockTexture(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Texture *a0 = (SDL_Texture *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
+    SDL_Texture *a0 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Texture");
     SDL_UnlockTexture(a0);
     return mrb_nil_value();
     }
@@ -12473,8 +12473,8 @@ static mrb_value GenR_SDL_UnmapGPUTransferBuffer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_GPUTransferBuffer *a1 = (SDL_GPUTransferBuffer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTransferBuffer");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUTransferBuffer *a1 = (SDL_GPUTransferBuffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTransferBuffer");
     SDL_UnmapGPUTransferBuffer(a0, a1);
     return mrb_nil_value();
     }
@@ -12487,8 +12487,8 @@ static mrb_value GenR_SDL_UnsetEnvironmentVariable(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Environment *a0 = (SDL_Environment *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Environment");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Environment *a0 = (SDL_Environment *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Environment");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_UnsetEnvironmentVariable(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12513,9 +12513,9 @@ static mrb_value GenR_SDL_UpdateHapticEffect(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Haptic *a0 = (SDL_Haptic *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
-    SDL_HapticEffectID a1 = (SDL_HapticEffectID)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const SDL_HapticEffect *a2 = (const SDL_HapticEffect *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_HapticEffect");
+    SDL_Haptic *a0 = (SDL_Haptic *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Haptic");
+    SDL_HapticEffectID a1 = (SDL_HapticEffectID)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const SDL_HapticEffect *a2 = (const SDL_HapticEffect *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_HapticEffect");
     bool rv = SDL_UpdateHapticEffect(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12564,7 +12564,7 @@ static mrb_value GenR_SDL_UpdateWindowSurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_UpdateWindowSurface(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12577,14 +12577,14 @@ static mrb_value GenR_SDL_UpdateWindowSurfaceRects(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     SDL_Rect tmp1;
     const SDL_Rect *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
         GenRead_SDL_Rect(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_UpdateWindowSurfaceRects(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12597,10 +12597,10 @@ static mrb_value GenR_SDL_UploadToGPUBuffer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCopyPass");
-    const SDL_GPUTransferBufferLocation *a1 = (const SDL_GPUTransferBufferLocation *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTransferBufferLocation");
-    const SDL_GPUBufferRegion *a2 = (const SDL_GPUBufferRegion *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUBufferRegion");
-    bool a3 = (bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCopyPass");
+    const SDL_GPUTransferBufferLocation *a1 = (const SDL_GPUTransferBufferLocation *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTransferBufferLocation");
+    const SDL_GPUBufferRegion *a2 = (const SDL_GPUBufferRegion *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUBufferRegion");
+    bool a3 = (bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     SDL_UploadToGPUBuffer(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -12613,10 +12613,10 @@ static mrb_value GenR_SDL_UploadToGPUTexture(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCopyPass");
-    const SDL_GPUTextureTransferInfo *a1 = (const SDL_GPUTextureTransferInfo *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTextureTransferInfo");
-    const SDL_GPUTextureRegion *a2 = (const SDL_GPUTextureRegion *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUTextureRegion");
-    bool a3 = (bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    SDL_GPUCopyPass *a0 = (SDL_GPUCopyPass *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUCopyPass");
+    const SDL_GPUTextureTransferInfo *a1 = (const SDL_GPUTextureTransferInfo *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_GPUTextureTransferInfo");
+    const SDL_GPUTextureRegion *a2 = (const SDL_GPUTextureRegion *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "SDL_GPUTextureRegion");
+    bool a3 = (bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     SDL_UploadToGPUTexture(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -12629,9 +12629,9 @@ static mrb_value GenR_SDL_WaitAsyncIOResult(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AsyncIOQueue *a0 = (SDL_AsyncIOQueue *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AsyncIOQueue");
-    SDL_AsyncIOOutcome *a1 = (SDL_AsyncIOOutcome *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_AsyncIOOutcome");
-    Sint32 a2 = (Sint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_AsyncIOQueue *a0 = (SDL_AsyncIOQueue *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AsyncIOQueue");
+    SDL_AsyncIOOutcome *a1 = (SDL_AsyncIOOutcome *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_AsyncIOOutcome");
+    Sint32 a2 = (Sint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_WaitAsyncIOResult(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12644,7 +12644,7 @@ static mrb_value GenR_SDL_WaitEvent(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Event *a0 = (SDL_Event *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Event");
+    SDL_Event *a0 = (SDL_Event *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Event");
     bool rv = SDL_WaitEvent(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12657,8 +12657,8 @@ static mrb_value GenR_SDL_WaitEventTimeout(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Event *a0 = (SDL_Event *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Event");
-    Sint32 a1 = (Sint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Event *a0 = (SDL_Event *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Event");
+    Sint32 a1 = (Sint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_WaitEventTimeout(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12671,7 +12671,7 @@ static mrb_value GenR_SDL_WaitForGPUIdle(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
     bool rv = SDL_WaitForGPUIdle(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12684,8 +12684,8 @@ static mrb_value GenR_SDL_WaitForGPUSwapchain(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_WaitForGPUSwapchain(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12698,9 +12698,9 @@ static mrb_value GenR_SDL_WaitProcess(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Process *a0 = (SDL_Process *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Process");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Process *a0 = (SDL_Process *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Process");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_WaitProcess(a0, a1, &io2);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -12716,8 +12716,8 @@ static mrb_value GenR_SDL_WarpMouseGlobal(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_WarpMouseGlobal(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12730,9 +12730,9 @@ static mrb_value GenR_SDL_WarpMouseInWindow(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_WarpMouseInWindow(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -12745,7 +12745,7 @@ static mrb_value GenR_SDL_WasInit(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_InitFlags a0 = (SDL_InitFlags)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_InitFlags a0 = (SDL_InitFlags)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_InitFlags rv = SDL_WasInit(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -12758,7 +12758,7 @@ static mrb_value GenR_SDL_WindowHasSurface(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Window *a0 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
     bool rv = SDL_WindowHasSurface(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12771,9 +12771,9 @@ static mrb_value GenR_SDL_WindowSupportsGPUPresentMode(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
-    SDL_GPUPresentMode a2 = (SDL_GPUPresentMode)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
+    SDL_GPUPresentMode a2 = (SDL_GPUPresentMode)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_WindowSupportsGPUPresentMode(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12786,9 +12786,9 @@ static mrb_value GenR_SDL_WindowSupportsGPUSwapchainComposition(mrb_state *mrb, 
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
-    SDL_Window *a1 = (SDL_Window *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
-    SDL_GPUSwapchainComposition a2 = (SDL_GPUSwapchainComposition)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_Window *a1 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Window");
+    SDL_GPUSwapchainComposition a2 = (SDL_GPUSwapchainComposition)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = SDL_WindowSupportsGPUSwapchainComposition(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12801,9 +12801,9 @@ static mrb_value GenR_SDL_WriteIO(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
     size_t len1 = 0;
-    const char *a1 = SDLStaticGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
+    const char *a1 = GrappleGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
     size_t rv = SDL_WriteIO(a0, (const void *)a1, (size_t)len1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -12816,8 +12816,8 @@ static mrb_value GenR_SDL_WriteS16BE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Sint16 a1 = (Sint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Sint16 a1 = (Sint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_WriteS16BE(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12830,8 +12830,8 @@ static mrb_value GenR_SDL_WriteS16LE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Sint16 a1 = (Sint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Sint16 a1 = (Sint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_WriteS16LE(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12844,8 +12844,8 @@ static mrb_value GenR_SDL_WriteS32BE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Sint32 a1 = (Sint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Sint32 a1 = (Sint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_WriteS32BE(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12858,8 +12858,8 @@ static mrb_value GenR_SDL_WriteS32LE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Sint32 a1 = (Sint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Sint32 a1 = (Sint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_WriteS32LE(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12872,8 +12872,8 @@ static mrb_value GenR_SDL_WriteS64BE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Sint64 a1 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Sint64 a1 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_WriteS64BE(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12886,8 +12886,8 @@ static mrb_value GenR_SDL_WriteS64LE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Sint64 a1 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Sint64 a1 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_WriteS64LE(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12900,8 +12900,8 @@ static mrb_value GenR_SDL_WriteS8(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Sint8 a1 = (Sint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Sint8 a1 = (Sint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_WriteS8(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12914,10 +12914,10 @@ static mrb_value GenR_SDL_WriteStorageFile(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Storage *a0 = (SDL_Storage *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     size_t len2 = 0;
-    const char *a2 = SDLStaticGen_RubyToBlob(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &len2);
+    const char *a2 = GrappleGen_RubyToBlob(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &len2);
     bool rv = SDL_WriteStorageFile(a0, a1, (const void *)a2, (Uint64)len2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12930,13 +12930,13 @@ static mrb_value GenR_SDL_WriteSurfacePixel(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint8 a3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint8 a4 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    Uint8 a5 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    Uint8 a6 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint8 a3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint8 a4 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    Uint8 a5 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    Uint8 a6 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     bool rv = SDL_WriteSurfacePixel(a0, a1, a2, a3, a4, a5, a6);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12949,13 +12949,13 @@ static mrb_value GenR_SDL_WriteSurfacePixelFloat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    float a5 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    float a6 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Surface");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a5 = (float)GrappleGen_RubyToNum(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    float a6 = (float)GrappleGen_RubyToNum(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     bool rv = SDL_WriteSurfacePixelFloat(a0, a1, a2, a3, a4, a5, a6);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12968,8 +12968,8 @@ static mrb_value GenR_SDL_WriteU16BE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Uint16 a1 = (Uint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Uint16 a1 = (Uint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_WriteU16BE(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12982,8 +12982,8 @@ static mrb_value GenR_SDL_WriteU16LE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Uint16 a1 = (Uint16)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Uint16 a1 = (Uint16)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_WriteU16LE(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -12996,8 +12996,8 @@ static mrb_value GenR_SDL_WriteU32BE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_WriteU32BE(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -13010,8 +13010,8 @@ static mrb_value GenR_SDL_WriteU32LE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_WriteU32LE(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -13024,8 +13024,8 @@ static mrb_value GenR_SDL_WriteU64BE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Uint64 a1 = (Uint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Uint64 a1 = (Uint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_WriteU64BE(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -13038,8 +13038,8 @@ static mrb_value GenR_SDL_WriteU64LE(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Uint64 a1 = (Uint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Uint64 a1 = (Uint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_WriteU64LE(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -13052,8 +13052,8 @@ static mrb_value GenR_SDL_WriteU8(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    Uint8 a1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    Uint8 a1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = SDL_WriteU8(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -13066,7 +13066,7 @@ static mrb_value GenR_SDL_getenv(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_getenv(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -13079,7 +13079,7 @@ static mrb_value GenR_SDL_getenv_unsafe(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = SDL_getenv_unsafe(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -13092,7 +13092,7 @@ static mrb_value GenR_SDL_hid_ble_scan(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    bool a0 = (bool)SDLStaticGen_RubyToBool((argc > 0 ? argv[0] : mrb_nil_value()));
+    bool a0 = (bool)GrappleGen_RubyToBool((argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_hid_ble_scan(a0);
     return mrb_nil_value();
     }
@@ -13105,7 +13105,7 @@ static mrb_value GenR_SDL_hid_close(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_hid_device *a0 = (SDL_hid_device *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
     int rv = SDL_hid_close(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -13130,10 +13130,10 @@ static mrb_value GenR_SDL_hid_enumerate(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    unsigned short a0 = (unsigned short)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    unsigned short a1 = (unsigned short)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    unsigned short a0 = (unsigned short)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    unsigned short a1 = (unsigned short)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_hid_device_info * rv = SDL_hid_enumerate(a0, a1);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_hid_device_info");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_hid_device_info");
     }
 }
 
@@ -13156,7 +13156,7 @@ static mrb_value GenR_SDL_hid_free_enumeration(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_hid_device_info *a0 = (SDL_hid_device_info *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device_info");
+    SDL_hid_device_info *a0 = (SDL_hid_device_info *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device_info");
     SDL_hid_free_enumeration(a0);
     return mrb_nil_value();
     }
@@ -13169,9 +13169,9 @@ static mrb_value GenR_SDL_hid_get_device_info(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_hid_device *a0 = (SDL_hid_device *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
     SDL_hid_device_info * rv = SDL_hid_get_device_info(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_hid_device_info");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_hid_device_info");
     }
 }
 
@@ -13182,7 +13182,7 @@ static mrb_value GenR_SDL_hid_get_properties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_hid_device *a0 = (SDL_hid_device *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
     SDL_PropertiesID rv = SDL_hid_get_properties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -13207,9 +13207,9 @@ static mrb_value GenR_SDL_hid_open_path(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_hid_device * rv = SDL_hid_open_path(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_hid_device");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_hid_device");
     }
 }
 
@@ -13220,9 +13220,9 @@ static mrb_value GenR_SDL_hid_send_feature_report(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_hid_device *a0 = (SDL_hid_device *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
     size_t len1 = 0;
-    const char *a1 = SDLStaticGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
+    const char *a1 = GrappleGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
     int rv = SDL_hid_send_feature_report(a0, (const void *)a1, (size_t)len1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -13235,8 +13235,8 @@ static mrb_value GenR_SDL_hid_set_nonblocking(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_hid_device *a0 = (SDL_hid_device *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = SDL_hid_set_nonblocking(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -13249,9 +13249,9 @@ static mrb_value GenR_SDL_hid_write(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_hid_device *a0 = (SDL_hid_device *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
     size_t len1 = 0;
-    const char *a1 = SDLStaticGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
+    const char *a1 = GrappleGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
     int rv = SDL_hid_write(a0, (const void *)a1, (size_t)len1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -13264,10 +13264,10 @@ static mrb_value GenR_SDL_iconv_string(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    size_t a3 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    size_t a3 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     char * rv = SDL_iconv_string(a0, a1, a2, a3);
     mrb_value rstr = rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv);
     if (rv != NULL) { SDL_free(rv); }
@@ -13282,9 +13282,9 @@ static mrb_value GenR_SDL_setenv_unsafe(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     int rv = SDL_setenv_unsafe(a0, a1, a2);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -13297,7 +13297,7 @@ static mrb_value GenR_SDL_unsetenv_unsafe(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     int rv = SDL_unsetenv_unsafe(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -13310,7 +13310,7 @@ static mrb_value GenR_SDL_utf8strlen(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     size_t rv = SDL_utf8strlen(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -13323,18 +13323,18 @@ static mrb_value GenR_SDL_utf8strnlen(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    size_t a1 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    size_t a1 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     size_t rv = SDL_utf8strnlen(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
 }
 
-void SDLStaticGen_OpenRuby_sdl(mrb_state *mrb);
-void SDLStaticGen_OpenRuby_sdl(mrb_state *mrb)
+void GrappleGen_OpenRuby_sdl(mrb_state *mrb);
+void GrappleGen_OpenRuby_sdl(mrb_state *mrb)
 {
     struct RClass *mod;
-    SDLStaticGen_RubyEnsureHandleClass(mrb);
+    GrappleGen_RubyEnsureHandleClass(mrb);
     mod = mrb_define_module(mrb, "SDL");
     mrb_define_module_function(mrb, mod, "AcquireCameraFrame", GenR_SDL_AcquireCameraFrame, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "AcquireGPUCommandBuffer", GenR_SDL_AcquireGPUCommandBuffer, MRB_ARGS_ANY());

@@ -5,7 +5,7 @@
  * Keep this file thin: parse args / wire dependencies, then call library code.
  */
 
-#include "SDL3_static_extensions/version.hpp"
+#include "grapple/version.hpp"
 
 #include <CLI/CLI.hpp>
 #include <iostream>
@@ -19,11 +19,11 @@
  */
 int main(int argc, char **argv)
 {
-    CLI::App app{"SDL3-static-extensions — cppboot project"};
-    app.set_version_flag("-V,--version", std::string{SDL3_static_extensions::Version()});
+    CLI::App app{"grapple-beam — cppboot project"};
+    app.set_version_flag("-V,--version", std::string{grapple::Version()});
     CLI11_PARSE(app, argc, argv);
 
-    std::cout << "SDL3-static-extensions " << SDL3_static_extensions::Version()
+    std::cout << "grapple-beam " << grapple::Version()
               << " — add components under src/ (see README.md / AGENTS.md)\n";
     return 0;
 }

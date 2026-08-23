@@ -48,7 +48,7 @@ jobs:
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
           -DCMAKE_C_COMPILER=clang
           -DCMAKE_CXX_COMPILER=clang++
-          -DSDL3_STATIC_EXTENSIONS_ENABLE_SANITIZERS=ON
+          -DGRAPPLE_BEAM_ENABLE_SANITIZERS=ON
 
       - name: Build
         run: cmake --build build/sanitizer --parallel
@@ -65,7 +65,7 @@ jobs:
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
         run: |
           set -euo pipefail
-          bin="build/sanitizer/bin/SDL3-static-extensions"
+          bin="build/sanitizer/bin/grapple-beam"
           if [ ! -x "${bin}" ]; then
             echo "app binary not found at ${bin}"
             exit 1

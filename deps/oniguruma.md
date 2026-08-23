@@ -24,7 +24,7 @@ someone might need.
 
 ## Build configuration
 
-`regex/CMakeLists.txt` compiles the engine into `SDLStatic_Regex` and
+`regex/CMakeLists.txt` compiles the engine into `Grapple_Regex` and
 generates `config.h` from upstream's own `config.h.cmake.in` using CMake's
 `check_include_file` / `check_type_size` probes, which is what the autotools
 `configure` would otherwise determine. Two deliberate choices:
@@ -48,7 +48,7 @@ only. The wrapper is compiled with the project's normal warning settings.
 mruby ships no regex engine — there is no `Regexp` in any stock mruby, and
 none of its ~30 core gems provides one — while Lua has patterns rather than
 regular expressions. Oniguruma is the engine CRuby itself uses, so
-`SDLStatic::Regex` gives Ruby scripts the semantics they expect (named
+`Grapple::Regex` gives Ruby scripts the semantics they expect (named
 captures, lookaround, `\p{...}`) instead of an approximation, and gives Lua
 something it has never had. See [../docs/regex.md](../docs/regex.md).
 
@@ -66,7 +66,7 @@ entirely and serves Lua and C++ at the same time.
 The Release archive is about 0.7 MB. A full web build of the REPL — both
 interpreters and every module — grows from 5.65 MB to 6.12 MB of wasm,
 1.92 MB to 2.06 MB gzipped: roughly 8% uncompressed, 7% over the wire.
-`-DSDLSTATIC_BUILD_REGEX=OFF` removes it from C-only builds; the script
+`-DGRAPPLE_BUILD_REGEX=OFF` removes it from C-only builds; the script
 interpreters require it, because Ruby's `Regexp` is built on it.
 
 ## Local changes
