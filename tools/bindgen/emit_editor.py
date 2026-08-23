@@ -335,7 +335,7 @@ def _emit_tags(manifest: Manifest, header_paths: dict[str, str]) -> str:
         "!_TAG_FILE_FORMAT\t2\t/extended format/",
         "!_TAG_FILE_SORTED\t1\t/0=unsorted, 1=sorted/",
         "!_TAG_PROGRAM_NAME\tsdlstatic-bindgen\t//",
-        "!_TAG_PROGRAM_URL\thttps://github.com/bluesentinelsec/SDL3-static-extensions\t//",
+        "!_TAG_PROGRAM_URL\thttps://github.com/bluesentinelsec/grapple-beam\t//",
     ]
     seen: set[tuple[str, str]] = set()
     for name, header, pattern, kind in sorted(entries):

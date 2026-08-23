@@ -41,4 +41,4 @@ get the `JSON.*` module — see [C++](cpp.html) and
 [Scripting](scripting.html).
 
 Provenance for all three:
-[`deps/formats.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/deps/formats.md).
+[`deps/formats.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/formats.md).

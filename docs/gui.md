@@ -327,4 +327,4 @@ SDL events drive clicks, toggles, a real slider drag, and UTF-8 text
 entry.
 
 Provenance and configuration:
-[`deps/nuklear.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/deps/nuklear.md).
+[`deps/nuklear.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/nuklear.md).

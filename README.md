@@ -1,14 +1,16 @@
 <div align="center">
 
-# SDL3 Static Extensions
+# grapple-beam
 
-**Everything a 2D game needs, statically linked into one self-contained binary.**
+**Everything a 2D game needs, pulled into one self-contained binary.**
 
-[![CI](https://github.com/bluesentinelsec/SDL3-static-extensions/actions/workflows/ci.yml/badge.svg)](https://github.com/bluesentinelsec/SDL3-static-extensions/actions/workflows/ci.yml)
+*A static-first game engine on SDL3, scriptable in Lua and Ruby.*
+
+[![CI](https://github.com/bluesentinelsec/grapple-beam/actions/workflows/ci.yml/badge.svg)](https://github.com/bluesentinelsec/grapple-beam/actions/workflows/ci.yml)
 [![License: zlib](https://img.shields.io/badge/License-zlib-informational.svg)](LICENSE)
-&nbsp;·&nbsp; **[Documentation](https://bluesentinelsec.github.io/SDL3-static-extensions/)** ·
-[Getting Started](https://bluesentinelsec.github.io/SDL3-static-extensions/getting-started.html) ·
-[Modules](https://bluesentinelsec.github.io/SDL3-static-extensions/modules.html)
+&nbsp;·&nbsp; **[Documentation](https://bluesentinelsec.github.io/grapple-beam/)** ·
+[Getting Started](https://bluesentinelsec.github.io/grapple-beam/getting-started.html) ·
+[Modules](https://bluesentinelsec.github.io/grapple-beam/modules.html)
 
 </div>
 
@@ -59,7 +61,7 @@ and browser WebAssembly, and CI proves all of it on every push.
 ```cmake
 include(FetchContent)
 FetchContent_Declare(SDL3_static_extensions
-  GIT_REPOSITORY https://github.com/bluesentinelsec/SDL3-static-extensions.git
+  GIT_REPOSITORY https://github.com/bluesentinelsec/grapple-beam.git
   GIT_TAG        v0.2.0)
 FetchContent_MakeAvailable(SDL3_static_extensions)
 
@@ -69,7 +71,7 @@ target_link_libraries(my_game PRIVATE SDL3::SDL3 SDLStatic::Mixer SDLStatic::Gfx
 
 Link only what you use; switch whole modules off with
 `set(SDLSTATIC_BUILD_<NAME> OFF)` before `MakeAvailable`. Full walkthrough:
-[Getting Started](https://bluesentinelsec.github.io/SDL3-static-extensions/getting-started.html).
+[Getting Started](https://bluesentinelsec.github.io/grapple-beam/getting-started.html).
 
 To hack on the repository itself:
 
@@ -89,12 +91,12 @@ contains a complete Pong in each as living proof:
   `sdlstatic::Mixer`, …) with `Status`/`Result` error handling and no
   exceptions, plus a generated surface covering every C function:
   RAII owners for 60+ resource types, `Status` wrappers, aliases.
-  [Details](https://bluesentinelsec.github.io/SDL3-static-extensions/cpp.html).
+  [Details](https://bluesentinelsec.github.io/grapple-beam/cpp.html).
 - **Lua & Ruby** — embedded runtimes with a curated game API plus a
   generated mirror of the entire C API (2,156 functions per language,
   GC-safe ownership), `require` working from mounted (optionally
   encrypted) zip archives, and an interactive REPL (`repl -l lua|ruby`).
-  [Details](https://bluesentinelsec.github.io/SDL3-static-extensions/scripting.html).
+  [Details](https://bluesentinelsec.github.io/grapple-beam/scripting.html).
 
 ## Ship your assets sealed
 

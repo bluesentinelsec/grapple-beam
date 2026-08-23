@@ -83,10 +83,10 @@ SDLStatic_RenderDebugTextFormat(renderer, 8, 8, "FPS: %d", fps);
 ```
 
 Provenance:
-[`deps/SDL3_ttf.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/deps/SDL3_ttf.md)
+[`deps/SDL3_ttf.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/SDL3_ttf.md)
 ·
-[`deps/FreeType.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/deps/FreeType.md)
+[`deps/FreeType.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/FreeType.md)
 ·
-[`deps/harfbuzz.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/deps/harfbuzz.md)
+[`deps/harfbuzz.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/harfbuzz.md)
 ·
-[`deps/sheenbidi.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/deps/sheenbidi.md).
+[`deps/sheenbidi.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/sheenbidi.md).

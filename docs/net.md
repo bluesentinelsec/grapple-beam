@@ -37,4 +37,4 @@ Tests are fully self-contained over 127.0.0.1: TCP echo both directions,
 UDP round-trips, multi-socket readiness, clean failure paths.
 
 Provenance:
-[`deps/SDL3_net.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/deps/SDL3_net.md).
+[`deps/SDL3_net.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/SDL3_net.md).

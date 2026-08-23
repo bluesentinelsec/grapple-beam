@@ -1,0 +1,9 @@
+@PACKAGE_INIT@
+
+# Named from the project rather than spelled out, so a rename cannot leave
+# the config pointing at a targets file that no longer exists — which is
+# exactly what happened when the project became grapple-beam and this file
+# still said SDL3-static-extensions.
+include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+
+check_required_components(@PROJECT_NAME@)

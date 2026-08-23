@@ -27,7 +27,7 @@
 
 static int Usage(void)
 {
-    fprintf(stderr, "usage: repl [-l <lua|ruby>] [-e code] [script] [args...]\n");
+    fprintf(stderr, "usage: grapple [-l <lua|ruby>] [-e code] [script] [args...]\n");
     fprintf(stderr, "       the language is inferred from a .lua or .rb script\n");
     return 2;
 }

@@ -49,4 +49,4 @@ get `SDLStatic.load_map` with GC-managed map objects — see
 [C++](cpp.html) and [Scripting](scripting.html).
 
 Provenance and local fixes (four upstream bugs documented):
-[`deps/cute_tiled.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/deps/cute_tiled.md).
+[`deps/cute_tiled.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/cute_tiled.md).

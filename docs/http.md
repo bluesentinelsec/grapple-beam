@@ -62,4 +62,4 @@ embedded HTTP/1.1 + mbedTLS stack when none is available. Full behavior
 docs live at [mog's own site](https://bluesentinelsec.github.io/mog/).
 
 Provenance:
-[`deps/mog.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/deps/mog.md).
+[`deps/mog.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/mog.md).

@@ -45,8 +45,8 @@ endif()
 # The archive has to contain the engine, not just exist. A hollow library
 # links fine against a consumer that calls nothing, so check before building.
 # Two archives: the C SDK and the self-contained C++ one.
-foreach(flavour "sdk" "sdk_cxx")
-  file(GLOB found "${prefix}/lib/*SDL3_static_extensions_${flavour}.*")
+foreach(flavour "grapple_sdk" "grapple_sdk_cxx")
+  file(GLOB found "${prefix}/lib/*${flavour}.*")
   if(NOT found)
     message(FATAL_ERROR "no ${flavour} archive installed into ${prefix}/lib")
   endif()

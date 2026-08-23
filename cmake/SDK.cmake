@@ -154,13 +154,13 @@ add_library(SDLStatic::SDKCxx ALIAS SDLStatic_SDK_Cxx)
 add_library(${PROJECT_NAME}::SDKCxx ALIAS SDLStatic_SDK_Cxx)
 
 set_target_properties(SDLStatic_SDK PROPERTIES
-  OUTPUT_NAME SDL3_static_extensions_sdk
+  OUTPUT_NAME grapple_sdk
   EXPORT_NAME SDK
   POSITION_INDEPENDENT_CODE ON
   LINKER_LANGUAGE CXX
 )
 set_target_properties(SDLStatic_SDK_Cxx PROPERTIES
-  OUTPUT_NAME SDL3_static_extensions_sdk_cxx
+  OUTPUT_NAME grapple_sdk_cxx
   EXPORT_NAME SDKCxx
   POSITION_INDEPENDENT_CODE ON
   LINKER_LANGUAGE CXX
@@ -660,11 +660,11 @@ if(SDLSTATIC_BUILD_SHARED_SDK)
 
   foreach(sdk IN LISTS SDLSTATIC_SDK_SHARED_TARGETS)
     if(sdk STREQUAL "SDLStatic_SDK_Shared")
-      set(_output_name SDL3_static_extensions)
+      set(_output_name grapple)
       set(_export_name SDKShared)
       set(_exports "${_c_exports}")
     else()
-      set(_output_name SDL3_static_extensions_cxx)
+      set(_output_name grapple_cxx)
       set(_export_name SDKCxxShared)
       set(_exports "${_cxx_exports}")
     endif()

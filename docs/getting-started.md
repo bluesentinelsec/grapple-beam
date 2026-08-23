@@ -24,7 +24,7 @@ and link it. A desktop release ships three things:
 |---|---|
 | `lib/libSDL3_static_extensions_sdk.a` | the C API: every module, SDL3, and the vendored libraries |
 | `lib/libSDL3_static_extensions_sdk_cxx.a` | all of that **plus** the C++ wrapper |
-| `bin/repl` | the runner: plays a Lua or Ruby game with no toolchain installed |
+| `bin/grapple` | the runner: plays a Lua or Ruby game with no toolchain installed |
 | `lib/libSDL3_static_extensions.{so,dylib,dll}` | the C API as a shared library |
 | `lib/libSDL3_static_extensions_cxx.{so,dylib,dll}` | the C++ API as a shared library |
 | `share/doc/…` | this documentation, offline, plus the generated API references |
@@ -42,19 +42,19 @@ know the other exists, and there is no link order to get wrong.
 cmake_minimum_required(VERSION 3.20)
 project(my_game C)
 
-find_package(SDL3-static-extensions REQUIRED)
+find_package(grapple-beam REQUIRED)
 
 add_executable(my_game main.c)
-target_link_libraries(my_game PRIVATE SDL3-static-extensions::SDK)
+target_link_libraries(my_game PRIVATE grapple-beam::SDK)
 ```
 
 In C++, the same package with one target changed:
 
 ```cmake
 project(my_game CXX)
-find_package(SDL3-static-extensions REQUIRED)
+find_package(grapple-beam REQUIRED)
 add_executable(my_game main.cpp)
-target_link_libraries(my_game PRIVATE SDL3-static-extensions::SDKCxx)
+target_link_libraries(my_game PRIVATE grapple-beam::SDKCxx)
 ```
 
 ```cpp
@@ -88,7 +88,7 @@ project(my_game C)
 
 include(FetchContent)
 FetchContent_Declare(SDL3_static_extensions
-  GIT_REPOSITORY https://github.com/bluesentinelsec/SDL3-static-extensions.git
+  GIT_REPOSITORY https://github.com/bluesentinelsec/grapple-beam.git
   GIT_TAG        v0.2.0)
 FetchContent_MakeAvailable(SDL3_static_extensions)
 
@@ -155,7 +155,7 @@ on the [C++ page](cpp.html). Prefer a scripting language? The
 ## Build the repository itself
 
 ```bash
-git clone https://github.com/bluesentinelsec/SDL3-static-extensions.git
+git clone https://github.com/bluesentinelsec/grapple-beam.git
 cd SDL3-static-extensions
 cmake -B build/debug -DCMAKE_BUILD_TYPE=Debug
 cmake --build build/debug --parallel
@@ -176,17 +176,17 @@ Point it at a script and it runs it. The language comes from the
 extension, so there is nothing to remember:
 
 ```bash
-./build/debug/bin/repl game.lua
-./build/debug/bin/repl game.rb
+./build/debug/bin/grapple game.lua
+./build/debug/bin/grapple game.rb
 ```
 
 With no script, it is an interactive REPL, and `-l` says which language
 when there is no file to infer it from:
 
 ```bash
-./build/debug/bin/repl -l lua
+./build/debug/bin/grapple -l lua
 > SDL.GetPlatform()
-./build/debug/bin/repl -l ruby
+./build/debug/bin/grapple -l ruby
 > SDL.GetPlatform
 ```
 

@@ -79,7 +79,7 @@ world->World_Step(1.0f / 60.0f, 4);              // destroyed on scope exit
   C API always remains callable.
 
 Coverage is 100% accounted for and machine-checked: see
-[`bindings/generated/COVERAGE.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/bindings/generated/COVERAGE.md).
+[`bindings/generated/COVERAGE.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/COVERAGE.md).
 A CI test regenerates the bindings and fails if the committed output has
 drifted.
 

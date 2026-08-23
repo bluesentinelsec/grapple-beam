@@ -1,7 +1,7 @@
 !_TAG_FILE_FORMAT	2	/extended format/
 !_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted/
 !_TAG_PROGRAM_NAME	sdlstatic-bindgen	//
-!_TAG_PROGRAM_URL	https://github.com/bluesentinelsec/SDL3-static-extensions	//
+!_TAG_PROGRAM_URL	https://github.com/bluesentinelsec/grapple-beam	//
 Abits	include/SDL3/SDL_assert.h	/^.*Abits/;"	m
 Amask	include/SDL3/SDL_assert.h	/^.*Amask/;"	m
 Ashift	include/SDL3/SDL_assert.h	/^.*Ashift/;"	m

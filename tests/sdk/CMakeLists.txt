@@ -36,10 +36,10 @@ endif()
 
 # The runner, doing the thing it exists for: running a game script in either
 # language, with the language inferred from the file's extension.
-if(TARGET repl)
+if(TARGET grapple)
   foreach(lang lua rb)
     add_test(NAME runner_runs_${lang}_script
-      COMMAND $<TARGET_FILE:repl> ${CMAKE_CURRENT_SOURCE_DIR}/hello.${lang}
+      COMMAND $<TARGET_FILE:grapple> ${CMAKE_CURRENT_SOURCE_DIR}/hello.${lang}
     )
     set_tests_properties(runner_runs_${lang}_script PROPERTIES
       PASS_REGULAR_EXPRESSION "runner ok"
@@ -81,9 +81,9 @@ endif()
 # The Lua file is checked with our own interpreter — the runner already
 # embeds Lua 5.4, so this needs no language server installed. loadfile
 # compiles without executing, which is what a definition file is for.
-if(TARGET repl)
+if(TARGET grapple)
   add_test(NAME editor_lua_definitions_parse
-    COMMAND $<TARGET_FILE:repl> -l lua -e
+    COMMAND $<TARGET_FILE:grapple> -l lua -e
       "local f, err = loadfile('${CMAKE_CURRENT_SOURCE_DIR}/../../bindings/generated/editor/sdlstatic.lua') if not f then error(err) end print('definitions parse')"
   )
   set_tests_properties(editor_lua_definitions_parse PROPERTIES

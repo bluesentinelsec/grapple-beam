@@ -9,7 +9,7 @@ Every module is a static library with a `SDLStatic::` CMake alias target.
 Link what you need; each page below covers the API surface, examples, and
 the exact upstream provenance. Deeper reference material lives with the
 code in each module's `README.md` and in the [`deps/`
-ledgers](https://github.com/bluesentinelsec/SDL3-static-extensions/tree/main/deps),
+ledgers](https://github.com/bluesentinelsec/grapple-beam/tree/main/deps),
 which record every vendored version, checksum, deletion, and local fix.
 
 | Target | Page | Provides |

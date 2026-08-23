@@ -78,4 +78,4 @@ the classic NES four-voice lineup (two pulse, triangle, noise) is the
 example above.
 
 Provenance and the full delete list:
-[`deps/SDL3_mixer.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/deps/SDL3_mixer.md).
+[`deps/SDL3_mixer.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/SDL3_mixer.md).

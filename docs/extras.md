@@ -151,4 +151,4 @@ RFC 8439) in the test suite, with an independent Python implementation of
 the SSE1 container cross-validated against the C one.
 
 Provenance for the vendored DEFLATE:
-[`deps/sdefl.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/deps/sdefl.md).
+[`deps/sdefl.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/sdefl.md).

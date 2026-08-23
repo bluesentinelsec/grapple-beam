@@ -52,4 +52,4 @@ TGA has no magic bytes: loading TGA from memory needs
 directly).
 
 Provenance and change ledger:
-[`deps/SDL3_image.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/deps/SDL3_image.md).
+[`deps/SDL3_image.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/SDL3_image.md).

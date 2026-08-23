@@ -50,4 +50,4 @@ Tests render headless with pixel readback and prove the CPU and GPU
 layers draw the same shapes (intersection-over-union comparison).
 
 Provenance and local fixes:
-[`deps/SDL3_gfx.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/deps/SDL3_gfx.md).
+[`deps/SDL3_gfx.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/SDL3_gfx.md).

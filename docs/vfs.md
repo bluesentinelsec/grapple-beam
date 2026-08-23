@@ -68,4 +68,4 @@ The [Tiled](tiled.html) module and both [script runtimes](scripting.html)
 (`require`/`load` from mounted archives) are VFS-aware out of the box.
 
 Provenance:
-[`deps/physfs.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/deps/physfs.md).
+[`deps/physfs.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/physfs.md).

@@ -104,7 +104,7 @@ because its prefix is lowercase `nk_`. Each constant is emitted behind an
 ### The script signature is not always the C signature
 
 Check
-[`SCRIPT_API.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/bindings/generated/SCRIPT_API.md)
+[`SCRIPT_API.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/SCRIPT_API.md)
 — it lists every bound function with the signature the *script* sees.
 Three rules make it differ from C:
 
@@ -119,7 +119,7 @@ Three rules make it differ from C:
 
 Functions that cannot cross a script boundary (callbacks, varargs,
 threading) are skipped **with the reason recorded** in
-[`COVERAGE.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/bindings/generated/COVERAGE.md).
+[`COVERAGE.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/COVERAGE.md).
 
 ## Scenes from a script
 
@@ -345,6 +345,6 @@ For clangd, no extra file is needed: point it at your own project's
 bindings loaded:
 
 ```bash
-./build/debug/bin/repl -l lua
-./build/debug/bin/repl -l ruby
+./build/debug/bin/grapple -l lua
+./build/debug/bin/grapple -l ruby
 ```
