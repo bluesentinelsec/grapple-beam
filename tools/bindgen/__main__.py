@@ -18,7 +18,7 @@ from .spec import LIBRARIES, resolve_headers
 def build_manifest(repo: Path, deps: Path) -> Manifest:
     from .parse import check_nk_config
 
-    check_nk_config(repo / "gui" / "include" / "Grapple" / "nuklear.h")
+    check_nk_config(repo / "gui" / "include" / "grapple" / "nuklear.h")
     manifest = Manifest()
     for spec in LIBRARIES:
         lib = Library(key=spec.key)
@@ -78,9 +78,9 @@ def main() -> int:
         tmp = Path(tempfile.mkdtemp(prefix="bindgen-check-"))
         # emit_cpp includes Grapple module headers by name only, so a bare
         # skeleton suffices.
-        (tmp / "gui" / "include" / "Grapple").mkdir(parents=True)
-        shutil.copy(args.repo / "gui" / "include" / "Grapple" / "nuklear.h",
-                    tmp / "gui" / "include" / "Grapple" / "nuklear.h")
+        (tmp / "gui" / "include" / "grapple").mkdir(parents=True)
+        shutil.copy(args.repo / "gui" / "include" / "grapple" / "nuklear.h",
+                    tmp / "gui" / "include" / "grapple" / "nuklear.h")
         target = tmp
 
     outcomes = {}
