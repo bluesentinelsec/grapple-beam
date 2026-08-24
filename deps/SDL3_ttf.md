@@ -71,9 +71,9 @@ Removal pass (no-stubs policy — removed APIs fail at build time):
     not 4-aligned, and the typed `Uint32*` walkers made clang emit
     aligned loads despite upstream's memcpy workaround (misaligned-load UB
     on every LCD render).
-- SDLStatic additions (ours, zlib): `SDLStatic/debug_text.h` +
-  `src/sdlstatic_debug_text.c` — zero-setup debug/HUD text overlay backed by
-  an embedded ProggyClean font (`src/sdlstatic_debug_font.h`, MIT, license
+- Grapple additions (ours, zlib): `grapple/debug_text.h` +
+  `src/grapple_debug_text.c` — zero-setup debug/HUD text overlay backed by
+  an embedded ProggyClean font (`src/grapple_debug_font.h`, MIT, license
   reproduced in the header; regenerate with `scripts/embed_font.py`).
 - HarfBuzz shaping and plutosvg color-emoji are disabled at build level
   (`TTF_USE_HARFBUZZ` / `TTF_USE_PLUTOSVG` = 0); no submodules imported.

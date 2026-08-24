@@ -7660,7 +7660,7 @@ nk_vsnprintf(char *buf, int buf_size, const char *fmt, va_list args)
             int padding = 0;
 
             NK_ASSERT(arg_type == NK_ARG_TYPE_DEFAULT);
-            /* SDLStatic local fix (deps/nuklear.md): round to the requested
+            /* Grapple local fix (deps/nuklear.md): round to the requested
                precision before conversion so "%.0f" of 2.7 is "3", matching
                printf, instead of truncating to "2". */
             {
@@ -7701,7 +7701,7 @@ nk_vsnprintf(char *buf, int buf_size, const char *fmt, va_list args)
                 buf[len++] = '+';
             else if ((flag & NK_ARG_FLAG_SPACE) && (value >= 0) && (len < buf_size))
                 buf[len++] = ' ';
-            /* SDLStatic local fix (deps/nuklear.md): the original tested
+            /* Grapple local fix (deps/nuklear.md): the original tested
                `frac_len >= cur_precision` before any fraction digit had been
                seen, so a precision of 0 ended the loop after the very first
                character — "%.0f" of 40.0 printed "4". Copy the whole integer

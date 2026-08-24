@@ -10,17 +10,17 @@ static void GenRead_MIX_Point3D(mrb_state *mrb, mrb_value h, MIX_Point3D *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->x = (float)SDLStaticGen_RubyFieldNum(mrb, h, "x");
-    out->y = (float)SDLStaticGen_RubyFieldNum(mrb, h, "y");
-    out->z = (float)SDLStaticGen_RubyFieldNum(mrb, h, "z");
+    out->x = (float)GrappleGen_RubyFieldNum(mrb, h, "x");
+    out->y = (float)GrappleGen_RubyFieldNum(mrb, h, "y");
+    out->z = (float)GrappleGen_RubyFieldNum(mrb, h, "z");
 }
 
 static mrb_value GenPush_MIX_Point3D(mrb_state *mrb, const MIX_Point3D *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "x", mrb_float_value(mrb, (mrb_float)in->x));
-    SDLStaticGen_RubyHashSet(mrb, h, "y", mrb_float_value(mrb, (mrb_float)in->y));
-    SDLStaticGen_RubyHashSet(mrb, h, "z", mrb_float_value(mrb, (mrb_float)in->z));
+    GrappleGen_RubyHashSet(mrb, h, "x", mrb_float_value(mrb, (mrb_float)in->x));
+    GrappleGen_RubyHashSet(mrb, h, "y", mrb_float_value(mrb, (mrb_float)in->y));
+    GrappleGen_RubyHashSet(mrb, h, "z", mrb_float_value(mrb, (mrb_float)in->z));
     return h;
 }
 
@@ -28,25 +28,25 @@ static void GenRead_MIX_StereoGains(mrb_state *mrb, mrb_value h, MIX_StereoGains
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->left = (float)SDLStaticGen_RubyFieldNum(mrb, h, "left");
-    out->right = (float)SDLStaticGen_RubyFieldNum(mrb, h, "right");
+    out->left = (float)GrappleGen_RubyFieldNum(mrb, h, "left");
+    out->right = (float)GrappleGen_RubyFieldNum(mrb, h, "right");
 }
 
 static void GenRead_SDL_AudioSpec(mrb_state *mrb, mrb_value h, SDL_AudioSpec *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->format = (SDL_AudioFormat)SDLStaticGen_RubyFieldInt(mrb, h, "format");
-    out->channels = (int)SDLStaticGen_RubyFieldInt(mrb, h, "channels");
-    out->freq = (int)SDLStaticGen_RubyFieldInt(mrb, h, "freq");
+    out->format = (SDL_AudioFormat)GrappleGen_RubyFieldInt(mrb, h, "format");
+    out->channels = (int)GrappleGen_RubyFieldInt(mrb, h, "channels");
+    out->freq = (int)GrappleGen_RubyFieldInt(mrb, h, "freq");
 }
 
 static mrb_value GenPush_SDL_AudioSpec(mrb_state *mrb, const SDL_AudioSpec *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "format", mrb_int_value(mrb, (mrb_int)in->format));
-    SDLStaticGen_RubyHashSet(mrb, h, "channels", mrb_int_value(mrb, (mrb_int)in->channels));
-    SDLStaticGen_RubyHashSet(mrb, h, "freq", mrb_int_value(mrb, (mrb_int)in->freq));
+    GrappleGen_RubyHashSet(mrb, h, "format", mrb_int_value(mrb, (mrb_int)in->format));
+    GrappleGen_RubyHashSet(mrb, h, "channels", mrb_int_value(mrb, (mrb_int)in->channels));
+    GrappleGen_RubyHashSet(mrb, h, "freq", mrb_int_value(mrb, (mrb_int)in->freq));
     return h;
 }
 
@@ -81,8 +81,8 @@ static mrb_value GenR_MIX_AudioFramesToMS(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Audio *a0 = (MIX_Audio *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Audio");
-    Sint64 a1 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Audio *a0 = (MIX_Audio *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Audio");
+    Sint64 a1 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     Sint64 rv = MIX_AudioFramesToMS(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -95,8 +95,8 @@ static mrb_value GenR_MIX_AudioMSToFrames(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Audio *a0 = (MIX_Audio *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Audio");
-    Sint64 a1 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Audio *a0 = (MIX_Audio *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Audio");
+    Sint64 a1 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     Sint64 rv = MIX_AudioMSToFrames(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -109,10 +109,10 @@ static mrb_value GenR_MIX_CreateAudioDecoder(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    SDL_PropertiesID a1 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PropertiesID a1 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     MIX_AudioDecoder * rv = MIX_CreateAudioDecoder(a0, a1);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "MIX_AudioDecoder", GenDtor_MIX_DestroyAudioDecoder);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "MIX_AudioDecoder", GenDtor_MIX_DestroyAudioDecoder);
     }
 }
 
@@ -123,11 +123,11 @@ static mrb_value GenR_MIX_CreateAudioDecoder_IO(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
-    SDL_PropertiesID a2 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_PropertiesID a2 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     MIX_AudioDecoder * rv = MIX_CreateAudioDecoder_IO(a0, a1, a2);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "MIX_AudioDecoder", GenDtor_MIX_DestroyAudioDecoder);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "MIX_AudioDecoder", GenDtor_MIX_DestroyAudioDecoder);
     }
 }
 
@@ -138,9 +138,9 @@ static mrb_value GenR_MIX_CreateGroup(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
     MIX_Group * rv = MIX_CreateGroup(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "MIX_Group");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "MIX_Group");
     }
 }
 
@@ -158,7 +158,7 @@ static mrb_value GenR_MIX_CreateMixer(mrb_state *mrb, mrb_value self)
         a0 = &tmp0;
     }
     MIX_Mixer * rv = MIX_CreateMixer(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "MIX_Mixer", GenDtor_MIX_DestroyMixer);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "MIX_Mixer", GenDtor_MIX_DestroyMixer);
     }
 }
 
@@ -169,7 +169,7 @@ static mrb_value GenR_MIX_CreateMixerDevice(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_AudioSpec tmp1;
     const SDL_AudioSpec *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -177,7 +177,7 @@ static mrb_value GenR_MIX_CreateMixerDevice(mrb_state *mrb, mrb_value self)
         a1 = &tmp1;
     }
     MIX_Mixer * rv = MIX_CreateMixerDevice(a0, a1);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "MIX_Mixer", GenDtor_MIX_DestroyMixer);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "MIX_Mixer", GenDtor_MIX_DestroyMixer);
     }
 }
 
@@ -188,12 +188,12 @@ static mrb_value GenR_MIX_CreateSineWaveAudio(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Sint64 a3 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Sint64 a3 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     MIX_Audio * rv = MIX_CreateSineWaveAudio(a0, a1, a2, a3);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "MIX_Audio", GenDtor_MIX_DestroyAudio);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "MIX_Audio", GenDtor_MIX_DestroyAudio);
     }
 }
 
@@ -204,9 +204,9 @@ static mrb_value GenR_MIX_CreateTrack(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
     MIX_Track * rv = MIX_CreateTrack(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "MIX_Track", GenDtor_MIX_DestroyTrack);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "MIX_Track", GenDtor_MIX_DestroyTrack);
     }
 }
 
@@ -217,7 +217,7 @@ static mrb_value GenR_MIX_DestroyAudio(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Audio *a0 = (MIX_Audio *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Audio");
+    MIX_Audio *a0 = (MIX_Audio *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Audio");
     MIX_DestroyAudio(a0);
     return mrb_nil_value();
     }
@@ -230,7 +230,7 @@ static mrb_value GenR_MIX_DestroyAudioDecoder(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_AudioDecoder *a0 = (MIX_AudioDecoder *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_AudioDecoder");
+    MIX_AudioDecoder *a0 = (MIX_AudioDecoder *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_AudioDecoder");
     MIX_DestroyAudioDecoder(a0);
     return mrb_nil_value();
     }
@@ -243,7 +243,7 @@ static mrb_value GenR_MIX_DestroyGroup(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Group *a0 = (MIX_Group *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Group");
+    MIX_Group *a0 = (MIX_Group *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Group");
     MIX_DestroyGroup(a0);
     return mrb_nil_value();
     }
@@ -256,7 +256,7 @@ static mrb_value GenR_MIX_DestroyMixer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
     MIX_DestroyMixer(a0);
     return mrb_nil_value();
     }
@@ -269,7 +269,7 @@ static mrb_value GenR_MIX_DestroyTrack(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     MIX_DestroyTrack(a0);
     return mrb_nil_value();
     }
@@ -282,8 +282,8 @@ static mrb_value GenR_MIX_FramesToMS(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    Sint64 a1 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Sint64 a1 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     Sint64 rv = MIX_FramesToMS(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -296,7 +296,7 @@ static mrb_value GenR_MIX_GetAudioDecoder(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = MIX_GetAudioDecoder(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -309,7 +309,7 @@ static mrb_value GenR_MIX_GetAudioDecoderFormat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_AudioDecoder *a0 = (MIX_AudioDecoder *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_AudioDecoder");
+    MIX_AudioDecoder *a0 = (MIX_AudioDecoder *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_AudioDecoder");
     SDL_AudioSpec out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = MIX_GetAudioDecoderFormat(a0, &out1);
@@ -327,7 +327,7 @@ static mrb_value GenR_MIX_GetAudioDecoderProperties(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_AudioDecoder *a0 = (MIX_AudioDecoder *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_AudioDecoder");
+    MIX_AudioDecoder *a0 = (MIX_AudioDecoder *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_AudioDecoder");
     SDL_PropertiesID rv = MIX_GetAudioDecoderProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -340,7 +340,7 @@ static mrb_value GenR_MIX_GetAudioDuration(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Audio *a0 = (MIX_Audio *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Audio");
+    MIX_Audio *a0 = (MIX_Audio *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Audio");
     Sint64 rv = MIX_GetAudioDuration(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -353,7 +353,7 @@ static mrb_value GenR_MIX_GetAudioFormat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Audio *a0 = (MIX_Audio *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Audio");
+    MIX_Audio *a0 = (MIX_Audio *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Audio");
     SDL_AudioSpec out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = MIX_GetAudioFormat(a0, &out1);
@@ -371,7 +371,7 @@ static mrb_value GenR_MIX_GetAudioProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Audio *a0 = (MIX_Audio *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Audio");
+    MIX_Audio *a0 = (MIX_Audio *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Audio");
     SDL_PropertiesID rv = MIX_GetAudioProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -384,9 +384,9 @@ static mrb_value GenR_MIX_GetGroupMixer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Group *a0 = (MIX_Group *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Group");
+    MIX_Group *a0 = (MIX_Group *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Group");
     MIX_Mixer * rv = MIX_GetGroupMixer(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "MIX_Mixer");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "MIX_Mixer");
     }
 }
 
@@ -397,7 +397,7 @@ static mrb_value GenR_MIX_GetGroupProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Group *a0 = (MIX_Group *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Group");
+    MIX_Group *a0 = (MIX_Group *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Group");
     SDL_PropertiesID rv = MIX_GetGroupProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -410,7 +410,7 @@ static mrb_value GenR_MIX_GetMixerFormat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
     SDL_AudioSpec out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = MIX_GetMixerFormat(a0, &out1);
@@ -428,7 +428,7 @@ static mrb_value GenR_MIX_GetMixerFrequencyRatio(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
     float rv = MIX_GetMixerFrequencyRatio(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -441,7 +441,7 @@ static mrb_value GenR_MIX_GetMixerGain(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
     float rv = MIX_GetMixerGain(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -454,7 +454,7 @@ static mrb_value GenR_MIX_GetMixerProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
     SDL_PropertiesID rv = MIX_GetMixerProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -479,7 +479,7 @@ static mrb_value GenR_MIX_GetTrack3DPosition(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     MIX_Point3D out1;
     memset(&out1, 0, sizeof(out1));
     bool rv = MIX_GetTrack3DPosition(a0, &out1);
@@ -497,9 +497,9 @@ static mrb_value GenR_MIX_GetTrackAudio(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     MIX_Audio * rv = MIX_GetTrackAudio(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "MIX_Audio");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "MIX_Audio");
     }
 }
 
@@ -510,9 +510,9 @@ static mrb_value GenR_MIX_GetTrackAudioStream(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     SDL_AudioStream * rv = MIX_GetTrackAudioStream(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_AudioStream");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_AudioStream");
     }
 }
 
@@ -523,7 +523,7 @@ static mrb_value GenR_MIX_GetTrackFadeFrames(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     Sint64 rv = MIX_GetTrackFadeFrames(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -536,7 +536,7 @@ static mrb_value GenR_MIX_GetTrackFrequencyRatio(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     float rv = MIX_GetTrackFrequencyRatio(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -549,7 +549,7 @@ static mrb_value GenR_MIX_GetTrackGain(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     float rv = MIX_GetTrackGain(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -562,7 +562,7 @@ static mrb_value GenR_MIX_GetTrackLoops(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     int rv = MIX_GetTrackLoops(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -575,9 +575,9 @@ static mrb_value GenR_MIX_GetTrackMixer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     MIX_Mixer * rv = MIX_GetTrackMixer(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "MIX_Mixer");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "MIX_Mixer");
     }
 }
 
@@ -588,7 +588,7 @@ static mrb_value GenR_MIX_GetTrackPlaybackPosition(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     Sint64 rv = MIX_GetTrackPlaybackPosition(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -601,7 +601,7 @@ static mrb_value GenR_MIX_GetTrackProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     SDL_PropertiesID rv = MIX_GetTrackProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -614,7 +614,7 @@ static mrb_value GenR_MIX_GetTrackRemaining(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     Sint64 rv = MIX_GetTrackRemaining(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -639,11 +639,11 @@ static mrb_value GenR_MIX_LoadAudio(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     MIX_Audio * rv = MIX_LoadAudio(a0, a1, a2);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "MIX_Audio", GenDtor_MIX_DestroyAudio);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "MIX_Audio", GenDtor_MIX_DestroyAudio);
     }
 }
 
@@ -654,12 +654,12 @@ static mrb_value GenR_MIX_LoadAudioNoCopy(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
     size_t len1 = 0;
-    const char *a1 = SDLStaticGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
-    bool a3 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
+    bool a3 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     MIX_Audio * rv = MIX_LoadAudioNoCopy(a0, (const void *)a1, (size_t)len1, a3);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "MIX_Audio");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "MIX_Audio");
     }
 }
 
@@ -670,9 +670,9 @@ static mrb_value GenR_MIX_LoadAudioWithProperties(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     MIX_Audio * rv = MIX_LoadAudioWithProperties(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "MIX_Audio", GenDtor_MIX_DestroyAudio);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "MIX_Audio", GenDtor_MIX_DestroyAudio);
     }
 }
 
@@ -683,12 +683,12 @@ static mrb_value GenR_MIX_LoadAudio_IO(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
-    SDL_IOStream *a1 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_IOStream");
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
-    bool a3 = (bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    SDL_IOStream *a1 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_IOStream");
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    bool a3 = (bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     MIX_Audio * rv = MIX_LoadAudio_IO(a0, a1, a2, a3);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "MIX_Audio", GenDtor_MIX_DestroyAudio);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "MIX_Audio", GenDtor_MIX_DestroyAudio);
     }
 }
 
@@ -699,9 +699,9 @@ static mrb_value GenR_MIX_LoadRawAudio(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
     size_t len1 = 0;
-    const char *a1 = SDLStaticGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
+    const char *a1 = GrappleGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
     SDL_AudioSpec tmp3;
     const SDL_AudioSpec *a3 = NULL;
     if (argc > 2 && mrb_hash_p(argv[2])) {
@@ -709,7 +709,7 @@ static mrb_value GenR_MIX_LoadRawAudio(mrb_state *mrb, mrb_value self)
         a3 = &tmp3;
     }
     MIX_Audio * rv = MIX_LoadRawAudio(a0, (const void *)a1, (size_t)len1, a3);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "MIX_Audio", GenDtor_MIX_DestroyAudio);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "MIX_Audio", GenDtor_MIX_DestroyAudio);
     }
 }
 
@@ -720,18 +720,18 @@ static mrb_value GenR_MIX_LoadRawAudioNoCopy(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
     size_t len1 = 0;
-    const char *a1 = SDLStaticGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
+    const char *a1 = GrappleGen_RubyToBlob(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &len1);
     SDL_AudioSpec tmp3;
     const SDL_AudioSpec *a3 = NULL;
     if (argc > 2 && mrb_hash_p(argv[2])) {
         GenRead_SDL_AudioSpec(mrb, argv[2], &tmp3);
         a3 = &tmp3;
     }
-    bool a4 = (bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    bool a4 = (bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     MIX_Audio * rv = MIX_LoadRawAudioNoCopy(a0, (const void *)a1, (size_t)len1, a3, a4);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "MIX_Audio");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "MIX_Audio");
     }
 }
 
@@ -742,17 +742,17 @@ static mrb_value GenR_MIX_LoadRawAudio_IO(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
-    SDL_IOStream *a1 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_IOStream");
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    SDL_IOStream *a1 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_IOStream");
     SDL_AudioSpec tmp2;
     const SDL_AudioSpec *a2 = NULL;
     if (argc > 2 && mrb_hash_p(argv[2])) {
         GenRead_SDL_AudioSpec(mrb, argv[2], &tmp2);
         a2 = &tmp2;
     }
-    bool a3 = (bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    bool a3 = (bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     MIX_Audio * rv = MIX_LoadRawAudio_IO(a0, a1, a2, a3);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "MIX_Audio", GenDtor_MIX_DestroyAudio);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "MIX_Audio", GenDtor_MIX_DestroyAudio);
     }
 }
 
@@ -763,7 +763,7 @@ static mrb_value GenR_MIX_LockMixer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
     MIX_LockMixer(a0);
     return mrb_nil_value();
     }
@@ -776,8 +776,8 @@ static mrb_value GenR_MIX_MSToFrames(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int a0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    Sint64 a1 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Sint64 a1 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     Sint64 rv = MIX_MSToFrames(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -790,7 +790,7 @@ static mrb_value GenR_MIX_PauseAllTracks(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
     bool rv = MIX_PauseAllTracks(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -803,8 +803,8 @@ static mrb_value GenR_MIX_PauseTag(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = MIX_PauseTag(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -817,7 +817,7 @@ static mrb_value GenR_MIX_PauseTrack(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     bool rv = MIX_PauseTrack(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -830,8 +830,8 @@ static mrb_value GenR_MIX_PlayAudio(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
-    MIX_Audio *a1 = (MIX_Audio *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "MIX_Audio");
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    MIX_Audio *a1 = (MIX_Audio *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "MIX_Audio");
     bool rv = MIX_PlayAudio(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -844,9 +844,9 @@ static mrb_value GenR_MIX_PlayTag(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    SDL_PropertiesID a2 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_PropertiesID a2 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = MIX_PlayTag(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -859,8 +859,8 @@ static mrb_value GenR_MIX_PlayTrack(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
-    SDL_PropertiesID a1 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    SDL_PropertiesID a1 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = MIX_PlayTrack(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -885,7 +885,7 @@ static mrb_value GenR_MIX_ResumeAllTracks(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
     bool rv = MIX_ResumeAllTracks(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -898,8 +898,8 @@ static mrb_value GenR_MIX_ResumeTag(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = MIX_ResumeTag(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -912,7 +912,7 @@ static mrb_value GenR_MIX_ResumeTrack(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     bool rv = MIX_ResumeTrack(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -925,8 +925,8 @@ static mrb_value GenR_MIX_SetMixerFrequencyRatio(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = MIX_SetMixerFrequencyRatio(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -939,8 +939,8 @@ static mrb_value GenR_MIX_SetMixerGain(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = MIX_SetMixerGain(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -953,9 +953,9 @@ static mrb_value GenR_MIX_SetTagGain(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = MIX_SetTagGain(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -968,7 +968,7 @@ static mrb_value GenR_MIX_SetTrack3DPosition(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     MIX_Point3D tmp1;
     const MIX_Point3D *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -987,8 +987,8 @@ static mrb_value GenR_MIX_SetTrackAudio(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
-    MIX_Audio *a1 = (MIX_Audio *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "MIX_Audio");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Audio *a1 = (MIX_Audio *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "MIX_Audio");
     bool rv = MIX_SetTrackAudio(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1001,8 +1001,8 @@ static mrb_value GenR_MIX_SetTrackAudioStream(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
-    SDL_AudioStream *a1 = (SDL_AudioStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_AudioStream");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    SDL_AudioStream *a1 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_AudioStream");
     bool rv = MIX_SetTrackAudioStream(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1015,8 +1015,8 @@ static mrb_value GenR_MIX_SetTrackFrequencyRatio(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = MIX_SetTrackFrequencyRatio(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1029,8 +1029,8 @@ static mrb_value GenR_MIX_SetTrackGain(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = MIX_SetTrackGain(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1043,8 +1043,8 @@ static mrb_value GenR_MIX_SetTrackGroup(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
-    MIX_Group *a1 = (MIX_Group *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "MIX_Group");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Group *a1 = (MIX_Group *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "MIX_Group");
     bool rv = MIX_SetTrackGroup(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1057,9 +1057,9 @@ static mrb_value GenR_MIX_SetTrackIOStream(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
-    SDL_IOStream *a1 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_IOStream");
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    SDL_IOStream *a1 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_IOStream");
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = MIX_SetTrackIOStream(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1072,8 +1072,8 @@ static mrb_value GenR_MIX_SetTrackLoops(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = MIX_SetTrackLoops(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1086,8 +1086,8 @@ static mrb_value GenR_MIX_SetTrackPlaybackPosition(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
-    Sint64 a1 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    Sint64 a1 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = MIX_SetTrackPlaybackPosition(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1100,15 +1100,15 @@ static mrb_value GenR_MIX_SetTrackRawIOStream(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
-    SDL_IOStream *a1 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_IOStream");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    SDL_IOStream *a1 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_IOStream");
     SDL_AudioSpec tmp2;
     const SDL_AudioSpec *a2 = NULL;
     if (argc > 2 && mrb_hash_p(argv[2])) {
         GenRead_SDL_AudioSpec(mrb, argv[2], &tmp2);
         a2 = &tmp2;
     }
-    bool a3 = (bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    bool a3 = (bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = MIX_SetTrackRawIOStream(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1121,7 +1121,7 @@ static mrb_value GenR_MIX_SetTrackStereo(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     MIX_StereoGains tmp1;
     const MIX_StereoGains *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -1140,8 +1140,8 @@ static mrb_value GenR_MIX_StopAllTracks(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
-    Sint64 a1 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    Sint64 a1 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = MIX_StopAllTracks(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1154,9 +1154,9 @@ static mrb_value GenR_MIX_StopTag(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Sint64 a2 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Sint64 a2 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = MIX_StopTag(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1169,8 +1169,8 @@ static mrb_value GenR_MIX_StopTrack(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
-    Sint64 a1 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    Sint64 a1 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = MIX_StopTrack(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1183,8 +1183,8 @@ static mrb_value GenR_MIX_TagTrack(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = MIX_TagTrack(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1197,8 +1197,8 @@ static mrb_value GenR_MIX_TrackFramesToMS(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
-    Sint64 a1 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    Sint64 a1 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     Sint64 rv = MIX_TrackFramesToMS(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1211,8 +1211,8 @@ static mrb_value GenR_MIX_TrackMSToFrames(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
-    Sint64 a1 = (Sint64)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    Sint64 a1 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     Sint64 rv = MIX_TrackMSToFrames(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1225,7 +1225,7 @@ static mrb_value GenR_MIX_TrackPaused(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     bool rv = MIX_TrackPaused(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1238,7 +1238,7 @@ static mrb_value GenR_MIX_TrackPlaying(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     bool rv = MIX_TrackPlaying(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1251,7 +1251,7 @@ static mrb_value GenR_MIX_UnlockMixer(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Mixer *a0 = (MIX_Mixer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
     MIX_UnlockMixer(a0);
     return mrb_nil_value();
     }
@@ -1264,8 +1264,8 @@ static mrb_value GenR_MIX_UntagTrack(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    MIX_Track *a0 = (MIX_Track *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     MIX_UntagTrack(a0, a1);
     return mrb_nil_value();
     }
@@ -1283,11 +1283,11 @@ static mrb_value GenR_MIX_Version(mrb_state *mrb, mrb_value self)
     }
 }
 
-void SDLStaticGen_OpenRuby_mix(mrb_state *mrb);
-void SDLStaticGen_OpenRuby_mix(mrb_state *mrb)
+void GrappleGen_OpenRuby_mix(mrb_state *mrb);
+void GrappleGen_OpenRuby_mix(mrb_state *mrb)
 {
     struct RClass *mod;
-    SDLStaticGen_RubyEnsureHandleClass(mrb);
+    GrappleGen_RubyEnsureHandleClass(mrb);
     mod = mrb_define_module(mrb, "MIX");
     mrb_define_module_function(mrb, mod, "AudioFramesToMS", GenR_MIX_AudioFramesToMS, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "AudioMSToFrames", GenR_MIX_AudioMSToFrames, MRB_ARGS_ANY());

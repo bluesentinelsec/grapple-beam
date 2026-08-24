@@ -1,8 +1,8 @@
-# SDLStatic::Regex — regular expressions over vendored Oniguruma (BSD-2,
+# Grapple::Regex — regular expressions over vendored Oniguruma (BSD-2,
 # provenance in deps/oniguruma.md). Oniguruma is pure C with no external
 # dependencies, so it links statically everywhere we ship, web included.
 #
-#   <SDLStatic/regex.h>  compile / search / groups / replace, Ruby syntax
+#   <grapple/regex.h>  compile / search / groups / replace, Ruby syntax
 #
 # Oniguruma normally configures itself with autotools; we generate the same
 # config.h from CMake's own probes so the build stays plain CMake.
@@ -38,7 +38,7 @@ configure_file(${ONIG_DIR}/src/config.h.cmake.in
 # rather than compiled, and the POSIX shim (regposix.c) defines regcomp and
 # regexec, which would collide with libc's in a static link. Everything is
 # still vendored; this only decides what is compiled.
-set(SDLSTATIC_ONIG_NAMES
+set(GRAPPLE_ONIG_NAMES
   regparse.c regcomp.c regexec.c
   regenc.c regerror.c regext.c regsyntax.c regtrav.c regversion.c st.c
   reggnu.c
@@ -53,39 +53,39 @@ set(SDLSTATIC_ONIG_NAMES
   euc_tw.c euc_kr.c big5.c gb18030.c koi8_r.c cp1251.c
   onig_init.c
 )
-set(SDLSTATIC_ONIG_SOURCES "")
-foreach(name IN LISTS SDLSTATIC_ONIG_NAMES)
-  list(APPEND SDLSTATIC_ONIG_SOURCES ${ONIG_DIR}/src/${name})
+set(GRAPPLE_ONIG_SOURCES "")
+foreach(name IN LISTS GRAPPLE_ONIG_NAMES)
+  list(APPEND GRAPPLE_ONIG_SOURCES ${ONIG_DIR}/src/${name})
 endforeach()
 
-add_library(SDLStatic_Regex STATIC
-  src/sdlstatic_regex.c
-  ${SDLSTATIC_ONIG_SOURCES}
+add_library(Grapple_Regex STATIC
+  src/grapple_regex.c
+  ${GRAPPLE_ONIG_SOURCES}
 )
-add_library(SDLStatic::Regex ALIAS SDLStatic_Regex)
+add_library(Grapple::Regex ALIAS Grapple_Regex)
 
-set_target_properties(SDLStatic_Regex PROPERTIES
-  OUTPUT_NAME SDLStatic_Regex
+set_target_properties(Grapple_Regex PROPERTIES
+  OUTPUT_NAME Grapple_Regex
   POSITION_INDEPENDENT_CODE ON
 )
 
-target_include_directories(SDLStatic_Regex
+target_include_directories(Grapple_Regex
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 # SYSTEM so Oniguruma's own warnings never reach a consumer's -Werror.
-target_include_directories(SDLStatic_Regex SYSTEM PRIVATE
+target_include_directories(Grapple_Regex SYSTEM PRIVATE
   ${ONIG_DIR}/src
   ${CMAKE_CURRENT_BINARY_DIR}/onig-config
 )
 
 # ONIG_EXTERN must not expand to a dllimport/visibility attribute: the
 # engine is compiled into this archive, never a shared object.
-target_compile_definitions(SDLStatic_Regex PRIVATE HAVE_CONFIG_H ONIG_EXTERN=extern)
+target_compile_definitions(Grapple_Regex PRIVATE HAVE_CONFIG_H ONIG_EXTERN=extern)
 
 # Oniguruma is third-party: build it as it is rather than patching warnings.
 if(NOT MSVC)
-  set_source_files_properties(${SDLSTATIC_ONIG_SOURCES} PROPERTIES COMPILE_OPTIONS "-w")
+  set_source_files_properties(${GRAPPLE_ONIG_SOURCES} PROPERTIES COMPILE_OPTIONS "-w")
 endif()
 
-target_link_libraries(SDLStatic_Regex PUBLIC SDL3::SDL3)
+target_link_libraries(Grapple_Regex PUBLIC SDL3::SDL3)

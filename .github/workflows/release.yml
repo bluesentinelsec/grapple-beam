@@ -118,7 +118,7 @@ jobs:
           - macos-latest
           - windows-latest
     env:
-      APP_NAME: SDL3-static-extensions
+      APP_NAME: grapple-beam
       RELEASE_VERSION: ${{ needs.prepare.outputs.version }}
     defaults:
       run:
@@ -236,7 +236,7 @@ jobs:
           # release nobody can use for that half of the audience.
           # Two static archives and two shared libraries. A release missing
           # one of them is a release half the audience cannot use.
-          for lib in SDL3_static_extensions_sdk SDL3_static_extensions_sdk_cxx; do
+          for lib in grapple_sdk grapple_sdk_cxx; do
             found="$(find "${prefix}/lib" -name "*${lib}.*" -print -quit)"
             if [ -z "${found}" ]; then
               echo "Missing static ${lib} from the SDK" >&2
@@ -249,7 +249,7 @@ jobs:
             fi
           done
 
-          for lib in SDL3_static_extensions SDL3_static_extensions_cxx; do
+          for lib in grapple grapple_cxx; do
             found="$(find "${prefix}/lib" "${prefix}/bin" \
                        \( -name "lib${lib}.so*" -o -name "lib${lib}*.dylib" \
                           -o -name "${lib}.dll" \) -print -quit 2>/dev/null)"
@@ -263,31 +263,31 @@ jobs:
           # fine and fails on the first lookup, and on Windows a DLL with no
           # exports is a valid DLL. This calls into it.
           shared_c="$(find "${prefix}/lib" "${prefix}/bin" \
-                        \( -name "libSDL3_static_extensions.so*" \
-                           -o -name "libSDL3_static_extensions*.dylib" \
-                           -o -name "SDL3_static_extensions.dll" \) -print -quit 2>/dev/null)"
+                        \( -name "libgrapple.so*" \
+                           -o -name "libgrapple*.dylib" \
+                           -o -name "grapple.dll" \) -print -quit 2>/dev/null)"
           python3 tests/ctypes/test_shared_library.py "${shared_c}"
 
-          runner="${prefix}/bin/repl"
-          [ -f "${runner}" ] || runner="${prefix}/bin/repl.exe"
+          runner="${prefix}/bin/grapple"
+          [ -f "${runner}" ] || runner="${prefix}/bin/grapple.exe"
           if [ ! -f "${runner}" ]; then
             echo "Missing the runner from the SDK" >&2
             exit 1
           fi
 
-          for header in SDLStatic/engine.h SDL3/SDL.h; do
+          for header in grapple/engine.h SDL3/SDL.h; do
             test -f "${prefix}/include/${header}"
           done
           # The C++ headers live under a differently-cased directory, which is
           # one directory on macOS and two on Linux.
-          find "${prefix}/include" -iname "sdlstatic.h" | grep -q . \
+          find "${prefix}/include" -iname "grapple.h" | grep -q . \
             || { echo "Missing the C++ headers" >&2; exit 1; }
 
           # The editor tooling, which is the difference between an API you
           # can complete and one you read in a browser tab.
           test -f "${prefix}/tags"
-          test -f "${prefix}/share/${APP_NAME}/editor/sdlstatic.lua"
-          test -f "${prefix}/share/${APP_NAME}/editor/sdlstatic.rbs"
+          test -f "${prefix}/share/${APP_NAME}/editor/grapple.lua"
+          test -f "${prefix}/share/${APP_NAME}/editor/grapple.rbs"
 
           # Documentation. A library whose SDK explains nothing offline is a
           # library you can only use with a browser open.
@@ -335,13 +335,13 @@ jobs:
           mkdir -p "${out}/editor"
 
           sdk="${{ steps.pkg.outputs.prefix }}"
-          if [ -f "${sdk}/bin/repl.exe" ]; then
-            cp "${sdk}/bin/repl.exe" "${out}/"
+          if [ -f "${sdk}/bin/grapple.exe" ]; then
+            cp "${sdk}/bin/grapple.exe" "${out}/"
           else
-            cp "${sdk}/bin/repl" "${out}/"
+            cp "${sdk}/bin/grapple" "${out}/"
           fi
-          cp "${sdk}/share/${APP_NAME}/editor/sdlstatic.lua" "${out}/editor/"
-          cp "${sdk}/share/${APP_NAME}/editor/sdlstatic.rbs" "${out}/editor/"
+          cp "${sdk}/share/${APP_NAME}/editor/grapple.lua" "${out}/editor/"
+          cp "${sdk}/share/${APP_NAME}/editor/grapple.rbs" "${out}/editor/"
           cp LICENSE "${out}/LICENSE"
 
           # The two pages a script author actually needs, offline: how to
@@ -358,9 +358,9 @@ jobs:
           Plays a game written in Lua or Ruby. Nothing needs to be installed:
           the interpreters, the engine and SDL3 are inside the executable.
 
-              ./repl game.lua
-              ./repl game.rb
-              ./repl -l lua          # an interactive shell
+              ./grapple game.lua
+              ./grapple game.rb
+              ./grapple -l lua          # an interactive shell
 
           The language comes from the file's extension; `-l` says which when
           there is no file to infer it from.
@@ -375,9 +375,9 @@ jobs:
 
           **Lua** — lua-language-server, in `.luarc.json`:
 
-              { "workspace": { "library": ["editor/sdlstatic.lua"] } }
+              { "workspace": { "library": ["editor/grapple.lua"] } }
 
-          **Ruby** — RBS, for Steep or Solargraph: put `editor/sdlstatic.rbs`
+          **Ruby** — RBS, for Steep or Solargraph: put `editor/grapple.rbs`
           on your RBS path.
           README
 
@@ -413,8 +413,8 @@ jobs:
             rm -rf dist/_linkcheck && mkdir -p dist/_linkcheck
             (cd dist/_linkcheck && unzip -q "../${stem}.zip")
             link="$(find "dist/_linkcheck/${stem}/lib" \
-                      \( -name 'libSDL3_static_extensions.so' \
-                         -o -name 'libSDL3_static_extensions.dylib' \) -print -quit)"
+                      \( -name 'libgrapple.so' \
+                         -o -name 'libgrapple.dylib' \) -print -quit)"
             if [ -z "${link}" ] || [ ! -L "${link}" ]; then
               echo "the shared library's version links were flattened into copies" >&2
               ls -l "dist/_linkcheck/${stem}/lib" >&2
@@ -471,35 +471,35 @@ jobs:
 
       - name: Build Release AAR and consumer APK
         run: |
-          bash android/gradlew -p android --no-daemon :SDL3_static_extensions:assembleRelease
+          bash android/gradlew -p android --no-daemon :grapple:assembleRelease
           bash android/gradlew -p android --no-daemon :test-app:assembleRelease
 
       - name: Verify Release AAR version and ABIs
         run: |
           set -euo pipefail
-          aar=android/SDL3_static_extensions/build/outputs/aar/SDL3_static_extensions-release.aar
+          aar=android/grapple/build/outputs/aar/grapple-release.aar
           test -f "${aar}"
           unzip -Z1 "${aar}" > aar-entries.txt
           for abi in armeabi-v7a arm64-v8a x86_64; do
-            grep -qx "prefab/modules/SDL3_static_extensions/libs/android.${abi}/libSDL3_static_extensions.so" aar-entries.txt
+            grep -qx "prefab/modules/grapple/libs/android.${abi}/libgrapple.so" aar-entries.txt
           done
           unzip -p "${aar}" prefab/prefab.json | grep -q "\"version\"[[:space:]]*:[[:space:]]*\"${RELEASE_VERSION}\""
 
           # Contents, not just shape. ABIs, paths and version were all true
           # of an AAR containing one object file, and a release is the worst
           # place to find that out.
-          for header in SDLStatic/engine.h SDLStatic/bindings.h SDL3/SDL.h; do
-            grep -qx "prefab/modules/SDL3_static_extensions/include/${header}" aar-entries.txt
+          for header in grapple/engine.h grapple/bindings.h SDL3/SDL.h; do
+            grep -qx "prefab/modules/grapple/include/${header}" aar-entries.txt
           done
           mkdir -p aar-check && unzip -o -q "${aar}" -d aar-check
-          so="aar-check/jni/arm64-v8a/libSDL3_static_extensions.so"
+          so="aar-check/jni/arm64-v8a/libgrapple.so"
           size="$(stat -c%s "${so}")"
           if [ "${size}" -lt 5000000 ]; then
             echo "${so} is ${size} bytes — that is a placeholder, not the SDK" >&2
             exit 1
           fi
           nm -D --defined-only "${so}" > aar-symbols.txt
-          for symbol in SDLStatic_CreateEngine SDLStatic_OpenLuaBindings SDL_CreateWindow; do
+          for symbol in Grapple_CreateEngine Grapple_OpenLuaBindings SDL_CreateWindow; do
             if ! grep -qw "${symbol}" aar-symbols.txt; then
               echo "Missing ${symbol} — the AAR is not carrying the engine" >&2
               exit 1
@@ -525,9 +525,9 @@ jobs:
         id: pkg
         run: |
           set -euo pipefail
-          stem="SDL3-static-extensions-android-release-${RELEASE_VERSION}"
+          stem="grapple-beam-android-release-${RELEASE_VERSION}"
           mkdir -p dist
-          cp android/SDL3_static_extensions/build/outputs/aar/SDL3_static_extensions-release.aar "dist/${stem}.aar"
+          cp android/grapple/build/outputs/aar/grapple-release.aar "dist/${stem}.aar"
           echo "artifact_name=${stem}" >> "${GITHUB_OUTPUT}"
           echo "artifact_path=dist/${stem}.aar" >> "${GITHUB_OUTPUT}"
 
@@ -563,12 +563,12 @@ jobs:
         run: |
           bash scripts/build_ios_xcframework.sh Release build/ios/release
           bash scripts/build_ios_test_apps.sh \
-            build/ios/release/SDL3-static-extensions.xcframework Release build/ios/consumer-release
+            build/ios/release/grapple-beam.xcframework Release build/ios/consumer-release
 
       - name: Verify Release XCFramework version and slices
         run: >
           bash scripts/verify_ios_xcframework.sh
-          build/ios/release/SDL3-static-extensions.xcframework
+          build/ios/release/grapple-beam.xcframework
           "${RELEASE_VERSION}"
 
       - name: Run Release package tests in iOS Simulator
@@ -579,8 +579,8 @@ jobs:
       - name: Upload iOS Release XCFramework
         uses: actions/upload-artifact@v7
         with:
-          name: SDL3-static-extensions-ios-xcframework-release-${{ needs.prepare.outputs.version }}
-          path: build/ios/release/SDL3-static-extensions-ios-xcframework-release-${{ needs.prepare.outputs.version }}.zip
+          name: grapple-beam-ios-xcframework-release-${{ needs.prepare.outputs.version }}
+          path: build/ios/release/grapple-beam-ios-xcframework-release-${{ needs.prepare.outputs.version }}.zip
           if-no-files-found: error
           retention-days: 14
 
@@ -613,7 +613,7 @@ jobs:
         run: >
           emcmake cmake -S . -B build/web-release -G Ninja
           -DCMAKE_BUILD_TYPE=Release
-          -DSDL3_STATIC_EXTENSIONS_BUILD_TESTS=ON
+          -DGRAPPLE_BEAM_BUILD_TESTS=ON
 
       - name: Build Release
         run: cmake --build build/web-release --parallel
@@ -623,20 +623,20 @@ jobs:
           emrun --browser=google-chrome
           --browser_args="--headless=new --no-sandbox --disable-gpu"
           --kill_exit --timeout 120
-          build/web-release/bin/SDL3_static_extensions_web_test.html
+          build/web-release/bin/grapple_web_test.html
 
       - name: Package web library and demo
         id: pkg
         run: |
           set -euo pipefail
-          stem="SDL3-static-extensions-web-wasm32-release-${RELEASE_VERSION}"
+          stem="grapple-beam-web-wasm32-release-${RELEASE_VERSION}"
           prefix="${PWD}/dist/${stem}"
           cmake --install build/web-release --prefix "${prefix}"
           emcc --version | sed -n '1p' > "${prefix}/EMSCRIPTEN_VERSION"
           cp LICENSE "${prefix}/LICENSE"
           mkdir -p "${prefix}/demo"
-          cp build/web-release/bin/SDL3-static-extensions.html build/web-release/bin/SDL3-static-extensions.js \
-             build/web-release/bin/SDL3-static-extensions.wasm "${prefix}/demo/"
+          cp build/web-release/bin/grapple-beam.html build/web-release/bin/grapple-beam.js \
+             build/web-release/bin/grapple-beam.wasm "${prefix}/demo/"
           (cd dist && zip -r -y "${stem}.zip" "${stem}" >/dev/null)
           echo "artifact_name=${stem}" >> "${GITHUB_OUTPUT}"
           echo "artifact_path=dist/${stem}.zip" >> "${GITHUB_OUTPUT}"
@@ -688,7 +688,7 @@ jobs:
           echo "artifact_name=${stem}" >> "${GITHUB_OUTPUT}"
           echo "artifact_path=dist/${stem}.zip" >> "${GITHUB_OUTPUT}"
         env:
-          APP_NAME: SDL3-static-extensions
+          APP_NAME: grapple-beam
 
       - name: Upload the docs
         uses: actions/upload-artifact@v7
@@ -710,7 +710,7 @@ jobs:
         uses: actions/download-artifact@v7
         with:
           path: release-assets
-          pattern: "SDL3-static-extensions-*"
+          pattern: "grapple-beam-*"
           merge-multiple: true
 
       - name: List assets

@@ -1,5 +1,5 @@
-# SDLStatic::VFS — static-only build of vendored PhysFS 3.2.0 (zlib;
-# provenance in deps/physfs.md) plus original SDLStatic glue for the
+# Grapple::VFS — static-only build of vendored PhysFS 3.2.0 (zlib;
+# provenance in deps/physfs.md) plus original Grapple glue for the
 # encrypted-asset pipeline (folder -> zip -> SSE1 encrypt -> embed/ship ->
 # decrypt -> mount from memory).
 #
@@ -12,7 +12,7 @@ if(APPLE)
   enable_language(OBJC)
 endif()
 
-add_library(SDLStatic_VFS STATIC
+add_library(Grapple_VFS STATIC
   src/physfs/physfs.c
   src/physfs/physfs_byteorder.c
   src/physfs/physfs_unicode.c
@@ -22,29 +22,29 @@ add_library(SDLStatic_VFS STATIC
   src/physfs/physfs_platform_unix.c
   src/physfs/physfs_platform_windows.c
   src/physfs/physfs_platform_android.c
-  # Original SDLStatic code (not vendored): encrypted mounts + SDL_IOStream.
-  src/sdlstatic_vfs.c
+  # Original Grapple code (not vendored): encrypted mounts + SDL_IOStream.
+  src/grapple_vfs.c
 )
 if(APPLE)
-  target_sources(SDLStatic_VFS PRIVATE src/physfs/physfs_platform_apple.m)
+  target_sources(Grapple_VFS PRIVATE src/physfs/physfs_platform_apple.m)
 endif()
-add_library(SDLStatic::VFS ALIAS SDLStatic_VFS)
+add_library(Grapple::VFS ALIAS Grapple_VFS)
 
 if("c_std_99" IN_LIST CMAKE_C_COMPILE_FEATURES)
-  target_compile_features(SDLStatic_VFS PRIVATE c_std_99)
+  target_compile_features(Grapple_VFS PRIVATE c_std_99)
 endif()
 
-set_target_properties(SDLStatic_VFS PROPERTIES
-  OUTPUT_NAME SDLStatic_VFS
+set_target_properties(Grapple_VFS PROPERTIES
+  OUTPUT_NAME Grapple_VFS
   POSITION_INDEPENDENT_CODE ON
 )
 
-target_include_directories(SDLStatic_VFS
+target_include_directories(Grapple_VFS
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-target_compile_definitions(SDLStatic_VFS
+target_compile_definitions(Grapple_VFS
   PUBLIC
     PHYSFS_STATIC
   PRIVATE
@@ -63,7 +63,7 @@ if(APPLE)
     LANGUAGE OBJC)
 endif()
 
-target_link_libraries(SDLStatic_VFS PUBLIC SDL3::SDL3 SDLStatic::Extras)
+target_link_libraries(Grapple_VFS PUBLIC SDL3::SDL3 Grapple::Extras)
 if(APPLE)
-  target_link_libraries(SDLStatic_VFS PUBLIC "-framework Foundation" "-framework IOKit")
+  target_link_libraries(Grapple_VFS PUBLIC "-framework Foundation" "-framework IOKit")
 endif()

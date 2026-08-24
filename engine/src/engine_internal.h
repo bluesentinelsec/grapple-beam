@@ -2,35 +2,35 @@
  * engine_internal.h — shared between the engine's translation units.
  *
  * The engine is one library but several subsystems: the loop
- * (sdlstatic_engine.c) and the scene stack (sdlstatic_engine_scene.c) so
+ * (grapple_engine.c) and the scene stack (grapple_engine_scene.c) so
  * far. They share the engine object, which lives here rather than in the
  * public header because a game has no business knowing its layout.
  */
-#ifndef SDLSTATIC_ENGINE_INTERNAL_H
-#define SDLSTATIC_ENGINE_INTERNAL_H
+#ifndef GRAPPLE_ENGINE_INTERNAL_H
+#define GRAPPLE_ENGINE_INTERNAL_H
 
-#include <SDLStatic/engine.h>
-#include <SDLStatic/engine_graphics.h>
-#include <SDLStatic/engine_media.h>
-#include <SDLStatic/engine_input.h>
-#include <SDLStatic/engine_light.h>
-#include <SDLStatic/engine_render.h>
-#include <SDLStatic/engine_scene.h>
+#include <grapple/engine.h>
+#include <grapple/engine_graphics.h>
+#include <grapple/engine_media.h>
+#include <grapple/engine_input.h>
+#include <grapple/engine_light.h>
+#include <grapple/engine_render.h>
+#include <grapple/engine_scene.h>
 
 #define NS_PER_SECOND 1000000000ull
 
-struct SDLStatic_PostFX;
-struct SDLStatic_ActorWorld;
-struct SDLStatic_DrawItem;
-struct SDLStatic_Input;
-struct SDLStatic_Physics;
-struct SDLStatic_Assets;
-struct SDLStatic_EngineLight;
-struct SDLStatic_Saves;
-struct SDLStatic_Text;
-struct SDLStatic_ScriptBridge;
+struct Grapple_PostFX;
+struct Grapple_ActorWorld;
+struct Grapple_DrawItem;
+struct Grapple_Input;
+struct Grapple_Physics;
+struct Grapple_Assets;
+struct Grapple_EngineLight;
+struct Grapple_Saves;
+struct Grapple_Text;
+struct Grapple_ScriptBridge;
 
-struct SDLStatic_Engine
+struct Grapple_Engine
 {
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -38,7 +38,7 @@ struct SDLStatic_Engine
 
     int design_width, design_height;   /* the reference space */
     float view_width, view_height;     /* what is actually visible */
-    SDLStatic_EnginePresentation presentation;
+    Grapple_EnginePresentation presentation;
     SDL_FColor clear_color;
 
     /* Timing. All internal time is nanoseconds; the API speaks seconds. */
@@ -54,7 +54,7 @@ struct SDLStatic_Engine
     int max_steps;
     int max_fps;          /* 0 = follow the display, <0 = no limiter */
     Uint64 frame_start_ns; /* for the limiter */
-    SDLStatic_EngineInterpolation interpolation;
+    Grapple_EngineInterpolation interpolation;
     float time_scale;
 
     float delta_seconds;
@@ -69,189 +69,189 @@ struct SDLStatic_Engine
     int fps_frames;
 
     bool running;
-    const SDLStatic_GameHooks *hooks;
+    const Grapple_GameHooks *hooks;
     void *user;
 
     /* Allocated on first use, so a game that never touches scenes pays
        nothing for them. */
-    struct SDLStatic_SceneStack *scenes;
+    struct Grapple_SceneStack *scenes;
 
     /* Graphics settings, and the offscreen frame the render-scale and
        post-processing paths share. Both want the frame in a texture rather
        than in the backbuffer, so there is only ever one. */
-    SDLStatic_GraphicsSettings graphics;
+    Grapple_GraphicsSettings graphics;
     SDL_Texture *frame_target;
     int frame_target_w, frame_target_h;
     bool frame_target_active; /* set between Begin and End, so End knows */
-    struct SDLStatic_PostFX *postfx;
+    struct Grapple_PostFX *postfx;
     bool postfx_failed; /* tried once, could not: do not try every frame */
 
-    SDLStatic_MediaSource media_source;
+    Grapple_MediaSource media_source;
     char media_path[512];
 
     /* Allocated on first spawn, so a game that never uses actors pays
        nothing for them. */
-    struct SDLStatic_ActorWorld *actors;
+    struct Grapple_ActorWorld *actors;
 
     /* The draw list: grown once and reused, because this runs every frame
        and possibly once per camera. */
-    struct SDLStatic_DrawItem *draw_list;
+    struct Grapple_DrawItem *draw_list;
     int draw_capacity;
-    SDLStatic_RenderStats render_stats;
+    Grapple_RenderStats render_stats;
 
-    struct SDLStatic_Input *input;
-    struct SDLStatic_Physics *physics;
-    struct SDLStatic_Assets *assets;
-    struct SDLStatic_EngineLight *light;
-    struct SDLStatic_Saves *saves;
-    struct SDLStatic_Text *text;
-    struct SDLStatic_ScriptBridge *script;
+    struct Grapple_Input *input;
+    struct Grapple_Physics *physics;
+    struct Grapple_Assets *assets;
+    struct Grapple_EngineLight *light;
+    struct Grapple_Saves *saves;
+    struct Grapple_Text *text;
+    struct Grapple_ScriptBridge *script;
 };
 
-extern void SDLStatic_EngineSavesDestroy(SDLStatic_Engine *engine);
-extern void SDLStatic_EngineTextDestroy(SDLStatic_Engine *engine);
+extern void Grapple_EngineSavesDestroy(Grapple_Engine *engine);
+extern void Grapple_EngineTextDestroy(Grapple_Engine *engine);
 
 /* --- lighting ------------------------------------------------------------ */
 
 /** Advance the day/night clock. Per-frame, because a cycle is scenery. */
-extern void SDLStatic_EngineLightUpdate(SDLStatic_Engine *engine, float dt);
-extern void SDLStatic_EngineLightDestroy(SDLStatic_Engine *engine);
+extern void Grapple_EngineLightUpdate(Grapple_Engine *engine, float dt);
+extern void Grapple_EngineLightDestroy(Grapple_Engine *engine);
 
 /** The actor's attached light, as with the sprite. */
-extern SDLStatic_LightDef *SDLStatic_ActorLightSlot(SDLStatic_Actor *actor, bool create);
-extern void SDLStatic_ActorLightRemove(SDLStatic_Actor *actor);
+extern Grapple_LightDef *Grapple_ActorLightSlot(Grapple_Actor *actor, bool create);
+extern void Grapple_ActorLightRemove(Grapple_Actor *actor);
 
 
 /* --- assets -------------------------------------------------------------- */
 
 /** Turn decoded surfaces into textures, within this frame's time budget.
  *  Main thread only: SDL's renderer belongs to the thread that made it. */
-extern void SDLStatic_EngineAssetsPump(SDLStatic_Engine *engine);
-extern void SDLStatic_EngineAssetsDestroy(SDLStatic_Engine *engine);
+extern void Grapple_EngineAssetsPump(Grapple_Engine *engine);
+extern void Grapple_EngineAssetsDestroy(Grapple_Engine *engine);
 
 /* --- physics ------------------------------------------------------------- */
 
 /** Advance the world one fixed step and write the results onto actors. */
-extern void SDLStatic_EnginePhysicsStep(SDLStatic_Engine *engine, float step);
-extern void SDLStatic_EnginePhysicsDestroy(SDLStatic_Engine *engine);
+extern void Grapple_EnginePhysicsStep(Grapple_Engine *engine, float step);
+extern void Grapple_EnginePhysicsDestroy(Grapple_Engine *engine);
 
 /** A Box2D body handle, stored on the actor as its three fields so that the
  *  actor system needs no Box2D header. */
-extern void SDLStatic_ActorSetBody(SDLStatic_Actor *actor, int index, Uint16 world,
+extern void Grapple_ActorSetBody(Grapple_Actor *actor, int index, Uint16 world,
                                    Uint16 generation, float offset_x, float offset_y);
-extern bool SDLStatic_ActorGetBody(SDLStatic_Actor *actor, int *index, Uint16 *world,
+extern bool Grapple_ActorGetBody(Grapple_Actor *actor, int *index, Uint16 *world,
                                    Uint16 *generation, float *offset_x, float *offset_y);
-extern void SDLStatic_ActorClearBody(SDLStatic_Actor *actor);
+extern void Grapple_ActorClearBody(Grapple_Actor *actor);
 
 /* --- input --------------------------------------------------------------- */
 
-extern bool SDLStatic_EngineInputInit(SDLStatic_Engine *engine);
-extern void SDLStatic_EngineInputDestroy(SDLStatic_Engine *engine);
+extern bool Grapple_EngineInputInit(Grapple_Engine *engine);
+extern void Grapple_EngineInputDestroy(Grapple_Engine *engine);
 
 /** Adopt controllers that were already plugged in at startup: they do not
  *  all produce an ADDED event. */
-extern void SDLStatic_EngineInputOpenGamepads(SDLStatic_Engine *engine);
+extern void Grapple_EngineInputOpenGamepads(Grapple_Engine *engine);
 
 /** Snapshot last frame's state; edges are the difference. */
-extern void SDLStatic_EngineInputBeginFrame(SDLStatic_Engine *engine);
+extern void Grapple_EngineInputBeginFrame(Grapple_Engine *engine);
 
 /** Fold one SDL event into the state table. */
-extern void SDLStatic_EngineInputEvent(SDLStatic_Engine *engine, const SDL_Event *event);
+extern void Grapple_EngineInputEvent(Grapple_Engine *engine, const SDL_Event *event);
 
 /** Sample the things that are polled rather than evented — stick axes —
  *  and advance the menu-repeat clocks. */
-extern void SDLStatic_EngineInputEndFrame(SDLStatic_Engine *engine, float dt);
+extern void Grapple_EngineInputEndFrame(Grapple_Engine *engine, float dt);
 
 /* Small hooks the binding layer uses. */
-extern bool SDLStatic_InputKeyDownRaw(SDLStatic_Engine *engine, int scancode);
-extern int SDLStatic_InputFirstPressedKey(SDLStatic_Engine *engine);
+extern bool Grapple_InputKeyDownRaw(Grapple_Engine *engine, int scancode);
+extern int Grapple_InputFirstPressedKey(Grapple_Engine *engine);
 
 /* --- rendering ----------------------------------------------------------- */
 
 /** The actor's sprite storage. `create` gives it one if it has none. */
-extern SDLStatic_Sprite *SDLStatic_ActorSpriteSlot(SDLStatic_Actor *actor, bool create);
+extern Grapple_Sprite *Grapple_ActorSpriteSlot(Grapple_Actor *actor, bool create);
 
 /** Forget the actor's sprite. */
-extern void SDLStatic_ActorSpriteRemove(SDLStatic_Actor *actor);
+extern void Grapple_ActorSpriteRemove(Grapple_Actor *actor);
 
 /** Free the draw list with the engine. */
-extern void SDLStatic_RenderDestroy(SDLStatic_Engine *engine);
+extern void Grapple_RenderDestroy(Grapple_Engine *engine);
 
 /* --- actors, driven by the loop ------------------------------------------ */
 
 /** Snapshot transforms for interpolation, then run one simulation step. */
-extern void SDLStatic_ActorDispatchFixedUpdate(SDLStatic_Engine *engine, float step);
+extern void Grapple_ActorDispatchFixedUpdate(Grapple_Engine *engine, float step);
 
 /** Per-frame cosmetic update. */
-extern void SDLStatic_ActorDispatchUpdate(SDLStatic_Engine *engine, float dt);
+extern void Grapple_ActorDispatchUpdate(Grapple_Engine *engine, float dt);
 
 /** Drain the message queue, once, after the updates. */
-extern void SDLStatic_ActorDeliverMessages(SDLStatic_Engine *engine);
+extern void Grapple_ActorDeliverMessages(Grapple_Engine *engine);
 
 /** Admit spawned actors and free destroyed ones, at the end of the frame. */
-extern void SDLStatic_ActorApplyPending(SDLStatic_Engine *engine);
+extern void Grapple_ActorApplyPending(Grapple_Engine *engine);
 
 /** Free the world with the engine. */
-extern void SDLStatic_ActorWorldDestroy(SDLStatic_Engine *engine);
+extern void Grapple_ActorWorldDestroy(Grapple_Engine *engine);
 
 /* --- media --------------------------------------------------------------- */
 
 /** Run the mount search and record what it found on the engine. */
-extern void SDLStatic_EngineMountMedia(SDLStatic_Engine *engine, const char *explicit_path,
+extern void Grapple_EngineMountMedia(Grapple_Engine *engine, const char *explicit_path,
                                        int argc, char *const *argv);
 
 /** Point the settings resolver at the mounted archive, so a game's shipped
  *  config.toml is found wherever it lives. */
-extern void SDLStatic_EngineInstallConfigReader(void);
+extern void Grapple_EngineInstallConfigReader(void);
 
 /* --- graphics ------------------------------------------------------------ */
 
 /** Push engine->graphics.filter to the renderer's default scale mode. */
-extern void SDLStatic_EngineApplyFilter(SDLStatic_Engine *engine);
+extern void Grapple_EngineApplyFilter(Grapple_Engine *engine);
 
 /** Redirect rendering into the offscreen frame when the settings need one
  *  (render scale below native, or any post-effect enabled). No-op
  *  otherwise, so a game using neither pays nothing. */
-extern void SDLStatic_EngineBeginFrameTarget(SDLStatic_Engine *engine);
+extern void Grapple_EngineBeginFrameTarget(Grapple_Engine *engine);
 
 /** Composite the offscreen frame back to the window, then run the
  *  post-processing chain over the result. Always called, because the chain
  *  applies whether or not a target was used. */
-extern void SDLStatic_EngineEndFrameTarget(SDLStatic_Engine *engine);
+extern void Grapple_EngineEndFrameTarget(Grapple_Engine *engine);
 
 /** True when the renderer can run the post-processing shaders (OpenGL or
  *  OpenGL ES) and at least one effect is enabled. */
-extern bool SDLStatic_EnginePostFXAvailable(SDLStatic_Engine *engine);
+extern bool Grapple_EnginePostFXAvailable(Grapple_Engine *engine);
 
 /** Drop cached shader state after a settings change. */
-extern void SDLStatic_EnginePostFXInvalidate(SDLStatic_Engine *engine);
+extern void Grapple_EnginePostFXInvalidate(Grapple_Engine *engine);
 
 /** Run the effect chain over the frame currently in the framebuffer.
  *  Returns false when the chain could not run, in which case the frame is
  *  simply left as it was drawn. */
-extern bool SDLStatic_EnginePostFXPresent(SDLStatic_Engine *engine);
+extern bool Grapple_EnginePostFXPresent(Grapple_Engine *engine);
 
-extern void SDLStatic_EnginePostFXDestroy(SDLStatic_Engine *engine);
+extern void Grapple_EnginePostFXDestroy(Grapple_Engine *engine);
 
-extern void SDLStatic_EngineDestroyFrameTarget(SDLStatic_Engine *engine);
+extern void Grapple_EngineDestroyFrameTarget(Grapple_Engine *engine);
 
 /* --- scene stack, driven by the loop ------------------------------------ */
 
 /** Dispatch a simulation step to the scene stack. */
-extern void SDLStatic_SceneDispatchFixedUpdate(SDLStatic_Engine *engine, float step);
+extern void Grapple_SceneDispatchFixedUpdate(Grapple_Engine *engine, float step);
 
 /** Dispatch a per-frame update, and advance any transition in progress. */
-extern void SDLStatic_SceneDispatchUpdate(SDLStatic_Engine *engine, float dt);
+extern void Grapple_SceneDispatchUpdate(Grapple_Engine *engine, float dt);
 
 /** Draw the stack, bottom-up from the lowest visible scene, then the
  *  transition overlay if one is running. */
-extern void SDLStatic_SceneDispatchRender(SDLStatic_Engine *engine, float alpha);
+extern void Grapple_SceneDispatchRender(Grapple_Engine *engine, float alpha);
 
 /** Give an event to the top scene. */
-extern void SDLStatic_SceneDispatchEvent(SDLStatic_Engine *engine, const SDL_Event *event);
+extern void Grapple_SceneDispatchEvent(Grapple_Engine *engine, const SDL_Event *event);
 
 /** Tear the whole stack down, top first. Called when the engine is
  *  destroyed so scenes always see their exit and unload hooks. */
-extern void SDLStatic_SceneShutdown(SDLStatic_Engine *engine);
+extern void Grapple_SceneShutdown(Grapple_Engine *engine);
 
-#endif /* SDLSTATIC_ENGINE_INTERNAL_H */
+#endif /* GRAPPLE_ENGINE_INTERNAL_H */

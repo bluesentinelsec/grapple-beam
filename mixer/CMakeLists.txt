@@ -1,4 +1,4 @@
-# SDLStatic::Mixer — static-only build of the vendored SDL_mixer sources
+# Grapple::Mixer — static-only build of the vendored SDL_mixer sources
 # (upstream release-3.2.4, the redesigned MIX_* API; provenance in
 # deps/SDL3_mixer.md).
 #
@@ -19,7 +19,7 @@
 # The root project is CXX-only; the vendored SDL_mixer sources are C.
 enable_language(C)
 
-add_library(SDLStatic_Mixer STATIC
+add_library(Grapple_Mixer STATIC
   src/SDL_mixer.c
   src/SDL_mixer_metadata_tags.c
   src/SDL_mixer_spatialization.c
@@ -42,21 +42,21 @@ add_library(SDLStatic_Mixer STATIC
   src/timidity/resample.c
   src/timidity/tables.c
   src/timidity/timidity.c
-  # Original SDLStatic code (not vendored): 8-bit synthesis layer.
-  src/sdlstatic_chiptune.c
+  # Original Grapple code (not vendored): 8-bit synthesis layer.
+  src/grapple_chiptune.c
 )
-add_library(SDLStatic::Mixer ALIAS SDLStatic_Mixer)
+add_library(Grapple::Mixer ALIAS Grapple_Mixer)
 
 if("c_std_99" IN_LIST CMAKE_C_COMPILE_FEATURES)
-  target_compile_features(SDLStatic_Mixer PRIVATE c_std_99)
+  target_compile_features(Grapple_Mixer PRIVATE c_std_99)
 endif()
 
-set_target_properties(SDLStatic_Mixer PROPERTIES
-  OUTPUT_NAME SDLStatic_Mixer
+set_target_properties(Grapple_Mixer PROPERTIES
+  OUTPUT_NAME Grapple_Mixer
   POSITION_INDEPENDENT_CODE ON
 )
 
-target_compile_definitions(SDLStatic_Mixer PRIVATE
+target_compile_definitions(Grapple_Mixer PRIVATE
   DECODER_WAV
   DECODER_AIFF
   DECODER_AU
@@ -67,14 +67,14 @@ target_compile_definitions(SDLStatic_Mixer PRIVATE
   DECODER_MIDI_TIMIDITY
 )
 
-target_include_directories(SDLStatic_Mixer
+target_include_directories(Grapple_Mixer
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-target_link_libraries(SDLStatic_Mixer PUBLIC SDL3::SDL3)
+target_link_libraries(Grapple_Mixer PUBLIC SDL3::SDL3)
 
 # Vendored upstream C: build quietly rather than under the project's
 # warnings-as-errors regime; our own code around it stays strict.

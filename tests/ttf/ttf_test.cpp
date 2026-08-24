@@ -1,6 +1,6 @@
 /**
  * @file ttf_test.cpp
- * @brief Foundation tests for SDLStatic::TTF (vendored SDL_ttf, static
+ * @brief Foundation tests for Grapple::TTF (vendored SDL_ttf, static
  *        minimal FreeType backend).
  *
  * Covers: init/version, font open (file + memory + DPI), metrics sanity,
@@ -60,7 +60,7 @@ TEST_F(TtfFoundation, OpensFontAndReportsSaneMetrics)
     EXPECT_GT(TTF_GetFontLineSkip(font), 0);
 
     int w = 0, h = 0;
-    ASSERT_TRUE(TTF_GetStringSize(font, "Hello, SDLStatic!", 0, &w, &h))
+    ASSERT_TRUE(TTF_GetStringSize(font, "Hello, Grapple!", 0, &w, &h))
         << SDL_GetError();
     EXPECT_GT(w, 0);
     EXPECT_GT(h, 0);
@@ -128,7 +128,7 @@ TEST_F(TtfFoundation, BlendedRenderProducesGlyphPixels)
     ASSERT_NE(font, nullptr) << SDL_GetError();
 
     const SDL_Color white = {255, 255, 255, 255};
-    SDL_Surface *surface = TTF_RenderText_Blended(font, "SDLStatic", 0, white);
+    SDL_Surface *surface = TTF_RenderText_Blended(font, "Grapple", 0, white);
     ASSERT_NE(surface, nullptr) << SDL_GetError();
     EXPECT_GT(surface->w, 0);
     EXPECT_GT(surface->h, 0);
@@ -144,7 +144,7 @@ TEST_F(TtfFoundation, SolidRenderProducesGlyphPixels)
     ASSERT_NE(font, nullptr) << SDL_GetError();
 
     const SDL_Color white = {255, 255, 255, 255};
-    SDL_Surface *surface = TTF_RenderText_Solid(font, "SDLStatic", 0, white);
+    SDL_Surface *surface = TTF_RenderText_Solid(font, "Grapple", 0, white);
     ASSERT_NE(surface, nullptr) << SDL_GetError();
     EXPECT_GT(CountNonZeroBrightPixels(surface), 50);
 
@@ -467,9 +467,9 @@ TEST_F(TtfFoundation, HintingModesAllRender)
 }
 
 
-// --- SDLStatic debug text (embedded ProggyClean) ----------------------------
+// --- Grapple debug text (embedded ProggyClean) ----------------------------
 
-#include <SDLStatic/debug_text.h>
+#include <grapple/debug_text.h>
 
 TEST_F(TtfFoundation, DebugTextDrawsWithEmbeddedFont)
 {
@@ -481,9 +481,9 @@ TEST_F(TtfFoundation, DebugTextDrawsWithEmbeddedFont)
     SDL_SetRenderDrawColor(renderer, 10, 12, 14, 255);
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 80, 250, 123, 255);  // text = draw color
-    ASSERT_TRUE(SDLStatic_RenderDebugTextFormat(renderer, 8.0F, 8.0F, "FPS: %d", 60))
+    ASSERT_TRUE(Grapple_RenderDebugTextFormat(renderer, 8.0F, 8.0F, "FPS: %d", 60))
         << SDL_GetError();
-    ASSERT_TRUE(SDLStatic_RenderDebugText(renderer, 8.0F, 28.0F,
+    ASSERT_TRUE(Grapple_RenderDebugText(renderer, 8.0F, 28.0F,
                                           "frame 1234  draw 0.8ms"))
         << SDL_GetError();
     SDL_RenderPresent(renderer);
@@ -505,12 +505,12 @@ TEST_F(TtfFoundation, DebugTextDrawsWithEmbeddedFont)
     EXPECT_GT(green, 40) << "debug text did not render";
 
     // Cached redraw and size change both succeed.
-    EXPECT_TRUE(SDLStatic_RenderDebugText(renderer, 8.0F, 48.0F, "FPS: 60"));
-    SDLStatic_SetDebugTextSize(18.0F);
-    EXPECT_TRUE(SDLStatic_RenderDebugText(renderer, 8.0F, 8.0F, "resized"));
-    SDLStatic_SetDebugTextSize(13.0F);
+    EXPECT_TRUE(Grapple_RenderDebugText(renderer, 8.0F, 48.0F, "FPS: 60"));
+    Grapple_SetDebugTextSize(18.0F);
+    EXPECT_TRUE(Grapple_RenderDebugText(renderer, 8.0F, 8.0F, "resized"));
+    Grapple_SetDebugTextSize(13.0F);
 
-    SDLStatic_QuitDebugText();
+    Grapple_QuitDebugText();
     SDL_DestroyRenderer(renderer);
     SDL_DestroySurface(canvas);
 }

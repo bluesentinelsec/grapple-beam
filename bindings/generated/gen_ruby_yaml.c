@@ -13,9 +13,9 @@ static mrb_value GenR_yaml_get_version(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int io0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int io0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     yaml_get_version(&io0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_int_value(mrb, (mrb_int)io0);
@@ -37,11 +37,11 @@ static mrb_value GenR_yaml_get_version_string(mrb_state *mrb, mrb_value self)
     }
 }
 
-void SDLStaticGen_OpenRuby_yaml(mrb_state *mrb);
-void SDLStaticGen_OpenRuby_yaml(mrb_state *mrb)
+void GrappleGen_OpenRuby_yaml(mrb_state *mrb);
+void GrappleGen_OpenRuby_yaml(mrb_state *mrb)
 {
     struct RClass *mod;
-    SDLStaticGen_RubyEnsureHandleClass(mrb);
+    GrappleGen_RubyEnsureHandleClass(mrb);
     mod = mrb_define_module(mrb, "YAML");
     mrb_define_module_function(mrb, mod, "get_version", GenR_yaml_get_version, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "get_version_string", GenR_yaml_get_version_string, MRB_ARGS_ANY());

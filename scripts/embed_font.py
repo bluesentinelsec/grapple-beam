@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Embed a TTF font as a C header (byte array + length) with provenance.
 
-Used to generate ttf/src/sdlstatic_debug_font.h from ProggyClean.ttf.
+Used to generate ttf/src/grapple_debug_font.h from ProggyClean.ttf.
 Deterministic: identical input bytes produce an identical header.
 
 Usage: embed_font.py <font.ttf> <out.h> <array_name>
@@ -14,7 +14,7 @@ from pathlib import Path
 
 HEADER = """\
 /*
- * {name} — embedded debug font for SDLStatic_RenderDebugText.
+ * {name} — embedded debug font for Grapple_RenderDebugText.
  *
  * Font:       ProggyClean.ttf by Tristan Grimmer (proggyfonts.net)
  * Source:     https://github.com/bluescan/proggyfonts

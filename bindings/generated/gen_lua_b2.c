@@ -10,8 +10,8 @@ static void GenRead_b2Vec2(lua_State *L, int idx, b2Vec2 *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->x = (float)SDLStaticGen_LuaFieldNum(L, idx, "x");
-    out->y = (float)SDLStaticGen_LuaFieldNum(L, idx, "y");
+    out->x = (float)GrappleGen_LuaFieldNum(L, idx, "x");
+    out->y = (float)GrappleGen_LuaFieldNum(L, idx, "y");
 }
 
 static void GenPush_b2Vec2(lua_State *L, const b2Vec2 *in)
@@ -48,8 +48,8 @@ static void GenRead_b2Rot(lua_State *L, int idx, b2Rot *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->c = (float)SDLStaticGen_LuaFieldNum(L, idx, "c");
-    out->s = (float)SDLStaticGen_LuaFieldNum(L, idx, "s");
+    out->c = (float)GrappleGen_LuaFieldNum(L, idx, "c");
+    out->s = (float)GrappleGen_LuaFieldNum(L, idx, "s");
 }
 
 static void GenPush_b2Rot(lua_State *L, const b2Rot *in)
@@ -65,7 +65,7 @@ static void GenRead_b2BodyDef(lua_State *L, int idx, b2BodyDef *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->type = (b2BodyType)SDLStaticGen_LuaFieldInt(L, idx, "type");
+    out->type = (b2BodyType)GrappleGen_LuaFieldInt(L, idx, "type");
     lua_getfield(L, idx, "position");
     GenRead_b2Vec2(L, lua_gettop(L), &out->position);
     lua_pop(L, 1);
@@ -75,18 +75,18 @@ static void GenRead_b2BodyDef(lua_State *L, int idx, b2BodyDef *out)
     lua_getfield(L, idx, "linearVelocity");
     GenRead_b2Vec2(L, lua_gettop(L), &out->linearVelocity);
     lua_pop(L, 1);
-    out->angularVelocity = (float)SDLStaticGen_LuaFieldNum(L, idx, "angularVelocity");
-    out->linearDamping = (float)SDLStaticGen_LuaFieldNum(L, idx, "linearDamping");
-    out->angularDamping = (float)SDLStaticGen_LuaFieldNum(L, idx, "angularDamping");
-    out->gravityScale = (float)SDLStaticGen_LuaFieldNum(L, idx, "gravityScale");
-    out->sleepThreshold = (float)SDLStaticGen_LuaFieldNum(L, idx, "sleepThreshold");
-    out->enableSleep = (bool)SDLStaticGen_LuaFieldBool(L, idx, "enableSleep");
-    out->isAwake = (bool)SDLStaticGen_LuaFieldBool(L, idx, "isAwake");
-    out->fixedRotation = (bool)SDLStaticGen_LuaFieldBool(L, idx, "fixedRotation");
-    out->isBullet = (bool)SDLStaticGen_LuaFieldBool(L, idx, "isBullet");
-    out->isEnabled = (bool)SDLStaticGen_LuaFieldBool(L, idx, "isEnabled");
-    out->allowFastRotation = (bool)SDLStaticGen_LuaFieldBool(L, idx, "allowFastRotation");
-    out->internalValue = (int)SDLStaticGen_LuaFieldInt(L, idx, "internalValue");
+    out->angularVelocity = (float)GrappleGen_LuaFieldNum(L, idx, "angularVelocity");
+    out->linearDamping = (float)GrappleGen_LuaFieldNum(L, idx, "linearDamping");
+    out->angularDamping = (float)GrappleGen_LuaFieldNum(L, idx, "angularDamping");
+    out->gravityScale = (float)GrappleGen_LuaFieldNum(L, idx, "gravityScale");
+    out->sleepThreshold = (float)GrappleGen_LuaFieldNum(L, idx, "sleepThreshold");
+    out->enableSleep = (bool)GrappleGen_LuaFieldBool(L, idx, "enableSleep");
+    out->isAwake = (bool)GrappleGen_LuaFieldBool(L, idx, "isAwake");
+    out->fixedRotation = (bool)GrappleGen_LuaFieldBool(L, idx, "fixedRotation");
+    out->isBullet = (bool)GrappleGen_LuaFieldBool(L, idx, "isBullet");
+    out->isEnabled = (bool)GrappleGen_LuaFieldBool(L, idx, "isEnabled");
+    out->allowFastRotation = (bool)GrappleGen_LuaFieldBool(L, idx, "allowFastRotation");
+    out->internalValue = (int)GrappleGen_LuaFieldInt(L, idx, "internalValue");
 }
 
 static void GenPush_b2BodyDef(lua_State *L, const b2BodyDef *in)
@@ -130,9 +130,9 @@ static void GenRead_b2BodyId(lua_State *L, int idx, b2BodyId *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->index1 = (int32_t)SDLStaticGen_LuaFieldInt(L, idx, "index1");
-    out->world0 = (uint16_t)SDLStaticGen_LuaFieldInt(L, idx, "world0");
-    out->generation = (uint16_t)SDLStaticGen_LuaFieldInt(L, idx, "generation");
+    out->index1 = (int32_t)GrappleGen_LuaFieldInt(L, idx, "index1");
+    out->world0 = (uint16_t)GrappleGen_LuaFieldInt(L, idx, "world0");
+    out->generation = (uint16_t)GrappleGen_LuaFieldInt(L, idx, "generation");
 }
 
 static void GenPush_b2BodyId(lua_State *L, const b2BodyId *in)
@@ -156,7 +156,7 @@ static void GenRead_b2Capsule(lua_State *L, int idx, b2Capsule *out)
     lua_getfield(L, idx, "center2");
     GenRead_b2Vec2(L, lua_gettop(L), &out->center2);
     lua_pop(L, 1);
-    out->radius = (float)SDLStaticGen_LuaFieldNum(L, idx, "radius");
+    out->radius = (float)GrappleGen_LuaFieldNum(L, idx, "radius");
 }
 
 static void GenPush_b2Capsule(lua_State *L, const b2Capsule *in)
@@ -189,12 +189,12 @@ static void GenRead_b2SurfaceMaterial(lua_State *L, int idx, b2SurfaceMaterial *
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->friction = (float)SDLStaticGen_LuaFieldNum(L, idx, "friction");
-    out->restitution = (float)SDLStaticGen_LuaFieldNum(L, idx, "restitution");
-    out->rollingResistance = (float)SDLStaticGen_LuaFieldNum(L, idx, "rollingResistance");
-    out->tangentSpeed = (float)SDLStaticGen_LuaFieldNum(L, idx, "tangentSpeed");
-    out->userMaterialId = (int)SDLStaticGen_LuaFieldInt(L, idx, "userMaterialId");
-    out->customColor = (uint32_t)SDLStaticGen_LuaFieldInt(L, idx, "customColor");
+    out->friction = (float)GrappleGen_LuaFieldNum(L, idx, "friction");
+    out->restitution = (float)GrappleGen_LuaFieldNum(L, idx, "restitution");
+    out->rollingResistance = (float)GrappleGen_LuaFieldNum(L, idx, "rollingResistance");
+    out->tangentSpeed = (float)GrappleGen_LuaFieldNum(L, idx, "tangentSpeed");
+    out->userMaterialId = (int)GrappleGen_LuaFieldInt(L, idx, "userMaterialId");
+    out->customColor = (uint32_t)GrappleGen_LuaFieldInt(L, idx, "customColor");
 }
 
 static void GenPush_b2SurfaceMaterial(lua_State *L, const b2SurfaceMaterial *in)
@@ -218,9 +218,9 @@ static void GenRead_b2Filter(lua_State *L, int idx, b2Filter *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->categoryBits = (uint64_t)SDLStaticGen_LuaFieldInt(L, idx, "categoryBits");
-    out->maskBits = (uint64_t)SDLStaticGen_LuaFieldInt(L, idx, "maskBits");
-    out->groupIndex = (int)SDLStaticGen_LuaFieldInt(L, idx, "groupIndex");
+    out->categoryBits = (uint64_t)GrappleGen_LuaFieldInt(L, idx, "categoryBits");
+    out->maskBits = (uint64_t)GrappleGen_LuaFieldInt(L, idx, "maskBits");
+    out->groupIndex = (int)GrappleGen_LuaFieldInt(L, idx, "groupIndex");
 }
 
 static void GenPush_b2Filter(lua_State *L, const b2Filter *in)
@@ -238,14 +238,14 @@ static void GenRead_b2ChainDef(lua_State *L, int idx, b2ChainDef *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->count = (int)SDLStaticGen_LuaFieldInt(L, idx, "count");
-    out->materialCount = (int)SDLStaticGen_LuaFieldInt(L, idx, "materialCount");
+    out->count = (int)GrappleGen_LuaFieldInt(L, idx, "count");
+    out->materialCount = (int)GrappleGen_LuaFieldInt(L, idx, "materialCount");
     lua_getfield(L, idx, "filter");
     GenRead_b2Filter(L, lua_gettop(L), &out->filter);
     lua_pop(L, 1);
-    out->isLoop = (bool)SDLStaticGen_LuaFieldBool(L, idx, "isLoop");
-    out->enableSensorEvents = (bool)SDLStaticGen_LuaFieldBool(L, idx, "enableSensorEvents");
-    out->internalValue = (int)SDLStaticGen_LuaFieldInt(L, idx, "internalValue");
+    out->isLoop = (bool)GrappleGen_LuaFieldBool(L, idx, "isLoop");
+    out->enableSensorEvents = (bool)GrappleGen_LuaFieldBool(L, idx, "enableSensorEvents");
+    out->internalValue = (int)GrappleGen_LuaFieldInt(L, idx, "internalValue");
 }
 
 static void GenPush_b2ChainDef(lua_State *L, const b2ChainDef *in)
@@ -269,9 +269,9 @@ static void GenRead_b2ChainId(lua_State *L, int idx, b2ChainId *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->index1 = (int32_t)SDLStaticGen_LuaFieldInt(L, idx, "index1");
-    out->world0 = (uint16_t)SDLStaticGen_LuaFieldInt(L, idx, "world0");
-    out->generation = (uint16_t)SDLStaticGen_LuaFieldInt(L, idx, "generation");
+    out->index1 = (int32_t)GrappleGen_LuaFieldInt(L, idx, "index1");
+    out->world0 = (uint16_t)GrappleGen_LuaFieldInt(L, idx, "world0");
+    out->generation = (uint16_t)GrappleGen_LuaFieldInt(L, idx, "generation");
 }
 
 static void GenPush_b2ChainId(lua_State *L, const b2ChainId *in)
@@ -319,7 +319,7 @@ static void GenRead_b2ChainSegment(lua_State *L, int idx, b2ChainSegment *out)
     lua_getfield(L, idx, "ghost2");
     GenRead_b2Vec2(L, lua_gettop(L), &out->ghost2);
     lua_pop(L, 1);
-    out->chainId = (int)SDLStaticGen_LuaFieldInt(L, idx, "chainId");
+    out->chainId = (int)GrappleGen_LuaFieldInt(L, idx, "chainId");
 }
 
 static void GenPush_b2ChainSegment(lua_State *L, const b2ChainSegment *in)
@@ -342,7 +342,7 @@ static void GenRead_b2Circle(lua_State *L, int idx, b2Circle *out)
     lua_getfield(L, idx, "center");
     GenRead_b2Vec2(L, lua_gettop(L), &out->center);
     lua_pop(L, 1);
-    out->radius = (float)SDLStaticGen_LuaFieldNum(L, idx, "radius");
+    out->radius = (float)GrappleGen_LuaFieldNum(L, idx, "radius");
 }
 
 static void GenPush_b2Circle(lua_State *L, const b2Circle *in)
@@ -361,7 +361,7 @@ static void GenRead_b2Plane(lua_State *L, int idx, b2Plane *out)
     lua_getfield(L, idx, "normal");
     GenRead_b2Vec2(L, lua_gettop(L), &out->normal);
     lua_pop(L, 1);
-    out->offset = (float)SDLStaticGen_LuaFieldNum(L, idx, "offset");
+    out->offset = (float)GrappleGen_LuaFieldNum(L, idx, "offset");
 }
 
 static void GenPush_b2Plane(lua_State *L, const b2Plane *in)
@@ -380,9 +380,9 @@ static void GenRead_b2CollisionPlane(lua_State *L, int idx, b2CollisionPlane *ou
     lua_getfield(L, idx, "plane");
     GenRead_b2Plane(L, lua_gettop(L), &out->plane);
     lua_pop(L, 1);
-    out->pushLimit = (float)SDLStaticGen_LuaFieldNum(L, idx, "pushLimit");
-    out->push = (float)SDLStaticGen_LuaFieldNum(L, idx, "push");
-    out->clipVelocity = (bool)SDLStaticGen_LuaFieldBool(L, idx, "clipVelocity");
+    out->pushLimit = (float)GrappleGen_LuaFieldNum(L, idx, "pushLimit");
+    out->push = (float)GrappleGen_LuaFieldNum(L, idx, "push");
+    out->clipVelocity = (bool)GrappleGen_LuaFieldBool(L, idx, "clipVelocity");
 }
 
 static void GenPush_b2CollisionPlane(lua_State *L, const b2CollisionPlane *in)
@@ -402,9 +402,9 @@ static void GenRead_b2ShapeId(lua_State *L, int idx, b2ShapeId *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->index1 = (int32_t)SDLStaticGen_LuaFieldInt(L, idx, "index1");
-    out->world0 = (uint16_t)SDLStaticGen_LuaFieldInt(L, idx, "world0");
-    out->generation = (uint16_t)SDLStaticGen_LuaFieldInt(L, idx, "generation");
+    out->index1 = (int32_t)GrappleGen_LuaFieldInt(L, idx, "index1");
+    out->world0 = (uint16_t)GrappleGen_LuaFieldInt(L, idx, "world0");
+    out->generation = (uint16_t)GrappleGen_LuaFieldInt(L, idx, "generation");
 }
 
 static void GenPush_b2ShapeId(lua_State *L, const b2ShapeId *in)
@@ -524,8 +524,8 @@ static void GenRead_b2ShapeProxy(lua_State *L, int idx, b2ShapeProxy *out)
         }
     }
     lua_pop(L, 1);
-    out->count = (int)SDLStaticGen_LuaFieldInt(L, idx, "count");
-    out->radius = (float)SDLStaticGen_LuaFieldNum(L, idx, "radius");
+    out->count = (int)GrappleGen_LuaFieldInt(L, idx, "count");
+    out->radius = (float)GrappleGen_LuaFieldNum(L, idx, "radius");
 }
 
 static void GenPush_b2ShapeProxy(lua_State *L, const b2ShapeProxy *in)
@@ -580,7 +580,7 @@ static void GenRead_b2DistanceInput(lua_State *L, int idx, b2DistanceInput *out)
     lua_getfield(L, idx, "transformB");
     GenRead_b2Transform(L, lua_gettop(L), &out->transformB);
     lua_pop(L, 1);
-    out->useRadii = (bool)SDLStaticGen_LuaFieldBool(L, idx, "useRadii");
+    out->useRadii = (bool)GrappleGen_LuaFieldBool(L, idx, "useRadii");
 }
 
 static void GenPush_b2DistanceOutput(lua_State *L, const b2DistanceOutput *in)
@@ -604,13 +604,13 @@ static void GenRead_b2ExplosionDef(lua_State *L, int idx, b2ExplosionDef *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->maskBits = (uint64_t)SDLStaticGen_LuaFieldInt(L, idx, "maskBits");
+    out->maskBits = (uint64_t)GrappleGen_LuaFieldInt(L, idx, "maskBits");
     lua_getfield(L, idx, "position");
     GenRead_b2Vec2(L, lua_gettop(L), &out->position);
     lua_pop(L, 1);
-    out->radius = (float)SDLStaticGen_LuaFieldNum(L, idx, "radius");
-    out->falloff = (float)SDLStaticGen_LuaFieldNum(L, idx, "falloff");
-    out->impulsePerLength = (float)SDLStaticGen_LuaFieldNum(L, idx, "impulsePerLength");
+    out->radius = (float)GrappleGen_LuaFieldNum(L, idx, "radius");
+    out->falloff = (float)GrappleGen_LuaFieldNum(L, idx, "falloff");
+    out->impulsePerLength = (float)GrappleGen_LuaFieldNum(L, idx, "impulsePerLength");
 }
 
 static void GenPush_b2ExplosionDef(lua_State *L, const b2ExplosionDef *in)
@@ -645,9 +645,9 @@ static void GenRead_b2JointId(lua_State *L, int idx, b2JointId *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->index1 = (int32_t)SDLStaticGen_LuaFieldInt(L, idx, "index1");
-    out->world0 = (uint16_t)SDLStaticGen_LuaFieldInt(L, idx, "world0");
-    out->generation = (uint16_t)SDLStaticGen_LuaFieldInt(L, idx, "generation");
+    out->index1 = (int32_t)GrappleGen_LuaFieldInt(L, idx, "index1");
+    out->world0 = (uint16_t)GrappleGen_LuaFieldInt(L, idx, "world0");
+    out->generation = (uint16_t)GrappleGen_LuaFieldInt(L, idx, "generation");
 }
 
 static void GenPush_b2JointId(lua_State *L, const b2JointId *in)
@@ -665,11 +665,11 @@ static void GenRead_b2MassData(lua_State *L, int idx, b2MassData *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->mass = (float)SDLStaticGen_LuaFieldNum(L, idx, "mass");
+    out->mass = (float)GrappleGen_LuaFieldNum(L, idx, "mass");
     lua_getfield(L, idx, "center");
     GenRead_b2Vec2(L, lua_gettop(L), &out->center);
     lua_pop(L, 1);
-    out->rotationalInertia = (float)SDLStaticGen_LuaFieldNum(L, idx, "rotationalInertia");
+    out->rotationalInertia = (float)GrappleGen_LuaFieldNum(L, idx, "rotationalInertia");
 }
 
 static void GenPush_b2MassData(lua_State *L, const b2MassData *in)
@@ -717,8 +717,8 @@ static void GenRead_b2Polygon(lua_State *L, int idx, b2Polygon *out)
     lua_getfield(L, idx, "centroid");
     GenRead_b2Vec2(L, lua_gettop(L), &out->centroid);
     lua_pop(L, 1);
-    out->radius = (float)SDLStaticGen_LuaFieldNum(L, idx, "radius");
-    out->count = (int)SDLStaticGen_LuaFieldInt(L, idx, "count");
+    out->radius = (float)GrappleGen_LuaFieldNum(L, idx, "radius");
+    out->count = (int)GrappleGen_LuaFieldInt(L, idx, "count");
 }
 
 static void GenPush_b2Polygon(lua_State *L, const b2Polygon *in)
@@ -797,8 +797,8 @@ static void GenRead_b2QueryFilter(lua_State *L, int idx, b2QueryFilter *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->categoryBits = (uint64_t)SDLStaticGen_LuaFieldInt(L, idx, "categoryBits");
-    out->maskBits = (uint64_t)SDLStaticGen_LuaFieldInt(L, idx, "maskBits");
+    out->categoryBits = (uint64_t)GrappleGen_LuaFieldInt(L, idx, "categoryBits");
+    out->maskBits = (uint64_t)GrappleGen_LuaFieldInt(L, idx, "maskBits");
 }
 
 static void GenPush_b2QueryFilter(lua_State *L, const b2QueryFilter *in)
@@ -820,7 +820,7 @@ static void GenRead_b2RayCastInput(lua_State *L, int idx, b2RayCastInput *out)
     lua_getfield(L, idx, "translation");
     GenRead_b2Vec2(L, lua_gettop(L), &out->translation);
     lua_pop(L, 1);
-    out->maxFraction = (float)SDLStaticGen_LuaFieldNum(L, idx, "maxFraction");
+    out->maxFraction = (float)GrappleGen_LuaFieldNum(L, idx, "maxFraction");
 }
 
 static void GenPush_b2RayResult(lua_State *L, const b2RayResult *in)
@@ -867,8 +867,8 @@ static void GenRead_b2ShapeCastInput(lua_State *L, int idx, b2ShapeCastInput *ou
     lua_getfield(L, idx, "translation");
     GenRead_b2Vec2(L, lua_gettop(L), &out->translation);
     lua_pop(L, 1);
-    out->maxFraction = (float)SDLStaticGen_LuaFieldNum(L, idx, "maxFraction");
-    out->canEncroach = (bool)SDLStaticGen_LuaFieldBool(L, idx, "canEncroach");
+    out->maxFraction = (float)GrappleGen_LuaFieldNum(L, idx, "maxFraction");
+    out->canEncroach = (bool)GrappleGen_LuaFieldBool(L, idx, "canEncroach");
 }
 
 static void GenRead_b2ShapeCastPairInput(lua_State *L, int idx, b2ShapeCastPairInput *out)
@@ -890,8 +890,8 @@ static void GenRead_b2ShapeCastPairInput(lua_State *L, int idx, b2ShapeCastPairI
     lua_getfield(L, idx, "translationB");
     GenRead_b2Vec2(L, lua_gettop(L), &out->translationB);
     lua_pop(L, 1);
-    out->maxFraction = (float)SDLStaticGen_LuaFieldNum(L, idx, "maxFraction");
-    out->canEncroach = (bool)SDLStaticGen_LuaFieldBool(L, idx, "canEncroach");
+    out->maxFraction = (float)GrappleGen_LuaFieldNum(L, idx, "maxFraction");
+    out->canEncroach = (bool)GrappleGen_LuaFieldBool(L, idx, "canEncroach");
 }
 
 static void GenRead_b2ShapeDef(lua_State *L, int idx, b2ShapeDef *out)
@@ -901,18 +901,18 @@ static void GenRead_b2ShapeDef(lua_State *L, int idx, b2ShapeDef *out)
     lua_getfield(L, idx, "material");
     GenRead_b2SurfaceMaterial(L, lua_gettop(L), &out->material);
     lua_pop(L, 1);
-    out->density = (float)SDLStaticGen_LuaFieldNum(L, idx, "density");
+    out->density = (float)GrappleGen_LuaFieldNum(L, idx, "density");
     lua_getfield(L, idx, "filter");
     GenRead_b2Filter(L, lua_gettop(L), &out->filter);
     lua_pop(L, 1);
-    out->isSensor = (bool)SDLStaticGen_LuaFieldBool(L, idx, "isSensor");
-    out->enableSensorEvents = (bool)SDLStaticGen_LuaFieldBool(L, idx, "enableSensorEvents");
-    out->enableContactEvents = (bool)SDLStaticGen_LuaFieldBool(L, idx, "enableContactEvents");
-    out->enableHitEvents = (bool)SDLStaticGen_LuaFieldBool(L, idx, "enableHitEvents");
-    out->enablePreSolveEvents = (bool)SDLStaticGen_LuaFieldBool(L, idx, "enablePreSolveEvents");
-    out->invokeContactCreation = (bool)SDLStaticGen_LuaFieldBool(L, idx, "invokeContactCreation");
-    out->updateBodyMass = (bool)SDLStaticGen_LuaFieldBool(L, idx, "updateBodyMass");
-    out->internalValue = (int)SDLStaticGen_LuaFieldInt(L, idx, "internalValue");
+    out->isSensor = (bool)GrappleGen_LuaFieldBool(L, idx, "isSensor");
+    out->enableSensorEvents = (bool)GrappleGen_LuaFieldBool(L, idx, "enableSensorEvents");
+    out->enableContactEvents = (bool)GrappleGen_LuaFieldBool(L, idx, "enableContactEvents");
+    out->enableHitEvents = (bool)GrappleGen_LuaFieldBool(L, idx, "enableHitEvents");
+    out->enablePreSolveEvents = (bool)GrappleGen_LuaFieldBool(L, idx, "enablePreSolveEvents");
+    out->invokeContactCreation = (bool)GrappleGen_LuaFieldBool(L, idx, "invokeContactCreation");
+    out->updateBodyMass = (bool)GrappleGen_LuaFieldBool(L, idx, "updateBodyMass");
+    out->internalValue = (int)GrappleGen_LuaFieldInt(L, idx, "internalValue");
 }
 
 static void GenPush_b2ShapeDef(lua_State *L, const b2ShapeDef *in)
@@ -1009,7 +1009,7 @@ static void GenRead_b2TOIInput(lua_State *L, int idx, b2TOIInput *out)
     lua_getfield(L, idx, "sweepB");
     GenRead_b2Sweep(L, lua_gettop(L), &out->sweepB);
     lua_pop(L, 1);
-    out->maxFraction = (float)SDLStaticGen_LuaFieldNum(L, idx, "maxFraction");
+    out->maxFraction = (float)GrappleGen_LuaFieldNum(L, idx, "maxFraction");
 }
 
 static void GenPush_b2TOIOutput(lua_State *L, const b2TOIOutput *in)
@@ -1039,16 +1039,16 @@ static void GenRead_b2WorldDef(lua_State *L, int idx, b2WorldDef *out)
     lua_getfield(L, idx, "gravity");
     GenRead_b2Vec2(L, lua_gettop(L), &out->gravity);
     lua_pop(L, 1);
-    out->restitutionThreshold = (float)SDLStaticGen_LuaFieldNum(L, idx, "restitutionThreshold");
-    out->hitEventThreshold = (float)SDLStaticGen_LuaFieldNum(L, idx, "hitEventThreshold");
-    out->contactHertz = (float)SDLStaticGen_LuaFieldNum(L, idx, "contactHertz");
-    out->contactDampingRatio = (float)SDLStaticGen_LuaFieldNum(L, idx, "contactDampingRatio");
-    out->maxContactPushSpeed = (float)SDLStaticGen_LuaFieldNum(L, idx, "maxContactPushSpeed");
-    out->maximumLinearSpeed = (float)SDLStaticGen_LuaFieldNum(L, idx, "maximumLinearSpeed");
-    out->enableSleep = (bool)SDLStaticGen_LuaFieldBool(L, idx, "enableSleep");
-    out->enableContinuous = (bool)SDLStaticGen_LuaFieldBool(L, idx, "enableContinuous");
-    out->workerCount = (int)SDLStaticGen_LuaFieldInt(L, idx, "workerCount");
-    out->internalValue = (int)SDLStaticGen_LuaFieldInt(L, idx, "internalValue");
+    out->restitutionThreshold = (float)GrappleGen_LuaFieldNum(L, idx, "restitutionThreshold");
+    out->hitEventThreshold = (float)GrappleGen_LuaFieldNum(L, idx, "hitEventThreshold");
+    out->contactHertz = (float)GrappleGen_LuaFieldNum(L, idx, "contactHertz");
+    out->contactDampingRatio = (float)GrappleGen_LuaFieldNum(L, idx, "contactDampingRatio");
+    out->maxContactPushSpeed = (float)GrappleGen_LuaFieldNum(L, idx, "maxContactPushSpeed");
+    out->maximumLinearSpeed = (float)GrappleGen_LuaFieldNum(L, idx, "maximumLinearSpeed");
+    out->enableSleep = (bool)GrappleGen_LuaFieldBool(L, idx, "enableSleep");
+    out->enableContinuous = (bool)GrappleGen_LuaFieldBool(L, idx, "enableContinuous");
+    out->workerCount = (int)GrappleGen_LuaFieldInt(L, idx, "workerCount");
+    out->internalValue = (int)GrappleGen_LuaFieldInt(L, idx, "internalValue");
 }
 
 static void GenPush_b2WorldDef(lua_State *L, const b2WorldDef *in)
@@ -1082,8 +1082,8 @@ static void GenRead_b2WorldId(lua_State *L, int idx, b2WorldId *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
-    out->index1 = (uint16_t)SDLStaticGen_LuaFieldInt(L, idx, "index1");
-    out->generation = (uint16_t)SDLStaticGen_LuaFieldInt(L, idx, "generation");
+    out->index1 = (uint16_t)GrappleGen_LuaFieldInt(L, idx, "index1");
+    out->generation = (uint16_t)GrappleGen_LuaFieldInt(L, idx, "generation");
 }
 
 static void GenPush_b2WorldId(lua_State *L, const b2WorldId *in)
@@ -1955,7 +1955,7 @@ static int GenL_b2CollideChainSegmentAndCapsule(lua_State *L)
     }
     b2Transform a3;
     GenRead_b2Transform(L, 4, &a3);
-    b2SimplexCache *a4 = (b2SimplexCache *)SDLStaticGen_LuaCheckHandle(L, 5, "b2SimplexCache");
+    b2SimplexCache *a4 = (b2SimplexCache *)GrappleGen_LuaCheckHandle(L, 5, "b2SimplexCache");
     b2Manifold rv = b2CollideChainSegmentAndCapsule(a0, a1, a2, a3, a4);
     GenPush_b2Manifold(L, &rv);
     return 1;
@@ -2004,7 +2004,7 @@ static int GenL_b2CollideChainSegmentAndPolygon(lua_State *L)
     }
     b2Transform a3;
     GenRead_b2Transform(L, 4, &a3);
-    b2SimplexCache *a4 = (b2SimplexCache *)SDLStaticGen_LuaCheckHandle(L, 5, "b2SimplexCache");
+    b2SimplexCache *a4 = (b2SimplexCache *)GrappleGen_LuaCheckHandle(L, 5, "b2SimplexCache");
     b2Manifold rv = b2CollideChainSegmentAndPolygon(a0, a1, a2, a3, a4);
     GenPush_b2Manifold(L, &rv);
     return 1;
@@ -2404,7 +2404,7 @@ static int GenL_b2CreateDistanceJoint(lua_State *L)
     (void)L;
     b2WorldId a0;
     GenRead_b2WorldId(L, 1, &a0);
-    const b2DistanceJointDef *a1 = (const b2DistanceJointDef *)SDLStaticGen_LuaCheckHandle(L, 2, "b2DistanceJointDef");
+    const b2DistanceJointDef *a1 = (const b2DistanceJointDef *)GrappleGen_LuaCheckHandle(L, 2, "b2DistanceJointDef");
     b2JointId rv = b2CreateDistanceJoint(a0, a1);
     GenPush_b2JointId(L, &rv);
     return 1;
@@ -2415,7 +2415,7 @@ static int GenL_b2CreateFilterJoint(lua_State *L)
     (void)L;
     b2WorldId a0;
     GenRead_b2WorldId(L, 1, &a0);
-    const b2FilterJointDef *a1 = (const b2FilterJointDef *)SDLStaticGen_LuaCheckHandle(L, 2, "b2FilterJointDef");
+    const b2FilterJointDef *a1 = (const b2FilterJointDef *)GrappleGen_LuaCheckHandle(L, 2, "b2FilterJointDef");
     b2JointId rv = b2CreateFilterJoint(a0, a1);
     GenPush_b2JointId(L, &rv);
     return 1;
@@ -2426,7 +2426,7 @@ static int GenL_b2CreateMotorJoint(lua_State *L)
     (void)L;
     b2WorldId a0;
     GenRead_b2WorldId(L, 1, &a0);
-    const b2MotorJointDef *a1 = (const b2MotorJointDef *)SDLStaticGen_LuaCheckHandle(L, 2, "b2MotorJointDef");
+    const b2MotorJointDef *a1 = (const b2MotorJointDef *)GrappleGen_LuaCheckHandle(L, 2, "b2MotorJointDef");
     b2JointId rv = b2CreateMotorJoint(a0, a1);
     GenPush_b2JointId(L, &rv);
     return 1;
@@ -2437,7 +2437,7 @@ static int GenL_b2CreateMouseJoint(lua_State *L)
     (void)L;
     b2WorldId a0;
     GenRead_b2WorldId(L, 1, &a0);
-    const b2MouseJointDef *a1 = (const b2MouseJointDef *)SDLStaticGen_LuaCheckHandle(L, 2, "b2MouseJointDef");
+    const b2MouseJointDef *a1 = (const b2MouseJointDef *)GrappleGen_LuaCheckHandle(L, 2, "b2MouseJointDef");
     b2JointId rv = b2CreateMouseJoint(a0, a1);
     GenPush_b2JointId(L, &rv);
     return 1;
@@ -2470,7 +2470,7 @@ static int GenL_b2CreatePrismaticJoint(lua_State *L)
     (void)L;
     b2WorldId a0;
     GenRead_b2WorldId(L, 1, &a0);
-    const b2PrismaticJointDef *a1 = (const b2PrismaticJointDef *)SDLStaticGen_LuaCheckHandle(L, 2, "b2PrismaticJointDef");
+    const b2PrismaticJointDef *a1 = (const b2PrismaticJointDef *)GrappleGen_LuaCheckHandle(L, 2, "b2PrismaticJointDef");
     b2JointId rv = b2CreatePrismaticJoint(a0, a1);
     GenPush_b2JointId(L, &rv);
     return 1;
@@ -2481,7 +2481,7 @@ static int GenL_b2CreateRevoluteJoint(lua_State *L)
     (void)L;
     b2WorldId a0;
     GenRead_b2WorldId(L, 1, &a0);
-    const b2RevoluteJointDef *a1 = (const b2RevoluteJointDef *)SDLStaticGen_LuaCheckHandle(L, 2, "b2RevoluteJointDef");
+    const b2RevoluteJointDef *a1 = (const b2RevoluteJointDef *)GrappleGen_LuaCheckHandle(L, 2, "b2RevoluteJointDef");
     b2JointId rv = b2CreateRevoluteJoint(a0, a1);
     GenPush_b2JointId(L, &rv);
     return 1;
@@ -2514,7 +2514,7 @@ static int GenL_b2CreateWeldJoint(lua_State *L)
     (void)L;
     b2WorldId a0;
     GenRead_b2WorldId(L, 1, &a0);
-    const b2WeldJointDef *a1 = (const b2WeldJointDef *)SDLStaticGen_LuaCheckHandle(L, 2, "b2WeldJointDef");
+    const b2WeldJointDef *a1 = (const b2WeldJointDef *)GrappleGen_LuaCheckHandle(L, 2, "b2WeldJointDef");
     b2JointId rv = b2CreateWeldJoint(a0, a1);
     GenPush_b2JointId(L, &rv);
     return 1;
@@ -2525,7 +2525,7 @@ static int GenL_b2CreateWheelJoint(lua_State *L)
     (void)L;
     b2WorldId a0;
     GenRead_b2WorldId(L, 1, &a0);
-    const b2WheelJointDef *a1 = (const b2WheelJointDef *)SDLStaticGen_LuaCheckHandle(L, 2, "b2WheelJointDef");
+    const b2WheelJointDef *a1 = (const b2WheelJointDef *)GrappleGen_LuaCheckHandle(L, 2, "b2WheelJointDef");
     b2JointId rv = b2CreateWheelJoint(a0, a1);
     GenPush_b2JointId(L, &rv);
     return 1;
@@ -2869,7 +2869,7 @@ static int GenL_b2DistanceJoint_SetSpringHertz(lua_State *L)
 static int GenL_b2DynamicTree_CreateProxy(lua_State *L)
 {
     (void)L;
-    b2DynamicTree *a0 = (b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    b2DynamicTree *a0 = (b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     b2AABB a1;
     GenRead_b2AABB(L, 2, &a1);
     uint64_t a2 = (uint64_t)luaL_checkinteger(L, 3);
@@ -2882,7 +2882,7 @@ static int GenL_b2DynamicTree_CreateProxy(lua_State *L)
 static int GenL_b2DynamicTree_Destroy(lua_State *L)
 {
     (void)L;
-    b2DynamicTree *a0 = (b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    b2DynamicTree *a0 = (b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     b2DynamicTree_Destroy(a0);
     return 0;
 }
@@ -2890,7 +2890,7 @@ static int GenL_b2DynamicTree_Destroy(lua_State *L)
 static int GenL_b2DynamicTree_DestroyProxy(lua_State *L)
 {
     (void)L;
-    b2DynamicTree *a0 = (b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    b2DynamicTree *a0 = (b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     int a1 = (int)luaL_checkinteger(L, 2);
     b2DynamicTree_DestroyProxy(a0, a1);
     return 0;
@@ -2899,7 +2899,7 @@ static int GenL_b2DynamicTree_DestroyProxy(lua_State *L)
 static int GenL_b2DynamicTree_EnlargeProxy(lua_State *L)
 {
     (void)L;
-    b2DynamicTree *a0 = (b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    b2DynamicTree *a0 = (b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     int a1 = (int)luaL_checkinteger(L, 2);
     b2AABB a2;
     GenRead_b2AABB(L, 3, &a2);
@@ -2910,7 +2910,7 @@ static int GenL_b2DynamicTree_EnlargeProxy(lua_State *L)
 static int GenL_b2DynamicTree_GetAABB(lua_State *L)
 {
     (void)L;
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     int a1 = (int)luaL_checkinteger(L, 2);
     b2AABB rv = b2DynamicTree_GetAABB(a0, a1);
     GenPush_b2AABB(L, &rv);
@@ -2920,7 +2920,7 @@ static int GenL_b2DynamicTree_GetAABB(lua_State *L)
 static int GenL_b2DynamicTree_GetAreaRatio(lua_State *L)
 {
     (void)L;
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     float rv = b2DynamicTree_GetAreaRatio(a0);
     lua_pushnumber(L, (lua_Number)rv);
     return 1;
@@ -2929,7 +2929,7 @@ static int GenL_b2DynamicTree_GetAreaRatio(lua_State *L)
 static int GenL_b2DynamicTree_GetByteCount(lua_State *L)
 {
     (void)L;
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     int rv = b2DynamicTree_GetByteCount(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2938,7 +2938,7 @@ static int GenL_b2DynamicTree_GetByteCount(lua_State *L)
 static int GenL_b2DynamicTree_GetCategoryBits(lua_State *L)
 {
     (void)L;
-    b2DynamicTree *a0 = (b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    b2DynamicTree *a0 = (b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     int a1 = (int)luaL_checkinteger(L, 2);
     uint64_t rv = b2DynamicTree_GetCategoryBits(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -2948,7 +2948,7 @@ static int GenL_b2DynamicTree_GetCategoryBits(lua_State *L)
 static int GenL_b2DynamicTree_GetHeight(lua_State *L)
 {
     (void)L;
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     int rv = b2DynamicTree_GetHeight(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2957,7 +2957,7 @@ static int GenL_b2DynamicTree_GetHeight(lua_State *L)
 static int GenL_b2DynamicTree_GetProxyCount(lua_State *L)
 {
     (void)L;
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     int rv = b2DynamicTree_GetProxyCount(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
@@ -2966,7 +2966,7 @@ static int GenL_b2DynamicTree_GetProxyCount(lua_State *L)
 static int GenL_b2DynamicTree_GetRootBounds(lua_State *L)
 {
     (void)L;
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     b2AABB rv = b2DynamicTree_GetRootBounds(a0);
     GenPush_b2AABB(L, &rv);
     return 1;
@@ -2975,7 +2975,7 @@ static int GenL_b2DynamicTree_GetRootBounds(lua_State *L)
 static int GenL_b2DynamicTree_GetUserData(lua_State *L)
 {
     (void)L;
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     int a1 = (int)luaL_checkinteger(L, 2);
     uint64_t rv = b2DynamicTree_GetUserData(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -2985,7 +2985,7 @@ static int GenL_b2DynamicTree_GetUserData(lua_State *L)
 static int GenL_b2DynamicTree_MoveProxy(lua_State *L)
 {
     (void)L;
-    b2DynamicTree *a0 = (b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    b2DynamicTree *a0 = (b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     int a1 = (int)luaL_checkinteger(L, 2);
     b2AABB a2;
     GenRead_b2AABB(L, 3, &a2);
@@ -2996,7 +2996,7 @@ static int GenL_b2DynamicTree_MoveProxy(lua_State *L)
 static int GenL_b2DynamicTree_Rebuild(lua_State *L)
 {
     (void)L;
-    b2DynamicTree *a0 = (b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    b2DynamicTree *a0 = (b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     bool a1 = (bool)lua_toboolean(L, 2);
     int rv = b2DynamicTree_Rebuild(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
@@ -3006,7 +3006,7 @@ static int GenL_b2DynamicTree_Rebuild(lua_State *L)
 static int GenL_b2DynamicTree_SetCategoryBits(lua_State *L)
 {
     (void)L;
-    b2DynamicTree *a0 = (b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    b2DynamicTree *a0 = (b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     int a1 = (int)luaL_checkinteger(L, 2);
     uint64_t a2 = (uint64_t)luaL_checkinteger(L, 3);
     b2DynamicTree_SetCategoryBits(a0, a1, a2);
@@ -3016,7 +3016,7 @@ static int GenL_b2DynamicTree_SetCategoryBits(lua_State *L)
 static int GenL_b2DynamicTree_Validate(lua_State *L)
 {
     (void)L;
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     b2DynamicTree_Validate(a0);
     return 0;
 }
@@ -3024,7 +3024,7 @@ static int GenL_b2DynamicTree_Validate(lua_State *L)
 static int GenL_b2DynamicTree_ValidateNoEnlarged(lua_State *L)
 {
     (void)L;
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_LuaCheckHandle(L, 1, "b2DynamicTree");
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_LuaCheckHandle(L, 1, "b2DynamicTree");
     b2DynamicTree_ValidateNoEnlarged(a0);
     return 0;
 }
@@ -3411,7 +3411,7 @@ static int GenL_b2MakeOffsetBox(lua_State *L)
 static int GenL_b2MakeOffsetPolygon(lua_State *L)
 {
     (void)L;
-    const b2Hull *a0 = (const b2Hull *)SDLStaticGen_LuaCheckHandle(L, 1, "b2Hull");
+    const b2Hull *a0 = (const b2Hull *)GrappleGen_LuaCheckHandle(L, 1, "b2Hull");
     b2Vec2 a1;
     GenRead_b2Vec2(L, 2, &a1);
     b2Rot a2;
@@ -3459,7 +3459,7 @@ static int GenL_b2MakeOffsetRoundedBox(lua_State *L)
 static int GenL_b2MakeOffsetRoundedPolygon(lua_State *L)
 {
     (void)L;
-    const b2Hull *a0 = (const b2Hull *)SDLStaticGen_LuaCheckHandle(L, 1, "b2Hull");
+    const b2Hull *a0 = (const b2Hull *)GrappleGen_LuaCheckHandle(L, 1, "b2Hull");
     b2Vec2 a1;
     GenRead_b2Vec2(L, 2, &a1);
     b2Rot a2;
@@ -3473,7 +3473,7 @@ static int GenL_b2MakeOffsetRoundedPolygon(lua_State *L)
 static int GenL_b2MakePolygon(lua_State *L)
 {
     (void)L;
-    const b2Hull *a0 = (const b2Hull *)SDLStaticGen_LuaCheckHandle(L, 1, "b2Hull");
+    const b2Hull *a0 = (const b2Hull *)GrappleGen_LuaCheckHandle(L, 1, "b2Hull");
     float a1 = (float)luaL_checknumber(L, 2);
     b2Polygon rv = b2MakePolygon(a0, a1);
     GenPush_b2Polygon(L, &rv);
@@ -4386,7 +4386,7 @@ static int GenL_b2ShapeDistance(lua_State *L)
         GenRead_b2DistanceInput(L, 1, &tmp0);
         a0 = &tmp0;
     }
-    b2SimplexCache *a1 = (b2SimplexCache *)SDLStaticGen_LuaCheckHandle(L, 2, "b2SimplexCache");
+    b2SimplexCache *a1 = (b2SimplexCache *)GrappleGen_LuaCheckHandle(L, 2, "b2SimplexCache");
     b2Simplex out2;
     memset(&out2, 0, sizeof(out2));
     int a3 = (int)luaL_checkinteger(L, 3);
@@ -4924,7 +4924,7 @@ static int GenL_b2TransformPolygon(lua_State *L)
 static int GenL_b2ValidateHull(lua_State *L)
 {
     (void)L;
-    const b2Hull *a0 = (const b2Hull *)SDLStaticGen_LuaCheckHandle(L, 1, "b2Hull");
+    const b2Hull *a0 = (const b2Hull *)GrappleGen_LuaCheckHandle(L, 1, "b2Hull");
     bool rv = b2ValidateHull(a0);
     lua_pushboolean(L, (int)rv);
     return 1;
@@ -5232,7 +5232,7 @@ static int GenL_b2World_Draw(lua_State *L)
     (void)L;
     b2WorldId a0;
     GenRead_b2WorldId(L, 1, &a0);
-    b2DebugDraw *a1 = (b2DebugDraw *)SDLStaticGen_LuaCheckHandle(L, 2, "b2DebugDraw");
+    b2DebugDraw *a1 = (b2DebugDraw *)GrappleGen_LuaCheckHandle(L, 2, "b2DebugDraw");
     b2World_Draw(a0, a1);
     return 0;
 }
@@ -5491,8 +5491,8 @@ static int GenL_b2Yield(lua_State *L)
     return 0;
 }
 
-int SDLStaticGen_OpenLua_b2(lua_State *L);
-int SDLStaticGen_OpenLua_b2(lua_State *L)
+int GrappleGen_OpenLua_b2(lua_State *L);
+int GrappleGen_OpenLua_b2(lua_State *L)
 {
     lua_createtable(L, 0, 385);
     lua_pushcfunction(L, GenL_b2Atan2);

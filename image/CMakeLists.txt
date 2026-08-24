@@ -1,4 +1,4 @@
-# SDLStatic::Image — static-link-first build of the vendored SDL3_image
+# Grapple::Image — static-link-first build of the vendored SDL3_image
 # sources (upstream release-3.4.4; provenance in deps/SDL3_image.md).
 #
 # Heavy-codec translation units (AVIF, JXL, WEBP, TIFF, libpng, WIC, ImageIO)
@@ -14,7 +14,7 @@
 # The root project is CXX-only; the vendored SDL3_image sources are C.
 enable_language(C)
 
-add_library(SDLStatic_Image STATIC
+add_library(Grapple_Image STATIC
   src/IMG.c
   src/IMG_ani.c
   src/IMG_anim_encoder.c
@@ -35,18 +35,18 @@ add_library(SDLStatic_Image STATIC
   src/IMG_xpm.c
   src/IMG_xv.c
 )
-add_library(SDLStatic::Image ALIAS SDLStatic_Image)
+add_library(Grapple::Image ALIAS Grapple_Image)
 
 if("c_std_99" IN_LIST CMAKE_C_COMPILE_FEATURES)
-  target_compile_features(SDLStatic_Image PRIVATE c_std_99)
+  target_compile_features(Grapple_Image PRIVATE c_std_99)
 endif()
 
-set_target_properties(SDLStatic_Image PROPERTIES
-  OUTPUT_NAME SDLStatic_Image
+set_target_properties(Grapple_Image PROPERTIES
+  OUTPUT_NAME Grapple_Image
   POSITION_INDEPENDENT_CODE ON
 )
 
-target_compile_definitions(SDLStatic_Image PRIVATE
+target_compile_definitions(Grapple_Image PRIVATE
   USE_STBIMAGE
   LOAD_ANI
   LOAD_BMP
@@ -68,17 +68,17 @@ if(APPLE)
   # No ImageIO backend here (stb everywhere): upstream wraps the common C
   # decoders in `!defined(__APPLE__) || defined(SDL_IMAGE_USE_COMMON_BACKEND)`,
   # so this define is required on macOS/iOS or the format TUs compile empty.
-  target_compile_definitions(SDLStatic_Image PRIVATE SDL_IMAGE_USE_COMMON_BACKEND)
+  target_compile_definitions(Grapple_Image PRIVATE SDL_IMAGE_USE_COMMON_BACKEND)
 endif()
 
-target_include_directories(SDLStatic_Image
+target_include_directories(Grapple_Image
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-target_link_libraries(SDLStatic_Image PUBLIC SDL3::SDL3)
+target_link_libraries(Grapple_Image PUBLIC SDL3::SDL3)
 
 # Vendored upstream C: build quietly rather than under the project's
 # warnings-as-errors regime; our own code around it stays strict.

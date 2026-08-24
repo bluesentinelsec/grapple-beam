@@ -1,6 +1,6 @@
 /**
  * @file vfs_test.cpp
- * @brief Tests for SDLStatic::VFS — vendored PhysFS (ZIP-only) + glue.
+ * @brief Tests for Grapple::VFS — vendored PhysFS (ZIP-only) + glue.
  *
  * The corpus (tests/vfs/assets) is built by scripts/pack_assets.py: a
  * deterministic zip and the same zip in the SSE1 encrypted container.
@@ -9,8 +9,8 @@
  */
 
 #include <SDL3/SDL.h>
-#include <SDLStatic/crypto.h>
-#include <SDLStatic/vfs.h>
+#include <grapple/crypto.h>
+#include <grapple/vfs.h>
 #include <gtest/gtest.h>
 #include <physfs.h>
 
@@ -89,14 +89,14 @@ TEST_F(VfsFoundation, MountsZipFromDiskAndReadsExactContents)
 
     // Text file, exact bytes.
     int size = 0;
-    unsigned char *hello = SDLStatic_LoadVFSFile("hello.txt", &size);
+    unsigned char *hello = Grapple_LoadVFSFile("hello.txt", &size);
     ASSERT_NE(hello, nullptr) << SDL_GetError();
     EXPECT_EQ(std::string(reinterpret_cast<char *>(hello), static_cast<size_t>(size)),
               "Hello from the vault!\n");
     SDL_free(hello);
 
     // Nested paths and binary integrity.
-    unsigned char *hero = SDLStatic_LoadVFSFile("sprites/hero.dat", &size);
+    unsigned char *hero = Grapple_LoadVFSFile("sprites/hero.dat", &size);
     ASSERT_NE(hero, nullptr) << SDL_GetError();
     ASSERT_EQ(size, 256);
     for (int i = 0; i < 256; ++i)
@@ -125,7 +125,7 @@ TEST_F(VfsFoundation, MountsZipImageFromMemory)
         << PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode());
 
     int size = 0;
-    unsigned char *json = SDLStatic_LoadVFSFile("/mem/config/level.json", &size);
+    unsigned char *json = Grapple_LoadVFSFile("/mem/config/level.json", &size);
     ASSERT_NE(json, nullptr) << SDL_GetError();
     EXPECT_NE(std::strstr(reinterpret_cast<char *>(json), "kraken"), nullptr);
     SDL_free(json);
@@ -138,12 +138,12 @@ TEST_F(VfsFoundation, MountsPythonEncryptedArchive)
     // implementation here — cross-validating both.
     const std::vector<unsigned char> blob = ReadHostFile("media_encrypted.bin");
     ASSERT_FALSE(blob.empty());
-    ASSERT_TRUE(SDLStatic_MountEncryptedArchive(blob.data(), static_cast<int>(blob.size()),
+    ASSERT_TRUE(Grapple_MountEncryptedArchive(blob.data(), static_cast<int>(blob.size()),
                                                 "openSesame", "/vault"))
         << SDL_GetError();
 
     int size = 0;
-    unsigned char *hello = SDLStatic_LoadVFSFile("/vault/hello.txt", &size);
+    unsigned char *hello = Grapple_LoadVFSFile("/vault/hello.txt", &size);
     ASSERT_NE(hello, nullptr) << SDL_GetError();
     EXPECT_EQ(std::string(reinterpret_cast<char *>(hello), static_cast<size_t>(size)),
               "Hello from the vault!\n");
@@ -154,25 +154,25 @@ TEST_F(VfsFoundation, EncryptedMountRejectsWrongPasswordAndGarbage)
 {
     const std::vector<unsigned char> blob = ReadHostFile("media_encrypted.bin");
     ASSERT_FALSE(blob.empty());
-    EXPECT_FALSE(SDLStatic_MountEncryptedArchive(blob.data(), static_cast<int>(blob.size()),
+    EXPECT_FALSE(Grapple_MountEncryptedArchive(blob.data(), static_cast<int>(blob.size()),
                                                  "wrongPassword", "/vault"));
 
     // Valid password but payload isn't a zip: encrypt junk on the fly.
     int encSize = 0;
     const unsigned char junk[] = "this is not a zip archive at all";
-    unsigned char *enc = SDLStatic_EncryptData(junk, sizeof(junk), "pw", &encSize);
+    unsigned char *enc = Grapple_EncryptData(junk, sizeof(junk), "pw", &encSize);
     ASSERT_NE(enc, nullptr);
-    EXPECT_FALSE(SDLStatic_MountEncryptedArchive(enc, encSize, "pw", "/junk"));
+    EXPECT_FALSE(Grapple_MountEncryptedArchive(enc, encSize, "pw", "/junk"));
     SDL_free(enc);
 
-    EXPECT_FALSE(SDLStatic_MountEncryptedArchive(nullptr, 0, "pw", "/x"));
-    EXPECT_FALSE(SDLStatic_MountEncryptedArchiveFile(AssetPath("missing.bin").c_str(), "pw",
+    EXPECT_FALSE(Grapple_MountEncryptedArchive(nullptr, 0, "pw", "/x"));
+    EXPECT_FALSE(Grapple_MountEncryptedArchiveFile(AssetPath("missing.bin").c_str(), "pw",
                                                      "/x"));
 }
 
 TEST_F(VfsFoundation, EncryptedMountFromFileWorks)
 {
-    ASSERT_TRUE(SDLStatic_MountEncryptedArchiveFile(AssetPath("media_encrypted.bin").c_str(),
+    ASSERT_TRUE(Grapple_MountEncryptedArchiveFile(AssetPath("media_encrypted.bin").c_str(),
                                                     "openSesame", nullptr))
         << SDL_GetError();
     EXPECT_NE(PHYSFS_exists("sprites/hero.dat"), 0);
@@ -181,7 +181,7 @@ TEST_F(VfsFoundation, EncryptedMountFromFileWorks)
 TEST_F(VfsFoundation, IoStreamBridgeSupportsSizeSeekRead)
 {
     ASSERT_TRUE(PHYSFS_mount(AssetPath("media.zip").c_str(), "/", 1));
-    SDL_IOStream *stream = SDLStatic_OpenVFSRead("hello.txt");
+    SDL_IOStream *stream = Grapple_OpenVFSRead("hello.txt");
     ASSERT_NE(stream, nullptr) << SDL_GetError();
 
     EXPECT_EQ(SDL_GetIOSize(stream), 22);
@@ -208,7 +208,7 @@ TEST_F(VfsFoundation, IoStreamBridgeSupportsSizeSeekRead)
     SDL_free(data);
 
     // Writes must be refused on a fresh stream.
-    SDL_IOStream *ro = SDLStatic_OpenVFSRead("hello.txt");
+    SDL_IOStream *ro = Grapple_OpenVFSRead("hello.txt");
     ASSERT_NE(ro, nullptr);
     EXPECT_EQ(SDL_WriteIO(ro, "x", 1), 0u);
     SDL_CloseIO(ro);
@@ -244,7 +244,7 @@ TEST_F(VfsFoundation, MalformedZipImagesFailCleanly)
         {
             /* if it mounted, reading through it must not crash either */
             int size = 0;
-            unsigned char *data = SDLStatic_LoadVFSFile("/fuzz/hello.txt", &size);
+            unsigned char *data = Grapple_LoadVFSFile("/fuzz/hello.txt", &size);
             SDL_free(data);
             PHYSFS_unmount("fuzz.zip");
         }

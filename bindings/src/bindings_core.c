@@ -1,11 +1,11 @@
 /*
  * bindings_core.c — implementation of the language-independent binding core.
- * Original SDLStatic code (zlib). See bindings_core.h.
+ * Original Grapple code (zlib). See bindings_core.h.
  */
 #include "bindings_core.h"
 
 #include <SDL3_image/SDL_image.h>
-#include <SDLStatic/vfs.h>
+#include <grapple/vfs.h>
 #include <physfs.h>
 
 BindApp *BindApp_Create(const char *title, int w, int h)
@@ -141,7 +141,7 @@ BindTexture *BindApp_LoadTexture(BindApp *app, const char *path)
     SDL_Surface *surface = NULL;
     if (PHYSFS_isInit() && PHYSFS_exists(path))
     {
-        SDL_IOStream *io = SDLStatic_OpenVFSRead(path);
+        SDL_IOStream *io = Grapple_OpenVFSRead(path);
         if (io != NULL)
         {
             surface = IMG_Load_IO(io, true);
@@ -239,7 +239,7 @@ BindSound *BindAudio_Load(BindAudio *audio, const char *path)
     MIX_Audio *loaded = NULL;
     if (PHYSFS_isInit() && PHYSFS_exists(path))
     {
-        SDL_IOStream *io = SDLStatic_OpenVFSRead(path);
+        SDL_IOStream *io = Grapple_OpenVFSRead(path);
         if (io != NULL)
         {
             loaded = MIX_LoadAudio_IO(audio->mixer, io, true, true);

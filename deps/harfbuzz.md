@@ -18,7 +18,7 @@ were not imported.
 
 ## Build configuration
 
-Compiled as one C++ TU (`harfbuzz.cc`) inside `SDLStatic_TTF` with:
+Compiled as one C++ TU (`harfbuzz.cc`) inside `Grapple_TTF` with:
 
 - `HAVE_FREETYPE=1` — enables `hb-ft` so SDL_ttf can wrap FreeType faces
 - `HB_NO_MMAP=1` — no platform mmap paths; keeps the TU portable

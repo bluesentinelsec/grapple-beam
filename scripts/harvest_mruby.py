@@ -10,8 +10,8 @@ serves every target platform.
 
 Regenerate:
   1. tar xzf mruby-4.0.0.tar.gz && cd mruby-4.0.0
-  2. cp <repo>/scripts/mruby_build_config.rb build_config/sdlstatic.rb
-  3. rake MRUBY_CONFIG=build_config/sdlstatic.rb
+  2. cp <repo>/scripts/mruby_build_config.rb build_config/grapple.rb
+  3. rake MRUBY_CONFIG=build_config/grapple.rb
   4. python3 <repo>/scripts/harvest_mruby.py <mruby-dir> <repo>/mruby
 """
 import shutil, sys

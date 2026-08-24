@@ -1,16 +1,16 @@
 /*
  * gen_support_lua.c — marshaling runtime for the generated Lua bindings.
- * Original SDLStatic code (zlib). See gen_support_lua.h for the model.
+ * Original Grapple code (zlib). See gen_support_lua.h for the model.
  */
 #include "gen_support_lua.h"
 
 #include <string.h>
 
-#define GEN_MT "SDLStaticGen.Handle"
+#define GEN_MT "GrappleGen.Handle"
 
 static int GenHandleGc(lua_State *L)
 {
-    SDLStaticGen_Handle *h = (SDLStaticGen_Handle *)luaL_checkudata(L, 1, GEN_MT);
+    GrappleGen_Handle *h = (GrappleGen_Handle *)luaL_checkudata(L, 1, GEN_MT);
     if (h->ptr != NULL && h->dtor != NULL)
     {
         h->dtor(h->ptr);
@@ -22,7 +22,7 @@ static int GenHandleGc(lua_State *L)
 
 static int GenHandleTostring(lua_State *L)
 {
-    SDLStaticGen_Handle *h = (SDLStaticGen_Handle *)luaL_checkudata(L, 1, GEN_MT);
+    GrappleGen_Handle *h = (GrappleGen_Handle *)luaL_checkudata(L, 1, GEN_MT);
     lua_pushfstring(L, "%s: %p%s", h->ctype, h->ptr,
                     h->dtor != NULL ? " (owned)" : "");
     return 1;
@@ -40,36 +40,36 @@ static void GenEnsureMetatable(lua_State *L)
     lua_pop(L, 1);
 }
 
-static void GenPush(lua_State *L, void *ptr, const char *ctype, SDLStaticGen_Dtor dtor)
+static void GenPush(lua_State *L, void *ptr, const char *ctype, GrappleGen_Dtor dtor)
 {
-    SDLStaticGen_Handle *h;
+    GrappleGen_Handle *h;
     if (ptr == NULL)
     {
         lua_pushnil(L);
         return;
     }
     GenEnsureMetatable(L);
-    h = (SDLStaticGen_Handle *)lua_newuserdatauv(L, sizeof(SDLStaticGen_Handle), 0);
+    h = (GrappleGen_Handle *)lua_newuserdatauv(L, sizeof(GrappleGen_Handle), 0);
     h->ptr = ptr;
     h->ctype = ctype;
     h->dtor = dtor;
     luaL_setmetatable(L, GEN_MT);
 }
 
-void SDLStaticGen_LuaPushHandle(lua_State *L, void *ptr, const char *ctype)
+void GrappleGen_LuaPushHandle(lua_State *L, void *ptr, const char *ctype)
 {
     GenPush(L, ptr, ctype, NULL);
 }
 
-void SDLStaticGen_LuaPushOwned(lua_State *L, void *ptr, const char *ctype,
-                               SDLStaticGen_Dtor dtor)
+void GrappleGen_LuaPushOwned(lua_State *L, void *ptr, const char *ctype,
+                               GrappleGen_Dtor dtor)
 {
     GenPush(L, ptr, ctype, dtor);
 }
 
-static SDLStaticGen_Handle *GenCheck(lua_State *L, int idx, const char *ctype)
+static GrappleGen_Handle *GenCheck(lua_State *L, int idx, const char *ctype)
 {
-    SDLStaticGen_Handle *h = (SDLStaticGen_Handle *)luaL_checkudata(L, idx, GEN_MT);
+    GrappleGen_Handle *h = (GrappleGen_Handle *)luaL_checkudata(L, idx, GEN_MT);
     if (strcmp(h->ctype, ctype) != 0)
     {
         luaL_error(L, "expected %s, got %s", ctype, h->ctype);
@@ -78,7 +78,7 @@ static SDLStaticGen_Handle *GenCheck(lua_State *L, int idx, const char *ctype)
     return h;
 }
 
-void *SDLStaticGen_LuaCheckHandle(lua_State *L, int idx, const char *ctype)
+void *GrappleGen_LuaCheckHandle(lua_State *L, int idx, const char *ctype)
 {
     if (lua_isnoneornil(L, idx))
     {
@@ -87,9 +87,9 @@ void *SDLStaticGen_LuaCheckHandle(lua_State *L, int idx, const char *ctype)
     return GenCheck(L, idx, ctype)->ptr;
 }
 
-void *SDLStaticGen_LuaTakeHandle(lua_State *L, int idx, const char *ctype)
+void *GrappleGen_LuaTakeHandle(lua_State *L, int idx, const char *ctype)
 {
-    SDLStaticGen_Handle *h;
+    GrappleGen_Handle *h;
     if (lua_isnoneornil(L, idx))
     {
         return NULL;
@@ -103,7 +103,7 @@ void *SDLStaticGen_LuaTakeHandle(lua_State *L, int idx, const char *ctype)
     }
 }
 
-lua_Integer SDLStaticGen_LuaFieldInt(lua_State *L, int idx, const char *field)
+lua_Integer GrappleGen_LuaFieldInt(lua_State *L, int idx, const char *field)
 {
     lua_Integer out;
     lua_getfield(L, idx, field);
@@ -112,7 +112,7 @@ lua_Integer SDLStaticGen_LuaFieldInt(lua_State *L, int idx, const char *field)
     return out;
 }
 
-lua_Number SDLStaticGen_LuaFieldNum(lua_State *L, int idx, const char *field)
+lua_Number GrappleGen_LuaFieldNum(lua_State *L, int idx, const char *field)
 {
     lua_Number out;
     lua_getfield(L, idx, field);
@@ -121,7 +121,7 @@ lua_Number SDLStaticGen_LuaFieldNum(lua_State *L, int idx, const char *field)
     return out;
 }
 
-int SDLStaticGen_LuaFieldBool(lua_State *L, int idx, const char *field)
+int GrappleGen_LuaFieldBool(lua_State *L, int idx, const char *field)
 {
     int out;
     lua_getfield(L, idx, field);

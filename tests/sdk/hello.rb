@@ -1,13 +1,13 @@
 # The Ruby half of the same check.
-cfg = SDLStaticC.ConfigCreate
-SDLStaticC.ConfigSetHeadless(cfg, true)
-SDLStaticC.ConfigSetManualClock(cfg, true)
-SDLStaticC.ConfigSetAutoMount(cfg, false)
-engine = SDLStaticC.CreateEngine(cfg)
-SDLStaticC.ConfigDestroy(cfg)
+cfg = GrappleC.ConfigCreate
+GrappleC.ConfigSetHeadless(cfg, true)
+GrappleC.ConfigSetManualClock(cfg, true)
+GrappleC.ConfigSetAutoMount(cfg, false)
+engine = GrappleC.CreateEngine(cfg)
+GrappleC.ConfigDestroy(cfg)
 raise "the runner could not create an engine" if engine.nil?
-SDLStaticC.EngineAdvance(engine, 16666667)
-SDLStaticC.EngineTick(engine)
-raise "no frames" unless SDLStaticC.EngineFrameCount(engine) >= 1
-SDLStaticC.DestroyEngine(engine)
+GrappleC.EngineAdvance(engine, 16666667)
+GrappleC.EngineTick(engine)
+raise "no frames" unless GrappleC.EngineFrameCount(engine) >= 1
+GrappleC.DestroyEngine(engine)
 puts "runner ok: ruby on #{SDL.GetPlatform}"

@@ -1,22 +1,22 @@
-add_executable(SDL3_static_extensions_genbindings_test
+add_executable(grapple_genbindings_test
   genbindings_test.cpp
 )
-target_link_libraries(SDL3_static_extensions_genbindings_test
+target_link_libraries(grapple_genbindings_test
   PRIVATE
-    SDLStatic::Bindings
-    SDLStatic::Cpp
-    SDLStatic::Physics
-    SDLStatic::Formats
+    Grapple::Bindings
+    Grapple::Cpp
+    Grapple::Physics
+    Grapple::Formats
     GTest::gtest_main
 )
-cppboot_set_project_warnings(SDL3_static_extensions_genbindings_test)
-gtest_discover_tests(SDL3_static_extensions_genbindings_test DISCOVERY_TIMEOUT 60)
+cppboot_set_project_warnings(grapple_genbindings_test)
+gtest_discover_tests(grapple_genbindings_test DISCOVERY_TIMEOUT 60)
 
 find_package(Python3 COMPONENTS Interpreter)
 if(Python3_Interpreter_FOUND)
   add_test(NAME genbindings_link_audit
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/scripts/link_audit.py
-            $<TARGET_FILE:SDL3_static_extensions_genbindings_test>
+            $<TARGET_FILE:grapple_genbindings_test>
   )
   # Nuklear stays public-API only: NK_LIB/NK_INTERN must not be bound, and
   # only value types get field access.

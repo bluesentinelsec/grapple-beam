@@ -22,8 +22,8 @@ Build system, samples, docs, benchmarks, test suite, `.natvis`.
 
 ## Original additions (not vendored)
 
-`physics/glue/sdlstatic_physics_draw.c` + `<SDLStatic/physics_draw.h>`:
-`SDLStatic_DrawPhysicsWorld()` wires `b2DebugDraw` to the SDLStatic::Gfx
+`physics/glue/grapple_physics_draw.c` + `<grapple/physics_draw.h>`:
+`Grapple_DrawPhysicsWorld()` wires `b2DebugDraw` to the Grapple::Gfx
 GPU primitives — collision shapes render as a batched overlay through one
 `SDL_Renderer`, with world-meters → screen-pixels mapping (y flipped).
 

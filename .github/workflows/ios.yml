@@ -54,12 +54,12 @@ jobs:
           -DCMAKE_OSX_ARCHITECTURES=arm64
           -DCMAKE_OSX_DEPLOYMENT_TARGET=13.0
           -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO
-          -DSDL3_STATIC_EXTENSIONS_BUILD_APP=OFF
-          -DSDL3_STATIC_EXTENSIONS_BUILD_TESTS=OFF
-          -DSDL3_STATIC_EXTENSIONS_BUILD_BENCHMARKS=OFF
-          -DSDL3_STATIC_EXTENSIONS_WITH_CLI11=OFF
-          -DSDL3_STATIC_EXTENSIONS_WITH_JSON=OFF
-          -DSDL3_STATIC_EXTENSIONS_WITH_SPDLOG=OFF
+          -DGRAPPLE_BEAM_BUILD_APP=OFF
+          -DGRAPPLE_BEAM_BUILD_TESTS=OFF
+          -DGRAPPLE_BEAM_BUILD_BENCHMARKS=OFF
+          -DGRAPPLE_BEAM_WITH_CLI11=OFF
+          -DGRAPPLE_BEAM_WITH_JSON=OFF
+          -DGRAPPLE_BEAM_WITH_SPDLOG=OFF
 
       # Both SDK targets, so every component is compiled and the pair stays in
       # step. Building only one is what broke the full iOS run after the C++
@@ -67,7 +67,7 @@ jobs:
       - name: Build the SDKs
         run: >
           cmake --build build/ios --config Release
-          --target SDLStatic_SDK SDLStatic_SDK_Cxx --parallel
+          --target Grapple_SDK Grapple_SDK_Cxx --parallel
 
       # The install rules, which the packaging script relies on to stage
       # headers. They are a different code path from the build and have
@@ -78,7 +78,7 @@ jobs:
       - name: Verify the archive carries the engine
         run: |
           set -euo pipefail
-          archive="$(find build/ios -name libSDL3_static_extensions_sdk_cxx.a -print -quit)"
+          archive="$(find build/ios -name libgrapple_sdk_cxx.a -print -quit)"
           test -n "${archive}"
           size="$(stat -f%z "${archive}")"
           if [ "${size}" -lt 5000000 ]; then
@@ -86,7 +86,7 @@ jobs:
             exit 1
           fi
           nm -g "${archive}" > ios-symbols.txt
-          for symbol in _SDLStatic_CreateEngine _SDLStatic_OpenLuaBindings _SDL_CreateWindow; do
+          for symbol in _Grapple_CreateEngine _Grapple_OpenLuaBindings _SDL_CreateWindow; do
             if ! grep -qE "[ST] ${symbol}$" ios-symbols.txt; then
               echo "Missing ${symbol} — the iOS archive is not carrying the engine" >&2
               exit 1
@@ -102,7 +102,7 @@ jobs:
     # CI iteration profile: Release only, simulator slice arm64-only (runners
     # are arm64). The release workflow builds the full fat simulator slice.
     env:
-      SDL3_STATIC_EXTENSIONS_IOS_SIMULATOR_ARCHS: arm64
+      GRAPPLE_BEAM_IOS_SIMULATOR_ARCHS: arm64
 
     defaults:
       run:
@@ -122,7 +122,7 @@ jobs:
         run: |
           bash scripts/build_ios_xcframework.sh Release build/ios/release
           bash scripts/build_ios_test_apps.sh \
-            build/ios/release/SDL3-static-extensions.xcframework Release build/ios/consumer-release
+            build/ios/release/grapple-beam.xcframework Release build/ios/consumer-release
 
       - name: Run Release package tests in iOS Simulator
         env:
@@ -133,8 +133,8 @@ jobs:
         id: ios_package
         run: |
           version="$(tr -d '[:space:]' < VERSION | sed 's/^v//;s/^V//;s/#.*//')"
-          echo "artifact_name=SDL3-static-extensions-ios-xcframework-release-${version}" >> "${GITHUB_OUTPUT}"
-          echo "artifact_path=build/ios/release/SDL3-static-extensions-ios-xcframework-release-${version}.zip" >> "${GITHUB_OUTPUT}"
+          echo "artifact_name=grapple-beam-ios-xcframework-release-${version}" >> "${GITHUB_OUTPUT}"
+          echo "artifact_path=build/ios/release/grapple-beam-ios-xcframework-release-${version}.zip" >> "${GITHUB_OUTPUT}"
 
       - name: Upload iOS package
         uses: actions/upload-artifact@v7

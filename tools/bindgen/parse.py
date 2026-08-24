@@ -2,7 +2,7 @@
 
 These headers follow rigid per-library declaration macros
 (SDL_DECLSPEC/SDLCALL, PHYSFS_DECL, B2_API, NK_API, CJSON_PUBLIC, plain
-extern for SDLStatic modules), which makes a targeted scanner far more
+extern for Grapple modules), which makes a targeted scanner far more
 robust here than it would be for arbitrary C — and keeps the generator
 dependency-free (no libclang).
 """
@@ -35,7 +35,7 @@ def strip_line_continuations(text: str) -> str:
 # We do not run a real preprocessor. Instead we track #if nesting and mark
 # regions whose condition either (a) mentions a platform/compiler gate, or
 # (b) tests a config macro we know the truth of (Nuklear's NK_INCLUDE_* set
-# from SDLStatic/nuklear.h). Declarations inside excluded regions are
+# from grapple/nuklear.h). Declarations inside excluded regions are
 # dropped, so the committed generated code never references symbols that
 # only exist on some platforms or under a different single-header config.
 
@@ -50,8 +50,8 @@ _PLATFORM_GATE_RE = re.compile(
 )
 
 # Macros defined by our single-header configs / build. Conditions that test
-# one of these resolve exactly; see gui/include/SDLStatic/nuklear.h.
-# Mirrors gui/include/SDLStatic/nuklear.h exactly — the tool verifies this
+# one of these resolve exactly; see gui/include/grapple/nuklear.h.
+# Mirrors gui/include/grapple/nuklear.h exactly — the tool verifies this
 # at generation time (see check_nk_config).
 _KNOWN_TRUE = {
     "NK_INCLUDE_FIXED_TYPES",
@@ -364,9 +364,9 @@ _FUNC_PATTERNS = {
         r"(?P<name>mog_[A-Za-z0-9_]*)\s*\((?P<params>[^;]*?)\)\s*;",
         flags=re.S,
     ),
-    "sdlstatic": re.compile(
+    "grapple": re.compile(
         r"extern\s+(?P<ret>[^;()#]*?[\s*])\s*"
-        r"(?P<name>SDLStatic_[A-Za-z0-9_]*)\s*\((?P<params>[^;]*?)\)\s*;",
+        r"(?P<name>Grapple_[A-Za-z0-9_]*)\s*\((?P<params>[^;]*?)\)\s*;",
         flags=re.S,
     ),
 }

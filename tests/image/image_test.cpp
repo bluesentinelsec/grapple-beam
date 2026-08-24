@@ -1,6 +1,6 @@
 /**
  * @file image_test.cpp
- * @brief Tests for SDLStatic::Image (vendored SDL3_image, static formats only).
+ * @brief Tests for Grapple::Image (vendored SDL3_image, static formats only).
  *
  * Covers: every enabled loader against the committed corpus, animation
  * decoding, PNG/JPG save round-trips, and negative proof that the removed

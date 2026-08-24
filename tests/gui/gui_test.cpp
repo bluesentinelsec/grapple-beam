@@ -1,6 +1,6 @@
 /**
  * @file gui_test.cpp
- * @brief Tests for SDLStatic::GUI — vendored Nuklear + SDL3 backend + grid.
+ * @brief Tests for Grapple::GUI — vendored Nuklear + SDL3 backend + grid.
  *
  * Runs fully headless on a software renderer: frames are driven manually,
  * input is injected as fabricated SDL events, rendering is verified by
@@ -10,8 +10,8 @@
  */
 
 #include <SDL3/SDL.h>
-#include <SDLStatic/gui.h>
-#include <SDLStatic/gui_grid.h>
+#include <grapple/gui.h>
+#include <grapple/gui_grid.h>
 #include <gtest/gtest.h>
 
 #include <cstring>
@@ -33,12 +33,12 @@ class GuiHarness : public ::testing::Test
         ASSERT_NE(surface_, nullptr);
         renderer_ = SDL_CreateSoftwareRenderer(surface_);
         ASSERT_NE(renderer_, nullptr) << SDL_GetError();
-        gui_ = SDLStatic_CreateGui(renderer_, nullptr, 0, 0.0f);
+        gui_ = Grapple_CreateGui(renderer_, nullptr, 0, 0.0f);
         ASSERT_NE(gui_, nullptr) << SDL_GetError();
     }
     void TearDown() override
     {
-        SDLStatic_DestroyGui(gui_);
+        Grapple_DestroyGui(gui_);
         SDL_DestroyRenderer(renderer_);
         SDL_DestroySurface(surface_);
         SDL_Quit();
@@ -56,7 +56,7 @@ class GuiHarness : public ::testing::Test
         event.type = SDL_EVENT_MOUSE_MOTION;
         event.motion.x = x;
         event.motion.y = y;
-        EXPECT_TRUE(SDLStatic_GuiProcessEvent(gui_, &event));
+        EXPECT_TRUE(Grapple_GuiProcessEvent(gui_, &event));
     }
 
     void FeedButton(float x, float y, bool down)
@@ -67,7 +67,7 @@ class GuiHarness : public ::testing::Test
         event.button.clicks = 1;
         event.button.x = x;
         event.button.y = y;
-        EXPECT_TRUE(SDLStatic_GuiProcessEvent(gui_, &event));
+        EXPECT_TRUE(Grapple_GuiProcessEvent(gui_, &event));
     }
 
     bool Lit(int x, int y)
@@ -83,30 +83,30 @@ class GuiHarness : public ::testing::Test
 
     SDL_Surface *surface_ = nullptr;
     SDL_Renderer *renderer_ = nullptr;
-    SDLStatic_Gui *gui_ = nullptr;
+    Grapple_Gui *gui_ = nullptr;
 };
 
 TEST_F(GuiHarness, CreateRejectsNullRenderer)
 {
-    EXPECT_EQ(SDLStatic_CreateGui(nullptr, nullptr, 0, 0.0f), nullptr);
-    EXPECT_NE(SDLStatic_GuiContext(gui_), nullptr);
-    SDLStatic_DestroyGui(nullptr); // safe no-op
+    EXPECT_EQ(Grapple_CreateGui(nullptr, nullptr, 0, 0.0f), nullptr);
+    EXPECT_NE(Grapple_GuiContext(gui_), nullptr);
+    Grapple_DestroyGui(nullptr); // safe no-op
 }
 
 TEST_F(GuiHarness, WindowRendersPixelsInsideAndNotOutside)
 {
     BeginFrame();
-    SDLStatic_GuiInputBegin(gui_);
-    SDLStatic_GuiInputEnd(gui_);
-    struct nk_context *ctx = SDLStatic_GuiContext(gui_);
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
     if (nk_begin(ctx, "panel", nk_rect(20, 20, 200, 150), NK_WINDOW_BORDER | NK_WINDOW_TITLE))
     {
         nk_layout_row_dynamic(ctx, 0, 1);
-        nk_label(ctx, "Hello SDLStatic", NK_TEXT_LEFT);
+        nk_label(ctx, "Hello Grapple", NK_TEXT_LEFT);
         nk_button_label(ctx, "A Button");
     }
     nk_end(ctx);
-    ASSERT_TRUE(SDLStatic_GuiRender(gui_)) << SDL_GetError();
+    ASSERT_TRUE(Grapple_GuiRender(gui_)) << SDL_GetError();
 
     EXPECT_TRUE(Lit(120, 90)) << "window interior";
     EXPECT_TRUE(Lit(30, 30)) << "title bar";
@@ -120,9 +120,9 @@ TEST_F(GuiHarness, ButtonClickReportsPressed)
 
     // Frame 1: no input; capture where the button lands.
     BeginFrame();
-    SDLStatic_GuiInputBegin(gui_);
-    SDLStatic_GuiInputEnd(gui_);
-    struct nk_context *ctx = SDLStatic_GuiContext(gui_);
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
     if (nk_begin(ctx, "win", nk_rect(10, 10, 220, 160), NK_WINDOW_NO_SCROLLBAR))
     {
         nk_layout_row_dynamic(ctx, 30, 1);
@@ -130,7 +130,7 @@ TEST_F(GuiHarness, ButtonClickReportsPressed)
         nk_button_label(ctx, "Fire");
     }
     nk_end(ctx);
-    ASSERT_TRUE(SDLStatic_GuiRender(gui_));
+    ASSERT_TRUE(Grapple_GuiRender(gui_));
     ASSERT_GT(button_bounds.w, 0.0f);
 
     // Frame 2: press on the button; frame 3: release -> click fires.
@@ -139,7 +139,7 @@ TEST_F(GuiHarness, ButtonClickReportsPressed)
     for (int phase = 0; phase < 2; ++phase)
     {
         BeginFrame();
-        SDLStatic_GuiInputBegin(gui_);
+        Grapple_GuiInputBegin(gui_);
         if (phase == 0)
         {
             FeedMouseMove(cx, cy);
@@ -149,7 +149,7 @@ TEST_F(GuiHarness, ButtonClickReportsPressed)
         {
             FeedButton(cx, cy, false);
         }
-        SDLStatic_GuiInputEnd(gui_);
+        Grapple_GuiInputEnd(gui_);
         if (nk_begin(ctx, "win", nk_rect(10, 10, 220, 160), NK_WINDOW_NO_SCROLLBAR))
         {
             nk_layout_row_dynamic(ctx, 30, 1);
@@ -159,10 +159,10 @@ TEST_F(GuiHarness, ButtonClickReportsPressed)
             }
         }
         nk_end(ctx);
-        ASSERT_TRUE(SDLStatic_GuiRender(gui_));
+        ASSERT_TRUE(Grapple_GuiRender(gui_));
     }
     EXPECT_TRUE(clicked) << "press+release at the button's bounds must register";
-    EXPECT_TRUE(SDLStatic_GuiWantsInput(gui_)) << "pointer is over the UI";
+    EXPECT_TRUE(Grapple_GuiWantsInput(gui_)) << "pointer is over the UI";
 }
 
 TEST_F(GuiHarness, CheckboxTogglesAndSliderMoves)
@@ -171,7 +171,7 @@ TEST_F(GuiHarness, CheckboxTogglesAndSliderMoves)
     struct nk_rect slider_bounds = nk_rect(0, 0, 0, 0);
     nk_bool checked = nk_false;
     float value = 0.0f;
-    struct nk_context *ctx = SDLStatic_GuiContext(gui_);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
 
     auto frame = [&](bool capture) {
         BeginFrame();
@@ -190,25 +190,25 @@ TEST_F(GuiHarness, CheckboxTogglesAndSliderMoves)
             nk_slider_float(ctx, 0.0f, &value, 1.0f, 0.01f);
         }
         nk_end(ctx);
-        ASSERT_TRUE(SDLStatic_GuiRender(gui_));
+        ASSERT_TRUE(Grapple_GuiRender(gui_));
     };
 
-    SDLStatic_GuiInputBegin(gui_);
-    SDLStatic_GuiInputEnd(gui_);
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
     frame(true);
     ASSERT_GT(check_bounds.w, 0.0f);
 
     // Press and release on the checkbox across two frames.
     const float kx = check_bounds.x + 8;
     const float ky = check_bounds.y + check_bounds.h / 2;
-    SDLStatic_GuiInputBegin(gui_);
+    Grapple_GuiInputBegin(gui_);
     FeedMouseMove(kx, ky);
     FeedButton(kx, ky, true);
-    SDLStatic_GuiInputEnd(gui_);
+    Grapple_GuiInputEnd(gui_);
     frame(false);
-    SDLStatic_GuiInputBegin(gui_);
+    Grapple_GuiInputBegin(gui_);
     FeedButton(kx, ky, false);
-    SDLStatic_GuiInputEnd(gui_);
+    Grapple_GuiInputEnd(gui_);
     frame(false);
     EXPECT_TRUE(checked) << "checkbox must toggle on";
 
@@ -217,18 +217,18 @@ TEST_F(GuiHarness, CheckboxTogglesAndSliderMoves)
     const float sy = slider_bounds.y + slider_bounds.h / 2.0f;
     const float grab_x = slider_bounds.x + 4.0f; /* cursor sits at the left end */
     const float target_x = slider_bounds.x + slider_bounds.w * 0.75f;
-    SDLStatic_GuiInputBegin(gui_);
+    Grapple_GuiInputBegin(gui_);
     FeedMouseMove(grab_x, sy);
     FeedButton(grab_x, sy, true);
-    SDLStatic_GuiInputEnd(gui_);
+    Grapple_GuiInputEnd(gui_);
     frame(false);
-    SDLStatic_GuiInputBegin(gui_);
+    Grapple_GuiInputBegin(gui_);
     FeedMouseMove(target_x, sy);
-    SDLStatic_GuiInputEnd(gui_);
+    Grapple_GuiInputEnd(gui_);
     frame(false);
-    SDLStatic_GuiInputBegin(gui_);
+    Grapple_GuiInputBegin(gui_);
     FeedButton(target_x, sy, false);
-    SDLStatic_GuiInputEnd(gui_);
+    Grapple_GuiInputEnd(gui_);
     frame(false);
     EXPECT_NEAR(value, 0.75f, 0.15f) << "drag should land near the target fraction";
 }
@@ -237,7 +237,7 @@ TEST_F(GuiHarness, EditFieldReceivesTypedText)
 {
     char buffer[64] = {};
     struct nk_rect edit_bounds = nk_rect(0, 0, 0, 0);
-    struct nk_context *ctx = SDLStatic_GuiContext(gui_);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
 
     auto frame = [&](bool capture) {
         BeginFrame();
@@ -252,33 +252,33 @@ TEST_F(GuiHarness, EditFieldReceivesTypedText)
                                            nk_filter_default);
         }
         nk_end(ctx);
-        ASSERT_TRUE(SDLStatic_GuiRender(gui_));
+        ASSERT_TRUE(Grapple_GuiRender(gui_));
     };
 
-    SDLStatic_GuiInputBegin(gui_);
-    SDLStatic_GuiInputEnd(gui_);
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
     frame(true);
 
     // Press and release inside the field to focus it.
     const float fx = edit_bounds.x + 10;
     const float fy = edit_bounds.y + edit_bounds.h / 2;
-    SDLStatic_GuiInputBegin(gui_);
+    Grapple_GuiInputBegin(gui_);
     FeedMouseMove(fx, fy);
     FeedButton(fx, fy, true);
-    SDLStatic_GuiInputEnd(gui_);
+    Grapple_GuiInputEnd(gui_);
     frame(false);
-    SDLStatic_GuiInputBegin(gui_);
+    Grapple_GuiInputBegin(gui_);
     FeedButton(fx, fy, false);
-    SDLStatic_GuiInputEnd(gui_);
+    Grapple_GuiInputEnd(gui_);
     frame(false);
 
     // Type UTF-8 text ("hé" exercises the decoder).
     SDL_Event text = {};
     text.type = SDL_EVENT_TEXT_INPUT;
     text.text.text = "h\xc3\xa9!";
-    SDLStatic_GuiInputBegin(gui_);
-    EXPECT_TRUE(SDLStatic_GuiProcessEvent(gui_, &text));
-    SDLStatic_GuiInputEnd(gui_);
+    Grapple_GuiInputBegin(gui_);
+    EXPECT_TRUE(Grapple_GuiProcessEvent(gui_, &text));
+    Grapple_GuiInputEnd(gui_);
     frame(false);
 
     EXPECT_STREQ(buffer, "h\xc3\xa9!") << "typed text must land in the edit buffer";
@@ -291,41 +291,41 @@ TEST_F(GuiHarness, GridWidthsFollowWeightsAndSpans)
     struct nk_rect c3 = nk_rect(0, 0, 0, 0);
     struct nk_rect span_cell = nk_rect(0, 0, 0, 0);
     struct nk_rect next_row = nk_rect(0, 0, 0, 0);
-    struct nk_context *ctx = SDLStatic_GuiContext(gui_);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
     static const float weights[3] = {1.0f, 2.0f, 1.0f};
 
-    SDLStatic_GuiInputBegin(gui_);
-    SDLStatic_GuiInputEnd(gui_);
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
     BeginFrame();
     if (nk_begin(ctx, "grid", nk_rect(0, 0, 320, 300), NK_WINDOW_NO_SCROLLBAR))
     {
-        SDLStatic_GuiGrid grid;
-        ASSERT_TRUE(SDLStatic_GuiGridBegin(ctx, &grid, 3, weights, 25.0f));
+        Grapple_GuiGrid grid;
+        ASSERT_TRUE(Grapple_GuiGridBegin(ctx, &grid, 3, weights, 25.0f));
 
-        SDLStatic_GuiGridCell(&grid);
+        Grapple_GuiGridCell(&grid);
         c1 = nk_widget_bounds(ctx);
         nk_label(ctx, "a", NK_TEXT_LEFT);
-        SDLStatic_GuiGridCell(&grid);
+        Grapple_GuiGridCell(&grid);
         c2 = nk_widget_bounds(ctx);
         nk_label(ctx, "b", NK_TEXT_LEFT);
-        SDLStatic_GuiGridCell(&grid);
+        Grapple_GuiGridCell(&grid);
         c3 = nk_widget_bounds(ctx);
         nk_label(ctx, "c", NK_TEXT_LEFT);
 
         // Auto-wrap: this cell must begin row 2. Span 2 columns.
-        SDLStatic_GuiGridCellSpan(&grid, 2);
+        Grapple_GuiGridCellSpan(&grid, 2);
         span_cell = nk_widget_bounds(ctx);
         nk_label(ctx, "wide", NK_TEXT_LEFT);
 
-        SDLStatic_GuiGridNextRow(&grid);
-        SDLStatic_GuiGridCell(&grid);
+        Grapple_GuiGridNextRow(&grid);
+        Grapple_GuiGridCell(&grid);
         next_row = nk_widget_bounds(ctx);
         nk_label(ctx, "row3", NK_TEXT_LEFT);
 
-        SDLStatic_GuiGridEnd(&grid);
+        Grapple_GuiGridEnd(&grid);
     }
     nk_end(ctx);
-    ASSERT_TRUE(SDLStatic_GuiRender(gui_));
+    ASSERT_TRUE(Grapple_GuiRender(gui_));
     ASSERT_GT(c1.w, 0.0f) << "grid window must have been built";
 
     // Weight 1:2:1 must show up as proportional widths (padding tolerance).
@@ -347,7 +347,7 @@ TEST_F(GuiHarness, GridScalesWithWindowSizeNotPixels)
 {
     // The same grid code in two window sizes: widths must scale
     // proportionally — the "no hard-coded coordinates" guarantee.
-    struct nk_context *ctx = SDLStatic_GuiContext(gui_);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
     static const float weights[2] = {1.0f, 3.0f};
     float first_w = 0.0f;
     float second_w = 0.0f;
@@ -355,21 +355,21 @@ TEST_F(GuiHarness, GridScalesWithWindowSizeNotPixels)
     for (int pass = 0; pass < 2; ++pass)
     {
         const float window_w = (pass == 0) ? 200.0f : 380.0f;
-        SDLStatic_GuiInputBegin(gui_);
-        SDLStatic_GuiInputEnd(gui_);
+        Grapple_GuiInputBegin(gui_);
+        Grapple_GuiInputEnd(gui_);
         BeginFrame();
         char name[16];
         SDL_snprintf(name, sizeof(name), "scale%d", pass);
         if (nk_begin(ctx, name, nk_rect(0, 0, window_w, 100), NK_WINDOW_NO_SCROLLBAR))
         {
-            SDLStatic_GuiGrid grid;
-            ASSERT_TRUE(SDLStatic_GuiGridBegin(ctx, &grid, 2, weights, 0.0f));
-            SDLStatic_GuiGridCell(&grid);
+            Grapple_GuiGrid grid;
+            ASSERT_TRUE(Grapple_GuiGridBegin(ctx, &grid, 2, weights, 0.0f));
+            Grapple_GuiGridCell(&grid);
             const struct nk_rect bounds = nk_widget_bounds(ctx);
             nk_label(ctx, "x", NK_TEXT_LEFT);
-            SDLStatic_GuiGridCell(&grid);
+            Grapple_GuiGridCell(&grid);
             nk_label(ctx, "y", NK_TEXT_LEFT);
-            SDLStatic_GuiGridEnd(&grid);
+            Grapple_GuiGridEnd(&grid);
             if (pass == 0)
             {
                 first_w = bounds.w;
@@ -380,7 +380,7 @@ TEST_F(GuiHarness, GridScalesWithWindowSizeNotPixels)
             }
         }
         nk_end(ctx);
-        ASSERT_TRUE(SDLStatic_GuiRender(gui_));
+        ASSERT_TRUE(Grapple_GuiRender(gui_));
     }
     ASSERT_GT(first_w, 0.0f);
     EXPECT_NEAR(second_w / first_w, 380.0f / 200.0f, 0.25f)
@@ -389,31 +389,31 @@ TEST_F(GuiHarness, GridScalesWithWindowSizeNotPixels)
 
 TEST_F(GuiHarness, GridRejectsBadInput)
 {
-    struct nk_context *ctx = SDLStatic_GuiContext(gui_);
-    SDLStatic_GuiGrid grid;
-    EXPECT_FALSE(SDLStatic_GuiGridBegin(nullptr, &grid, 2, nullptr, 0.0f));
-    EXPECT_FALSE(SDLStatic_GuiGridBegin(ctx, nullptr, 2, nullptr, 0.0f));
-    EXPECT_FALSE(SDLStatic_GuiGridBegin(ctx, &grid, 0, nullptr, 0.0f));
-    EXPECT_FALSE(SDLStatic_GuiGridBegin(ctx, &grid, SDLSTATIC_GUI_GRID_MAX_COLS + 1, nullptr,
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
+    Grapple_GuiGrid grid;
+    EXPECT_FALSE(Grapple_GuiGridBegin(nullptr, &grid, 2, nullptr, 0.0f));
+    EXPECT_FALSE(Grapple_GuiGridBegin(ctx, nullptr, 2, nullptr, 0.0f));
+    EXPECT_FALSE(Grapple_GuiGridBegin(ctx, &grid, 0, nullptr, 0.0f));
+    EXPECT_FALSE(Grapple_GuiGridBegin(ctx, &grid, GRAPPLE_GUI_GRID_MAX_COLS + 1, nullptr,
                                         0.0f));
     // Calls on an unopened grid must be safe no-ops.
-    SDLStatic_GuiGrid dead = {};
-    SDLStatic_GuiGridCell(&dead);
-    SDLStatic_GuiGridEnd(&dead);
+    Grapple_GuiGrid dead = {};
+    Grapple_GuiGridCell(&dead);
+    Grapple_GuiGridEnd(&dead);
 }
 
 TEST_F(GuiHarness, IgnoresUnrelatedEvents)
 {
     SDL_Event event = {};
     event.type = SDL_EVENT_GAMEPAD_BUTTON_DOWN;
-    SDLStatic_GuiInputBegin(gui_);
-    EXPECT_FALSE(SDLStatic_GuiProcessEvent(gui_, &event));
-    EXPECT_FALSE(SDLStatic_GuiProcessEvent(gui_, nullptr));
-    SDLStatic_GuiInputEnd(gui_);
+    Grapple_GuiInputBegin(gui_);
+    EXPECT_FALSE(Grapple_GuiProcessEvent(gui_, &event));
+    EXPECT_FALSE(Grapple_GuiProcessEvent(gui_, nullptr));
+    Grapple_GuiInputEnd(gui_);
 }
 
 
-// SDLStatic_GuiPumpEvents: the one-call input pump. Also the entry point
+// Grapple_GuiPumpEvents: the one-call input pump. Also the entry point
 // that makes the GUI drivable from Lua and Ruby, where SDL_Event (a union)
 // cannot cross the script boundary.
 TEST_F(GuiHarness, PumpEventsDrainsQueueAndReportsQuit)
@@ -427,11 +427,11 @@ TEST_F(GuiHarness, PumpEventsDrainsQueueAndReportsQuit)
     SDL_zero(quit);
     quit.type = SDL_EVENT_QUIT;
     ASSERT_TRUE(SDL_PushEvent(&quit));
-    EXPECT_FALSE(SDLStatic_GuiPumpEvents(gui_)) << "quit must stop the loop";
+    EXPECT_FALSE(Grapple_GuiPumpEvents(gui_)) << "quit must stop the loop";
 
     // With an empty queue it keeps running and leaves the GUI usable.
-    EXPECT_TRUE(SDLStatic_GuiPumpEvents(gui_));
-    struct nk_context *ctx = SDLStatic_GuiContext(gui_);
+    EXPECT_TRUE(Grapple_GuiPumpEvents(gui_));
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
     ASSERT_NE(ctx, nullptr);
     if (nk_begin(ctx, "pump", nk_rect(0, 0, 100, 60), NK_WINDOW_BORDER))
     {
@@ -439,7 +439,7 @@ TEST_F(GuiHarness, PumpEventsDrainsQueueAndReportsQuit)
         nk_label(ctx, "ok", NK_TEXT_LEFT);
     }
     nk_end(ctx);
-    EXPECT_TRUE(SDLStatic_GuiRender(gui_));
+    EXPECT_TRUE(Grapple_GuiRender(gui_));
 
     // Mouse motion routed through the pump reaches Nuklear's input state.
     SDL_Event motion;
@@ -448,11 +448,11 @@ TEST_F(GuiHarness, PumpEventsDrainsQueueAndReportsQuit)
     motion.motion.x = 42.0f;
     motion.motion.y = 24.0f;
     ASSERT_TRUE(SDL_PushEvent(&motion));
-    EXPECT_TRUE(SDLStatic_GuiPumpEvents(gui_));
+    EXPECT_TRUE(Grapple_GuiPumpEvents(gui_));
     EXPECT_EQ(ctx->input.mouse.pos.x, 42.0f);
     EXPECT_EQ(ctx->input.mouse.pos.y, 24.0f);
 
-    EXPECT_FALSE(SDLStatic_GuiPumpEvents(nullptr)) << "null gui fails cleanly";
+    EXPECT_FALSE(Grapple_GuiPumpEvents(nullptr)) << "null gui fails cleanly";
 
     SDL_QuitSubSystem(SDL_INIT_EVENTS);
 }
@@ -468,18 +468,18 @@ TEST_F(GuiHarness, KeyPressedReportsThisFramesKeys)
     key.type = SDL_EVENT_KEY_DOWN;
     key.key.scancode = SDL_SCANCODE_ESCAPE;
     ASSERT_TRUE(SDL_PushEvent(&key));
-    EXPECT_TRUE(SDLStatic_GuiPumpEvents(gui_));
-    EXPECT_TRUE(SDLStatic_GuiKeyPressed(gui_, SDL_SCANCODE_ESCAPE));
-    EXPECT_FALSE(SDLStatic_GuiKeyPressed(gui_, SDL_SCANCODE_A)) << "only keys seen";
+    EXPECT_TRUE(Grapple_GuiPumpEvents(gui_));
+    EXPECT_TRUE(Grapple_GuiKeyPressed(gui_, SDL_SCANCODE_ESCAPE));
+    EXPECT_FALSE(Grapple_GuiKeyPressed(gui_, SDL_SCANCODE_A)) << "only keys seen";
 
     // The set is per-frame: a pump with no keys clears it.
-    EXPECT_TRUE(SDLStatic_GuiPumpEvents(gui_));
-    EXPECT_FALSE(SDLStatic_GuiKeyPressed(gui_, SDL_SCANCODE_ESCAPE));
+    EXPECT_TRUE(Grapple_GuiPumpEvents(gui_));
+    EXPECT_FALSE(Grapple_GuiKeyPressed(gui_, SDL_SCANCODE_ESCAPE));
 
     // Out-of-range and null are safe.
-    EXPECT_FALSE(SDLStatic_GuiKeyPressed(gui_, -1));
-    EXPECT_FALSE(SDLStatic_GuiKeyPressed(gui_, 999999));
-    EXPECT_FALSE(SDLStatic_GuiKeyPressed(nullptr, SDL_SCANCODE_ESCAPE));
+    EXPECT_FALSE(Grapple_GuiKeyPressed(gui_, -1));
+    EXPECT_FALSE(Grapple_GuiKeyPressed(gui_, 999999));
+    EXPECT_FALSE(Grapple_GuiKeyPressed(nullptr, SDL_SCANCODE_ESCAPE));
 
     SDL_QuitSubSystem(SDL_INIT_EVENTS);
 }
@@ -488,26 +488,26 @@ TEST_F(GuiHarness, KeyPressedReportsThisFramesKeys)
 // the entry point Lua and Ruby can reach.
 TEST_F(GuiHarness, StyleColorPushPopRestoresTheme)
 {
-    struct nk_context *ctx = SDLStatic_GuiContext(gui_);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
     const struct nk_color before = ctx->style.window.fixed_background.data.color;
     const struct nk_color text_before = ctx->style.text.color;
 
-    ASSERT_TRUE(SDLStatic_GuiPushStyleColor(
-        gui_, SDLSTATIC_GUI_COLOR_WINDOW_BACKGROUND, SDL_Color{10, 20, 30, 255}));
-    ASSERT_TRUE(SDLStatic_GuiPushStyleColor(gui_, SDLSTATIC_GUI_COLOR_TEXT,
+    ASSERT_TRUE(Grapple_GuiPushStyleColor(
+        gui_, GRAPPLE_GUI_COLOR_WINDOW_BACKGROUND, SDL_Color{10, 20, 30, 255}));
+    ASSERT_TRUE(Grapple_GuiPushStyleColor(gui_, GRAPPLE_GUI_COLOR_TEXT,
                                             SDL_Color{1, 2, 3, 255}));
     EXPECT_EQ(ctx->style.window.fixed_background.data.color.r, 10);
     EXPECT_EQ(ctx->style.text.color.g, 2) << "plain-colour stack too";
 
     // Pops unwind both stacks in LIFO order, whichever kind each push used.
-    SDLStatic_GuiPopStyleColor(gui_, 2);
+    Grapple_GuiPopStyleColor(gui_, 2);
     EXPECT_EQ(ctx->style.window.fixed_background.data.color.r, before.r);
     EXPECT_EQ(ctx->style.text.color.g, text_before.g);
 
     // Over-popping and null are safe no-ops.
-    SDLStatic_GuiPopStyleColor(gui_, 5);
-    SDLStatic_GuiPopStyleColor(nullptr, 1);
-    EXPECT_FALSE(SDLStatic_GuiPushStyleColor(nullptr, SDLSTATIC_GUI_COLOR_BUTTON,
+    Grapple_GuiPopStyleColor(gui_, 5);
+    Grapple_GuiPopStyleColor(nullptr, 1);
+    EXPECT_FALSE(Grapple_GuiPushStyleColor(nullptr, GRAPPLE_GUI_COLOR_BUTTON,
                                              SDL_Color{0, 0, 0, 255}));
 }
 
@@ -515,48 +515,48 @@ TEST_F(GuiHarness, StyleColorPushPopRestoresTheme)
 // so the sizes are baked up front and selected here.
 TEST_F(GuiHarness, FontSizesAreSelectableAtRuntime)
 {
-    const float normal = SDLStatic_GuiFontHeight(gui_);
+    const float normal = Grapple_GuiFontHeight(gui_);
     EXPECT_GT(normal, 0.0f);
 
-    ASSERT_TRUE(SDLStatic_GuiSetFont(gui_, SDLSTATIC_GUI_FONT_LARGE));
-    const float large = SDLStatic_GuiFontHeight(gui_);
+    ASSERT_TRUE(Grapple_GuiSetFont(gui_, GRAPPLE_GUI_FONT_LARGE));
+    const float large = Grapple_GuiFontHeight(gui_);
     EXPECT_GT(large, normal);
 
-    ASSERT_TRUE(SDLStatic_GuiSetFont(gui_, SDLSTATIC_GUI_FONT_SMALL));
-    EXPECT_LT(SDLStatic_GuiFontHeight(gui_), normal);
+    ASSERT_TRUE(Grapple_GuiSetFont(gui_, GRAPPLE_GUI_FONT_SMALL));
+    EXPECT_LT(Grapple_GuiFontHeight(gui_), normal);
 
-    ASSERT_TRUE(SDLStatic_GuiSetFont(gui_, SDLSTATIC_GUI_FONT_NORMAL));
-    EXPECT_FLOAT_EQ(SDLStatic_GuiFontHeight(gui_), normal);
+    ASSERT_TRUE(Grapple_GuiSetFont(gui_, GRAPPLE_GUI_FONT_NORMAL));
+    EXPECT_FLOAT_EQ(Grapple_GuiFontHeight(gui_), normal);
 
     // Scoped push/pop restores the previous font.
-    ASSERT_TRUE(SDLStatic_GuiPushFont(gui_, SDLSTATIC_GUI_FONT_LARGE));
-    EXPECT_FLOAT_EQ(SDLStatic_GuiFontHeight(gui_), large);
-    SDLStatic_GuiPopFont(gui_, 1);
-    EXPECT_FLOAT_EQ(SDLStatic_GuiFontHeight(gui_), normal);
+    ASSERT_TRUE(Grapple_GuiPushFont(gui_, GRAPPLE_GUI_FONT_LARGE));
+    EXPECT_FLOAT_EQ(Grapple_GuiFontHeight(gui_), large);
+    Grapple_GuiPopFont(gui_, 1);
+    EXPECT_FLOAT_EQ(Grapple_GuiFontHeight(gui_), normal);
 
     // Text actually measures wider with a bigger font (glyphs really differ).
-    struct nk_context *ctx = SDLStatic_GuiContext(gui_);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
     const char *sample = "Button 1 was clicked.";
     const int len = static_cast<int>(SDL_strlen(sample));
     const float w_normal = ctx->style.font->width(ctx->style.font->userdata,
                                                   ctx->style.font->height, sample, len);
-    ASSERT_TRUE(SDLStatic_GuiSetFont(gui_, SDLSTATIC_GUI_FONT_LARGE));
+    ASSERT_TRUE(Grapple_GuiSetFont(gui_, GRAPPLE_GUI_FONT_LARGE));
     const float w_large = ctx->style.font->width(ctx->style.font->userdata,
                                                  ctx->style.font->height, sample, len);
     EXPECT_GT(w_large, w_normal);
-    ASSERT_TRUE(SDLStatic_GuiSetFont(gui_, SDLSTATIC_GUI_FONT_NORMAL));
+    ASSERT_TRUE(Grapple_GuiSetFont(gui_, GRAPPLE_GUI_FONT_NORMAL));
 
     // Bad input and over-pop are safe.
     // 3 is one past LARGE and still inside the enum's value range, so the
     // cast is well defined — GCC rejects casting a far-out value like 99 to
     // a three-value enum under -Wconversion.
-    EXPECT_FALSE(SDLStatic_GuiSetFont(gui_, static_cast<SDLStatic_GuiFontSize>(3)));
-    EXPECT_FALSE(SDLStatic_GuiSetFont(nullptr, SDLSTATIC_GUI_FONT_NORMAL));
-    EXPECT_FALSE(SDLStatic_GuiPushFont(nullptr, SDLSTATIC_GUI_FONT_LARGE));
-    SDLStatic_GuiPopFont(gui_, 5);
-    SDLStatic_GuiPopFont(nullptr, 1);
-    EXPECT_FLOAT_EQ(SDLStatic_GuiFontHeight(gui_), normal);
-    EXPECT_FLOAT_EQ(SDLStatic_GuiFontHeight(nullptr), 0.0f);
+    EXPECT_FALSE(Grapple_GuiSetFont(gui_, static_cast<Grapple_GuiFontSize>(3)));
+    EXPECT_FALSE(Grapple_GuiSetFont(nullptr, GRAPPLE_GUI_FONT_NORMAL));
+    EXPECT_FALSE(Grapple_GuiPushFont(nullptr, GRAPPLE_GUI_FONT_LARGE));
+    Grapple_GuiPopFont(gui_, 5);
+    Grapple_GuiPopFont(nullptr, 1);
+    EXPECT_FLOAT_EQ(Grapple_GuiFontHeight(gui_), normal);
+    EXPECT_FLOAT_EQ(Grapple_GuiFontHeight(nullptr), 0.0f);
 }
 
 // nk_labelf float formatting. Nuklear's built-in printf (used because
@@ -565,13 +565,13 @@ TEST_F(GuiHarness, FontSizesAreSelectableAtRuntime)
 // rendering the formatted text beside the literal it must equal.
 TEST_F(GuiHarness, LabelfFormatsFloatsCorrectly)
 {
-    struct nk_context *ctx = SDLStatic_GuiContext(gui_);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
 
     auto render_text = [&](bool formatted, double value, const char *literal) {
         SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
         SDL_RenderClear(renderer_);
-        SDLStatic_GuiInputBegin(gui_);
-        SDLStatic_GuiInputEnd(gui_);
+        Grapple_GuiInputBegin(gui_);
+        Grapple_GuiInputEnd(gui_);
         if (nk_begin(ctx, "fmt", nk_rect(0, 0, kScreen, kScreen), 0))
         {
             nk_layout_row_dynamic(ctx, 30, 1);
@@ -585,7 +585,7 @@ TEST_F(GuiHarness, LabelfFormatsFloatsCorrectly)
             }
         }
         nk_end(ctx);
-        SDLStatic_GuiRender(gui_);
+        Grapple_GuiRender(gui_);
         SDL_FlushRenderer(renderer_);
         int lit = 0;
         for (int y = 0; y < kScreen; y++)
@@ -625,19 +625,19 @@ TEST_F(GuiHarness, ImageWidgetHonoursSizingModes)
     ASSERT_NE(texture, nullptr) << SDL_GetError();
     SDL_DestroySurface(pixels);
 
-    auto painted = [&](SDLStatic_GuiImageMode mode) {
+    auto painted = [&](Grapple_GuiImageMode mode) {
         SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
         SDL_RenderClear(renderer_);
-        SDLStatic_GuiInputBegin(gui_);
-        SDLStatic_GuiInputEnd(gui_);
-        struct nk_context *ctx = SDLStatic_GuiContext(gui_);
+        Grapple_GuiInputBegin(gui_);
+        Grapple_GuiInputEnd(gui_);
+        struct nk_context *ctx = Grapple_GuiContext(gui_);
         if (nk_begin(ctx, "img", nk_rect(0, 0, kScreen, kScreen), 0))
         {
             nk_layout_row_static(ctx, 100, 100, 1);  // square 100x100 slot
-            EXPECT_TRUE(SDLStatic_GuiImage(gui_, texture, mode));
+            EXPECT_TRUE(Grapple_GuiImage(gui_, texture, mode));
         }
         nk_end(ctx);
-        SDLStatic_GuiRender(gui_);
+        Grapple_GuiRender(gui_);
         SDL_FlushRenderer(renderer_);
         int red = 0;
         for (int y = 0; y < kScreen; y++)
@@ -655,10 +655,10 @@ TEST_F(GuiHarness, ImageWidgetHonoursSizingModes)
         return red;
     };
 
-    const int stretch = painted(SDLSTATIC_GUI_IMAGE_STRETCH);
-    const int zoom = painted(SDLSTATIC_GUI_IMAGE_ZOOM);
-    const int fill = painted(SDLSTATIC_GUI_IMAGE_FILL);
-    const int center = painted(SDLSTATIC_GUI_IMAGE_CENTER);
+    const int stretch = painted(GRAPPLE_GUI_IMAGE_STRETCH);
+    const int zoom = painted(GRAPPLE_GUI_IMAGE_ZOOM);
+    const int fill = painted(GRAPPLE_GUI_IMAGE_FILL);
+    const int center = painted(GRAPPLE_GUI_IMAGE_CENTER);
 
     EXPECT_GT(stretch, 0) << "stretch must paint the whole slot";
     // 2:1 source zoomed into a square slot covers about half of it.
@@ -669,8 +669,8 @@ TEST_F(GuiHarness, ImageWidgetHonoursSizingModes)
     // Native 40x20 centred is much smaller than the 100x100 slot.
     EXPECT_LT(center, zoom);
 
-    EXPECT_FALSE(SDLStatic_GuiImage(nullptr, texture, SDLSTATIC_GUI_IMAGE_ZOOM));
-    EXPECT_FALSE(SDLStatic_GuiImage(gui_, nullptr, SDLSTATIC_GUI_IMAGE_ZOOM));
+    EXPECT_FALSE(Grapple_GuiImage(nullptr, texture, GRAPPLE_GUI_IMAGE_ZOOM));
+    EXPECT_FALSE(Grapple_GuiImage(gui_, nullptr, GRAPPLE_GUI_IMAGE_ZOOM));
     SDL_DestroyTexture(texture);
 }
 
@@ -678,36 +678,36 @@ TEST_F(GuiHarness, ImageWidgetHonoursSizingModes)
 // from scripts (which cannot hold a struct or pass a float array).
 TEST_F(GuiHarness, OwnedGridMatchesCallerOwnedGrid)
 {
-    struct nk_context *ctx = SDLStatic_GuiContext(gui_);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
 
     auto widths = [&](bool owned) {
         std::vector<float> out;
-        SDLStatic_GuiInputBegin(gui_);
-        SDLStatic_GuiInputEnd(gui_);
+        Grapple_GuiInputBegin(gui_);
+        Grapple_GuiInputEnd(gui_);
         if (nk_begin(ctx, "grid", nk_rect(0, 0, 300, 200), 0))
         {
             static const float weights[] = {1.0f, 2.0f, 1.0f};
-            SDLStatic_GuiGrid caller_grid;
+            Grapple_GuiGrid caller_grid;
             if (owned)
             {
-                SDLStatic_GuiGridWeight(gui_, 0, 1.0f);
-                SDLStatic_GuiGridWeight(gui_, 1, 2.0f);
-                SDLStatic_GuiGridWeight(gui_, 2, 1.0f);
-                SDLStatic_GuiGridBeginOwned(gui_, 3, 24.0f);
+                Grapple_GuiGridWeight(gui_, 0, 1.0f);
+                Grapple_GuiGridWeight(gui_, 1, 2.0f);
+                Grapple_GuiGridWeight(gui_, 2, 1.0f);
+                Grapple_GuiGridBeginOwned(gui_, 3, 24.0f);
             }
             else
             {
-                SDLStatic_GuiGridBegin(ctx, &caller_grid, 3, weights, 24.0f);
+                Grapple_GuiGridBegin(ctx, &caller_grid, 3, weights, 24.0f);
             }
             for (int i = 0; i < 3; i++)
             {
                 if (owned)
                 {
-                    SDLStatic_GuiGridCellOwned(gui_);
+                    Grapple_GuiGridCellOwned(gui_);
                 }
                 else
                 {
-                    SDLStatic_GuiGridCell(&caller_grid);
+                    Grapple_GuiGridCell(&caller_grid);
                 }
                 struct nk_rect bounds = nk_widget_bounds(ctx);
                 out.push_back(bounds.w);
@@ -715,15 +715,15 @@ TEST_F(GuiHarness, OwnedGridMatchesCallerOwnedGrid)
             }
             if (owned)
             {
-                SDLStatic_GuiGridEndOwned(gui_);
+                Grapple_GuiGridEndOwned(gui_);
             }
             else
             {
-                SDLStatic_GuiGridEnd(&caller_grid);
+                Grapple_GuiGridEnd(&caller_grid);
             }
         }
         nk_end(ctx);
-        SDLStatic_GuiRender(gui_);  // ends the frame (nk_clear)
+        Grapple_GuiRender(gui_);  // ends the frame (nk_clear)
         return out;
     };
 
@@ -739,39 +739,39 @@ TEST_F(GuiHarness, OwnedGridMatchesCallerOwnedGrid)
     EXPECT_NEAR(owned[1] / owned[0], 2.0, 0.15);
 
     // Weights reset between grids: the next one is equal-width.
-    SDLStatic_GuiInputBegin(gui_);
-    SDLStatic_GuiInputEnd(gui_);
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
     std::vector<float> equal;
     if (nk_begin(ctx, "grid2", nk_rect(0, 0, 300, 200), 0))
     {
-        SDLStatic_GuiGridBeginOwned(gui_, 3, 24.0f);
+        Grapple_GuiGridBeginOwned(gui_, 3, 24.0f);
         for (int i = 0; i < 3; i++)
         {
-            SDLStatic_GuiGridCellOwned(gui_);
+            Grapple_GuiGridCellOwned(gui_);
             equal.push_back(nk_widget_bounds(ctx).w);
             nk_label(ctx, "x", NK_TEXT_LEFT);
         }
-        SDLStatic_GuiGridEndOwned(gui_);
+        Grapple_GuiGridEndOwned(gui_);
     }
     nk_end(ctx);
-    SDLStatic_GuiRender(gui_);
+    Grapple_GuiRender(gui_);
     ASSERT_EQ(equal.size(), 3u);
     EXPECT_NEAR(equal[1] / equal[0], 1.0, 0.05);
 
-    EXPECT_FALSE(SDLStatic_GuiGridWeight(nullptr, 0, 1.0f));
-    EXPECT_FALSE(SDLStatic_GuiGridWeight(gui_, -1, 1.0f));
-    EXPECT_FALSE(SDLStatic_GuiGridBeginOwned(nullptr, 2, 20.0f));
-    SDLStatic_GuiGridEndOwned(nullptr);  // safe no-op
+    EXPECT_FALSE(Grapple_GuiGridWeight(nullptr, 0, 1.0f));
+    EXPECT_FALSE(Grapple_GuiGridWeight(gui_, -1, 1.0f));
+    EXPECT_FALSE(Grapple_GuiGridBeginOwned(nullptr, 2, 20.0f));
+    Grapple_GuiGridEndOwned(nullptr);  // safe no-op
 }
 
 // Tooltip timing: Nuklear's nk_tooltip draws immediately and stays up as
-// long as the pointer is inside the widget. SDLStatic_GuiTooltip adds the
+// long as the pointer is inside the widget. Grapple_GuiTooltip adds the
 // desktop behaviour — appear after a dwell, hide as soon as the pointer
 // moves.
 TEST_F(GuiHarness, TooltipWaitsForHoverDwellAndHidesOnMotion)
 {
     ASSERT_TRUE(SDL_InitSubSystem(SDL_INIT_EVENTS)) << SDL_GetError();
-    struct nk_context *ctx = SDLStatic_GuiContext(gui_);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
 
     // Drive one frame with the pointer at (x, y); returns whether the
     // tooltip was displayed for the button occupying the top-left row.
@@ -782,21 +782,21 @@ TEST_F(GuiHarness, TooltipWaitsForHoverDwellAndHidesOnMotion)
         motion.motion.x = x;
         motion.motion.y = y;
         SDL_PushEvent(&motion);
-        SDLStatic_GuiPumpEvents(gui_);
+        Grapple_GuiPumpEvents(gui_);
 
         bool shown = false;
         if (nk_begin(ctx, "tips", nk_rect(0, 0, 200, 120), 0))
         {
             nk_layout_row_dynamic(ctx, 40, 1);
-            shown = SDLStatic_GuiTooltip(gui_, "hover text");
+            shown = Grapple_GuiTooltip(gui_, "hover text");
             nk_button_label(ctx, "Hover me");
         }
         nk_end(ctx);
-        SDLStatic_GuiRender(gui_);  // ends the frame
+        Grapple_GuiRender(gui_);  // ends the frame
         return shown;
     };
 
-    EXPECT_EQ(SDLStatic_GuiTooltipDelay(gui_), 1000) << "desktop-style default";
+    EXPECT_EQ(Grapple_GuiTooltipDelay(gui_), 1000) << "desktop-style default";
 
     // Pointer away from the widget: never shown.
     EXPECT_FALSE(frame_at(180.0f, 110.0f));
@@ -806,7 +806,7 @@ TEST_F(GuiHarness, TooltipWaitsForHoverDwellAndHidesOnMotion)
     EXPECT_FALSE(frame_at(50.0f, 30.0f)) << "still counting down";
 
     // With no delay it appears as soon as the pointer is resting.
-    SDLStatic_GuiSetTooltipDelay(gui_, 0);
+    Grapple_GuiSetTooltipDelay(gui_, 0);
     EXPECT_TRUE(frame_at(50.0f, 30.0f));
 
     // Moving the pointer re-arms it, even within the same widget.
@@ -814,18 +814,18 @@ TEST_F(GuiHarness, TooltipWaitsForHoverDwellAndHidesOnMotion)
     EXPECT_TRUE(frame_at(70.0f, 34.0f)) << "resting again shows it";
 
     // A long delay keeps it hidden no matter how many frames pass.
-    SDLStatic_GuiSetTooltipDelay(gui_, 60000);
+    Grapple_GuiSetTooltipDelay(gui_, 60000);
     EXPECT_FALSE(frame_at(90.0f, 34.0f));
     for (int i = 0; i < 5; i++)
     {
         EXPECT_FALSE(frame_at(90.0f, 34.0f));
     }
 
-    SDLStatic_GuiSetTooltipDelay(gui_, -5);
-    EXPECT_EQ(SDLStatic_GuiTooltipDelay(gui_), 0) << "negative clamps to 0";
-    EXPECT_FALSE(SDLStatic_GuiTooltip(nullptr, "x"));
-    EXPECT_FALSE(SDLStatic_GuiTooltip(gui_, nullptr));
-    SDLStatic_GuiSetTooltipDelay(nullptr, 100);  // safe no-op
+    Grapple_GuiSetTooltipDelay(gui_, -5);
+    EXPECT_EQ(Grapple_GuiTooltipDelay(gui_), 0) << "negative clamps to 0";
+    EXPECT_FALSE(Grapple_GuiTooltip(nullptr, "x"));
+    EXPECT_FALSE(Grapple_GuiTooltip(gui_, nullptr));
+    Grapple_GuiSetTooltipDelay(nullptr, 100);  // safe no-op
 
     SDL_QuitSubSystem(SDL_INIT_EVENTS);
 }
@@ -834,8 +834,8 @@ TEST_F(GuiHarness, TooltipWaitsForHoverDwellAndHidesOnMotion)
 // non-Retina displays are unaffected by the high-DPI path.
 TEST_F(GuiHarness, ScaleDefaultsToOneWithoutAWindow)
 {
-    EXPECT_FLOAT_EQ(SDLStatic_GuiScale(gui_), 1.0f);
-    EXPECT_FLOAT_EQ(SDLStatic_GuiScale(nullptr), 1.0f);
+    EXPECT_FLOAT_EQ(Grapple_GuiScale(gui_), 1.0f);
+    EXPECT_FLOAT_EQ(Grapple_GuiScale(nullptr), 1.0f);
 }
 
 // The file buttons are ordinary buttons on desktop: nothing happens until
@@ -843,23 +843,23 @@ TEST_F(GuiHarness, ScaleDefaultsToOneWithoutAWindow)
 // browser halves are DOM overlays and are exercised in a real engine.)
 TEST_F(GuiHarness, FileButtonsAreInertUntilClicked)
 {
-    struct nk_context *ctx = SDLStatic_GuiContext(gui_);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
     BeginFrame();
     if (nk_begin(ctx, "files", nk_rect(10, 10, 300, 200), NK_WINDOW_NO_SCROLLBAR))
     {
         nk_layout_row_dynamic(ctx, 30.0f, 1);
-        EXPECT_FALSE(SDLStatic_GuiOpenFileButton(gui_, "Open", "Text files", "txt"));
-        EXPECT_FALSE(SDLStatic_GuiSaveFileButton(gui_, "Save", "untitled.txt", "hi", 2));
+        EXPECT_FALSE(Grapple_GuiOpenFileButton(gui_, "Open", "Text files", "txt"));
+        EXPECT_FALSE(Grapple_GuiSaveFileButton(gui_, "Save", "untitled.txt", "hi", 2));
     }
     nk_end(ctx);
-    EXPECT_TRUE(SDLStatic_GuiRender(gui_));
-    EXPECT_EQ(SDLStatic_GuiSavedPath(gui_), nullptr) << "nothing has been saved";
-    EXPECT_EQ(SDLStatic_GuiSavedPath(nullptr), nullptr);
+    EXPECT_TRUE(Grapple_GuiRender(gui_));
+    EXPECT_EQ(Grapple_GuiSavedPath(gui_), nullptr) << "nothing has been saved";
+    EXPECT_EQ(Grapple_GuiSavedPath(nullptr), nullptr);
 
-    EXPECT_FALSE(SDLStatic_GuiOpenFileButton(nullptr, "Open", nullptr, nullptr));
-    EXPECT_FALSE(SDLStatic_GuiOpenFileButton(gui_, nullptr, nullptr, nullptr));
-    EXPECT_FALSE(SDLStatic_GuiSaveFileButton(gui_, "Save", nullptr, "hi", 2));
-    EXPECT_FALSE(SDLStatic_GuiSaveFileButton(gui_, "Save", "f.txt", nullptr, 4))
+    EXPECT_FALSE(Grapple_GuiOpenFileButton(nullptr, "Open", nullptr, nullptr));
+    EXPECT_FALSE(Grapple_GuiOpenFileButton(gui_, nullptr, nullptr, nullptr));
+    EXPECT_FALSE(Grapple_GuiSaveFileButton(gui_, "Save", nullptr, "hi", 2));
+    EXPECT_FALSE(Grapple_GuiSaveFileButton(gui_, "Save", "f.txt", nullptr, 4))
         << "a null buffer with a non-zero length is a caller bug";
 }
 
@@ -880,36 +880,36 @@ TEST_F(GuiHarness, GlyphRangeDecidesWhatCanBeDrawn)
     std::vector<Uint32> latin1(static_cast<size_t>(kScreen) * kScreen);
     std::vector<Uint32> punctuation(latin1.size());
 
-    auto render_into = [&](SDLStatic_GuiGlyphRange range, std::vector<Uint32> &out) {
-        SDLStatic_Gui *gui = SDLStatic_CreateGuiWithGlyphs(renderer_, font, font_size, 24.0f,
+    auto render_into = [&](Grapple_GuiGlyphRange range, std::vector<Uint32> &out) {
+        Grapple_Gui *gui = Grapple_CreateGuiWithGlyphs(renderer_, font, font_size, 24.0f,
                                                            range);
         ASSERT_NE(gui, nullptr) << SDL_GetError();
-        struct nk_context *ctx = SDLStatic_GuiContext(gui);
+        struct nk_context *ctx = Grapple_GuiContext(gui);
         BeginFrame();
-        SDLStatic_GuiInputBegin(gui);
-        SDLStatic_GuiInputEnd(gui);
+        Grapple_GuiInputBegin(gui);
+        Grapple_GuiInputEnd(gui);
         if (nk_begin(ctx, "glyphs", nk_rect(0, 0, kScreen, kScreen), NK_WINDOW_NO_SCROLLBAR))
         {
             nk_layout_row_dynamic(ctx, 40.0f, 1);
             nk_label(ctx, text, NK_TEXT_LEFT);
         }
         nk_end(ctx);
-        EXPECT_TRUE(SDLStatic_GuiRender(gui));
+        EXPECT_TRUE(Grapple_GuiRender(gui));
         SDL_FlushRenderer(renderer_);
         SDL_memcpy(out.data(), surface_->pixels, bytes);
-        SDLStatic_DestroyGui(gui);
+        Grapple_DestroyGui(gui);
     };
 
-    render_into(SDLSTATIC_GUI_GLYPHS_LATIN1, latin1);
-    render_into(SDLSTATIC_GUI_GLYPHS_PUNCTUATION, punctuation);
+    render_into(GRAPPLE_GUI_GLYPHS_LATIN1, latin1);
+    render_into(GRAPPLE_GUI_GLYPHS_PUNCTUATION, punctuation);
     EXPECT_NE(SDL_memcmp(latin1.data(), punctuation.data(), bytes), 0)
         << "the same string must render differently once the glyphs are baked";
 
     // The default entry point keeps its old behaviour exactly.
     std::vector<Uint32> plain(latin1.size());
-    SDLStatic_Gui *gui = SDLStatic_CreateGui(renderer_, font, font_size, 24.0f);
+    Grapple_Gui *gui = Grapple_CreateGui(renderer_, font, font_size, 24.0f);
     ASSERT_NE(gui, nullptr);
-    SDLStatic_DestroyGui(gui);
+    Grapple_DestroyGui(gui);
     SDL_free(font);
 }
 
@@ -924,22 +924,22 @@ TEST_F(GuiHarness, DrawTextureHonoursRectAndOverlayOrder)
     ASSERT_NE(texture, nullptr) << SDL_GetError();
     SDL_DestroySurface(pixels);
 
-    struct nk_context *ctx = SDLStatic_GuiContext(gui_);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
     BeginFrame();
-    SDLStatic_GuiInputBegin(gui_);
-    SDLStatic_GuiInputEnd(gui_);
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
     const SDL_FRect where = {20.0f, 20.0f, 40.0f, 40.0f};
     if (nk_begin(ctx, "canvas", nk_rect(0, 0, kScreen, kScreen), NK_WINDOW_NO_SCROLLBAR))
     {
-        EXPECT_TRUE(SDLStatic_GuiDrawTexture(gui_, texture, where,
-                                             SDLSTATIC_GUI_IMAGE_STRETCH));
+        EXPECT_TRUE(Grapple_GuiDrawTexture(gui_, texture, where,
+                                             GRAPPLE_GUI_IMAGE_STRETCH));
     }
     nk_end(ctx);
     // Queued from outside any window, and still drawn — that is the point.
     const SDL_FRect ghost = {120.0f, 120.0f, 30.0f, 30.0f};
-    EXPECT_TRUE(SDLStatic_GuiDrawTextureOverlay(gui_, texture, ghost,
-                                                SDLSTATIC_GUI_IMAGE_STRETCH));
-    EXPECT_TRUE(SDLStatic_GuiRender(gui_));
+    EXPECT_TRUE(Grapple_GuiDrawTextureOverlay(gui_, texture, ghost,
+                                                GRAPPLE_GUI_IMAGE_STRETCH));
+    EXPECT_TRUE(Grapple_GuiRender(gui_));
     SDL_FlushRenderer(renderer_);
 
     auto pixel_at = [&](int x, int y) {
@@ -954,28 +954,28 @@ TEST_F(GuiHarness, DrawTextureHonoursRectAndOverlayOrder)
 
     // Overlays last one frame; the next frame must be clean.
     BeginFrame();
-    EXPECT_TRUE(SDLStatic_GuiRender(gui_));
+    EXPECT_TRUE(Grapple_GuiRender(gui_));
     SDL_FlushRenderer(renderer_);
     EXPECT_EQ(pixel_at(130, 130), 0x00000000u) << "the queue is emptied each frame";
 
     // Outside a window there is no canvas to draw into, and that is an
     // error rather than a silent no-op.
-    EXPECT_FALSE(SDLStatic_GuiDrawTexture(gui_, texture, where, SDLSTATIC_GUI_IMAGE_STRETCH));
-    EXPECT_FALSE(SDLStatic_GuiDrawTexture(gui_, nullptr, where, SDLSTATIC_GUI_IMAGE_STRETCH));
-    EXPECT_FALSE(SDLStatic_GuiDrawTextureOverlay(nullptr, texture, where,
-                                                 SDLSTATIC_GUI_IMAGE_STRETCH));
+    EXPECT_FALSE(Grapple_GuiDrawTexture(gui_, texture, where, GRAPPLE_GUI_IMAGE_STRETCH));
+    EXPECT_FALSE(Grapple_GuiDrawTexture(gui_, nullptr, where, GRAPPLE_GUI_IMAGE_STRETCH));
+    EXPECT_FALSE(Grapple_GuiDrawTextureOverlay(nullptr, texture, where,
+                                                 GRAPPLE_GUI_IMAGE_STRETCH));
     SDL_DestroyTexture(texture);
 }
 
 // The debug-overlay counters: they must move with what was actually drawn.
 TEST_F(GuiHarness, CountersReportTheLastFrame)
 {
-    EXPECT_EQ(SDLStatic_GuiDrawCommandCount(gui_), 0) << "nothing rendered yet";
-    EXPECT_EQ(SDLStatic_GuiMemoryUsed(gui_), 0);
-    EXPECT_EQ(SDLStatic_GuiDrawCommandCount(nullptr), 0);
-    EXPECT_EQ(SDLStatic_GuiMemoryUsed(nullptr), 0);
+    EXPECT_EQ(Grapple_GuiDrawCommandCount(gui_), 0) << "nothing rendered yet";
+    EXPECT_EQ(Grapple_GuiMemoryUsed(gui_), 0);
+    EXPECT_EQ(Grapple_GuiDrawCommandCount(nullptr), 0);
+    EXPECT_EQ(Grapple_GuiMemoryUsed(nullptr), 0);
 
-    struct nk_context *ctx = SDLStatic_GuiContext(gui_);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
     BeginFrame();
     if (nk_begin(ctx, "busy", nk_rect(0, 0, 200, 200), NK_WINDOW_BORDER | NK_WINDOW_TITLE))
     {
@@ -986,9 +986,9 @@ TEST_F(GuiHarness, CountersReportTheLastFrame)
         }
     }
     nk_end(ctx);
-    ASSERT_TRUE(SDLStatic_GuiRender(gui_));
-    const int busy_memory = SDLStatic_GuiMemoryUsed(gui_);
-    EXPECT_GT(SDLStatic_GuiDrawCommandCount(gui_), 0);
+    ASSERT_TRUE(Grapple_GuiRender(gui_));
+    const int busy_memory = Grapple_GuiMemoryUsed(gui_);
+    EXPECT_GT(Grapple_GuiDrawCommandCount(gui_), 0);
     EXPECT_GT(busy_memory, 0);
 
     BeginFrame();
@@ -998,8 +998,8 @@ TEST_F(GuiHarness, CountersReportTheLastFrame)
         nk_label(ctx, "quiet", NK_TEXT_LEFT);
     }
     nk_end(ctx);
-    ASSERT_TRUE(SDLStatic_GuiRender(gui_));
-    EXPECT_LT(SDLStatic_GuiMemoryUsed(gui_), busy_memory)
+    ASSERT_TRUE(Grapple_GuiRender(gui_));
+    EXPECT_LT(Grapple_GuiMemoryUsed(gui_), busy_memory)
         << "a simpler frame must cost less, or the counter is not measuring the frame";
 }
 

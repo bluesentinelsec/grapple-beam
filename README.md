@@ -1,14 +1,16 @@
 <div align="center">
 
-# SDL3 Static Extensions
+# grapple-beam
 
-**Everything a 2D game needs, statically linked into one self-contained binary.**
+**Everything a 2D game needs, pulled into one self-contained binary.**
 
-[![CI](https://github.com/bluesentinelsec/SDL3-static-extensions/actions/workflows/ci.yml/badge.svg)](https://github.com/bluesentinelsec/SDL3-static-extensions/actions/workflows/ci.yml)
+*A static-first game engine on SDL3, scriptable in Lua and Ruby.*
+
+[![CI](https://github.com/bluesentinelsec/grapple-beam/actions/workflows/ci.yml/badge.svg)](https://github.com/bluesentinelsec/grapple-beam/actions/workflows/ci.yml)
 [![License: zlib](https://img.shields.io/badge/License-zlib-informational.svg)](LICENSE)
-&nbsp;·&nbsp; **[Documentation](https://bluesentinelsec.github.io/SDL3-static-extensions/)** ·
-[Getting Started](https://bluesentinelsec.github.io/SDL3-static-extensions/getting-started.html) ·
-[Modules](https://bluesentinelsec.github.io/SDL3-static-extensions/modules.html)
+&nbsp;·&nbsp; **[Documentation](https://bluesentinelsec.github.io/grapple-beam/)** ·
+[Getting Started](https://bluesentinelsec.github.io/grapple-beam/getting-started.html) ·
+[Modules](https://bluesentinelsec.github.io/grapple-beam/modules.html)
 
 </div>
 
@@ -26,7 +28,7 @@ its own packaging story on every platform.
 
 This project takes the opposite approach. **Every extension is vendored as
 pinned source and compiled into a static library.** Your game links a
-handful of `SDLStatic::*` CMake targets and produces one self-contained
+handful of `Grapple::*` CMake targets and produces one self-contained
 executable — no DLLs beside the binary, no `LD_LIBRARY_PATH`, no "works on
 my machine." The same tree builds for Linux, macOS, Windows, Android, iOS,
 and browser WebAssembly, and CI proves all of it on every push.
@@ -35,41 +37,41 @@ and browser WebAssembly, and CI proves all of it on every push.
 
 | Need | Module | Under the hood |
 |------|--------|----------------|
-| Audio: mixing, music, SFX, MIDI, chiptunes | `SDLStatic::Mixer` | SDL3_mixer 3.2.4 + vendored codecs, TiMidity, original MML synth |
-| 2D drawing primitives | `SDLStatic::Gfx` | SDL3_gfx + original GPU-batched equivalents |
-| Image loading/saving (13 formats) | `SDLStatic::Image` | SDL3_image, all-static codecs |
-| Text and fonts, i18n shaping + BiDi | `SDLStatic::TTF` | SDL3_ttf + static FreeType, HarfBuzz, SheenBidi |
-| TCP/UDP networking | `SDLStatic::Net` | SDL3_net |
-| HTTP/S client + embedded server | `SDLStatic::Http` / `mog::mog` | [mog](https://github.com/bluesentinelsec/mog), statically linked |
-| Rigid-body physics | `SDLStatic::Physics` | Box2D v3 (pure C11) |
-| Immediate-mode GUI | `SDLStatic::GUI` | Nuklear + SDL3 backend + weighted grid layout |
-| Tiled map parsing (.tmj) | `SDLStatic::Tiled` | cute_tiled, VFS-aware |
-| Regular expressions | `SDLStatic::Regex` | Oniguruma (Ruby syntax) in C, C++, Lua and Ruby |
-| Dynamic 2D lighting | `SDLStatic::Light` | GPU shader (embedded GLSL), day/night, shadows, CPU fallback |
-| Opinionated game engine | `SDLStatic::Engine` | fixed-tick loop with interpolated rendering, design-resolution scaling |
-| Virtual filesystem, encrypted archives | `SDLStatic::VFS` | PhysFS (zip-only) + SSE1 crypto container |
-| Crypto, DEFLATE, base64, signals | `SDLStatic::Extras` | original code + sdefl/sinfl |
-| JSON / TOML / YAML | `SDLStatic::Formats` | cJSON, tomlc99, libyaml |
-| Embedded scripting | `SDLStatic::Lua` / `SDLStatic::Ruby` | Lua 5.4.8, mruby 4.0.0, require-from-zip |
-| Script game API (both languages) | `SDLStatic::Bindings` | curated layer + generated full-API mirror |
-| C++ RAII bindings | `SDLStatic::Cpp` | Google-style, `Status`/`Result`, no exceptions |
+| Audio: mixing, music, SFX, MIDI, chiptunes | `Grapple::Mixer` | SDL3_mixer 3.2.4 + vendored codecs, TiMidity, original MML synth |
+| 2D drawing primitives | `Grapple::Gfx` | SDL3_gfx + original GPU-batched equivalents |
+| Image loading/saving (13 formats) | `Grapple::Image` | SDL3_image, all-static codecs |
+| Text and fonts, i18n shaping + BiDi | `Grapple::TTF` | SDL3_ttf + static FreeType, HarfBuzz, SheenBidi |
+| TCP/UDP networking | `Grapple::Net` | SDL3_net |
+| HTTP/S client + embedded server | `Grapple::Http` / `mog::mog` | [mog](https://github.com/bluesentinelsec/mog), statically linked |
+| Rigid-body physics | `Grapple::Physics` | Box2D v3 (pure C11) |
+| Immediate-mode GUI | `Grapple::GUI` | Nuklear + SDL3 backend + weighted grid layout |
+| Tiled map parsing (.tmj) | `Grapple::Tiled` | cute_tiled, VFS-aware |
+| Regular expressions | `Grapple::Regex` | Oniguruma (Ruby syntax) in C, C++, Lua and Ruby |
+| Dynamic 2D lighting | `Grapple::Light` | GPU shader (embedded GLSL), day/night, shadows, CPU fallback |
+| Opinionated game engine | `Grapple::Engine` | fixed-tick loop with interpolated rendering, design-resolution scaling |
+| Virtual filesystem, encrypted archives | `Grapple::VFS` | PhysFS (zip-only) + SSE1 crypto container |
+| Crypto, DEFLATE, base64, signals | `Grapple::Extras` | original code + sdefl/sinfl |
+| JSON / TOML / YAML | `Grapple::Formats` | cJSON, tomlc99, libyaml |
+| Embedded scripting | `Grapple::Lua` / `Grapple::Ruby` | Lua 5.4.8, mruby 4.0.0, require-from-zip |
+| Script game API (both languages) | `Grapple::Bindings` | curated layer + generated full-API mirror |
+| C++ RAII bindings | `Grapple::Cpp` | Google-style, `Status`/`Result`, no exceptions |
 
 ## Quick start
 
 ```cmake
 include(FetchContent)
-FetchContent_Declare(SDL3_static_extensions
-  GIT_REPOSITORY https://github.com/bluesentinelsec/SDL3-static-extensions.git
+FetchContent_Declare(grapple
+  GIT_REPOSITORY https://github.com/bluesentinelsec/grapple-beam.git
   GIT_TAG        v0.2.0)
-FetchContent_MakeAvailable(SDL3_static_extensions)
+FetchContent_MakeAvailable(grapple)
 
 add_executable(my_game main.c)
-target_link_libraries(my_game PRIVATE SDL3::SDL3 SDLStatic::Mixer SDLStatic::Gfx)
+target_link_libraries(my_game PRIVATE SDL3::SDL3 Grapple::Mixer Grapple::Gfx)
 ```
 
 Link only what you use; switch whole modules off with
-`set(SDLSTATIC_BUILD_<NAME> OFF)` before `MakeAvailable`. Full walkthrough:
-[Getting Started](https://bluesentinelsec.github.io/SDL3-static-extensions/getting-started.html).
+`set(GRAPPLE_BUILD_<NAME> OFF)` before `MakeAvailable`. Full walkthrough:
+[Getting Started](https://bluesentinelsec.github.io/grapple-beam/getting-started.html).
 
 To hack on the repository itself:
 
@@ -85,16 +87,16 @@ The whole stack is exposed on four language surfaces — the repository
 contains a complete Pong in each as living proof:
 
 - **C** — the native API of every module.
-- **C++** — Google-style RAII wrappers (`sdlstatic::Window`,
-  `sdlstatic::Mixer`, …) with `Status`/`Result` error handling and no
+- **C++** — Google-style RAII wrappers (`grapple::Window`,
+  `grapple::Mixer`, …) with `Status`/`Result` error handling and no
   exceptions, plus a generated surface covering every C function:
   RAII owners for 60+ resource types, `Status` wrappers, aliases.
-  [Details](https://bluesentinelsec.github.io/SDL3-static-extensions/cpp.html).
+  [Details](https://bluesentinelsec.github.io/grapple-beam/cpp.html).
 - **Lua & Ruby** — embedded runtimes with a curated game API plus a
   generated mirror of the entire C API (2,156 functions per language,
   GC-safe ownership), `require` working from mounted (optionally
   encrypted) zip archives, and an interactive REPL (`repl -l lua|ruby`).
-  [Details](https://bluesentinelsec.github.io/SDL3-static-extensions/scripting.html).
+  [Details](https://bluesentinelsec.github.io/grapple-beam/scripting.html).
 
 ## Ship your assets sealed
 
@@ -104,8 +106,8 @@ python3 scripts/pack_assets.py assets/ media.bin --password "secret" \
 ```
 
 ```c
-SDLStatic_MountEncryptedArchive(game_media, (int)game_media_len, "secret", "/assets");
-SDL_Surface *hero = IMG_Load_IO(SDLStatic_OpenVFSRead("/assets/hero.png"), true);
+Grapple_MountEncryptedArchive(game_media, (int)game_media_len, "secret", "/assets");
+SDL_Surface *hero = IMG_Load_IO(Grapple_OpenVFSRead("/assets/hero.png"), true);
 ```
 
 Textures, audio, maps, and scripts all load transparently from the mounted

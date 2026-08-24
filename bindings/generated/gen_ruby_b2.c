@@ -10,15 +10,15 @@ static void GenRead_b2Vec2(mrb_state *mrb, mrb_value h, b2Vec2 *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->x = (float)SDLStaticGen_RubyFieldNum(mrb, h, "x");
-    out->y = (float)SDLStaticGen_RubyFieldNum(mrb, h, "y");
+    out->x = (float)GrappleGen_RubyFieldNum(mrb, h, "x");
+    out->y = (float)GrappleGen_RubyFieldNum(mrb, h, "y");
 }
 
 static mrb_value GenPush_b2Vec2(mrb_state *mrb, const b2Vec2 *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "x", mrb_float_value(mrb, (mrb_float)in->x));
-    SDLStaticGen_RubyHashSet(mrb, h, "y", mrb_float_value(mrb, (mrb_float)in->y));
+    GrappleGen_RubyHashSet(mrb, h, "x", mrb_float_value(mrb, (mrb_float)in->x));
+    GrappleGen_RubyHashSet(mrb, h, "y", mrb_float_value(mrb, (mrb_float)in->y));
     return h;
 }
 
@@ -26,15 +26,15 @@ static void GenRead_b2AABB(mrb_state *mrb, mrb_value h, b2AABB *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "lowerBound"), &out->lowerBound);
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "upperBound"), &out->upperBound);
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "lowerBound"), &out->lowerBound);
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "upperBound"), &out->upperBound);
 }
 
 static mrb_value GenPush_b2AABB(mrb_state *mrb, const b2AABB *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "lowerBound", GenPush_b2Vec2(mrb, &in->lowerBound));
-    SDLStaticGen_RubyHashSet(mrb, h, "upperBound", GenPush_b2Vec2(mrb, &in->upperBound));
+    GrappleGen_RubyHashSet(mrb, h, "lowerBound", GenPush_b2Vec2(mrb, &in->lowerBound));
+    GrappleGen_RubyHashSet(mrb, h, "upperBound", GenPush_b2Vec2(mrb, &in->upperBound));
     return h;
 }
 
@@ -42,15 +42,15 @@ static void GenRead_b2Rot(mrb_state *mrb, mrb_value h, b2Rot *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->c = (float)SDLStaticGen_RubyFieldNum(mrb, h, "c");
-    out->s = (float)SDLStaticGen_RubyFieldNum(mrb, h, "s");
+    out->c = (float)GrappleGen_RubyFieldNum(mrb, h, "c");
+    out->s = (float)GrappleGen_RubyFieldNum(mrb, h, "s");
 }
 
 static mrb_value GenPush_b2Rot(mrb_state *mrb, const b2Rot *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "c", mrb_float_value(mrb, (mrb_float)in->c));
-    SDLStaticGen_RubyHashSet(mrb, h, "s", mrb_float_value(mrb, (mrb_float)in->s));
+    GrappleGen_RubyHashSet(mrb, h, "c", mrb_float_value(mrb, (mrb_float)in->c));
+    GrappleGen_RubyHashSet(mrb, h, "s", mrb_float_value(mrb, (mrb_float)in->s));
     return h;
 }
 
@@ -58,43 +58,43 @@ static void GenRead_b2BodyDef(mrb_state *mrb, mrb_value h, b2BodyDef *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->type = (b2BodyType)SDLStaticGen_RubyFieldInt(mrb, h, "type");
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "position"), &out->position);
-    GenRead_b2Rot(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "rotation"), &out->rotation);
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "linearVelocity"), &out->linearVelocity);
-    out->angularVelocity = (float)SDLStaticGen_RubyFieldNum(mrb, h, "angularVelocity");
-    out->linearDamping = (float)SDLStaticGen_RubyFieldNum(mrb, h, "linearDamping");
-    out->angularDamping = (float)SDLStaticGen_RubyFieldNum(mrb, h, "angularDamping");
-    out->gravityScale = (float)SDLStaticGen_RubyFieldNum(mrb, h, "gravityScale");
-    out->sleepThreshold = (float)SDLStaticGen_RubyFieldNum(mrb, h, "sleepThreshold");
-    out->enableSleep = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "enableSleep");
-    out->isAwake = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "isAwake");
-    out->fixedRotation = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "fixedRotation");
-    out->isBullet = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "isBullet");
-    out->isEnabled = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "isEnabled");
-    out->allowFastRotation = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "allowFastRotation");
-    out->internalValue = (int)SDLStaticGen_RubyFieldInt(mrb, h, "internalValue");
+    out->type = (b2BodyType)GrappleGen_RubyFieldInt(mrb, h, "type");
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "position"), &out->position);
+    GenRead_b2Rot(mrb, GrappleGen_RubyFieldGet(mrb, h, "rotation"), &out->rotation);
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "linearVelocity"), &out->linearVelocity);
+    out->angularVelocity = (float)GrappleGen_RubyFieldNum(mrb, h, "angularVelocity");
+    out->linearDamping = (float)GrappleGen_RubyFieldNum(mrb, h, "linearDamping");
+    out->angularDamping = (float)GrappleGen_RubyFieldNum(mrb, h, "angularDamping");
+    out->gravityScale = (float)GrappleGen_RubyFieldNum(mrb, h, "gravityScale");
+    out->sleepThreshold = (float)GrappleGen_RubyFieldNum(mrb, h, "sleepThreshold");
+    out->enableSleep = (bool)GrappleGen_RubyFieldBool(mrb, h, "enableSleep");
+    out->isAwake = (bool)GrappleGen_RubyFieldBool(mrb, h, "isAwake");
+    out->fixedRotation = (bool)GrappleGen_RubyFieldBool(mrb, h, "fixedRotation");
+    out->isBullet = (bool)GrappleGen_RubyFieldBool(mrb, h, "isBullet");
+    out->isEnabled = (bool)GrappleGen_RubyFieldBool(mrb, h, "isEnabled");
+    out->allowFastRotation = (bool)GrappleGen_RubyFieldBool(mrb, h, "allowFastRotation");
+    out->internalValue = (int)GrappleGen_RubyFieldInt(mrb, h, "internalValue");
 }
 
 static mrb_value GenPush_b2BodyDef(mrb_state *mrb, const b2BodyDef *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "type", mrb_int_value(mrb, (mrb_int)in->type));
-    SDLStaticGen_RubyHashSet(mrb, h, "position", GenPush_b2Vec2(mrb, &in->position));
-    SDLStaticGen_RubyHashSet(mrb, h, "rotation", GenPush_b2Rot(mrb, &in->rotation));
-    SDLStaticGen_RubyHashSet(mrb, h, "linearVelocity", GenPush_b2Vec2(mrb, &in->linearVelocity));
-    SDLStaticGen_RubyHashSet(mrb, h, "angularVelocity", mrb_float_value(mrb, (mrb_float)in->angularVelocity));
-    SDLStaticGen_RubyHashSet(mrb, h, "linearDamping", mrb_float_value(mrb, (mrb_float)in->linearDamping));
-    SDLStaticGen_RubyHashSet(mrb, h, "angularDamping", mrb_float_value(mrb, (mrb_float)in->angularDamping));
-    SDLStaticGen_RubyHashSet(mrb, h, "gravityScale", mrb_float_value(mrb, (mrb_float)in->gravityScale));
-    SDLStaticGen_RubyHashSet(mrb, h, "sleepThreshold", mrb_float_value(mrb, (mrb_float)in->sleepThreshold));
-    SDLStaticGen_RubyHashSet(mrb, h, "enableSleep", mrb_bool_value((mrb_bool)(in->enableSleep != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "isAwake", mrb_bool_value((mrb_bool)(in->isAwake != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "fixedRotation", mrb_bool_value((mrb_bool)(in->fixedRotation != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "isBullet", mrb_bool_value((mrb_bool)(in->isBullet != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "isEnabled", mrb_bool_value((mrb_bool)(in->isEnabled != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "allowFastRotation", mrb_bool_value((mrb_bool)(in->allowFastRotation != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "internalValue", mrb_int_value(mrb, (mrb_int)in->internalValue));
+    GrappleGen_RubyHashSet(mrb, h, "type", mrb_int_value(mrb, (mrb_int)in->type));
+    GrappleGen_RubyHashSet(mrb, h, "position", GenPush_b2Vec2(mrb, &in->position));
+    GrappleGen_RubyHashSet(mrb, h, "rotation", GenPush_b2Rot(mrb, &in->rotation));
+    GrappleGen_RubyHashSet(mrb, h, "linearVelocity", GenPush_b2Vec2(mrb, &in->linearVelocity));
+    GrappleGen_RubyHashSet(mrb, h, "angularVelocity", mrb_float_value(mrb, (mrb_float)in->angularVelocity));
+    GrappleGen_RubyHashSet(mrb, h, "linearDamping", mrb_float_value(mrb, (mrb_float)in->linearDamping));
+    GrappleGen_RubyHashSet(mrb, h, "angularDamping", mrb_float_value(mrb, (mrb_float)in->angularDamping));
+    GrappleGen_RubyHashSet(mrb, h, "gravityScale", mrb_float_value(mrb, (mrb_float)in->gravityScale));
+    GrappleGen_RubyHashSet(mrb, h, "sleepThreshold", mrb_float_value(mrb, (mrb_float)in->sleepThreshold));
+    GrappleGen_RubyHashSet(mrb, h, "enableSleep", mrb_bool_value((mrb_bool)(in->enableSleep != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "isAwake", mrb_bool_value((mrb_bool)(in->isAwake != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "fixedRotation", mrb_bool_value((mrb_bool)(in->fixedRotation != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "isBullet", mrb_bool_value((mrb_bool)(in->isBullet != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "isEnabled", mrb_bool_value((mrb_bool)(in->isEnabled != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "allowFastRotation", mrb_bool_value((mrb_bool)(in->allowFastRotation != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "internalValue", mrb_int_value(mrb, (mrb_int)in->internalValue));
     return h;
 }
 
@@ -102,17 +102,17 @@ static void GenRead_b2BodyId(mrb_state *mrb, mrb_value h, b2BodyId *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->index1 = (int32_t)SDLStaticGen_RubyFieldInt(mrb, h, "index1");
-    out->world0 = (uint16_t)SDLStaticGen_RubyFieldInt(mrb, h, "world0");
-    out->generation = (uint16_t)SDLStaticGen_RubyFieldInt(mrb, h, "generation");
+    out->index1 = (int32_t)GrappleGen_RubyFieldInt(mrb, h, "index1");
+    out->world0 = (uint16_t)GrappleGen_RubyFieldInt(mrb, h, "world0");
+    out->generation = (uint16_t)GrappleGen_RubyFieldInt(mrb, h, "generation");
 }
 
 static mrb_value GenPush_b2BodyId(mrb_state *mrb, const b2BodyId *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "index1", mrb_int_value(mrb, (mrb_int)in->index1));
-    SDLStaticGen_RubyHashSet(mrb, h, "world0", mrb_int_value(mrb, (mrb_int)in->world0));
-    SDLStaticGen_RubyHashSet(mrb, h, "generation", mrb_int_value(mrb, (mrb_int)in->generation));
+    GrappleGen_RubyHashSet(mrb, h, "index1", mrb_int_value(mrb, (mrb_int)in->index1));
+    GrappleGen_RubyHashSet(mrb, h, "world0", mrb_int_value(mrb, (mrb_int)in->world0));
+    GrappleGen_RubyHashSet(mrb, h, "generation", mrb_int_value(mrb, (mrb_int)in->generation));
     return h;
 }
 
@@ -120,28 +120,28 @@ static void GenRead_b2Capsule(mrb_state *mrb, mrb_value h, b2Capsule *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "center1"), &out->center1);
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "center2"), &out->center2);
-    out->radius = (float)SDLStaticGen_RubyFieldNum(mrb, h, "radius");
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "center1"), &out->center1);
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "center2"), &out->center2);
+    out->radius = (float)GrappleGen_RubyFieldNum(mrb, h, "radius");
 }
 
 static mrb_value GenPush_b2Capsule(mrb_state *mrb, const b2Capsule *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "center1", GenPush_b2Vec2(mrb, &in->center1));
-    SDLStaticGen_RubyHashSet(mrb, h, "center2", GenPush_b2Vec2(mrb, &in->center2));
-    SDLStaticGen_RubyHashSet(mrb, h, "radius", mrb_float_value(mrb, (mrb_float)in->radius));
+    GrappleGen_RubyHashSet(mrb, h, "center1", GenPush_b2Vec2(mrb, &in->center1));
+    GrappleGen_RubyHashSet(mrb, h, "center2", GenPush_b2Vec2(mrb, &in->center2));
+    GrappleGen_RubyHashSet(mrb, h, "radius", mrb_float_value(mrb, (mrb_float)in->radius));
     return h;
 }
 
 static mrb_value GenPush_b2CastOutput(mrb_state *mrb, const b2CastOutput *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "normal", GenPush_b2Vec2(mrb, &in->normal));
-    SDLStaticGen_RubyHashSet(mrb, h, "point", GenPush_b2Vec2(mrb, &in->point));
-    SDLStaticGen_RubyHashSet(mrb, h, "fraction", mrb_float_value(mrb, (mrb_float)in->fraction));
-    SDLStaticGen_RubyHashSet(mrb, h, "iterations", mrb_int_value(mrb, (mrb_int)in->iterations));
-    SDLStaticGen_RubyHashSet(mrb, h, "hit", mrb_bool_value((mrb_bool)(in->hit != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "normal", GenPush_b2Vec2(mrb, &in->normal));
+    GrappleGen_RubyHashSet(mrb, h, "point", GenPush_b2Vec2(mrb, &in->point));
+    GrappleGen_RubyHashSet(mrb, h, "fraction", mrb_float_value(mrb, (mrb_float)in->fraction));
+    GrappleGen_RubyHashSet(mrb, h, "iterations", mrb_int_value(mrb, (mrb_int)in->iterations));
+    GrappleGen_RubyHashSet(mrb, h, "hit", mrb_bool_value((mrb_bool)(in->hit != 0)));
     return h;
 }
 
@@ -149,23 +149,23 @@ static void GenRead_b2SurfaceMaterial(mrb_state *mrb, mrb_value h, b2SurfaceMate
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->friction = (float)SDLStaticGen_RubyFieldNum(mrb, h, "friction");
-    out->restitution = (float)SDLStaticGen_RubyFieldNum(mrb, h, "restitution");
-    out->rollingResistance = (float)SDLStaticGen_RubyFieldNum(mrb, h, "rollingResistance");
-    out->tangentSpeed = (float)SDLStaticGen_RubyFieldNum(mrb, h, "tangentSpeed");
-    out->userMaterialId = (int)SDLStaticGen_RubyFieldInt(mrb, h, "userMaterialId");
-    out->customColor = (uint32_t)SDLStaticGen_RubyFieldInt(mrb, h, "customColor");
+    out->friction = (float)GrappleGen_RubyFieldNum(mrb, h, "friction");
+    out->restitution = (float)GrappleGen_RubyFieldNum(mrb, h, "restitution");
+    out->rollingResistance = (float)GrappleGen_RubyFieldNum(mrb, h, "rollingResistance");
+    out->tangentSpeed = (float)GrappleGen_RubyFieldNum(mrb, h, "tangentSpeed");
+    out->userMaterialId = (int)GrappleGen_RubyFieldInt(mrb, h, "userMaterialId");
+    out->customColor = (uint32_t)GrappleGen_RubyFieldInt(mrb, h, "customColor");
 }
 
 static mrb_value GenPush_b2SurfaceMaterial(mrb_state *mrb, const b2SurfaceMaterial *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "friction", mrb_float_value(mrb, (mrb_float)in->friction));
-    SDLStaticGen_RubyHashSet(mrb, h, "restitution", mrb_float_value(mrb, (mrb_float)in->restitution));
-    SDLStaticGen_RubyHashSet(mrb, h, "rollingResistance", mrb_float_value(mrb, (mrb_float)in->rollingResistance));
-    SDLStaticGen_RubyHashSet(mrb, h, "tangentSpeed", mrb_float_value(mrb, (mrb_float)in->tangentSpeed));
-    SDLStaticGen_RubyHashSet(mrb, h, "userMaterialId", mrb_int_value(mrb, (mrb_int)in->userMaterialId));
-    SDLStaticGen_RubyHashSet(mrb, h, "customColor", mrb_int_value(mrb, (mrb_int)in->customColor));
+    GrappleGen_RubyHashSet(mrb, h, "friction", mrb_float_value(mrb, (mrb_float)in->friction));
+    GrappleGen_RubyHashSet(mrb, h, "restitution", mrb_float_value(mrb, (mrb_float)in->restitution));
+    GrappleGen_RubyHashSet(mrb, h, "rollingResistance", mrb_float_value(mrb, (mrb_float)in->rollingResistance));
+    GrappleGen_RubyHashSet(mrb, h, "tangentSpeed", mrb_float_value(mrb, (mrb_float)in->tangentSpeed));
+    GrappleGen_RubyHashSet(mrb, h, "userMaterialId", mrb_int_value(mrb, (mrb_int)in->userMaterialId));
+    GrappleGen_RubyHashSet(mrb, h, "customColor", mrb_int_value(mrb, (mrb_int)in->customColor));
     return h;
 }
 
@@ -173,17 +173,17 @@ static void GenRead_b2Filter(mrb_state *mrb, mrb_value h, b2Filter *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->categoryBits = (uint64_t)SDLStaticGen_RubyFieldInt(mrb, h, "categoryBits");
-    out->maskBits = (uint64_t)SDLStaticGen_RubyFieldInt(mrb, h, "maskBits");
-    out->groupIndex = (int)SDLStaticGen_RubyFieldInt(mrb, h, "groupIndex");
+    out->categoryBits = (uint64_t)GrappleGen_RubyFieldInt(mrb, h, "categoryBits");
+    out->maskBits = (uint64_t)GrappleGen_RubyFieldInt(mrb, h, "maskBits");
+    out->groupIndex = (int)GrappleGen_RubyFieldInt(mrb, h, "groupIndex");
 }
 
 static mrb_value GenPush_b2Filter(mrb_state *mrb, const b2Filter *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "categoryBits", mrb_int_value(mrb, (mrb_int)in->categoryBits));
-    SDLStaticGen_RubyHashSet(mrb, h, "maskBits", mrb_int_value(mrb, (mrb_int)in->maskBits));
-    SDLStaticGen_RubyHashSet(mrb, h, "groupIndex", mrb_int_value(mrb, (mrb_int)in->groupIndex));
+    GrappleGen_RubyHashSet(mrb, h, "categoryBits", mrb_int_value(mrb, (mrb_int)in->categoryBits));
+    GrappleGen_RubyHashSet(mrb, h, "maskBits", mrb_int_value(mrb, (mrb_int)in->maskBits));
+    GrappleGen_RubyHashSet(mrb, h, "groupIndex", mrb_int_value(mrb, (mrb_int)in->groupIndex));
     return h;
 }
 
@@ -191,23 +191,23 @@ static void GenRead_b2ChainDef(mrb_state *mrb, mrb_value h, b2ChainDef *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->count = (int)SDLStaticGen_RubyFieldInt(mrb, h, "count");
-    out->materialCount = (int)SDLStaticGen_RubyFieldInt(mrb, h, "materialCount");
-    GenRead_b2Filter(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "filter"), &out->filter);
-    out->isLoop = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "isLoop");
-    out->enableSensorEvents = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "enableSensorEvents");
-    out->internalValue = (int)SDLStaticGen_RubyFieldInt(mrb, h, "internalValue");
+    out->count = (int)GrappleGen_RubyFieldInt(mrb, h, "count");
+    out->materialCount = (int)GrappleGen_RubyFieldInt(mrb, h, "materialCount");
+    GenRead_b2Filter(mrb, GrappleGen_RubyFieldGet(mrb, h, "filter"), &out->filter);
+    out->isLoop = (bool)GrappleGen_RubyFieldBool(mrb, h, "isLoop");
+    out->enableSensorEvents = (bool)GrappleGen_RubyFieldBool(mrb, h, "enableSensorEvents");
+    out->internalValue = (int)GrappleGen_RubyFieldInt(mrb, h, "internalValue");
 }
 
 static mrb_value GenPush_b2ChainDef(mrb_state *mrb, const b2ChainDef *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "count", mrb_int_value(mrb, (mrb_int)in->count));
-    SDLStaticGen_RubyHashSet(mrb, h, "materialCount", mrb_int_value(mrb, (mrb_int)in->materialCount));
-    SDLStaticGen_RubyHashSet(mrb, h, "filter", GenPush_b2Filter(mrb, &in->filter));
-    SDLStaticGen_RubyHashSet(mrb, h, "isLoop", mrb_bool_value((mrb_bool)(in->isLoop != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "enableSensorEvents", mrb_bool_value((mrb_bool)(in->enableSensorEvents != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "internalValue", mrb_int_value(mrb, (mrb_int)in->internalValue));
+    GrappleGen_RubyHashSet(mrb, h, "count", mrb_int_value(mrb, (mrb_int)in->count));
+    GrappleGen_RubyHashSet(mrb, h, "materialCount", mrb_int_value(mrb, (mrb_int)in->materialCount));
+    GrappleGen_RubyHashSet(mrb, h, "filter", GenPush_b2Filter(mrb, &in->filter));
+    GrappleGen_RubyHashSet(mrb, h, "isLoop", mrb_bool_value((mrb_bool)(in->isLoop != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "enableSensorEvents", mrb_bool_value((mrb_bool)(in->enableSensorEvents != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "internalValue", mrb_int_value(mrb, (mrb_int)in->internalValue));
     return h;
 }
 
@@ -215,17 +215,17 @@ static void GenRead_b2ChainId(mrb_state *mrb, mrb_value h, b2ChainId *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->index1 = (int32_t)SDLStaticGen_RubyFieldInt(mrb, h, "index1");
-    out->world0 = (uint16_t)SDLStaticGen_RubyFieldInt(mrb, h, "world0");
-    out->generation = (uint16_t)SDLStaticGen_RubyFieldInt(mrb, h, "generation");
+    out->index1 = (int32_t)GrappleGen_RubyFieldInt(mrb, h, "index1");
+    out->world0 = (uint16_t)GrappleGen_RubyFieldInt(mrb, h, "world0");
+    out->generation = (uint16_t)GrappleGen_RubyFieldInt(mrb, h, "generation");
 }
 
 static mrb_value GenPush_b2ChainId(mrb_state *mrb, const b2ChainId *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "index1", mrb_int_value(mrb, (mrb_int)in->index1));
-    SDLStaticGen_RubyHashSet(mrb, h, "world0", mrb_int_value(mrb, (mrb_int)in->world0));
-    SDLStaticGen_RubyHashSet(mrb, h, "generation", mrb_int_value(mrb, (mrb_int)in->generation));
+    GrappleGen_RubyHashSet(mrb, h, "index1", mrb_int_value(mrb, (mrb_int)in->index1));
+    GrappleGen_RubyHashSet(mrb, h, "world0", mrb_int_value(mrb, (mrb_int)in->world0));
+    GrappleGen_RubyHashSet(mrb, h, "generation", mrb_int_value(mrb, (mrb_int)in->generation));
     return h;
 }
 
@@ -233,15 +233,15 @@ static void GenRead_b2Segment(mrb_state *mrb, mrb_value h, b2Segment *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "point1"), &out->point1);
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "point2"), &out->point2);
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "point1"), &out->point1);
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "point2"), &out->point2);
 }
 
 static mrb_value GenPush_b2Segment(mrb_state *mrb, const b2Segment *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "point1", GenPush_b2Vec2(mrb, &in->point1));
-    SDLStaticGen_RubyHashSet(mrb, h, "point2", GenPush_b2Vec2(mrb, &in->point2));
+    GrappleGen_RubyHashSet(mrb, h, "point1", GenPush_b2Vec2(mrb, &in->point1));
+    GrappleGen_RubyHashSet(mrb, h, "point2", GenPush_b2Vec2(mrb, &in->point2));
     return h;
 }
 
@@ -249,19 +249,19 @@ static void GenRead_b2ChainSegment(mrb_state *mrb, mrb_value h, b2ChainSegment *
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "ghost1"), &out->ghost1);
-    GenRead_b2Segment(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "segment"), &out->segment);
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "ghost2"), &out->ghost2);
-    out->chainId = (int)SDLStaticGen_RubyFieldInt(mrb, h, "chainId");
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "ghost1"), &out->ghost1);
+    GenRead_b2Segment(mrb, GrappleGen_RubyFieldGet(mrb, h, "segment"), &out->segment);
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "ghost2"), &out->ghost2);
+    out->chainId = (int)GrappleGen_RubyFieldInt(mrb, h, "chainId");
 }
 
 static mrb_value GenPush_b2ChainSegment(mrb_state *mrb, const b2ChainSegment *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "ghost1", GenPush_b2Vec2(mrb, &in->ghost1));
-    SDLStaticGen_RubyHashSet(mrb, h, "segment", GenPush_b2Segment(mrb, &in->segment));
-    SDLStaticGen_RubyHashSet(mrb, h, "ghost2", GenPush_b2Vec2(mrb, &in->ghost2));
-    SDLStaticGen_RubyHashSet(mrb, h, "chainId", mrb_int_value(mrb, (mrb_int)in->chainId));
+    GrappleGen_RubyHashSet(mrb, h, "ghost1", GenPush_b2Vec2(mrb, &in->ghost1));
+    GrappleGen_RubyHashSet(mrb, h, "segment", GenPush_b2Segment(mrb, &in->segment));
+    GrappleGen_RubyHashSet(mrb, h, "ghost2", GenPush_b2Vec2(mrb, &in->ghost2));
+    GrappleGen_RubyHashSet(mrb, h, "chainId", mrb_int_value(mrb, (mrb_int)in->chainId));
     return h;
 }
 
@@ -269,15 +269,15 @@ static void GenRead_b2Circle(mrb_state *mrb, mrb_value h, b2Circle *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "center"), &out->center);
-    out->radius = (float)SDLStaticGen_RubyFieldNum(mrb, h, "radius");
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "center"), &out->center);
+    out->radius = (float)GrappleGen_RubyFieldNum(mrb, h, "radius");
 }
 
 static mrb_value GenPush_b2Circle(mrb_state *mrb, const b2Circle *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "center", GenPush_b2Vec2(mrb, &in->center));
-    SDLStaticGen_RubyHashSet(mrb, h, "radius", mrb_float_value(mrb, (mrb_float)in->radius));
+    GrappleGen_RubyHashSet(mrb, h, "center", GenPush_b2Vec2(mrb, &in->center));
+    GrappleGen_RubyHashSet(mrb, h, "radius", mrb_float_value(mrb, (mrb_float)in->radius));
     return h;
 }
 
@@ -285,15 +285,15 @@ static void GenRead_b2Plane(mrb_state *mrb, mrb_value h, b2Plane *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "normal"), &out->normal);
-    out->offset = (float)SDLStaticGen_RubyFieldNum(mrb, h, "offset");
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "normal"), &out->normal);
+    out->offset = (float)GrappleGen_RubyFieldNum(mrb, h, "offset");
 }
 
 static mrb_value GenPush_b2Plane(mrb_state *mrb, const b2Plane *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "normal", GenPush_b2Vec2(mrb, &in->normal));
-    SDLStaticGen_RubyHashSet(mrb, h, "offset", mrb_float_value(mrb, (mrb_float)in->offset));
+    GrappleGen_RubyHashSet(mrb, h, "normal", GenPush_b2Vec2(mrb, &in->normal));
+    GrappleGen_RubyHashSet(mrb, h, "offset", mrb_float_value(mrb, (mrb_float)in->offset));
     return h;
 }
 
@@ -301,19 +301,19 @@ static void GenRead_b2CollisionPlane(mrb_state *mrb, mrb_value h, b2CollisionPla
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    GenRead_b2Plane(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "plane"), &out->plane);
-    out->pushLimit = (float)SDLStaticGen_RubyFieldNum(mrb, h, "pushLimit");
-    out->push = (float)SDLStaticGen_RubyFieldNum(mrb, h, "push");
-    out->clipVelocity = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "clipVelocity");
+    GenRead_b2Plane(mrb, GrappleGen_RubyFieldGet(mrb, h, "plane"), &out->plane);
+    out->pushLimit = (float)GrappleGen_RubyFieldNum(mrb, h, "pushLimit");
+    out->push = (float)GrappleGen_RubyFieldNum(mrb, h, "push");
+    out->clipVelocity = (bool)GrappleGen_RubyFieldBool(mrb, h, "clipVelocity");
 }
 
 static mrb_value GenPush_b2CollisionPlane(mrb_state *mrb, const b2CollisionPlane *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "plane", GenPush_b2Plane(mrb, &in->plane));
-    SDLStaticGen_RubyHashSet(mrb, h, "pushLimit", mrb_float_value(mrb, (mrb_float)in->pushLimit));
-    SDLStaticGen_RubyHashSet(mrb, h, "push", mrb_float_value(mrb, (mrb_float)in->push));
-    SDLStaticGen_RubyHashSet(mrb, h, "clipVelocity", mrb_bool_value((mrb_bool)(in->clipVelocity != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "plane", GenPush_b2Plane(mrb, &in->plane));
+    GrappleGen_RubyHashSet(mrb, h, "pushLimit", mrb_float_value(mrb, (mrb_float)in->pushLimit));
+    GrappleGen_RubyHashSet(mrb, h, "push", mrb_float_value(mrb, (mrb_float)in->push));
+    GrappleGen_RubyHashSet(mrb, h, "clipVelocity", mrb_bool_value((mrb_bool)(in->clipVelocity != 0)));
     return h;
 }
 
@@ -321,88 +321,88 @@ static void GenRead_b2ShapeId(mrb_state *mrb, mrb_value h, b2ShapeId *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->index1 = (int32_t)SDLStaticGen_RubyFieldInt(mrb, h, "index1");
-    out->world0 = (uint16_t)SDLStaticGen_RubyFieldInt(mrb, h, "world0");
-    out->generation = (uint16_t)SDLStaticGen_RubyFieldInt(mrb, h, "generation");
+    out->index1 = (int32_t)GrappleGen_RubyFieldInt(mrb, h, "index1");
+    out->world0 = (uint16_t)GrappleGen_RubyFieldInt(mrb, h, "world0");
+    out->generation = (uint16_t)GrappleGen_RubyFieldInt(mrb, h, "generation");
 }
 
 static mrb_value GenPush_b2ShapeId(mrb_state *mrb, const b2ShapeId *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "index1", mrb_int_value(mrb, (mrb_int)in->index1));
-    SDLStaticGen_RubyHashSet(mrb, h, "world0", mrb_int_value(mrb, (mrb_int)in->world0));
-    SDLStaticGen_RubyHashSet(mrb, h, "generation", mrb_int_value(mrb, (mrb_int)in->generation));
+    GrappleGen_RubyHashSet(mrb, h, "index1", mrb_int_value(mrb, (mrb_int)in->index1));
+    GrappleGen_RubyHashSet(mrb, h, "world0", mrb_int_value(mrb, (mrb_int)in->world0));
+    GrappleGen_RubyHashSet(mrb, h, "generation", mrb_int_value(mrb, (mrb_int)in->generation));
     return h;
 }
 
 static mrb_value GenPush_b2ManifoldPoint(mrb_state *mrb, const b2ManifoldPoint *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "point", GenPush_b2Vec2(mrb, &in->point));
-    SDLStaticGen_RubyHashSet(mrb, h, "anchorA", GenPush_b2Vec2(mrb, &in->anchorA));
-    SDLStaticGen_RubyHashSet(mrb, h, "anchorB", GenPush_b2Vec2(mrb, &in->anchorB));
-    SDLStaticGen_RubyHashSet(mrb, h, "separation", mrb_float_value(mrb, (mrb_float)in->separation));
-    SDLStaticGen_RubyHashSet(mrb, h, "normalImpulse", mrb_float_value(mrb, (mrb_float)in->normalImpulse));
-    SDLStaticGen_RubyHashSet(mrb, h, "tangentImpulse", mrb_float_value(mrb, (mrb_float)in->tangentImpulse));
-    SDLStaticGen_RubyHashSet(mrb, h, "totalNormalImpulse", mrb_float_value(mrb, (mrb_float)in->totalNormalImpulse));
-    SDLStaticGen_RubyHashSet(mrb, h, "normalVelocity", mrb_float_value(mrb, (mrb_float)in->normalVelocity));
-    SDLStaticGen_RubyHashSet(mrb, h, "id", mrb_int_value(mrb, (mrb_int)in->id));
-    SDLStaticGen_RubyHashSet(mrb, h, "persisted", mrb_bool_value((mrb_bool)(in->persisted != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "point", GenPush_b2Vec2(mrb, &in->point));
+    GrappleGen_RubyHashSet(mrb, h, "anchorA", GenPush_b2Vec2(mrb, &in->anchorA));
+    GrappleGen_RubyHashSet(mrb, h, "anchorB", GenPush_b2Vec2(mrb, &in->anchorB));
+    GrappleGen_RubyHashSet(mrb, h, "separation", mrb_float_value(mrb, (mrb_float)in->separation));
+    GrappleGen_RubyHashSet(mrb, h, "normalImpulse", mrb_float_value(mrb, (mrb_float)in->normalImpulse));
+    GrappleGen_RubyHashSet(mrb, h, "tangentImpulse", mrb_float_value(mrb, (mrb_float)in->tangentImpulse));
+    GrappleGen_RubyHashSet(mrb, h, "totalNormalImpulse", mrb_float_value(mrb, (mrb_float)in->totalNormalImpulse));
+    GrappleGen_RubyHashSet(mrb, h, "normalVelocity", mrb_float_value(mrb, (mrb_float)in->normalVelocity));
+    GrappleGen_RubyHashSet(mrb, h, "id", mrb_int_value(mrb, (mrb_int)in->id));
+    GrappleGen_RubyHashSet(mrb, h, "persisted", mrb_bool_value((mrb_bool)(in->persisted != 0)));
     return h;
 }
 
 static mrb_value GenPush_b2Manifold(mrb_state *mrb, const b2Manifold *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "normal", GenPush_b2Vec2(mrb, &in->normal));
-    SDLStaticGen_RubyHashSet(mrb, h, "rollingImpulse", mrb_float_value(mrb, (mrb_float)in->rollingImpulse));
+    GrappleGen_RubyHashSet(mrb, h, "normal", GenPush_b2Vec2(mrb, &in->normal));
+    GrappleGen_RubyHashSet(mrb, h, "rollingImpulse", mrb_float_value(mrb, (mrb_float)in->rollingImpulse));
     {
         mrb_value arr = mrb_ary_new_capa(mrb, (mrb_int)(2));
         for (mrb_int gi = 0; gi < (mrb_int)(2); ++gi) {
             mrb_ary_push(mrb, arr, GenPush_b2ManifoldPoint(mrb, &in->points[gi]));
         }
-        SDLStaticGen_RubyHashSet(mrb, h, "points", arr);
+        GrappleGen_RubyHashSet(mrb, h, "points", arr);
     }
-    SDLStaticGen_RubyHashSet(mrb, h, "pointCount", mrb_int_value(mrb, (mrb_int)in->pointCount));
+    GrappleGen_RubyHashSet(mrb, h, "pointCount", mrb_int_value(mrb, (mrb_int)in->pointCount));
     return h;
 }
 
 static mrb_value GenPush_b2ContactData(mrb_state *mrb, const b2ContactData *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "shapeIdA", GenPush_b2ShapeId(mrb, &in->shapeIdA));
-    SDLStaticGen_RubyHashSet(mrb, h, "shapeIdB", GenPush_b2ShapeId(mrb, &in->shapeIdB));
-    SDLStaticGen_RubyHashSet(mrb, h, "manifold", GenPush_b2Manifold(mrb, &in->manifold));
+    GrappleGen_RubyHashSet(mrb, h, "shapeIdA", GenPush_b2ShapeId(mrb, &in->shapeIdA));
+    GrappleGen_RubyHashSet(mrb, h, "shapeIdB", GenPush_b2ShapeId(mrb, &in->shapeIdB));
+    GrappleGen_RubyHashSet(mrb, h, "manifold", GenPush_b2Manifold(mrb, &in->manifold));
     return h;
 }
 
 static mrb_value GenPush_b2CosSin(mrb_state *mrb, const b2CosSin *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "cosine", mrb_float_value(mrb, (mrb_float)in->cosine));
-    SDLStaticGen_RubyHashSet(mrb, h, "sine", mrb_float_value(mrb, (mrb_float)in->sine));
+    GrappleGen_RubyHashSet(mrb, h, "cosine", mrb_float_value(mrb, (mrb_float)in->cosine));
+    GrappleGen_RubyHashSet(mrb, h, "sine", mrb_float_value(mrb, (mrb_float)in->sine));
     return h;
 }
 
 static mrb_value GenPush_b2Counters(mrb_state *mrb, const b2Counters *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "bodyCount", mrb_int_value(mrb, (mrb_int)in->bodyCount));
-    SDLStaticGen_RubyHashSet(mrb, h, "shapeCount", mrb_int_value(mrb, (mrb_int)in->shapeCount));
-    SDLStaticGen_RubyHashSet(mrb, h, "contactCount", mrb_int_value(mrb, (mrb_int)in->contactCount));
-    SDLStaticGen_RubyHashSet(mrb, h, "jointCount", mrb_int_value(mrb, (mrb_int)in->jointCount));
-    SDLStaticGen_RubyHashSet(mrb, h, "islandCount", mrb_int_value(mrb, (mrb_int)in->islandCount));
-    SDLStaticGen_RubyHashSet(mrb, h, "stackUsed", mrb_int_value(mrb, (mrb_int)in->stackUsed));
-    SDLStaticGen_RubyHashSet(mrb, h, "staticTreeHeight", mrb_int_value(mrb, (mrb_int)in->staticTreeHeight));
-    SDLStaticGen_RubyHashSet(mrb, h, "treeHeight", mrb_int_value(mrb, (mrb_int)in->treeHeight));
-    SDLStaticGen_RubyHashSet(mrb, h, "byteCount", mrb_int_value(mrb, (mrb_int)in->byteCount));
-    SDLStaticGen_RubyHashSet(mrb, h, "taskCount", mrb_int_value(mrb, (mrb_int)in->taskCount));
+    GrappleGen_RubyHashSet(mrb, h, "bodyCount", mrb_int_value(mrb, (mrb_int)in->bodyCount));
+    GrappleGen_RubyHashSet(mrb, h, "shapeCount", mrb_int_value(mrb, (mrb_int)in->shapeCount));
+    GrappleGen_RubyHashSet(mrb, h, "contactCount", mrb_int_value(mrb, (mrb_int)in->contactCount));
+    GrappleGen_RubyHashSet(mrb, h, "jointCount", mrb_int_value(mrb, (mrb_int)in->jointCount));
+    GrappleGen_RubyHashSet(mrb, h, "islandCount", mrb_int_value(mrb, (mrb_int)in->islandCount));
+    GrappleGen_RubyHashSet(mrb, h, "stackUsed", mrb_int_value(mrb, (mrb_int)in->stackUsed));
+    GrappleGen_RubyHashSet(mrb, h, "staticTreeHeight", mrb_int_value(mrb, (mrb_int)in->staticTreeHeight));
+    GrappleGen_RubyHashSet(mrb, h, "treeHeight", mrb_int_value(mrb, (mrb_int)in->treeHeight));
+    GrappleGen_RubyHashSet(mrb, h, "byteCount", mrb_int_value(mrb, (mrb_int)in->byteCount));
+    GrappleGen_RubyHashSet(mrb, h, "taskCount", mrb_int_value(mrb, (mrb_int)in->taskCount));
     {
         mrb_value arr = mrb_ary_new_capa(mrb, (mrb_int)(12));
         for (mrb_int gi = 0; gi < (mrb_int)(12); ++gi) {
             mrb_ary_push(mrb, arr, mrb_int_value(mrb, (mrb_int)in->colorCounts[gi]));
         }
-        SDLStaticGen_RubyHashSet(mrb, h, "colorCounts", arr);
+        GrappleGen_RubyHashSet(mrb, h, "colorCounts", arr);
     }
     return h;
 }
@@ -412,7 +412,7 @@ static void GenRead_b2ShapeProxy(mrb_state *mrb, mrb_value h, b2ShapeProxy *out)
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
     {
-        mrb_value arr = SDLStaticGen_RubyFieldGet(mrb, h, "points");
+        mrb_value arr = GrappleGen_RubyFieldGet(mrb, h, "points");
         if (mrb_array_p(arr)) {
             for (mrb_int gi = 0; gi < (mrb_int)(B2_MAX_POLYGON_VERTICES) && gi < RARRAY_LEN(arr); ++gi) {
                 mrb_value el = mrb_ary_ref(mrb, arr, gi);
@@ -420,8 +420,8 @@ static void GenRead_b2ShapeProxy(mrb_state *mrb, mrb_value h, b2ShapeProxy *out)
             }
         }
     }
-    out->count = (int)SDLStaticGen_RubyFieldInt(mrb, h, "count");
-    out->radius = (float)SDLStaticGen_RubyFieldNum(mrb, h, "radius");
+    out->count = (int)GrappleGen_RubyFieldInt(mrb, h, "count");
+    out->radius = (float)GrappleGen_RubyFieldNum(mrb, h, "radius");
 }
 
 static mrb_value GenPush_b2ShapeProxy(mrb_state *mrb, const b2ShapeProxy *in)
@@ -432,10 +432,10 @@ static mrb_value GenPush_b2ShapeProxy(mrb_state *mrb, const b2ShapeProxy *in)
         for (mrb_int gi = 0; gi < (mrb_int)(B2_MAX_POLYGON_VERTICES); ++gi) {
             mrb_ary_push(mrb, arr, GenPush_b2Vec2(mrb, &in->points[gi]));
         }
-        SDLStaticGen_RubyHashSet(mrb, h, "points", arr);
+        GrappleGen_RubyHashSet(mrb, h, "points", arr);
     }
-    SDLStaticGen_RubyHashSet(mrb, h, "count", mrb_int_value(mrb, (mrb_int)in->count));
-    SDLStaticGen_RubyHashSet(mrb, h, "radius", mrb_float_value(mrb, (mrb_float)in->radius));
+    GrappleGen_RubyHashSet(mrb, h, "count", mrb_int_value(mrb, (mrb_int)in->count));
+    GrappleGen_RubyHashSet(mrb, h, "radius", mrb_float_value(mrb, (mrb_float)in->radius));
     return h;
 }
 
@@ -443,15 +443,15 @@ static void GenRead_b2Transform(mrb_state *mrb, mrb_value h, b2Transform *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "p"), &out->p);
-    GenRead_b2Rot(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "q"), &out->q);
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "p"), &out->p);
+    GenRead_b2Rot(mrb, GrappleGen_RubyFieldGet(mrb, h, "q"), &out->q);
 }
 
 static mrb_value GenPush_b2Transform(mrb_state *mrb, const b2Transform *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "p", GenPush_b2Vec2(mrb, &in->p));
-    SDLStaticGen_RubyHashSet(mrb, h, "q", GenPush_b2Rot(mrb, &in->q));
+    GrappleGen_RubyHashSet(mrb, h, "p", GenPush_b2Vec2(mrb, &in->p));
+    GrappleGen_RubyHashSet(mrb, h, "q", GenPush_b2Rot(mrb, &in->q));
     return h;
 }
 
@@ -459,22 +459,22 @@ static void GenRead_b2DistanceInput(mrb_state *mrb, mrb_value h, b2DistanceInput
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    GenRead_b2ShapeProxy(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "proxyA"), &out->proxyA);
-    GenRead_b2ShapeProxy(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "proxyB"), &out->proxyB);
-    GenRead_b2Transform(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "transformA"), &out->transformA);
-    GenRead_b2Transform(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "transformB"), &out->transformB);
-    out->useRadii = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "useRadii");
+    GenRead_b2ShapeProxy(mrb, GrappleGen_RubyFieldGet(mrb, h, "proxyA"), &out->proxyA);
+    GenRead_b2ShapeProxy(mrb, GrappleGen_RubyFieldGet(mrb, h, "proxyB"), &out->proxyB);
+    GenRead_b2Transform(mrb, GrappleGen_RubyFieldGet(mrb, h, "transformA"), &out->transformA);
+    GenRead_b2Transform(mrb, GrappleGen_RubyFieldGet(mrb, h, "transformB"), &out->transformB);
+    out->useRadii = (bool)GrappleGen_RubyFieldBool(mrb, h, "useRadii");
 }
 
 static mrb_value GenPush_b2DistanceOutput(mrb_state *mrb, const b2DistanceOutput *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "pointA", GenPush_b2Vec2(mrb, &in->pointA));
-    SDLStaticGen_RubyHashSet(mrb, h, "pointB", GenPush_b2Vec2(mrb, &in->pointB));
-    SDLStaticGen_RubyHashSet(mrb, h, "normal", GenPush_b2Vec2(mrb, &in->normal));
-    SDLStaticGen_RubyHashSet(mrb, h, "distance", mrb_float_value(mrb, (mrb_float)in->distance));
-    SDLStaticGen_RubyHashSet(mrb, h, "iterations", mrb_int_value(mrb, (mrb_int)in->iterations));
-    SDLStaticGen_RubyHashSet(mrb, h, "simplexCount", mrb_int_value(mrb, (mrb_int)in->simplexCount));
+    GrappleGen_RubyHashSet(mrb, h, "pointA", GenPush_b2Vec2(mrb, &in->pointA));
+    GrappleGen_RubyHashSet(mrb, h, "pointB", GenPush_b2Vec2(mrb, &in->pointB));
+    GrappleGen_RubyHashSet(mrb, h, "normal", GenPush_b2Vec2(mrb, &in->normal));
+    GrappleGen_RubyHashSet(mrb, h, "distance", mrb_float_value(mrb, (mrb_float)in->distance));
+    GrappleGen_RubyHashSet(mrb, h, "iterations", mrb_int_value(mrb, (mrb_int)in->iterations));
+    GrappleGen_RubyHashSet(mrb, h, "simplexCount", mrb_int_value(mrb, (mrb_int)in->simplexCount));
     return h;
 }
 
@@ -482,21 +482,21 @@ static void GenRead_b2ExplosionDef(mrb_state *mrb, mrb_value h, b2ExplosionDef *
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->maskBits = (uint64_t)SDLStaticGen_RubyFieldInt(mrb, h, "maskBits");
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "position"), &out->position);
-    out->radius = (float)SDLStaticGen_RubyFieldNum(mrb, h, "radius");
-    out->falloff = (float)SDLStaticGen_RubyFieldNum(mrb, h, "falloff");
-    out->impulsePerLength = (float)SDLStaticGen_RubyFieldNum(mrb, h, "impulsePerLength");
+    out->maskBits = (uint64_t)GrappleGen_RubyFieldInt(mrb, h, "maskBits");
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "position"), &out->position);
+    out->radius = (float)GrappleGen_RubyFieldNum(mrb, h, "radius");
+    out->falloff = (float)GrappleGen_RubyFieldNum(mrb, h, "falloff");
+    out->impulsePerLength = (float)GrappleGen_RubyFieldNum(mrb, h, "impulsePerLength");
 }
 
 static mrb_value GenPush_b2ExplosionDef(mrb_state *mrb, const b2ExplosionDef *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "maskBits", mrb_int_value(mrb, (mrb_int)in->maskBits));
-    SDLStaticGen_RubyHashSet(mrb, h, "position", GenPush_b2Vec2(mrb, &in->position));
-    SDLStaticGen_RubyHashSet(mrb, h, "radius", mrb_float_value(mrb, (mrb_float)in->radius));
-    SDLStaticGen_RubyHashSet(mrb, h, "falloff", mrb_float_value(mrb, (mrb_float)in->falloff));
-    SDLStaticGen_RubyHashSet(mrb, h, "impulsePerLength", mrb_float_value(mrb, (mrb_float)in->impulsePerLength));
+    GrappleGen_RubyHashSet(mrb, h, "maskBits", mrb_int_value(mrb, (mrb_int)in->maskBits));
+    GrappleGen_RubyHashSet(mrb, h, "position", GenPush_b2Vec2(mrb, &in->position));
+    GrappleGen_RubyHashSet(mrb, h, "radius", mrb_float_value(mrb, (mrb_float)in->radius));
+    GrappleGen_RubyHashSet(mrb, h, "falloff", mrb_float_value(mrb, (mrb_float)in->falloff));
+    GrappleGen_RubyHashSet(mrb, h, "impulsePerLength", mrb_float_value(mrb, (mrb_float)in->impulsePerLength));
     return h;
 }
 
@@ -508,9 +508,9 @@ static mrb_value GenPush_b2Hull(mrb_state *mrb, const b2Hull *in)
         for (mrb_int gi = 0; gi < (mrb_int)(B2_MAX_POLYGON_VERTICES); ++gi) {
             mrb_ary_push(mrb, arr, GenPush_b2Vec2(mrb, &in->points[gi]));
         }
-        SDLStaticGen_RubyHashSet(mrb, h, "points", arr);
+        GrappleGen_RubyHashSet(mrb, h, "points", arr);
     }
-    SDLStaticGen_RubyHashSet(mrb, h, "count", mrb_int_value(mrb, (mrb_int)in->count));
+    GrappleGen_RubyHashSet(mrb, h, "count", mrb_int_value(mrb, (mrb_int)in->count));
     return h;
 }
 
@@ -518,17 +518,17 @@ static void GenRead_b2JointId(mrb_state *mrb, mrb_value h, b2JointId *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->index1 = (int32_t)SDLStaticGen_RubyFieldInt(mrb, h, "index1");
-    out->world0 = (uint16_t)SDLStaticGen_RubyFieldInt(mrb, h, "world0");
-    out->generation = (uint16_t)SDLStaticGen_RubyFieldInt(mrb, h, "generation");
+    out->index1 = (int32_t)GrappleGen_RubyFieldInt(mrb, h, "index1");
+    out->world0 = (uint16_t)GrappleGen_RubyFieldInt(mrb, h, "world0");
+    out->generation = (uint16_t)GrappleGen_RubyFieldInt(mrb, h, "generation");
 }
 
 static mrb_value GenPush_b2JointId(mrb_state *mrb, const b2JointId *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "index1", mrb_int_value(mrb, (mrb_int)in->index1));
-    SDLStaticGen_RubyHashSet(mrb, h, "world0", mrb_int_value(mrb, (mrb_int)in->world0));
-    SDLStaticGen_RubyHashSet(mrb, h, "generation", mrb_int_value(mrb, (mrb_int)in->generation));
+    GrappleGen_RubyHashSet(mrb, h, "index1", mrb_int_value(mrb, (mrb_int)in->index1));
+    GrappleGen_RubyHashSet(mrb, h, "world0", mrb_int_value(mrb, (mrb_int)in->world0));
+    GrappleGen_RubyHashSet(mrb, h, "generation", mrb_int_value(mrb, (mrb_int)in->generation));
     return h;
 }
 
@@ -536,25 +536,25 @@ static void GenRead_b2MassData(mrb_state *mrb, mrb_value h, b2MassData *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->mass = (float)SDLStaticGen_RubyFieldNum(mrb, h, "mass");
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "center"), &out->center);
-    out->rotationalInertia = (float)SDLStaticGen_RubyFieldNum(mrb, h, "rotationalInertia");
+    out->mass = (float)GrappleGen_RubyFieldNum(mrb, h, "mass");
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "center"), &out->center);
+    out->rotationalInertia = (float)GrappleGen_RubyFieldNum(mrb, h, "rotationalInertia");
 }
 
 static mrb_value GenPush_b2MassData(mrb_state *mrb, const b2MassData *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "mass", mrb_float_value(mrb, (mrb_float)in->mass));
-    SDLStaticGen_RubyHashSet(mrb, h, "center", GenPush_b2Vec2(mrb, &in->center));
-    SDLStaticGen_RubyHashSet(mrb, h, "rotationalInertia", mrb_float_value(mrb, (mrb_float)in->rotationalInertia));
+    GrappleGen_RubyHashSet(mrb, h, "mass", mrb_float_value(mrb, (mrb_float)in->mass));
+    GrappleGen_RubyHashSet(mrb, h, "center", GenPush_b2Vec2(mrb, &in->center));
+    GrappleGen_RubyHashSet(mrb, h, "rotationalInertia", mrb_float_value(mrb, (mrb_float)in->rotationalInertia));
     return h;
 }
 
 static mrb_value GenPush_b2PlaneSolverResult(mrb_state *mrb, const b2PlaneSolverResult *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "translation", GenPush_b2Vec2(mrb, &in->translation));
-    SDLStaticGen_RubyHashSet(mrb, h, "iterationCount", mrb_int_value(mrb, (mrb_int)in->iterationCount));
+    GrappleGen_RubyHashSet(mrb, h, "translation", GenPush_b2Vec2(mrb, &in->translation));
+    GrappleGen_RubyHashSet(mrb, h, "iterationCount", mrb_int_value(mrb, (mrb_int)in->iterationCount));
     return h;
 }
 
@@ -563,7 +563,7 @@ static void GenRead_b2Polygon(mrb_state *mrb, mrb_value h, b2Polygon *out)
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
     {
-        mrb_value arr = SDLStaticGen_RubyFieldGet(mrb, h, "vertices");
+        mrb_value arr = GrappleGen_RubyFieldGet(mrb, h, "vertices");
         if (mrb_array_p(arr)) {
             for (mrb_int gi = 0; gi < (mrb_int)(B2_MAX_POLYGON_VERTICES) && gi < RARRAY_LEN(arr); ++gi) {
                 mrb_value el = mrb_ary_ref(mrb, arr, gi);
@@ -572,7 +572,7 @@ static void GenRead_b2Polygon(mrb_state *mrb, mrb_value h, b2Polygon *out)
         }
     }
     {
-        mrb_value arr = SDLStaticGen_RubyFieldGet(mrb, h, "normals");
+        mrb_value arr = GrappleGen_RubyFieldGet(mrb, h, "normals");
         if (mrb_array_p(arr)) {
             for (mrb_int gi = 0; gi < (mrb_int)(B2_MAX_POLYGON_VERTICES) && gi < RARRAY_LEN(arr); ++gi) {
                 mrb_value el = mrb_ary_ref(mrb, arr, gi);
@@ -580,9 +580,9 @@ static void GenRead_b2Polygon(mrb_state *mrb, mrb_value h, b2Polygon *out)
             }
         }
     }
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "centroid"), &out->centroid);
-    out->radius = (float)SDLStaticGen_RubyFieldNum(mrb, h, "radius");
-    out->count = (int)SDLStaticGen_RubyFieldInt(mrb, h, "count");
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "centroid"), &out->centroid);
+    out->radius = (float)GrappleGen_RubyFieldNum(mrb, h, "radius");
+    out->count = (int)GrappleGen_RubyFieldInt(mrb, h, "count");
 }
 
 static mrb_value GenPush_b2Polygon(mrb_state *mrb, const b2Polygon *in)
@@ -593,46 +593,46 @@ static mrb_value GenPush_b2Polygon(mrb_state *mrb, const b2Polygon *in)
         for (mrb_int gi = 0; gi < (mrb_int)(B2_MAX_POLYGON_VERTICES); ++gi) {
             mrb_ary_push(mrb, arr, GenPush_b2Vec2(mrb, &in->vertices[gi]));
         }
-        SDLStaticGen_RubyHashSet(mrb, h, "vertices", arr);
+        GrappleGen_RubyHashSet(mrb, h, "vertices", arr);
     }
     {
         mrb_value arr = mrb_ary_new_capa(mrb, (mrb_int)(B2_MAX_POLYGON_VERTICES));
         for (mrb_int gi = 0; gi < (mrb_int)(B2_MAX_POLYGON_VERTICES); ++gi) {
             mrb_ary_push(mrb, arr, GenPush_b2Vec2(mrb, &in->normals[gi]));
         }
-        SDLStaticGen_RubyHashSet(mrb, h, "normals", arr);
+        GrappleGen_RubyHashSet(mrb, h, "normals", arr);
     }
-    SDLStaticGen_RubyHashSet(mrb, h, "centroid", GenPush_b2Vec2(mrb, &in->centroid));
-    SDLStaticGen_RubyHashSet(mrb, h, "radius", mrb_float_value(mrb, (mrb_float)in->radius));
-    SDLStaticGen_RubyHashSet(mrb, h, "count", mrb_int_value(mrb, (mrb_int)in->count));
+    GrappleGen_RubyHashSet(mrb, h, "centroid", GenPush_b2Vec2(mrb, &in->centroid));
+    GrappleGen_RubyHashSet(mrb, h, "radius", mrb_float_value(mrb, (mrb_float)in->radius));
+    GrappleGen_RubyHashSet(mrb, h, "count", mrb_int_value(mrb, (mrb_int)in->count));
     return h;
 }
 
 static mrb_value GenPush_b2Profile(mrb_state *mrb, const b2Profile *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "step", mrb_float_value(mrb, (mrb_float)in->step));
-    SDLStaticGen_RubyHashSet(mrb, h, "pairs", mrb_float_value(mrb, (mrb_float)in->pairs));
-    SDLStaticGen_RubyHashSet(mrb, h, "collide", mrb_float_value(mrb, (mrb_float)in->collide));
-    SDLStaticGen_RubyHashSet(mrb, h, "solve", mrb_float_value(mrb, (mrb_float)in->solve));
-    SDLStaticGen_RubyHashSet(mrb, h, "mergeIslands", mrb_float_value(mrb, (mrb_float)in->mergeIslands));
-    SDLStaticGen_RubyHashSet(mrb, h, "prepareStages", mrb_float_value(mrb, (mrb_float)in->prepareStages));
-    SDLStaticGen_RubyHashSet(mrb, h, "solveConstraints", mrb_float_value(mrb, (mrb_float)in->solveConstraints));
-    SDLStaticGen_RubyHashSet(mrb, h, "prepareConstraints", mrb_float_value(mrb, (mrb_float)in->prepareConstraints));
-    SDLStaticGen_RubyHashSet(mrb, h, "integrateVelocities", mrb_float_value(mrb, (mrb_float)in->integrateVelocities));
-    SDLStaticGen_RubyHashSet(mrb, h, "warmStart", mrb_float_value(mrb, (mrb_float)in->warmStart));
-    SDLStaticGen_RubyHashSet(mrb, h, "solveImpulses", mrb_float_value(mrb, (mrb_float)in->solveImpulses));
-    SDLStaticGen_RubyHashSet(mrb, h, "integratePositions", mrb_float_value(mrb, (mrb_float)in->integratePositions));
-    SDLStaticGen_RubyHashSet(mrb, h, "relaxImpulses", mrb_float_value(mrb, (mrb_float)in->relaxImpulses));
-    SDLStaticGen_RubyHashSet(mrb, h, "applyRestitution", mrb_float_value(mrb, (mrb_float)in->applyRestitution));
-    SDLStaticGen_RubyHashSet(mrb, h, "storeImpulses", mrb_float_value(mrb, (mrb_float)in->storeImpulses));
-    SDLStaticGen_RubyHashSet(mrb, h, "splitIslands", mrb_float_value(mrb, (mrb_float)in->splitIslands));
-    SDLStaticGen_RubyHashSet(mrb, h, "transforms", mrb_float_value(mrb, (mrb_float)in->transforms));
-    SDLStaticGen_RubyHashSet(mrb, h, "hitEvents", mrb_float_value(mrb, (mrb_float)in->hitEvents));
-    SDLStaticGen_RubyHashSet(mrb, h, "refit", mrb_float_value(mrb, (mrb_float)in->refit));
-    SDLStaticGen_RubyHashSet(mrb, h, "bullets", mrb_float_value(mrb, (mrb_float)in->bullets));
-    SDLStaticGen_RubyHashSet(mrb, h, "sleepIslands", mrb_float_value(mrb, (mrb_float)in->sleepIslands));
-    SDLStaticGen_RubyHashSet(mrb, h, "sensors", mrb_float_value(mrb, (mrb_float)in->sensors));
+    GrappleGen_RubyHashSet(mrb, h, "step", mrb_float_value(mrb, (mrb_float)in->step));
+    GrappleGen_RubyHashSet(mrb, h, "pairs", mrb_float_value(mrb, (mrb_float)in->pairs));
+    GrappleGen_RubyHashSet(mrb, h, "collide", mrb_float_value(mrb, (mrb_float)in->collide));
+    GrappleGen_RubyHashSet(mrb, h, "solve", mrb_float_value(mrb, (mrb_float)in->solve));
+    GrappleGen_RubyHashSet(mrb, h, "mergeIslands", mrb_float_value(mrb, (mrb_float)in->mergeIslands));
+    GrappleGen_RubyHashSet(mrb, h, "prepareStages", mrb_float_value(mrb, (mrb_float)in->prepareStages));
+    GrappleGen_RubyHashSet(mrb, h, "solveConstraints", mrb_float_value(mrb, (mrb_float)in->solveConstraints));
+    GrappleGen_RubyHashSet(mrb, h, "prepareConstraints", mrb_float_value(mrb, (mrb_float)in->prepareConstraints));
+    GrappleGen_RubyHashSet(mrb, h, "integrateVelocities", mrb_float_value(mrb, (mrb_float)in->integrateVelocities));
+    GrappleGen_RubyHashSet(mrb, h, "warmStart", mrb_float_value(mrb, (mrb_float)in->warmStart));
+    GrappleGen_RubyHashSet(mrb, h, "solveImpulses", mrb_float_value(mrb, (mrb_float)in->solveImpulses));
+    GrappleGen_RubyHashSet(mrb, h, "integratePositions", mrb_float_value(mrb, (mrb_float)in->integratePositions));
+    GrappleGen_RubyHashSet(mrb, h, "relaxImpulses", mrb_float_value(mrb, (mrb_float)in->relaxImpulses));
+    GrappleGen_RubyHashSet(mrb, h, "applyRestitution", mrb_float_value(mrb, (mrb_float)in->applyRestitution));
+    GrappleGen_RubyHashSet(mrb, h, "storeImpulses", mrb_float_value(mrb, (mrb_float)in->storeImpulses));
+    GrappleGen_RubyHashSet(mrb, h, "splitIslands", mrb_float_value(mrb, (mrb_float)in->splitIslands));
+    GrappleGen_RubyHashSet(mrb, h, "transforms", mrb_float_value(mrb, (mrb_float)in->transforms));
+    GrappleGen_RubyHashSet(mrb, h, "hitEvents", mrb_float_value(mrb, (mrb_float)in->hitEvents));
+    GrappleGen_RubyHashSet(mrb, h, "refit", mrb_float_value(mrb, (mrb_float)in->refit));
+    GrappleGen_RubyHashSet(mrb, h, "bullets", mrb_float_value(mrb, (mrb_float)in->bullets));
+    GrappleGen_RubyHashSet(mrb, h, "sleepIslands", mrb_float_value(mrb, (mrb_float)in->sleepIslands));
+    GrappleGen_RubyHashSet(mrb, h, "sensors", mrb_float_value(mrb, (mrb_float)in->sensors));
     return h;
 }
 
@@ -640,15 +640,15 @@ static void GenRead_b2QueryFilter(mrb_state *mrb, mrb_value h, b2QueryFilter *ou
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->categoryBits = (uint64_t)SDLStaticGen_RubyFieldInt(mrb, h, "categoryBits");
-    out->maskBits = (uint64_t)SDLStaticGen_RubyFieldInt(mrb, h, "maskBits");
+    out->categoryBits = (uint64_t)GrappleGen_RubyFieldInt(mrb, h, "categoryBits");
+    out->maskBits = (uint64_t)GrappleGen_RubyFieldInt(mrb, h, "maskBits");
 }
 
 static mrb_value GenPush_b2QueryFilter(mrb_state *mrb, const b2QueryFilter *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "categoryBits", mrb_int_value(mrb, (mrb_int)in->categoryBits));
-    SDLStaticGen_RubyHashSet(mrb, h, "maskBits", mrb_int_value(mrb, (mrb_int)in->maskBits));
+    GrappleGen_RubyHashSet(mrb, h, "categoryBits", mrb_int_value(mrb, (mrb_int)in->categoryBits));
+    GrappleGen_RubyHashSet(mrb, h, "maskBits", mrb_int_value(mrb, (mrb_int)in->maskBits));
     return h;
 }
 
@@ -656,32 +656,32 @@ static void GenRead_b2RayCastInput(mrb_state *mrb, mrb_value h, b2RayCastInput *
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "origin"), &out->origin);
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "translation"), &out->translation);
-    out->maxFraction = (float)SDLStaticGen_RubyFieldNum(mrb, h, "maxFraction");
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "origin"), &out->origin);
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "translation"), &out->translation);
+    out->maxFraction = (float)GrappleGen_RubyFieldNum(mrb, h, "maxFraction");
 }
 
 static mrb_value GenPush_b2RayResult(mrb_state *mrb, const b2RayResult *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "shapeId", GenPush_b2ShapeId(mrb, &in->shapeId));
-    SDLStaticGen_RubyHashSet(mrb, h, "point", GenPush_b2Vec2(mrb, &in->point));
-    SDLStaticGen_RubyHashSet(mrb, h, "normal", GenPush_b2Vec2(mrb, &in->normal));
-    SDLStaticGen_RubyHashSet(mrb, h, "fraction", mrb_float_value(mrb, (mrb_float)in->fraction));
-    SDLStaticGen_RubyHashSet(mrb, h, "nodeVisits", mrb_int_value(mrb, (mrb_int)in->nodeVisits));
-    SDLStaticGen_RubyHashSet(mrb, h, "leafVisits", mrb_int_value(mrb, (mrb_int)in->leafVisits));
-    SDLStaticGen_RubyHashSet(mrb, h, "hit", mrb_bool_value((mrb_bool)(in->hit != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "shapeId", GenPush_b2ShapeId(mrb, &in->shapeId));
+    GrappleGen_RubyHashSet(mrb, h, "point", GenPush_b2Vec2(mrb, &in->point));
+    GrappleGen_RubyHashSet(mrb, h, "normal", GenPush_b2Vec2(mrb, &in->normal));
+    GrappleGen_RubyHashSet(mrb, h, "fraction", mrb_float_value(mrb, (mrb_float)in->fraction));
+    GrappleGen_RubyHashSet(mrb, h, "nodeVisits", mrb_int_value(mrb, (mrb_int)in->nodeVisits));
+    GrappleGen_RubyHashSet(mrb, h, "leafVisits", mrb_int_value(mrb, (mrb_int)in->leafVisits));
+    GrappleGen_RubyHashSet(mrb, h, "hit", mrb_bool_value((mrb_bool)(in->hit != 0)));
     return h;
 }
 
 static mrb_value GenPush_b2SegmentDistanceResult(mrb_state *mrb, const b2SegmentDistanceResult *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "closest1", GenPush_b2Vec2(mrb, &in->closest1));
-    SDLStaticGen_RubyHashSet(mrb, h, "closest2", GenPush_b2Vec2(mrb, &in->closest2));
-    SDLStaticGen_RubyHashSet(mrb, h, "fraction1", mrb_float_value(mrb, (mrb_float)in->fraction1));
-    SDLStaticGen_RubyHashSet(mrb, h, "fraction2", mrb_float_value(mrb, (mrb_float)in->fraction2));
-    SDLStaticGen_RubyHashSet(mrb, h, "distanceSquared", mrb_float_value(mrb, (mrb_float)in->distanceSquared));
+    GrappleGen_RubyHashSet(mrb, h, "closest1", GenPush_b2Vec2(mrb, &in->closest1));
+    GrappleGen_RubyHashSet(mrb, h, "closest2", GenPush_b2Vec2(mrb, &in->closest2));
+    GrappleGen_RubyHashSet(mrb, h, "fraction1", mrb_float_value(mrb, (mrb_float)in->fraction1));
+    GrappleGen_RubyHashSet(mrb, h, "fraction2", mrb_float_value(mrb, (mrb_float)in->fraction2));
+    GrappleGen_RubyHashSet(mrb, h, "distanceSquared", mrb_float_value(mrb, (mrb_float)in->distanceSquared));
     return h;
 }
 
@@ -689,78 +689,78 @@ static void GenRead_b2ShapeCastInput(mrb_state *mrb, mrb_value h, b2ShapeCastInp
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    GenRead_b2ShapeProxy(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "proxy"), &out->proxy);
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "translation"), &out->translation);
-    out->maxFraction = (float)SDLStaticGen_RubyFieldNum(mrb, h, "maxFraction");
-    out->canEncroach = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "canEncroach");
+    GenRead_b2ShapeProxy(mrb, GrappleGen_RubyFieldGet(mrb, h, "proxy"), &out->proxy);
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "translation"), &out->translation);
+    out->maxFraction = (float)GrappleGen_RubyFieldNum(mrb, h, "maxFraction");
+    out->canEncroach = (bool)GrappleGen_RubyFieldBool(mrb, h, "canEncroach");
 }
 
 static void GenRead_b2ShapeCastPairInput(mrb_state *mrb, mrb_value h, b2ShapeCastPairInput *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    GenRead_b2ShapeProxy(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "proxyA"), &out->proxyA);
-    GenRead_b2ShapeProxy(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "proxyB"), &out->proxyB);
-    GenRead_b2Transform(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "transformA"), &out->transformA);
-    GenRead_b2Transform(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "transformB"), &out->transformB);
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "translationB"), &out->translationB);
-    out->maxFraction = (float)SDLStaticGen_RubyFieldNum(mrb, h, "maxFraction");
-    out->canEncroach = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "canEncroach");
+    GenRead_b2ShapeProxy(mrb, GrappleGen_RubyFieldGet(mrb, h, "proxyA"), &out->proxyA);
+    GenRead_b2ShapeProxy(mrb, GrappleGen_RubyFieldGet(mrb, h, "proxyB"), &out->proxyB);
+    GenRead_b2Transform(mrb, GrappleGen_RubyFieldGet(mrb, h, "transformA"), &out->transformA);
+    GenRead_b2Transform(mrb, GrappleGen_RubyFieldGet(mrb, h, "transformB"), &out->transformB);
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "translationB"), &out->translationB);
+    out->maxFraction = (float)GrappleGen_RubyFieldNum(mrb, h, "maxFraction");
+    out->canEncroach = (bool)GrappleGen_RubyFieldBool(mrb, h, "canEncroach");
 }
 
 static void GenRead_b2ShapeDef(mrb_state *mrb, mrb_value h, b2ShapeDef *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    GenRead_b2SurfaceMaterial(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "material"), &out->material);
-    out->density = (float)SDLStaticGen_RubyFieldNum(mrb, h, "density");
-    GenRead_b2Filter(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "filter"), &out->filter);
-    out->isSensor = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "isSensor");
-    out->enableSensorEvents = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "enableSensorEvents");
-    out->enableContactEvents = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "enableContactEvents");
-    out->enableHitEvents = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "enableHitEvents");
-    out->enablePreSolveEvents = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "enablePreSolveEvents");
-    out->invokeContactCreation = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "invokeContactCreation");
-    out->updateBodyMass = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "updateBodyMass");
-    out->internalValue = (int)SDLStaticGen_RubyFieldInt(mrb, h, "internalValue");
+    GenRead_b2SurfaceMaterial(mrb, GrappleGen_RubyFieldGet(mrb, h, "material"), &out->material);
+    out->density = (float)GrappleGen_RubyFieldNum(mrb, h, "density");
+    GenRead_b2Filter(mrb, GrappleGen_RubyFieldGet(mrb, h, "filter"), &out->filter);
+    out->isSensor = (bool)GrappleGen_RubyFieldBool(mrb, h, "isSensor");
+    out->enableSensorEvents = (bool)GrappleGen_RubyFieldBool(mrb, h, "enableSensorEvents");
+    out->enableContactEvents = (bool)GrappleGen_RubyFieldBool(mrb, h, "enableContactEvents");
+    out->enableHitEvents = (bool)GrappleGen_RubyFieldBool(mrb, h, "enableHitEvents");
+    out->enablePreSolveEvents = (bool)GrappleGen_RubyFieldBool(mrb, h, "enablePreSolveEvents");
+    out->invokeContactCreation = (bool)GrappleGen_RubyFieldBool(mrb, h, "invokeContactCreation");
+    out->updateBodyMass = (bool)GrappleGen_RubyFieldBool(mrb, h, "updateBodyMass");
+    out->internalValue = (int)GrappleGen_RubyFieldInt(mrb, h, "internalValue");
 }
 
 static mrb_value GenPush_b2ShapeDef(mrb_state *mrb, const b2ShapeDef *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "material", GenPush_b2SurfaceMaterial(mrb, &in->material));
-    SDLStaticGen_RubyHashSet(mrb, h, "density", mrb_float_value(mrb, (mrb_float)in->density));
-    SDLStaticGen_RubyHashSet(mrb, h, "filter", GenPush_b2Filter(mrb, &in->filter));
-    SDLStaticGen_RubyHashSet(mrb, h, "isSensor", mrb_bool_value((mrb_bool)(in->isSensor != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "enableSensorEvents", mrb_bool_value((mrb_bool)(in->enableSensorEvents != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "enableContactEvents", mrb_bool_value((mrb_bool)(in->enableContactEvents != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "enableHitEvents", mrb_bool_value((mrb_bool)(in->enableHitEvents != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "enablePreSolveEvents", mrb_bool_value((mrb_bool)(in->enablePreSolveEvents != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "invokeContactCreation", mrb_bool_value((mrb_bool)(in->invokeContactCreation != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "updateBodyMass", mrb_bool_value((mrb_bool)(in->updateBodyMass != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "internalValue", mrb_int_value(mrb, (mrb_int)in->internalValue));
+    GrappleGen_RubyHashSet(mrb, h, "material", GenPush_b2SurfaceMaterial(mrb, &in->material));
+    GrappleGen_RubyHashSet(mrb, h, "density", mrb_float_value(mrb, (mrb_float)in->density));
+    GrappleGen_RubyHashSet(mrb, h, "filter", GenPush_b2Filter(mrb, &in->filter));
+    GrappleGen_RubyHashSet(mrb, h, "isSensor", mrb_bool_value((mrb_bool)(in->isSensor != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "enableSensorEvents", mrb_bool_value((mrb_bool)(in->enableSensorEvents != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "enableContactEvents", mrb_bool_value((mrb_bool)(in->enableContactEvents != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "enableHitEvents", mrb_bool_value((mrb_bool)(in->enableHitEvents != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "enablePreSolveEvents", mrb_bool_value((mrb_bool)(in->enablePreSolveEvents != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "invokeContactCreation", mrb_bool_value((mrb_bool)(in->invokeContactCreation != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "updateBodyMass", mrb_bool_value((mrb_bool)(in->updateBodyMass != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "internalValue", mrb_int_value(mrb, (mrb_int)in->internalValue));
     return h;
 }
 
 static mrb_value GenPush_b2SimplexVertex(mrb_state *mrb, const b2SimplexVertex *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "wA", GenPush_b2Vec2(mrb, &in->wA));
-    SDLStaticGen_RubyHashSet(mrb, h, "wB", GenPush_b2Vec2(mrb, &in->wB));
-    SDLStaticGen_RubyHashSet(mrb, h, "w", GenPush_b2Vec2(mrb, &in->w));
-    SDLStaticGen_RubyHashSet(mrb, h, "a", mrb_float_value(mrb, (mrb_float)in->a));
-    SDLStaticGen_RubyHashSet(mrb, h, "indexA", mrb_int_value(mrb, (mrb_int)in->indexA));
-    SDLStaticGen_RubyHashSet(mrb, h, "indexB", mrb_int_value(mrb, (mrb_int)in->indexB));
+    GrappleGen_RubyHashSet(mrb, h, "wA", GenPush_b2Vec2(mrb, &in->wA));
+    GrappleGen_RubyHashSet(mrb, h, "wB", GenPush_b2Vec2(mrb, &in->wB));
+    GrappleGen_RubyHashSet(mrb, h, "w", GenPush_b2Vec2(mrb, &in->w));
+    GrappleGen_RubyHashSet(mrb, h, "a", mrb_float_value(mrb, (mrb_float)in->a));
+    GrappleGen_RubyHashSet(mrb, h, "indexA", mrb_int_value(mrb, (mrb_int)in->indexA));
+    GrappleGen_RubyHashSet(mrb, h, "indexB", mrb_int_value(mrb, (mrb_int)in->indexB));
     return h;
 }
 
 static mrb_value GenPush_b2Simplex(mrb_state *mrb, const b2Simplex *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "v1", GenPush_b2SimplexVertex(mrb, &in->v1));
-    SDLStaticGen_RubyHashSet(mrb, h, "v2", GenPush_b2SimplexVertex(mrb, &in->v2));
-    SDLStaticGen_RubyHashSet(mrb, h, "v3", GenPush_b2SimplexVertex(mrb, &in->v3));
-    SDLStaticGen_RubyHashSet(mrb, h, "count", mrb_int_value(mrb, (mrb_int)in->count));
+    GrappleGen_RubyHashSet(mrb, h, "v1", GenPush_b2SimplexVertex(mrb, &in->v1));
+    GrappleGen_RubyHashSet(mrb, h, "v2", GenPush_b2SimplexVertex(mrb, &in->v2));
+    GrappleGen_RubyHashSet(mrb, h, "v3", GenPush_b2SimplexVertex(mrb, &in->v3));
+    GrappleGen_RubyHashSet(mrb, h, "count", mrb_int_value(mrb, (mrb_int)in->count));
     return h;
 }
 
@@ -768,38 +768,38 @@ static void GenRead_b2Sweep(mrb_state *mrb, mrb_value h, b2Sweep *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "localCenter"), &out->localCenter);
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "c1"), &out->c1);
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "c2"), &out->c2);
-    GenRead_b2Rot(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "q1"), &out->q1);
-    GenRead_b2Rot(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "q2"), &out->q2);
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "localCenter"), &out->localCenter);
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "c1"), &out->c1);
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "c2"), &out->c2);
+    GenRead_b2Rot(mrb, GrappleGen_RubyFieldGet(mrb, h, "q1"), &out->q1);
+    GenRead_b2Rot(mrb, GrappleGen_RubyFieldGet(mrb, h, "q2"), &out->q2);
 }
 
 static void GenRead_b2TOIInput(mrb_state *mrb, mrb_value h, b2TOIInput *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    GenRead_b2ShapeProxy(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "proxyA"), &out->proxyA);
-    GenRead_b2ShapeProxy(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "proxyB"), &out->proxyB);
-    GenRead_b2Sweep(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "sweepA"), &out->sweepA);
-    GenRead_b2Sweep(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "sweepB"), &out->sweepB);
-    out->maxFraction = (float)SDLStaticGen_RubyFieldNum(mrb, h, "maxFraction");
+    GenRead_b2ShapeProxy(mrb, GrappleGen_RubyFieldGet(mrb, h, "proxyA"), &out->proxyA);
+    GenRead_b2ShapeProxy(mrb, GrappleGen_RubyFieldGet(mrb, h, "proxyB"), &out->proxyB);
+    GenRead_b2Sweep(mrb, GrappleGen_RubyFieldGet(mrb, h, "sweepA"), &out->sweepA);
+    GenRead_b2Sweep(mrb, GrappleGen_RubyFieldGet(mrb, h, "sweepB"), &out->sweepB);
+    out->maxFraction = (float)GrappleGen_RubyFieldNum(mrb, h, "maxFraction");
 }
 
 static mrb_value GenPush_b2TOIOutput(mrb_state *mrb, const b2TOIOutput *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "state", mrb_int_value(mrb, (mrb_int)in->state));
-    SDLStaticGen_RubyHashSet(mrb, h, "fraction", mrb_float_value(mrb, (mrb_float)in->fraction));
+    GrappleGen_RubyHashSet(mrb, h, "state", mrb_int_value(mrb, (mrb_int)in->state));
+    GrappleGen_RubyHashSet(mrb, h, "fraction", mrb_float_value(mrb, (mrb_float)in->fraction));
     return h;
 }
 
 static mrb_value GenPush_b2Version(mrb_state *mrb, const b2Version *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "major", mrb_int_value(mrb, (mrb_int)in->major));
-    SDLStaticGen_RubyHashSet(mrb, h, "minor", mrb_int_value(mrb, (mrb_int)in->minor));
-    SDLStaticGen_RubyHashSet(mrb, h, "revision", mrb_int_value(mrb, (mrb_int)in->revision));
+    GrappleGen_RubyHashSet(mrb, h, "major", mrb_int_value(mrb, (mrb_int)in->major));
+    GrappleGen_RubyHashSet(mrb, h, "minor", mrb_int_value(mrb, (mrb_int)in->minor));
+    GrappleGen_RubyHashSet(mrb, h, "revision", mrb_int_value(mrb, (mrb_int)in->revision));
     return h;
 }
 
@@ -807,33 +807,33 @@ static void GenRead_b2WorldDef(mrb_state *mrb, mrb_value h, b2WorldDef *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    GenRead_b2Vec2(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "gravity"), &out->gravity);
-    out->restitutionThreshold = (float)SDLStaticGen_RubyFieldNum(mrb, h, "restitutionThreshold");
-    out->hitEventThreshold = (float)SDLStaticGen_RubyFieldNum(mrb, h, "hitEventThreshold");
-    out->contactHertz = (float)SDLStaticGen_RubyFieldNum(mrb, h, "contactHertz");
-    out->contactDampingRatio = (float)SDLStaticGen_RubyFieldNum(mrb, h, "contactDampingRatio");
-    out->maxContactPushSpeed = (float)SDLStaticGen_RubyFieldNum(mrb, h, "maxContactPushSpeed");
-    out->maximumLinearSpeed = (float)SDLStaticGen_RubyFieldNum(mrb, h, "maximumLinearSpeed");
-    out->enableSleep = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "enableSleep");
-    out->enableContinuous = (bool)SDLStaticGen_RubyFieldBool(mrb, h, "enableContinuous");
-    out->workerCount = (int)SDLStaticGen_RubyFieldInt(mrb, h, "workerCount");
-    out->internalValue = (int)SDLStaticGen_RubyFieldInt(mrb, h, "internalValue");
+    GenRead_b2Vec2(mrb, GrappleGen_RubyFieldGet(mrb, h, "gravity"), &out->gravity);
+    out->restitutionThreshold = (float)GrappleGen_RubyFieldNum(mrb, h, "restitutionThreshold");
+    out->hitEventThreshold = (float)GrappleGen_RubyFieldNum(mrb, h, "hitEventThreshold");
+    out->contactHertz = (float)GrappleGen_RubyFieldNum(mrb, h, "contactHertz");
+    out->contactDampingRatio = (float)GrappleGen_RubyFieldNum(mrb, h, "contactDampingRatio");
+    out->maxContactPushSpeed = (float)GrappleGen_RubyFieldNum(mrb, h, "maxContactPushSpeed");
+    out->maximumLinearSpeed = (float)GrappleGen_RubyFieldNum(mrb, h, "maximumLinearSpeed");
+    out->enableSleep = (bool)GrappleGen_RubyFieldBool(mrb, h, "enableSleep");
+    out->enableContinuous = (bool)GrappleGen_RubyFieldBool(mrb, h, "enableContinuous");
+    out->workerCount = (int)GrappleGen_RubyFieldInt(mrb, h, "workerCount");
+    out->internalValue = (int)GrappleGen_RubyFieldInt(mrb, h, "internalValue");
 }
 
 static mrb_value GenPush_b2WorldDef(mrb_state *mrb, const b2WorldDef *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "gravity", GenPush_b2Vec2(mrb, &in->gravity));
-    SDLStaticGen_RubyHashSet(mrb, h, "restitutionThreshold", mrb_float_value(mrb, (mrb_float)in->restitutionThreshold));
-    SDLStaticGen_RubyHashSet(mrb, h, "hitEventThreshold", mrb_float_value(mrb, (mrb_float)in->hitEventThreshold));
-    SDLStaticGen_RubyHashSet(mrb, h, "contactHertz", mrb_float_value(mrb, (mrb_float)in->contactHertz));
-    SDLStaticGen_RubyHashSet(mrb, h, "contactDampingRatio", mrb_float_value(mrb, (mrb_float)in->contactDampingRatio));
-    SDLStaticGen_RubyHashSet(mrb, h, "maxContactPushSpeed", mrb_float_value(mrb, (mrb_float)in->maxContactPushSpeed));
-    SDLStaticGen_RubyHashSet(mrb, h, "maximumLinearSpeed", mrb_float_value(mrb, (mrb_float)in->maximumLinearSpeed));
-    SDLStaticGen_RubyHashSet(mrb, h, "enableSleep", mrb_bool_value((mrb_bool)(in->enableSleep != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "enableContinuous", mrb_bool_value((mrb_bool)(in->enableContinuous != 0)));
-    SDLStaticGen_RubyHashSet(mrb, h, "workerCount", mrb_int_value(mrb, (mrb_int)in->workerCount));
-    SDLStaticGen_RubyHashSet(mrb, h, "internalValue", mrb_int_value(mrb, (mrb_int)in->internalValue));
+    GrappleGen_RubyHashSet(mrb, h, "gravity", GenPush_b2Vec2(mrb, &in->gravity));
+    GrappleGen_RubyHashSet(mrb, h, "restitutionThreshold", mrb_float_value(mrb, (mrb_float)in->restitutionThreshold));
+    GrappleGen_RubyHashSet(mrb, h, "hitEventThreshold", mrb_float_value(mrb, (mrb_float)in->hitEventThreshold));
+    GrappleGen_RubyHashSet(mrb, h, "contactHertz", mrb_float_value(mrb, (mrb_float)in->contactHertz));
+    GrappleGen_RubyHashSet(mrb, h, "contactDampingRatio", mrb_float_value(mrb, (mrb_float)in->contactDampingRatio));
+    GrappleGen_RubyHashSet(mrb, h, "maxContactPushSpeed", mrb_float_value(mrb, (mrb_float)in->maxContactPushSpeed));
+    GrappleGen_RubyHashSet(mrb, h, "maximumLinearSpeed", mrb_float_value(mrb, (mrb_float)in->maximumLinearSpeed));
+    GrappleGen_RubyHashSet(mrb, h, "enableSleep", mrb_bool_value((mrb_bool)(in->enableSleep != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "enableContinuous", mrb_bool_value((mrb_bool)(in->enableContinuous != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "workerCount", mrb_int_value(mrb, (mrb_int)in->workerCount));
+    GrappleGen_RubyHashSet(mrb, h, "internalValue", mrb_int_value(mrb, (mrb_int)in->internalValue));
     return h;
 }
 
@@ -841,15 +841,15 @@ static void GenRead_b2WorldId(mrb_state *mrb, mrb_value h, b2WorldId *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->index1 = (uint16_t)SDLStaticGen_RubyFieldInt(mrb, h, "index1");
-    out->generation = (uint16_t)SDLStaticGen_RubyFieldInt(mrb, h, "generation");
+    out->index1 = (uint16_t)GrappleGen_RubyFieldInt(mrb, h, "index1");
+    out->generation = (uint16_t)GrappleGen_RubyFieldInt(mrb, h, "generation");
 }
 
 static mrb_value GenPush_b2WorldId(mrb_state *mrb, const b2WorldId *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "index1", mrb_int_value(mrb, (mrb_int)in->index1));
-    SDLStaticGen_RubyHashSet(mrb, h, "generation", mrb_int_value(mrb, (mrb_int)in->generation));
+    GrappleGen_RubyHashSet(mrb, h, "index1", mrb_int_value(mrb, (mrb_int)in->index1));
+    GrappleGen_RubyHashSet(mrb, h, "generation", mrb_int_value(mrb, (mrb_int)in->generation));
     return h;
 }
 
@@ -860,8 +860,8 @@ static mrb_value GenR_b2Atan2(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     float rv = b2Atan2(a0, a1);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -876,8 +876,8 @@ static mrb_value GenR_b2Body_ApplyAngularImpulse(mrb_state *mrb, mrb_value self)
     {
     b2BodyId a0;
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     b2Body_ApplyAngularImpulse(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -896,7 +896,7 @@ static mrb_value GenR_b2Body_ApplyForce(mrb_state *mrb, mrb_value self)
     GenRead_b2Vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     b2Vec2 a2;
     GenRead_b2Vec2(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
-    bool a3 = (bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    bool a3 = (bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     b2Body_ApplyForce(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -913,7 +913,7 @@ static mrb_value GenR_b2Body_ApplyForceToCenter(mrb_state *mrb, mrb_value self)
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
     b2Vec2 a1;
     GenRead_b2Vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     b2Body_ApplyForceToCenter(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -932,7 +932,7 @@ static mrb_value GenR_b2Body_ApplyLinearImpulse(mrb_state *mrb, mrb_value self)
     GenRead_b2Vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     b2Vec2 a2;
     GenRead_b2Vec2(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
-    bool a3 = (bool)SDLStaticGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
+    bool a3 = (bool)GrappleGen_RubyToBool((argc > 3 ? argv[3] : mrb_nil_value()));
     b2Body_ApplyLinearImpulse(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -949,7 +949,7 @@ static mrb_value GenR_b2Body_ApplyLinearImpulseToCenter(mrb_state *mrb, mrb_valu
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
     b2Vec2 a1;
     GenRead_b2Vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     b2Body_ApplyLinearImpulseToCenter(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -978,8 +978,8 @@ static mrb_value GenR_b2Body_ApplyTorque(mrb_state *mrb, mrb_value self)
     {
     b2BodyId a0;
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     b2Body_ApplyTorque(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -1036,7 +1036,7 @@ static mrb_value GenR_b2Body_EnableContactEvents(mrb_state *mrb, mrb_value self)
     {
     b2BodyId a0;
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2Body_EnableContactEvents(a0, a1);
     return mrb_nil_value();
     }
@@ -1051,7 +1051,7 @@ static mrb_value GenR_b2Body_EnableHitEvents(mrb_state *mrb, mrb_value self)
     {
     b2BodyId a0;
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2Body_EnableHitEvents(a0, a1);
     return mrb_nil_value();
     }
@@ -1066,7 +1066,7 @@ static mrb_value GenR_b2Body_EnableSleep(mrb_state *mrb, mrb_value self)
     {
     b2BodyId a0;
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2Body_EnableSleep(a0, a1);
     return mrb_nil_value();
     }
@@ -1125,7 +1125,7 @@ static mrb_value GenR_b2Body_GetContactData(mrb_state *mrb, mrb_value self)
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
     b2ContactData out1;
     memset(&out1, 0, sizeof(out1));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = b2Body_GetContactData(a0, &out1, a2);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -1173,7 +1173,7 @@ static mrb_value GenR_b2Body_GetJoints(mrb_state *mrb, mrb_value self)
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
     b2JointId out1;
     memset(&out1, 0, sizeof(out1));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = b2Body_GetJoints(a0, &out1, a2);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -1381,7 +1381,7 @@ static mrb_value GenR_b2Body_GetShapes(mrb_state *mrb, mrb_value self)
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
     b2ShapeId out1;
     memset(&out1, 0, sizeof(out1));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = b2Body_GetShapes(a0, &out1, a2);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -1601,7 +1601,7 @@ static mrb_value GenR_b2Body_SetAngularDamping(mrb_state *mrb, mrb_value self)
     {
     b2BodyId a0;
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Body_SetAngularDamping(a0, a1);
     return mrb_nil_value();
     }
@@ -1616,7 +1616,7 @@ static mrb_value GenR_b2Body_SetAngularVelocity(mrb_state *mrb, mrb_value self)
     {
     b2BodyId a0;
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Body_SetAngularVelocity(a0, a1);
     return mrb_nil_value();
     }
@@ -1631,7 +1631,7 @@ static mrb_value GenR_b2Body_SetAwake(mrb_state *mrb, mrb_value self)
     {
     b2BodyId a0;
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2Body_SetAwake(a0, a1);
     return mrb_nil_value();
     }
@@ -1646,7 +1646,7 @@ static mrb_value GenR_b2Body_SetBullet(mrb_state *mrb, mrb_value self)
     {
     b2BodyId a0;
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2Body_SetBullet(a0, a1);
     return mrb_nil_value();
     }
@@ -1661,7 +1661,7 @@ static mrb_value GenR_b2Body_SetFixedRotation(mrb_state *mrb, mrb_value self)
     {
     b2BodyId a0;
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2Body_SetFixedRotation(a0, a1);
     return mrb_nil_value();
     }
@@ -1676,7 +1676,7 @@ static mrb_value GenR_b2Body_SetGravityScale(mrb_state *mrb, mrb_value self)
     {
     b2BodyId a0;
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Body_SetGravityScale(a0, a1);
     return mrb_nil_value();
     }
@@ -1691,7 +1691,7 @@ static mrb_value GenR_b2Body_SetLinearDamping(mrb_state *mrb, mrb_value self)
     {
     b2BodyId a0;
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Body_SetLinearDamping(a0, a1);
     return mrb_nil_value();
     }
@@ -1738,7 +1738,7 @@ static mrb_value GenR_b2Body_SetName(mrb_state *mrb, mrb_value self)
     {
     b2BodyId a0;
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Body_SetName(a0, a1);
     return mrb_nil_value();
     }
@@ -1753,7 +1753,7 @@ static mrb_value GenR_b2Body_SetSleepThreshold(mrb_state *mrb, mrb_value self)
     {
     b2BodyId a0;
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Body_SetSleepThreshold(a0, a1);
     return mrb_nil_value();
     }
@@ -1770,7 +1770,7 @@ static mrb_value GenR_b2Body_SetTargetTransform(mrb_state *mrb, mrb_value self)
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
     b2Transform a1;
     GenRead_b2Transform(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     b2Body_SetTargetTransform(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -1803,7 +1803,7 @@ static mrb_value GenR_b2Body_SetType(mrb_state *mrb, mrb_value self)
     {
     b2BodyId a0;
     GenRead_b2BodyId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    b2BodyType a1 = (b2BodyType)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    b2BodyType a1 = (b2BodyType)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Body_SetType(a0, a1);
     return mrb_nil_value();
     }
@@ -1876,7 +1876,7 @@ static mrb_value GenR_b2Chain_GetSegments(mrb_state *mrb, mrb_value self)
     GenRead_b2ChainId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
     b2ShapeId out1;
     memset(&out1, 0, sizeof(out1));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = b2Chain_GetSegments(a0, &out1, a2);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -1922,7 +1922,7 @@ static mrb_value GenR_b2Chain_SetFriction(mrb_state *mrb, mrb_value self)
     {
     b2ChainId a0;
     GenRead_b2ChainId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Chain_SetFriction(a0, a1);
     return mrb_nil_value();
     }
@@ -1937,7 +1937,7 @@ static mrb_value GenR_b2Chain_SetMaterial(mrb_state *mrb, mrb_value self)
     {
     b2ChainId a0;
     GenRead_b2ChainId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Chain_SetMaterial(a0, a1);
     return mrb_nil_value();
     }
@@ -1952,7 +1952,7 @@ static mrb_value GenR_b2Chain_SetRestitution(mrb_state *mrb, mrb_value self)
     {
     b2ChainId a0;
     GenRead_b2ChainId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Chain_SetRestitution(a0, a1);
     return mrb_nil_value();
     }
@@ -1973,7 +1973,7 @@ static mrb_value GenR_b2ClipVector(mrb_state *mrb, mrb_value self)
         GenRead_b2CollisionPlane(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     b2Vec2 rv = b2ClipVector(a0, a1, a2);
     return GenPush_b2Vec2(mrb, &rv);
     }
@@ -2058,7 +2058,7 @@ static mrb_value GenR_b2CollideChainSegmentAndCapsule(mrb_state *mrb, mrb_value 
     }
     b2Transform a3;
     GenRead_b2Transform(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
-    b2SimplexCache *a4 = (b2SimplexCache *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), "b2SimplexCache");
+    b2SimplexCache *a4 = (b2SimplexCache *)GrappleGen_RubyCheckHandle(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), "b2SimplexCache");
     b2Manifold rv = b2CollideChainSegmentAndCapsule(a0, a1, a2, a3, a4);
     return GenPush_b2Manifold(mrb, &rv);
     }
@@ -2115,7 +2115,7 @@ static mrb_value GenR_b2CollideChainSegmentAndPolygon(mrb_state *mrb, mrb_value 
     }
     b2Transform a3;
     GenRead_b2Transform(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
-    b2SimplexCache *a4 = (b2SimplexCache *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), "b2SimplexCache");
+    b2SimplexCache *a4 = (b2SimplexCache *)GrappleGen_RubyCheckHandle(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), "b2SimplexCache");
     b2Manifold rv = b2CollideChainSegmentAndPolygon(a0, a1, a2, a3, a4);
     return GenPush_b2Manifold(mrb, &rv);
     }
@@ -2350,7 +2350,7 @@ static mrb_value GenR_b2ComputeCapsuleMass(mrb_state *mrb, mrb_value self)
         GenRead_b2Capsule(mrb, argv[0], &tmp0);
         a0 = &tmp0;
     }
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2MassData rv = b2ComputeCapsuleMass(a0, a1);
     return GenPush_b2MassData(mrb, &rv);
     }
@@ -2389,7 +2389,7 @@ static mrb_value GenR_b2ComputeCircleMass(mrb_state *mrb, mrb_value self)
         GenRead_b2Circle(mrb, argv[0], &tmp0);
         a0 = &tmp0;
     }
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2MassData rv = b2ComputeCircleMass(a0, a1);
     return GenPush_b2MassData(mrb, &rv);
     }
@@ -2402,7 +2402,7 @@ static mrb_value GenR_b2ComputeCosSin(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     b2CosSin rv = b2ComputeCosSin(a0);
     return GenPush_b2CosSin(mrb, &rv);
     }
@@ -2421,7 +2421,7 @@ static mrb_value GenR_b2ComputeHull(mrb_state *mrb, mrb_value self)
         GenRead_b2Vec2(mrb, argv[0], &tmp0);
         a0 = &tmp0;
     }
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Hull rv = b2ComputeHull(a0, a1);
     return GenPush_b2Hull(mrb, &rv);
     }
@@ -2460,7 +2460,7 @@ static mrb_value GenR_b2ComputePolygonMass(mrb_state *mrb, mrb_value self)
         GenRead_b2Polygon(mrb, argv[0], &tmp0);
         a0 = &tmp0;
     }
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2MassData rv = b2ComputePolygonMass(a0, a1);
     return GenPush_b2MassData(mrb, &rv);
     }
@@ -2603,7 +2603,7 @@ static mrb_value GenR_b2CreateDistanceJoint(mrb_state *mrb, mrb_value self)
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    const b2DistanceJointDef *a1 = (const b2DistanceJointDef *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2DistanceJointDef");
+    const b2DistanceJointDef *a1 = (const b2DistanceJointDef *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2DistanceJointDef");
     b2JointId rv = b2CreateDistanceJoint(a0, a1);
     return GenPush_b2JointId(mrb, &rv);
     }
@@ -2618,7 +2618,7 @@ static mrb_value GenR_b2CreateFilterJoint(mrb_state *mrb, mrb_value self)
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    const b2FilterJointDef *a1 = (const b2FilterJointDef *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2FilterJointDef");
+    const b2FilterJointDef *a1 = (const b2FilterJointDef *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2FilterJointDef");
     b2JointId rv = b2CreateFilterJoint(a0, a1);
     return GenPush_b2JointId(mrb, &rv);
     }
@@ -2633,7 +2633,7 @@ static mrb_value GenR_b2CreateMotorJoint(mrb_state *mrb, mrb_value self)
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    const b2MotorJointDef *a1 = (const b2MotorJointDef *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2MotorJointDef");
+    const b2MotorJointDef *a1 = (const b2MotorJointDef *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2MotorJointDef");
     b2JointId rv = b2CreateMotorJoint(a0, a1);
     return GenPush_b2JointId(mrb, &rv);
     }
@@ -2648,7 +2648,7 @@ static mrb_value GenR_b2CreateMouseJoint(mrb_state *mrb, mrb_value self)
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    const b2MouseJointDef *a1 = (const b2MouseJointDef *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2MouseJointDef");
+    const b2MouseJointDef *a1 = (const b2MouseJointDef *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2MouseJointDef");
     b2JointId rv = b2CreateMouseJoint(a0, a1);
     return GenPush_b2JointId(mrb, &rv);
     }
@@ -2689,7 +2689,7 @@ static mrb_value GenR_b2CreatePrismaticJoint(mrb_state *mrb, mrb_value self)
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    const b2PrismaticJointDef *a1 = (const b2PrismaticJointDef *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2PrismaticJointDef");
+    const b2PrismaticJointDef *a1 = (const b2PrismaticJointDef *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2PrismaticJointDef");
     b2JointId rv = b2CreatePrismaticJoint(a0, a1);
     return GenPush_b2JointId(mrb, &rv);
     }
@@ -2704,7 +2704,7 @@ static mrb_value GenR_b2CreateRevoluteJoint(mrb_state *mrb, mrb_value self)
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    const b2RevoluteJointDef *a1 = (const b2RevoluteJointDef *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2RevoluteJointDef");
+    const b2RevoluteJointDef *a1 = (const b2RevoluteJointDef *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2RevoluteJointDef");
     b2JointId rv = b2CreateRevoluteJoint(a0, a1);
     return GenPush_b2JointId(mrb, &rv);
     }
@@ -2745,7 +2745,7 @@ static mrb_value GenR_b2CreateWeldJoint(mrb_state *mrb, mrb_value self)
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    const b2WeldJointDef *a1 = (const b2WeldJointDef *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2WeldJointDef");
+    const b2WeldJointDef *a1 = (const b2WeldJointDef *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2WeldJointDef");
     b2JointId rv = b2CreateWeldJoint(a0, a1);
     return GenPush_b2JointId(mrb, &rv);
     }
@@ -2760,7 +2760,7 @@ static mrb_value GenR_b2CreateWheelJoint(mrb_state *mrb, mrb_value self)
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    const b2WheelJointDef *a1 = (const b2WheelJointDef *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2WheelJointDef");
+    const b2WheelJointDef *a1 = (const b2WheelJointDef *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2WheelJointDef");
     b2JointId rv = b2CreateWheelJoint(a0, a1);
     return GenPush_b2JointId(mrb, &rv);
     }
@@ -2931,7 +2931,7 @@ static mrb_value GenR_b2DestroyShape(mrb_state *mrb, mrb_value self)
     {
     b2ShapeId a0;
     GenRead_b2ShapeId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2DestroyShape(a0, a1);
     return mrb_nil_value();
     }
@@ -2960,7 +2960,7 @@ static mrb_value GenR_b2DistanceJoint_EnableLimit(mrb_state *mrb, mrb_value self
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2DistanceJoint_EnableLimit(a0, a1);
     return mrb_nil_value();
     }
@@ -2975,7 +2975,7 @@ static mrb_value GenR_b2DistanceJoint_EnableMotor(mrb_state *mrb, mrb_value self
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2DistanceJoint_EnableMotor(a0, a1);
     return mrb_nil_value();
     }
@@ -2990,7 +2990,7 @@ static mrb_value GenR_b2DistanceJoint_EnableSpring(mrb_state *mrb, mrb_value sel
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2DistanceJoint_EnableSpring(a0, a1);
     return mrb_nil_value();
     }
@@ -3173,7 +3173,7 @@ static mrb_value GenR_b2DistanceJoint_SetLength(mrb_state *mrb, mrb_value self)
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2DistanceJoint_SetLength(a0, a1);
     return mrb_nil_value();
     }
@@ -3188,8 +3188,8 @@ static mrb_value GenR_b2DistanceJoint_SetLengthRange(mrb_state *mrb, mrb_value s
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     b2DistanceJoint_SetLengthRange(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -3204,7 +3204,7 @@ static mrb_value GenR_b2DistanceJoint_SetMaxMotorForce(mrb_state *mrb, mrb_value
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2DistanceJoint_SetMaxMotorForce(a0, a1);
     return mrb_nil_value();
     }
@@ -3219,7 +3219,7 @@ static mrb_value GenR_b2DistanceJoint_SetMotorSpeed(mrb_state *mrb, mrb_value se
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2DistanceJoint_SetMotorSpeed(a0, a1);
     return mrb_nil_value();
     }
@@ -3234,7 +3234,7 @@ static mrb_value GenR_b2DistanceJoint_SetSpringDampingRatio(mrb_state *mrb, mrb_
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2DistanceJoint_SetSpringDampingRatio(a0, a1);
     return mrb_nil_value();
     }
@@ -3249,7 +3249,7 @@ static mrb_value GenR_b2DistanceJoint_SetSpringHertz(mrb_state *mrb, mrb_value s
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2DistanceJoint_SetSpringHertz(a0, a1);
     return mrb_nil_value();
     }
@@ -3262,11 +3262,11 @@ static mrb_value GenR_b2DynamicTree_CreateProxy(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    b2DynamicTree *a0 = (b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    b2DynamicTree *a0 = (b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
     b2AABB a1;
     GenRead_b2AABB(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
-    uint64_t a2 = (uint64_t)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    uint64_t a3 = (uint64_t)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    uint64_t a2 = (uint64_t)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    uint64_t a3 = (uint64_t)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     int rv = b2DynamicTree_CreateProxy(a0, a1, a2, a3);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3279,7 +3279,7 @@ static mrb_value GenR_b2DynamicTree_Destroy(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    b2DynamicTree *a0 = (b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    b2DynamicTree *a0 = (b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
     b2DynamicTree_Destroy(a0);
     return mrb_nil_value();
     }
@@ -3292,8 +3292,8 @@ static mrb_value GenR_b2DynamicTree_DestroyProxy(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    b2DynamicTree *a0 = (b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    b2DynamicTree *a0 = (b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2DynamicTree_DestroyProxy(a0, a1);
     return mrb_nil_value();
     }
@@ -3306,8 +3306,8 @@ static mrb_value GenR_b2DynamicTree_EnlargeProxy(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    b2DynamicTree *a0 = (b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    b2DynamicTree *a0 = (b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2AABB a2;
     GenRead_b2AABB(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     b2DynamicTree_EnlargeProxy(a0, a1, a2);
@@ -3322,8 +3322,8 @@ static mrb_value GenR_b2DynamicTree_GetAABB(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2AABB rv = b2DynamicTree_GetAABB(a0, a1);
     return GenPush_b2AABB(mrb, &rv);
     }
@@ -3336,7 +3336,7 @@ static mrb_value GenR_b2DynamicTree_GetAreaRatio(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
     float rv = b2DynamicTree_GetAreaRatio(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -3349,7 +3349,7 @@ static mrb_value GenR_b2DynamicTree_GetByteCount(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
     int rv = b2DynamicTree_GetByteCount(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3362,8 +3362,8 @@ static mrb_value GenR_b2DynamicTree_GetCategoryBits(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    b2DynamicTree *a0 = (b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    b2DynamicTree *a0 = (b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     uint64_t rv = b2DynamicTree_GetCategoryBits(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3376,7 +3376,7 @@ static mrb_value GenR_b2DynamicTree_GetHeight(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
     int rv = b2DynamicTree_GetHeight(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3389,7 +3389,7 @@ static mrb_value GenR_b2DynamicTree_GetProxyCount(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
     int rv = b2DynamicTree_GetProxyCount(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3402,7 +3402,7 @@ static mrb_value GenR_b2DynamicTree_GetRootBounds(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
     b2AABB rv = b2DynamicTree_GetRootBounds(a0);
     return GenPush_b2AABB(mrb, &rv);
     }
@@ -3415,8 +3415,8 @@ static mrb_value GenR_b2DynamicTree_GetUserData(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     uint64_t rv = b2DynamicTree_GetUserData(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3429,8 +3429,8 @@ static mrb_value GenR_b2DynamicTree_MoveProxy(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    b2DynamicTree *a0 = (b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    b2DynamicTree *a0 = (b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2AABB a2;
     GenRead_b2AABB(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     b2DynamicTree_MoveProxy(a0, a1, a2);
@@ -3445,8 +3445,8 @@ static mrb_value GenR_b2DynamicTree_Rebuild(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    b2DynamicTree *a0 = (b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    b2DynamicTree *a0 = (b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = b2DynamicTree_Rebuild(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -3459,9 +3459,9 @@ static mrb_value GenR_b2DynamicTree_SetCategoryBits(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    b2DynamicTree *a0 = (b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    uint64_t a2 = (uint64_t)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    b2DynamicTree *a0 = (b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    uint64_t a2 = (uint64_t)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     b2DynamicTree_SetCategoryBits(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -3474,7 +3474,7 @@ static mrb_value GenR_b2DynamicTree_Validate(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
     b2DynamicTree_Validate(a0);
     return mrb_nil_value();
     }
@@ -3487,7 +3487,7 @@ static mrb_value GenR_b2DynamicTree_ValidateNoEnlarged(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const b2DynamicTree *a0 = (const b2DynamicTree *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
+    const b2DynamicTree *a0 = (const b2DynamicTree *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2DynamicTree");
     b2DynamicTree_ValidateNoEnlarged(a0);
     return mrb_nil_value();
     }
@@ -3524,7 +3524,7 @@ static mrb_value GenR_b2GetMilliseconds(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    uint64_t a0 = (uint64_t)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    uint64_t a0 = (uint64_t)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     float rv = b2GetMilliseconds(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -3537,7 +3537,7 @@ static mrb_value GenR_b2GetMillisecondsAndReset(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    uint64_t io0 = (uint64_t)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    uint64_t io0 = (uint64_t)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     float rv = b2GetMillisecondsAndReset(&io0);
     mrb_value rets[2];
     rets[0] = mrb_float_value(mrb, (mrb_float)rv);
@@ -3559,7 +3559,7 @@ static mrb_value GenR_b2GetSweepTransform(mrb_state *mrb, mrb_value self)
         GenRead_b2Sweep(mrb, argv[0], &tmp0);
         a0 = &tmp0;
     }
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Transform rv = b2GetSweepTransform(a0, a1);
     return GenPush_b2Transform(mrb, &rv);
     }
@@ -3610,7 +3610,7 @@ static mrb_value GenR_b2IsValidFloat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     bool rv = b2IsValidFloat(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -3769,8 +3769,8 @@ static mrb_value GenR_b2Joint_GetConstraintTuning(mrb_state *mrb, mrb_value self
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float io2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     b2Joint_GetConstraintTuning(a0, &io1, &io2);
     mrb_value rets[2];
     rets[0] = mrb_float_value(mrb, (mrb_float)io1);
@@ -3900,7 +3900,7 @@ static mrb_value GenR_b2Joint_SetCollideConnected(mrb_state *mrb, mrb_value self
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2Joint_SetCollideConnected(a0, a1);
     return mrb_nil_value();
     }
@@ -3915,8 +3915,8 @@ static mrb_value GenR_b2Joint_SetConstraintTuning(mrb_state *mrb, mrb_value self
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     b2Joint_SetConstraintTuning(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -3979,7 +3979,7 @@ static mrb_value GenR_b2Joint_SetReferenceAngle(mrb_state *mrb, mrb_value self)
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Joint_SetReferenceAngle(a0, a1);
     return mrb_nil_value();
     }
@@ -4006,8 +4006,8 @@ static mrb_value GenR_b2MakeBox(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Polygon rv = b2MakeBox(a0, a1);
     return GenPush_b2Polygon(mrb, &rv);
     }
@@ -4020,8 +4020,8 @@ static mrb_value GenR_b2MakeOffsetBox(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Vec2 a2;
     GenRead_b2Vec2(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     b2Rot a3;
@@ -4038,7 +4038,7 @@ static mrb_value GenR_b2MakeOffsetPolygon(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const b2Hull *a0 = (const b2Hull *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2Hull");
+    const b2Hull *a0 = (const b2Hull *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2Hull");
     b2Vec2 a1;
     GenRead_b2Vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     b2Rot a2;
@@ -4061,8 +4061,8 @@ static mrb_value GenR_b2MakeOffsetProxy(mrb_state *mrb, mrb_value self)
         GenRead_b2Vec2(mrb, argv[0], &tmp0);
         a0 = &tmp0;
     }
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     b2Vec2 a3;
     GenRead_b2Vec2(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     b2Rot a4;
@@ -4079,13 +4079,13 @@ static mrb_value GenR_b2MakeOffsetRoundedBox(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Vec2 a2;
     GenRead_b2Vec2(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     b2Rot a3;
     GenRead_b2Rot(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     b2Polygon rv = b2MakeOffsetRoundedBox(a0, a1, a2, a3, a4);
     return GenPush_b2Polygon(mrb, &rv);
     }
@@ -4098,12 +4098,12 @@ static mrb_value GenR_b2MakeOffsetRoundedPolygon(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const b2Hull *a0 = (const b2Hull *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2Hull");
+    const b2Hull *a0 = (const b2Hull *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2Hull");
     b2Vec2 a1;
     GenRead_b2Vec2(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     b2Rot a2;
     GenRead_b2Rot(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     b2Polygon rv = b2MakeOffsetRoundedPolygon(a0, a1, a2, a3);
     return GenPush_b2Polygon(mrb, &rv);
     }
@@ -4116,8 +4116,8 @@ static mrb_value GenR_b2MakePolygon(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const b2Hull *a0 = (const b2Hull *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2Hull");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const b2Hull *a0 = (const b2Hull *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2Hull");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Polygon rv = b2MakePolygon(a0, a1);
     return GenPush_b2Polygon(mrb, &rv);
     }
@@ -4136,8 +4136,8 @@ static mrb_value GenR_b2MakeProxy(mrb_state *mrb, mrb_value self)
         GenRead_b2Vec2(mrb, argv[0], &tmp0);
         a0 = &tmp0;
     }
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     b2ShapeProxy rv = b2MakeProxy(a0, a1, a2);
     return GenPush_b2ShapeProxy(mrb, &rv);
     }
@@ -4150,9 +4150,9 @@ static mrb_value GenR_b2MakeRoundedBox(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     b2Polygon rv = b2MakeRoundedBox(a0, a1, a2);
     return GenPush_b2Polygon(mrb, &rv);
     }
@@ -4165,7 +4165,7 @@ static mrb_value GenR_b2MakeSquare(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     b2Polygon rv = b2MakeSquare(a0);
     return GenPush_b2Polygon(mrb, &rv);
     }
@@ -4250,7 +4250,7 @@ static mrb_value GenR_b2MotorJoint_SetAngularOffset(mrb_state *mrb, mrb_value se
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2MotorJoint_SetAngularOffset(a0, a1);
     return mrb_nil_value();
     }
@@ -4265,7 +4265,7 @@ static mrb_value GenR_b2MotorJoint_SetCorrectionFactor(mrb_state *mrb, mrb_value
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2MotorJoint_SetCorrectionFactor(a0, a1);
     return mrb_nil_value();
     }
@@ -4296,7 +4296,7 @@ static mrb_value GenR_b2MotorJoint_SetMaxForce(mrb_state *mrb, mrb_value self)
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2MotorJoint_SetMaxForce(a0, a1);
     return mrb_nil_value();
     }
@@ -4311,7 +4311,7 @@ static mrb_value GenR_b2MotorJoint_SetMaxTorque(mrb_state *mrb, mrb_value self)
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2MotorJoint_SetMaxTorque(a0, a1);
     return mrb_nil_value();
     }
@@ -4382,7 +4382,7 @@ static mrb_value GenR_b2MouseJoint_SetMaxForce(mrb_state *mrb, mrb_value self)
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2MouseJoint_SetMaxForce(a0, a1);
     return mrb_nil_value();
     }
@@ -4397,7 +4397,7 @@ static mrb_value GenR_b2MouseJoint_SetSpringDampingRatio(mrb_state *mrb, mrb_val
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2MouseJoint_SetSpringDampingRatio(a0, a1);
     return mrb_nil_value();
     }
@@ -4412,7 +4412,7 @@ static mrb_value GenR_b2MouseJoint_SetSpringHertz(mrb_state *mrb, mrb_value self
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2MouseJoint_SetSpringHertz(a0, a1);
     return mrb_nil_value();
     }
@@ -4503,7 +4503,7 @@ static mrb_value GenR_b2PrismaticJoint_EnableLimit(mrb_state *mrb, mrb_value sel
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2PrismaticJoint_EnableLimit(a0, a1);
     return mrb_nil_value();
     }
@@ -4518,7 +4518,7 @@ static mrb_value GenR_b2PrismaticJoint_EnableMotor(mrb_state *mrb, mrb_value sel
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2PrismaticJoint_EnableMotor(a0, a1);
     return mrb_nil_value();
     }
@@ -4533,7 +4533,7 @@ static mrb_value GenR_b2PrismaticJoint_EnableSpring(mrb_state *mrb, mrb_value se
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2PrismaticJoint_EnableSpring(a0, a1);
     return mrb_nil_value();
     }
@@ -4730,8 +4730,8 @@ static mrb_value GenR_b2PrismaticJoint_SetLimits(mrb_state *mrb, mrb_value self)
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     b2PrismaticJoint_SetLimits(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -4746,7 +4746,7 @@ static mrb_value GenR_b2PrismaticJoint_SetMaxMotorForce(mrb_state *mrb, mrb_valu
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2PrismaticJoint_SetMaxMotorForce(a0, a1);
     return mrb_nil_value();
     }
@@ -4761,7 +4761,7 @@ static mrb_value GenR_b2PrismaticJoint_SetMotorSpeed(mrb_state *mrb, mrb_value s
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2PrismaticJoint_SetMotorSpeed(a0, a1);
     return mrb_nil_value();
     }
@@ -4776,7 +4776,7 @@ static mrb_value GenR_b2PrismaticJoint_SetSpringDampingRatio(mrb_state *mrb, mrb
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2PrismaticJoint_SetSpringDampingRatio(a0, a1);
     return mrb_nil_value();
     }
@@ -4791,7 +4791,7 @@ static mrb_value GenR_b2PrismaticJoint_SetSpringHertz(mrb_state *mrb, mrb_value 
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2PrismaticJoint_SetSpringHertz(a0, a1);
     return mrb_nil_value();
     }
@@ -4806,7 +4806,7 @@ static mrb_value GenR_b2PrismaticJoint_SetTargetTranslation(mrb_state *mrb, mrb_
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2PrismaticJoint_SetTargetTranslation(a0, a1);
     return mrb_nil_value();
     }
@@ -4903,7 +4903,7 @@ static mrb_value GenR_b2RayCastSegment(mrb_state *mrb, mrb_value self)
         GenRead_b2Segment(mrb, argv[1], &tmp1);
         a1 = &tmp1;
     }
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     b2CastOutput rv = b2RayCastSegment(a0, a1, a2);
     return GenPush_b2CastOutput(mrb, &rv);
     }
@@ -4918,7 +4918,7 @@ static mrb_value GenR_b2RevoluteJoint_EnableLimit(mrb_state *mrb, mrb_value self
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2RevoluteJoint_EnableLimit(a0, a1);
     return mrb_nil_value();
     }
@@ -4933,7 +4933,7 @@ static mrb_value GenR_b2RevoluteJoint_EnableMotor(mrb_state *mrb, mrb_value self
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2RevoluteJoint_EnableMotor(a0, a1);
     return mrb_nil_value();
     }
@@ -4948,7 +4948,7 @@ static mrb_value GenR_b2RevoluteJoint_EnableSpring(mrb_state *mrb, mrb_value sel
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2RevoluteJoint_EnableSpring(a0, a1);
     return mrb_nil_value();
     }
@@ -5131,8 +5131,8 @@ static mrb_value GenR_b2RevoluteJoint_SetLimits(mrb_state *mrb, mrb_value self)
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     b2RevoluteJoint_SetLimits(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -5147,7 +5147,7 @@ static mrb_value GenR_b2RevoluteJoint_SetMaxMotorTorque(mrb_state *mrb, mrb_valu
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2RevoluteJoint_SetMaxMotorTorque(a0, a1);
     return mrb_nil_value();
     }
@@ -5162,7 +5162,7 @@ static mrb_value GenR_b2RevoluteJoint_SetMotorSpeed(mrb_state *mrb, mrb_value se
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2RevoluteJoint_SetMotorSpeed(a0, a1);
     return mrb_nil_value();
     }
@@ -5177,7 +5177,7 @@ static mrb_value GenR_b2RevoluteJoint_SetSpringDampingRatio(mrb_state *mrb, mrb_
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2RevoluteJoint_SetSpringDampingRatio(a0, a1);
     return mrb_nil_value();
     }
@@ -5192,7 +5192,7 @@ static mrb_value GenR_b2RevoluteJoint_SetSpringHertz(mrb_state *mrb, mrb_value s
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2RevoluteJoint_SetSpringHertz(a0, a1);
     return mrb_nil_value();
     }
@@ -5207,7 +5207,7 @@ static mrb_value GenR_b2RevoluteJoint_SetTargetAngle(mrb_state *mrb, mrb_value s
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2RevoluteJoint_SetTargetAngle(a0, a1);
     return mrb_nil_value();
     }
@@ -5240,7 +5240,7 @@ static mrb_value GenR_b2SetLengthUnitsPerMeter(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    float a0 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a0 = (float)GrappleGen_RubyToNum(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     b2SetLengthUnitsPerMeter(a0);
     return mrb_nil_value();
     }
@@ -5373,10 +5373,10 @@ static mrb_value GenR_b2ShapeDistance(mrb_state *mrb, mrb_value self)
         GenRead_b2DistanceInput(mrb, argv[0], &tmp0);
         a0 = &tmp0;
     }
-    b2SimplexCache *a1 = (b2SimplexCache *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2SimplexCache");
+    b2SimplexCache *a1 = (b2SimplexCache *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2SimplexCache");
     b2Simplex out2;
     memset(&out2, 0, sizeof(out2));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     b2DistanceOutput rv = b2ShapeDistance(a0, a1, &out2, a3);
     mrb_value rets[2];
     rets[0] = GenPush_b2DistanceOutput(mrb, &rv);
@@ -5450,7 +5450,7 @@ static mrb_value GenR_b2Shape_EnableContactEvents(mrb_state *mrb, mrb_value self
     {
     b2ShapeId a0;
     GenRead_b2ShapeId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2Shape_EnableContactEvents(a0, a1);
     return mrb_nil_value();
     }
@@ -5465,7 +5465,7 @@ static mrb_value GenR_b2Shape_EnableHitEvents(mrb_state *mrb, mrb_value self)
     {
     b2ShapeId a0;
     GenRead_b2ShapeId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2Shape_EnableHitEvents(a0, a1);
     return mrb_nil_value();
     }
@@ -5480,7 +5480,7 @@ static mrb_value GenR_b2Shape_EnablePreSolveEvents(mrb_state *mrb, mrb_value sel
     {
     b2ShapeId a0;
     GenRead_b2ShapeId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2Shape_EnablePreSolveEvents(a0, a1);
     return mrb_nil_value();
     }
@@ -5495,7 +5495,7 @@ static mrb_value GenR_b2Shape_EnableSensorEvents(mrb_state *mrb, mrb_value self)
     {
     b2ShapeId a0;
     GenRead_b2ShapeId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2Shape_EnableSensorEvents(a0, a1);
     return mrb_nil_value();
     }
@@ -5612,7 +5612,7 @@ static mrb_value GenR_b2Shape_GetContactData(mrb_state *mrb, mrb_value self)
     GenRead_b2ShapeId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
     b2ContactData out1;
     memset(&out1, 0, sizeof(out1));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = b2Shape_GetContactData(a0, &out1, a2);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -5772,7 +5772,7 @@ static mrb_value GenR_b2Shape_GetSensorOverlaps(mrb_state *mrb, mrb_value self)
     GenRead_b2ShapeId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
     b2ShapeId out1;
     memset(&out1, 0, sizeof(out1));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = b2Shape_GetSensorOverlaps(a0, &out1, a2);
     mrb_value rets[2];
     rets[0] = mrb_int_value(mrb, (mrb_int)rv);
@@ -5920,8 +5920,8 @@ static mrb_value GenR_b2Shape_SetDensity(mrb_state *mrb, mrb_value self)
     {
     b2ShapeId a0;
     GenRead_b2ShapeId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    bool a2 = (bool)SDLStaticGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a2 = (bool)GrappleGen_RubyToBool((argc > 2 ? argv[2] : mrb_nil_value()));
     b2Shape_SetDensity(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -5952,7 +5952,7 @@ static mrb_value GenR_b2Shape_SetFriction(mrb_state *mrb, mrb_value self)
     {
     b2ShapeId a0;
     GenRead_b2ShapeId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Shape_SetFriction(a0, a1);
     return mrb_nil_value();
     }
@@ -5967,7 +5967,7 @@ static mrb_value GenR_b2Shape_SetMaterial(mrb_state *mrb, mrb_value self)
     {
     b2ShapeId a0;
     GenRead_b2ShapeId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Shape_SetMaterial(a0, a1);
     return mrb_nil_value();
     }
@@ -6002,7 +6002,7 @@ static mrb_value GenR_b2Shape_SetRestitution(mrb_state *mrb, mrb_value self)
     {
     b2ShapeId a0;
     GenRead_b2ShapeId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2Shape_SetRestitution(a0, a1);
     return mrb_nil_value();
     }
@@ -6071,7 +6071,7 @@ static mrb_value GenR_b2SolvePlanes(mrb_state *mrb, mrb_value self)
     GenRead_b2Vec2(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
     b2CollisionPlane out1;
     memset(&out1, 0, sizeof(out1));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2PlaneSolverResult rv = b2SolvePlanes(a0, &out1, a2);
     mrb_value rets[2];
     rets[0] = GenPush_b2PlaneSolverResult(mrb, &rv);
@@ -6125,7 +6125,7 @@ static mrb_value GenR_b2ValidateHull(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const b2Hull *a0 = (const b2Hull *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2Hull");
+    const b2Hull *a0 = (const b2Hull *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "b2Hull");
     bool rv = b2ValidateHull(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -6196,7 +6196,7 @@ static mrb_value GenR_b2WeldJoint_SetAngularDampingRatio(mrb_state *mrb, mrb_val
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2WeldJoint_SetAngularDampingRatio(a0, a1);
     return mrb_nil_value();
     }
@@ -6211,7 +6211,7 @@ static mrb_value GenR_b2WeldJoint_SetAngularHertz(mrb_state *mrb, mrb_value self
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2WeldJoint_SetAngularHertz(a0, a1);
     return mrb_nil_value();
     }
@@ -6226,7 +6226,7 @@ static mrb_value GenR_b2WeldJoint_SetLinearDampingRatio(mrb_state *mrb, mrb_valu
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2WeldJoint_SetLinearDampingRatio(a0, a1);
     return mrb_nil_value();
     }
@@ -6241,7 +6241,7 @@ static mrb_value GenR_b2WeldJoint_SetLinearHertz(mrb_state *mrb, mrb_value self)
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2WeldJoint_SetLinearHertz(a0, a1);
     return mrb_nil_value();
     }
@@ -6256,7 +6256,7 @@ static mrb_value GenR_b2WheelJoint_EnableLimit(mrb_state *mrb, mrb_value self)
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2WheelJoint_EnableLimit(a0, a1);
     return mrb_nil_value();
     }
@@ -6271,7 +6271,7 @@ static mrb_value GenR_b2WheelJoint_EnableMotor(mrb_state *mrb, mrb_value self)
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2WheelJoint_EnableMotor(a0, a1);
     return mrb_nil_value();
     }
@@ -6286,7 +6286,7 @@ static mrb_value GenR_b2WheelJoint_EnableSpring(mrb_state *mrb, mrb_value self)
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2WheelJoint_EnableSpring(a0, a1);
     return mrb_nil_value();
     }
@@ -6441,8 +6441,8 @@ static mrb_value GenR_b2WheelJoint_SetLimits(mrb_state *mrb, mrb_value self)
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     b2WheelJoint_SetLimits(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -6457,7 +6457,7 @@ static mrb_value GenR_b2WheelJoint_SetMaxMotorTorque(mrb_state *mrb, mrb_value s
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2WheelJoint_SetMaxMotorTorque(a0, a1);
     return mrb_nil_value();
     }
@@ -6472,7 +6472,7 @@ static mrb_value GenR_b2WheelJoint_SetMotorSpeed(mrb_state *mrb, mrb_value self)
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2WheelJoint_SetMotorSpeed(a0, a1);
     return mrb_nil_value();
     }
@@ -6487,7 +6487,7 @@ static mrb_value GenR_b2WheelJoint_SetSpringDampingRatio(mrb_state *mrb, mrb_val
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2WheelJoint_SetSpringDampingRatio(a0, a1);
     return mrb_nil_value();
     }
@@ -6502,7 +6502,7 @@ static mrb_value GenR_b2WheelJoint_SetSpringHertz(mrb_state *mrb, mrb_value self
     {
     b2JointId a0;
     GenRead_b2JointId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2WheelJoint_SetSpringHertz(a0, a1);
     return mrb_nil_value();
     }
@@ -6561,7 +6561,7 @@ static mrb_value GenR_b2World_Draw(mrb_state *mrb, mrb_value self)
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    b2DebugDraw *a1 = (b2DebugDraw *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2DebugDraw");
+    b2DebugDraw *a1 = (b2DebugDraw *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "b2DebugDraw");
     b2World_Draw(a0, a1);
     return mrb_nil_value();
     }
@@ -6590,7 +6590,7 @@ static mrb_value GenR_b2World_EnableContinuous(mrb_state *mrb, mrb_value self)
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2World_EnableContinuous(a0, a1);
     return mrb_nil_value();
     }
@@ -6605,7 +6605,7 @@ static mrb_value GenR_b2World_EnableSleeping(mrb_state *mrb, mrb_value self)
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2World_EnableSleeping(a0, a1);
     return mrb_nil_value();
     }
@@ -6620,7 +6620,7 @@ static mrb_value GenR_b2World_EnableSpeculative(mrb_state *mrb, mrb_value self)
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2World_EnableSpeculative(a0, a1);
     return mrb_nil_value();
     }
@@ -6635,7 +6635,7 @@ static mrb_value GenR_b2World_EnableWarmStarting(mrb_state *mrb, mrb_value self)
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     b2World_EnableWarmStarting(a0, a1);
     return mrb_nil_value();
     }
@@ -6838,9 +6838,9 @@ static mrb_value GenR_b2World_SetContactTuning(mrb_state *mrb, mrb_value self)
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     b2World_SetContactTuning(a0, a1, a2, a3);
     return mrb_nil_value();
     }
@@ -6871,7 +6871,7 @@ static mrb_value GenR_b2World_SetHitEventThreshold(mrb_state *mrb, mrb_value sel
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2World_SetHitEventThreshold(a0, a1);
     return mrb_nil_value();
     }
@@ -6886,7 +6886,7 @@ static mrb_value GenR_b2World_SetMaximumLinearSpeed(mrb_state *mrb, mrb_value se
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2World_SetMaximumLinearSpeed(a0, a1);
     return mrb_nil_value();
     }
@@ -6901,7 +6901,7 @@ static mrb_value GenR_b2World_SetRestitutionThreshold(mrb_state *mrb, mrb_value 
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     b2World_SetRestitutionThreshold(a0, a1);
     return mrb_nil_value();
     }
@@ -6916,8 +6916,8 @@ static mrb_value GenR_b2World_Step(mrb_state *mrb, mrb_value self)
     {
     b2WorldId a0;
     GenRead_b2WorldId(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), &a0);
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     b2World_Step(a0, a1, a2);
     return mrb_nil_value();
     }
@@ -6935,11 +6935,11 @@ static mrb_value GenR_b2Yield(mrb_state *mrb, mrb_value self)
     }
 }
 
-void SDLStaticGen_OpenRuby_b2(mrb_state *mrb);
-void SDLStaticGen_OpenRuby_b2(mrb_state *mrb)
+void GrappleGen_OpenRuby_b2(mrb_state *mrb);
+void GrappleGen_OpenRuby_b2(mrb_state *mrb)
 {
     struct RClass *mod;
-    SDLStaticGen_RubyEnsureHandleClass(mrb);
+    GrappleGen_RubyEnsureHandleClass(mrb);
     mod = mrb_define_module(mrb, "B2");
     mrb_define_module_function(mrb, mod, "Atan2", GenR_b2Atan2, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "Body_ApplyAngularImpulse", GenR_b2Body_ApplyAngularImpulse, MRB_ARGS_ANY());

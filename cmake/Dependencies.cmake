@@ -11,7 +11,7 @@ set(SPDLOG_TAG v1.17.0)
 # Preferred application libraries (optional — defaults follow top-level vs embed)
 # ---------------------------------------------------------------------------
 
-if(SDL3_STATIC_EXTENSIONS_WITH_CLI11)
+if(GRAPPLE_BEAM_WITH_CLI11)
   # CLI11 — header-only CLI parser (static-link friendly).
   set(CLI11_PRECOMPILED OFF CACHE BOOL "" FORCE)
   set(CLI11_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -26,7 +26,7 @@ if(SDL3_STATIC_EXTENSIONS_WITH_CLI11)
   cppboot_mark_system_includes(CLI11)
 endif()
 
-if(SDL3_STATIC_EXTENSIONS_WITH_JSON)
+if(GRAPPLE_BEAM_WITH_JSON)
   # nlohmann/json — header-only JSON (static-link friendly).
   set(JSON_BuildTests OFF CACHE BOOL "" FORCE)
   set(JSON_Install OFF CACHE BOOL "" FORCE)
@@ -40,7 +40,7 @@ if(SDL3_STATIC_EXTENSIONS_WITH_JSON)
   cppboot_mark_system_includes(nlohmann_json)
 endif()
 
-if(SDL3_STATIC_EXTENSIONS_WITH_SPDLOG)
+if(GRAPPLE_BEAM_WITH_SPDLOG)
   # spdlog — fast logging; built as a static library by default.
   set(SPDLOG_BUILD_EXAMPLE OFF CACHE BOOL "" FORCE)
   set(SPDLOG_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -61,7 +61,7 @@ endif()
 # Test / benchmark frameworks (only when those options are enabled)
 # ---------------------------------------------------------------------------
 
-if(SDL3_STATIC_EXTENSIONS_BUILD_TESTS)
+if(GRAPPLE_BEAM_BUILD_TESTS)
   # GoogleTest / GoogleMock
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
   set(BUILD_GMOCK ON CACHE BOOL "" FORCE)
@@ -80,7 +80,7 @@ if(SDL3_STATIC_EXTENSIONS_BUILD_TESTS)
   endforeach()
 endif()
 
-if(SDL3_STATIC_EXTENSIONS_BUILD_BENCHMARKS)
+if(GRAPPLE_BEAM_BUILD_BENCHMARKS)
   # Google Benchmark
   set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
   set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
@@ -106,7 +106,7 @@ include(GoogleTest)
 # Pinned release tarball, SHA-256 verified, built static. Never vendored,
 # never a submodule; extensions never embed a second SDL3.
 # ---------------------------------------------------------------------------
-if(SDLSTATIC_BUILD_IMAGE OR SDLSTATIC_BUILD_TTF OR SDLSTATIC_BUILD_MIXER OR SDLSTATIC_BUILD_NET OR SDLSTATIC_BUILD_GFX OR SDLSTATIC_BUILD_EXTRAS OR SDLSTATIC_BUILD_VFS OR SDLSTATIC_BUILD_PHYSICS OR SDLSTATIC_BUILD_GUI OR SDLSTATIC_BUILD_LUA OR SDLSTATIC_BUILD_RUBY)
+if(GRAPPLE_BUILD_IMAGE OR GRAPPLE_BUILD_TTF OR GRAPPLE_BUILD_MIXER OR GRAPPLE_BUILD_NET OR GRAPPLE_BUILD_GFX OR GRAPPLE_BUILD_EXTRAS OR GRAPPLE_BUILD_VFS OR GRAPPLE_BUILD_PHYSICS OR GRAPPLE_BUILD_GUI OR GRAPPLE_BUILD_LUA OR GRAPPLE_BUILD_RUBY)
   set(SDL_SHARED OFF CACHE BOOL "" FORCE)
   set(SDL_STATIC ON CACHE BOOL "" FORCE)
   set(SDL_TEST_LIBRARY OFF CACHE BOOL "" FORCE)
@@ -123,13 +123,13 @@ if(SDLSTATIC_BUILD_IMAGE OR SDLSTATIC_BUILD_TTF OR SDLSTATIC_BUILD_MIXER OR SDLS
 endif()
 
 # ---------------------------------------------------------------------------
-# FreeType — Phase-A backend for SDLStatic::TTF (see deps/FreeType.md).
+# FreeType — Phase-A backend for Grapple::TTF (see deps/FreeType.md).
 # Official release tarball, SHA-256 pinned, built static and minimal: every
 # optional dependency disabled (internal zlib; no bzip2/png/harfbuzz/brotli),
 # so it adds zero shared-library dependencies. License: FTL (attribution
 # required in shipped products — see deps/FreeType.md).
 # ---------------------------------------------------------------------------
-if(SDLSTATIC_BUILD_TTF)
+if(GRAPPLE_BUILD_TTF)
   set(FT_DISABLE_ZLIB ON CACHE BOOL "" FORCE)
   set(FT_DISABLE_BZIP2 ON CACHE BOOL "" FORCE)
   set(FT_DISABLE_PNG ON CACHE BOOL "" FORCE)
@@ -153,7 +153,7 @@ endif()
 # core `mog_lib`. Transports are platform-native (WinHTTP, NSURLSession,
 # libcurl via dlopen on Linux) — nothing shared is linked, so the link
 # audit holds.
-if(SDLSTATIC_BUILD_HTTP)
+if(GRAPPLE_BUILD_HTTP)
   # mbedtls arrives under mog and installs itself. This switch suppresses its
   # CMake package config, so an SDK prefix does not offer a consumer a second
   # find_package() that resolves to something already inside our archive.

@@ -1,6 +1,6 @@
 /**
  * @file net_test.cpp
- * @brief Tests for SDLStatic::Net (vendored SDL_net, NET_* API).
+ * @brief Tests for Grapple::Net (vendored SDL_net, NET_* API).
  *
  * Entirely self-contained: every data-path test runs over 127.0.0.1, so no
  * external network or DNS is required (CI runners always have loopback).
@@ -132,7 +132,7 @@ TEST_F(NetFoundation, TcpLoopbackEchoBothDirections)
     ASSERT_NE(accepted, nullptr) << "no connection accepted within 1s";
 
     // client -> server
-    const char ping[] = "ping over SDLStatic::Net";
+    const char ping[] = "ping over Grapple::Net";
     ASSERT_TRUE(NET_WriteToStreamSocket(client, ping, sizeof(ping))) << SDL_GetError();
     ASSERT_EQ(NET_WaitUntilStreamSocketDrained(client, 5000), 0);
 

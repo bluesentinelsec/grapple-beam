@@ -12,7 +12,7 @@ release tarball). We ran that once (scripts/mruby_build_config.rb pins the
 gems) and committed the generated output — all portable C (RITE bytecode is
 byte-oriented), so plain CMake builds it on every platform with no Ruby.
 
-Original glue (`<SDLStatic/ruby.h>`): Kernel#require/#require_relative/#load
+Original glue (`<grapple/ruby.h>`): Kernel#require/#require_relative/#load
 (mruby has none) with $LOAD_PATH + $LOADED_FEATURES dedup, circular-require
 guard, .rb (runtime compile) + .mrb (bytecode) resolution, VFS-first file
 access; Kernel#puts/print/p without the IO gem. No modifications to
@@ -22,7 +22,7 @@ load path resolves to bare names.
 No regex engine: mruby has none, and none of its core gems provides one, so
 `Regexp` does not exist in a stock build. Rather than adopt a gem — which
 would force a re-harvest through rake — the class is supplied by
-`bindings/src/sdlstatic_regexp_ruby.c` over `SDLStatic::Regex`
+`bindings/src/grapple_regexp_ruby.c` over `Grapple::Regex`
 (Oniguruma, see `oniguruma.md`). mruby's compiler already emits
 `Regexp.compile` for `/re/` literals and global reads for `$1`/`$~`, so
 defining the class is enough; nothing vendored here is patched.

@@ -25,7 +25,7 @@ types). The full C API additionally stays reachable from C/C++.
 | libyaml | 48 | 0 | 0 | 48 | 2 | 46 |
 | mog HTTP/S | 69 | 54 | 0 | 12 | 67 | 2 |
 | cJSON | 78 | 57 | 0 | 20 | 70 | 8 |
-| SDLStatic modules | 645 | 75 | 116 | 450 | 610 | 35 |
+| Grapple modules | 645 | 75 | 116 | 450 | 610 | 35 |
 | **Total** | 3537 | 1093 | 340 | 2057 | 2908 | 629 |
 
 ## Script-surface skip reasons
@@ -700,43 +700,43 @@ types). The full C API additionally stays reachable from C/C++.
 
 </details>
 
-<details><summary>SDLStatic modules (35)</summary>
+<details><summary>Grapple modules (35)</summary>
 
-- `SDLStatic_ActorEach` — param visit: <funcptr>*
-- `SDLStatic_ActorLight` — returns struct pointer
-- `SDLStatic_ActorState` — return type void*
-- `SDLStatic_BidiItemize` — returns struct pointer
-- `SDLStatic_BodyDefCreate` — returns struct pointer
-- `SDLStatic_CameraCreate` — returns struct pointer
-- `SDLStatic_CompressData` — return type unsigned char*
-- `SDLStatic_ConnectSignal` — param callback: SDLStatic_SignalCallback
-- `SDLStatic_DecodeDataBase64` — return type unsigned char*
-- `SDLStatic_DecompressData` — return type unsigned char*
-- `SDLStatic_DecryptData` — return type unsigned char*
-- `SDLStatic_EmitSignal` — param args: void*
-- `SDLStatic_EncryptData` — return type unsigned char*
-- `SDLStatic_EngineGraphics` — returns struct pointer
-- `SDLStatic_EngineSetHooks` — param user: void*
-- `SDLStatic_FingerHeldInRect` — returns struct pointer
-- `SDLStatic_FingerInRect` — returns struct pointer
-- `SDLStatic_GPUReadTransferBuffer` — return type void*
-- `SDLStatic_GetFinger` — returns struct pointer
-- `SDLStatic_GraphicsArgsConfigPath` — param argv: char**
-- `SDLStatic_GraphicsLoadArgs` — param argv: char**
-- `SDLStatic_GraphicsResolve` — param argv: char**
-- `SDLStatic_GraphicsSetArchiveReader` — param reader: SDLStatic_GraphicsReadFile
-- `SDLStatic_GuiGridBegin` — param weights: const float*
-- `SDLStatic_LightDefCreate` — returns struct pointer
-- `SDLStatic_LoadVFSFile` — return type unsigned char*
-- `SDLStatic_PhysicsSetCollisionCallback` — param callback: SDLStatic_CollisionCallback
-- `SDLStatic_RunGame` — param user: void*
-- `SDLStatic_SaveRead` — return type void*
-- `SDLStatic_SceneState` — return type void*
-- `SDLStatic_ScriptBind` — param language_state: void*
-- `SDLStatic_ScriptSetSceneDispatch` — param dispatch: SDLStatic_ScriptSceneDispatch
-- `SDLStatic_SpriteDefault` — return type SDLStatic_Sprite
-- `SDLStatic_TextFormat` — variadic
-- `SDLStatic_TextSystemLanguages` — param out: char**
+- `Grapple_ActorEach` — param visit: <funcptr>*
+- `Grapple_ActorLight` — returns struct pointer
+- `Grapple_ActorState` — return type void*
+- `Grapple_BidiItemize` — returns struct pointer
+- `Grapple_BodyDefCreate` — returns struct pointer
+- `Grapple_CameraCreate` — returns struct pointer
+- `Grapple_CompressData` — return type unsigned char*
+- `Grapple_ConnectSignal` — param callback: Grapple_SignalCallback
+- `Grapple_DecodeDataBase64` — return type unsigned char*
+- `Grapple_DecompressData` — return type unsigned char*
+- `Grapple_DecryptData` — return type unsigned char*
+- `Grapple_EmitSignal` — param args: void*
+- `Grapple_EncryptData` — return type unsigned char*
+- `Grapple_EngineGraphics` — returns struct pointer
+- `Grapple_EngineSetHooks` — param user: void*
+- `Grapple_FingerHeldInRect` — returns struct pointer
+- `Grapple_FingerInRect` — returns struct pointer
+- `Grapple_GPUReadTransferBuffer` — return type void*
+- `Grapple_GetFinger` — returns struct pointer
+- `Grapple_GraphicsArgsConfigPath` — param argv: char**
+- `Grapple_GraphicsLoadArgs` — param argv: char**
+- `Grapple_GraphicsResolve` — param argv: char**
+- `Grapple_GraphicsSetArchiveReader` — param reader: Grapple_GraphicsReadFile
+- `Grapple_GuiGridBegin` — param weights: const float*
+- `Grapple_LightDefCreate` — returns struct pointer
+- `Grapple_LoadVFSFile` — return type unsigned char*
+- `Grapple_PhysicsSetCollisionCallback` — param callback: Grapple_CollisionCallback
+- `Grapple_RunGame` — param user: void*
+- `Grapple_SaveRead` — return type void*
+- `Grapple_SceneState` — return type void*
+- `Grapple_ScriptBind` — param language_state: void*
+- `Grapple_ScriptSetSceneDispatch` — param dispatch: Grapple_ScriptSceneDispatch
+- `Grapple_SpriteDefault` — return type Grapple_Sprite
+- `Grapple_TextFormat` — variadic
+- `Grapple_TextSystemLanguages` — param out: char**
 
 </details>
 

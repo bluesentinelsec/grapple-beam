@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# Build the Simulator/device test apps against a packaged SDL3-static-extensions.xcframework.
+# Build the Simulator/device test apps against a packaged grapple-beam.xcframework.
 set -euo pipefail
 
 repository_root="$(cd "$(dirname "$0")/.." && pwd)"
 xcframework="${1:-}"
 configuration="${2:-Release}"
 output_root="${3:-${repository_root}/build/ios/consumer}"
-deployment_target="${SDL3_STATIC_EXTENSIONS_IOS_DEPLOYMENT_TARGET:-13.0}"
+deployment_target="${GRAPPLE_BEAM_IOS_DEPLOYMENT_TARGET:-13.0}"
 version="$(tr -d '[:space:]' <"${repository_root}/VERSION" | sed 's/^v//;s/^V//;s/#.*//')"
 
 if [[ -z "${xcframework}" ]]; then
-    echo "usage: $0 <SDL3-static-extensions.xcframework> [Debug|Release] [output-directory]" >&2
+    echo "usage: $0 <grapple-beam.xcframework> [Debug|Release] [output-directory]" >&2
     exit 2
 fi
 if [[ "${xcframework}" != /* ]]; then
@@ -46,11 +46,11 @@ configure_and_build() {
         -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO \
         -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED=NO \
         -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY= \
-        -DSDL3_STATIC_EXTENSIONS_XCFRAMEWORK="${xcframework}" \
-        -DSDL3_STATIC_EXTENSIONS_EXPECTED_VERSION="${version}"
+        -DGRAPPLE_BEAM_XCFRAMEWORK="${xcframework}" \
+        -DGRAPPLE_BEAM_EXPECTED_VERSION="${version}"
 
     cmake --build "${build_dir}" --config "${configuration}" \
-        --target SDL3_static_extensions_ios_test --parallel
+        --target grapple_ios_test --parallel
 }
 
 cmake -E remove_directory "${output_root}"

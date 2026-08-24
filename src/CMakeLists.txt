@@ -6,18 +6,18 @@ add_subdirectory(version)
 
 # Painfully obvious program entrypoint: src/main.cpp
 # Skipped when this project is consumed via add_subdirectory / FetchContent
-# unless SDL3_STATIC_EXTENSIONS_BUILD_APP=ON.
-if(SDL3_STATIC_EXTENSIONS_BUILD_APP)
+# unless GRAPPLE_BEAM_BUILD_APP=ON.
+if(GRAPPLE_BEAM_BUILD_APP)
   add_executable(${PROJECT_NAME}_app main.cpp)
-  set_target_properties(${PROJECT_NAME}_app PROPERTIES OUTPUT_NAME SDL3-static-extensions)
+  set_target_properties(${PROJECT_NAME}_app PROPERTIES OUTPUT_NAME grapple-beam)
   target_link_libraries(${PROJECT_NAME}_app PRIVATE ${PROJECT_NAME}_lib)
-  if(SDL3_STATIC_EXTENSIONS_WITH_CLI11)
+  if(GRAPPLE_BEAM_WITH_CLI11)
     target_link_libraries(${PROJECT_NAME}_app PRIVATE CLI11::CLI11)
   endif()
-  if(SDL3_STATIC_EXTENSIONS_WITH_JSON)
+  if(GRAPPLE_BEAM_WITH_JSON)
     target_link_libraries(${PROJECT_NAME}_app PRIVATE nlohmann_json::nlohmann_json)
   endif()
-  if(SDL3_STATIC_EXTENSIONS_WITH_SPDLOG)
+  if(GRAPPLE_BEAM_WITH_SPDLOG)
     target_link_libraries(${PROJECT_NAME}_app PRIVATE spdlog::spdlog)
   endif()
   cppboot_set_project_warnings(${PROJECT_NAME}_app)

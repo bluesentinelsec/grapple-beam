@@ -42,7 +42,7 @@ jobs:
         run: >
           emcmake cmake -S . -B build/web-debug -G Ninja
           -DCMAKE_BUILD_TYPE=Debug
-          -DSDL3_STATIC_EXTENSIONS_BUILD_TESTS=ON
+          -DGRAPPLE_BEAM_BUILD_TESTS=ON
 
       - name: Build Debug
         run: cmake --build build/web-debug --parallel
@@ -52,13 +52,13 @@ jobs:
           emrun --browser=google-chrome
           --browser_args="--headless=new --no-sandbox --disable-gpu"
           --kill_exit --timeout 120
-          build/web-debug/bin/SDL3_static_extensions_web_test.html
+          build/web-debug/bin/grapple_web_test.html
 
       - name: Configure Release
         run: >
           emcmake cmake -S . -B build/web-release -G Ninja
           -DCMAKE_BUILD_TYPE=Release
-          -DSDL3_STATIC_EXTENSIONS_BUILD_TESTS=ON
+          -DGRAPPLE_BEAM_BUILD_TESTS=ON
 
       - name: Build Release
         run: cmake --build build/web-release --parallel
@@ -68,16 +68,16 @@ jobs:
           emrun --browser=google-chrome
           --browser_args="--headless=new --no-sandbox --disable-gpu"
           --kill_exit --timeout 120
-          build/web-release/bin/SDL3_static_extensions_web_test.html
+          build/web-release/bin/grapple_web_test.html
 
       - name: Verify canvas demo build
         run: |
           set -euo pipefail
-          test -f build/web-release/bin/SDL3-static-extensions.html
-          test -f build/web-release/bin/SDL3-static-extensions.js
-          test -f build/web-release/bin/SDL3-static-extensions.wasm
+          test -f build/web-release/bin/grapple-beam.html
+          test -f build/web-release/bin/grapple-beam.js
+          test -f build/web-release/bin/grapple-beam.wasm
           # emcc -O3 minifies the shell (strips attribute quotes); match the tag.
-          grep -qi "<canvas" build/web-release/bin/SDL3-static-extensions.html
+          grep -qi "<canvas" build/web-release/bin/grapple-beam.html
 
       - name: Verify the wasm SDK carries the engine
         run: |
@@ -85,7 +85,7 @@ jobs:
           prefix="${PWD}/build/web-verify"
           cmake --install build/web-release --prefix "${prefix}"
 
-          archive="${prefix}/lib/libSDL3_static_extensions_sdk.a"
+          archive="${prefix}/lib/libgrapple_sdk.a"
           test -f "${archive}"
           size="$(stat -c%s "${archive}")"
           if [ "${size}" -lt 5000000 ]; then
@@ -96,14 +96,14 @@ jobs:
           # The shipped archive was 686 bytes for several releases while every
           # check in this workflow passed, because none of them looked inside.
           emar t "${archive}" > web-objects.txt
-          for object in sdlstatic_engine.c.o sdlstatic_engine_actor.c.o SDL_video.c.o; do
+          for object in grapple_engine.c.o grapple_engine_actor.c.o SDL_video.c.o; do
             if ! grep -qx "${object}" web-objects.txt; then
               echo "Missing ${object} — the wasm SDK is not carrying the engine" >&2
               exit 1
             fi
           done
 
-          for header in SDLStatic/engine.h SDLStatic/bindings.h SDL3/SDL.h; do
+          for header in grapple/engine.h grapple/bindings.h SDL3/SDL.h; do
             test -f "${prefix}/include/${header}"
           done
 
@@ -111,14 +111,14 @@ jobs:
         id: package
         run: |
           set -euo pipefail
-          stem="SDL3-static-extensions-web-wasm32-release-$(tr -d "[:space:]" < VERSION | sed "s/^v//;s/^V//;s/#.*//")"
+          stem="grapple-beam-web-wasm32-release-$(tr -d "[:space:]" < VERSION | sed "s/^v//;s/^V//;s/#.*//")"
           prefix="${PWD}/dist/${stem}"
           cmake --install build/web-release --prefix "${prefix}"
           emcc --version | sed -n '1p' > "${prefix}/EMSCRIPTEN_VERSION"
           cp LICENSE "${prefix}/LICENSE"
           mkdir -p "${prefix}/demo"
-          cp build/web-release/bin/SDL3-static-extensions.html build/web-release/bin/SDL3-static-extensions.js \
-             build/web-release/bin/SDL3-static-extensions.wasm "${prefix}/demo/"
+          cp build/web-release/bin/grapple-beam.html build/web-release/bin/grapple-beam.js \
+             build/web-release/bin/grapple-beam.wasm "${prefix}/demo/"
           (cd dist && zip -r "${stem}.zip" "${stem}" >/dev/null)
           echo "artifact_name=${stem}" >> "${GITHUB_OUTPUT}"
           echo "artifact_path=dist/${stem}.zip" >> "${GITHUB_OUTPUT}"

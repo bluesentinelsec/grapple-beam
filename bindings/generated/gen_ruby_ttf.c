@@ -11,29 +11,29 @@ static void GenRead_SDL_Color(mrb_state *mrb, mrb_value h, SDL_Color *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->r = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "r");
-    out->g = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "g");
-    out->b = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "b");
-    out->a = (Uint8)SDLStaticGen_RubyFieldInt(mrb, h, "a");
+    out->r = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "r");
+    out->g = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "g");
+    out->b = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "b");
+    out->a = (Uint8)GrappleGen_RubyFieldInt(mrb, h, "a");
 }
 
 static void GenRead_SDL_Rect(mrb_state *mrb, mrb_value h, SDL_Rect *out)
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->x = (int)SDLStaticGen_RubyFieldInt(mrb, h, "x");
-    out->y = (int)SDLStaticGen_RubyFieldInt(mrb, h, "y");
-    out->w = (int)SDLStaticGen_RubyFieldInt(mrb, h, "w");
-    out->h = (int)SDLStaticGen_RubyFieldInt(mrb, h, "h");
+    out->x = (int)GrappleGen_RubyFieldInt(mrb, h, "x");
+    out->y = (int)GrappleGen_RubyFieldInt(mrb, h, "y");
+    out->w = (int)GrappleGen_RubyFieldInt(mrb, h, "w");
+    out->h = (int)GrappleGen_RubyFieldInt(mrb, h, "h");
 }
 
 static mrb_value GenPush_SDL_Rect(mrb_state *mrb, const SDL_Rect *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "x", mrb_int_value(mrb, (mrb_int)in->x));
-    SDLStaticGen_RubyHashSet(mrb, h, "y", mrb_int_value(mrb, (mrb_int)in->y));
-    SDLStaticGen_RubyHashSet(mrb, h, "w", mrb_int_value(mrb, (mrb_int)in->w));
-    SDLStaticGen_RubyHashSet(mrb, h, "h", mrb_int_value(mrb, (mrb_int)in->h));
+    GrappleGen_RubyHashSet(mrb, h, "x", mrb_int_value(mrb, (mrb_int)in->x));
+    GrappleGen_RubyHashSet(mrb, h, "y", mrb_int_value(mrb, (mrb_int)in->y));
+    GrappleGen_RubyHashSet(mrb, h, "w", mrb_int_value(mrb, (mrb_int)in->w));
+    GrappleGen_RubyHashSet(mrb, h, "h", mrb_int_value(mrb, (mrb_int)in->h));
     return h;
 }
 
@@ -41,23 +41,23 @@ static void GenRead_TTF_SubString(mrb_state *mrb, mrb_value h, TTF_SubString *ou
 {
     memset(out, 0, sizeof(*out));
     if (!mrb_hash_p(h)) { return; }
-    out->flags = (TTF_SubStringFlags)SDLStaticGen_RubyFieldInt(mrb, h, "flags");
-    out->offset = (int)SDLStaticGen_RubyFieldInt(mrb, h, "offset");
-    out->length = (int)SDLStaticGen_RubyFieldInt(mrb, h, "length");
-    out->line_index = (int)SDLStaticGen_RubyFieldInt(mrb, h, "line_index");
-    out->cluster_index = (int)SDLStaticGen_RubyFieldInt(mrb, h, "cluster_index");
-    GenRead_SDL_Rect(mrb, SDLStaticGen_RubyFieldGet(mrb, h, "rect"), &out->rect);
+    out->flags = (TTF_SubStringFlags)GrappleGen_RubyFieldInt(mrb, h, "flags");
+    out->offset = (int)GrappleGen_RubyFieldInt(mrb, h, "offset");
+    out->length = (int)GrappleGen_RubyFieldInt(mrb, h, "length");
+    out->line_index = (int)GrappleGen_RubyFieldInt(mrb, h, "line_index");
+    out->cluster_index = (int)GrappleGen_RubyFieldInt(mrb, h, "cluster_index");
+    GenRead_SDL_Rect(mrb, GrappleGen_RubyFieldGet(mrb, h, "rect"), &out->rect);
 }
 
 static mrb_value GenPush_TTF_SubString(mrb_state *mrb, const TTF_SubString *in)
 {
     mrb_value h = mrb_hash_new(mrb);
-    SDLStaticGen_RubyHashSet(mrb, h, "flags", mrb_int_value(mrb, (mrb_int)in->flags));
-    SDLStaticGen_RubyHashSet(mrb, h, "offset", mrb_int_value(mrb, (mrb_int)in->offset));
-    SDLStaticGen_RubyHashSet(mrb, h, "length", mrb_int_value(mrb, (mrb_int)in->length));
-    SDLStaticGen_RubyHashSet(mrb, h, "line_index", mrb_int_value(mrb, (mrb_int)in->line_index));
-    SDLStaticGen_RubyHashSet(mrb, h, "cluster_index", mrb_int_value(mrb, (mrb_int)in->cluster_index));
-    SDLStaticGen_RubyHashSet(mrb, h, "rect", GenPush_SDL_Rect(mrb, &in->rect));
+    GrappleGen_RubyHashSet(mrb, h, "flags", mrb_int_value(mrb, (mrb_int)in->flags));
+    GrappleGen_RubyHashSet(mrb, h, "offset", mrb_int_value(mrb, (mrb_int)in->offset));
+    GrappleGen_RubyHashSet(mrb, h, "length", mrb_int_value(mrb, (mrb_int)in->length));
+    GrappleGen_RubyHashSet(mrb, h, "line_index", mrb_int_value(mrb, (mrb_int)in->line_index));
+    GrappleGen_RubyHashSet(mrb, h, "cluster_index", mrb_int_value(mrb, (mrb_int)in->cluster_index));
+    GrappleGen_RubyHashSet(mrb, h, "rect", GenPush_SDL_Rect(mrb, &in->rect));
     return h;
 }
 
@@ -92,8 +92,8 @@ static mrb_value GenR_TTF_AddFallbackFont(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    TTF_Font *a1 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "TTF_Font");
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    TTF_Font *a1 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "TTF_Font");
     bool rv = TTF_AddFallbackFont(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -106,9 +106,9 @@ static mrb_value GenR_TTF_AppendTextString(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    size_t a2 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    size_t a2 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = TTF_AppendTextString(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -121,7 +121,7 @@ static mrb_value GenR_TTF_ClearFallbackFonts(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     TTF_ClearFallbackFonts(a0);
     return mrb_nil_value();
     }
@@ -134,7 +134,7 @@ static mrb_value GenR_TTF_CloseFont(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     TTF_CloseFont(a0);
     return mrb_nil_value();
     }
@@ -147,9 +147,9 @@ static mrb_value GenR_TTF_CopyFont(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     TTF_Font * rv = TTF_CopyFont(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "TTF_Font", GenDtor_TTF_CloseFont);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "TTF_Font", GenDtor_TTF_CloseFont);
     }
 }
 
@@ -160,9 +160,9 @@ static mrb_value GenR_TTF_CreateGPUTextEngine(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_GPUDevice *a0 = (SDL_GPUDevice *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
+    SDL_GPUDevice *a0 = (SDL_GPUDevice *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_GPUDevice");
     TTF_TextEngine * rv = TTF_CreateGPUTextEngine(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "TTF_TextEngine");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "TTF_TextEngine");
     }
 }
 
@@ -173,9 +173,9 @@ static mrb_value GenR_TTF_CreateGPUTextEngineWithProperties(mrb_state *mrb, mrb_
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     TTF_TextEngine * rv = TTF_CreateGPUTextEngineWithProperties(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "TTF_TextEngine");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "TTF_TextEngine");
     }
 }
 
@@ -186,9 +186,9 @@ static mrb_value GenR_TTF_CreateRendererTextEngine(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Renderer");
     TTF_TextEngine * rv = TTF_CreateRendererTextEngine(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "TTF_TextEngine", GenDtor_TTF_DestroyRendererTextEngine);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "TTF_TextEngine", GenDtor_TTF_DestroyRendererTextEngine);
     }
 }
 
@@ -199,9 +199,9 @@ static mrb_value GenR_TTF_CreateRendererTextEngineWithProperties(mrb_state *mrb,
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     TTF_TextEngine * rv = TTF_CreateRendererTextEngineWithProperties(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "TTF_TextEngine");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "TTF_TextEngine");
     }
 }
 
@@ -213,7 +213,7 @@ static mrb_value GenR_TTF_CreateSurfaceTextEngine(mrb_state *mrb, mrb_value self
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     TTF_TextEngine * rv = TTF_CreateSurfaceTextEngine();
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "TTF_TextEngine");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "TTF_TextEngine");
     }
 }
 
@@ -224,12 +224,12 @@ static mrb_value GenR_TTF_CreateText(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_TextEngine *a0 = (TTF_TextEngine *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_TextEngine");
-    TTF_Font *a1 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "TTF_Font");
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    size_t a3 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    TTF_TextEngine *a0 = (TTF_TextEngine *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_TextEngine");
+    TTF_Font *a1 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "TTF_Font");
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    size_t a3 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     TTF_Text * rv = TTF_CreateText(a0, a1, a2, a3);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "TTF_Text", GenDtor_TTF_DestroyText);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "TTF_Text", GenDtor_TTF_DestroyText);
     }
 }
 
@@ -240,9 +240,9 @@ static mrb_value GenR_TTF_DeleteTextString(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = TTF_DeleteTextString(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -255,7 +255,7 @@ static mrb_value GenR_TTF_DestroyGPUTextEngine(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_TextEngine *a0 = (TTF_TextEngine *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_TextEngine");
+    TTF_TextEngine *a0 = (TTF_TextEngine *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_TextEngine");
     TTF_DestroyGPUTextEngine(a0);
     return mrb_nil_value();
     }
@@ -268,7 +268,7 @@ static mrb_value GenR_TTF_DestroyRendererTextEngine(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_TextEngine *a0 = (TTF_TextEngine *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_TextEngine");
+    TTF_TextEngine *a0 = (TTF_TextEngine *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_TextEngine");
     TTF_DestroyRendererTextEngine(a0);
     return mrb_nil_value();
     }
@@ -281,7 +281,7 @@ static mrb_value GenR_TTF_DestroySurfaceTextEngine(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_TextEngine *a0 = (TTF_TextEngine *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_TextEngine");
+    TTF_TextEngine *a0 = (TTF_TextEngine *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_TextEngine");
     TTF_DestroySurfaceTextEngine(a0);
     return mrb_nil_value();
     }
@@ -294,7 +294,7 @@ static mrb_value GenR_TTF_DestroyText(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
     TTF_DestroyText(a0);
     return mrb_nil_value();
     }
@@ -307,9 +307,9 @@ static mrb_value GenR_TTF_DrawRendererText(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = TTF_DrawRendererText(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -322,10 +322,10 @@ static mrb_value GenR_TTF_DrawSurfaceText(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    SDL_Surface *a3 = (SDL_Surface *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "SDL_Surface");
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_Surface *a3 = (SDL_Surface *)GrappleGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "SDL_Surface");
     bool rv = TTF_DrawSurfaceText(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -338,8 +338,8 @@ static mrb_value GenR_TTF_FontHasGlyph(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = TTF_FontHasGlyph(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -352,7 +352,7 @@ static mrb_value GenR_TTF_FontIsFixedWidth(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_Font *a0 = (const TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const TTF_Font *a0 = (const TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     bool rv = TTF_FontIsFixedWidth(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -365,7 +365,7 @@ static mrb_value GenR_TTF_FontIsScalable(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_Font *a0 = (const TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const TTF_Font *a0 = (const TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     bool rv = TTF_FontIsScalable(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -378,7 +378,7 @@ static mrb_value GenR_TTF_GetFontAscent(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_Font *a0 = (const TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const TTF_Font *a0 = (const TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     int rv = TTF_GetFontAscent(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -391,9 +391,9 @@ static mrb_value GenR_TTF_GetFontDPI(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = TTF_GetFontDPI(a0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -410,7 +410,7 @@ static mrb_value GenR_TTF_GetFontDescent(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_Font *a0 = (const TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const TTF_Font *a0 = (const TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     int rv = TTF_GetFontDescent(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -423,7 +423,7 @@ static mrb_value GenR_TTF_GetFontDirection(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     TTF_Direction rv = TTF_GetFontDirection(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -436,7 +436,7 @@ static mrb_value GenR_TTF_GetFontFamilyName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_Font *a0 = (const TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const TTF_Font *a0 = (const TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     const char * rv = TTF_GetFontFamilyName(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -449,7 +449,7 @@ static mrb_value GenR_TTF_GetFontGeneration(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     Uint32 rv = TTF_GetFontGeneration(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -462,7 +462,7 @@ static mrb_value GenR_TTF_GetFontHeight(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_Font *a0 = (const TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const TTF_Font *a0 = (const TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     int rv = TTF_GetFontHeight(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -475,7 +475,7 @@ static mrb_value GenR_TTF_GetFontHinting(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_Font *a0 = (const TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const TTF_Font *a0 = (const TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     TTF_HintingFlags rv = TTF_GetFontHinting(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -488,7 +488,7 @@ static mrb_value GenR_TTF_GetFontKerning(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_Font *a0 = (const TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const TTF_Font *a0 = (const TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     bool rv = TTF_GetFontKerning(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -501,7 +501,7 @@ static mrb_value GenR_TTF_GetFontLineSkip(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_Font *a0 = (const TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const TTF_Font *a0 = (const TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     int rv = TTF_GetFontLineSkip(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -514,7 +514,7 @@ static mrb_value GenR_TTF_GetFontOutline(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_Font *a0 = (const TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const TTF_Font *a0 = (const TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     int rv = TTF_GetFontOutline(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -527,7 +527,7 @@ static mrb_value GenR_TTF_GetFontProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     SDL_PropertiesID rv = TTF_GetFontProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -540,7 +540,7 @@ static mrb_value GenR_TTF_GetFontSDF(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_Font *a0 = (const TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const TTF_Font *a0 = (const TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     bool rv = TTF_GetFontSDF(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -553,7 +553,7 @@ static mrb_value GenR_TTF_GetFontScript(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     Uint32 rv = TTF_GetFontScript(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -566,7 +566,7 @@ static mrb_value GenR_TTF_GetFontSize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     float rv = TTF_GetFontSize(a0);
     return mrb_float_value(mrb, (mrb_float)rv);
     }
@@ -579,7 +579,7 @@ static mrb_value GenR_TTF_GetFontStyle(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_Font *a0 = (const TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const TTF_Font *a0 = (const TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     TTF_FontStyleFlags rv = TTF_GetFontStyle(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -592,7 +592,7 @@ static mrb_value GenR_TTF_GetFontStyleName(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_Font *a0 = (const TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const TTF_Font *a0 = (const TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     const char * rv = TTF_GetFontStyleName(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
     }
@@ -605,7 +605,7 @@ static mrb_value GenR_TTF_GetFontWeight(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_Font *a0 = (const TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const TTF_Font *a0 = (const TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     int rv = TTF_GetFontWeight(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -618,7 +618,7 @@ static mrb_value GenR_TTF_GetFontWrapAlignment(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_Font *a0 = (const TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const TTF_Font *a0 = (const TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     TTF_HorizontalAlignment rv = TTF_GetFontWrapAlignment(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -631,9 +631,9 @@ static mrb_value GenR_TTF_GetFreeTypeVersion(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int io0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int io0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     TTF_GetFreeTypeVersion(&io0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_int_value(mrb, (mrb_int)io0);
@@ -650,9 +650,9 @@ static mrb_value GenR_TTF_GetGPUTextDrawData(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
     TTF_GPUAtlasDrawSequence * rv = TTF_GetGPUTextDrawData(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "TTF_GPUAtlasDrawSequence");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "TTF_GPUAtlasDrawSequence");
     }
 }
 
@@ -663,7 +663,7 @@ static mrb_value GenR_TTF_GetGPUTextEngineWinding(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_TextEngine *a0 = (const TTF_TextEngine *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_TextEngine");
+    const TTF_TextEngine *a0 = (const TTF_TextEngine *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_TextEngine");
     TTF_GPUTextEngineWinding rv = TTF_GetGPUTextEngineWinding(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -676,12 +676,12 @@ static mrb_value GenR_TTF_GetGlyphImage(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    TTF_ImageType io2 = (TTF_ImageType)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_ImageType io2 = (TTF_ImageType)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_Surface * rv = TTF_GetGlyphImage(a0, a1, &io2);
     mrb_value rets[2];
-    rets[0] = SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
+    rets[0] = GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
     rets[1] = mrb_int_value(mrb, (mrb_int)io2);
     return mrb_ary_new_from_values(mrb, 2, rets);
     }
@@ -694,12 +694,12 @@ static mrb_value GenR_TTF_GetGlyphImageForIndex(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    TTF_ImageType io2 = (TTF_ImageType)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_ImageType io2 = (TTF_ImageType)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_Surface * rv = TTF_GetGlyphImageForIndex(a0, a1, &io2);
     mrb_value rets[2];
-    rets[0] = SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
+    rets[0] = GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Surface");
     rets[1] = mrb_int_value(mrb, (mrb_int)io2);
     return mrb_ary_new_from_values(mrb, 2, rets);
     }
@@ -712,10 +712,10 @@ static mrb_value GenR_TTF_GetGlyphKerning(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint32 a2 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int io3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 a2 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int io3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = TTF_GetGlyphKerning(a0, a1, a2, &io3);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -731,13 +731,13 @@ static mrb_value GenR_TTF_GetGlyphMetrics(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int io3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int io4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    int io5 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
-    int io6 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int io3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int io4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    int io5 = (int)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    int io6 = (int)GrappleGen_RubyToInt(mrb, (argc > 6 ? argv[6] : mrb_nil_value()));
     bool rv = TTF_GetGlyphMetrics(a0, a1, &io2, &io3, &io4, &io5, &io6);
     mrb_value rets[6];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -757,7 +757,7 @@ static mrb_value GenR_TTF_GetGlyphScript(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    Uint32 a0 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Uint32 a0 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     Uint32 rv = TTF_GetGlyphScript(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -770,9 +770,9 @@ static mrb_value GenR_TTF_GetHarfBuzzVersion(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    int io0 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int io0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     TTF_GetHarfBuzzVersion(&io0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_int_value(mrb, (mrb_int)io0);
@@ -789,7 +789,7 @@ static mrb_value GenR_TTF_GetNextTextSubString(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
     TTF_SubString tmp1;
     const TTF_SubString *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -813,7 +813,7 @@ static mrb_value GenR_TTF_GetNumFontFaces(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const TTF_Font *a0 = (const TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const TTF_Font *a0 = (const TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
     int rv = TTF_GetNumFontFaces(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -826,7 +826,7 @@ static mrb_value GenR_TTF_GetPreviousTextSubString(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
     TTF_SubString tmp1;
     const TTF_SubString *a1 = NULL;
     if (argc > 1 && mrb_hash_p(argv[1])) {
@@ -850,11 +850,11 @@ static mrb_value GenR_TTF_GetStringSize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    size_t a2 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int io3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int io4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    size_t a2 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int io3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int io4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = TTF_GetStringSize(a0, a1, a2, &io3, &io4);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -871,12 +871,12 @@ static mrb_value GenR_TTF_GetStringSizeWrapped(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    size_t a2 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int io4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    int io5 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    size_t a2 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int io4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    int io5 = (int)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     bool rv = TTF_GetStringSizeWrapped(a0, a1, a2, a3, &io4, &io5);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -893,11 +893,11 @@ static mrb_value GenR_TTF_GetTextColor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    Uint8 io1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint8 io2 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint8 io3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint8 io4 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    Uint8 io1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint8 io2 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint8 io3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint8 io4 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = TTF_GetTextColor(a0, &io1, &io2, &io3, &io4);
     mrb_value rets[5];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -916,11 +916,11 @@ static mrb_value GenR_TTF_GetTextColorFloat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    float io1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float io2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float io3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float io4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    float io1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float io2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float io3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float io4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = TTF_GetTextColorFloat(a0, &io1, &io2, &io3, &io4);
     mrb_value rets[5];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -939,7 +939,7 @@ static mrb_value GenR_TTF_GetTextDirection(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
     TTF_Direction rv = TTF_GetTextDirection(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -952,9 +952,9 @@ static mrb_value GenR_TTF_GetTextEngine(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
     TTF_TextEngine * rv = TTF_GetTextEngine(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "TTF_TextEngine");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "TTF_TextEngine");
     }
 }
 
@@ -965,9 +965,9 @@ static mrb_value GenR_TTF_GetTextFont(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
     TTF_Font * rv = TTF_GetTextFont(a0);
-    return SDLStaticGen_RubyPushHandle(mrb, (void *)rv, "TTF_Font");
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "TTF_Font");
     }
 }
 
@@ -978,9 +978,9 @@ static mrb_value GenR_TTF_GetTextPosition(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = TTF_GetTextPosition(a0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -997,7 +997,7 @@ static mrb_value GenR_TTF_GetTextProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
     SDL_PropertiesID rv = TTF_GetTextProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1010,7 +1010,7 @@ static mrb_value GenR_TTF_GetTextScript(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
     Uint32 rv = TTF_GetTextScript(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1023,9 +1023,9 @@ static mrb_value GenR_TTF_GetTextSize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int io2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int io2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = TTF_GetTextSize(a0, &io1, &io2);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -1042,8 +1042,8 @@ static mrb_value GenR_TTF_GetTextSubString(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     TTF_SubString out2;
     memset(&out2, 0, sizeof(out2));
     bool rv = TTF_GetTextSubString(a0, a1, &out2);
@@ -1061,8 +1061,8 @@ static mrb_value GenR_TTF_GetTextSubStringForLine(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     TTF_SubString out2;
     memset(&out2, 0, sizeof(out2));
     bool rv = TTF_GetTextSubStringForLine(a0, a1, &out2);
@@ -1080,9 +1080,9 @@ static mrb_value GenR_TTF_GetTextSubStringForPoint(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     TTF_SubString out3;
     memset(&out3, 0, sizeof(out3));
     bool rv = TTF_GetTextSubStringForPoint(a0, a1, a2, &out3);
@@ -1100,8 +1100,8 @@ static mrb_value GenR_TTF_GetTextWrapWidth(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    int io1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = TTF_GetTextWrapWidth(a0, &io1);
     mrb_value rets[2];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -1129,10 +1129,10 @@ static mrb_value GenR_TTF_InsertTextString(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    const char *a2 = SDLStaticGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    size_t a3 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    size_t a3 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = TTF_InsertTextString(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1145,12 +1145,12 @@ static mrb_value GenR_TTF_MeasureString(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    size_t a2 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    int io4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
-    size_t io5 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    size_t a2 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int io4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    size_t io5 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     bool rv = TTF_MeasureString(a0, a1, a2, a3, &io4, &io5);
     mrb_value rets[3];
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
@@ -1167,10 +1167,10 @@ static mrb_value GenR_TTF_OpenFont(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     TTF_Font * rv = TTF_OpenFont(a0, a1);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "TTF_Font", GenDtor_TTF_CloseFont);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "TTF_Font", GenDtor_TTF_CloseFont);
     }
 }
 
@@ -1181,11 +1181,11 @@ static mrb_value GenR_TTF_OpenFontIO(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_IOStream *a0 = (SDL_IOStream *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     TTF_Font * rv = TTF_OpenFontIO(a0, a1, a2);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "TTF_Font", GenDtor_TTF_CloseFont);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "TTF_Font", GenDtor_TTF_CloseFont);
     }
 }
 
@@ -1196,9 +1196,9 @@ static mrb_value GenR_TTF_OpenFontWithProperties(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    SDL_PropertiesID a0 = (SDL_PropertiesID)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    SDL_PropertiesID a0 = (SDL_PropertiesID)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     TTF_Font * rv = TTF_OpenFontWithProperties(a0);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "TTF_Font", GenDtor_TTF_CloseFont);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "TTF_Font", GenDtor_TTF_CloseFont);
     }
 }
 
@@ -1221,8 +1221,8 @@ static mrb_value GenR_TTF_RemoveFallbackFont(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    TTF_Font *a1 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "TTF_Font");
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    TTF_Font *a1 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "TTF_Font");
     TTF_RemoveFallbackFont(a0, a1);
     return mrb_nil_value();
     }
@@ -1235,12 +1235,12 @@ static mrb_value GenR_TTF_RenderGlyph_Blended(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Color a2;
     GenRead_SDL_Color(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     SDL_Surface * rv = TTF_RenderGlyph_Blended(a0, a1, a2);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -1251,14 +1251,14 @@ static mrb_value GenR_TTF_RenderGlyph_LCD(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Color a2;
     GenRead_SDL_Color(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     SDL_Color a3;
     GenRead_SDL_Color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     SDL_Surface * rv = TTF_RenderGlyph_LCD(a0, a1, a2, a3);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -1269,14 +1269,14 @@ static mrb_value GenR_TTF_RenderGlyph_Shaded(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Color a2;
     GenRead_SDL_Color(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     SDL_Color a3;
     GenRead_SDL_Color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     SDL_Surface * rv = TTF_RenderGlyph_Shaded(a0, a1, a2, a3);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -1287,12 +1287,12 @@ static mrb_value GenR_TTF_RenderGlyph_Solid(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_Color a2;
     GenRead_SDL_Color(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), &a2);
     SDL_Surface * rv = TTF_RenderGlyph_Solid(a0, a1, a2);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -1303,13 +1303,13 @@ static mrb_value GenR_TTF_RenderText_Blended(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    size_t a2 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    size_t a2 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_Color a3;
     GenRead_SDL_Color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     SDL_Surface * rv = TTF_RenderText_Blended(a0, a1, a2, a3);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -1320,14 +1320,14 @@ static mrb_value GenR_TTF_RenderText_Blended_Wrapped(mrb_state *mrb, mrb_value s
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    size_t a2 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    size_t a2 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_Color a3;
     GenRead_SDL_Color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     SDL_Surface * rv = TTF_RenderText_Blended_Wrapped(a0, a1, a2, a3, a4);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -1338,15 +1338,15 @@ static mrb_value GenR_TTF_RenderText_LCD(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    size_t a2 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    size_t a2 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_Color a3;
     GenRead_SDL_Color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     SDL_Color a4;
     GenRead_SDL_Color(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
     SDL_Surface * rv = TTF_RenderText_LCD(a0, a1, a2, a3, a4);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -1357,16 +1357,16 @@ static mrb_value GenR_TTF_RenderText_LCD_Wrapped(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    size_t a2 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    size_t a2 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_Color a3;
     GenRead_SDL_Color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     SDL_Color a4;
     GenRead_SDL_Color(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
-    int a5 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    int a5 = (int)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     SDL_Surface * rv = TTF_RenderText_LCD_Wrapped(a0, a1, a2, a3, a4, a5);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -1377,15 +1377,15 @@ static mrb_value GenR_TTF_RenderText_Shaded(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    size_t a2 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    size_t a2 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_Color a3;
     GenRead_SDL_Color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     SDL_Color a4;
     GenRead_SDL_Color(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
     SDL_Surface * rv = TTF_RenderText_Shaded(a0, a1, a2, a3, a4);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -1396,16 +1396,16 @@ static mrb_value GenR_TTF_RenderText_Shaded_Wrapped(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    size_t a2 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    size_t a2 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_Color a3;
     GenRead_SDL_Color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     SDL_Color a4;
     GenRead_SDL_Color(mrb, (argc > 4 ? argv[4] : mrb_nil_value()), &a4);
-    int a5 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
+    int a5 = (int)GrappleGen_RubyToInt(mrb, (argc > 5 ? argv[5] : mrb_nil_value()));
     SDL_Surface * rv = TTF_RenderText_Shaded_Wrapped(a0, a1, a2, a3, a4, a5);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -1416,13 +1416,13 @@ static mrb_value GenR_TTF_RenderText_Solid(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    size_t a2 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    size_t a2 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_Color a3;
     GenRead_SDL_Color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
     SDL_Surface * rv = TTF_RenderText_Solid(a0, a1, a2, a3);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -1433,14 +1433,14 @@ static mrb_value GenR_TTF_RenderText_Solid_Wrapped(mrb_state *mrb, mrb_value sel
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    size_t a2 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    size_t a2 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     SDL_Color a3;
     GenRead_SDL_Color(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), &a3);
-    int a4 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     SDL_Surface * rv = TTF_RenderText_Solid_Wrapped(a0, a1, a2, a3, a4);
-    return SDLStaticGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     }
 }
 
@@ -1451,8 +1451,8 @@ static mrb_value GenR_TTF_SetFontDirection(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    TTF_Direction a1 = (TTF_Direction)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    TTF_Direction a1 = (TTF_Direction)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = TTF_SetFontDirection(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1465,8 +1465,8 @@ static mrb_value GenR_TTF_SetFontHinting(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    TTF_HintingFlags a1 = (TTF_HintingFlags)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    TTF_HintingFlags a1 = (TTF_HintingFlags)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     TTF_SetFontHinting(a0, a1);
     return mrb_nil_value();
     }
@@ -1479,8 +1479,8 @@ static mrb_value GenR_TTF_SetFontKerning(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     TTF_SetFontKerning(a0, a1);
     return mrb_nil_value();
     }
@@ -1493,8 +1493,8 @@ static mrb_value GenR_TTF_SetFontLanguage(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = TTF_SetFontLanguage(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1507,8 +1507,8 @@ static mrb_value GenR_TTF_SetFontLineSkip(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     TTF_SetFontLineSkip(a0, a1);
     return mrb_nil_value();
     }
@@ -1521,8 +1521,8 @@ static mrb_value GenR_TTF_SetFontOutline(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = TTF_SetFontOutline(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1535,8 +1535,8 @@ static mrb_value GenR_TTF_SetFontSDF(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = TTF_SetFontSDF(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1549,8 +1549,8 @@ static mrb_value GenR_TTF_SetFontScript(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = TTF_SetFontScript(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1563,8 +1563,8 @@ static mrb_value GenR_TTF_SetFontSize(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = TTF_SetFontSize(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1577,10 +1577,10 @@ static mrb_value GenR_TTF_SetFontSizeDPI(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    int a3 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     bool rv = TTF_SetFontSizeDPI(a0, a1, a2, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1593,8 +1593,8 @@ static mrb_value GenR_TTF_SetFontStyle(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    TTF_FontStyleFlags a1 = (TTF_FontStyleFlags)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    TTF_FontStyleFlags a1 = (TTF_FontStyleFlags)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     TTF_SetFontStyle(a0, a1);
     return mrb_nil_value();
     }
@@ -1607,8 +1607,8 @@ static mrb_value GenR_TTF_SetFontWrapAlignment(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Font *a0 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
-    TTF_HorizontalAlignment a1 = (TTF_HorizontalAlignment)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Font *a0 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Font");
+    TTF_HorizontalAlignment a1 = (TTF_HorizontalAlignment)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     TTF_SetFontWrapAlignment(a0, a1);
     return mrb_nil_value();
     }
@@ -1621,8 +1621,8 @@ static mrb_value GenR_TTF_SetGPUTextEngineWinding(mrb_state *mrb, mrb_value self
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_TextEngine *a0 = (TTF_TextEngine *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_TextEngine");
-    TTF_GPUTextEngineWinding a1 = (TTF_GPUTextEngineWinding)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_TextEngine *a0 = (TTF_TextEngine *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_TextEngine");
+    TTF_GPUTextEngineWinding a1 = (TTF_GPUTextEngineWinding)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     TTF_SetGPUTextEngineWinding(a0, a1);
     return mrb_nil_value();
     }
@@ -1635,11 +1635,11 @@ static mrb_value GenR_TTF_SetTextColor(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    Uint8 a1 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    Uint8 a2 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    Uint8 a3 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    Uint8 a4 = (Uint8)SDLStaticGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    Uint8 a1 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint8 a2 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Uint8 a3 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Uint8 a4 = (Uint8)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = TTF_SetTextColor(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1652,11 +1652,11 @@ static mrb_value GenR_TTF_SetTextColorFloat(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    float a1 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    float a2 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
-    float a3 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
-    float a4 = (float)SDLStaticGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     bool rv = TTF_SetTextColorFloat(a0, a1, a2, a3, a4);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1669,8 +1669,8 @@ static mrb_value GenR_TTF_SetTextDirection(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    TTF_Direction a1 = (TTF_Direction)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    TTF_Direction a1 = (TTF_Direction)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = TTF_SetTextDirection(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1683,8 +1683,8 @@ static mrb_value GenR_TTF_SetTextEngine(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    TTF_TextEngine *a1 = (TTF_TextEngine *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "TTF_TextEngine");
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    TTF_TextEngine *a1 = (TTF_TextEngine *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "TTF_TextEngine");
     bool rv = TTF_SetTextEngine(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1697,8 +1697,8 @@ static mrb_value GenR_TTF_SetTextFont(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    TTF_Font *a1 = (TTF_Font *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "TTF_Font");
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    TTF_Font *a1 = (TTF_Font *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "TTF_Font");
     bool rv = TTF_SetTextFont(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1711,9 +1711,9 @@ static mrb_value GenR_TTF_SetTextPosition(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    int a2 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = TTF_SetTextPosition(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1726,8 +1726,8 @@ static mrb_value GenR_TTF_SetTextScript(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    Uint32 a1 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    Uint32 a1 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = TTF_SetTextScript(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1740,9 +1740,9 @@ static mrb_value GenR_TTF_SetTextString(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    const char *a1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
-    size_t a2 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    size_t a2 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = TTF_SetTextString(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1755,8 +1755,8 @@ static mrb_value GenR_TTF_SetTextWrapWhitespaceVisible(mrb_state *mrb, mrb_value
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    bool a1 = (bool)SDLStaticGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = TTF_SetTextWrapWhitespaceVisible(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1769,8 +1769,8 @@ static mrb_value GenR_TTF_SetTextWrapWidth(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
-    int a1 = (int)SDLStaticGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     bool rv = TTF_SetTextWrapWidth(a0, a1);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1783,7 +1783,7 @@ static mrb_value GenR_TTF_StringToTag(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    const char *a0 = SDLStaticGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     Uint32 rv = TTF_StringToTag(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
@@ -1796,10 +1796,10 @@ static mrb_value GenR_TTF_TagToString(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    Uint32 a0 = (Uint32)SDLStaticGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
-    const char *src1 = SDLStaticGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint32 a0 = (Uint32)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *src1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     char *a1 = SDL_strdup(src1 != NULL ? src1 : "");
-    size_t a2 = (size_t)SDLStaticGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    size_t a2 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     TTF_TagToString(a0, a1, a2);
     SDL_free(a1);
     return mrb_nil_value();
@@ -1813,7 +1813,7 @@ static mrb_value GenR_TTF_TextWrapWhitespaceVisible(mrb_state *mrb, mrb_value se
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
     bool rv = TTF_TextWrapWhitespaceVisible(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1826,7 +1826,7 @@ static mrb_value GenR_TTF_UpdateText(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    TTF_Text *a0 = (TTF_Text *)SDLStaticGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
+    TTF_Text *a0 = (TTF_Text *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "TTF_Text");
     bool rv = TTF_UpdateText(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
@@ -1856,11 +1856,11 @@ static mrb_value GenR_TTF_WasInit(mrb_state *mrb, mrb_value self)
     }
 }
 
-void SDLStaticGen_OpenRuby_ttf(mrb_state *mrb);
-void SDLStaticGen_OpenRuby_ttf(mrb_state *mrb)
+void GrappleGen_OpenRuby_ttf(mrb_state *mrb);
+void GrappleGen_OpenRuby_ttf(mrb_state *mrb)
 {
     struct RClass *mod;
-    SDLStaticGen_RubyEnsureHandleClass(mrb);
+    GrappleGen_RubyEnsureHandleClass(mrb);
     mod = mrb_define_module(mrb, "TTF");
     mrb_define_module_function(mrb, mod, "AddFallbackFont", GenR_TTF_AddFallbackFont, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "AppendTextString", GenR_TTF_AppendTextString, MRB_ARGS_ANY());

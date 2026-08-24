@@ -5,7 +5,7 @@
  * The C++ API is headers over the C one, so this is as much a test that the
  * headers were installed and agree with the objects as it is a link test.
  */
-#include <sdlstatic/sdlstatic.h>
+#include <grapple/grapple.h>
 
 #include <SDL3/SDL.h>
 
@@ -15,14 +15,14 @@ int main()
 {
     // A zeroed config is the documented starting point in C, and the C++
     // wrapper takes the same struct rather than inventing a second one.
-    SDLStatic_EngineConfig config{};
+    Grapple_EngineConfig config{};
     // Headless with a manual clock: no window, no GPU, no waiting on a real
     // clock — this has to run on a CI machine with no display.
     config.headless = true;
     config.manual_clock = true;
     config.no_auto_mount = true;
 
-    sdlstatic::Result<sdlstatic::Engine> engine = sdlstatic::Engine::Create(config);
+    grapple::Result<grapple::Engine> engine = grapple::Engine::Create(config);
     if (!engine.ok())
     {
         std::fprintf(stderr, "Engine::Create failed: %s\n", engine.status().message().c_str());

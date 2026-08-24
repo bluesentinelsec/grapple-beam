@@ -27,8 +27,8 @@ static int GenL_yaml_get_version_string(lua_State *L)
     return 1;
 }
 
-int SDLStaticGen_OpenLua_yaml(lua_State *L);
-int SDLStaticGen_OpenLua_yaml(lua_State *L)
+int GrappleGen_OpenLua_yaml(lua_State *L);
+int GrappleGen_OpenLua_yaml(lua_State *L)
 {
     lua_createtable(L, 0, 2);
     lua_pushcfunction(L, GenL_yaml_get_version);

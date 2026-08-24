@@ -2,19 +2,19 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug SDL3-static-extensions",
+      "name": "Debug grapple-beam",
       "type": "lldb",
       "request": "launch",
-      "program": "${workspaceFolder}/build/debug/bin/SDL3-static-extensions",
+      "program": "${workspaceFolder}/build/debug/bin/grapple-beam",
       "args": [],
       "cwd": "${workspaceFolder}",
       "preLaunchTask": "Build Debug"
     },
     {
-      "name": "Debug SDL3-static-extensions (Windows)",
+      "name": "Debug grapple-beam (Windows)",
       "type": "cppvsdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/debug/bin/SDL3-static-extensions.exe",
+      "program": "${workspaceFolder}/build/debug/bin/grapple-beam.exe",
       "args": [],
       "cwd": "${workspaceFolder}",
       "preLaunchTask": "Build Debug",

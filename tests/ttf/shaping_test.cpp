@@ -10,7 +10,7 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
-#include <SDLStatic/bidi.h>
+#include <grapple/bidi.h>
 #include <gtest/gtest.h>
 
 #include <hb.h>
@@ -181,7 +181,7 @@ TEST(Bidi, MixedParagraphItemizes)
     /* "abc " + Arabic + " def" */
     const std::string text = std::string("abc ") + "\xD8\xB9\xD8\xB1\xD8\xA8\xD9\x8A" + " def";
     int count = 0;
-    SDLStatic_BidiRun *runs = SDLStatic_BidiItemize(text.c_str(), -1, &count);
+    Grapple_BidiRun *runs = Grapple_BidiItemize(text.c_str(), -1, &count);
     ASSERT_NE(runs, nullptr) << SDL_GetError();
     ASSERT_EQ(count, 3);
 
@@ -201,18 +201,18 @@ TEST(Bidi, MixedParagraphItemizes)
 TEST(Bidi, SingleDirectionAndBaseDetection)
 {
     int count = 0;
-    SDLStatic_BidiRun *runs = SDLStatic_BidiItemize("plain english", -1, &count);
+    Grapple_BidiRun *runs = Grapple_BidiItemize("plain english", -1, &count);
     ASSERT_NE(runs, nullptr);
     EXPECT_EQ(count, 1);
     EXPECT_EQ(runs[0].direction, TTF_DIRECTION_LTR);
     SDL_free(runs);
 
-    EXPECT_FALSE(SDLStatic_BidiBaseIsRTL("hello", -1));
-    EXPECT_TRUE(SDLStatic_BidiBaseIsRTL("\xD7\xA9\xD7\x9C\xD7\x95\xD7\x9D abc", -1));
+    EXPECT_FALSE(Grapple_BidiBaseIsRTL("hello", -1));
+    EXPECT_TRUE(Grapple_BidiBaseIsRTL("\xD7\xA9\xD7\x9C\xD7\x95\xD7\x9D abc", -1));
 
     // Degenerate inputs fail cleanly, never crash.
-    EXPECT_EQ(SDLStatic_BidiItemize(nullptr, -1, &count), nullptr);
-    runs = SDLStatic_BidiItemize("", 0, &count);
+    EXPECT_EQ(Grapple_BidiItemize(nullptr, -1, &count), nullptr);
+    runs = Grapple_BidiItemize("", 0, &count);
     if (runs != nullptr)
     {
         SDL_free(runs);

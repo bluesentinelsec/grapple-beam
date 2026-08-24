@@ -9,8 +9,8 @@
 | Imported | 2026-08-13, direct source copy |
 
 The same single-header DEFLATE implementation raylib vendors, backing
-`SDLStatic_CompressData` / `SDLStatic_DecompressData` (see
-`extras/include/SDLStatic/compress.h`). We use the `zsdeflate`/`zsinflate`
+`Grapple_CompressData` / `Grapple_DecompressData` (see
+`extras/include/grapple/compress.h`). We use the `zsdeflate`/`zsinflate`
 zlib-format entry points for their adler32 integrity check.
 
 ## Local modifications (found by our sanitizer suite, kept local)

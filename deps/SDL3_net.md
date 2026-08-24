@@ -20,7 +20,7 @@
 
 - `src/SDL_net_stub_only.c` — upstream's every-function-fails stub for
   platforms without sockets (Emscripten, DOS, consoles). This project does
-  not ship stubs: on web builds `SDLSTATIC_BUILD_NET` is forced OFF and the
+  not ship stubs: on web builds `GRAPPLE_BUILD_NET` is forced OFF and the
   library simply does not exist (compile-time absence, not runtime failure).
 - `src/SDL_net_haiku.cpp` (Haiku is not a target), shared-library export
   machinery (`genexports.py`, `.exports`, `.sym`, `version.rc`), `.github/`,

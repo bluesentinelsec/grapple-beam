@@ -20,16 +20,16 @@ which fails that rule.
 
 `cute_tiled.h` only — **vendored as-is, no delete-down** (single
 dependency-free header; nothing to slim). The implementation is compiled
-in exactly one TU: `tiled/src/sdlstatic_tiled.c`
+in exactly one TU: `tiled/src/grapple_tiled.c`
 (`CUTE_TILED_IMPLEMENTATION`).
 
 ## Original additions (not vendored)
 
-- `tiled/src/sdlstatic_tiled.c` + `<SDLStatic/tiled.h>` — VFS-first map
+- `tiled/src/grapple_tiled.c` + `<grapple/tiled.h>` — VFS-first map
   loading (mounted/encrypted zip archives via PhysFS, filesystem
   fallback) and a flat accessor API (dimensions, layers, tile GIDs,
   objects) that the Lua/Ruby/C++ bindings wrap. The full
-  `cute_tiled_map_t` parse tree stays reachable via `SDLStatic_TiledRaw`.
+  `cute_tiled_map_t` parse tree stays reachable via `Grapple_TiledRaw`.
 - `scripts/gen_tiled_maps.py` — generates the Tiled-1.10-conformant test
   corpus (`tests/tiled/assets/level.tmj` + `maps.zip`). Note: Tiled's
   JSON export puts no space after `:`; cute_tiled depends on this for
@@ -52,8 +52,8 @@ in exactly one TU: `tiled/src/sdlstatic_tiled.c`
 3. **Crash on truncated input (mitigated in the wrapper, header
    untouched)** — `cute_tiled_next` deliberately null-writes
    (`CUTE_TILED_CRASH`) when the cursor runs off the end of the buffer,
-   which truncated or non-JSON input triggers. `SDLStatic_LoadTiledMap`
-   validates the buffer with cJSON (`SDLStatic::Formats`) before handing
+   which truncated or non-JSON input triggers. `Grapple_LoadTiledMap`
+   validates the buffer with cJSON (`Grapple::Formats`) before handing
    it to cute_tiled, so malformed input fails with `SDL_GetError` instead
    of a segfault.
 

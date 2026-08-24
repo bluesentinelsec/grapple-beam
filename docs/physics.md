@@ -3,7 +3,7 @@ title: Physics
 description: "Box2D v3 rigid-body physics, pure C11, statically built for every platform including WebAssembly, with a one-call debug-draw overlay."
 ---
 
-# Physics — `SDLStatic::Physics`
+# Physics — `Grapple::Physics`
 
 Box2D v3.1.1 — Erin Catto's canonical 2D physics engine, rewritten in
 pure C11 for v3. Zero external dependencies, SIMD with scalar fallback,
@@ -11,7 +11,7 @@ works on every platform including web. The full native `b2*` API ships
 unchanged.
 
 ```cmake
-target_link_libraries(your_game PRIVATE SDLStatic::Physics)
+target_link_libraries(your_game PRIVATE Grapple::Physics)
 ```
 
 ```c
@@ -34,16 +34,16 @@ b2World_Step(world, 1.0f / 60.0f, 4);   /* each frame */
 
 ## Debug-draw overlay (original extension)
 
-`<SDLStatic/physics_draw.h>` renders a world's collision shapes through
+`<grapple/physics_draw.h>` renders a world's collision shapes through
 the [Gfx](gfx.html) GPU primitives — batched draws, meters-to-pixels
 mapping with y flipped:
 
 ```c
-SDLStatic_PhysicsDrawConfig cfg = {
+Grapple_PhysicsDrawConfig cfg = {
     .pixels_per_meter = 32.0f,
     .offset_x = 640.0f, .offset_y = 600.0f,
 };
-SDLStatic_DrawPhysicsWorld(world, renderer, &cfg);
+Grapple_DrawPhysicsWorld(world, renderer, &cfg);
 ```
 
 Tests assert simulation against analytical expectations — resting
@@ -56,4 +56,4 @@ the full `B2.*` module — see [C++](cpp.html) and
 [Scripting](scripting.html).
 
 Provenance:
-[`deps/box2d.md`](https://github.com/bluesentinelsec/SDL3-static-extensions/blob/main/deps/box2d.md).
+[`deps/box2d.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/box2d.md).

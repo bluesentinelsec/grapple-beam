@@ -26,13 +26,13 @@ own platform quirks, and its own packaging story on Android, iOS, and the web.
 
 This project takes the opposite approach. Every extension is **vendored as
 pinned source and compiled into a static library**. Your game links a handful
-of `SDLStatic::*` CMake targets and produces one self-contained executable —
+of `Grapple::*` CMake targets and produces one self-contained executable —
 no DLLs beside the binary, no `LD_LIBRARY_PATH`, no "works on my machine."
 The same source tree builds for Linux, macOS, Windows, Android, iOS, and
 browser WebAssembly, and all of it is exercised by CI on every platform.
 
 - **One `FetchContent` away.** Consume the whole stack from CMake with a
-  single declaration; pick the modules you want with `SDLSTATIC_BUILD_*`
+  single declaration; pick the modules you want with `GRAPPLE_BUILD_*`
   options (everything is on by default).
 - **Four languages, one engine.** The full C API; Google-style C++ RAII
   wrappers with `Status`/`Result` error handling and no exceptions; and Lua

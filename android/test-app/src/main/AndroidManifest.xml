@@ -2,7 +2,7 @@
 
     <application
         android:allowBackup="false"
-        android:label="SDL3-static-extensions Android tests"
+        android:label="grapple-beam Android tests"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
         <activity

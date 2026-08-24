@@ -2,7 +2,7 @@
 
 Every bound function becomes a lua_CFunction registered (prefix-stripped)
 in a global table named after the library (SDL, MIX, IMG, TTF, NET,
-PHYSFS, B2, NK, JSON, SDLStaticC). Enum enumerators are registered as
+PHYSFS, B2, NK, JSON, Grapple). Enum enumerators are registered as
 integer constants in the same table. Return convention: the C return
 value first (nil for NULL pointers), then every out/in-out parameter in
 declaration order. Owned handles carry a __gc destructor; bound destroy
@@ -161,11 +161,11 @@ class _LibEmitter:
             self.w(f"    GenRead_{base}(L, lua_gettop(L), &out->{f.name});")
             self.w("    lua_pop(L, 1);")
         elif kind == "num":
-            self.w(f"    out->{f.name} = ({f.type.base})SDLStaticGen_LuaFieldNum(L, idx, \"{f.name}\");")
+            self.w(f"    out->{f.name} = ({f.type.base})GrappleGen_LuaFieldNum(L, idx, \"{f.name}\");")
         elif kind == "bool":
-            self.w(f"    out->{f.name} = ({f.type.base})SDLStaticGen_LuaFieldBool(L, idx, \"{f.name}\");")
+            self.w(f"    out->{f.name} = ({f.type.base})GrappleGen_LuaFieldBool(L, idx, \"{f.name}\");")
         else:
-            self.w(f"    out->{f.name} = ({f.type.base})SDLStaticGen_LuaFieldInt(L, idx, \"{f.name}\");")
+            self.w(f"    out->{f.name} = ({f.type.base})GrappleGen_LuaFieldInt(L, idx, \"{f.name}\");")
 
     def _emit_field_push(self, sname: str, f) -> None:
         kind = self._field_kind(f.type)
@@ -254,7 +254,7 @@ class _LibEmitter:
                 call_args[i] = v
             elif pp.mode == "handle_in":
                 take = fn.name in self.destroys and i == 0
-                helper = "SDLStaticGen_LuaTakeHandle" if take else "SDLStaticGen_LuaCheckHandle"
+                helper = "GrappleGen_LuaTakeHandle" if take else "GrappleGen_LuaCheckHandle"
                 const = "const " if pp.info.is_const else ""
                 self.w(f"    {const}{self._handle_ref(base)} *{v} = "
                        f"({const}{self._handle_ref(base)} *){helper}(L, {arg_n}, \"{base}\");")
@@ -338,9 +338,9 @@ class _LibEmitter:
         elif ret.kind == TK.HANDLE:
             if plan.owned_handle:
                 r = self.resources[plan.owned_resource_idx]
-                self.w(f"    SDLStaticGen_LuaPushOwned(L, (void *)rv, \"{ret.base}\", GenDtor_{r.destroy});")
+                self.w(f"    GrappleGen_LuaPushOwned(L, (void *)rv, \"{ret.base}\", GenDtor_{r.destroy});")
             else:
-                self.w(f"    SDLStaticGen_LuaPushHandle(L, (void *)rv, \"{ret.base}\");")
+                self.w(f"    GrappleGen_LuaPushHandle(L, (void *)rv, \"{ret.base}\");")
             nret += 1
         for line in post:
             self.w(line)
@@ -399,9 +399,9 @@ def emit_lua(manifest: Manifest, repo: Path) -> dict[str, dict[str, ScriptPlan]]
         em.w()
         for inc in lib.includes:
             em.w(f"#include {inc}")
-        if lib.key == "sdlstatic":
+        if lib.key == "grapple":
             for header in sorted(set(library.header_names)):
-                em.w(f"#include <SDLStatic/{header}>")
+                em.w(f"#include <grapple/{header}>")
         em.w("#include <string.h>")
         em.w()
         bound = {n: p for n, p in plans.items() if p.ok}
@@ -414,8 +414,8 @@ def emit_lua(manifest: Manifest, repo: Path) -> dict[str, dict[str, ScriptPlan]]
             em.emit_stub(bound[name])
         # registration
         taken: set[str] = set()
-        em.w(f"int SDLStaticGen_OpenLua_{lib.key}(lua_State *L);")
-        em.w(f"int SDLStaticGen_OpenLua_{lib.key}(lua_State *L)")
+        em.w(f"int GrappleGen_OpenLua_{lib.key}(lua_State *L);")
+        em.w(f"int GrappleGen_OpenLua_{lib.key}(lua_State *L)")
         em.w("{")
         em.w(f"    lua_createtable(L, 0, {len(bound)});")
         for name in sorted(bound):
@@ -450,26 +450,26 @@ def emit_lua(manifest: Manifest, repo: Path) -> dict[str, dict[str, ScriptPlan]]
         em.w("    return 0;")
         em.w("}")
         (outdir / f"gen_lua_{lib.key}.c").write_text("\n".join(em.out) + "\n", encoding="utf-8")
-        opens.append(f"SDLStaticGen_OpenLua_{lib.key}")
+        opens.append(f"GrappleGen_OpenLua_{lib.key}")
 
     reg = [
         "/* GENERATED FILE - DO NOT EDIT. Aggregate Lua registration.",
-        " * SDLSTATIC_GEN_DISABLE_<LIB> gates modules whose CMake option is",
+        " * GRAPPLE_GEN_DISABLE_<LIB> gates modules whose CMake option is",
         " * off on this platform (e.g. NET on Emscripten). */",
         "#include \"../src/gen_support_lua.h\"",
         "",
     ]
     for lib, o in zip(LIBRARIES, opens):
-        guard = f"SDLSTATIC_GEN_DISABLE_{lib.key.upper()}"
+        guard = f"GRAPPLE_GEN_DISABLE_{lib.key.upper()}"
         reg.append(f"#ifndef {guard}")
         reg.append(f"extern int {o}(lua_State *L);")
         reg.append(f"#endif")
     reg.append("")
-    reg.append("int SDLStatic_OpenGeneratedLuaBindings(lua_State *L);")
-    reg.append("int SDLStatic_OpenGeneratedLuaBindings(lua_State *L)")
+    reg.append("int Grapple_OpenGeneratedLuaBindings(lua_State *L);")
+    reg.append("int Grapple_OpenGeneratedLuaBindings(lua_State *L)")
     reg.append("{")
     for lib, o in zip(LIBRARIES, opens):
-        guard = f"SDLSTATIC_GEN_DISABLE_{lib.key.upper()}"
+        guard = f"GRAPPLE_GEN_DISABLE_{lib.key.upper()}"
         reg.append(f"#ifndef {guard}")
         reg.append(f"    {o}(L);")
         reg.append(f"#endif")

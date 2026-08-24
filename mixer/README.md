@@ -1,8 +1,8 @@
-# SDLStatic::Mixer
+# Grapple::Mixer
 
 A static-link-first port of [SDL3_mixer](https://github.com/libsdl-org/SDL_mixer)
 3.2.4 (the redesigned `MIX_*` API). No shared codec libraries — every enabled
-decoder is vendored source, compiled into `libSDLStatic_Mixer.a`.
+decoder is vendored source, compiled into `libGrapple_Mixer.a`.
 
 Provenance and the full delete list: [`deps/SDL3_mixer.md`](../deps/SDL3_mixer.md).
 
@@ -33,7 +33,7 @@ with a clean error, and nothing references the deleted code.
 ## Usage
 
 ```cmake
-target_link_libraries(your_game PRIVATE SDLStatic::Mixer)
+target_link_libraries(your_game PRIVATE Grapple::Mixer)
 ```
 
 ```c
@@ -47,26 +47,26 @@ MIX_SetTrackAudio(track, music);
 MIX_PlayTrack(track, 0);
 ```
 
-## Chiptune synthesis (SDLStatic extension)
+## Chiptune synthesis (Grapple extension)
 
-Original code (not vendored SDL_mixer): `<SDLStatic/chiptune.h>` adds 8-bit
+Original code (not vendored SDL_mixer): `<grapple/chiptune.h>` adds 8-bit
 era synthesis with high-level entry points, rendered offline into normal
 `MIX_Audio` objects — deterministic, loopable, zero runtime cost beyond
 ordinary playback.
 
-- `SDLStatic_CreateChipTone` — one voice: square (12.5/25/50% duty), 16-step
+- `Grapple_CreateChipTone` — one voice: square (12.5/25/50% duty), 16-step
   NES-style triangle, saw, LFSR noise (normal + metallic short-loop), or
   sine, with pitch sweep, vibrato, and attack/release envelope.
-- `SDLStatic_CreateChipSFX` — canned effects: coin, laser, jump, explosion,
+- `Grapple_CreateChipSFX` — canned effects: coin, laser, jump, explosion,
   powerup, hurt.
-- `SDLStatic_CreateChipTune` — compiles an MML string (the 8-bit BASIC
+- `Grapple_CreateChipTune` — compiles an MML string (the 8-bit BASIC
   `PLAY` dialect: notes `A-G#`, octaves `O`/`<`/`>`, lengths `L`/dots, tempo
   `T`, volume `V`, waveform `W`, envelope shape `S`, up to 8 `;`-separated
   channels) into a finished multi-channel tune — here the classic NES
   four-voice lineup:
 
 ```c
-MIX_Audio *tune = SDLStatic_CreateChipTune(mixer,
+MIX_Audio *tune = Grapple_CreateChipTune(mixer,
     "T140 W1 O5 L8 C E G >C< G E C4 ;"                     /* pulse lead   */
     "T140 W2 O4 L8 E G B >E< B G E4 ;"                     /* counterpoint */
     "T140 W3 O2 L4 C G E G ;"                              /* triangle bass */

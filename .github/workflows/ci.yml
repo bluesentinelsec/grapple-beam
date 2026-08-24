@@ -24,7 +24,7 @@ jobs:
           - macos-latest
           - windows-latest
     env:
-      APP_NAME: SDL3-static-extensions
+      APP_NAME: grapple-beam
 
     defaults:
       run:

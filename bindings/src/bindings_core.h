@@ -1,13 +1,13 @@
 /*
  * bindings_core.h — language-independent core for the script bindings.
  *
- * Original SDLStatic code (zlib). The Lua and Ruby binding files marshal
+ * Original Grapple code (zlib). The Lua and Ruby binding files marshal
  * arguments and manage GC; every actual operation lives here so the two
  * languages expose identical behavior. All handles are opaque structs the
  * script side owns via GC-finalized wrappers.
  */
-#ifndef SDLSTATIC_BINDINGS_CORE_H
-#define SDLSTATIC_BINDINGS_CORE_H
+#ifndef GRAPPLE_BINDINGS_CORE_H
+#define GRAPPLE_BINDINGS_CORE_H
 
 #include <SDL3/SDL.h>
 #include <SDL3_mixer/SDL_mixer.h>
@@ -99,4 +99,4 @@ float BindBody_Angle(BindBody *body);
 bool BindBody_SetVelocity(BindBody *body, float vx, float vy);
 bool BindBody_ApplyImpulse(BindBody *body, float ix, float iy);
 
-#endif /* SDLSTATIC_BINDINGS_CORE_H */
+#endif /* GRAPPLE_BINDINGS_CORE_H */

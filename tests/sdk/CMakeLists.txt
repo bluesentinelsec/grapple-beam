@@ -14,7 +14,7 @@
 # a local sanitizer tree often the other, and the test is equally unlinkable
 # either way.
 set(_sdk_sanitized OFF)
-if(SDL3_STATIC_EXTENSIONS_ENABLE_SANITIZERS
+if(GRAPPLE_BEAM_ENABLE_SANITIZERS
    OR CMAKE_C_FLAGS MATCHES "-fsanitize"
    OR CMAKE_CXX_FLAGS MATCHES "-fsanitize")
   set(_sdk_sanitized ON)
@@ -36,10 +36,10 @@ endif()
 
 # The runner, doing the thing it exists for: running a game script in either
 # language, with the language inferred from the file's extension.
-if(TARGET repl)
+if(TARGET grapple)
   foreach(lang lua rb)
     add_test(NAME runner_runs_${lang}_script
-      COMMAND $<TARGET_FILE:repl> ${CMAKE_CURRENT_SOURCE_DIR}/hello.${lang}
+      COMMAND $<TARGET_FILE:grapple> ${CMAKE_CURRENT_SOURCE_DIR}/hello.${lang}
     )
     set_tests_properties(runner_runs_${lang}_script PROPERTIES
       PASS_REGULAR_EXPRESSION "runner ok"
@@ -57,18 +57,18 @@ endif()
 # skipped there: the library's objects reference the ASan runtime, and a
 # plain Python interpreter has not loaded it, so the dlopen fails on a
 # missing __asan_* rather than on anything we did wrong.
-if(TARGET SDLStatic_SDK_Shared AND NOT _sdk_sanitized)
+if(TARGET Grapple_SDK_Shared AND NOT _sdk_sanitized)
   find_package(Python3 COMPONENTS Interpreter)
   if(Python3_Interpreter_FOUND)
     add_test(NAME shared_library_ctypes_c
       COMMAND ${Python3_EXECUTABLE}
               ${CMAKE_CURRENT_SOURCE_DIR}/../ctypes/test_shared_library.py
-              $<TARGET_FILE:SDLStatic_SDK_Shared>
+              $<TARGET_FILE:Grapple_SDK_Shared>
     )
     add_test(NAME shared_library_ctypes_cxx
       COMMAND ${Python3_EXECUTABLE}
               ${CMAKE_CURRENT_SOURCE_DIR}/../ctypes/test_shared_library.py
-              $<TARGET_FILE:SDLStatic_SDK_Cxx_Shared> --cxx
+              $<TARGET_FILE:Grapple_SDK_Cxx_Shared> --cxx
     )
     set_tests_properties(shared_library_ctypes_c shared_library_ctypes_cxx
       PROPERTIES TIMEOUT 300)
@@ -81,10 +81,10 @@ endif()
 # The Lua file is checked with our own interpreter — the runner already
 # embeds Lua 5.4, so this needs no language server installed. loadfile
 # compiles without executing, which is what a definition file is for.
-if(TARGET repl)
+if(TARGET grapple)
   add_test(NAME editor_lua_definitions_parse
-    COMMAND $<TARGET_FILE:repl> -l lua -e
-      "local f, err = loadfile('${CMAKE_CURRENT_SOURCE_DIR}/../../bindings/generated/editor/sdlstatic.lua') if not f then error(err) end print('definitions parse')"
+    COMMAND $<TARGET_FILE:grapple> -l lua -e
+      "local f, err = loadfile('${CMAKE_CURRENT_SOURCE_DIR}/../../bindings/generated/editor/grapple.lua') if not f then error(err) end print('definitions parse')"
   )
   set_tests_properties(editor_lua_definitions_parse PROPERTIES
     PASS_REGULAR_EXPRESSION "definitions parse")
@@ -98,7 +98,7 @@ if(Python3_Interpreter_FOUND)
   add_test(NAME editor_rbs_definitions_shape
     COMMAND ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/../editor/check_rbs.py
-            ${CMAKE_CURRENT_SOURCE_DIR}/../../bindings/generated/editor/sdlstatic.rbs
+            ${CMAKE_CURRENT_SOURCE_DIR}/../../bindings/generated/editor/grapple.rbs
   )
   add_test(NAME editor_tags_shape
     COMMAND ${Python3_EXECUTABLE}

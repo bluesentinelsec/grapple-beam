@@ -1,4 +1,4 @@
-# SDLStatic::Net
+# Grapple::Net
 
 A static-link-first build of [SDL3_net](https://github.com/libsdl-org/SDL_net)
 3.2.0 (the `NET_*` API). SDL_net is the simplest port in this repo: one
@@ -16,12 +16,12 @@ Provenance: [`deps/SDL3_net.md`](../deps/SDL3_net.md).
 | UDP datagram sockets | ✅ full |
 | Multi-socket wait (`NET_WaitUntilInputAvailable`) | ✅ full |
 | Windows | ✅ links OS-built-in `iphlpapi`/`ws2_32` only |
-| Web / Emscripten | ❌ not built — upstream only offers a stub there, and this project does not ship stubs; `SDLSTATIC_BUILD_NET` is forced OFF for web builds |
+| Web / Emscripten | ❌ not built — upstream only offers a stub there, and this project does not ship stubs; `GRAPPLE_BUILD_NET` is forced OFF for web builds |
 
 ## Usage
 
 ```cmake
-target_link_libraries(your_game PRIVATE SDLStatic::Net)
+target_link_libraries(your_game PRIVATE Grapple::Net)
 ```
 
 ```c

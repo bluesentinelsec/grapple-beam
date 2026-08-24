@@ -122,7 +122,7 @@ extern "C" {
 
 struct sinfl {
   const unsigned char *bitptr;
-  const unsigned char *bitend; /* SDLStatic local fix: input bound for refill */
+  const unsigned char *bitend; /* Grapple local fix: input bound for refill */
   unsigned long long bitbuf;
   int bitcnt;
 
@@ -216,7 +216,7 @@ sinfl_copy128(unsigned char **dst, unsigned char **src) {
 #endif
 static void
 sinfl_refill(struct sinfl *s) {
-  /* SDLStatic local fix: upstream reads 8 bytes unconditionally, running
+  /* Grapple local fix: upstream reads 8 bytes unconditionally, running
      past the end of the input buffer near the stream tail (heap over-read,
      caught by ASan). Bound the fast path and finish with a zero-filled
      tail read that never advances past bitend. */
@@ -406,7 +406,7 @@ sinfl_decompress(unsigned char *out, int cap, const unsigned char *in, int size)
   int last = 0;
 
   s.bitptr = in;
-  s.bitend = in + size; /* SDLStatic local fix */
+  s.bitend = in + size; /* Grapple local fix */
   while (1) {
     switch (state) {
     case hdr: {
@@ -625,7 +625,7 @@ zsinflate(void *out, int cap, const void *mem, int size) {
     int n = sinfl_decompress((unsigned char*)out, cap, in + 2, size - 6);
     if (n < 0) return -2;
     unsigned a = sinfl_adler32(1u, (unsigned char*)out, n);
-    /* SDLStatic local fix: unsigned char promotes to int, so a byte >= 0x80
+    /* Grapple local fix: unsigned char promotes to int, so a byte >= 0x80
        shifted left 24 overflows int (UB, caught by UBSan). */
     unsigned h = (unsigned)eob[0] << 24 | (unsigned)eob[1] << 16 | (unsigned)eob[2] << 8 | (unsigned)eob[3] << 0;
     return a == h ? n : -1;

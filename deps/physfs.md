@@ -29,8 +29,8 @@
 
 ## Original additions (not vendored)
 
-`vfs/src/sdlstatic_vfs.c` + `<SDLStatic/vfs.h>`: encrypted-archive mounts
-(SSE1 container from SDLStatic Extras → `PHYSFS_mountMemory`) and a
+`vfs/src/grapple_vfs.c` + `<grapple/vfs.h>`: encrypted-archive mounts
+(SSE1 container from Grapple Extras → `PHYSFS_mountMemory`) and a
 read-only `SDL_IOStream` bridge over PhysFS files. `scripts/pack_assets.py`
 builds deterministic zips, optionally encrypts them (independent Python
 SSE1 implementation — the C tests mount its output, cross-validating both),

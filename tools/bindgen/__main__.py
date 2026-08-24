@@ -18,7 +18,7 @@ from .spec import LIBRARIES, resolve_headers
 def build_manifest(repo: Path, deps: Path) -> Manifest:
     from .parse import check_nk_config
 
-    check_nk_config(repo / "gui" / "include" / "SDLStatic" / "nuklear.h")
+    check_nk_config(repo / "gui" / "include" / "grapple" / "nuklear.h")
     manifest = Manifest()
     for spec in LIBRARIES:
         lib = Library(key=spec.key)
@@ -76,11 +76,11 @@ def main() -> int:
         import tempfile
 
         tmp = Path(tempfile.mkdtemp(prefix="bindgen-check-"))
-        # emit_cpp includes SDLStatic module headers by name only, so a bare
+        # emit_cpp includes Grapple module headers by name only, so a bare
         # skeleton suffices.
-        (tmp / "gui" / "include" / "SDLStatic").mkdir(parents=True)
-        shutil.copy(args.repo / "gui" / "include" / "SDLStatic" / "nuklear.h",
-                    tmp / "gui" / "include" / "SDLStatic" / "nuklear.h")
+        (tmp / "gui" / "include" / "grapple").mkdir(parents=True)
+        shutil.copy(args.repo / "gui" / "include" / "grapple" / "nuklear.h",
+                    tmp / "gui" / "include" / "grapple" / "nuklear.h")
         target = tmp
 
     outcomes = {}
@@ -100,7 +100,7 @@ def main() -> int:
             return path.read_bytes().replace(b"\r\n", b"\n")
 
         stale: list[str] = []
-        for rel_dir in ("cpp/include/sdlstatic/gen", "bindings/generated"):
+        for rel_dir in ("cpp/include/grapple/gen", "bindings/generated"):
             fresh_dir = target / rel_dir
             committed_dir = args.repo / rel_dir
             # Recursive: bindings/generated has subdirectories now (editor/),

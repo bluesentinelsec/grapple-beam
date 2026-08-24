@@ -87,7 +87,7 @@ static int GenL_SDL_setFramerate(lua_State *L)
 static int GenL_aacircleColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -100,7 +100,7 @@ static int GenL_aacircleColor(lua_State *L)
 static int GenL_aacircleRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -116,7 +116,7 @@ static int GenL_aacircleRGBA(lua_State *L)
 static int GenL_aaellipseColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -130,7 +130,7 @@ static int GenL_aaellipseColor(lua_State *L)
 static int GenL_aaellipseRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -147,7 +147,7 @@ static int GenL_aaellipseRGBA(lua_State *L)
 static int GenL_aalineColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -161,7 +161,7 @@ static int GenL_aalineColor(lua_State *L)
 static int GenL_aalineRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -178,7 +178,7 @@ static int GenL_aalineRGBA(lua_State *L)
 static int GenL_aatrigonColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -194,7 +194,7 @@ static int GenL_aatrigonColor(lua_State *L)
 static int GenL_aatrigonRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -213,7 +213,7 @@ static int GenL_aatrigonRGBA(lua_State *L)
 static int GenL_arcColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -228,7 +228,7 @@ static int GenL_arcColor(lua_State *L)
 static int GenL_arcRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -246,7 +246,7 @@ static int GenL_arcRGBA(lua_State *L)
 static int GenL_boxColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -260,7 +260,7 @@ static int GenL_boxColor(lua_State *L)
 static int GenL_boxRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -277,7 +277,7 @@ static int GenL_boxRGBA(lua_State *L)
 static int GenL_characterColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     char a3 = (char)luaL_checkinteger(L, 4);
@@ -290,7 +290,7 @@ static int GenL_characterColor(lua_State *L)
 static int GenL_characterRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     char a3 = (char)luaL_checkinteger(L, 4);
@@ -306,7 +306,7 @@ static int GenL_characterRGBA(lua_State *L)
 static int GenL_circleColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -319,7 +319,7 @@ static int GenL_circleColor(lua_State *L)
 static int GenL_circleRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -335,7 +335,7 @@ static int GenL_circleRGBA(lua_State *L)
 static int GenL_ellipseColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -349,7 +349,7 @@ static int GenL_ellipseColor(lua_State *L)
 static int GenL_ellipseRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -366,7 +366,7 @@ static int GenL_ellipseRGBA(lua_State *L)
 static int GenL_filledCircleColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -379,7 +379,7 @@ static int GenL_filledCircleColor(lua_State *L)
 static int GenL_filledCircleRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -395,7 +395,7 @@ static int GenL_filledCircleRGBA(lua_State *L)
 static int GenL_filledEllipseColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -409,7 +409,7 @@ static int GenL_filledEllipseColor(lua_State *L)
 static int GenL_filledEllipseRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -426,7 +426,7 @@ static int GenL_filledEllipseRGBA(lua_State *L)
 static int GenL_filledPieColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -441,7 +441,7 @@ static int GenL_filledPieColor(lua_State *L)
 static int GenL_filledPieRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -459,7 +459,7 @@ static int GenL_filledPieRGBA(lua_State *L)
 static int GenL_filledTrigonColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -475,7 +475,7 @@ static int GenL_filledTrigonColor(lua_State *L)
 static int GenL_filledTrigonRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -502,7 +502,7 @@ static int GenL_gfxPrimitivesSetFontRotation(lua_State *L)
 static int GenL_hlineColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -515,7 +515,7 @@ static int GenL_hlineColor(lua_State *L)
 static int GenL_hlineRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -531,7 +531,7 @@ static int GenL_hlineRGBA(lua_State *L)
 static int GenL_lineColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -545,7 +545,7 @@ static int GenL_lineColor(lua_State *L)
 static int GenL_lineRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -562,7 +562,7 @@ static int GenL_lineRGBA(lua_State *L)
 static int GenL_pieColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -577,7 +577,7 @@ static int GenL_pieColor(lua_State *L)
 static int GenL_pieRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -595,7 +595,7 @@ static int GenL_pieRGBA(lua_State *L)
 static int GenL_pixelColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Uint32 a3 = (Uint32)luaL_checkinteger(L, 4);
@@ -607,7 +607,7 @@ static int GenL_pixelColor(lua_State *L)
 static int GenL_pixelRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Uint8 a3 = (Uint8)luaL_checkinteger(L, 4);
@@ -622,7 +622,7 @@ static int GenL_pixelRGBA(lua_State *L)
 static int GenL_rectangleColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -636,7 +636,7 @@ static int GenL_rectangleColor(lua_State *L)
 static int GenL_rectangleRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -653,22 +653,22 @@ static int GenL_rectangleRGBA(lua_State *L)
 static int GenL_rotateSurface90Degrees(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     int a1 = (int)luaL_checkinteger(L, 2);
     SDL_Surface * rv = rotateSurface90Degrees(a0, a1);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     return 1;
 }
 
 static int GenL_rotozoomSurface(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     double a1 = (double)luaL_checknumber(L, 2);
     double a2 = (double)luaL_checknumber(L, 3);
     int a3 = (int)luaL_checkinteger(L, 4);
     SDL_Surface * rv = rotozoomSurface(a0, a1, a2, a3);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     return 1;
 }
 
@@ -706,20 +706,20 @@ static int GenL_rotozoomSurfaceSizeXY(lua_State *L)
 static int GenL_rotozoomSurfaceXY(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     double a1 = (double)luaL_checknumber(L, 2);
     double a2 = (double)luaL_checknumber(L, 3);
     double a3 = (double)luaL_checknumber(L, 4);
     int a4 = (int)luaL_checkinteger(L, 5);
     SDL_Surface * rv = rotozoomSurfaceXY(a0, a1, a2, a3, a4);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     return 1;
 }
 
 static int GenL_roundedBoxColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -734,7 +734,7 @@ static int GenL_roundedBoxColor(lua_State *L)
 static int GenL_roundedBoxRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -752,7 +752,7 @@ static int GenL_roundedBoxRGBA(lua_State *L)
 static int GenL_roundedRectangleColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -767,7 +767,7 @@ static int GenL_roundedRectangleColor(lua_State *L)
 static int GenL_roundedRectangleRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -785,18 +785,18 @@ static int GenL_roundedRectangleRGBA(lua_State *L)
 static int GenL_shrinkSurface(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     int a1 = (int)luaL_checkinteger(L, 2);
     int a2 = (int)luaL_checkinteger(L, 3);
     SDL_Surface * rv = shrinkSurface(a0, a1, a2);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     return 1;
 }
 
 static int GenL_stringColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     const char *a3 = lua_isnoneornil(L, 4) ? NULL : luaL_checkstring(L, 4);
@@ -809,7 +809,7 @@ static int GenL_stringColor(lua_State *L)
 static int GenL_stringRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     const char *a3 = lua_isnoneornil(L, 4) ? NULL : luaL_checkstring(L, 4);
@@ -825,7 +825,7 @@ static int GenL_stringRGBA(lua_State *L)
 static int GenL_thickLineColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -840,7 +840,7 @@ static int GenL_thickLineColor(lua_State *L)
 static int GenL_thickLineRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -858,7 +858,7 @@ static int GenL_thickLineRGBA(lua_State *L)
 static int GenL_trigonColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -874,7 +874,7 @@ static int GenL_trigonColor(lua_State *L)
 static int GenL_trigonRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -893,7 +893,7 @@ static int GenL_trigonRGBA(lua_State *L)
 static int GenL_vlineColor(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -906,7 +906,7 @@ static int GenL_vlineColor(lua_State *L)
 static int GenL_vlineRGBA(lua_State *L)
 {
     (void)L;
-    SDL_Renderer *a0 = (SDL_Renderer *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
     Sint16 a1 = (Sint16)luaL_checkinteger(L, 2);
     Sint16 a2 = (Sint16)luaL_checkinteger(L, 3);
     Sint16 a3 = (Sint16)luaL_checkinteger(L, 4);
@@ -922,12 +922,12 @@ static int GenL_vlineRGBA(lua_State *L)
 static int GenL_zoomSurface(lua_State *L)
 {
     (void)L;
-    SDL_Surface *a0 = (SDL_Surface *)SDLStaticGen_LuaCheckHandle(L, 1, "SDL_Surface");
+    SDL_Surface *a0 = (SDL_Surface *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Surface");
     double a1 = (double)luaL_checknumber(L, 2);
     double a2 = (double)luaL_checknumber(L, 3);
     int a3 = (int)luaL_checkinteger(L, 4);
     SDL_Surface * rv = zoomSurface(a0, a1, a2, a3);
-    SDLStaticGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_Surface", GenDtor_SDL_DestroySurface);
     return 1;
 }
 
@@ -946,8 +946,8 @@ static int GenL_zoomSurfaceSize(lua_State *L)
     return 2;
 }
 
-int SDLStaticGen_OpenLua_gfx(lua_State *L);
-int SDLStaticGen_OpenLua_gfx(lua_State *L)
+int GrappleGen_OpenLua_gfx(lua_State *L);
+int GrappleGen_OpenLua_gfx(lua_State *L)
 {
     lua_createtable(L, 0, 62);
     lua_pushcfunction(L, GenL_SDL_framerateDelay);

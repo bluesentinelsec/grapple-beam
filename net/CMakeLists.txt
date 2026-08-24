@@ -1,4 +1,4 @@
-# SDLStatic::Net — static-only build of the vendored SDL_net sources
+# Grapple::Net — static-only build of the vendored SDL_net sources
 # (upstream release-3.2.0, the NET_* API; provenance in deps/SDL3_net.md).
 #
 # SDL_net has no third-party dependencies at all: one portable C file over
@@ -8,21 +8,21 @@
 
 enable_language(C)
 
-add_library(SDLStatic_Net STATIC
+add_library(Grapple_Net STATIC
   src/SDL_net.c
 )
-add_library(SDLStatic::Net ALIAS SDLStatic_Net)
+add_library(Grapple::Net ALIAS Grapple_Net)
 
 if("c_std_99" IN_LIST CMAKE_C_COMPILE_FEATURES)
-  target_compile_features(SDLStatic_Net PRIVATE c_std_99)
+  target_compile_features(Grapple_Net PRIVATE c_std_99)
 endif()
 
-set_target_properties(SDLStatic_Net PROPERTIES
-  OUTPUT_NAME SDLStatic_Net
+set_target_properties(Grapple_Net PROPERTIES
+  OUTPUT_NAME Grapple_Net
   POSITION_INDEPENDENT_CODE ON
 )
 
-target_include_directories(SDLStatic_Net
+target_include_directories(Grapple_Net
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
@@ -41,12 +41,12 @@ if(NOT WIN32)
       }
       " HAVE_GETIFADDRS)
   if(HAVE_GETIFADDRS)
-    target_compile_definitions(SDLStatic_Net PRIVATE HAVE_GETIFADDRS)
+    target_compile_definitions(Grapple_Net PRIVATE HAVE_GETIFADDRS)
   endif()
 endif()
 
-target_link_libraries(SDLStatic_Net PUBLIC SDL3::SDL3)
+target_link_libraries(Grapple_Net PUBLIC SDL3::SDL3)
 if(WIN32)
   # OS-built-in system libraries (not third-party): name resolution + winsock.
-  target_link_libraries(SDLStatic_Net PRIVATE iphlpapi ws2_32)
+  target_link_libraries(Grapple_Net PRIVATE iphlpapi ws2_32)
 endif()

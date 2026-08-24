@@ -4,9 +4,9 @@
 .PHONY: all debug release test bench sanitizer fmt doc clean reconfigure-debug reconfigure-release \
         configure-debug configure-release link_compile_commands copy_compile_commands help tags
 
-PROJECT_NAME := SDL3-static-extensions
-PROJECT_MACRO := SDL3_STATIC_EXTENSIONS
-TARGET_NAME  := SDL3_static_extensions
+PROJECT_NAME := grapple-beam
+PROJECT_MACRO := GRAPPLE_BEAM
+TARGET_NAME  := grapple
 BUILD_DEBUG  := build/debug
 BUILD_RELEASE := build/release
 BUILD_SANITIZER := build/sanitizer

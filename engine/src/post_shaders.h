@@ -8,8 +8,8 @@
  * The sources carry no #version line: the loader prepends one, because the
  * same shader has to serve desktop GL (120) and GLES/WebGL (100).
  */
-#ifndef SDLSTATIC_ENGINE_POST_SHADERS_H
-#define SDLSTATIC_ENGINE_POST_SHADERS_H
+#ifndef GRAPPLE_ENGINE_POST_SHADERS_H
+#define GRAPPLE_ENGINE_POST_SHADERS_H
 
 /* engine/shaders/post.vert */
 static const char kPostVert[] =
@@ -335,4 +335,4 @@ static const char kPostCompositeFrag[] =
     ;
 
 
-#endif /* SDLSTATIC_ENGINE_POST_SHADERS_H */
+#endif /* GRAPPLE_ENGINE_POST_SHADERS_H */

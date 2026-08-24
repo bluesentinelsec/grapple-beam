@@ -7,8 +7,8 @@ Every function callable from Lua and Ruby, with the signature as the
 
 - A `(const void *data, size_t len)` pair collapses into **one**
   string argument, so later parameters shift left. For example
-  `SDLStatic_CreateGui(renderer, font_data, font_len, font_size)` is
-  `SDLStaticC.CreateGui(renderer, font_data, font_size)` — passing a
+  `Grapple_CreateGui(renderer, font_data, font_len, font_size)` is
+  `GrappleC.CreateGui(renderer, font_data, font_size)` — passing a
   spurious length argument silently lands in `font_size`.
 - Pure out-parameters are **not** arguments; they come back as extra
   return values, after the function's own return value.
@@ -2383,618 +2383,618 @@ returns as an array.
 | `JSON.SetValuestring(object: cJSON, valuestring: string|nil)` | string|nil |
 | `JSON.Version()` | string|nil |
 
-## SDLStatic modules — `SDLStaticC`
+## Grapple modules — `GrappleC`
 
 | Script call | Returns |
 |---|---|
-| `SDLStaticC.ActionBind(map: SDLStatic_ActionMap, action: string|nil, binding: SDLStatic_Binding table)` | boolean |
-| `SDLStaticC.ActionBindAxis(map: SDLStatic_ActionMap, action: string|nil, axis: integer, half: integer)` | boolean |
-| `SDLStaticC.ActionBindDirection(map: SDLStatic_ActionMap, action: string|nil, direction: integer)` | boolean |
-| `SDLStaticC.ActionBindKey(map: SDLStatic_ActionMap, action: string|nil, key: integer)` | boolean |
-| `SDLStaticC.ActionBindKeySigned(map: SDLStatic_ActionMap, action: string|nil, key: integer, sign: integer)` | boolean |
-| `SDLStaticC.ActionBindMouse(map: SDLStatic_ActionMap, action: string|nil, button: integer)` | boolean |
-| `SDLStaticC.ActionBindPad(map: SDLStatic_ActionMap, action: string|nil, button: integer)` | boolean |
-| `SDLStaticC.ActionBindingAt(map: SDLStatic_ActionMap, action: string|nil, index: integer)` | boolean, out: SDLStatic_Binding table |
-| `SDLStaticC.ActionBindingCount(map: SDLStatic_ActionMap, action: string|nil)` | integer |
-| `SDLStaticC.ActionCapture(engine: SDLStatic_Engine, player: integer)` | boolean, out: SDLStatic_Binding table |
-| `SDLStaticC.ActionClear(map: SDLStatic_ActionMap, action: string|nil)` | nil |
-| `SDLStaticC.ActionCount(map: SDLStatic_ActionMap)` | integer |
-| `SDLStaticC.ActionDown(engine: SDLStatic_Engine, map: SDLStatic_ActionMap, player: integer, action: string|nil)` | boolean |
-| `SDLStaticC.ActionMapCreate()` | SDLStatic_ActionMap|nil |
-| `SDLStaticC.ActionMapDestroy(map: SDLStatic_ActionMap)` | nil |
-| `SDLStaticC.ActionMapKeyboardPlayer(map: SDLStatic_ActionMap)` | integer |
-| `SDLStaticC.ActionMapLoad(map: SDLStatic_ActionMap, org: string|nil, app: string|nil)` | boolean |
-| `SDLStaticC.ActionMapLoadToml(map: SDLStatic_ActionMap, toml: string|nil)` | boolean |
-| `SDLStaticC.ActionMapSave(map: SDLStatic_ActionMap, org: string|nil, app: string|nil)` | boolean |
-| `SDLStaticC.ActionMapSetKeyboardPlayer(map: SDLStatic_ActionMap, player: integer)` | nil |
-| `SDLStaticC.ActionMapToToml(map: SDLStatic_ActionMap)` | string|nil |
-| `SDLStaticC.ActionName(map: SDLStatic_ActionMap, index: integer)` | string|nil |
-| `SDLStaticC.ActionPressed(engine: SDLStatic_Engine, map: SDLStatic_ActionMap, player: integer, action: string|nil)` | boolean |
-| `SDLStaticC.ActionReleased(engine: SDLStatic_Engine, map: SDLStatic_ActionMap, player: integer, action: string|nil)` | boolean |
-| `SDLStaticC.ActionValue(engine: SDLStatic_Engine, map: SDLStatic_ActionMap, player: integer, action: string|nil)` | number |
-| `SDLStaticC.ActionVector(engine: SDLStatic_Engine, map: SDLStatic_ActionMap, player: integer, x_action: string|nil, y_action: string|nil, x: number, y: number)` | x: number, y: number |
-| `SDLStaticC.ActorAddBody(actor: SDLStatic_Actor, def: SDLStatic_BodyDef table)` | boolean |
-| `SDLStaticC.ActorAddLight(actor: SDLStatic_Actor, light: SDLStatic_LightDef table)` | boolean |
-| `SDLStaticC.ActorAlive(engine: SDLStatic_Engine, id: integer)` | boolean |
-| `SDLStaticC.ActorAngularVelocity(actor: SDLStatic_Actor)` | number |
-| `SDLStaticC.ActorApplyForce(actor: SDLStatic_Actor, x: number, y: number)` | nil |
-| `SDLStaticC.ActorApplyImpulse(actor: SDLStatic_Actor, x: number, y: number)` | nil |
-| `SDLStaticC.ActorBodyBounds(actor: SDLStatic_Actor)` | boolean, out: SDL_FRect table |
-| `SDLStaticC.ActorBroadcast(engine: SDLStatic_Engine, type: string|nil, tags: integer, message: SDLStatic_ActorMessage table)` | integer |
-| `SDLStaticC.ActorChild(actor: SDLStatic_Actor, index: integer)` | integer |
-| `SDLStaticC.ActorChildCount(actor: SDLStatic_Actor)` | integer |
-| `SDLStaticC.ActorClear(engine: SDLStatic_Engine)` | nil |
-| `SDLStaticC.ActorClearSprite(actor: SDLStatic_Actor)` | nil |
-| `SDLStaticC.ActorCount(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.ActorDefCreate()` | SDLStatic_ActorDef|nil |
-| `SDLStaticC.ActorDefDestroy(def: SDLStatic_ActorDef)` | nil |
-| `SDLStaticC.ActorDefSetName(def: SDLStatic_ActorDef, name: string|nil)` | nil |
-| `SDLStaticC.ActorDefSetParent(def: SDLStatic_ActorDef, parent: integer)` | nil |
-| `SDLStaticC.ActorDefSetPosition(def: SDLStatic_ActorDef, x: number, y: number)` | nil |
-| `SDLStaticC.ActorDefSetRotation(def: SDLStatic_ActorDef, degrees: number)` | nil |
-| `SDLStaticC.ActorDefSetScale(def: SDLStatic_ActorDef, x: number, y: number)` | nil |
-| `SDLStaticC.ActorDefSetStateSize(def: SDLStatic_ActorDef, size: integer)` | nil |
-| `SDLStaticC.ActorDefSetTags(def: SDLStatic_ActorDef, tags: integer)` | nil |
-| `SDLStaticC.ActorDefSetType(def: SDLStatic_ActorDef, type: string|nil)` | nil |
-| `SDLStaticC.ActorDestroy(engine: SDLStatic_Engine, id: integer)` | nil |
-| `SDLStaticC.ActorEnabled(actor: SDLStatic_Actor)` | boolean |
-| `SDLStaticC.ActorEngine(actor: SDLStatic_Actor)` | SDLStatic_Engine|nil |
-| `SDLStaticC.ActorFindByName(engine: SDLStatic_Engine, name: string|nil)` | integer |
-| `SDLStaticC.ActorFindByType(engine: SDLStatic_Engine, type: string|nil)` | integer |
-| `SDLStaticC.ActorGet(engine: SDLStatic_Engine, id: integer)` | SDLStatic_Actor|nil |
-| `SDLStaticC.ActorGetId(actor: SDLStatic_Actor)` | integer |
-| `SDLStaticC.ActorGetTags(actor: SDLStatic_Actor)` | integer |
-| `SDLStaticC.ActorHasBody(actor: SDLStatic_Actor)` | boolean |
-| `SDLStaticC.ActorHasTags(actor: SDLStatic_Actor, any: integer)` | boolean |
-| `SDLStaticC.ActorLocal(actor: SDLStatic_Actor)` | SDLStatic_ActorTransform table |
-| `SDLStaticC.ActorMove(actor: SDLStatic_Actor, dx: number, dy: number)` | nil |
-| `SDLStaticC.ActorName(actor: SDLStatic_Actor)` | string|nil |
-| `SDLStaticC.ActorParent(actor: SDLStatic_Actor)` | integer |
-| `SDLStaticC.ActorQuery(engine: SDLStatic_Engine, type: string|nil, tags: integer, out: integer, capacity: integer)` | integer, out: integer |
-| `SDLStaticC.ActorRemoveBody(actor: SDLStatic_Actor)` | nil |
-| `SDLStaticC.ActorRemoveLight(actor: SDLStatic_Actor)` | nil |
-| `SDLStaticC.ActorRenderTransform(actor: SDLStatic_Actor, alpha: number)` | SDLStatic_ActorTransform table |
-| `SDLStaticC.ActorSend(engine: SDLStatic_Engine, target: integer, message: SDLStatic_ActorMessage table)` | boolean |
-| `SDLStaticC.ActorSetAngularVelocity(actor: SDLStatic_Actor, degrees_per_second: number)` | nil |
-| `SDLStaticC.ActorSetEnabled(actor: SDLStatic_Actor, enabled: boolean)` | nil |
-| `SDLStaticC.ActorSetLocal(actor: SDLStatic_Actor, transform: SDLStatic_ActorTransform table)` | nil |
-| `SDLStaticC.ActorSetParent(actor: SDLStatic_Actor, parent: integer)` | boolean |
-| `SDLStaticC.ActorSetPosition(actor: SDLStatic_Actor, x: number, y: number)` | nil |
-| `SDLStaticC.ActorSetSprite(actor: SDLStatic_Actor, sprite: SDLStatic_Sprite)` | boolean |
-| `SDLStaticC.ActorSetTags(actor: SDLStatic_Actor, tags: integer)` | nil |
-| `SDLStaticC.ActorSetVelocity(actor: SDLStatic_Actor, x: number, y: number)` | nil |
-| `SDLStaticC.ActorSpawn(engine: SDLStatic_Engine, def: SDLStatic_ActorDef)` | integer |
-| `SDLStaticC.ActorSprite(actor: SDLStatic_Actor)` | SDLStatic_Sprite|nil |
-| `SDLStaticC.ActorTeleport(actor: SDLStatic_Actor, x: number, y: number)` | nil |
-| `SDLStaticC.ActorTeleportBody(actor: SDLStatic_Actor, x: number, y: number)` | nil |
-| `SDLStaticC.ActorType(actor: SDLStatic_Actor)` | string|nil |
-| `SDLStaticC.ActorVelocity(actor: SDLStatic_Actor, x: number, y: number)` | x: number, y: number |
-| `SDLStaticC.ActorWakeBody(actor: SDLStatic_Actor)` | nil |
-| `SDLStaticC.ActorWorld(actor: SDLStatic_Actor)` | SDLStatic_ActorTransform table |
-| `SDLStaticC.AddDarkZone(scene: SDLStatic_LightScene, rect: SDL_FRect table, ambient: SDL_FColor table)` | boolean |
-| `SDLStaticC.AddLight(scene: SDLStatic_LightScene, light: SDLStatic_Light table)` | boolean |
-| `SDLStaticC.AddOccluderRect(scene: SDLStatic_LightScene, rect: SDL_FRect table)` | boolean |
-| `SDLStaticC.AddOccluderSegment(scene: SDLStatic_LightScene, x1: number, y1: number, x2: number, y2: number)` | boolean |
-| `SDLStaticC.AnyInput(engine: SDLStatic_Engine)` | boolean |
-| `SDLStaticC.AssetPath(engine: SDLStatic_Engine, id: integer)` | string|nil |
-| `SDLStaticC.AssetRelease(engine: SDLStatic_Engine, id: integer)` | nil |
-| `SDLStaticC.AssetRetain(engine: SDLStatic_Engine, id: integer)` | nil |
-| `SDLStaticC.AssetStatusOf(engine: SDLStatic_Engine, id: integer)` | integer |
-| `SDLStaticC.AssetsFrameBudget(engine: SDLStatic_Engine)` | number |
-| `SDLStaticC.AssetsLoaded(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.AssetsPending(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.AssetsProgress(engine: SDLStatic_Engine)` | number |
-| `SDLStaticC.AssetsReady(engine: SDLStatic_Engine)` | boolean |
-| `SDLStaticC.AssetsSetFrameBudget(engine: SDLStatic_Engine, milliseconds: number)` | nil |
-| `SDLStaticC.AssetsSetWorkers(engine: SDLStatic_Engine, workers: integer)` | nil |
-| `SDLStaticC.AssetsWait(engine: SDLStatic_Engine)` | nil |
-| `SDLStaticC.BidiBaseIsRTL(utf8: string|nil, length: integer)` | boolean |
-| `SDLStaticC.BindingFromString(text: string|nil)` | boolean, out: SDLStatic_Binding table |
-| `SDLStaticC.BindingToString(binding: SDLStatic_Binding table, buffer: string, size: integer)` | string|nil |
-| `SDLStaticC.BodyDefDestroy()` | def: SDLStatic_BodyDef table |
-| `SDLStaticC.BodyDefSetBullet(bullet: boolean)` | def: SDLStatic_BodyDef table |
-| `SDLStaticC.BodyDefSetFilter(category: integer, collides_with: integer)` | def: SDLStatic_BodyDef table |
-| `SDLStaticC.BodyDefSetFixedRotation(fixed: boolean)` | def: SDLStatic_BodyDef table |
-| `SDLStaticC.BodyDefSetGravityScale(scale: number)` | def: SDLStatic_BodyDef table |
-| `SDLStaticC.BodyDefSetMaterial(density: number, friction: number, restitution: number)` | def: SDLStatic_BodyDef table |
-| `SDLStaticC.BodyDefSetOffset(x: number, y: number)` | def: SDLStatic_BodyDef table |
-| `SDLStaticC.BodyDefSetSensor(sensor: boolean)` | def: SDLStatic_BodyDef table |
-| `SDLStaticC.BodyDefSetShape(shape: integer)` | def: SDLStatic_BodyDef table |
-| `SDLStaticC.BodyDefSetSize(width: number, height: number)` | def: SDLStatic_BodyDef table |
-| `SDLStaticC.BodyDefSetType(type: integer)` | def: SDLStatic_BodyDef table |
-| `SDLStaticC.BodyDefault()` | SDLStatic_BodyDef table |
-| `SDLStaticC.CameraBegin(engine: SDLStatic_Engine, camera: SDLStatic_Camera table)` | boolean |
-| `SDLStaticC.CameraDestroy()` | camera: SDLStatic_Camera table |
-| `SDLStaticC.CameraEnd(engine: SDLStatic_Engine)` | nil |
-| `SDLStaticC.CameraFollow(world_x: number, world_y: number)` | camera: SDLStatic_Camera table |
-| `SDLStaticC.CameraInit(engine: SDLStatic_Engine)` | camera: SDLStatic_Camera table |
-| `SDLStaticC.CameraPoint(camera: SDLStatic_Camera table, world_x: number, world_y: number, out_x: number, out_y: number)` | out_x: number, out_y: number |
-| `SDLStaticC.CameraRect(camera: SDLStatic_Camera table, world: SDL_FRect table)` | SDL_FRect table |
-| `SDLStaticC.CameraScreenToWorld(camera: SDLStatic_Camera table, screen_x: number, screen_y: number, world_x: number, world_y: number)` | boolean, world_x: number, world_y: number |
-| `SDLStaticC.CameraSetBounds(x: number, y: number, w: number, h: number)` | camera: SDLStatic_Camera table |
-| `SDLStaticC.CameraSetDeadzone(width: number, height: number)` | camera: SDLStatic_Camera table |
-| `SDLStaticC.CameraSetSmoothing(seconds: number)` | camera: SDLStatic_Camera table |
-| `SDLStaticC.CameraSetViewport(x: number, y: number, w: number, h: number)` | camera: SDLStatic_Camera table |
-| `SDLStaticC.CameraSetZoom(zoom: number)` | camera: SDLStatic_Camera table |
-| `SDLStaticC.CameraShake(amount: number, seconds: number)` | camera: SDLStatic_Camera table |
-| `SDLStaticC.CameraSnap(world_x: number, world_y: number)` | camera: SDLStatic_Camera table |
-| `SDLStaticC.CameraSplit(engine: SDLStatic_Engine, mode: integer, count: integer, gap: number)` | integer, cameras: SDLStatic_Camera table |
-| `SDLStaticC.CameraUpdate(engine: SDLStatic_Engine, dt: number)` | camera: SDLStatic_Camera table |
-| `SDLStaticC.CameraVisible(camera: SDLStatic_Camera table, world: SDL_FRect table)` | boolean |
-| `SDLStaticC.CameraX()` | number, camera: SDLStatic_Camera table |
-| `SDLStaticC.CameraY()` | number, camera: SDLStatic_Camera table |
-| `SDLStaticC.CompileRegex(pattern: string|nil, flags: string|nil)` | SDLStatic_Regex|nil |
-| `SDLStaticC.ConfigCreate()` | SDLStatic_EngineConfig|nil |
-| `SDLStaticC.ConfigDestroy(config: SDLStatic_EngineConfig)` | nil |
-| `SDLStaticC.ConfigSetAutoMount(config: SDLStatic_EngineConfig, enabled: boolean)` | nil |
-| `SDLStaticC.ConfigSetBackend(config: SDLStatic_EngineConfig, backend: integer)` | nil |
-| `SDLStaticC.ConfigSetDesignSize(config: SDLStatic_EngineConfig, width: integer, height: integer)` | nil |
-| `SDLStaticC.ConfigSetFullscreen(config: SDLStatic_EngineConfig, fullscreen: boolean)` | nil |
-| `SDLStaticC.ConfigSetGraphics(config: SDLStatic_EngineConfig, graphics: SDLStatic_GraphicsSettings table)` | nil |
-| `SDLStaticC.ConfigSetHeadless(config: SDLStatic_EngineConfig, headless: boolean)` | nil |
-| `SDLStaticC.ConfigSetHighDpi(config: SDLStatic_EngineConfig, high_dpi: boolean)` | nil |
-| `SDLStaticC.ConfigSetManualClock(config: SDLStatic_EngineConfig, manual: boolean)` | nil |
-| `SDLStaticC.ConfigSetMaxFps(config: SDLStatic_EngineConfig, max_fps: integer)` | nil |
-| `SDLStaticC.ConfigSetMediaPath(config: SDLStatic_EngineConfig, path: string|nil)` | nil |
-| `SDLStaticC.ConfigSetPresentation(config: SDLStatic_EngineConfig, presentation: integer)` | nil |
-| `SDLStaticC.ConfigSetResizable(config: SDLStatic_EngineConfig, resizable: boolean)` | nil |
-| `SDLStaticC.ConfigSetTickRate(config: SDLStatic_EngineConfig, ticks_per_second: integer)` | nil |
-| `SDLStaticC.ConfigSetTitle(config: SDLStatic_EngineConfig, title: string|nil)` | nil |
-| `SDLStaticC.ConfigSetVsync(config: SDLStatic_EngineConfig, vsync: boolean)` | nil |
-| `SDLStaticC.ConfigSetWindowSize(config: SDLStatic_EngineConfig, width: integer, height: integer)` | nil |
-| `SDLStaticC.CountSignalConnections(emitter: SDLStatic_SignalEmitter, signal: string|nil)` | integer |
-| `SDLStaticC.CreateChipSFX(mixer: MIX_Mixer, which: integer)` | MIX_Audio|nil |
-| `SDLStaticC.CreateChipTone(mixer: MIX_Mixer, desc: SDLStatic_ChipToneDesc table)` | MIX_Audio|nil |
-| `SDLStaticC.CreateChipTune(mixer: MIX_Mixer, mml: string|nil)` | MIX_Audio|nil |
-| `SDLStaticC.CreateEngine(config: SDLStatic_EngineConfig)` | SDLStatic_Engine|nil |
-| `SDLStaticC.CreateGui(renderer: SDL_Renderer, font_data: string|nil, font_size: number)` | SDLStatic_Gui|nil |
-| `SDLStaticC.CreateGuiWithGlyphs(renderer: SDL_Renderer, font_data: string|nil, font_size: number, range: integer)` | SDLStatic_Gui|nil |
-| `SDLStaticC.CreateLightScene(renderer: SDL_Renderer)` | SDLStatic_LightScene|nil |
-| `SDLStaticC.CreateSignalEmitter()` | SDLStatic_SignalEmitter|nil |
-| `SDLStaticC.CryptoSelfTest()` | boolean |
-| `SDLStaticC.DayNightAmbient(hours: number)` | SDL_FColor table |
-| `SDLStaticC.DayNightSunlight(hours: number)` | number |
-| `SDLStaticC.DestroyEngine(engine: SDLStatic_Engine)` | nil |
-| `SDLStaticC.DestroyGui(gui: SDLStatic_Gui)` | nil |
-| `SDLStaticC.DestroyLightScene(scene: SDLStatic_LightScene)` | nil |
-| `SDLStaticC.DestroyRegex(regex: SDLStatic_Regex)` | nil |
-| `SDLStaticC.DestroySignalEmitter(emitter: SDLStatic_SignalEmitter)` | nil |
-| `SDLStaticC.DeviceAccelerometer(engine: SDLStatic_Engine, x: number, y: number, z: number)` | x: number, y: number, z: number |
-| `SDLStaticC.DeviceGyro(engine: SDLStatic_Engine, x: number, y: number, z: number)` | x: number, y: number, z: number |
-| `SDLStaticC.DialogDeliverSave(path: string|nil)` | boolean |
-| `SDLStaticC.DialogPath()` | string|nil |
-| `SDLStaticC.DialogReset()` | nil |
-| `SDLStaticC.DialogStatus()` | integer |
-| `SDLStaticC.DisconnectSignal(emitter: SDLStatic_SignalEmitter, connection: integer)` | boolean |
-| `SDLStaticC.DistanceJointDefCreate()` | b2DistanceJointDef|nil |
-| `SDLStaticC.DistanceJointDefDestroy(def: b2DistanceJointDef)` | nil |
-| `SDLStaticC.DistanceJointDefSetAnchors(def: b2DistanceJointDef, ax: number, ay: number, bx: number, by: number)` | nil |
-| `SDLStaticC.DistanceJointDefSetBodies(def: b2DistanceJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
-| `SDLStaticC.DistanceJointDefSetCollideConnected(def: b2DistanceJointDef, enabled: boolean)` | nil |
-| `SDLStaticC.DistanceJointDefSetLength(def: b2DistanceJointDef, length: number)` | nil |
-| `SDLStaticC.DistanceJointDefSetLimit(def: b2DistanceJointDef, enabled: boolean, min_length: number, max_length: number)` | nil |
-| `SDLStaticC.DistanceJointDefSetSpring(def: b2DistanceJointDef, enabled: boolean, hertz: number, damping: number)` | nil |
-| `SDLStaticC.DrawPhysicsWorld(world: b2WorldId table, renderer: SDL_Renderer, config: SDLStatic_PhysicsDrawConfig table)` | boolean |
-| `SDLStaticC.EncodeDataBase64(data: string|nil, outputSize: integer)` | string|nil, outputSize: integer |
-| `SDLStaticC.EngineAdvance(engine: SDLStatic_Engine, nanoseconds: integer)` | nil |
-| `SDLStaticC.EngineAlpha(engine: SDLStatic_Engine)` | number |
-| `SDLStaticC.EngineAssetScale(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.EngineDelta(engine: SDLStatic_Engine)` | number |
-| `SDLStaticC.EngineDesignSize(engine: SDLStatic_Engine, width: integer, height: integer)` | width: integer, height: integer |
-| `SDLStaticC.EngineDisplay(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.EngineDisplayCount()` | integer |
-| `SDLStaticC.EngineDisplayName(index: integer)` | string|nil |
-| `SDLStaticC.EngineEffectsAvailable(engine: SDLStatic_Engine)` | boolean |
-| `SDLStaticC.EngineEmbedMedia(data: string|nil, password: string|nil)` | nil |
-| `SDLStaticC.EngineFps(engine: SDLStatic_Engine)` | number |
-| `SDLStaticC.EngineFrameCount(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.EngineMaxFps(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.EngineMediaPath(engine: SDLStatic_Engine)` | string|nil |
-| `SDLStaticC.EngineMediaSource(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.EngineOverloadFrames(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.EnginePixelSize(engine: SDLStatic_Engine, width: integer, height: integer)` | width: integer, height: integer |
-| `SDLStaticC.EnginePresentation_(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.EngineQuit(engine: SDLStatic_Engine)` | nil |
-| `SDLStaticC.EngineRenderScale(engine: SDLStatic_Engine)` | number |
-| `SDLStaticC.EngineRenderer(engine: SDLStatic_Engine)` | SDL_Renderer|nil |
-| `SDLStaticC.EngineSafeRect(engine: SDLStatic_Engine)` | SDL_FRect table |
-| `SDLStaticC.EngineSetClearColor(engine: SDLStatic_Engine, color: SDL_FColor table)` | nil |
-| `SDLStaticC.EngineSetDisplay(engine: SDLStatic_Engine, index: integer)` | boolean |
-| `SDLStaticC.EngineSetGraphics(engine: SDLStatic_Engine, settings: SDLStatic_GraphicsSettings table)` | boolean |
-| `SDLStaticC.EngineSetMaxFps(engine: SDLStatic_Engine, max_fps: integer)` | nil |
-| `SDLStaticC.EngineSetMediaPassword(password: string|nil)` | nil |
-| `SDLStaticC.EngineSetPresentation(engine: SDLStatic_Engine, mode: integer)` | boolean |
-| `SDLStaticC.EngineSetRefreshRate(engine: SDLStatic_Engine, hz: number)` | nil |
-| `SDLStaticC.EngineSetTickRate(engine: SDLStatic_Engine, ticks_per_second: integer)` | boolean |
-| `SDLStaticC.EngineSetTimeScale(engine: SDLStatic_Engine, scale: number)` | nil |
-| `SDLStaticC.EngineStep(engine: SDLStatic_Engine)` | number |
-| `SDLStaticC.EngineStepsLastFrame(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.EngineTick(engine: SDLStatic_Engine)` | boolean |
-| `SDLStaticC.EngineTickRate(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.EngineTimeScale(engine: SDLStatic_Engine)` | number |
-| `SDLStaticC.EngineViewRect(engine: SDLStatic_Engine)` | SDL_FRect table |
-| `SDLStaticC.EngineWindow(engine: SDLStatic_Engine)` | SDL_Window|nil |
-| `SDLStaticC.EngineWindowToDesign(engine: SDLStatic_Engine, window_x: number, window_y: number, design_x: number, design_y: number)` | design_x: number, design_y: number |
-| `SDLStaticC.EventCreate()` | SDL_Event|nil |
-| `SDLStaticC.EventDestroy(event: SDL_Event)` | nil |
-| `SDLStaticC.EventGamepadAxis(event: SDL_Event)` | integer |
-| `SDLStaticC.EventGamepadAxisValue(event: SDL_Event)` | number |
-| `SDLStaticC.EventGamepadButton(event: SDL_Event)` | integer |
-| `SDLStaticC.EventGamepadWhich(event: SDL_Event)` | integer |
-| `SDLStaticC.EventKeyModifiers(event: SDL_Event)` | integer |
-| `SDLStaticC.EventKeyRepeat(event: SDL_Event)` | boolean |
-| `SDLStaticC.EventKeyScancode(event: SDL_Event)` | integer |
-| `SDLStaticC.EventMouseButton(event: SDL_Event)` | integer |
-| `SDLStaticC.EventMouseDeltaX(event: SDL_Event)` | number |
-| `SDLStaticC.EventMouseDeltaY(event: SDL_Event)` | number |
-| `SDLStaticC.EventMouseX(event: SDL_Event)` | number |
-| `SDLStaticC.EventMouseY(event: SDL_Event)` | number |
-| `SDLStaticC.EventSetType(event: SDL_Event, type: integer)` | nil |
-| `SDLStaticC.EventText(event: SDL_Event)` | string|nil |
-| `SDLStaticC.EventTouchX(event: SDL_Event)` | number |
-| `SDLStaticC.EventTouchY(event: SDL_Event)` | number |
-| `SDLStaticC.EventType(event: SDL_Event)` | integer |
-| `SDLStaticC.EventWheelX(event: SDL_Event)` | number |
-| `SDLStaticC.EventWheelY(event: SDL_Event)` | number |
-| `SDLStaticC.EventWindowId(event: SDL_Event)` | integer |
-| `SDLStaticC.FilterJointDefCreate()` | b2FilterJointDef|nil |
-| `SDLStaticC.FilterJointDefDestroy(def: b2FilterJointDef)` | nil |
-| `SDLStaticC.FilterJointDefSetBodies(def: b2FilterJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
-| `SDLStaticC.FingerCount(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.FreeTiledMap(map: SDLStatic_TiledMap)` | nil |
-| `SDLStaticC.GPUAcquireSwapchain(command_buffer: SDL_GPUCommandBuffer, window: SDL_Window)` | SDL_GPUTexture|nil |
-| `SDLStaticC.GPUBeginComputePass(command_buffer: SDL_GPUCommandBuffer, bindings: SDLStatic_GPUComputeBindings)` | SDL_GPUComputePass|nil |
-| `SDLStaticC.GPUBindComputeStorageBuffer(pass: SDL_GPUComputePass, slot: integer, buffer: SDL_GPUBuffer)` | nil |
-| `SDLStaticC.GPUBindComputeStorageTexture(pass: SDL_GPUComputePass, slot: integer, texture: SDL_GPUTexture)` | nil |
-| `SDLStaticC.GPUBindFragmentStorageBuffer(pass: SDL_GPURenderPass, slot: integer, buffer: SDL_GPUBuffer)` | nil |
-| `SDLStaticC.GPUBindFragmentStorageTexture(pass: SDL_GPURenderPass, slot: integer, texture: SDL_GPUTexture)` | nil |
-| `SDLStaticC.GPUBindVertexStorageBuffer(pass: SDL_GPURenderPass, slot: integer, buffer: SDL_GPUBuffer)` | nil |
-| `SDLStaticC.GPUBindVertexStorageTexture(pass: SDL_GPURenderPass, slot: integer, texture: SDL_GPUTexture)` | nil |
-| `SDLStaticC.GPUBlitInfoCreate()` | SDL_GPUBlitInfo|nil |
-| `SDLStaticC.GPUBlitInfoDestroy(info: SDL_GPUBlitInfo)` | nil |
-| `SDLStaticC.GPUBlitInfoSetDestination(info: SDL_GPUBlitInfo, texture: SDL_GPUTexture, x: integer, y: integer, w: integer, h: integer)` | nil |
-| `SDLStaticC.GPUBlitInfoSetFilter(info: SDL_GPUBlitInfo, filter: integer)` | nil |
-| `SDLStaticC.GPUBlitInfoSetSource(info: SDL_GPUBlitInfo, texture: SDL_GPUTexture, x: integer, y: integer, w: integer, h: integer)` | nil |
-| `SDLStaticC.GPUBufferBindingCreate()` | SDL_GPUBufferBinding|nil |
-| `SDLStaticC.GPUBufferBindingDestroy(binding: SDL_GPUBufferBinding)` | nil |
-| `SDLStaticC.GPUBufferBindingSet(binding: SDL_GPUBufferBinding, buffer: SDL_GPUBuffer, offset: integer)` | nil |
-| `SDLStaticC.GPUBufferLocationCreate()` | SDL_GPUBufferLocation|nil |
-| `SDLStaticC.GPUBufferLocationDestroy(location: SDL_GPUBufferLocation)` | nil |
-| `SDLStaticC.GPUBufferLocationSet(location: SDL_GPUBufferLocation, buffer: SDL_GPUBuffer, offset: integer)` | nil |
-| `SDLStaticC.GPUBufferRegionCreate()` | SDL_GPUBufferRegion|nil |
-| `SDLStaticC.GPUBufferRegionDestroy(region: SDL_GPUBufferRegion)` | nil |
-| `SDLStaticC.GPUBufferRegionSet(region: SDL_GPUBufferRegion, buffer: SDL_GPUBuffer, offset: integer, size: integer)` | nil |
-| `SDLStaticC.GPUColorTargetInfoCreate()` | SDL_GPUColorTargetInfo|nil |
-| `SDLStaticC.GPUColorTargetInfoDestroy(info: SDL_GPUColorTargetInfo)` | nil |
-| `SDLStaticC.GPUColorTargetInfoSetClearColor(info: SDL_GPUColorTargetInfo, r: number, g: number, b: number, a: number)` | nil |
-| `SDLStaticC.GPUColorTargetInfoSetCycle(info: SDL_GPUColorTargetInfo, cycle: boolean)` | nil |
-| `SDLStaticC.GPUColorTargetInfoSetMipLayer(info: SDL_GPUColorTargetInfo, mip: integer, layer_or_depth: integer)` | nil |
-| `SDLStaticC.GPUColorTargetInfoSetOps(info: SDL_GPUColorTargetInfo, load_op: integer, store_op: integer)` | nil |
-| `SDLStaticC.GPUColorTargetInfoSetTexture(info: SDL_GPUColorTargetInfo, texture: SDL_GPUTexture)` | nil |
-| `SDLStaticC.GPUComputeBindingsAddBuffer(bindings: SDLStatic_GPUComputeBindings, buffer: SDL_GPUBuffer, cycle: boolean)` | boolean |
-| `SDLStaticC.GPUComputeBindingsAddTexture(bindings: SDLStatic_GPUComputeBindings, texture: SDL_GPUTexture, mip_level: integer, layer: integer, cycle: boolean)` | boolean |
-| `SDLStaticC.GPUComputeBindingsCreate()` | SDLStatic_GPUComputeBindings|nil |
-| `SDLStaticC.GPUComputeBindingsDestroy(bindings: SDLStatic_GPUComputeBindings)` | nil |
-| `SDLStaticC.GPUComputePipelineInfoCreate()` | SDL_GPUComputePipelineCreateInfo|nil |
-| `SDLStaticC.GPUComputePipelineInfoDestroy(info: SDL_GPUComputePipelineCreateInfo)` | nil |
-| `SDLStaticC.GPUComputePipelineInfoSetCode(info: SDL_GPUComputePipelineCreateInfo, code: string|nil)` | nil |
-| `SDLStaticC.GPUComputePipelineInfoSetEntrypoint(info: SDL_GPUComputePipelineCreateInfo, entrypoint: string|nil)` | nil |
-| `SDLStaticC.GPUComputePipelineInfoSetFormat(info: SDL_GPUComputePipelineCreateInfo, format: integer)` | nil |
-| `SDLStaticC.GPUComputePipelineInfoSetThreadCount(info: SDL_GPUComputePipelineCreateInfo, x: integer, y: integer, z: integer)` | nil |
-| `SDLStaticC.GPUDepthStencilTargetInfoCreate()` | SDL_GPUDepthStencilTargetInfo|nil |
-| `SDLStaticC.GPUDepthStencilTargetInfoDestroy(info: SDL_GPUDepthStencilTargetInfo)` | nil |
-| `SDLStaticC.GPUDepthStencilTargetInfoSetClear(info: SDL_GPUDepthStencilTargetInfo, depth: number, stencil: integer)` | nil |
-| `SDLStaticC.GPUDepthStencilTargetInfoSetOps(info: SDL_GPUDepthStencilTargetInfo, load_op: integer, store_op: integer)` | nil |
-| `SDLStaticC.GPUDepthStencilTargetInfoSetTexture(info: SDL_GPUDepthStencilTargetInfo, texture: SDL_GPUTexture)` | nil |
-| `SDLStaticC.GPUPipelineInfoAddColorTarget(info: SDL_GPUGraphicsPipelineCreateInfo, format: integer)` | boolean |
-| `SDLStaticC.GPUPipelineInfoAddVertexAttribute(info: SDL_GPUGraphicsPipelineCreateInfo, location: integer, buffer_slot: integer, format: integer, offset: integer)` | boolean |
-| `SDLStaticC.GPUPipelineInfoAddVertexBuffer(info: SDL_GPUGraphicsPipelineCreateInfo, slot: integer, pitch: integer, input_rate: integer)` | boolean |
-| `SDLStaticC.GPUPipelineInfoCreate()` | SDL_GPUGraphicsPipelineCreateInfo|nil |
-| `SDLStaticC.GPUPipelineInfoDestroy(info: SDL_GPUGraphicsPipelineCreateInfo)` | nil |
-| `SDLStaticC.GPUPipelineInfoSetDepthStencil(info: SDL_GPUGraphicsPipelineCreateInfo, format: integer, enabled: boolean)` | nil |
-| `SDLStaticC.GPUPipelineInfoSetFillMode(info: SDL_GPUGraphicsPipelineCreateInfo, fill: integer, cull: integer)` | nil |
-| `SDLStaticC.GPUPipelineInfoSetPrimitive(info: SDL_GPUGraphicsPipelineCreateInfo, primitive: integer)` | nil |
-| `SDLStaticC.GPUPipelineInfoSetShaders(info: SDL_GPUGraphicsPipelineCreateInfo, vertex: SDL_GPUShader, fragment: SDL_GPUShader)` | nil |
-| `SDLStaticC.GPURenderStateInfoAddSampler(info: SDL_GPURenderStateCreateInfo, texture: SDL_GPUTexture, sampler: SDL_GPUSampler)` | boolean |
-| `SDLStaticC.GPURenderStateInfoCreate()` | SDL_GPURenderStateCreateInfo|nil |
-| `SDLStaticC.GPURenderStateInfoDestroy(info: SDL_GPURenderStateCreateInfo)` | nil |
-| `SDLStaticC.GPURenderStateInfoSetShader(info: SDL_GPURenderStateCreateInfo, fragment_shader: SDL_GPUShader)` | nil |
-| `SDLStaticC.GPUShaderCreateInfoCreate()` | SDL_GPUShaderCreateInfo|nil |
-| `SDLStaticC.GPUShaderCreateInfoDestroy(info: SDL_GPUShaderCreateInfo)` | nil |
-| `SDLStaticC.GPUShaderCreateInfoSetCode(info: SDL_GPUShaderCreateInfo, code: string|nil)` | nil |
-| `SDLStaticC.GPUShaderCreateInfoSetCounts(info: SDL_GPUShaderCreateInfo, samplers: integer, storage_textures: integer, storage_buffers: integer, uniform_buffers: integer)` | nil |
-| `SDLStaticC.GPUShaderCreateInfoSetEntrypoint(info: SDL_GPUShaderCreateInfo, entrypoint: string|nil)` | nil |
-| `SDLStaticC.GPUShaderCreateInfoSetFormat(info: SDL_GPUShaderCreateInfo, format: integer, stage: integer)` | nil |
-| `SDLStaticC.GPUSwapchainHeight()` | integer |
-| `SDLStaticC.GPUSwapchainWidth()` | integer |
-| `SDLStaticC.GPUTextureLocationCreate()` | SDL_GPUTextureLocation|nil |
-| `SDLStaticC.GPUTextureLocationDestroy(location: SDL_GPUTextureLocation)` | nil |
-| `SDLStaticC.GPUTextureLocationSet(location: SDL_GPUTextureLocation, texture: SDL_GPUTexture, x: integer, y: integer, z: integer)` | nil |
-| `SDLStaticC.GPUTextureRegionCreate()` | SDL_GPUTextureRegion|nil |
-| `SDLStaticC.GPUTextureRegionDestroy(region: SDL_GPUTextureRegion)` | nil |
-| `SDLStaticC.GPUTextureRegionSet(region: SDL_GPUTextureRegion, texture: SDL_GPUTexture, x: integer, y: integer, w: integer, h: integer)` | nil |
-| `SDLStaticC.GPUTextureSamplerBindingCreate()` | SDL_GPUTextureSamplerBinding|nil |
-| `SDLStaticC.GPUTextureSamplerBindingDestroy(binding: SDL_GPUTextureSamplerBinding)` | nil |
-| `SDLStaticC.GPUTextureSamplerBindingSet(binding: SDL_GPUTextureSamplerBinding, texture: SDL_GPUTexture, sampler: SDL_GPUSampler)` | nil |
-| `SDLStaticC.GPUTextureTransferInfoCreate()` | SDL_GPUTextureTransferInfo|nil |
-| `SDLStaticC.GPUTextureTransferInfoDestroy(info: SDL_GPUTextureTransferInfo)` | nil |
-| `SDLStaticC.GPUTextureTransferInfoSet(info: SDL_GPUTextureTransferInfo, buffer: SDL_GPUTransferBuffer, offset: integer, pixels_per_row: integer, rows_per_layer: integer)` | nil |
-| `SDLStaticC.GPUTransferBufferLocationCreate()` | SDL_GPUTransferBufferLocation|nil |
-| `SDLStaticC.GPUTransferBufferLocationDestroy(location: SDL_GPUTransferBufferLocation)` | nil |
-| `SDLStaticC.GPUTransferBufferLocationSet(location: SDL_GPUTransferBufferLocation, buffer: SDL_GPUTransferBuffer, offset: integer)` | nil |
-| `SDLStaticC.GPUUploadToTransferBuffer(device: SDL_GPUDevice, buffer: SDL_GPUTransferBuffer, offset: integer, data: string|nil, cycle: boolean)` | boolean |
-| `SDLStaticC.GPUWaitAndAcquireSwapchain(command_buffer: SDL_GPUCommandBuffer, window: SDL_Window)` | SDL_GPUTexture|nil |
-| `SDLStaticC.GPUWaitForFence(device: SDL_GPUDevice, fence: SDL_GPUFence)` | boolean |
-| `SDLStaticC.GamepadAccelerometer(engine: SDLStatic_Engine, player: integer, x: number, y: number, z: number)` | x: number, y: number, z: number |
-| `SDLStaticC.GamepadAxisValue(engine: SDLStatic_Engine, player: integer, axis: integer)` | number |
-| `SDLStaticC.GamepadButtonDown(engine: SDLStatic_Engine, player: integer, button: integer)` | boolean |
-| `SDLStaticC.GamepadButtonPressed(engine: SDLStatic_Engine, player: integer, button: integer)` | boolean |
-| `SDLStaticC.GamepadButtonReleased(engine: SDLStatic_Engine, player: integer, button: integer)` | boolean |
-| `SDLStaticC.GamepadConnected(engine: SDLStatic_Engine, player: integer)` | boolean |
-| `SDLStaticC.GamepadCount(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.GamepadDeadzone(engine: SDLStatic_Engine)` | number |
-| `SDLStaticC.GamepadDirectionPressed(engine: SDLStatic_Engine, player: integer, direction: integer)` | boolean |
-| `SDLStaticC.GamepadDirectionRepeat(engine: SDLStatic_Engine, player: integer, direction: integer)` | boolean |
-| `SDLStaticC.GamepadGyro(engine: SDLStatic_Engine, player: integer, x: number, y: number, z: number)` | x: number, y: number, z: number |
-| `SDLStaticC.GamepadHasAccelerometer(engine: SDLStatic_Engine, player: integer)` | boolean |
-| `SDLStaticC.GamepadHasGyro(engine: SDLStatic_Engine, player: integer)` | boolean |
-| `SDLStaticC.GamepadName(engine: SDLStatic_Engine, player: integer)` | string|nil |
-| `SDLStaticC.GamepadRumble(engine: SDLStatic_Engine, player: integer, low: number, high: number, milliseconds: integer)` | boolean |
-| `SDLStaticC.GamepadRumbleTriggers(engine: SDLStatic_Engine, player: integer, left: number, right: number, milliseconds: integer)` | boolean |
-| `SDLStaticC.GamepadSetLED(engine: SDLStatic_Engine, player: integer, red: integer, green: integer, blue: integer)` | boolean |
-| `SDLStaticC.GamepadStick(engine: SDLStatic_Engine, player: integer, side: integer, x: number, y: number)` | x: number, y: number |
-| `SDLStaticC.GamepadStopRumble(engine: SDLStatic_Engine, player: integer)` | nil |
-| `SDLStaticC.GraphicsClamp()` | settings: SDLStatic_GraphicsSettings table |
-| `SDLStaticC.GraphicsConfigError()` | string|nil |
-| `SDLStaticC.GraphicsConfigPath()` | string|nil |
-| `SDLStaticC.GraphicsDefaults()` | SDLStatic_GraphicsSettings table |
-| `SDLStaticC.GraphicsEqual(a: SDLStatic_GraphicsSettings table, b: SDLStatic_GraphicsSettings table)` | boolean |
-| `SDLStaticC.GraphicsLightMapScale(quality: integer)` | number |
-| `SDLStaticC.GraphicsLoadTomlFile(path: string|nil)` | boolean, settings: SDLStatic_GraphicsSettings table |
-| `SDLStaticC.GraphicsLoadTomlString(toml: string|nil)` | boolean, settings: SDLStatic_GraphicsSettings table |
-| `SDLStaticC.GraphicsMaxDynamicLights(quality: integer)` | integer |
-| `SDLStaticC.GraphicsParticleDensity(quality: integer)` | number |
-| `SDLStaticC.GraphicsQualityFromName(name: string|nil, out: integer)` | boolean, out: integer |
-| `SDLStaticC.GraphicsQualityName(quality: integer)` | string|nil |
-| `SDLStaticC.GraphicsSafeMode()` | SDLStatic_GraphicsSettings table |
-| `SDLStaticC.GraphicsSave(settings: SDLStatic_GraphicsSettings table, org: string|nil, app: string|nil)` | boolean |
-| `SDLStaticC.GraphicsSavePath(org: string|nil, app: string|nil)` | string|nil |
-| `SDLStaticC.GraphicsShadowRays(quality: integer)` | integer |
-| `SDLStaticC.GraphicsShadowSoftness(quality: integer)` | number |
-| `SDLStaticC.GraphicsToToml(settings: SDLStatic_GraphicsSettings table)` | string|nil |
-| `SDLStaticC.GuiContext(gui: SDLStatic_Gui)` | nk_context|nil |
-| `SDLStaticC.GuiDrawCommandCount(gui: SDLStatic_Gui)` | integer |
-| `SDLStaticC.GuiDrawTexture(gui: SDLStatic_Gui, texture: SDL_Texture, rect: SDL_FRect table, mode: integer)` | boolean |
-| `SDLStaticC.GuiDrawTextureOverlay(gui: SDLStatic_Gui, texture: SDL_Texture, rect: SDL_FRect table, mode: integer)` | boolean |
-| `SDLStaticC.GuiFontHeight(gui: SDLStatic_Gui)` | number |
-| `SDLStaticC.GuiGridBeginOwned(gui: SDLStatic_Gui, columns: integer, row_height: number)` | boolean |
-| `SDLStaticC.GuiGridCell(grid: SDLStatic_GuiGrid)` | nil |
-| `SDLStaticC.GuiGridCellOwned(gui: SDLStatic_Gui)` | nil |
-| `SDLStaticC.GuiGridCellSpan(grid: SDLStatic_GuiGrid, span: integer)` | nil |
-| `SDLStaticC.GuiGridCellSpanOwned(gui: SDLStatic_Gui, span: integer)` | nil |
-| `SDLStaticC.GuiGridCreate()` | SDLStatic_GuiGrid|nil |
-| `SDLStaticC.GuiGridDestroy(grid: SDLStatic_GuiGrid)` | nil |
-| `SDLStaticC.GuiGridEnd(grid: SDLStatic_GuiGrid)` | nil |
-| `SDLStaticC.GuiGridEndOwned(gui: SDLStatic_Gui)` | nil |
-| `SDLStaticC.GuiGridNextRow(grid: SDLStatic_GuiGrid)` | nil |
-| `SDLStaticC.GuiGridNextRowOwned(gui: SDLStatic_Gui)` | nil |
-| `SDLStaticC.GuiGridWeight(gui: SDLStatic_Gui, column: integer, weight: number)` | boolean |
-| `SDLStaticC.GuiImage(gui: SDLStatic_Gui, texture: SDL_Texture, mode: integer)` | boolean |
-| `SDLStaticC.GuiInputBegin(gui: SDLStatic_Gui)` | nil |
-| `SDLStaticC.GuiInputEnd(gui: SDLStatic_Gui)` | nil |
-| `SDLStaticC.GuiKeyPressed(gui: SDLStatic_Gui, scancode: integer)` | boolean |
-| `SDLStaticC.GuiMemoryUsed(gui: SDLStatic_Gui)` | integer |
-| `SDLStaticC.GuiOpenFileButton(gui: SDLStatic_Gui, label: string|nil, filter_name: string|nil, filter_pattern: string|nil)` | boolean |
-| `SDLStaticC.GuiPopFont(gui: SDLStatic_Gui, count: integer)` | nil |
-| `SDLStaticC.GuiPopStyleColor(gui: SDLStatic_Gui, count: integer)` | nil |
-| `SDLStaticC.GuiProcessEvent(gui: SDLStatic_Gui, event: SDL_Event)` | boolean |
-| `SDLStaticC.GuiPumpEvents(gui: SDLStatic_Gui)` | boolean |
-| `SDLStaticC.GuiPushFont(gui: SDLStatic_Gui, which: integer)` | boolean |
-| `SDLStaticC.GuiPushStyleColor(gui: SDLStatic_Gui, which: integer, color: SDL_Color table)` | boolean |
-| `SDLStaticC.GuiRender(gui: SDLStatic_Gui)` | boolean |
-| `SDLStaticC.GuiSaveFileButton(gui: SDLStatic_Gui, label: string|nil, filename: string|nil, data: string|nil)` | boolean |
-| `SDLStaticC.GuiSavedPath(gui: SDLStatic_Gui)` | string|nil |
-| `SDLStaticC.GuiScale(gui: SDLStatic_Gui)` | number |
-| `SDLStaticC.GuiSetFont(gui: SDLStatic_Gui, which: integer)` | boolean |
-| `SDLStaticC.GuiSetTooltipDelay(gui: SDLStatic_Gui, delay_ms: integer)` | nil |
-| `SDLStaticC.GuiTooltip(gui: SDLStatic_Gui, text: string|nil)` | boolean |
-| `SDLStaticC.GuiTooltipDelay(gui: SDLStatic_Gui)` | integer |
-| `SDLStaticC.GuiWantsInput(gui: SDLStatic_Gui)` | boolean |
-| `SDLStaticC.HMACSHA256(key: string|nil, data: string|nil, digest: integer)` | boolean, digest: integer |
-| `SDLStaticC.HasDeviceMotion(engine: SDLStatic_Engine)` | boolean |
-| `SDLStaticC.IdleSeconds(engine: SDLStatic_Engine)` | number |
-| `SDLStaticC.KeyDown(engine: SDLStatic_Engine, key: integer)` | boolean |
-| `SDLStaticC.KeyModifiers(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.KeyPressed(engine: SDLStatic_Engine, key: integer)` | boolean |
-| `SDLStaticC.KeyReleased(engine: SDLStatic_Engine, key: integer)` | boolean |
-| `SDLStaticC.LastInputDevice(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.LightAddDarkZone(engine: SDLStatic_Engine, area: SDL_FRect table, ambient: SDL_FColor table)` | nil |
-| `SDLStaticC.LightAddOccluder(engine: SDLStatic_Engine, wall: SDL_FRect table)` | nil |
-| `SDLStaticC.LightAddOccluderLine(engine: SDLStatic_Engine, x1: number, y1: number, x2: number, y2: number)` | nil |
-| `SDLStaticC.LightAmbient(engine: SDLStatic_Engine)` | SDL_FColor table |
-| `SDLStaticC.LightAt(engine: SDLStatic_Engine, x: number, y: number)` | number |
-| `SDLStaticC.LightBeginFrame(scene: SDLStatic_LightScene, camera_x: number, camera_y: number)` | nil |
-| `SDLStaticC.LightCount(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.LightDefDestroy()` | def: SDLStatic_LightDef table |
-| `SDLStaticC.LightDefSetColor(r: number, g: number, b: number, a: number)` | def: SDLStatic_LightDef table |
-| `SDLStaticC.LightDefSetCone(direction: number, width: number)` | def: SDLStatic_LightDef table |
-| `SDLStaticC.LightDefSetFlicker(flicker: number)` | def: SDLStatic_LightDef table |
-| `SDLStaticC.LightDefSetOffset(x: number, y: number)` | def: SDLStatic_LightDef table |
-| `SDLStaticC.LightDefSetRadius(radius: number)` | def: SDLStatic_LightDef table |
-| `SDLStaticC.LightDefSetShadows(casts_shadows: boolean)` | def: SDLStatic_LightDef table |
-| `SDLStaticC.LightDefault()` | SDLStatic_LightDef table |
-| `SDLStaticC.LightHour(engine: SDLStatic_Engine)` | number |
-| `SDLStaticC.LightLineOfSight(scene: SDLStatic_LightScene, x1: number, y1: number, x2: number, y2: number)` | boolean |
-| `SDLStaticC.LightPreset_(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.LightRender(engine: SDLStatic_Engine, camera: SDLStatic_Camera table, alpha: number)` | boolean |
-| `SDLStaticC.LightSetAmbient(engine: SDLStatic_Engine, ambient: SDL_FColor table)` | nil |
-| `SDLStaticC.LightSetAutoOccluders(engine: SDLStatic_Engine, enabled: boolean)` | nil |
-| `SDLStaticC.LightSetClock(engine: SDLStatic_Engine, hours: number, hours_per_second: number)` | nil |
-| `SDLStaticC.LightSetPreset(engine: SDLStatic_Engine, preset: integer)` | nil |
-| `SDLStaticC.LightSunlight(engine: SDLStatic_Engine)` | number |
-| `SDLStaticC.LightUsesShaders(scene: SDLStatic_LightScene)` | boolean |
-| `SDLStaticC.LoadTextFile(path: string|nil)` | string|nil |
-| `SDLStaticC.LoadTexture(engine: SDLStatic_Engine, path: string|nil)` | integer |
-| `SDLStaticC.LoadTextureAsync(engine: SDLStatic_Engine, path: string|nil)` | integer |
-| `SDLStaticC.LoadTiledMap(path: string|nil)` | SDLStatic_TiledMap|nil |
-| `SDLStaticC.MotorJointDefCreate()` | b2MotorJointDef|nil |
-| `SDLStaticC.MotorJointDefDestroy(def: b2MotorJointDef)` | nil |
-| `SDLStaticC.MotorJointDefSetBodies(def: b2MotorJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
-| `SDLStaticC.MountEncryptedArchive(data: string|nil, password: string|nil, mountPoint: string|nil)` | boolean |
-| `SDLStaticC.MountEncryptedArchiveFile(path: string|nil, password: string|nil, mountPoint: string|nil)` | boolean |
-| `SDLStaticC.MountMedia(explicit_path: string|nil, password: string|nil)` | integer |
-| `SDLStaticC.MouseCaptured(engine: SDLStatic_Engine)` | boolean |
-| `SDLStaticC.MouseDelta(engine: SDLStatic_Engine, x: number, y: number)` | x: number, y: number |
-| `SDLStaticC.MouseDown(engine: SDLStatic_Engine, button: integer)` | boolean |
-| `SDLStaticC.MouseJointDefCreate()` | b2MouseJointDef|nil |
-| `SDLStaticC.MouseJointDefDestroy(def: b2MouseJointDef)` | nil |
-| `SDLStaticC.MouseJointDefSetBodies(def: b2MouseJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
-| `SDLStaticC.MouseJointDefSetMaxForce(def: b2MouseJointDef, force: number)` | nil |
-| `SDLStaticC.MouseJointDefSetSpring(def: b2MouseJointDef, hertz: number, damping: number)` | nil |
-| `SDLStaticC.MousePosition(engine: SDLStatic_Engine, x: number, y: number)` | x: number, y: number |
-| `SDLStaticC.MousePressed(engine: SDLStatic_Engine, button: integer)` | boolean |
-| `SDLStaticC.MouseReleased(engine: SDLStatic_Engine, button: integer)` | boolean |
-| `SDLStaticC.MouseWheel(engine: SDLStatic_Engine, x: number, y: number)` | x: number, y: number |
-| `SDLStaticC.OpenVFSRead(vfsPath: string|nil)` | SDL_IOStream|nil |
-| `SDLStaticC.PhysicsBodyCount(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.PhysicsGravity(engine: SDLStatic_Engine, x: number, y: number)` | x: number, y: number |
-| `SDLStaticC.PhysicsOverlap(engine: SDLStatic_Engine, area: SDL_FRect table, mask: integer, out: integer, capacity: integer)` | integer, out: integer |
-| `SDLStaticC.PhysicsPaused(engine: SDLStatic_Engine)` | boolean |
-| `SDLStaticC.PhysicsPixelsPerMetre(engine: SDLStatic_Engine)` | number |
-| `SDLStaticC.PhysicsRaycast(engine: SDLStatic_Engine, x: number, y: number, dx: number, dy: number, mask: integer)` | SDLStatic_RayHit table |
-| `SDLStaticC.PhysicsSetGravity(engine: SDLStatic_Engine, x: number, y: number)` | nil |
-| `SDLStaticC.PhysicsSetPaused(engine: SDLStatic_Engine, paused: boolean)` | nil |
-| `SDLStaticC.PhysicsSetPixelsPerMetre(engine: SDLStatic_Engine, pixels: number)` | nil |
-| `SDLStaticC.PhysicsSetSubSteps(engine: SDLStatic_Engine, sub_steps: integer)` | nil |
-| `SDLStaticC.PrismaticJointDefCreate()` | b2PrismaticJointDef|nil |
-| `SDLStaticC.PrismaticJointDefDestroy(def: b2PrismaticJointDef)` | nil |
-| `SDLStaticC.PrismaticJointDefSetAnchors(def: b2PrismaticJointDef, ax: number, ay: number, bx: number, by: number)` | nil |
-| `SDLStaticC.PrismaticJointDefSetAxis(def: b2PrismaticJointDef, x: number, y: number)` | nil |
-| `SDLStaticC.PrismaticJointDefSetBodies(def: b2PrismaticJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
-| `SDLStaticC.PrismaticJointDefSetLimit(def: b2PrismaticJointDef, enabled: boolean, lower: number, upper: number)` | nil |
-| `SDLStaticC.PrismaticJointDefSetMotor(def: b2PrismaticJointDef, enabled: boolean, speed: number, max_force: number)` | nil |
-| `SDLStaticC.QuitDebugText()` | nil |
-| `SDLStaticC.RegexEscape(text: string|nil)` | string|nil |
-| `SDLStaticC.RegexFlags(regex: SDLStatic_Regex)` | string|nil |
-| `SDLStaticC.RegexGroup(regex: SDLStatic_Regex, group: integer)` | string|nil |
-| `SDLStaticC.RegexGroupBegin(regex: SDLStatic_Regex, group: integer)` | integer |
-| `SDLStaticC.RegexGroupCount(regex: SDLStatic_Regex)` | integer |
-| `SDLStaticC.RegexGroupEnd(regex: SDLStatic_Regex, group: integer)` | integer |
-| `SDLStaticC.RegexMatchAt(regex: SDLStatic_Regex, text: string|nil, start: integer)` | boolean |
-| `SDLStaticC.RegexNamedGroup(regex: SDLStatic_Regex, name: string|nil)` | integer |
-| `SDLStaticC.RegexNamedGroupCount(regex: SDLStatic_Regex)` | integer |
-| `SDLStaticC.RegexNamedGroupName(regex: SDLStatic_Regex, index: integer)` | string|nil |
-| `SDLStaticC.RegexPattern(regex: SDLStatic_Regex)` | string|nil |
-| `SDLStaticC.RegexReplace(regex: SDLStatic_Regex, text: string|nil, replacement: string|nil, all: boolean)` | string|nil |
-| `SDLStaticC.RegexSearch(regex: SDLStatic_Regex, text: string|nil, start: integer)` | boolean |
-| `SDLStaticC.RenderDebugText(renderer: SDL_Renderer, x: number, y: number, text: string|nil)` | boolean |
-| `SDLStaticC.RenderLastStats(engine: SDLStatic_Engine)` | SDLStatic_RenderStats table |
-| `SDLStaticC.RenderLighting(scene: SDLStatic_LightScene)` | boolean |
-| `SDLStaticC.RenderOverlay(engine: SDLStatic_Engine, alpha: number)` | integer |
-| `SDLStaticC.RenderWorld(engine: SDLStatic_Engine, camera: SDLStatic_Camera table, alpha: number)` | integer |
-| `SDLStaticC.RevoluteJointDefCreate()` | b2RevoluteJointDef|nil |
-| `SDLStaticC.RevoluteJointDefDestroy(def: b2RevoluteJointDef)` | nil |
-| `SDLStaticC.RevoluteJointDefSetAnchors(def: b2RevoluteJointDef, ax: number, ay: number, bx: number, by: number)` | nil |
-| `SDLStaticC.RevoluteJointDefSetBodies(def: b2RevoluteJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
-| `SDLStaticC.RevoluteJointDefSetCollideConnected(def: b2RevoluteJointDef, enabled: boolean)` | nil |
-| `SDLStaticC.RevoluteJointDefSetLimit(def: b2RevoluteJointDef, min_degrees: number, max_degrees: number)` | nil |
-| `SDLStaticC.RevoluteJointDefSetMotor(def: b2RevoluteJointDef, enabled: boolean, degrees_per_second: number, max_torque: number)` | nil |
-| `SDLStaticC.RevoluteJointDefSetSpring(def: b2RevoluteJointDef, enabled: boolean, hertz: number, damping: number)` | nil |
-| `SDLStaticC.SHA256(data: string|nil, digest: integer)` | boolean, digest: integer |
-| `SDLStaticC.SampleLight(scene: SDLStatic_LightScene, x: number, y: number)` | number |
-| `SDLStaticC.SaveDelete(engine: SDLStatic_Engine, slot: integer)` | boolean |
-| `SDLStaticC.SaveExists(engine: SDLStatic_Engine, slot: integer)` | boolean |
-| `SDLStaticC.SaveInfoOf(engine: SDLStatic_Engine, slot: integer)` | SDLStatic_SaveInfo table |
-| `SDLStaticC.SavePath(engine: SDLStatic_Engine, slot: integer)` | string|nil |
-| `SDLStaticC.SaveSetIdentity(engine: SDLStatic_Engine, org: string|nil, app: string|nil)` | nil |
-| `SDLStaticC.SaveWrite(engine: SDLStatic_Engine, slot: integer, data: string|nil, label: string|nil)` | boolean |
-| `SDLStaticC.SceneCurrent(engine: SDLStatic_Engine)` | SDLStatic_Scene|nil |
-| `SDLStaticC.SceneDepth(engine: SDLStatic_Engine)` | integer |
-| `SDLStaticC.SceneEngine(scene: SDLStatic_Scene)` | SDLStatic_Engine|nil |
-| `SDLStaticC.SceneFind(engine: SDLStatic_Engine, name: string|nil)` | SDLStatic_Scene|nil |
-| `SDLStaticC.SceneIsActive(scene: SDLStatic_Scene)` | boolean |
-| `SDLStaticC.SceneKey(scene: SDLStatic_Scene)` | integer |
-| `SDLStaticC.SceneName(scene: SDLStatic_Scene)` | string|nil |
-| `SDLStaticC.ScenePop(engine: SDLStatic_Engine)` | boolean |
-| `SDLStaticC.ScenePush(engine: SDLStatic_Engine, def: SDLStatic_SceneDef)` | boolean |
-| `SDLStaticC.SceneReplace(engine: SDLStatic_Engine, def: SDLStatic_SceneDef)` | boolean |
-| `SDLStaticC.SceneReset(engine: SDLStatic_Engine, def: SDLStatic_SceneDef)` | boolean |
-| `SDLStaticC.SceneSetTransitionColor(engine: SDLStatic_Engine, color: SDL_FColor table)` | nil |
-| `SDLStaticC.SceneTransitionTo(engine: SDLStatic_Engine, def: SDLStatic_SceneDef, transition: integer, seconds: number)` | boolean |
-| `SDLStaticC.SceneTransitioning(engine: SDLStatic_Engine)` | boolean |
-| `SDLStaticC.ScriptHasHandlers(engine: SDLStatic_Engine)` | boolean |
-| `SDLStaticC.ScriptRun(engine: SDLStatic_Engine)` | boolean |
-| `SDLStaticC.ScriptSceneDefine(engine: SDLStatic_Engine, name: string|nil)` | boolean |
-| `SDLStaticC.ScriptSceneDefined(engine: SDLStatic_Engine, name: string|nil)` | boolean |
-| `SDLStaticC.ScriptScenePush(engine: SDLStatic_Engine, name: string|nil)` | boolean |
-| `SDLStaticC.ScriptSceneReplace(engine: SDLStatic_Engine, name: string|nil)` | boolean |
-| `SDLStaticC.ScriptSceneReset(engine: SDLStatic_Engine, name: string|nil)` | boolean |
-| `SDLStaticC.ScriptSceneSetFlags(engine: SDLStatic_Engine, name: string|nil, flags: integer)` | boolean |
-| `SDLStaticC.ScriptSceneSetHook(engine: SDLStatic_Engine, name: string|nil, hook: integer, handle: integer)` | boolean |
-| `SDLStaticC.ScriptSceneSetStateSize(engine: SDLStatic_Engine, name: string|nil, state_size: integer)` | boolean |
-| `SDLStaticC.ScriptSceneTransitionTo(engine: SDLStatic_Engine, name: string|nil, transition: integer, seconds: number)` | boolean |
-| `SDLStaticC.ScriptSetHook(engine: SDLStatic_Engine, hook: integer, handle: integer)` | boolean |
-| `SDLStaticC.ScriptUnbind(engine: SDLStatic_Engine)` | nil |
-| `SDLStaticC.SetDebugTextSize(ptsize: number)` | nil |
-| `SDLStaticC.SetDeviceMotion(engine: SDLStatic_Engine, enabled: boolean)` | boolean |
-| `SDLStaticC.SetDirectionRepeat(engine: SDLStatic_Engine, delay_seconds: number, interval_seconds: number)` | nil |
-| `SDLStaticC.SetGamepadDeadzone(engine: SDLStatic_Engine, deadzone: number)` | nil |
-| `SDLStaticC.SetGamepadMotion(engine: SDLStatic_Engine, player: integer, enabled: boolean)` | boolean |
-| `SDLStaticC.SetLightAmbient(scene: SDLStatic_LightScene, ambient: SDL_FColor table)` | nil |
-| `SDLStaticC.SetLightDebugDraw(scene: SDLStatic_LightScene, enabled: boolean)` | nil |
-| `SDLStaticC.SetLightMapScale(scene: SDLStatic_LightScene, scale: number)` | nil |
-| `SDLStaticC.SetLightRayCount(scene: SDLStatic_LightScene, rays: integer)` | nil |
-| `SDLStaticC.SetLightRings(scene: SDLStatic_LightScene, rings: integer)` | nil |
-| `SDLStaticC.SetLightShadowSoftness(scene: SDLStatic_LightScene, softness: number)` | nil |
-| `SDLStaticC.SetLightUseShaders(scene: SDLStatic_LightScene, enabled: boolean)` | nil |
-| `SDLStaticC.SetMouseCapture(engine: SDLStatic_Engine, captured: boolean)` | boolean |
-| `SDLStaticC.SetTextInput(engine: SDLStatic_Engine, enabled: boolean)` | nil |
-| `SDLStaticC.SetTriggerThreshold(engine: SDLStatic_Engine, threshold: number)` | nil |
-| `SDLStaticC.ShowOpenFileDialog(window: SDL_Window, filter_name: string|nil, filter_pattern: string|nil, default_location: string|nil)` | boolean |
-| `SDLStaticC.ShowSaveFileDialog(window: SDL_Window, filter_name: string|nil, filter_pattern: string|nil, default_location: string|nil)` | boolean |
-| `SDLStaticC.SpriteCreate()` | SDLStatic_Sprite|nil |
-| `SDLStaticC.SpriteDestroy(sprite: SDLStatic_Sprite)` | nil |
-| `SDLStaticC.SpriteSetColor(sprite: SDLStatic_Sprite, r: number, g: number, b: number, a: number)` | nil |
-| `SDLStaticC.SpriteSetLayer(sprite: SDLStatic_Sprite, layer: integer, order: number)` | nil |
-| `SDLStaticC.SpriteSetOrigin(sprite: SDLStatic_Sprite, x: number, y: number)` | nil |
-| `SDLStaticC.SpriteSetScreenSpace(sprite: SDLStatic_Sprite, enabled: boolean)` | nil |
-| `SDLStaticC.SpriteSetSize(sprite: SDLStatic_Sprite, width: number, height: number)` | nil |
-| `SDLStaticC.SpriteSetSortByY(sprite: SDLStatic_Sprite, enabled: boolean)` | nil |
-| `SDLStaticC.SpriteSetSource(sprite: SDLStatic_Sprite, x: number, y: number, w: number, h: number)` | nil |
-| `SDLStaticC.SpriteSetTexture(sprite: SDLStatic_Sprite, texture: SDL_Texture)` | nil |
-| `SDLStaticC.SpriteSetVisible(sprite: SDLStatic_Sprite, visible: boolean)` | nil |
-| `SDLStaticC.Text(engine: SDLStatic_Engine, key: string|nil)` | string|nil |
-| `SDLStaticC.TextCount(engine: SDLStatic_Engine, language: string|nil)` | integer |
-| `SDLStaticC.TextHas(engine: SDLStatic_Engine, key: string|nil)` | boolean |
-| `SDLStaticC.TextLanguage(engine: SDLStatic_Engine)` | string|nil |
-| `SDLStaticC.TextLoad(engine: SDLStatic_Engine, language: string|nil, toml: string|nil)` | boolean |
-| `SDLStaticC.TextLoadFile(engine: SDLStatic_Engine, language: string|nil)` | boolean |
-| `SDLStaticC.TextSetLanguage(engine: SDLStatic_Engine, language: string|nil)` | nil |
-| `SDLStaticC.TextTyped(engine: SDLStatic_Engine)` | string|nil |
-| `SDLStaticC.Texture(engine: SDLStatic_Engine, id: integer)` | SDL_Texture|nil |
-| `SDLStaticC.TiledLayerCount(map: SDLStatic_TiledMap)` | integer |
-| `SDLStaticC.TiledLayerName(map: SDLStatic_TiledMap, idx: integer)` | string|nil |
-| `SDLStaticC.TiledLayerType(map: SDLStatic_TiledMap, idx: integer)` | string|nil |
-| `SDLStaticC.TiledMapHeight(map: SDLStatic_TiledMap)` | integer |
-| `SDLStaticC.TiledMapWidth(map: SDLStatic_TiledMap)` | integer |
-| `SDLStaticC.TiledObjectAt(map: SDLStatic_TiledMap, layer: integer, index: integer, out: SDLStatic_TiledObject)` | boolean |
-| `SDLStaticC.TiledObjectCount(map: SDLStatic_TiledMap, layer: integer)` | integer |
-| `SDLStaticC.TiledRaw(map: SDLStatic_TiledMap)` | cute_tiled_map_t|nil |
-| `SDLStaticC.TiledTileAt(map: SDLStatic_TiledMap, layer: integer, x: integer, y: integer)` | integer |
-| `SDLStaticC.TiledTileHeight(map: SDLStatic_TiledMap)` | integer |
-| `SDLStaticC.TiledTileWidth(map: SDLStatic_TiledMap)` | integer |
-| `SDLStaticC.TouchPinch(engine: SDLStatic_Engine)` | number |
-| `SDLStaticC.TouchRotation(engine: SDLStatic_Engine)` | number |
-| `SDLStaticC.WeldJointDefCreate()` | b2WeldJointDef|nil |
-| `SDLStaticC.WeldJointDefDestroy(def: b2WeldJointDef)` | nil |
-| `SDLStaticC.WeldJointDefSetAnchors(def: b2WeldJointDef, ax: number, ay: number, bx: number, by: number)` | nil |
-| `SDLStaticC.WeldJointDefSetBodies(def: b2WeldJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
-| `SDLStaticC.WeldJointDefSetSpring(def: b2WeldJointDef, linear_hertz: number, linear_damping: number, angular_hertz: number, angular_damping: number)` | nil |
-| `SDLStaticC.WheelJointDefCreate()` | b2WheelJointDef|nil |
-| `SDLStaticC.WheelJointDefDestroy(def: b2WheelJointDef)` | nil |
-| `SDLStaticC.WheelJointDefSetAnchors(def: b2WheelJointDef, ax: number, ay: number, bx: number, by: number)` | nil |
-| `SDLStaticC.WheelJointDefSetAxis(def: b2WheelJointDef, x: number, y: number)` | nil |
-| `SDLStaticC.WheelJointDefSetBodies(def: b2WheelJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
-| `SDLStaticC.WheelJointDefSetMotor(def: b2WheelJointDef, enabled: boolean, speed: number, max_torque: number)` | nil |
-| `SDLStaticC.WheelJointDefSetSpring(def: b2WheelJointDef, enabled: boolean, hertz: number, damping: number)` | nil |
+| `GrappleC.ActionBind(map: Grapple_ActionMap, action: string|nil, binding: Grapple_Binding table)` | boolean |
+| `GrappleC.ActionBindAxis(map: Grapple_ActionMap, action: string|nil, axis: integer, half: integer)` | boolean |
+| `GrappleC.ActionBindDirection(map: Grapple_ActionMap, action: string|nil, direction: integer)` | boolean |
+| `GrappleC.ActionBindKey(map: Grapple_ActionMap, action: string|nil, key: integer)` | boolean |
+| `GrappleC.ActionBindKeySigned(map: Grapple_ActionMap, action: string|nil, key: integer, sign: integer)` | boolean |
+| `GrappleC.ActionBindMouse(map: Grapple_ActionMap, action: string|nil, button: integer)` | boolean |
+| `GrappleC.ActionBindPad(map: Grapple_ActionMap, action: string|nil, button: integer)` | boolean |
+| `GrappleC.ActionBindingAt(map: Grapple_ActionMap, action: string|nil, index: integer)` | boolean, out: Grapple_Binding table |
+| `GrappleC.ActionBindingCount(map: Grapple_ActionMap, action: string|nil)` | integer |
+| `GrappleC.ActionCapture(engine: Grapple_Engine, player: integer)` | boolean, out: Grapple_Binding table |
+| `GrappleC.ActionClear(map: Grapple_ActionMap, action: string|nil)` | nil |
+| `GrappleC.ActionCount(map: Grapple_ActionMap)` | integer |
+| `GrappleC.ActionDown(engine: Grapple_Engine, map: Grapple_ActionMap, player: integer, action: string|nil)` | boolean |
+| `GrappleC.ActionMapCreate()` | Grapple_ActionMap|nil |
+| `GrappleC.ActionMapDestroy(map: Grapple_ActionMap)` | nil |
+| `GrappleC.ActionMapKeyboardPlayer(map: Grapple_ActionMap)` | integer |
+| `GrappleC.ActionMapLoad(map: Grapple_ActionMap, org: string|nil, app: string|nil)` | boolean |
+| `GrappleC.ActionMapLoadToml(map: Grapple_ActionMap, toml: string|nil)` | boolean |
+| `GrappleC.ActionMapSave(map: Grapple_ActionMap, org: string|nil, app: string|nil)` | boolean |
+| `GrappleC.ActionMapSetKeyboardPlayer(map: Grapple_ActionMap, player: integer)` | nil |
+| `GrappleC.ActionMapToToml(map: Grapple_ActionMap)` | string|nil |
+| `GrappleC.ActionName(map: Grapple_ActionMap, index: integer)` | string|nil |
+| `GrappleC.ActionPressed(engine: Grapple_Engine, map: Grapple_ActionMap, player: integer, action: string|nil)` | boolean |
+| `GrappleC.ActionReleased(engine: Grapple_Engine, map: Grapple_ActionMap, player: integer, action: string|nil)` | boolean |
+| `GrappleC.ActionValue(engine: Grapple_Engine, map: Grapple_ActionMap, player: integer, action: string|nil)` | number |
+| `GrappleC.ActionVector(engine: Grapple_Engine, map: Grapple_ActionMap, player: integer, x_action: string|nil, y_action: string|nil, x: number, y: number)` | x: number, y: number |
+| `GrappleC.ActorAddBody(actor: Grapple_Actor, def: Grapple_BodyDef table)` | boolean |
+| `GrappleC.ActorAddLight(actor: Grapple_Actor, light: Grapple_LightDef table)` | boolean |
+| `GrappleC.ActorAlive(engine: Grapple_Engine, id: integer)` | boolean |
+| `GrappleC.ActorAngularVelocity(actor: Grapple_Actor)` | number |
+| `GrappleC.ActorApplyForce(actor: Grapple_Actor, x: number, y: number)` | nil |
+| `GrappleC.ActorApplyImpulse(actor: Grapple_Actor, x: number, y: number)` | nil |
+| `GrappleC.ActorBodyBounds(actor: Grapple_Actor)` | boolean, out: SDL_FRect table |
+| `GrappleC.ActorBroadcast(engine: Grapple_Engine, type: string|nil, tags: integer, message: Grapple_ActorMessage table)` | integer |
+| `GrappleC.ActorChild(actor: Grapple_Actor, index: integer)` | integer |
+| `GrappleC.ActorChildCount(actor: Grapple_Actor)` | integer |
+| `GrappleC.ActorClear(engine: Grapple_Engine)` | nil |
+| `GrappleC.ActorClearSprite(actor: Grapple_Actor)` | nil |
+| `GrappleC.ActorCount(engine: Grapple_Engine)` | integer |
+| `GrappleC.ActorDefCreate()` | Grapple_ActorDef|nil |
+| `GrappleC.ActorDefDestroy(def: Grapple_ActorDef)` | nil |
+| `GrappleC.ActorDefSetName(def: Grapple_ActorDef, name: string|nil)` | nil |
+| `GrappleC.ActorDefSetParent(def: Grapple_ActorDef, parent: integer)` | nil |
+| `GrappleC.ActorDefSetPosition(def: Grapple_ActorDef, x: number, y: number)` | nil |
+| `GrappleC.ActorDefSetRotation(def: Grapple_ActorDef, degrees: number)` | nil |
+| `GrappleC.ActorDefSetScale(def: Grapple_ActorDef, x: number, y: number)` | nil |
+| `GrappleC.ActorDefSetStateSize(def: Grapple_ActorDef, size: integer)` | nil |
+| `GrappleC.ActorDefSetTags(def: Grapple_ActorDef, tags: integer)` | nil |
+| `GrappleC.ActorDefSetType(def: Grapple_ActorDef, type: string|nil)` | nil |
+| `GrappleC.ActorDestroy(engine: Grapple_Engine, id: integer)` | nil |
+| `GrappleC.ActorEnabled(actor: Grapple_Actor)` | boolean |
+| `GrappleC.ActorEngine(actor: Grapple_Actor)` | Grapple_Engine|nil |
+| `GrappleC.ActorFindByName(engine: Grapple_Engine, name: string|nil)` | integer |
+| `GrappleC.ActorFindByType(engine: Grapple_Engine, type: string|nil)` | integer |
+| `GrappleC.ActorGet(engine: Grapple_Engine, id: integer)` | Grapple_Actor|nil |
+| `GrappleC.ActorGetId(actor: Grapple_Actor)` | integer |
+| `GrappleC.ActorGetTags(actor: Grapple_Actor)` | integer |
+| `GrappleC.ActorHasBody(actor: Grapple_Actor)` | boolean |
+| `GrappleC.ActorHasTags(actor: Grapple_Actor, any: integer)` | boolean |
+| `GrappleC.ActorLocal(actor: Grapple_Actor)` | Grapple_ActorTransform table |
+| `GrappleC.ActorMove(actor: Grapple_Actor, dx: number, dy: number)` | nil |
+| `GrappleC.ActorName(actor: Grapple_Actor)` | string|nil |
+| `GrappleC.ActorParent(actor: Grapple_Actor)` | integer |
+| `GrappleC.ActorQuery(engine: Grapple_Engine, type: string|nil, tags: integer, out: integer, capacity: integer)` | integer, out: integer |
+| `GrappleC.ActorRemoveBody(actor: Grapple_Actor)` | nil |
+| `GrappleC.ActorRemoveLight(actor: Grapple_Actor)` | nil |
+| `GrappleC.ActorRenderTransform(actor: Grapple_Actor, alpha: number)` | Grapple_ActorTransform table |
+| `GrappleC.ActorSend(engine: Grapple_Engine, target: integer, message: Grapple_ActorMessage table)` | boolean |
+| `GrappleC.ActorSetAngularVelocity(actor: Grapple_Actor, degrees_per_second: number)` | nil |
+| `GrappleC.ActorSetEnabled(actor: Grapple_Actor, enabled: boolean)` | nil |
+| `GrappleC.ActorSetLocal(actor: Grapple_Actor, transform: Grapple_ActorTransform table)` | nil |
+| `GrappleC.ActorSetParent(actor: Grapple_Actor, parent: integer)` | boolean |
+| `GrappleC.ActorSetPosition(actor: Grapple_Actor, x: number, y: number)` | nil |
+| `GrappleC.ActorSetSprite(actor: Grapple_Actor, sprite: Grapple_Sprite)` | boolean |
+| `GrappleC.ActorSetTags(actor: Grapple_Actor, tags: integer)` | nil |
+| `GrappleC.ActorSetVelocity(actor: Grapple_Actor, x: number, y: number)` | nil |
+| `GrappleC.ActorSpawn(engine: Grapple_Engine, def: Grapple_ActorDef)` | integer |
+| `GrappleC.ActorSprite(actor: Grapple_Actor)` | Grapple_Sprite|nil |
+| `GrappleC.ActorTeleport(actor: Grapple_Actor, x: number, y: number)` | nil |
+| `GrappleC.ActorTeleportBody(actor: Grapple_Actor, x: number, y: number)` | nil |
+| `GrappleC.ActorType(actor: Grapple_Actor)` | string|nil |
+| `GrappleC.ActorVelocity(actor: Grapple_Actor, x: number, y: number)` | x: number, y: number |
+| `GrappleC.ActorWakeBody(actor: Grapple_Actor)` | nil |
+| `GrappleC.ActorWorld(actor: Grapple_Actor)` | Grapple_ActorTransform table |
+| `GrappleC.AddDarkZone(scene: Grapple_LightScene, rect: SDL_FRect table, ambient: SDL_FColor table)` | boolean |
+| `GrappleC.AddLight(scene: Grapple_LightScene, light: Grapple_Light table)` | boolean |
+| `GrappleC.AddOccluderRect(scene: Grapple_LightScene, rect: SDL_FRect table)` | boolean |
+| `GrappleC.AddOccluderSegment(scene: Grapple_LightScene, x1: number, y1: number, x2: number, y2: number)` | boolean |
+| `GrappleC.AnyInput(engine: Grapple_Engine)` | boolean |
+| `GrappleC.AssetPath(engine: Grapple_Engine, id: integer)` | string|nil |
+| `GrappleC.AssetRelease(engine: Grapple_Engine, id: integer)` | nil |
+| `GrappleC.AssetRetain(engine: Grapple_Engine, id: integer)` | nil |
+| `GrappleC.AssetStatusOf(engine: Grapple_Engine, id: integer)` | integer |
+| `GrappleC.AssetsFrameBudget(engine: Grapple_Engine)` | number |
+| `GrappleC.AssetsLoaded(engine: Grapple_Engine)` | integer |
+| `GrappleC.AssetsPending(engine: Grapple_Engine)` | integer |
+| `GrappleC.AssetsProgress(engine: Grapple_Engine)` | number |
+| `GrappleC.AssetsReady(engine: Grapple_Engine)` | boolean |
+| `GrappleC.AssetsSetFrameBudget(engine: Grapple_Engine, milliseconds: number)` | nil |
+| `GrappleC.AssetsSetWorkers(engine: Grapple_Engine, workers: integer)` | nil |
+| `GrappleC.AssetsWait(engine: Grapple_Engine)` | nil |
+| `GrappleC.BidiBaseIsRTL(utf8: string|nil, length: integer)` | boolean |
+| `GrappleC.BindingFromString(text: string|nil)` | boolean, out: Grapple_Binding table |
+| `GrappleC.BindingToString(binding: Grapple_Binding table, buffer: string, size: integer)` | string|nil |
+| `GrappleC.BodyDefDestroy()` | def: Grapple_BodyDef table |
+| `GrappleC.BodyDefSetBullet(bullet: boolean)` | def: Grapple_BodyDef table |
+| `GrappleC.BodyDefSetFilter(category: integer, collides_with: integer)` | def: Grapple_BodyDef table |
+| `GrappleC.BodyDefSetFixedRotation(fixed: boolean)` | def: Grapple_BodyDef table |
+| `GrappleC.BodyDefSetGravityScale(scale: number)` | def: Grapple_BodyDef table |
+| `GrappleC.BodyDefSetMaterial(density: number, friction: number, restitution: number)` | def: Grapple_BodyDef table |
+| `GrappleC.BodyDefSetOffset(x: number, y: number)` | def: Grapple_BodyDef table |
+| `GrappleC.BodyDefSetSensor(sensor: boolean)` | def: Grapple_BodyDef table |
+| `GrappleC.BodyDefSetShape(shape: integer)` | def: Grapple_BodyDef table |
+| `GrappleC.BodyDefSetSize(width: number, height: number)` | def: Grapple_BodyDef table |
+| `GrappleC.BodyDefSetType(type: integer)` | def: Grapple_BodyDef table |
+| `GrappleC.BodyDefault()` | Grapple_BodyDef table |
+| `GrappleC.CameraBegin(engine: Grapple_Engine, camera: Grapple_Camera table)` | boolean |
+| `GrappleC.CameraDestroy()` | camera: Grapple_Camera table |
+| `GrappleC.CameraEnd(engine: Grapple_Engine)` | nil |
+| `GrappleC.CameraFollow(world_x: number, world_y: number)` | camera: Grapple_Camera table |
+| `GrappleC.CameraInit(engine: Grapple_Engine)` | camera: Grapple_Camera table |
+| `GrappleC.CameraPoint(camera: Grapple_Camera table, world_x: number, world_y: number, out_x: number, out_y: number)` | out_x: number, out_y: number |
+| `GrappleC.CameraRect(camera: Grapple_Camera table, world: SDL_FRect table)` | SDL_FRect table |
+| `GrappleC.CameraScreenToWorld(camera: Grapple_Camera table, screen_x: number, screen_y: number, world_x: number, world_y: number)` | boolean, world_x: number, world_y: number |
+| `GrappleC.CameraSetBounds(x: number, y: number, w: number, h: number)` | camera: Grapple_Camera table |
+| `GrappleC.CameraSetDeadzone(width: number, height: number)` | camera: Grapple_Camera table |
+| `GrappleC.CameraSetSmoothing(seconds: number)` | camera: Grapple_Camera table |
+| `GrappleC.CameraSetViewport(x: number, y: number, w: number, h: number)` | camera: Grapple_Camera table |
+| `GrappleC.CameraSetZoom(zoom: number)` | camera: Grapple_Camera table |
+| `GrappleC.CameraShake(amount: number, seconds: number)` | camera: Grapple_Camera table |
+| `GrappleC.CameraSnap(world_x: number, world_y: number)` | camera: Grapple_Camera table |
+| `GrappleC.CameraSplit(engine: Grapple_Engine, mode: integer, count: integer, gap: number)` | integer, cameras: Grapple_Camera table |
+| `GrappleC.CameraUpdate(engine: Grapple_Engine, dt: number)` | camera: Grapple_Camera table |
+| `GrappleC.CameraVisible(camera: Grapple_Camera table, world: SDL_FRect table)` | boolean |
+| `GrappleC.CameraX()` | number, camera: Grapple_Camera table |
+| `GrappleC.CameraY()` | number, camera: Grapple_Camera table |
+| `GrappleC.CompileRegex(pattern: string|nil, flags: string|nil)` | Grapple_Regex|nil |
+| `GrappleC.ConfigCreate()` | Grapple_EngineConfig|nil |
+| `GrappleC.ConfigDestroy(config: Grapple_EngineConfig)` | nil |
+| `GrappleC.ConfigSetAutoMount(config: Grapple_EngineConfig, enabled: boolean)` | nil |
+| `GrappleC.ConfigSetBackend(config: Grapple_EngineConfig, backend: integer)` | nil |
+| `GrappleC.ConfigSetDesignSize(config: Grapple_EngineConfig, width: integer, height: integer)` | nil |
+| `GrappleC.ConfigSetFullscreen(config: Grapple_EngineConfig, fullscreen: boolean)` | nil |
+| `GrappleC.ConfigSetGraphics(config: Grapple_EngineConfig, graphics: Grapple_GraphicsSettings table)` | nil |
+| `GrappleC.ConfigSetHeadless(config: Grapple_EngineConfig, headless: boolean)` | nil |
+| `GrappleC.ConfigSetHighDpi(config: Grapple_EngineConfig, high_dpi: boolean)` | nil |
+| `GrappleC.ConfigSetManualClock(config: Grapple_EngineConfig, manual: boolean)` | nil |
+| `GrappleC.ConfigSetMaxFps(config: Grapple_EngineConfig, max_fps: integer)` | nil |
+| `GrappleC.ConfigSetMediaPath(config: Grapple_EngineConfig, path: string|nil)` | nil |
+| `GrappleC.ConfigSetPresentation(config: Grapple_EngineConfig, presentation: integer)` | nil |
+| `GrappleC.ConfigSetResizable(config: Grapple_EngineConfig, resizable: boolean)` | nil |
+| `GrappleC.ConfigSetTickRate(config: Grapple_EngineConfig, ticks_per_second: integer)` | nil |
+| `GrappleC.ConfigSetTitle(config: Grapple_EngineConfig, title: string|nil)` | nil |
+| `GrappleC.ConfigSetVsync(config: Grapple_EngineConfig, vsync: boolean)` | nil |
+| `GrappleC.ConfigSetWindowSize(config: Grapple_EngineConfig, width: integer, height: integer)` | nil |
+| `GrappleC.CountSignalConnections(emitter: Grapple_SignalEmitter, signal: string|nil)` | integer |
+| `GrappleC.CreateChipSFX(mixer: MIX_Mixer, which: integer)` | MIX_Audio|nil |
+| `GrappleC.CreateChipTone(mixer: MIX_Mixer, desc: Grapple_ChipToneDesc table)` | MIX_Audio|nil |
+| `GrappleC.CreateChipTune(mixer: MIX_Mixer, mml: string|nil)` | MIX_Audio|nil |
+| `GrappleC.CreateEngine(config: Grapple_EngineConfig)` | Grapple_Engine|nil |
+| `GrappleC.CreateGui(renderer: SDL_Renderer, font_data: string|nil, font_size: number)` | Grapple_Gui|nil |
+| `GrappleC.CreateGuiWithGlyphs(renderer: SDL_Renderer, font_data: string|nil, font_size: number, range: integer)` | Grapple_Gui|nil |
+| `GrappleC.CreateLightScene(renderer: SDL_Renderer)` | Grapple_LightScene|nil |
+| `GrappleC.CreateSignalEmitter()` | Grapple_SignalEmitter|nil |
+| `GrappleC.CryptoSelfTest()` | boolean |
+| `GrappleC.DayNightAmbient(hours: number)` | SDL_FColor table |
+| `GrappleC.DayNightSunlight(hours: number)` | number |
+| `GrappleC.DestroyEngine(engine: Grapple_Engine)` | nil |
+| `GrappleC.DestroyGui(gui: Grapple_Gui)` | nil |
+| `GrappleC.DestroyLightScene(scene: Grapple_LightScene)` | nil |
+| `GrappleC.DestroyRegex(regex: Grapple_Regex)` | nil |
+| `GrappleC.DestroySignalEmitter(emitter: Grapple_SignalEmitter)` | nil |
+| `GrappleC.DeviceAccelerometer(engine: Grapple_Engine, x: number, y: number, z: number)` | x: number, y: number, z: number |
+| `GrappleC.DeviceGyro(engine: Grapple_Engine, x: number, y: number, z: number)` | x: number, y: number, z: number |
+| `GrappleC.DialogDeliverSave(path: string|nil)` | boolean |
+| `GrappleC.DialogPath()` | string|nil |
+| `GrappleC.DialogReset()` | nil |
+| `GrappleC.DialogStatus()` | integer |
+| `GrappleC.DisconnectSignal(emitter: Grapple_SignalEmitter, connection: integer)` | boolean |
+| `GrappleC.DistanceJointDefCreate()` | b2DistanceJointDef|nil |
+| `GrappleC.DistanceJointDefDestroy(def: b2DistanceJointDef)` | nil |
+| `GrappleC.DistanceJointDefSetAnchors(def: b2DistanceJointDef, ax: number, ay: number, bx: number, by: number)` | nil |
+| `GrappleC.DistanceJointDefSetBodies(def: b2DistanceJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
+| `GrappleC.DistanceJointDefSetCollideConnected(def: b2DistanceJointDef, enabled: boolean)` | nil |
+| `GrappleC.DistanceJointDefSetLength(def: b2DistanceJointDef, length: number)` | nil |
+| `GrappleC.DistanceJointDefSetLimit(def: b2DistanceJointDef, enabled: boolean, min_length: number, max_length: number)` | nil |
+| `GrappleC.DistanceJointDefSetSpring(def: b2DistanceJointDef, enabled: boolean, hertz: number, damping: number)` | nil |
+| `GrappleC.DrawPhysicsWorld(world: b2WorldId table, renderer: SDL_Renderer, config: Grapple_PhysicsDrawConfig table)` | boolean |
+| `GrappleC.EncodeDataBase64(data: string|nil, outputSize: integer)` | string|nil, outputSize: integer |
+| `GrappleC.EngineAdvance(engine: Grapple_Engine, nanoseconds: integer)` | nil |
+| `GrappleC.EngineAlpha(engine: Grapple_Engine)` | number |
+| `GrappleC.EngineAssetScale(engine: Grapple_Engine)` | integer |
+| `GrappleC.EngineDelta(engine: Grapple_Engine)` | number |
+| `GrappleC.EngineDesignSize(engine: Grapple_Engine, width: integer, height: integer)` | width: integer, height: integer |
+| `GrappleC.EngineDisplay(engine: Grapple_Engine)` | integer |
+| `GrappleC.EngineDisplayCount()` | integer |
+| `GrappleC.EngineDisplayName(index: integer)` | string|nil |
+| `GrappleC.EngineEffectsAvailable(engine: Grapple_Engine)` | boolean |
+| `GrappleC.EngineEmbedMedia(data: string|nil, password: string|nil)` | nil |
+| `GrappleC.EngineFps(engine: Grapple_Engine)` | number |
+| `GrappleC.EngineFrameCount(engine: Grapple_Engine)` | integer |
+| `GrappleC.EngineMaxFps(engine: Grapple_Engine)` | integer |
+| `GrappleC.EngineMediaPath(engine: Grapple_Engine)` | string|nil |
+| `GrappleC.EngineMediaSource(engine: Grapple_Engine)` | integer |
+| `GrappleC.EngineOverloadFrames(engine: Grapple_Engine)` | integer |
+| `GrappleC.EnginePixelSize(engine: Grapple_Engine, width: integer, height: integer)` | width: integer, height: integer |
+| `GrappleC.EnginePresentation_(engine: Grapple_Engine)` | integer |
+| `GrappleC.EngineQuit(engine: Grapple_Engine)` | nil |
+| `GrappleC.EngineRenderScale(engine: Grapple_Engine)` | number |
+| `GrappleC.EngineRenderer(engine: Grapple_Engine)` | SDL_Renderer|nil |
+| `GrappleC.EngineSafeRect(engine: Grapple_Engine)` | SDL_FRect table |
+| `GrappleC.EngineSetClearColor(engine: Grapple_Engine, color: SDL_FColor table)` | nil |
+| `GrappleC.EngineSetDisplay(engine: Grapple_Engine, index: integer)` | boolean |
+| `GrappleC.EngineSetGraphics(engine: Grapple_Engine, settings: Grapple_GraphicsSettings table)` | boolean |
+| `GrappleC.EngineSetMaxFps(engine: Grapple_Engine, max_fps: integer)` | nil |
+| `GrappleC.EngineSetMediaPassword(password: string|nil)` | nil |
+| `GrappleC.EngineSetPresentation(engine: Grapple_Engine, mode: integer)` | boolean |
+| `GrappleC.EngineSetRefreshRate(engine: Grapple_Engine, hz: number)` | nil |
+| `GrappleC.EngineSetTickRate(engine: Grapple_Engine, ticks_per_second: integer)` | boolean |
+| `GrappleC.EngineSetTimeScale(engine: Grapple_Engine, scale: number)` | nil |
+| `GrappleC.EngineStep(engine: Grapple_Engine)` | number |
+| `GrappleC.EngineStepsLastFrame(engine: Grapple_Engine)` | integer |
+| `GrappleC.EngineTick(engine: Grapple_Engine)` | boolean |
+| `GrappleC.EngineTickRate(engine: Grapple_Engine)` | integer |
+| `GrappleC.EngineTimeScale(engine: Grapple_Engine)` | number |
+| `GrappleC.EngineViewRect(engine: Grapple_Engine)` | SDL_FRect table |
+| `GrappleC.EngineWindow(engine: Grapple_Engine)` | SDL_Window|nil |
+| `GrappleC.EngineWindowToDesign(engine: Grapple_Engine, window_x: number, window_y: number, design_x: number, design_y: number)` | design_x: number, design_y: number |
+| `GrappleC.EventCreate()` | SDL_Event|nil |
+| `GrappleC.EventDestroy(event: SDL_Event)` | nil |
+| `GrappleC.EventGamepadAxis(event: SDL_Event)` | integer |
+| `GrappleC.EventGamepadAxisValue(event: SDL_Event)` | number |
+| `GrappleC.EventGamepadButton(event: SDL_Event)` | integer |
+| `GrappleC.EventGamepadWhich(event: SDL_Event)` | integer |
+| `GrappleC.EventKeyModifiers(event: SDL_Event)` | integer |
+| `GrappleC.EventKeyRepeat(event: SDL_Event)` | boolean |
+| `GrappleC.EventKeyScancode(event: SDL_Event)` | integer |
+| `GrappleC.EventMouseButton(event: SDL_Event)` | integer |
+| `GrappleC.EventMouseDeltaX(event: SDL_Event)` | number |
+| `GrappleC.EventMouseDeltaY(event: SDL_Event)` | number |
+| `GrappleC.EventMouseX(event: SDL_Event)` | number |
+| `GrappleC.EventMouseY(event: SDL_Event)` | number |
+| `GrappleC.EventSetType(event: SDL_Event, type: integer)` | nil |
+| `GrappleC.EventText(event: SDL_Event)` | string|nil |
+| `GrappleC.EventTouchX(event: SDL_Event)` | number |
+| `GrappleC.EventTouchY(event: SDL_Event)` | number |
+| `GrappleC.EventType(event: SDL_Event)` | integer |
+| `GrappleC.EventWheelX(event: SDL_Event)` | number |
+| `GrappleC.EventWheelY(event: SDL_Event)` | number |
+| `GrappleC.EventWindowId(event: SDL_Event)` | integer |
+| `GrappleC.FilterJointDefCreate()` | b2FilterJointDef|nil |
+| `GrappleC.FilterJointDefDestroy(def: b2FilterJointDef)` | nil |
+| `GrappleC.FilterJointDefSetBodies(def: b2FilterJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
+| `GrappleC.FingerCount(engine: Grapple_Engine)` | integer |
+| `GrappleC.FreeTiledMap(map: Grapple_TiledMap)` | nil |
+| `GrappleC.GPUAcquireSwapchain(command_buffer: SDL_GPUCommandBuffer, window: SDL_Window)` | SDL_GPUTexture|nil |
+| `GrappleC.GPUBeginComputePass(command_buffer: SDL_GPUCommandBuffer, bindings: Grapple_GPUComputeBindings)` | SDL_GPUComputePass|nil |
+| `GrappleC.GPUBindComputeStorageBuffer(pass: SDL_GPUComputePass, slot: integer, buffer: SDL_GPUBuffer)` | nil |
+| `GrappleC.GPUBindComputeStorageTexture(pass: SDL_GPUComputePass, slot: integer, texture: SDL_GPUTexture)` | nil |
+| `GrappleC.GPUBindFragmentStorageBuffer(pass: SDL_GPURenderPass, slot: integer, buffer: SDL_GPUBuffer)` | nil |
+| `GrappleC.GPUBindFragmentStorageTexture(pass: SDL_GPURenderPass, slot: integer, texture: SDL_GPUTexture)` | nil |
+| `GrappleC.GPUBindVertexStorageBuffer(pass: SDL_GPURenderPass, slot: integer, buffer: SDL_GPUBuffer)` | nil |
+| `GrappleC.GPUBindVertexStorageTexture(pass: SDL_GPURenderPass, slot: integer, texture: SDL_GPUTexture)` | nil |
+| `GrappleC.GPUBlitInfoCreate()` | SDL_GPUBlitInfo|nil |
+| `GrappleC.GPUBlitInfoDestroy(info: SDL_GPUBlitInfo)` | nil |
+| `GrappleC.GPUBlitInfoSetDestination(info: SDL_GPUBlitInfo, texture: SDL_GPUTexture, x: integer, y: integer, w: integer, h: integer)` | nil |
+| `GrappleC.GPUBlitInfoSetFilter(info: SDL_GPUBlitInfo, filter: integer)` | nil |
+| `GrappleC.GPUBlitInfoSetSource(info: SDL_GPUBlitInfo, texture: SDL_GPUTexture, x: integer, y: integer, w: integer, h: integer)` | nil |
+| `GrappleC.GPUBufferBindingCreate()` | SDL_GPUBufferBinding|nil |
+| `GrappleC.GPUBufferBindingDestroy(binding: SDL_GPUBufferBinding)` | nil |
+| `GrappleC.GPUBufferBindingSet(binding: SDL_GPUBufferBinding, buffer: SDL_GPUBuffer, offset: integer)` | nil |
+| `GrappleC.GPUBufferLocationCreate()` | SDL_GPUBufferLocation|nil |
+| `GrappleC.GPUBufferLocationDestroy(location: SDL_GPUBufferLocation)` | nil |
+| `GrappleC.GPUBufferLocationSet(location: SDL_GPUBufferLocation, buffer: SDL_GPUBuffer, offset: integer)` | nil |
+| `GrappleC.GPUBufferRegionCreate()` | SDL_GPUBufferRegion|nil |
+| `GrappleC.GPUBufferRegionDestroy(region: SDL_GPUBufferRegion)` | nil |
+| `GrappleC.GPUBufferRegionSet(region: SDL_GPUBufferRegion, buffer: SDL_GPUBuffer, offset: integer, size: integer)` | nil |
+| `GrappleC.GPUColorTargetInfoCreate()` | SDL_GPUColorTargetInfo|nil |
+| `GrappleC.GPUColorTargetInfoDestroy(info: SDL_GPUColorTargetInfo)` | nil |
+| `GrappleC.GPUColorTargetInfoSetClearColor(info: SDL_GPUColorTargetInfo, r: number, g: number, b: number, a: number)` | nil |
+| `GrappleC.GPUColorTargetInfoSetCycle(info: SDL_GPUColorTargetInfo, cycle: boolean)` | nil |
+| `GrappleC.GPUColorTargetInfoSetMipLayer(info: SDL_GPUColorTargetInfo, mip: integer, layer_or_depth: integer)` | nil |
+| `GrappleC.GPUColorTargetInfoSetOps(info: SDL_GPUColorTargetInfo, load_op: integer, store_op: integer)` | nil |
+| `GrappleC.GPUColorTargetInfoSetTexture(info: SDL_GPUColorTargetInfo, texture: SDL_GPUTexture)` | nil |
+| `GrappleC.GPUComputeBindingsAddBuffer(bindings: Grapple_GPUComputeBindings, buffer: SDL_GPUBuffer, cycle: boolean)` | boolean |
+| `GrappleC.GPUComputeBindingsAddTexture(bindings: Grapple_GPUComputeBindings, texture: SDL_GPUTexture, mip_level: integer, layer: integer, cycle: boolean)` | boolean |
+| `GrappleC.GPUComputeBindingsCreate()` | Grapple_GPUComputeBindings|nil |
+| `GrappleC.GPUComputeBindingsDestroy(bindings: Grapple_GPUComputeBindings)` | nil |
+| `GrappleC.GPUComputePipelineInfoCreate()` | SDL_GPUComputePipelineCreateInfo|nil |
+| `GrappleC.GPUComputePipelineInfoDestroy(info: SDL_GPUComputePipelineCreateInfo)` | nil |
+| `GrappleC.GPUComputePipelineInfoSetCode(info: SDL_GPUComputePipelineCreateInfo, code: string|nil)` | nil |
+| `GrappleC.GPUComputePipelineInfoSetEntrypoint(info: SDL_GPUComputePipelineCreateInfo, entrypoint: string|nil)` | nil |
+| `GrappleC.GPUComputePipelineInfoSetFormat(info: SDL_GPUComputePipelineCreateInfo, format: integer)` | nil |
+| `GrappleC.GPUComputePipelineInfoSetThreadCount(info: SDL_GPUComputePipelineCreateInfo, x: integer, y: integer, z: integer)` | nil |
+| `GrappleC.GPUDepthStencilTargetInfoCreate()` | SDL_GPUDepthStencilTargetInfo|nil |
+| `GrappleC.GPUDepthStencilTargetInfoDestroy(info: SDL_GPUDepthStencilTargetInfo)` | nil |
+| `GrappleC.GPUDepthStencilTargetInfoSetClear(info: SDL_GPUDepthStencilTargetInfo, depth: number, stencil: integer)` | nil |
+| `GrappleC.GPUDepthStencilTargetInfoSetOps(info: SDL_GPUDepthStencilTargetInfo, load_op: integer, store_op: integer)` | nil |
+| `GrappleC.GPUDepthStencilTargetInfoSetTexture(info: SDL_GPUDepthStencilTargetInfo, texture: SDL_GPUTexture)` | nil |
+| `GrappleC.GPUPipelineInfoAddColorTarget(info: SDL_GPUGraphicsPipelineCreateInfo, format: integer)` | boolean |
+| `GrappleC.GPUPipelineInfoAddVertexAttribute(info: SDL_GPUGraphicsPipelineCreateInfo, location: integer, buffer_slot: integer, format: integer, offset: integer)` | boolean |
+| `GrappleC.GPUPipelineInfoAddVertexBuffer(info: SDL_GPUGraphicsPipelineCreateInfo, slot: integer, pitch: integer, input_rate: integer)` | boolean |
+| `GrappleC.GPUPipelineInfoCreate()` | SDL_GPUGraphicsPipelineCreateInfo|nil |
+| `GrappleC.GPUPipelineInfoDestroy(info: SDL_GPUGraphicsPipelineCreateInfo)` | nil |
+| `GrappleC.GPUPipelineInfoSetDepthStencil(info: SDL_GPUGraphicsPipelineCreateInfo, format: integer, enabled: boolean)` | nil |
+| `GrappleC.GPUPipelineInfoSetFillMode(info: SDL_GPUGraphicsPipelineCreateInfo, fill: integer, cull: integer)` | nil |
+| `GrappleC.GPUPipelineInfoSetPrimitive(info: SDL_GPUGraphicsPipelineCreateInfo, primitive: integer)` | nil |
+| `GrappleC.GPUPipelineInfoSetShaders(info: SDL_GPUGraphicsPipelineCreateInfo, vertex: SDL_GPUShader, fragment: SDL_GPUShader)` | nil |
+| `GrappleC.GPURenderStateInfoAddSampler(info: SDL_GPURenderStateCreateInfo, texture: SDL_GPUTexture, sampler: SDL_GPUSampler)` | boolean |
+| `GrappleC.GPURenderStateInfoCreate()` | SDL_GPURenderStateCreateInfo|nil |
+| `GrappleC.GPURenderStateInfoDestroy(info: SDL_GPURenderStateCreateInfo)` | nil |
+| `GrappleC.GPURenderStateInfoSetShader(info: SDL_GPURenderStateCreateInfo, fragment_shader: SDL_GPUShader)` | nil |
+| `GrappleC.GPUShaderCreateInfoCreate()` | SDL_GPUShaderCreateInfo|nil |
+| `GrappleC.GPUShaderCreateInfoDestroy(info: SDL_GPUShaderCreateInfo)` | nil |
+| `GrappleC.GPUShaderCreateInfoSetCode(info: SDL_GPUShaderCreateInfo, code: string|nil)` | nil |
+| `GrappleC.GPUShaderCreateInfoSetCounts(info: SDL_GPUShaderCreateInfo, samplers: integer, storage_textures: integer, storage_buffers: integer, uniform_buffers: integer)` | nil |
+| `GrappleC.GPUShaderCreateInfoSetEntrypoint(info: SDL_GPUShaderCreateInfo, entrypoint: string|nil)` | nil |
+| `GrappleC.GPUShaderCreateInfoSetFormat(info: SDL_GPUShaderCreateInfo, format: integer, stage: integer)` | nil |
+| `GrappleC.GPUSwapchainHeight()` | integer |
+| `GrappleC.GPUSwapchainWidth()` | integer |
+| `GrappleC.GPUTextureLocationCreate()` | SDL_GPUTextureLocation|nil |
+| `GrappleC.GPUTextureLocationDestroy(location: SDL_GPUTextureLocation)` | nil |
+| `GrappleC.GPUTextureLocationSet(location: SDL_GPUTextureLocation, texture: SDL_GPUTexture, x: integer, y: integer, z: integer)` | nil |
+| `GrappleC.GPUTextureRegionCreate()` | SDL_GPUTextureRegion|nil |
+| `GrappleC.GPUTextureRegionDestroy(region: SDL_GPUTextureRegion)` | nil |
+| `GrappleC.GPUTextureRegionSet(region: SDL_GPUTextureRegion, texture: SDL_GPUTexture, x: integer, y: integer, w: integer, h: integer)` | nil |
+| `GrappleC.GPUTextureSamplerBindingCreate()` | SDL_GPUTextureSamplerBinding|nil |
+| `GrappleC.GPUTextureSamplerBindingDestroy(binding: SDL_GPUTextureSamplerBinding)` | nil |
+| `GrappleC.GPUTextureSamplerBindingSet(binding: SDL_GPUTextureSamplerBinding, texture: SDL_GPUTexture, sampler: SDL_GPUSampler)` | nil |
+| `GrappleC.GPUTextureTransferInfoCreate()` | SDL_GPUTextureTransferInfo|nil |
+| `GrappleC.GPUTextureTransferInfoDestroy(info: SDL_GPUTextureTransferInfo)` | nil |
+| `GrappleC.GPUTextureTransferInfoSet(info: SDL_GPUTextureTransferInfo, buffer: SDL_GPUTransferBuffer, offset: integer, pixels_per_row: integer, rows_per_layer: integer)` | nil |
+| `GrappleC.GPUTransferBufferLocationCreate()` | SDL_GPUTransferBufferLocation|nil |
+| `GrappleC.GPUTransferBufferLocationDestroy(location: SDL_GPUTransferBufferLocation)` | nil |
+| `GrappleC.GPUTransferBufferLocationSet(location: SDL_GPUTransferBufferLocation, buffer: SDL_GPUTransferBuffer, offset: integer)` | nil |
+| `GrappleC.GPUUploadToTransferBuffer(device: SDL_GPUDevice, buffer: SDL_GPUTransferBuffer, offset: integer, data: string|nil, cycle: boolean)` | boolean |
+| `GrappleC.GPUWaitAndAcquireSwapchain(command_buffer: SDL_GPUCommandBuffer, window: SDL_Window)` | SDL_GPUTexture|nil |
+| `GrappleC.GPUWaitForFence(device: SDL_GPUDevice, fence: SDL_GPUFence)` | boolean |
+| `GrappleC.GamepadAccelerometer(engine: Grapple_Engine, player: integer, x: number, y: number, z: number)` | x: number, y: number, z: number |
+| `GrappleC.GamepadAxisValue(engine: Grapple_Engine, player: integer, axis: integer)` | number |
+| `GrappleC.GamepadButtonDown(engine: Grapple_Engine, player: integer, button: integer)` | boolean |
+| `GrappleC.GamepadButtonPressed(engine: Grapple_Engine, player: integer, button: integer)` | boolean |
+| `GrappleC.GamepadButtonReleased(engine: Grapple_Engine, player: integer, button: integer)` | boolean |
+| `GrappleC.GamepadConnected(engine: Grapple_Engine, player: integer)` | boolean |
+| `GrappleC.GamepadCount(engine: Grapple_Engine)` | integer |
+| `GrappleC.GamepadDeadzone(engine: Grapple_Engine)` | number |
+| `GrappleC.GamepadDirectionPressed(engine: Grapple_Engine, player: integer, direction: integer)` | boolean |
+| `GrappleC.GamepadDirectionRepeat(engine: Grapple_Engine, player: integer, direction: integer)` | boolean |
+| `GrappleC.GamepadGyro(engine: Grapple_Engine, player: integer, x: number, y: number, z: number)` | x: number, y: number, z: number |
+| `GrappleC.GamepadHasAccelerometer(engine: Grapple_Engine, player: integer)` | boolean |
+| `GrappleC.GamepadHasGyro(engine: Grapple_Engine, player: integer)` | boolean |
+| `GrappleC.GamepadName(engine: Grapple_Engine, player: integer)` | string|nil |
+| `GrappleC.GamepadRumble(engine: Grapple_Engine, player: integer, low: number, high: number, milliseconds: integer)` | boolean |
+| `GrappleC.GamepadRumbleTriggers(engine: Grapple_Engine, player: integer, left: number, right: number, milliseconds: integer)` | boolean |
+| `GrappleC.GamepadSetLED(engine: Grapple_Engine, player: integer, red: integer, green: integer, blue: integer)` | boolean |
+| `GrappleC.GamepadStick(engine: Grapple_Engine, player: integer, side: integer, x: number, y: number)` | x: number, y: number |
+| `GrappleC.GamepadStopRumble(engine: Grapple_Engine, player: integer)` | nil |
+| `GrappleC.GraphicsClamp()` | settings: Grapple_GraphicsSettings table |
+| `GrappleC.GraphicsConfigError()` | string|nil |
+| `GrappleC.GraphicsConfigPath()` | string|nil |
+| `GrappleC.GraphicsDefaults()` | Grapple_GraphicsSettings table |
+| `GrappleC.GraphicsEqual(a: Grapple_GraphicsSettings table, b: Grapple_GraphicsSettings table)` | boolean |
+| `GrappleC.GraphicsLightMapScale(quality: integer)` | number |
+| `GrappleC.GraphicsLoadTomlFile(path: string|nil)` | boolean, settings: Grapple_GraphicsSettings table |
+| `GrappleC.GraphicsLoadTomlString(toml: string|nil)` | boolean, settings: Grapple_GraphicsSettings table |
+| `GrappleC.GraphicsMaxDynamicLights(quality: integer)` | integer |
+| `GrappleC.GraphicsParticleDensity(quality: integer)` | number |
+| `GrappleC.GraphicsQualityFromName(name: string|nil, out: integer)` | boolean, out: integer |
+| `GrappleC.GraphicsQualityName(quality: integer)` | string|nil |
+| `GrappleC.GraphicsSafeMode()` | Grapple_GraphicsSettings table |
+| `GrappleC.GraphicsSave(settings: Grapple_GraphicsSettings table, org: string|nil, app: string|nil)` | boolean |
+| `GrappleC.GraphicsSavePath(org: string|nil, app: string|nil)` | string|nil |
+| `GrappleC.GraphicsShadowRays(quality: integer)` | integer |
+| `GrappleC.GraphicsShadowSoftness(quality: integer)` | number |
+| `GrappleC.GraphicsToToml(settings: Grapple_GraphicsSettings table)` | string|nil |
+| `GrappleC.GuiContext(gui: Grapple_Gui)` | nk_context|nil |
+| `GrappleC.GuiDrawCommandCount(gui: Grapple_Gui)` | integer |
+| `GrappleC.GuiDrawTexture(gui: Grapple_Gui, texture: SDL_Texture, rect: SDL_FRect table, mode: integer)` | boolean |
+| `GrappleC.GuiDrawTextureOverlay(gui: Grapple_Gui, texture: SDL_Texture, rect: SDL_FRect table, mode: integer)` | boolean |
+| `GrappleC.GuiFontHeight(gui: Grapple_Gui)` | number |
+| `GrappleC.GuiGridBeginOwned(gui: Grapple_Gui, columns: integer, row_height: number)` | boolean |
+| `GrappleC.GuiGridCell(grid: Grapple_GuiGrid)` | nil |
+| `GrappleC.GuiGridCellOwned(gui: Grapple_Gui)` | nil |
+| `GrappleC.GuiGridCellSpan(grid: Grapple_GuiGrid, span: integer)` | nil |
+| `GrappleC.GuiGridCellSpanOwned(gui: Grapple_Gui, span: integer)` | nil |
+| `GrappleC.GuiGridCreate()` | Grapple_GuiGrid|nil |
+| `GrappleC.GuiGridDestroy(grid: Grapple_GuiGrid)` | nil |
+| `GrappleC.GuiGridEnd(grid: Grapple_GuiGrid)` | nil |
+| `GrappleC.GuiGridEndOwned(gui: Grapple_Gui)` | nil |
+| `GrappleC.GuiGridNextRow(grid: Grapple_GuiGrid)` | nil |
+| `GrappleC.GuiGridNextRowOwned(gui: Grapple_Gui)` | nil |
+| `GrappleC.GuiGridWeight(gui: Grapple_Gui, column: integer, weight: number)` | boolean |
+| `GrappleC.GuiImage(gui: Grapple_Gui, texture: SDL_Texture, mode: integer)` | boolean |
+| `GrappleC.GuiInputBegin(gui: Grapple_Gui)` | nil |
+| `GrappleC.GuiInputEnd(gui: Grapple_Gui)` | nil |
+| `GrappleC.GuiKeyPressed(gui: Grapple_Gui, scancode: integer)` | boolean |
+| `GrappleC.GuiMemoryUsed(gui: Grapple_Gui)` | integer |
+| `GrappleC.GuiOpenFileButton(gui: Grapple_Gui, label: string|nil, filter_name: string|nil, filter_pattern: string|nil)` | boolean |
+| `GrappleC.GuiPopFont(gui: Grapple_Gui, count: integer)` | nil |
+| `GrappleC.GuiPopStyleColor(gui: Grapple_Gui, count: integer)` | nil |
+| `GrappleC.GuiProcessEvent(gui: Grapple_Gui, event: SDL_Event)` | boolean |
+| `GrappleC.GuiPumpEvents(gui: Grapple_Gui)` | boolean |
+| `GrappleC.GuiPushFont(gui: Grapple_Gui, which: integer)` | boolean |
+| `GrappleC.GuiPushStyleColor(gui: Grapple_Gui, which: integer, color: SDL_Color table)` | boolean |
+| `GrappleC.GuiRender(gui: Grapple_Gui)` | boolean |
+| `GrappleC.GuiSaveFileButton(gui: Grapple_Gui, label: string|nil, filename: string|nil, data: string|nil)` | boolean |
+| `GrappleC.GuiSavedPath(gui: Grapple_Gui)` | string|nil |
+| `GrappleC.GuiScale(gui: Grapple_Gui)` | number |
+| `GrappleC.GuiSetFont(gui: Grapple_Gui, which: integer)` | boolean |
+| `GrappleC.GuiSetTooltipDelay(gui: Grapple_Gui, delay_ms: integer)` | nil |
+| `GrappleC.GuiTooltip(gui: Grapple_Gui, text: string|nil)` | boolean |
+| `GrappleC.GuiTooltipDelay(gui: Grapple_Gui)` | integer |
+| `GrappleC.GuiWantsInput(gui: Grapple_Gui)` | boolean |
+| `GrappleC.HMACSHA256(key: string|nil, data: string|nil, digest: integer)` | boolean, digest: integer |
+| `GrappleC.HasDeviceMotion(engine: Grapple_Engine)` | boolean |
+| `GrappleC.IdleSeconds(engine: Grapple_Engine)` | number |
+| `GrappleC.KeyDown(engine: Grapple_Engine, key: integer)` | boolean |
+| `GrappleC.KeyModifiers(engine: Grapple_Engine)` | integer |
+| `GrappleC.KeyPressed(engine: Grapple_Engine, key: integer)` | boolean |
+| `GrappleC.KeyReleased(engine: Grapple_Engine, key: integer)` | boolean |
+| `GrappleC.LastInputDevice(engine: Grapple_Engine)` | integer |
+| `GrappleC.LightAddDarkZone(engine: Grapple_Engine, area: SDL_FRect table, ambient: SDL_FColor table)` | nil |
+| `GrappleC.LightAddOccluder(engine: Grapple_Engine, wall: SDL_FRect table)` | nil |
+| `GrappleC.LightAddOccluderLine(engine: Grapple_Engine, x1: number, y1: number, x2: number, y2: number)` | nil |
+| `GrappleC.LightAmbient(engine: Grapple_Engine)` | SDL_FColor table |
+| `GrappleC.LightAt(engine: Grapple_Engine, x: number, y: number)` | number |
+| `GrappleC.LightBeginFrame(scene: Grapple_LightScene, camera_x: number, camera_y: number)` | nil |
+| `GrappleC.LightCount(engine: Grapple_Engine)` | integer |
+| `GrappleC.LightDefDestroy()` | def: Grapple_LightDef table |
+| `GrappleC.LightDefSetColor(r: number, g: number, b: number, a: number)` | def: Grapple_LightDef table |
+| `GrappleC.LightDefSetCone(direction: number, width: number)` | def: Grapple_LightDef table |
+| `GrappleC.LightDefSetFlicker(flicker: number)` | def: Grapple_LightDef table |
+| `GrappleC.LightDefSetOffset(x: number, y: number)` | def: Grapple_LightDef table |
+| `GrappleC.LightDefSetRadius(radius: number)` | def: Grapple_LightDef table |
+| `GrappleC.LightDefSetShadows(casts_shadows: boolean)` | def: Grapple_LightDef table |
+| `GrappleC.LightDefault()` | Grapple_LightDef table |
+| `GrappleC.LightHour(engine: Grapple_Engine)` | number |
+| `GrappleC.LightLineOfSight(scene: Grapple_LightScene, x1: number, y1: number, x2: number, y2: number)` | boolean |
+| `GrappleC.LightPreset_(engine: Grapple_Engine)` | integer |
+| `GrappleC.LightRender(engine: Grapple_Engine, camera: Grapple_Camera table, alpha: number)` | boolean |
+| `GrappleC.LightSetAmbient(engine: Grapple_Engine, ambient: SDL_FColor table)` | nil |
+| `GrappleC.LightSetAutoOccluders(engine: Grapple_Engine, enabled: boolean)` | nil |
+| `GrappleC.LightSetClock(engine: Grapple_Engine, hours: number, hours_per_second: number)` | nil |
+| `GrappleC.LightSetPreset(engine: Grapple_Engine, preset: integer)` | nil |
+| `GrappleC.LightSunlight(engine: Grapple_Engine)` | number |
+| `GrappleC.LightUsesShaders(scene: Grapple_LightScene)` | boolean |
+| `GrappleC.LoadTextFile(path: string|nil)` | string|nil |
+| `GrappleC.LoadTexture(engine: Grapple_Engine, path: string|nil)` | integer |
+| `GrappleC.LoadTextureAsync(engine: Grapple_Engine, path: string|nil)` | integer |
+| `GrappleC.LoadTiledMap(path: string|nil)` | Grapple_TiledMap|nil |
+| `GrappleC.MotorJointDefCreate()` | b2MotorJointDef|nil |
+| `GrappleC.MotorJointDefDestroy(def: b2MotorJointDef)` | nil |
+| `GrappleC.MotorJointDefSetBodies(def: b2MotorJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
+| `GrappleC.MountEncryptedArchive(data: string|nil, password: string|nil, mountPoint: string|nil)` | boolean |
+| `GrappleC.MountEncryptedArchiveFile(path: string|nil, password: string|nil, mountPoint: string|nil)` | boolean |
+| `GrappleC.MountMedia(explicit_path: string|nil, password: string|nil)` | integer |
+| `GrappleC.MouseCaptured(engine: Grapple_Engine)` | boolean |
+| `GrappleC.MouseDelta(engine: Grapple_Engine, x: number, y: number)` | x: number, y: number |
+| `GrappleC.MouseDown(engine: Grapple_Engine, button: integer)` | boolean |
+| `GrappleC.MouseJointDefCreate()` | b2MouseJointDef|nil |
+| `GrappleC.MouseJointDefDestroy(def: b2MouseJointDef)` | nil |
+| `GrappleC.MouseJointDefSetBodies(def: b2MouseJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
+| `GrappleC.MouseJointDefSetMaxForce(def: b2MouseJointDef, force: number)` | nil |
+| `GrappleC.MouseJointDefSetSpring(def: b2MouseJointDef, hertz: number, damping: number)` | nil |
+| `GrappleC.MousePosition(engine: Grapple_Engine, x: number, y: number)` | x: number, y: number |
+| `GrappleC.MousePressed(engine: Grapple_Engine, button: integer)` | boolean |
+| `GrappleC.MouseReleased(engine: Grapple_Engine, button: integer)` | boolean |
+| `GrappleC.MouseWheel(engine: Grapple_Engine, x: number, y: number)` | x: number, y: number |
+| `GrappleC.OpenVFSRead(vfsPath: string|nil)` | SDL_IOStream|nil |
+| `GrappleC.PhysicsBodyCount(engine: Grapple_Engine)` | integer |
+| `GrappleC.PhysicsGravity(engine: Grapple_Engine, x: number, y: number)` | x: number, y: number |
+| `GrappleC.PhysicsOverlap(engine: Grapple_Engine, area: SDL_FRect table, mask: integer, out: integer, capacity: integer)` | integer, out: integer |
+| `GrappleC.PhysicsPaused(engine: Grapple_Engine)` | boolean |
+| `GrappleC.PhysicsPixelsPerMetre(engine: Grapple_Engine)` | number |
+| `GrappleC.PhysicsRaycast(engine: Grapple_Engine, x: number, y: number, dx: number, dy: number, mask: integer)` | Grapple_RayHit table |
+| `GrappleC.PhysicsSetGravity(engine: Grapple_Engine, x: number, y: number)` | nil |
+| `GrappleC.PhysicsSetPaused(engine: Grapple_Engine, paused: boolean)` | nil |
+| `GrappleC.PhysicsSetPixelsPerMetre(engine: Grapple_Engine, pixels: number)` | nil |
+| `GrappleC.PhysicsSetSubSteps(engine: Grapple_Engine, sub_steps: integer)` | nil |
+| `GrappleC.PrismaticJointDefCreate()` | b2PrismaticJointDef|nil |
+| `GrappleC.PrismaticJointDefDestroy(def: b2PrismaticJointDef)` | nil |
+| `GrappleC.PrismaticJointDefSetAnchors(def: b2PrismaticJointDef, ax: number, ay: number, bx: number, by: number)` | nil |
+| `GrappleC.PrismaticJointDefSetAxis(def: b2PrismaticJointDef, x: number, y: number)` | nil |
+| `GrappleC.PrismaticJointDefSetBodies(def: b2PrismaticJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
+| `GrappleC.PrismaticJointDefSetLimit(def: b2PrismaticJointDef, enabled: boolean, lower: number, upper: number)` | nil |
+| `GrappleC.PrismaticJointDefSetMotor(def: b2PrismaticJointDef, enabled: boolean, speed: number, max_force: number)` | nil |
+| `GrappleC.QuitDebugText()` | nil |
+| `GrappleC.RegexEscape(text: string|nil)` | string|nil |
+| `GrappleC.RegexFlags(regex: Grapple_Regex)` | string|nil |
+| `GrappleC.RegexGroup(regex: Grapple_Regex, group: integer)` | string|nil |
+| `GrappleC.RegexGroupBegin(regex: Grapple_Regex, group: integer)` | integer |
+| `GrappleC.RegexGroupCount(regex: Grapple_Regex)` | integer |
+| `GrappleC.RegexGroupEnd(regex: Grapple_Regex, group: integer)` | integer |
+| `GrappleC.RegexMatchAt(regex: Grapple_Regex, text: string|nil, start: integer)` | boolean |
+| `GrappleC.RegexNamedGroup(regex: Grapple_Regex, name: string|nil)` | integer |
+| `GrappleC.RegexNamedGroupCount(regex: Grapple_Regex)` | integer |
+| `GrappleC.RegexNamedGroupName(regex: Grapple_Regex, index: integer)` | string|nil |
+| `GrappleC.RegexPattern(regex: Grapple_Regex)` | string|nil |
+| `GrappleC.RegexReplace(regex: Grapple_Regex, text: string|nil, replacement: string|nil, all: boolean)` | string|nil |
+| `GrappleC.RegexSearch(regex: Grapple_Regex, text: string|nil, start: integer)` | boolean |
+| `GrappleC.RenderDebugText(renderer: SDL_Renderer, x: number, y: number, text: string|nil)` | boolean |
+| `GrappleC.RenderLastStats(engine: Grapple_Engine)` | Grapple_RenderStats table |
+| `GrappleC.RenderLighting(scene: Grapple_LightScene)` | boolean |
+| `GrappleC.RenderOverlay(engine: Grapple_Engine, alpha: number)` | integer |
+| `GrappleC.RenderWorld(engine: Grapple_Engine, camera: Grapple_Camera table, alpha: number)` | integer |
+| `GrappleC.RevoluteJointDefCreate()` | b2RevoluteJointDef|nil |
+| `GrappleC.RevoluteJointDefDestroy(def: b2RevoluteJointDef)` | nil |
+| `GrappleC.RevoluteJointDefSetAnchors(def: b2RevoluteJointDef, ax: number, ay: number, bx: number, by: number)` | nil |
+| `GrappleC.RevoluteJointDefSetBodies(def: b2RevoluteJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
+| `GrappleC.RevoluteJointDefSetCollideConnected(def: b2RevoluteJointDef, enabled: boolean)` | nil |
+| `GrappleC.RevoluteJointDefSetLimit(def: b2RevoluteJointDef, min_degrees: number, max_degrees: number)` | nil |
+| `GrappleC.RevoluteJointDefSetMotor(def: b2RevoluteJointDef, enabled: boolean, degrees_per_second: number, max_torque: number)` | nil |
+| `GrappleC.RevoluteJointDefSetSpring(def: b2RevoluteJointDef, enabled: boolean, hertz: number, damping: number)` | nil |
+| `GrappleC.SHA256(data: string|nil, digest: integer)` | boolean, digest: integer |
+| `GrappleC.SampleLight(scene: Grapple_LightScene, x: number, y: number)` | number |
+| `GrappleC.SaveDelete(engine: Grapple_Engine, slot: integer)` | boolean |
+| `GrappleC.SaveExists(engine: Grapple_Engine, slot: integer)` | boolean |
+| `GrappleC.SaveInfoOf(engine: Grapple_Engine, slot: integer)` | Grapple_SaveInfo table |
+| `GrappleC.SavePath(engine: Grapple_Engine, slot: integer)` | string|nil |
+| `GrappleC.SaveSetIdentity(engine: Grapple_Engine, org: string|nil, app: string|nil)` | nil |
+| `GrappleC.SaveWrite(engine: Grapple_Engine, slot: integer, data: string|nil, label: string|nil)` | boolean |
+| `GrappleC.SceneCurrent(engine: Grapple_Engine)` | Grapple_Scene|nil |
+| `GrappleC.SceneDepth(engine: Grapple_Engine)` | integer |
+| `GrappleC.SceneEngine(scene: Grapple_Scene)` | Grapple_Engine|nil |
+| `GrappleC.SceneFind(engine: Grapple_Engine, name: string|nil)` | Grapple_Scene|nil |
+| `GrappleC.SceneIsActive(scene: Grapple_Scene)` | boolean |
+| `GrappleC.SceneKey(scene: Grapple_Scene)` | integer |
+| `GrappleC.SceneName(scene: Grapple_Scene)` | string|nil |
+| `GrappleC.ScenePop(engine: Grapple_Engine)` | boolean |
+| `GrappleC.ScenePush(engine: Grapple_Engine, def: Grapple_SceneDef)` | boolean |
+| `GrappleC.SceneReplace(engine: Grapple_Engine, def: Grapple_SceneDef)` | boolean |
+| `GrappleC.SceneReset(engine: Grapple_Engine, def: Grapple_SceneDef)` | boolean |
+| `GrappleC.SceneSetTransitionColor(engine: Grapple_Engine, color: SDL_FColor table)` | nil |
+| `GrappleC.SceneTransitionTo(engine: Grapple_Engine, def: Grapple_SceneDef, transition: integer, seconds: number)` | boolean |
+| `GrappleC.SceneTransitioning(engine: Grapple_Engine)` | boolean |
+| `GrappleC.ScriptHasHandlers(engine: Grapple_Engine)` | boolean |
+| `GrappleC.ScriptRun(engine: Grapple_Engine)` | boolean |
+| `GrappleC.ScriptSceneDefine(engine: Grapple_Engine, name: string|nil)` | boolean |
+| `GrappleC.ScriptSceneDefined(engine: Grapple_Engine, name: string|nil)` | boolean |
+| `GrappleC.ScriptScenePush(engine: Grapple_Engine, name: string|nil)` | boolean |
+| `GrappleC.ScriptSceneReplace(engine: Grapple_Engine, name: string|nil)` | boolean |
+| `GrappleC.ScriptSceneReset(engine: Grapple_Engine, name: string|nil)` | boolean |
+| `GrappleC.ScriptSceneSetFlags(engine: Grapple_Engine, name: string|nil, flags: integer)` | boolean |
+| `GrappleC.ScriptSceneSetHook(engine: Grapple_Engine, name: string|nil, hook: integer, handle: integer)` | boolean |
+| `GrappleC.ScriptSceneSetStateSize(engine: Grapple_Engine, name: string|nil, state_size: integer)` | boolean |
+| `GrappleC.ScriptSceneTransitionTo(engine: Grapple_Engine, name: string|nil, transition: integer, seconds: number)` | boolean |
+| `GrappleC.ScriptSetHook(engine: Grapple_Engine, hook: integer, handle: integer)` | boolean |
+| `GrappleC.ScriptUnbind(engine: Grapple_Engine)` | nil |
+| `GrappleC.SetDebugTextSize(ptsize: number)` | nil |
+| `GrappleC.SetDeviceMotion(engine: Grapple_Engine, enabled: boolean)` | boolean |
+| `GrappleC.SetDirectionRepeat(engine: Grapple_Engine, delay_seconds: number, interval_seconds: number)` | nil |
+| `GrappleC.SetGamepadDeadzone(engine: Grapple_Engine, deadzone: number)` | nil |
+| `GrappleC.SetGamepadMotion(engine: Grapple_Engine, player: integer, enabled: boolean)` | boolean |
+| `GrappleC.SetLightAmbient(scene: Grapple_LightScene, ambient: SDL_FColor table)` | nil |
+| `GrappleC.SetLightDebugDraw(scene: Grapple_LightScene, enabled: boolean)` | nil |
+| `GrappleC.SetLightMapScale(scene: Grapple_LightScene, scale: number)` | nil |
+| `GrappleC.SetLightRayCount(scene: Grapple_LightScene, rays: integer)` | nil |
+| `GrappleC.SetLightRings(scene: Grapple_LightScene, rings: integer)` | nil |
+| `GrappleC.SetLightShadowSoftness(scene: Grapple_LightScene, softness: number)` | nil |
+| `GrappleC.SetLightUseShaders(scene: Grapple_LightScene, enabled: boolean)` | nil |
+| `GrappleC.SetMouseCapture(engine: Grapple_Engine, captured: boolean)` | boolean |
+| `GrappleC.SetTextInput(engine: Grapple_Engine, enabled: boolean)` | nil |
+| `GrappleC.SetTriggerThreshold(engine: Grapple_Engine, threshold: number)` | nil |
+| `GrappleC.ShowOpenFileDialog(window: SDL_Window, filter_name: string|nil, filter_pattern: string|nil, default_location: string|nil)` | boolean |
+| `GrappleC.ShowSaveFileDialog(window: SDL_Window, filter_name: string|nil, filter_pattern: string|nil, default_location: string|nil)` | boolean |
+| `GrappleC.SpriteCreate()` | Grapple_Sprite|nil |
+| `GrappleC.SpriteDestroy(sprite: Grapple_Sprite)` | nil |
+| `GrappleC.SpriteSetColor(sprite: Grapple_Sprite, r: number, g: number, b: number, a: number)` | nil |
+| `GrappleC.SpriteSetLayer(sprite: Grapple_Sprite, layer: integer, order: number)` | nil |
+| `GrappleC.SpriteSetOrigin(sprite: Grapple_Sprite, x: number, y: number)` | nil |
+| `GrappleC.SpriteSetScreenSpace(sprite: Grapple_Sprite, enabled: boolean)` | nil |
+| `GrappleC.SpriteSetSize(sprite: Grapple_Sprite, width: number, height: number)` | nil |
+| `GrappleC.SpriteSetSortByY(sprite: Grapple_Sprite, enabled: boolean)` | nil |
+| `GrappleC.SpriteSetSource(sprite: Grapple_Sprite, x: number, y: number, w: number, h: number)` | nil |
+| `GrappleC.SpriteSetTexture(sprite: Grapple_Sprite, texture: SDL_Texture)` | nil |
+| `GrappleC.SpriteSetVisible(sprite: Grapple_Sprite, visible: boolean)` | nil |
+| `GrappleC.Text(engine: Grapple_Engine, key: string|nil)` | string|nil |
+| `GrappleC.TextCount(engine: Grapple_Engine, language: string|nil)` | integer |
+| `GrappleC.TextHas(engine: Grapple_Engine, key: string|nil)` | boolean |
+| `GrappleC.TextLanguage(engine: Grapple_Engine)` | string|nil |
+| `GrappleC.TextLoad(engine: Grapple_Engine, language: string|nil, toml: string|nil)` | boolean |
+| `GrappleC.TextLoadFile(engine: Grapple_Engine, language: string|nil)` | boolean |
+| `GrappleC.TextSetLanguage(engine: Grapple_Engine, language: string|nil)` | nil |
+| `GrappleC.TextTyped(engine: Grapple_Engine)` | string|nil |
+| `GrappleC.Texture(engine: Grapple_Engine, id: integer)` | SDL_Texture|nil |
+| `GrappleC.TiledLayerCount(map: Grapple_TiledMap)` | integer |
+| `GrappleC.TiledLayerName(map: Grapple_TiledMap, idx: integer)` | string|nil |
+| `GrappleC.TiledLayerType(map: Grapple_TiledMap, idx: integer)` | string|nil |
+| `GrappleC.TiledMapHeight(map: Grapple_TiledMap)` | integer |
+| `GrappleC.TiledMapWidth(map: Grapple_TiledMap)` | integer |
+| `GrappleC.TiledObjectAt(map: Grapple_TiledMap, layer: integer, index: integer, out: Grapple_TiledObject)` | boolean |
+| `GrappleC.TiledObjectCount(map: Grapple_TiledMap, layer: integer)` | integer |
+| `GrappleC.TiledRaw(map: Grapple_TiledMap)` | cute_tiled_map_t|nil |
+| `GrappleC.TiledTileAt(map: Grapple_TiledMap, layer: integer, x: integer, y: integer)` | integer |
+| `GrappleC.TiledTileHeight(map: Grapple_TiledMap)` | integer |
+| `GrappleC.TiledTileWidth(map: Grapple_TiledMap)` | integer |
+| `GrappleC.TouchPinch(engine: Grapple_Engine)` | number |
+| `GrappleC.TouchRotation(engine: Grapple_Engine)` | number |
+| `GrappleC.WeldJointDefCreate()` | b2WeldJointDef|nil |
+| `GrappleC.WeldJointDefDestroy(def: b2WeldJointDef)` | nil |
+| `GrappleC.WeldJointDefSetAnchors(def: b2WeldJointDef, ax: number, ay: number, bx: number, by: number)` | nil |
+| `GrappleC.WeldJointDefSetBodies(def: b2WeldJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
+| `GrappleC.WeldJointDefSetSpring(def: b2WeldJointDef, linear_hertz: number, linear_damping: number, angular_hertz: number, angular_damping: number)` | nil |
+| `GrappleC.WheelJointDefCreate()` | b2WheelJointDef|nil |
+| `GrappleC.WheelJointDefDestroy(def: b2WheelJointDef)` | nil |
+| `GrappleC.WheelJointDefSetAnchors(def: b2WheelJointDef, ax: number, ay: number, bx: number, by: number)` | nil |
+| `GrappleC.WheelJointDefSetAxis(def: b2WheelJointDef, x: number, y: number)` | nil |
+| `GrappleC.WheelJointDefSetBodies(def: b2WheelJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
+| `GrappleC.WheelJointDefSetMotor(def: b2WheelJointDef, enabled: boolean, speed: number, max_torque: number)` | nil |
+| `GrappleC.WheelJointDefSetSpring(def: b2WheelJointDef, enabled: boolean, hertz: number, damping: number)` | nil |
 

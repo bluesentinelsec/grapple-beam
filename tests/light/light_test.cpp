@@ -1,13 +1,13 @@
 /**
  * @file light_test.cpp
- * @brief SDLStatic::Light — compositing, shadows, falloff, day/night.
+ * @brief Grapple::Light — compositing, shadows, falloff, day/night.
  *
  * Lighting is easy to get subtly wrong in ways that still look plausible,
  * so these read pixels: a wall must leave the far side darker than the near
  * side, ambient must scale what was already drawn, and a point behind an
  * occluder must sample as unlit.
  */
-#include <SDLStatic/light.h>
+#include <grapple/light.h>
 
 #include <gtest/gtest.h>
 
@@ -28,12 +28,12 @@ class LightHarness : public ::testing::Test
         ASSERT_NE(surface_, nullptr);
         renderer_ = SDL_CreateSoftwareRenderer(surface_);
         ASSERT_NE(renderer_, nullptr) << SDL_GetError();
-        scene_ = SDLStatic_CreateLightScene(renderer_);
+        scene_ = Grapple_CreateLightScene(renderer_);
         ASSERT_NE(scene_, nullptr) << SDL_GetError();
     }
     void TearDown() override
     {
-        SDLStatic_DestroyLightScene(scene_);
+        Grapple_DestroyLightScene(scene_);
         SDL_DestroyRenderer(renderer_);
         SDL_DestroySurface(surface_);
         SDL_Quit();
@@ -60,7 +60,7 @@ class LightHarness : public ::testing::Test
 
     SDL_Surface *surface_ = nullptr;
     SDL_Renderer *renderer_ = nullptr;
-    SDLStatic_LightScene *scene_ = nullptr;
+    Grapple_LightScene *scene_ = nullptr;
 };
 
 // Ambient is a multiplier over what is already drawn: black ambient is a
@@ -68,21 +68,21 @@ class LightHarness : public ::testing::Test
 TEST_F(LightHarness, AmbientScalesTheFrame)
 {
     DrawWorld(200);
-    SDLStatic_LightBeginFrame(scene_, 0.0f, 0.0f);
-    SDLStatic_SetLightAmbient(scene_, SDL_FColor{1.0f, 1.0f, 1.0f, 1.0f});
-    ASSERT_TRUE(SDLStatic_RenderLighting(scene_)) << SDL_GetError();
+    Grapple_LightBeginFrame(scene_, 0.0f, 0.0f);
+    Grapple_SetLightAmbient(scene_, SDL_FColor{1.0f, 1.0f, 1.0f, 1.0f});
+    ASSERT_TRUE(Grapple_RenderLighting(scene_)) << SDL_GetError();
     EXPECT_NEAR(Brightness(128, 128), 200, 4) << "white ambient must not change the frame";
 
     DrawWorld(200);
-    SDLStatic_LightBeginFrame(scene_, 0.0f, 0.0f);
-    SDLStatic_SetLightAmbient(scene_, SDL_FColor{0.25f, 0.25f, 0.25f, 1.0f});
-    ASSERT_TRUE(SDLStatic_RenderLighting(scene_));
+    Grapple_LightBeginFrame(scene_, 0.0f, 0.0f);
+    Grapple_SetLightAmbient(scene_, SDL_FColor{0.25f, 0.25f, 0.25f, 1.0f});
+    ASSERT_TRUE(Grapple_RenderLighting(scene_));
     EXPECT_NEAR(Brightness(128, 128), 50, 6) << "quarter ambient is a quarter as bright";
 
     DrawWorld(200);
-    SDLStatic_LightBeginFrame(scene_, 0.0f, 0.0f);
-    SDLStatic_SetLightAmbient(scene_, SDL_FColor{0.0f, 0.0f, 0.0f, 1.0f});
-    ASSERT_TRUE(SDLStatic_RenderLighting(scene_));
+    Grapple_LightBeginFrame(scene_, 0.0f, 0.0f);
+    Grapple_SetLightAmbient(scene_, SDL_FColor{0.0f, 0.0f, 0.0f, 1.0f});
+    ASSERT_TRUE(Grapple_RenderLighting(scene_));
     EXPECT_LT(Brightness(128, 128), 6) << "a pitch-dark dungeon";
 }
 
@@ -90,16 +90,16 @@ TEST_F(LightHarness, AmbientScalesTheFrame)
 TEST_F(LightHarness, LightFallsOffWithDistance)
 {
     DrawWorld(200);
-    SDLStatic_LightBeginFrame(scene_, 0.0f, 0.0f);
-    SDLStatic_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
+    Grapple_LightBeginFrame(scene_, 0.0f, 0.0f);
+    Grapple_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
 
-    SDLStatic_Light torch{};
+    Grapple_Light torch{};
     torch.x = 128.0f;
     torch.y = 128.0f;
     torch.radius = 90.0f;
     torch.color = SDL_FColor{1.0f, 1.0f, 1.0f, 1.0f};
-    ASSERT_TRUE(SDLStatic_AddLight(scene_, &torch));
-    ASSERT_TRUE(SDLStatic_RenderLighting(scene_));
+    ASSERT_TRUE(Grapple_AddLight(scene_, &torch));
+    ASSERT_TRUE(Grapple_RenderLighting(scene_));
 
     const int centre = Brightness(128, 128);
     const int middle = Brightness(128 + 45, 128);
@@ -116,20 +116,20 @@ TEST_F(LightHarness, LightFallsOffWithDistance)
 TEST_F(LightHarness, OccludersCastShadows)
 {
     DrawWorld(200);
-    SDLStatic_LightBeginFrame(scene_, 0.0f, 0.0f);
-    SDLStatic_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
+    Grapple_LightBeginFrame(scene_, 0.0f, 0.0f);
+    Grapple_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
 
     // A wall to the right of the light, with a gap above and below.
     const SDL_FRect wall = {150.0f, 100.0f, 12.0f, 56.0f};
-    ASSERT_TRUE(SDLStatic_AddOccluderRect(scene_, wall));
+    ASSERT_TRUE(Grapple_AddOccluderRect(scene_, wall));
 
-    SDLStatic_Light torch{};
+    Grapple_Light torch{};
     torch.x = 100.0f;
     torch.y = 128.0f;
     torch.radius = 140.0f;
     torch.color = SDL_FColor{1.0f, 1.0f, 1.0f, 1.0f};
-    ASSERT_TRUE(SDLStatic_AddLight(scene_, &torch));
-    ASSERT_TRUE(SDLStatic_RenderLighting(scene_));
+    ASSERT_TRUE(Grapple_AddLight(scene_, &torch));
+    ASSERT_TRUE(Grapple_RenderLighting(scene_));
 
     // Compare at the *same distance* from the light, or the comparison
     // measures falloff rather than shadowing: (200,128) is 100 units away
@@ -150,17 +150,17 @@ TEST_F(LightHarness, ShadowsCanBeDisabledPerLight)
 {
     auto brightness_behind = [&](bool no_shadows) {
         DrawWorld(200);
-        SDLStatic_LightBeginFrame(scene_, 0.0f, 0.0f);
-        SDLStatic_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
-        SDLStatic_AddOccluderRect(scene_, SDL_FRect{150.0f, 100.0f, 12.0f, 56.0f});
-        SDLStatic_Light light{};
+        Grapple_LightBeginFrame(scene_, 0.0f, 0.0f);
+        Grapple_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
+        Grapple_AddOccluderRect(scene_, SDL_FRect{150.0f, 100.0f, 12.0f, 56.0f});
+        Grapple_Light light{};
         light.x = 100.0f;
         light.y = 128.0f;
         light.radius = 140.0f;
         light.color = SDL_FColor{1.0f, 1.0f, 1.0f, 1.0f};
         light.no_shadows = no_shadows;
-        SDLStatic_AddLight(scene_, &light);
-        SDLStatic_RenderLighting(scene_);
+        Grapple_AddLight(scene_, &light);
+        Grapple_RenderLighting(scene_);
         return Brightness(200, 128);
     };
     EXPECT_GT(brightness_behind(true), brightness_behind(false) + 40);
@@ -171,18 +171,18 @@ TEST_F(LightHarness, ShadowsCanBeDisabledPerLight)
 TEST_F(LightHarness, ConesLightOnlyTheirDirection)
 {
     DrawWorld(200);
-    SDLStatic_LightBeginFrame(scene_, 0.0f, 0.0f);
-    SDLStatic_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
+    Grapple_LightBeginFrame(scene_, 0.0f, 0.0f);
+    Grapple_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
 
-    SDLStatic_Light lantern{};
+    Grapple_Light lantern{};
     lantern.x = 128.0f;
     lantern.y = 128.0f;
     lantern.radius = 110.0f;
     lantern.color = SDL_FColor{1.0f, 1.0f, 1.0f, 1.0f};
     lantern.angle = 0.0f;                  // pointing +x
     lantern.spread = 60.0f * SDL_PI_F / 180.0f;
-    ASSERT_TRUE(SDLStatic_AddLight(scene_, &lantern));
-    ASSERT_TRUE(SDLStatic_RenderLighting(scene_));
+    ASSERT_TRUE(Grapple_AddLight(scene_, &lantern));
+    ASSERT_TRUE(Grapple_RenderLighting(scene_));
 
     EXPECT_GT(Brightness(128 + 60, 128), 90) << "in front of the cone";
     EXPECT_LT(Brightness(128 - 60, 128), 20) << "behind it stays dark";
@@ -193,15 +193,15 @@ TEST_F(LightHarness, ConesLightOnlyTheirDirection)
 TEST_F(LightHarness, CameraOffsetsTheLightMap)
 {
     DrawWorld(200);
-    SDLStatic_LightBeginFrame(scene_, 100.0f, 0.0f); // camera scrolled right
-    SDLStatic_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
-    SDLStatic_Light light{};
+    Grapple_LightBeginFrame(scene_, 100.0f, 0.0f); // camera scrolled right
+    Grapple_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
+    Grapple_Light light{};
     light.x = 228.0f; // world x; screen x = 228 - 100 = 128
     light.y = 128.0f;
     light.radius = 60.0f;
     light.color = SDL_FColor{1.0f, 1.0f, 1.0f, 1.0f};
-    ASSERT_TRUE(SDLStatic_AddLight(scene_, &light));
-    ASSERT_TRUE(SDLStatic_RenderLighting(scene_));
+    ASSERT_TRUE(Grapple_AddLight(scene_, &light));
+    ASSERT_TRUE(Grapple_RenderLighting(scene_));
 
     EXPECT_GT(Brightness(128, 128), 120) << "drawn where the camera puts it";
     EXPECT_LT(Brightness(228, 128), 30) << "not at its world position";
@@ -210,40 +210,40 @@ TEST_F(LightHarness, CameraOffsetsTheLightMap)
 // The gameplay query: this is what decides whether a guard sees the player.
 TEST_F(LightHarness, SampleLightAnswersForGameplay)
 {
-    SDLStatic_LightBeginFrame(scene_, 0.0f, 0.0f);
-    SDLStatic_SetLightAmbient(scene_, SDL_FColor{0.0f, 0.0f, 0.0f, 1.0f});
-    SDLStatic_AddOccluderRect(scene_, SDL_FRect{150.0f, 100.0f, 12.0f, 56.0f});
+    Grapple_LightBeginFrame(scene_, 0.0f, 0.0f);
+    Grapple_SetLightAmbient(scene_, SDL_FColor{0.0f, 0.0f, 0.0f, 1.0f});
+    Grapple_AddOccluderRect(scene_, SDL_FRect{150.0f, 100.0f, 12.0f, 56.0f});
 
-    SDLStatic_Light torch{};
+    Grapple_Light torch{};
     torch.x = 100.0f;
     torch.y = 128.0f;
     torch.radius = 140.0f;
     torch.color = SDL_FColor{1.0f, 1.0f, 1.0f, 1.0f};
-    ASSERT_TRUE(SDLStatic_AddLight(scene_, &torch));
+    ASSERT_TRUE(Grapple_AddLight(scene_, &torch));
 
-    EXPECT_GT(SDLStatic_SampleLight(scene_, 110.0f, 128.0f), 0.7f) << "next to the torch";
-    EXPECT_LT(SDLStatic_SampleLight(scene_, 200.0f, 128.0f), 0.05f) << "in the wall's shadow";
-    EXPECT_GT(SDLStatic_SampleLight(scene_, 200.0f, 60.0f), 0.1f) << "clear line, further away";
-    EXPECT_LT(SDLStatic_SampleLight(scene_, 240.0f, 240.0f), 0.05f) << "out of range";
+    EXPECT_GT(Grapple_SampleLight(scene_, 110.0f, 128.0f), 0.7f) << "next to the torch";
+    EXPECT_LT(Grapple_SampleLight(scene_, 200.0f, 128.0f), 0.05f) << "in the wall's shadow";
+    EXPECT_GT(Grapple_SampleLight(scene_, 200.0f, 60.0f), 0.1f) << "clear line, further away";
+    EXPECT_LT(Grapple_SampleLight(scene_, 240.0f, 240.0f), 0.05f) << "out of range";
 
     // Line of sight is the same test, exposed on its own.
-    EXPECT_TRUE(SDLStatic_LightLineOfSight(scene_, 100.0f, 128.0f, 140.0f, 128.0f));
-    EXPECT_FALSE(SDLStatic_LightLineOfSight(scene_, 100.0f, 128.0f, 200.0f, 128.0f));
-    EXPECT_TRUE(SDLStatic_LightLineOfSight(scene_, 100.0f, 128.0f, 200.0f, 60.0f));
+    EXPECT_TRUE(Grapple_LightLineOfSight(scene_, 100.0f, 128.0f, 140.0f, 128.0f));
+    EXPECT_FALSE(Grapple_LightLineOfSight(scene_, 100.0f, 128.0f, 200.0f, 128.0f));
+    EXPECT_TRUE(Grapple_LightLineOfSight(scene_, 100.0f, 128.0f, 200.0f, 60.0f));
 
     // Ambient alone still counts as light: a moonlit field is not a cave.
-    SDLStatic_SetLightAmbient(scene_, SDL_FColor{0.5f, 0.5f, 0.5f, 1.0f});
-    EXPECT_GT(SDLStatic_SampleLight(scene_, 240.0f, 240.0f), 0.4f);
+    Grapple_SetLightAmbient(scene_, SDL_FColor{0.5f, 0.5f, 0.5f, 1.0f});
+    EXPECT_GT(Grapple_SampleLight(scene_, 240.0f, 240.0f), 0.4f);
 }
 
 // The day/night ramp has to be continuous — a jump would show as the sky
 // snapping between two colours — and dark at midnight.
 TEST_F(LightHarness, DayNightCycleIsContinuousAndOrdered)
 {
-    const SDL_FColor midnight = SDLStatic_DayNightAmbient(0.0f);
-    const SDL_FColor dawn = SDLStatic_DayNightAmbient(7.5f);
-    const SDL_FColor noon = SDLStatic_DayNightAmbient(13.0f);
-    const SDL_FColor dusk = SDLStatic_DayNightAmbient(19.0f);
+    const SDL_FColor midnight = Grapple_DayNightAmbient(0.0f);
+    const SDL_FColor dawn = Grapple_DayNightAmbient(7.5f);
+    const SDL_FColor noon = Grapple_DayNightAmbient(13.0f);
+    const SDL_FColor dusk = Grapple_DayNightAmbient(19.0f);
 
     auto luminance = [](SDL_FColor c) { return 0.2126f * c.r + 0.7152f * c.g + 0.0722f * c.b; };
     EXPECT_LT(luminance(midnight), 0.2f) << "night is dark";
@@ -255,10 +255,10 @@ TEST_F(LightHarness, DayNightCycleIsContinuousAndOrdered)
     EXPECT_LT(midnight.r, midnight.b) << "night is cool";
 
     // No discontinuities anywhere around the clock, including the wrap.
-    SDL_FColor previous = SDLStatic_DayNightAmbient(0.0f);
+    SDL_FColor previous = Grapple_DayNightAmbient(0.0f);
     for (float hour = 0.05f; hour <= 24.0f; hour += 0.05f)
     {
-        const SDL_FColor current = SDLStatic_DayNightAmbient(hour);
+        const SDL_FColor current = Grapple_DayNightAmbient(hour);
         EXPECT_LT(SDL_fabsf(current.r - previous.r), 0.05f) << "at hour " << hour;
         EXPECT_LT(SDL_fabsf(current.g - previous.g), 0.05f) << "at hour " << hour;
         EXPECT_LT(SDL_fabsf(current.b - previous.b), 0.05f) << "at hour " << hour;
@@ -266,55 +266,55 @@ TEST_F(LightHarness, DayNightCycleIsContinuousAndOrdered)
     }
 
     // Hours wrap, so a clock can just keep counting.
-    const SDL_FColor wrapped = SDLStatic_DayNightAmbient(25.0f);
-    const SDL_FColor same = SDLStatic_DayNightAmbient(1.0f);
+    const SDL_FColor wrapped = Grapple_DayNightAmbient(25.0f);
+    const SDL_FColor same = Grapple_DayNightAmbient(1.0f);
     EXPECT_FLOAT_EQ(wrapped.r, same.r);
-    EXPECT_FLOAT_EQ(SDLStatic_DayNightSunlight(25.0f), SDLStatic_DayNightSunlight(1.0f));
+    EXPECT_FLOAT_EQ(Grapple_DayNightSunlight(25.0f), Grapple_DayNightSunlight(1.0f));
 
-    EXPECT_FLOAT_EQ(SDLStatic_DayNightSunlight(0.0f), 0.0f);
-    EXPECT_FLOAT_EQ(SDLStatic_DayNightSunlight(13.0f), 1.0f);
-    EXPECT_GT(SDLStatic_DayNightSunlight(10.0f), SDLStatic_DayNightSunlight(7.0f));
+    EXPECT_FLOAT_EQ(Grapple_DayNightSunlight(0.0f), 0.0f);
+    EXPECT_FLOAT_EQ(Grapple_DayNightSunlight(13.0f), 1.0f);
+    EXPECT_GT(Grapple_DayNightSunlight(10.0f), Grapple_DayNightSunlight(7.0f));
 }
 
 // Limits are reported rather than silently dropping lights, and every
 // entry point survives a null scene.
 TEST_F(LightHarness, LimitsAndNullsAreHandled)
 {
-    SDLStatic_LightBeginFrame(scene_, 0.0f, 0.0f);
-    SDLStatic_Light light{};
+    Grapple_LightBeginFrame(scene_, 0.0f, 0.0f);
+    Grapple_Light light{};
     light.radius = 10.0f;
     light.color = SDL_FColor{1.0f, 1.0f, 1.0f, 1.0f};
-    for (int i = 0; i < SDLSTATIC_LIGHT_MAX; i++)
+    for (int i = 0; i < GRAPPLE_LIGHT_MAX; i++)
     {
-        EXPECT_TRUE(SDLStatic_AddLight(scene_, &light)) << "light " << i;
+        EXPECT_TRUE(Grapple_AddLight(scene_, &light)) << "light " << i;
     }
-    EXPECT_FALSE(SDLStatic_AddLight(scene_, &light)) << "one past the limit";
+    EXPECT_FALSE(Grapple_AddLight(scene_, &light)) << "one past the limit";
 
     // A zero-radius light is nothing to draw, not an error.
-    SDLStatic_LightBeginFrame(scene_, 0.0f, 0.0f);
-    SDLStatic_Light empty{};
-    EXPECT_TRUE(SDLStatic_AddLight(scene_, &empty));
+    Grapple_LightBeginFrame(scene_, 0.0f, 0.0f);
+    Grapple_Light empty{};
+    EXPECT_TRUE(Grapple_AddLight(scene_, &empty));
 
-    for (int i = 0; i < SDLSTATIC_LIGHT_OCCLUDER_MAX / 4; i++)
+    for (int i = 0; i < GRAPPLE_LIGHT_OCCLUDER_MAX / 4; i++)
     {
-        EXPECT_TRUE(SDLStatic_AddOccluderRect(scene_, SDL_FRect{0, 0, 1, 1})) << "rect " << i;
+        EXPECT_TRUE(Grapple_AddOccluderRect(scene_, SDL_FRect{0, 0, 1, 1})) << "rect " << i;
     }
-    EXPECT_FALSE(SDLStatic_AddOccluderRect(scene_, SDL_FRect{0, 0, 1, 1}));
+    EXPECT_FALSE(Grapple_AddOccluderRect(scene_, SDL_FRect{0, 0, 1, 1}));
 
-    EXPECT_EQ(SDLStatic_CreateLightScene(nullptr), nullptr);
-    SDLStatic_DestroyLightScene(nullptr);
-    SDLStatic_LightBeginFrame(nullptr, 0.0f, 0.0f);
-    SDLStatic_SetLightAmbient(nullptr, SDL_FColor{});
-    EXPECT_FALSE(SDLStatic_AddLight(nullptr, &light));
-    EXPECT_FALSE(SDLStatic_AddLight(scene_, nullptr));
-    EXPECT_FALSE(SDLStatic_AddOccluderRect(nullptr, SDL_FRect{}));
-    EXPECT_FALSE(SDLStatic_AddOccluderSegment(nullptr, 0, 0, 1, 1));
-    EXPECT_FALSE(SDLStatic_RenderLighting(nullptr));
-    EXPECT_FLOAT_EQ(SDLStatic_SampleLight(nullptr, 0.0f, 0.0f), 0.0f);
-    EXPECT_FALSE(SDLStatic_LightLineOfSight(nullptr, 0, 0, 1, 1));
-    SDLStatic_SetLightRayCount(nullptr, 32);
-    SDLStatic_SetLightRings(nullptr, 2);
-    SDLStatic_SetLightDebugDraw(nullptr, true);
+    EXPECT_EQ(Grapple_CreateLightScene(nullptr), nullptr);
+    Grapple_DestroyLightScene(nullptr);
+    Grapple_LightBeginFrame(nullptr, 0.0f, 0.0f);
+    Grapple_SetLightAmbient(nullptr, SDL_FColor{});
+    EXPECT_FALSE(Grapple_AddLight(nullptr, &light));
+    EXPECT_FALSE(Grapple_AddLight(scene_, nullptr));
+    EXPECT_FALSE(Grapple_AddOccluderRect(nullptr, SDL_FRect{}));
+    EXPECT_FALSE(Grapple_AddOccluderSegment(nullptr, 0, 0, 1, 1));
+    EXPECT_FALSE(Grapple_RenderLighting(nullptr));
+    EXPECT_FLOAT_EQ(Grapple_SampleLight(nullptr, 0.0f, 0.0f), 0.0f);
+    EXPECT_FALSE(Grapple_LightLineOfSight(nullptr, 0, 0, 1, 1));
+    Grapple_SetLightRayCount(nullptr, 32);
+    Grapple_SetLightRings(nullptr, 2);
+    Grapple_SetLightDebugDraw(nullptr, true);
 }
 
 // Quality settings change the geometry, not the result: a shadow is in the
@@ -322,19 +322,19 @@ TEST_F(LightHarness, LimitsAndNullsAreHandled)
 TEST_F(LightHarness, QualitySettingsKeepShadowsInPlace)
 {
     auto shadowed = [&](int rays, int rings) {
-        SDLStatic_SetLightRayCount(scene_, rays);
-        SDLStatic_SetLightRings(scene_, rings);
+        Grapple_SetLightRayCount(scene_, rays);
+        Grapple_SetLightRings(scene_, rings);
         DrawWorld(200);
-        SDLStatic_LightBeginFrame(scene_, 0.0f, 0.0f);
-        SDLStatic_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
-        SDLStatic_AddOccluderRect(scene_, SDL_FRect{150.0f, 100.0f, 12.0f, 56.0f});
-        SDLStatic_Light torch{};
+        Grapple_LightBeginFrame(scene_, 0.0f, 0.0f);
+        Grapple_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
+        Grapple_AddOccluderRect(scene_, SDL_FRect{150.0f, 100.0f, 12.0f, 56.0f});
+        Grapple_Light torch{};
         torch.x = 100.0f;
         torch.y = 128.0f;
         torch.radius = 140.0f;
         torch.color = SDL_FColor{1.0f, 1.0f, 1.0f, 1.0f};
-        SDLStatic_AddLight(scene_, &torch);
-        SDLStatic_RenderLighting(scene_);
+        Grapple_AddLight(scene_, &torch);
+        Grapple_RenderLighting(scene_);
         return Brightness(200, 128);
     };
     EXPECT_LT(shadowed(16, 1), 25);
@@ -367,16 +367,16 @@ class LightGlHarness : public ::testing::Test
         {
             GTEST_SKIP() << "no OpenGL renderer: " << SDL_GetError();
         }
-        scene_ = SDLStatic_CreateLightScene(renderer_);
+        scene_ = Grapple_CreateLightScene(renderer_);
         ASSERT_NE(scene_, nullptr) << SDL_GetError();
-        if (!SDLStatic_LightUsesShaders(scene_))
+        if (!Grapple_LightUsesShaders(scene_))
         {
             GTEST_SKIP() << "the light shader did not come up on this driver";
         }
     }
     void TearDown() override
     {
-        SDLStatic_DestroyLightScene(scene_);
+        Grapple_DestroyLightScene(scene_);
         if (renderer_ != nullptr)
         {
             SDL_DestroyRenderer(renderer_);
@@ -405,7 +405,7 @@ class LightGlHarness : public ::testing::Test
 
     SDL_Window *window_ = nullptr;
     SDL_Renderer *renderer_ = nullptr;
-    SDLStatic_LightScene *scene_ = nullptr;
+    Grapple_LightScene *scene_ = nullptr;
 };
 
 TEST_F(LightGlHarness, ShaderPathLightsAndShadows)
@@ -414,17 +414,17 @@ TEST_F(LightGlHarness, ShaderPathLightsAndShadows)
     SDL_SetRenderDrawColor(renderer_, 200, 200, 200, 255);
     SDL_RenderClear(renderer_);
 
-    SDLStatic_LightBeginFrame(scene_, 0.0f, 0.0f);
-    SDLStatic_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
-    SDLStatic_AddOccluderRect(scene_, SDL_FRect{150.0f, 100.0f, 12.0f, 56.0f});
+    Grapple_LightBeginFrame(scene_, 0.0f, 0.0f);
+    Grapple_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
+    Grapple_AddOccluderRect(scene_, SDL_FRect{150.0f, 100.0f, 12.0f, 56.0f});
 
-    SDLStatic_Light torch{};
+    Grapple_Light torch{};
     torch.x = 100.0f;
     torch.y = 128.0f;
     torch.radius = 140.0f;
     torch.color = SDL_FColor{1.0f, 1.0f, 1.0f, 1.0f};
-    ASSERT_TRUE(SDLStatic_AddLight(scene_, &torch));
-    ASSERT_TRUE(SDLStatic_RenderLighting(scene_)) << SDL_GetError();
+    ASSERT_TRUE(Grapple_AddLight(scene_, &torch));
+    ASSERT_TRUE(Grapple_RenderLighting(scene_)) << SDL_GetError();
 
     const int near_light = Brightness(110, 128);
     const int behind_wall = Brightness(200, 128);
@@ -440,20 +440,20 @@ TEST_F(LightGlHarness, ShaderPathLightsAndShadows)
 TEST_F(LightGlHarness, ShaderAndGeometryPathsAgree)
 {
     auto measure = [&](bool shaders) {
-        SDLStatic_SetLightUseShaders(scene_, shaders);
+        Grapple_SetLightUseShaders(scene_, shaders);
         SDL_SetRenderDrawBlendMode(renderer_, SDL_BLENDMODE_NONE);
         SDL_SetRenderDrawColor(renderer_, 200, 200, 200, 255);
         SDL_RenderClear(renderer_);
-        SDLStatic_LightBeginFrame(scene_, 0.0f, 0.0f);
-        SDLStatic_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
-        SDLStatic_AddOccluderRect(scene_, SDL_FRect{150.0f, 100.0f, 12.0f, 56.0f});
-        SDLStatic_Light torch{};
+        Grapple_LightBeginFrame(scene_, 0.0f, 0.0f);
+        Grapple_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
+        Grapple_AddOccluderRect(scene_, SDL_FRect{150.0f, 100.0f, 12.0f, 56.0f});
+        Grapple_Light torch{};
         torch.x = 100.0f;
         torch.y = 128.0f;
         torch.radius = 140.0f;
         torch.color = SDL_FColor{1.0f, 1.0f, 1.0f, 1.0f};
-        SDLStatic_AddLight(scene_, &torch);
-        SDLStatic_RenderLighting(scene_);
+        Grapple_AddLight(scene_, &torch);
+        Grapple_RenderLighting(scene_);
         return std::pair<int, int>{Brightness(110, 128), Brightness(200, 128)};
     };
     const auto shader = measure(true);
@@ -474,15 +474,15 @@ TEST_F(LightGlHarness, LightMapIsNotVerticallyFlipped)
     SDL_SetRenderDrawColor(renderer_, 200, 200, 200, 255);
     SDL_RenderClear(renderer_);
 
-    SDLStatic_LightBeginFrame(scene_, 0.0f, 0.0f);
-    SDLStatic_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
-    SDLStatic_Light lamp{};
+    Grapple_LightBeginFrame(scene_, 0.0f, 0.0f);
+    Grapple_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
+    Grapple_Light lamp{};
     lamp.x = 128.0f;
     lamp.y = 40.0f; // near the top
     lamp.radius = 60.0f;
     lamp.color = SDL_FColor{1.0f, 1.0f, 1.0f, 1.0f};
-    ASSERT_TRUE(SDLStatic_AddLight(scene_, &lamp));
-    ASSERT_TRUE(SDLStatic_RenderLighting(scene_)) << SDL_GetError();
+    ASSERT_TRUE(Grapple_AddLight(scene_, &lamp));
+    ASSERT_TRUE(Grapple_RenderLighting(scene_)) << SDL_GetError();
 
     EXPECT_GT(Brightness(128, 40), 120) << "lit where the light is";
     EXPECT_LT(Brightness(128, 216), 40) << "and not at the mirrored height";
@@ -496,16 +496,16 @@ TEST_F(LightGlHarness, ShadowsFallOnTheCorrectSide)
     SDL_SetRenderDrawColor(renderer_, 200, 200, 200, 255);
     SDL_RenderClear(renderer_);
 
-    SDLStatic_LightBeginFrame(scene_, 0.0f, 0.0f);
-    SDLStatic_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
-    SDLStatic_AddOccluderRect(scene_, SDL_FRect{100.0f, 90.0f, 56.0f, 12.0f});
-    SDLStatic_Light lamp{};
+    Grapple_LightBeginFrame(scene_, 0.0f, 0.0f);
+    Grapple_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
+    Grapple_AddOccluderRect(scene_, SDL_FRect{100.0f, 90.0f, 56.0f, 12.0f});
+    Grapple_Light lamp{};
     lamp.x = 128.0f;
     lamp.y = 140.0f; // below the bar
     lamp.radius = 150.0f;
     lamp.color = SDL_FColor{1.0f, 1.0f, 1.0f, 1.0f};
-    ASSERT_TRUE(SDLStatic_AddLight(scene_, &lamp));
-    ASSERT_TRUE(SDLStatic_RenderLighting(scene_)) << SDL_GetError();
+    ASSERT_TRUE(Grapple_AddLight(scene_, &lamp));
+    ASSERT_TRUE(Grapple_RenderLighting(scene_)) << SDL_GetError();
 
     EXPECT_LT(Brightness(128, 60), 40) << "shadow above the bar";
     EXPECT_GT(Brightness(128, 120), 100) << "lit below it";
@@ -515,18 +515,18 @@ TEST_F(LightGlHarness, ShadowsFallOnTheCorrectSide)
 // must still be there afterwards.
 TEST_F(LightGlHarness, MapScaleKeepsTheLighting)
 {
-    SDLStatic_SetLightMapScale(scene_, 0.5f);
+    Grapple_SetLightMapScale(scene_, 0.5f);
     SDL_SetRenderDrawColor(renderer_, 200, 200, 200, 255);
     SDL_RenderClear(renderer_);
-    SDLStatic_LightBeginFrame(scene_, 0.0f, 0.0f);
-    SDLStatic_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
-    SDLStatic_Light torch{};
+    Grapple_LightBeginFrame(scene_, 0.0f, 0.0f);
+    Grapple_SetLightAmbient(scene_, SDL_FColor{0.05f, 0.05f, 0.05f, 1.0f});
+    Grapple_Light torch{};
     torch.x = 128.0f;
     torch.y = 128.0f;
     torch.radius = 100.0f;
     torch.color = SDL_FColor{1.0f, 1.0f, 1.0f, 1.0f};
-    SDLStatic_AddLight(scene_, &torch);
-    ASSERT_TRUE(SDLStatic_RenderLighting(scene_)) << SDL_GetError();
+    Grapple_AddLight(scene_, &torch);
+    ASSERT_TRUE(Grapple_RenderLighting(scene_)) << SDL_GetError();
     EXPECT_GT(Brightness(128, 128), 120) << "still lit at half resolution";
     EXPECT_LT(Brightness(10, 10), 40) << "and still dark in the corner";
 }

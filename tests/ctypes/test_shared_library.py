@@ -42,27 +42,27 @@ def declare(lib: ctypes.CDLL) -> None:
     Pointers default to `int` in ctypes, which truncates a 64-bit address to
     32 bits and produces a crash that looks like the library's fault.
     """
-    lib.SDLStatic_ConfigCreate.restype = ctypes.c_void_p
-    lib.SDLStatic_ConfigCreate.argtypes = []
-    lib.SDLStatic_ConfigDestroy.restype = None
-    lib.SDLStatic_ConfigDestroy.argtypes = [ctypes.c_void_p]
+    lib.Grapple_ConfigCreate.restype = ctypes.c_void_p
+    lib.Grapple_ConfigCreate.argtypes = []
+    lib.Grapple_ConfigDestroy.restype = None
+    lib.Grapple_ConfigDestroy.argtypes = [ctypes.c_void_p]
 
-    for setter in ("SDLStatic_ConfigSetHeadless", "SDLStatic_ConfigSetManualClock",
-                   "SDLStatic_ConfigSetAutoMount"):
+    for setter in ("Grapple_ConfigSetHeadless", "Grapple_ConfigSetManualClock",
+                   "Grapple_ConfigSetAutoMount"):
         fn = getattr(lib, setter)
         fn.restype = None
         fn.argtypes = [ctypes.c_void_p, ctypes.c_bool]
 
-    lib.SDLStatic_CreateEngine.restype = ctypes.c_void_p
-    lib.SDLStatic_CreateEngine.argtypes = [ctypes.c_void_p]
-    lib.SDLStatic_DestroyEngine.restype = None
-    lib.SDLStatic_DestroyEngine.argtypes = [ctypes.c_void_p]
-    lib.SDLStatic_EngineAdvance.restype = None
-    lib.SDLStatic_EngineAdvance.argtypes = [ctypes.c_void_p, ctypes.c_uint64]
-    lib.SDLStatic_EngineTick.restype = ctypes.c_bool
-    lib.SDLStatic_EngineTick.argtypes = [ctypes.c_void_p]
-    lib.SDLStatic_EngineFrameCount.restype = ctypes.c_uint64
-    lib.SDLStatic_EngineFrameCount.argtypes = [ctypes.c_void_p]
+    lib.Grapple_CreateEngine.restype = ctypes.c_void_p
+    lib.Grapple_CreateEngine.argtypes = [ctypes.c_void_p]
+    lib.Grapple_DestroyEngine.restype = None
+    lib.Grapple_DestroyEngine.argtypes = [ctypes.c_void_p]
+    lib.Grapple_EngineAdvance.restype = None
+    lib.Grapple_EngineAdvance.argtypes = [ctypes.c_void_p, ctypes.c_uint64]
+    lib.Grapple_EngineTick.restype = ctypes.c_bool
+    lib.Grapple_EngineTick.argtypes = [ctypes.c_void_p]
+    lib.Grapple_EngineFrameCount.restype = ctypes.c_uint64
+    lib.Grapple_EngineFrameCount.argtypes = [ctypes.c_void_p]
 
     lib.SDL_GetPlatform.restype = ctypes.c_char_p
     lib.SDL_GetPlatform.argtypes = []
@@ -71,28 +71,28 @@ def declare(lib: ctypes.CDLL) -> None:
 
 
 def run_engine(lib: ctypes.CDLL) -> None:
-    config = lib.SDLStatic_ConfigCreate()
+    config = lib.Grapple_ConfigCreate()
     if not config:
-        raise SystemExit("SDLStatic_ConfigCreate returned NULL")
+        raise SystemExit("Grapple_ConfigCreate returned NULL")
 
     # Headless with a manual clock: no window, no GPU, and no waiting on a
     # real clock — this has to run on a CI machine with no display.
-    lib.SDLStatic_ConfigSetHeadless(config, True)
-    lib.SDLStatic_ConfigSetManualClock(config, True)
-    lib.SDLStatic_ConfigSetAutoMount(config, False)
+    lib.Grapple_ConfigSetHeadless(config, True)
+    lib.Grapple_ConfigSetManualClock(config, True)
+    lib.Grapple_ConfigSetAutoMount(config, False)
 
-    engine = lib.SDLStatic_CreateEngine(config)
-    lib.SDLStatic_ConfigDestroy(config)
+    engine = lib.Grapple_CreateEngine(config)
+    lib.Grapple_ConfigDestroy(config)
     if not engine:
         error = lib.SDL_GetError().decode("utf-8", "replace")
-        raise SystemExit(f"SDLStatic_CreateEngine returned NULL: {error}")
+        raise SystemExit(f"Grapple_CreateEngine returned NULL: {error}")
 
     for _ in range(5):
-        lib.SDLStatic_EngineAdvance(engine, 16_666_667)
-        lib.SDLStatic_EngineTick(engine)
+        lib.Grapple_EngineAdvance(engine, 16_666_667)
+        lib.Grapple_EngineTick(engine)
 
-    frames = lib.SDLStatic_EngineFrameCount(engine)
-    lib.SDLStatic_DestroyEngine(engine)
+    frames = lib.Grapple_EngineFrameCount(engine)
+    lib.Grapple_DestroyEngine(engine)
 
     if frames < 5:
         raise SystemExit(f"engine ran {frames} frames, expected at least 5")

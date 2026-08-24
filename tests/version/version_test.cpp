@@ -1,9 +1,9 @@
 /**
  * @file version_test.cpp
- * @brief Unit tests for SDL3_static_extensions::Version.
+ * @brief Unit tests for grapple::Version.
  */
 
-#include "SDL3_static_extensions/version.hpp"
+#include "grapple/version.hpp"
 
 #include <gtest/gtest.h>
 #include <string>
@@ -14,25 +14,25 @@ namespace
 
 TEST(VersionTest, IsNonEmpty)
 {
-    const std::string_view version = SDL3_static_extensions::Version();
+    const std::string_view version = grapple::Version();
     EXPECT_FALSE(version.empty());
 }
 
 TEST(VersionTest, MatchesComponentConstants)
 {
     // Version() is generated from the root VERSION file; constants must agree.
-    const std::string expected = std::to_string(SDL3_static_extensions::kVersionMajor) + "." +
-                                 std::to_string(SDL3_static_extensions::kVersionMinor) + "." +
-                                 std::to_string(SDL3_static_extensions::kVersionPatch);
-    EXPECT_EQ(std::string_view{SDL3_static_extensions::Version()}, expected);
-    EXPECT_GE(SDL3_static_extensions::kVersionMajor, 0);
-    EXPECT_GE(SDL3_static_extensions::kVersionMinor, 0);
-    EXPECT_GE(SDL3_static_extensions::kVersionPatch, 0);
+    const std::string expected = std::to_string(grapple::kVersionMajor) + "." +
+                                 std::to_string(grapple::kVersionMinor) + "." +
+                                 std::to_string(grapple::kVersionPatch);
+    EXPECT_EQ(std::string_view{grapple::Version()}, expected);
+    EXPECT_GE(grapple::kVersionMajor, 0);
+    EXPECT_GE(grapple::kVersionMinor, 0);
+    EXPECT_GE(grapple::kVersionPatch, 0);
 }
 
 TEST(VersionTest, HasThreeNumericComponents)
 {
-    const std::string_view version = SDL3_static_extensions::Version();
+    const std::string_view version = grapple::Version();
     EXPECT_NE(version.find('.'), std::string_view::npos);
     EXPECT_NE(version.rfind('.'), std::string_view::npos);
     EXPECT_NE(version.find('.'), version.rfind('.'));

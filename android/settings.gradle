@@ -14,6 +14,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "SDL3-static-extensions-android"
-include(":SDL3_static_extensions")
+rootProject.name = "grapple-beam-android"
+include(":grapple")
 include(":test-app")
