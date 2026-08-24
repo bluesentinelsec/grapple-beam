@@ -55,7 +55,11 @@ grep -q "kVersionPatch = ${version_patch}" "${version_header}"
 symbols_file="$(mktemp)"
 trap 'rm -f "${symbols_file}"' EXIT
 nm -g "${device_library}" >"${symbols_file}"
-grep -qE '[ST] _?_ZN22grapple7Version' "${symbols_file}"
+# The length prefix in an Itanium mangled name is part of the name:
+# _ZN7grapple7VersionEv is 7 for "grapple", and it was 22 for
+# "SDL3_static_extensions". A textual rename updates the name and leaves the
+# count behind, so match any count rather than spell one.
+grep -qE '[ST] _?_ZN[0-9]+grapple7Version' "${symbols_file}"
 
 # The engine itself. Checking the version symbol alone is what let this
 # framework ship holding a version string and nothing else, through a
