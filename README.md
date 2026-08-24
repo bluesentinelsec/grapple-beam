@@ -17,7 +17,7 @@
 ---
 
 <div align="center">
-  <img src="docs/assets/sse-banner.png" alt="SDL3 Static Extensions: a bag of holding erupting with game-development tools over an impossible-geometry block world" width="820">
+  <img src="docs/assets/grapple-beam-logo.png" alt="grapple-beam: a pixel-art grapple beam firing across a starfield, over the wordmark and the line "a 2D game engine for retro and beyond"" width="420">
 </div>
 
 SDL3 gives you a window, a renderer, input, and audio output — and then the
@@ -83,7 +83,7 @@ ctest --test-dir build/debug
 
 ## Write your game in C, C++, Lua, or Ruby
 
-The whole stack is exposed on four language surfaces — the repository
+The whole stack is exposed on four language surfaces — [`demos/`](demos/)
 contains a complete Pong in each as living proof:
 
 - **C** — the native API of every module.

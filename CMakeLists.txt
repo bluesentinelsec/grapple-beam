@@ -398,8 +398,26 @@ endif()
 # the targets to exist.
 include(SDK)
 
+# Playable demos, one per language surface. On by default at top level and
+# never installed: they are what the engine is for, not part of what it ships.
+set(GRAPPLE_BEAM_DEFAULT_BUILD_DEMOS ${GRAPPLE_BEAM_IS_TOP_LEVEL})
+if(ANDROID OR IOS)
+  set(GRAPPLE_BEAM_DEFAULT_BUILD_DEMOS OFF)
+endif()
+option(GRAPPLE_BEAM_BUILD_DEMOS "Build the playable demos"
+       ${GRAPPLE_BEAM_DEFAULT_BUILD_DEMOS})
+
+# Before the demos, not after: they register smoke tests of their own, and
+# add_test does nothing until testing is enabled.
 if(GRAPPLE_BEAM_BUILD_TESTS)
   enable_testing()
+endif()
+
+if(GRAPPLE_BEAM_BUILD_DEMOS AND GRAPPLE_BUILD_ENGINE AND GRAPPLE_BUILD_TTF)
+  add_subdirectory(demos)
+endif()
+
+if(GRAPPLE_BEAM_BUILD_TESTS)
   add_subdirectory(tests)
 endif()
 

@@ -4,7 +4,7 @@ description: "SDL3 Static Extensions: static-link-first game infrastructure for 
 ---
 
 <div class="hero">
-  <img class="banner" src="assets/sse-banner.png" alt="SDL3 Static Extensions: a bag of holding erupting with game-development tools over an impossible-geometry block world">
+  <img class="banner" src="assets/grapple-beam-logo.png" alt="grapple-beam: a pixel-art grapple beam firing across a starfield, over the wordmark and the line "a 2D game engine for retro and beyond"">
   <h1>SDL3 Static Extensions</h1>
   <p class="tagline">Everything a 2D game needs, statically linked into one self-contained binary. SDL3 and 12 battle-tested extension modules — audio, graphics, physics, GUI, Lua &amp; Ruby scripting — with zero shared-library dependencies.</p>
   <div class="badges">
@@ -68,9 +68,10 @@ browser WebAssembly, and all of it is exercised by CI on every platform.
 
 ## Proof it works
 
-The test suite runs 583 tests across six CI platforms, with a dedicated
+The test suite runs 592 tests across six CI platforms, with a dedicated
 AddressSanitizer + UBSan job, an iOS build gate on every pull request and
 a full XCFramework validation on demand. Which components build where is
 on the [platform matrix](platforms-matrix.html). The
 repository includes four complete Pong implementations — one each in C,
-C++, Lua, and Ruby — built purely against the public APIs.
+C++, Lua, and Ruby — built purely against the public APIs, and each played
+for ten seconds by CI to prove the loop still runs a real game.
