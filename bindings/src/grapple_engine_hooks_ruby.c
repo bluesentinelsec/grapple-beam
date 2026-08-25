@@ -114,6 +114,21 @@ static void ReleaseRuby(void *language_state, Sint64 handle)
     }
 }
 
+/* Bind one block to one hook. Shared with the engine object in
+   grapple_ui_ruby.c, which offers the same hooks as methods. */
+bool Grapple_RubyBindEngineHook(mrb_state *mrb, Grapple_Engine *engine,
+                                  Grapple_ScriptHook hook, mrb_value block)
+{
+    if (!Grapple_ScriptBind(engine, mrb, DispatchRuby, ReleaseRuby))
+    {
+        return false;
+    }
+    mrb_value array = HandlerArray(mrb);
+    mrb_ary_push(mrb, array, block);
+    const Sint64 handle = (Sint64)(RARRAY_LEN(array) - 1);
+    return Grapple_ScriptSetHook(engine, hook, handle);
+}
+
 static mrb_value SetHook(mrb_state *mrb, Grapple_ScriptHook hook)
 {
     mrb_value engine_value;

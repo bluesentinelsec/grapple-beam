@@ -25,8 +25,8 @@ types). The full C API additionally stays reachable from C/C++.
 | libyaml | 48 | 0 | 0 | 48 | 2 | 46 |
 | mog HTTP/S | 69 | 54 | 0 | 12 | 67 | 2 |
 | cJSON | 78 | 57 | 0 | 20 | 70 | 8 |
-| Grapple modules | 653 | 79 | 116 | 454 | 616 | 37 |
-| **Total** | 3545 | 1097 | 340 | 2061 | 2914 | 631 |
+| Grapple modules | 655 | 80 | 116 | 455 | 617 | 38 |
+| **Total** | 3547 | 1098 | 340 | 2062 | 2915 | 632 |
 
 ## Script-surface skip reasons
 
@@ -35,7 +35,7 @@ types). The full C API additionally stays reachable from C/C++.
 - 76: stdlib clone
 - 53: math clone
 - 47: threading
-- 8: callback parameter
+- 9: callback parameter
 - 3: owned string, no free fn
 - 1: variadic
 
@@ -700,7 +700,7 @@ types). The full C API additionally stays reachable from C/C++.
 
 </details>
 
-<details><summary>Grapple modules (37)</summary>
+<details><summary>Grapple modules (38)</summary>
 
 - `Grapple_ActorEach` — param visit: <funcptr>*
 - `Grapple_ActorLight` — returns struct pointer
@@ -718,6 +718,7 @@ types). The full C API additionally stays reachable from C/C++.
 - `Grapple_EngineGraphics` — returns struct pointer
 - `Grapple_EngineSetEventSink` — param sink: const Grapple_EventSink*
 - `Grapple_EngineSetHooks` — param user: void*
+- `Grapple_EngineSetOverlay` — param draw: <funcptr>*
 - `Grapple_FingerHeldInRect` — returns struct pointer
 - `Grapple_FingerInRect` — returns struct pointer
 - `Grapple_GPUReadTransferBuffer` — return type void*

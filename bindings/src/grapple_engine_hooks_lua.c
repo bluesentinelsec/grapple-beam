@@ -92,6 +92,25 @@ static void ReleaseLua(void *language_state, Sint64 handle)
     luaL_unref((lua_State *)language_state, LUA_REGISTRYINDEX, (int)handle);
 }
 
+/* Bind one Lua function to one hook. Shared with the engine object in
+   grapple_engine_lua.c, which offers the same hooks as methods. */
+bool Grapple_LuaBindEngineHook(lua_State *L, Grapple_Engine *engine,
+                                 Grapple_ScriptHook hook, int fn_index)
+{
+    if (!Grapple_ScriptBind(engine, L, DispatchLua, ReleaseLua))
+    {
+        return false;
+    }
+    lua_pushvalue(L, fn_index);
+    const int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    if (!Grapple_ScriptSetHook(engine, hook, (Sint64)ref))
+    {
+        luaL_unref(L, LUA_REGISTRYINDEX, ref);
+        return false;
+    }
+    return true;
+}
+
 /* GrappleC.OnFixedUpdate(engine, function(step) ... end) and friends. */
 static int SetHook(lua_State *L, Grapple_ScriptHook hook)
 {
@@ -104,15 +123,8 @@ static int SetHook(lua_State *L, Grapple_ScriptHook hook)
     luaL_argcheck(L, engine != NULL, 1, "engine expected");
     luaL_checktype(L, 2, LUA_TFUNCTION);
 
-    if (!Grapple_ScriptBind(engine, L, DispatchLua, ReleaseLua))
+    if (!Grapple_LuaBindEngineHook(L, engine, hook, 2))
     {
-        return luaL_error(L, "could not bind Lua to this engine");
-    }
-    lua_pushvalue(L, 2);
-    const int ref = luaL_ref(L, LUA_REGISTRYINDEX);
-    if (!Grapple_ScriptSetHook(engine, hook, (Sint64)ref))
-    {
-        luaL_unref(L, LUA_REGISTRYINDEX, ref);
         return luaL_error(L, "%s", SDL_GetError());
     }
     lua_pushboolean(L, 1);

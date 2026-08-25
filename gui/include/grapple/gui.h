@@ -91,6 +91,9 @@ extern Grapple_Gui *Grapple_CreateGuiWithGlyphs(SDL_Renderer *renderer,
 
 extern void Grapple_DestroyGui(Grapple_Gui *gui);
 
+/** The renderer this GUI draws through, as handed to Grapple_CreateGui. */
+extern SDL_Renderer *Grapple_GuiRenderer(Grapple_Gui *gui);
+
 /** The Nuklear context — use the full nk_* API with it. */
 extern struct nk_context *Grapple_GuiContext(Grapple_Gui *gui);
 

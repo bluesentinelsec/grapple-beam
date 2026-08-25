@@ -435,6 +435,7 @@ Grapple_EngineSetGraphics	include/grapple/engine_graphics.h	/^.*Grapple_EngineSe
 Grapple_EngineSetHooks	include/grapple/engine.h	/^.*Grapple_EngineSetHooks *(/;"	f
 Grapple_EngineSetMaxFps	include/grapple/engine.h	/^.*Grapple_EngineSetMaxFps *(/;"	f
 Grapple_EngineSetMediaPassword	include/grapple/engine_media.h	/^.*Grapple_EngineSetMediaPassword *(/;"	f
+Grapple_EngineSetOverlay	include/grapple/engine.h	/^.*Grapple_EngineSetOverlay *(/;"	f
 Grapple_EngineSetPresentation	include/grapple/engine.h	/^.*Grapple_EngineSetPresentation *(/;"	f
 Grapple_EngineSetRefreshRate	include/grapple/engine.h	/^.*Grapple_EngineSetRefreshRate *(/;"	f
 Grapple_EngineSetTickRate	include/grapple/engine.h	/^.*Grapple_EngineSetTickRate *(/;"	f
@@ -652,6 +653,7 @@ Grapple_GuiPumpEvents	include/grapple/gui.h	/^.*Grapple_GuiPumpEvents *(/;"	f
 Grapple_GuiPushFont	include/grapple/gui.h	/^.*Grapple_GuiPushFont *(/;"	f
 Grapple_GuiPushStyleColor	include/grapple/gui.h	/^.*Grapple_GuiPushStyleColor *(/;"	f
 Grapple_GuiRender	include/grapple/gui.h	/^.*Grapple_GuiRender *(/;"	f
+Grapple_GuiRenderer	include/grapple/gui.h	/^.*Grapple_GuiRenderer *(/;"	f
 Grapple_GuiSaveFileButton	include/grapple/gui.h	/^.*Grapple_GuiSaveFileButton *(/;"	f
 Grapple_GuiSavedPath	include/grapple/gui.h	/^.*Grapple_GuiSavedPath *(/;"	f
 Grapple_GuiScale	include/grapple/gui.h	/^.*Grapple_GuiScale *(/;"	f

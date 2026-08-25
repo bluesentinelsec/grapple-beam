@@ -311,6 +311,17 @@ extern bool Grapple_EngineTick(Grapple_Engine *engine);
  */
 extern void Grapple_EngineSetEventSink(Grapple_Engine *engine, const Grapple_EventSink *sink);
 
+/**
+ * Draw `draw` after everything else in the frame, including post_render.
+ *
+ * For a layer that draws itself — a retained UI, a console — so that using
+ * one does not spend the game's own post_render hook. Pass NULL to remove.
+ *
+ *   Grapple_EngineSetOverlay(engine, Grapple_UiDrawCallback, ui);
+ */
+extern void Grapple_EngineSetOverlay(Grapple_Engine *engine, void (*draw)(void *user),
+                                       void *user);
+
 /** Install the hooks without handing over the loop.
  *
  *  Grapple_RunGame does this for you. A game driving the loop itself with

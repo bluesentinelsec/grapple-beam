@@ -782,6 +782,8 @@ bool Grapple_OpenRubyBindings(mrb_state *mrb)
     /* Generated flat mirror of the full C API; see
      * bindings/generated/COVERAGE.md. */
     Grapple_OpenGeneratedRubyBindings(mrb);
+    /* One hash instead of a run of setters, and widgets you declare once. */
+    Grapple_OpenRubyUi(mrb);
     /* Reads the generator could not express, patched onto the module it
        made. mrb_define_module returns the existing SDL module here rather
        than creating a second one. */

@@ -1,0 +1,1088 @@
+/*
+ * grapple_ui.c — a retained widget tree over the immediate-mode GUI.
+ *
+ * Original Grapple code (zlib). Contract in grapple/widgets.h.
+ *
+ * The whole layer is one idea: keep the tree, and walk it once a frame
+ * emitting the nk_* calls the caller would otherwise have written by hand.
+ * Nothing here can do anything Nuklear could not; what it does is remember,
+ * which is what buys widget identity, owned state, and shrink-to-fit.
+ *
+ * Layout resolves in pixels at draw time, because that is the first moment
+ * the panel's real width is known. A row asks each child how wide it wants
+ * to be, hands the fixed answers to nk_layout_row_template_push_static and
+ * lets the rest share what is left; a column gives each child a row of its
+ * own. That is Tk's pack, and it is about forty lines of it.
+ */
+#include <grapple/widgets.h>
+
+#include <SDL3/SDL.h>
+
+#define MAX_TEXT 1024
+
+typedef enum NodeKind
+{
+    NODE_PANEL = 0,
+    NODE_ROW,
+    NODE_COLUMN,
+    NODE_LABEL,
+    NODE_BUTTON,
+    NODE_CHECK,
+    NODE_SLIDER,
+    NODE_ENTRY,
+    NODE_SPACER,
+    NODE_RAW
+} NodeKind;
+
+struct Grapple_UiWidget
+{
+    NodeKind kind;
+    Grapple_Ui *ui;
+    Grapple_UiWidget *parent;
+    Grapple_UiWidget *first_child;
+    Grapple_UiWidget *last_child;
+    Grapple_UiWidget *next_sibling;
+
+    /* Every node carries the same handful of layout knobs; which ones mean
+       anything depends on the kind, and the defaults are all "stretch". */
+    Grapple_UiLength width;
+    Grapple_UiLength height;
+    Grapple_UiAlign align;
+    float spacing;
+    float padding;
+    bool visible;
+    bool disabled;
+
+    /* Panel */
+    char title[128];
+    bool fill;
+    bool movable;
+    bool scrollable;
+    bool no_border;
+    float x, y, w, h;
+
+    /* Widget state. An entry's buffer lives here rather than in the
+       caller's hands, which is most of the ceremony this layer removes. */
+    char *text;
+    int capacity;
+    bool checked;
+    float value, min, max, step;
+    bool wrap;
+
+    /* Where this node landed last frame, so something can be anchored to
+       it. Nuklear knows only during the frame; the tree remembers. */
+    struct nk_rect last_bounds;
+    bool drawn;
+
+    Grapple_UiCallback on_click;
+    Grapple_UiCallback on_change;
+    Grapple_UiDrawFn draw;
+    void *user;
+};
+
+struct Grapple_Ui
+{
+    Grapple_Gui *gui;
+    bool owns_gui;
+    Grapple_UiWidget *first_panel;
+    Grapple_UiWidget *last_panel;
+    /* Nuklear identifies some widgets by call order, so every node needs a
+       name that is stable across frames rather than an index that shifts
+       when a sibling is hidden. */
+    unsigned next_id;
+};
+
+/* --- little helpers ------------------------------------------------------ */
+
+static float LineHeight(Grapple_Ui *ui)
+{
+    const float h = Grapple_GuiFontHeight(ui->gui);
+    return (h > 0.0f) ? h : 16.0f;
+}
+
+/* What one string is worth in pixels, asked of the live font. This is the
+   call an immediate-mode layout cannot make in time, and the reason
+   GRAPPLE_UI_FIT can be honest where GuiGridCellPart's fraction could not. */
+static float TextWidth(Grapple_Ui *ui, const char *text)
+{
+    struct nk_context *ctx = Grapple_GuiContext(ui->gui);
+    if (ctx == NULL || ctx->style.font == NULL || ctx->style.font->width == NULL ||
+        text == NULL)
+    {
+        return 0.0f;
+    }
+    const int len = (int)SDL_strlen(text);
+    return ctx->style.font->width(ctx->style.font->userdata, ctx->style.font->height, text,
+                                  len);
+}
+
+/* The horizontal padding a widget of this kind puts around its text. */
+static float Chrome(Grapple_UiWidget *node)
+{
+    struct nk_context *ctx = Grapple_GuiContext(node->ui->gui);
+    if (ctx == NULL)
+    {
+        return 0.0f;
+    }
+    switch (node->kind)
+    {
+    case NODE_BUTTON:
+        return ctx->style.button.padding.x * 2.0f + ctx->style.button.border * 2.0f + 8.0f;
+    case NODE_CHECK:
+        return ctx->style.checkbox.padding.x * 2.0f + LineHeight(node->ui) + 8.0f;
+    case NODE_ENTRY:
+        return ctx->style.edit.padding.x * 2.0f + 8.0f;
+    default:
+        return 4.0f;
+    }
+}
+
+static float Resolve(Grapple_UiWidget *node, Grapple_UiLength length, float available,
+                     float content)
+{
+    switch (length.unit)
+    {
+    case GRAPPLE_UI_UNIT_PX:
+        return length.value;
+    case GRAPPLE_UI_UNIT_EM:
+        return length.value * LineHeight(node->ui);
+    case GRAPPLE_UI_UNIT_PCT:
+        return length.value * available;
+    case GRAPPLE_UI_UNIT_FIT:
+        return content;
+    case GRAPPLE_UI_UNIT_STRETCH:
+    default:
+        return 0.0f; /* the caller shares the remainder out */
+    }
+}
+
+/* How wide this node would like to be if it got to choose. */
+static float ContentWidth(Grapple_UiWidget *node)
+{
+    switch (node->kind)
+    {
+    case NODE_LABEL:
+    case NODE_BUTTON:
+    case NODE_CHECK:
+    case NODE_ENTRY:
+        return TextWidth(node->ui, node->text) + Chrome(node);
+    default:
+        return 0.0f;
+    }
+}
+
+static float RowHeightOf(Grapple_UiWidget *node, float available_height)
+{
+    const float h = Resolve(node, node->height, available_height, LineHeight(node->ui));
+    if (h > 0.0f)
+    {
+        return h;
+    }
+    /* One line plus the widget's own vertical chrome: a button that is
+       exactly a line tall looks wrong in every toolkit. */
+    switch (node->kind)
+    {
+    case NODE_BUTTON:
+    case NODE_ENTRY:
+    case NODE_CHECK:
+        return LineHeight(node->ui) * 1.9f;
+    default:
+        return LineHeight(node->ui) * 1.3f;
+    }
+}
+
+static bool IsContainer(const Grapple_UiWidget *node)
+{
+    return node->kind == NODE_PANEL || node->kind == NODE_ROW || node->kind == NODE_COLUMN;
+}
+
+static int VisibleChildren(Grapple_UiWidget *node)
+{
+    int n = 0;
+    for (Grapple_UiWidget *c = node->first_child; c != NULL; c = c->next_sibling)
+    {
+        if (c->visible)
+        {
+            n++;
+        }
+    }
+    return n;
+}
+
+/* --- construction -------------------------------------------------------- */
+
+static Grapple_UiWidget *NewNode(Grapple_Ui *ui, Grapple_UiWidget *parent, NodeKind kind)
+{
+    Grapple_UiWidget *node = (Grapple_UiWidget *)SDL_calloc(1, sizeof(*node));
+    if (node == NULL)
+    {
+        return NULL;
+    }
+    node->kind = kind;
+    node->ui = ui;
+    node->parent = parent;
+    node->visible = true;
+    node->spacing = -1.0f; /* inherit */
+    node->max = 1.0f;
+    ui->next_id++;
+
+    if (parent != NULL)
+    {
+        if (parent->last_child == NULL)
+        {
+            parent->first_child = node;
+        }
+        else
+        {
+            parent->last_child->next_sibling = node;
+        }
+        parent->last_child = node;
+    }
+    return node;
+}
+
+static bool SetText(Grapple_UiWidget *node, const char *text, int capacity)
+{
+    const int want = (capacity > 0) ? capacity : MAX_TEXT;
+    if (node->text == NULL || node->capacity < want)
+    {
+        char *grown = (char *)SDL_realloc(node->text, (size_t)want);
+        if (grown == NULL)
+        {
+            return false;
+        }
+        node->text = grown;
+        node->capacity = want;
+    }
+    if (text != NULL)
+    {
+        SDL_strlcpy(node->text, text, (size_t)node->capacity);
+    }
+    else
+    {
+        node->text[0] = '\0';
+    }
+    return true;
+}
+
+/* The interface font each platform actually uses, in the order worth
+   trying. Loading the system font rather than embedding one keeps a
+   megabyte of glyphs out of the library and gets each platform's own look;
+   the built-in face is the fallback, not the plan. */
+static void *LoadPlatformFont(size_t *length)
+{
+    static const char *kCandidates[] = {
+#if defined(SDL_PLATFORM_MACOS)
+        "/System/Library/Fonts/SFNS.ttf",
+        "/System/Library/Fonts/Helvetica.ttc",
+        "/System/Library/Fonts/Supplemental/Arial.ttf",
+#elif defined(SDL_PLATFORM_WIN32)
+        "C:/Windows/Fonts/segoeui.ttf",
+        "C:/Windows/Fonts/arial.ttf",
+#elif defined(SDL_PLATFORM_ANDROID)
+        "/system/fonts/Roboto-Regular.ttf",
+        "/system/fonts/DroidSans.ttf",
+#else
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/TTF/DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+        "/usr/share/fonts/liberation-sans/LiberationSans-Regular.ttf",
+#endif
+    };
+    for (size_t i = 0; i < SDL_arraysize(kCandidates); ++i)
+    {
+        void *bytes = SDL_LoadFile(kCandidates[i], length);
+        if (bytes != NULL)
+        {
+            return bytes;
+        }
+    }
+    *length = 0;
+    return NULL;
+}
+
+Grapple_Ui *Grapple_OpenUi(SDL_Renderer *renderer, float font_points)
+{
+    size_t font_length = 0;
+    void *font = LoadPlatformFont(&font_length);
+    Grapple_Gui *gui = Grapple_CreateGui(renderer, font, font_length,
+                                             (font_points > 0.0f) ? font_points : 15.0f);
+    SDL_free(font); /* CreateGui copies what it needs */
+    if (gui == NULL)
+    {
+        return NULL;
+    }
+    Grapple_Ui *ui = Grapple_CreateUi(gui);
+    if (ui == NULL)
+    {
+        Grapple_DestroyGui(gui);
+        return NULL;
+    }
+    ui->owns_gui = true;
+    return ui;
+}
+
+Grapple_Gui *Grapple_UiGui(Grapple_Ui *ui)
+{
+    return (ui != NULL) ? ui->gui : NULL;
+}
+
+Grapple_EventSink Grapple_UiEventSink(Grapple_Ui *ui)
+{
+    if (ui == NULL)
+    {
+        const Grapple_EventSink none = {0};
+        return none;
+    }
+    return Grapple_GuiEventSink(ui->gui);
+}
+
+Grapple_Ui *Grapple_CreateUi(Grapple_Gui *gui)
+{
+    if (gui == NULL)
+    {
+        SDL_InvalidParamError("gui");
+        return NULL;
+    }
+    Grapple_Ui *ui = (Grapple_Ui *)SDL_calloc(1, sizeof(*ui));
+    if (ui == NULL)
+    {
+        return NULL;
+    }
+    ui->gui = gui;
+    return ui;
+}
+
+static void DestroyNode(Grapple_UiWidget *node)
+{
+    Grapple_UiWidget *child = node->first_child;
+    while (child != NULL)
+    {
+        Grapple_UiWidget *next = child->next_sibling;
+        DestroyNode(child);
+        child = next;
+    }
+    SDL_free(node->text);
+    SDL_free(node);
+}
+
+void Grapple_DestroyUi(Grapple_Ui *ui)
+{
+    if (ui == NULL)
+    {
+        return;
+    }
+    Grapple_UiWidget *panel = ui->first_panel;
+    while (panel != NULL)
+    {
+        Grapple_UiWidget *next = panel->next_sibling;
+        DestroyNode(panel);
+        panel = next;
+    }
+    if (ui->owns_gui)
+    {
+        Grapple_DestroyGui(ui->gui);
+    }
+    SDL_free(ui);
+}
+
+Grapple_UiWidget *Grapple_UiPanel(Grapple_Ui *ui, const Grapple_UiPanelDef *def)
+{
+    if (ui == NULL || def == NULL)
+    {
+        SDL_InvalidParamError("ui/def");
+        return NULL;
+    }
+    Grapple_UiWidget *node = NewNode(ui, NULL, NODE_PANEL);
+    if (node == NULL)
+    {
+        return NULL;
+    }
+    /* The title doubles as Nuklear's window name, which must be unique and
+       stable: two untitled panels would otherwise be the same window. */
+    if (def->title != NULL && def->title[0] != '\0')
+    {
+        SDL_strlcpy(node->title, def->title, sizeof(node->title));
+    }
+    else
+    {
+        SDL_snprintf(node->title, sizeof(node->title), "##panel%u", ui->next_id);
+    }
+    node->fill = def->fill;
+    node->x = def->x;
+    node->y = def->y;
+    node->w = def->width;
+    node->h = def->height;
+    node->padding = def->padding;
+    node->spacing = (def->spacing > 0.0f) ? def->spacing : -1.0f;
+    node->movable = def->movable;
+    node->scrollable = def->scrollable;
+    node->no_border = def->no_border;
+
+    if (ui->last_panel == NULL)
+    {
+        ui->first_panel = node;
+    }
+    else
+    {
+        ui->last_panel->next_sibling = node;
+    }
+    ui->last_panel = node;
+    return node;
+}
+
+static Grapple_UiWidget *NewStrip(Grapple_UiWidget *parent, const Grapple_UiStripDef *def,
+                                  NodeKind kind)
+{
+    if (parent == NULL)
+    {
+        SDL_InvalidParamError("parent");
+        return NULL;
+    }
+    Grapple_UiWidget *node = NewNode(parent->ui, parent, kind);
+    if (node == NULL)
+    {
+        return NULL;
+    }
+    if (def != NULL)
+    {
+        node->height = def->height;
+        node->spacing = def->spacing;
+        node->align = def->align;
+    }
+    return node;
+}
+
+Grapple_UiWidget *Grapple_UiRow(Grapple_UiWidget *parent, const Grapple_UiStripDef *def)
+{
+    return NewStrip(parent, def, NODE_ROW);
+}
+
+Grapple_UiWidget *Grapple_UiColumn(Grapple_UiWidget *parent, const Grapple_UiStripDef *def)
+{
+    return NewStrip(parent, def, NODE_COLUMN);
+}
+
+Grapple_UiWidget *Grapple_UiLabel(Grapple_UiWidget *parent, const Grapple_UiLabelDef *def)
+{
+    if (parent == NULL || def == NULL)
+    {
+        SDL_InvalidParamError("parent/def");
+        return NULL;
+    }
+    Grapple_UiWidget *node = NewNode(parent->ui, parent, NODE_LABEL);
+    if (node == NULL || !SetText(node, def->text, 0))
+    {
+        return NULL;
+    }
+    node->width = def->width;
+    node->height = def->height;
+    node->align = def->align;
+    node->wrap = def->wrap;
+    return node;
+}
+
+Grapple_UiWidget *Grapple_UiButton(Grapple_UiWidget *parent, const Grapple_UiButtonDef *def)
+{
+    if (parent == NULL || def == NULL)
+    {
+        SDL_InvalidParamError("parent/def");
+        return NULL;
+    }
+    Grapple_UiWidget *node = NewNode(parent->ui, parent, NODE_BUTTON);
+    if (node == NULL || !SetText(node, def->text, 0))
+    {
+        return NULL;
+    }
+    node->width = def->width;
+    node->height = def->height;
+    node->align = def->align;
+    node->disabled = def->disabled;
+    node->on_click = def->on_click;
+    node->user = def->user;
+    return node;
+}
+
+Grapple_UiWidget *Grapple_UiCheck(Grapple_UiWidget *parent, const Grapple_UiCheckDef *def)
+{
+    if (parent == NULL || def == NULL)
+    {
+        SDL_InvalidParamError("parent/def");
+        return NULL;
+    }
+    Grapple_UiWidget *node = NewNode(parent->ui, parent, NODE_CHECK);
+    if (node == NULL || !SetText(node, def->text, 0))
+    {
+        return NULL;
+    }
+    node->checked = def->checked;
+    node->width = def->width;
+    node->height = def->height;
+    node->align = def->align;
+    node->on_change = def->on_change;
+    node->user = def->user;
+    return node;
+}
+
+Grapple_UiWidget *Grapple_UiSlider(Grapple_UiWidget *parent, const Grapple_UiSliderDef *def)
+{
+    if (parent == NULL || def == NULL)
+    {
+        SDL_InvalidParamError("parent/def");
+        return NULL;
+    }
+    Grapple_UiWidget *node = NewNode(parent->ui, parent, NODE_SLIDER);
+    if (node == NULL)
+    {
+        return NULL;
+    }
+    node->min = def->min;
+    node->max = (def->max > def->min) ? def->max : (def->min + 1.0f);
+    node->step = (def->step > 0.0f) ? def->step : (node->max - node->min) / 100.0f;
+    node->value = SDL_clamp(def->value, node->min, node->max);
+    node->width = def->width;
+    node->height = def->height;
+    node->align = def->align;
+    node->on_change = def->on_change;
+    node->user = def->user;
+    return node;
+}
+
+Grapple_UiWidget *Grapple_UiEntry(Grapple_UiWidget *parent, const Grapple_UiEntryDef *def)
+{
+    if (parent == NULL || def == NULL)
+    {
+        SDL_InvalidParamError("parent/def");
+        return NULL;
+    }
+    Grapple_UiWidget *node = NewNode(parent->ui, parent, NODE_ENTRY);
+    if (node == NULL || !SetText(node, def->text, (def->capacity > 0) ? def->capacity : 256))
+    {
+        return NULL;
+    }
+    node->width = def->width;
+    node->height = def->height;
+    node->align = def->align;
+    node->on_change = def->on_change;
+    node->user = def->user;
+    return node;
+}
+
+Grapple_UiWidget *Grapple_UiSpacer(Grapple_UiWidget *parent, const Grapple_UiSpacerDef *def)
+{
+    if (parent == NULL)
+    {
+        SDL_InvalidParamError("parent");
+        return NULL;
+    }
+    Grapple_UiWidget *node = NewNode(parent->ui, parent, NODE_SPACER);
+    if (node != NULL && def != NULL)
+    {
+        node->width = def->width;
+        node->height = def->height;
+    }
+    return node;
+}
+
+Grapple_UiWidget *Grapple_UiRaw(Grapple_UiWidget *parent, const Grapple_UiRawDef *def)
+{
+    if (parent == NULL || def == NULL)
+    {
+        SDL_InvalidParamError("parent/def");
+        return NULL;
+    }
+    Grapple_UiWidget *node = NewNode(parent->ui, parent, NODE_RAW);
+    if (node == NULL)
+    {
+        return NULL;
+    }
+    node->draw = def->draw;
+    node->user = def->user;
+    node->width = def->width;
+    node->height = def->height;
+    return node;
+}
+
+/* --- reading and changing ------------------------------------------------ */
+
+void Grapple_UiSetText(Grapple_UiWidget *widget, const char *text)
+{
+    if (widget != NULL)
+    {
+        SetText(widget, text, widget->capacity);
+    }
+}
+
+const char *Grapple_UiText(Grapple_UiWidget *widget)
+{
+    return (widget != NULL && widget->text != NULL) ? widget->text : "";
+}
+
+void Grapple_UiSetChecked(Grapple_UiWidget *widget, bool checked)
+{
+    if (widget != NULL)
+    {
+        widget->checked = checked;
+    }
+}
+
+bool Grapple_UiChecked(Grapple_UiWidget *widget)
+{
+    return (widget != NULL) ? widget->checked : false;
+}
+
+void Grapple_UiSetValue(Grapple_UiWidget *widget, float value)
+{
+    if (widget != NULL)
+    {
+        widget->value = SDL_clamp(value, widget->min, widget->max);
+    }
+}
+
+float Grapple_UiValue(Grapple_UiWidget *widget)
+{
+    return (widget != NULL) ? widget->value : 0.0f;
+}
+
+void Grapple_UiSetVisible(Grapple_UiWidget *widget, bool visible)
+{
+    if (widget != NULL)
+    {
+        widget->visible = visible;
+    }
+}
+
+bool Grapple_UiVisible(Grapple_UiWidget *widget)
+{
+    return (widget != NULL) ? widget->visible : false;
+}
+
+void Grapple_UiSetDisabled(Grapple_UiWidget *widget, bool disabled)
+{
+    if (widget != NULL)
+    {
+        widget->disabled = disabled;
+    }
+}
+
+bool Grapple_UiDisabled(Grapple_UiWidget *widget)
+{
+    return (widget != NULL) ? widget->disabled : false;
+}
+
+bool Grapple_UiBounds(Grapple_UiWidget *widget, float *x, float *y, float *width,
+                        float *height)
+{
+    if (widget == NULL || !widget->drawn)
+    {
+        return false;
+    }
+    if (x != NULL)
+    {
+        *x = widget->last_bounds.x;
+    }
+    if (y != NULL)
+    {
+        *y = widget->last_bounds.y;
+    }
+    if (width != NULL)
+    {
+        *width = widget->last_bounds.w;
+    }
+    if (height != NULL)
+    {
+        *height = widget->last_bounds.h;
+    }
+    return true;
+}
+
+void *Grapple_UiUser(Grapple_UiWidget *widget)
+{
+    return (widget != NULL) ? widget->user : NULL;
+}
+
+static void Unlink(Grapple_UiWidget *widget)
+{
+    Grapple_UiWidget **link = NULL;
+    if (widget->parent != NULL)
+    {
+        link = &widget->parent->first_child;
+    }
+    else if (widget->ui != NULL)
+    {
+        link = &widget->ui->first_panel;
+    }
+    if (link == NULL)
+    {
+        return;
+    }
+    Grapple_UiWidget *prev = NULL;
+    for (Grapple_UiWidget *c = *link; c != NULL; prev = c, c = c->next_sibling)
+    {
+        if (c != widget)
+        {
+            continue;
+        }
+        if (prev == NULL)
+        {
+            *link = c->next_sibling;
+        }
+        else
+        {
+            prev->next_sibling = c->next_sibling;
+        }
+        if (widget->parent != NULL && widget->parent->last_child == widget)
+        {
+            widget->parent->last_child = prev;
+        }
+        if (widget->parent == NULL && widget->ui != NULL && widget->ui->last_panel == widget)
+        {
+            widget->ui->last_panel = prev;
+        }
+        return;
+    }
+}
+
+void Grapple_UiRemove(Grapple_UiWidget *widget)
+{
+    if (widget == NULL)
+    {
+        return;
+    }
+    Unlink(widget);
+    DestroyNode(widget);
+}
+
+void Grapple_UiClear(Grapple_UiWidget *parent)
+{
+    if (parent == NULL)
+    {
+        return;
+    }
+    Grapple_UiWidget *child = parent->first_child;
+    while (child != NULL)
+    {
+        Grapple_UiWidget *next = child->next_sibling;
+        DestroyNode(child);
+        child = next;
+    }
+    parent->first_child = NULL;
+    parent->last_child = NULL;
+}
+
+/* --- drawing ------------------------------------------------------------- */
+
+static void DrawNode(Grapple_UiWidget *node, float available_width);
+
+/* One widget, once its slot has already been pushed by its parent. */
+static void DrawLeaf(Grapple_UiWidget *node)
+{
+    struct nk_context *ctx = Grapple_GuiContext(node->ui->gui);
+    node->last_bounds = nk_widget_bounds(ctx);
+    node->drawn = true;
+    const nk_flags text_align = (node->align == GRAPPLE_UI_CENTER)   ? NK_TEXT_CENTERED
+                                : (node->align == GRAPPLE_UI_RIGHT) ? NK_TEXT_RIGHT
+                                                                     : NK_TEXT_LEFT;
+    switch (node->kind)
+    {
+    case NODE_LABEL:
+        if (node->wrap)
+        {
+            nk_label_wrap(ctx, node->text);
+        }
+        else
+        {
+            nk_label(ctx, node->text, text_align);
+        }
+        break;
+
+    case NODE_BUTTON:
+    {
+        /* Nuklear has no disabled button, so it is drawn as one that cannot
+           be pressed rather than one that merely looks pressable. */
+        if (node->disabled)
+        {
+            struct nk_style_button dimmed = ctx->style.button;
+            dimmed.normal = dimmed.hover = dimmed.active = ctx->style.button.normal;
+            dimmed.text_normal = dimmed.text_hover = dimmed.text_active =
+                nk_rgba(160, 160, 160, 160);
+            nk_button_label_styled(ctx, &dimmed, node->text);
+        }
+        else if (nk_button_label(ctx, node->text) && node->on_click != NULL)
+        {
+            node->on_click(node, node->user);
+        }
+        break;
+    }
+
+    case NODE_CHECK:
+    {
+        nk_bool checked = node->checked ? 1 : 0;
+        if (nk_checkbox_label(ctx, node->text, &checked))
+        {
+            node->checked = (checked != 0);
+            if (node->on_change != NULL)
+            {
+                node->on_change(node, node->user);
+            }
+        }
+        break;
+    }
+
+    case NODE_SLIDER:
+    {
+        float value = node->value;
+        if (nk_slider_float(ctx, node->min, &value, node->max, node->step))
+        {
+            node->value = value;
+            if (node->on_change != NULL)
+            {
+                node->on_change(node, node->user);
+            }
+        }
+        break;
+    }
+
+    case NODE_ENTRY:
+    {
+        const nk_flags state =
+            nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, node->text, node->capacity,
+                                           nk_filter_default);
+        if ((state & NK_EDIT_COMMITED) || (state & NK_EDIT_ACTIVE))
+        {
+            if (node->on_change != NULL && (state & NK_EDIT_COMMITED))
+            {
+                node->on_change(node, node->user);
+            }
+        }
+        break;
+    }
+
+    case NODE_SPACER:
+        nk_spacing(ctx, 1);
+        break;
+
+    case NODE_RAW:
+        if (node->draw != NULL)
+        {
+            node->draw(ctx, node->user);
+        }
+        break;
+
+    default:
+        break;
+    }
+}
+
+/* A row: fixed-width children keep their width, the rest share what is left.
+   This is nk_layout_row_template's whole purpose, so the mapping is direct. */
+static void DrawRow(Grapple_UiWidget *row, float available_width)
+{
+    struct nk_context *ctx = Grapple_GuiContext(row->ui->gui);
+    const int count = VisibleChildren(row);
+    if (count == 0)
+    {
+        return;
+    }
+
+    float tallest = 0.0f;
+    for (Grapple_UiWidget *c = row->first_child; c != NULL; c = c->next_sibling)
+    {
+        if (!c->visible)
+        {
+            continue;
+        }
+        const float h = IsContainer(c) ? LineHeight(row->ui) * 1.3f : RowHeightOf(c, 0.0f);
+        tallest = SDL_max(tallest, h);
+    }
+    const float height = Resolve(row, row->height, 0.0f, tallest);
+
+    nk_layout_row_template_begin(ctx, (height > 0.0f) ? height : tallest);
+    for (Grapple_UiWidget *c = row->first_child; c != NULL; c = c->next_sibling)
+    {
+        if (!c->visible)
+        {
+            continue;
+        }
+        const float fixed = Resolve(c, c->width, available_width, ContentWidth(c));
+        if (fixed > 0.0f)
+        {
+            nk_layout_row_template_push_static(ctx, fixed);
+        }
+        else
+        {
+            nk_layout_row_template_push_dynamic(ctx);
+        }
+    }
+    nk_layout_row_template_end(ctx);
+
+    for (Grapple_UiWidget *c = row->first_child; c != NULL; c = c->next_sibling)
+    {
+        if (c->visible)
+        {
+            DrawLeaf(c);
+        }
+    }
+}
+
+/* A column: one row per child, with the child's own height. A child that is
+   narrower than the column is placed by its alignment, which needs the
+   blank space either side to be real widgets — hence the spacers. */
+static void DrawColumn(Grapple_UiWidget *column, float available_width)
+{
+    struct nk_context *ctx = Grapple_GuiContext(column->ui->gui);
+
+    for (Grapple_UiWidget *c = column->first_child; c != NULL; c = c->next_sibling)
+    {
+        if (!c->visible)
+        {
+            continue;
+        }
+        if (c->kind == NODE_ROW || c->kind == NODE_COLUMN)
+        {
+            DrawNode(c, available_width);
+            continue;
+        }
+
+        const float height = RowHeightOf(c, 0.0f);
+        const float wanted = Resolve(c, c->width, available_width, ContentWidth(c));
+
+        if (wanted <= 0.0f)
+        {
+            nk_layout_row_dynamic(ctx, height, 1);
+            DrawLeaf(c);
+            continue;
+        }
+
+        nk_layout_row_template_begin(ctx, height);
+        if (c->align == GRAPPLE_UI_CENTER || c->align == GRAPPLE_UI_RIGHT)
+        {
+            nk_layout_row_template_push_dynamic(ctx);
+        }
+        nk_layout_row_template_push_static(ctx, wanted);
+        if (c->align == GRAPPLE_UI_CENTER || c->align == GRAPPLE_UI_LEFT)
+        {
+            nk_layout_row_template_push_dynamic(ctx);
+        }
+        nk_layout_row_template_end(ctx);
+
+        if (c->align == GRAPPLE_UI_CENTER || c->align == GRAPPLE_UI_RIGHT)
+        {
+            nk_spacing(ctx, 1);
+        }
+        DrawLeaf(c);
+        if (c->align == GRAPPLE_UI_CENTER || c->align == GRAPPLE_UI_LEFT)
+        {
+            nk_spacing(ctx, 1);
+        }
+    }
+}
+
+static void DrawNode(Grapple_UiWidget *node, float available_width)
+{
+    if (node->kind == NODE_ROW)
+    {
+        DrawRow(node, available_width);
+    }
+    else
+    {
+        DrawColumn(node, available_width);
+    }
+}
+
+void Grapple_UiDraw(Grapple_Ui *ui)
+{
+    if (ui == NULL || ui->gui == NULL)
+    {
+        return;
+    }
+    struct nk_context *ctx = Grapple_GuiContext(ui->gui);
+    if (ctx == NULL)
+    {
+        return;
+    }
+
+    for (Grapple_UiWidget *panel = ui->first_panel; panel != NULL;
+         panel = panel->next_sibling)
+    {
+        if (!panel->visible)
+        {
+            continue;
+        }
+
+        struct nk_rect bounds = nk_rect(panel->x, panel->y, panel->w, panel->h);
+        if (panel->fill)
+        {
+            /* Re-read every frame: this is what makes a resize reflow the
+               layout instead of scaling it. */
+            int pixel_w = 0;
+            int pixel_h = 0;
+            SDL_Renderer *renderer = Grapple_GuiRenderer(ui->gui);
+            if (renderer != NULL && SDL_GetRenderOutputSize(renderer, &pixel_w, &pixel_h))
+            {
+                bounds = nk_rect(0, 0, (float)pixel_w, (float)pixel_h);
+            }
+        }
+
+        nk_flags flags = 0;
+        if (panel->title[0] != '\0' && panel->title[0] != '#')
+        {
+            flags |= NK_WINDOW_TITLE;
+        }
+        if (!panel->no_border)
+        {
+            flags |= NK_WINDOW_BORDER;
+        }
+        if (panel->movable)
+        {
+            flags |= NK_WINDOW_MOVABLE;
+        }
+        if (!panel->scrollable)
+        {
+            flags |= NK_WINDOW_NO_SCROLLBAR;
+        }
+
+        const bool padded = panel->padding > 0.0f;
+        if (padded)
+        {
+            nk_style_push_vec2(ctx, &ctx->style.window.padding,
+                               nk_vec2(panel->padding, panel->padding));
+        }
+        const bool spaced = panel->spacing > 0.0f;
+        if (spaced)
+        {
+            nk_style_push_vec2(ctx, &ctx->style.window.spacing,
+                               nk_vec2(panel->spacing, panel->spacing));
+        }
+
+        if (nk_begin(ctx, panel->title, bounds, flags))
+        {
+            const struct nk_vec2 room = nk_window_get_content_region_size(ctx);
+            DrawColumn(panel, room.x);
+        }
+        nk_end(ctx);
+
+        /* Pop in the reverse order of the pushes: Nuklear's style stack is a
+           stack, and unbalancing it corrupts every window after this one. */
+        if (spaced)
+        {
+            nk_style_pop_vec2(ctx);
+        }
+        if (padded)
+        {
+            nk_style_pop_vec2(ctx);
+        }
+    }
+
+    Grapple_GuiRender(ui->gui);
+}
+
+void Grapple_UiDrawCallback(void *ui)
+{
+    Grapple_UiDraw((Grapple_Ui *)ui);
+}
+
+bool Grapple_UiWantsInput(Grapple_Ui *ui)
+{
+    return (ui != NULL) ? Grapple_GuiWantsInput(ui->gui) : false;
+}

@@ -2772,6 +2772,7 @@ module GrappleC
   def self.GuiPushFont: (untyped gui, Integer which) -> bool
   def self.GuiPushStyleColor: (untyped gui, Integer which, Hash[Symbol, untyped] color) -> bool
   def self.GuiRender: (untyped gui) -> bool
+  def self.GuiRenderer: (untyped gui) -> untyped
   def self.GuiSaveFileButton: (untyped gui, String? label, String? filename, String data) -> bool
   def self.GuiSavedPath: (untyped gui) -> String?
   def self.GuiScale: (untyped gui) -> Float

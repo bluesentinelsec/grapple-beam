@@ -768,6 +768,16 @@ bool Grapple_OpenLuaBindings(lua_State *L)
     /* Engine hooks: the one thing a generator cannot produce, because it
      * has to turn a Lua function into something C can hold. */
     Grapple_OpenLuaEngineHooks(L);
+    /* One table instead of a run of setters. */
+    if (!Grapple_OpenLuaEngine(L))
+    {
+        return false;
+    }
+    /* Widgets you declare once, over the immediate-mode GUI. */
+    if (!Grapple_OpenLuaUi(L))
+    {
+        return false;
+    }
     /* Real regular expressions, which Lua patterns are not. */
     if (!Grapple_OpenLuaRegex(L))
     {

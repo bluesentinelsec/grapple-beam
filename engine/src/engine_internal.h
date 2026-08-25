@@ -76,6 +76,11 @@ struct Grapple_Engine
        bracketed — an immediate-mode GUI, typically. See event_sink.h. */
     Grapple_EventSink event_sink;
 
+    /* Drawn last of all, above even post_render: a UI layer that draws
+       itself, so attaching one does not cost the game its own hook. */
+    void (*overlay)(void *user);
+    void *overlay_user;
+
     /* Allocated on first use, so a game that never touches scenes pays
        nothing for them. */
     struct Grapple_SceneStack *scenes;

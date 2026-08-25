@@ -469,6 +469,15 @@ static void PumpEvents(Grapple_Engine *engine)
     }
 }
 
+void Grapple_EngineSetOverlay(Grapple_Engine *engine, void (*draw)(void *user), void *user)
+{
+    if (engine != NULL)
+    {
+        engine->overlay = draw;
+        engine->overlay_user = user;
+    }
+}
+
 void Grapple_EngineSetEventSink(Grapple_Engine *engine, const Grapple_EventSink *sink)
 {
     if (engine == NULL)
@@ -650,6 +659,12 @@ bool Grapple_EngineTick(Grapple_Engine *engine)
     if (engine->hooks != NULL && engine->hooks->post_render != NULL)
     {
         engine->hooks->post_render(engine->user);
+    }
+
+    /* Last, so a UI sits above whatever the game drew over the frame. */
+    if (engine->overlay != NULL)
+    {
+        engine->overlay(engine->overlay_user);
     }
 
     SDL_RenderPresent(engine->renderer);

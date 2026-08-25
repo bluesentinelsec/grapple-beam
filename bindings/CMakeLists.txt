@@ -42,6 +42,9 @@ add_library(Grapple_Bindings STATIC
   src/gen_support_ruby.c
   src/grapple_regexp_ruby.c
   src/grapple_regex_lua.c
+  src/grapple_ui_lua.c
+  src/grapple_engine_lua.c
+  src/grapple_ui_ruby.c
   ${GRAPPLE_GEN_SOURCES}
 )
 

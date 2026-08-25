@@ -286,6 +286,11 @@ void Grapple_DestroyGui(Grapple_Gui *gui)
     SDL_free(gui);
 }
 
+SDL_Renderer *Grapple_GuiRenderer(Grapple_Gui *gui)
+{
+    return (gui != NULL) ? gui->renderer : NULL;
+}
+
 struct nk_context *Grapple_GuiContext(Grapple_Gui *gui)
 {
     return (gui != NULL) ? &gui->ctx : NULL;

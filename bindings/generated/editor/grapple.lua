@@ -15913,6 +15913,11 @@ function GrappleC.GuiPushStyleColor(gui, which, color) end
 ---@return boolean
 function GrappleC.GuiRender(gui) end
 
+---Calls `Grapple_GuiRenderer`.
+---@param gui userdata
+---@return userdata?
+function GrappleC.GuiRenderer(gui) end
+
 ---Calls `Grapple_GuiSaveFileButton`.
 ---@param gui userdata
 ---@param label string?

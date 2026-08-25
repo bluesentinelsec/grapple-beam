@@ -172,6 +172,9 @@ class GuiHandle {
     engaged_ = false;
   }
 
+  SDL_Renderer* GuiRenderer() {
+    return ::Grapple_GuiRenderer(value_);
+  }
   struct nk_context* GuiContext() {
     return ::Grapple_GuiContext(value_);
   }
@@ -964,6 +967,7 @@ inline constexpr auto& EngineSetEventSink = ::Grapple_EngineSetEventSink;
 inline constexpr auto& EngineSetHooks = ::Grapple_EngineSetHooks;
 inline constexpr auto& EngineSetMaxFps = ::Grapple_EngineSetMaxFps;
 inline constexpr auto& EngineSetMediaPassword = ::Grapple_EngineSetMediaPassword;
+inline constexpr auto& EngineSetOverlay = ::Grapple_EngineSetOverlay;
 inline constexpr auto& EngineSetRefreshRate = ::Grapple_EngineSetRefreshRate;
 inline constexpr auto& EngineSetTimeScale = ::Grapple_EngineSetTimeScale;
 inline constexpr auto& EngineStep = ::Grapple_EngineStep;

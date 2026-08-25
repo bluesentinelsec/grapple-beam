@@ -14,6 +14,7 @@ add_library(Grapple_GUI STATIC
   # the Nuklear implementation.
   src/grapple_gui.c
   src/grapple_gui_grid.c
+  src/grapple_ui.c
 )
 add_library(Grapple::GUI ALIAS Grapple_GUI)
 

@@ -2798,6 +2798,7 @@ returns as an array.
 | `GrappleC.GuiPushFont(gui: Grapple_Gui, which: integer)` | boolean |
 | `GrappleC.GuiPushStyleColor(gui: Grapple_Gui, which: integer, color: SDL_Color table)` | boolean |
 | `GrappleC.GuiRender(gui: Grapple_Gui)` | boolean |
+| `GrappleC.GuiRenderer(gui: Grapple_Gui)` | SDL_Renderer|nil |
 | `GrappleC.GuiSaveFileButton(gui: Grapple_Gui, label: string|nil, filename: string|nil, data: string|nil)` | boolean |
 | `GrappleC.GuiSavedPath(gui: Grapple_Gui)` | string|nil |
 | `GrappleC.GuiScale(gui: Grapple_Gui)` | number |

@@ -80,6 +80,105 @@ Nothing about `Grapple_EventSink` is GUI-specific — a debug console or a
 replay recorder installs the same way, and the struct lives in
 `grapple/event_sink.h` so neither module depends on the other.
 
+
+## Widgets you declare once
+
+Everything above is the immediate-mode API: you re-describe the interface
+every frame, and a widget is an `if` rather than a thing. That is the right
+model for a debug overlay that changes every frame, and the wrong one for a
+dialog that never changes.
+
+`<grapple/widgets.h>` is the other model — declare the tree once, bind
+callbacks, and let it draw itself:
+
+```c
+Grapple_Ui *ui = Grapple_OpenUi(Grapple_EngineRenderer(engine), 15.0f);
+const Grapple_EventSink sink = Grapple_UiEventSink(ui);
+Grapple_EngineSetEventSink(engine, &sink);
+Grapple_EngineSetOverlay(engine, Grapple_UiDrawCallback, ui);
+
+Grapple_UiWidget *panel = Grapple_UiPanel(ui, &(Grapple_UiPanelDef){
+    .title = "Settings", .fill = true, .padding = 12, .spacing = 8 });
+
+Grapple_UiSlider(panel, &(Grapple_UiSliderDef){
+    .value = 0.5f, .on_change = VolumeChanged, .user = app });
+
+Grapple_UiButton(panel, &(Grapple_UiButtonDef){
+    .text = "Close", .width = GRAPPLE_UI_FIT, .align = GRAPPLE_UI_RIGHT,
+    .on_click = Close, .user = app });
+```
+
+Those three setup lines are the entire per-frame cost: `Grapple_OpenUi`
+loads the platform's interface font, the sink gives it input, and the
+overlay draws it after everything else. No `nk_begin`, no `nk_end`, no
+input calls, and no re-declaring the panel sixty times a second.
+
+### Lengths, so a layout survives a font change
+
+| Written as | Means |
+| --- | --- |
+| `GRAPPLE_UI_PX(24)` | 24 pixels |
+| `GRAPPLE_UI_EM(2.4f)` | 2.4 lines of the current font |
+| `GRAPPLE_UI_PCT(0.25f)` | a quarter of the parent |
+| `GRAPPLE_UI_FIT` | exactly as wide as the widget's own content |
+| `{0}` (the default) | stretch to share what the fixed children left |
+
+`GRAPPLE_UI_FIT` is the one the immediate-mode API cannot offer. It measures
+the text with the live font *before* asking for the space, which is only
+possible because the widget was declared before the frame it appears in —
+the same reason `Grapple_GuiGridCellPart` has to take your estimate instead.
+
+### Containers
+
+`Grapple_UiRow` packs children side by side, `Grapple_UiColumn` stacks them,
+and a panel is a column. Fixed-width children keep their width and the rest
+share the remainder, which is Tk's `pack` and maps directly onto Nuklear's
+row template.
+
+### From Lua and Ruby
+
+Each language gets its own spelling of the same tree — a table in Lua,
+keyword arguments and a block in Ruby:
+
+```lua
+local ui = Grapple.ui(engine)
+local panel = ui:panel{ title = "Settings", padding = 12, spacing = 8 }
+local answer = panel:label{ text = "", align = "center" }
+panel:button{ text = "Clear", width = "fit", align = "right",
+              on_click = function() answer:set("") end }
+```
+
+```ruby
+ui = Grapple.ui(engine)
+panel = ui.panel(title: "Settings", padding: 12, spacing: 8)
+answer = panel.label(text: "", align: :center)
+panel.button(text: "Clear", width: :fit, align: :right) { answer.set("") }
+```
+
+Lengths take the units as strings: `24`, `"2.4em"`, `"25%"`, `"fit"`.
+Widgets own their state (`answer:set(...)`, `entry:text()`,
+`check:checked()`), and are owned by their parent, so nothing needs
+destroying.
+
+### The escape hatch
+
+Any wrapper over an immediate-mode library will fail to cover something, and
+the answer is never "start again in the lower API":
+
+```c
+Grapple_UiRaw(panel, &(Grapple_UiRawDef){ .draw = DrawChart, .user = app });
+```
+
+The callback is handed a real `nk_context` at that point in the layout, so
+anything in this document is still available inside a tree.
+
+### Which one to use
+
+Retained for interfaces that persist: menus, dialogs, HUDs, editors.
+Immediate for interfaces that are genuinely different every frame, and for
+debug overlays where declaring a tree would cost more than redrawing one.
+They compose — a `raw` node is immediate mode inside a retained tree.
+
 ## From Lua and Ruby
 
 The GUI is fully drivable from both script languages through the

@@ -122,6 +122,44 @@ threading) are skipped **with the reason recorded** in
 [`COVERAGE.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/COVERAGE.md).
 
 
+### The short way to open an engine
+
+`GrappleC.ConfigCreate` and its two dozen `ConfigSet*` functions still work,
+but a table says the same thing in one call, in any order, and complains
+about a key it does not recognise:
+
+```lua
+local engine = Grapple.engine{
+  title = "My Game",
+  window = { width = 1280, height = 720 },
+  presentation = "letterbox",   -- or "native", "expand", "integer", ...
+  tick_rate = 120,
+}
+```
+
+```ruby
+engine = Grapple.engine(
+  title: "My Game",
+  window: { width: 1280, height: 720 },
+  presentation: :letterbox,
+  tick_rate: 120
+)
+```
+
+`Grapple.engine{ titel = "..." }` answers *"unknown engine option 'titel' —
+did you mean 'title'?"*, which the setter form could not: a misspelled
+`ConfigSetTitel` is a nil call that fails much later, or never.
+
+The engine it returns carries the hooks as methods — `engine:on_update(fn)`,
+`engine:on_event(fn)`, `engine:run()`, `engine:quit()` — and takes key names
+rather than scancodes: `engine:key_pressed("escape")`. The keys the table
+accepts are `title`, `window`, `design`, `presentation`, `resizable`,
+`high_dpi`, `fullscreen`, `vsync`, `max_fps`, `tick_rate`, `auto_mount`,
+`headless`, `media`, `font_size` and `backend`.
+
+For the widget tree that goes with it, see
+[the GUI page](gui.html#widgets-you-declare-once).
+
 ### Some functions are hand-written, and not in `SCRIPT_API.md`
 
 The generator writes `SCRIPT_API.md` from the C headers, so anything a

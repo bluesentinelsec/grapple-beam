@@ -6422,6 +6422,19 @@ static mrb_value GenR_Grapple_GuiRender(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_Grapple_GuiRenderer(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_Gui *a0 = (Grapple_Gui *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_Gui");
+    SDL_Renderer * rv = Grapple_GuiRenderer(a0);
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Renderer");
+    }
+}
+
 static mrb_value GenR_Grapple_GuiSaveFileButton(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -9812,6 +9825,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "GuiPushFont", GenR_Grapple_GuiPushFont, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiPushStyleColor", GenR_Grapple_GuiPushStyleColor, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiRender", GenR_Grapple_GuiRender, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "GuiRenderer", GenR_Grapple_GuiRenderer, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiSaveFileButton", GenR_Grapple_GuiSaveFileButton, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiSavedPath", GenR_Grapple_GuiSavedPath, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiScale", GenR_Grapple_GuiScale, MRB_ARGS_ANY());

@@ -4668,6 +4668,15 @@ static int GenL_Grapple_GuiRender(lua_State *L)
     return 1;
 }
 
+static int GenL_Grapple_GuiRenderer(lua_State *L)
+{
+    (void)L;
+    Grapple_Gui *a0 = (Grapple_Gui *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Gui");
+    SDL_Renderer * rv = Grapple_GuiRenderer(a0);
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Renderer");
+    return 1;
+}
+
 static int GenL_Grapple_GuiSaveFileButton(lua_State *L)
 {
     (void)L;
@@ -6738,7 +6747,7 @@ static int GenL_Grapple_WheelJointDefSetSpring(lua_State *L)
 int GrappleGen_OpenLua_grapple(lua_State *L);
 int GrappleGen_OpenLua_grapple(lua_State *L)
 {
-    lua_createtable(L, 0, 616);
+    lua_createtable(L, 0, 617);
     lua_pushcfunction(L, GenL_Grapple_ActionBind);
     lua_setfield(L, -2, "ActionBind");
     lua_pushcfunction(L, GenL_Grapple_ActionBindAxis);
@@ -7561,6 +7570,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GuiPushStyleColor");
     lua_pushcfunction(L, GenL_Grapple_GuiRender);
     lua_setfield(L, -2, "GuiRender");
+    lua_pushcfunction(L, GenL_Grapple_GuiRenderer);
+    lua_setfield(L, -2, "GuiRenderer");
     lua_pushcfunction(L, GenL_Grapple_GuiSaveFileButton);
     lua_setfield(L, -2, "GuiSaveFileButton");
     lua_pushcfunction(L, GenL_Grapple_GuiSavedPath);
