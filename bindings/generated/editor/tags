@@ -90,10 +90,12 @@ GRAPPLE_GUI_IMAGE_FILL	include/grapple/chiptune.h	/^.*GRAPPLE_GUI_IMAGE_FILL/;"	
 GRAPPLE_GUI_IMAGE_STRETCH	include/grapple/chiptune.h	/^.*GRAPPLE_GUI_IMAGE_STRETCH/;"	e
 GRAPPLE_GUI_IMAGE_ZOOM	include/grapple/chiptune.h	/^.*GRAPPLE_GUI_IMAGE_ZOOM/;"	e
 GRAPPLE_HOOK_COUNT	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_COUNT/;"	e
+GRAPPLE_HOOK_EVENT	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_EVENT/;"	e
 GRAPPLE_HOOK_FIXED_UPDATE	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_FIXED_UPDATE/;"	e
 GRAPPLE_HOOK_LOAD	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_LOAD/;"	e
 GRAPPLE_HOOK_POST_RENDER	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_POST_RENDER/;"	e
 GRAPPLE_HOOK_RENDER	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_RENDER/;"	e
+GRAPPLE_HOOK_RESIZE	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_RESIZE/;"	e
 GRAPPLE_HOOK_UNLOAD	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_UNLOAD/;"	e
 GRAPPLE_HOOK_UPDATE	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_UPDATE/;"	e
 GRAPPLE_INTERPOLATE_EXTRAPOLATE	include/grapple/chiptune.h	/^.*GRAPPLE_INTERPOLATE_EXTRAPOLATE/;"	e
@@ -816,6 +818,7 @@ Grapple_ScriptSceneSetStateSize	include/grapple/engine_script.h	/^.*Grapple_Scri
 Grapple_ScriptSceneTransitionTo	include/grapple/engine_script.h	/^.*Grapple_ScriptSceneTransitionTo *(/;"	f
 Grapple_ScriptSetHook	include/grapple/engine_script.h	/^.*Grapple_ScriptSetHook *(/;"	f
 Grapple_ScriptSetSceneDispatch	include/grapple/engine_script.h	/^.*Grapple_ScriptSetSceneDispatch *(/;"	f
+Grapple_ScriptSize	include/grapple/chiptune.h	/^.*Grapple_ScriptSize/;"	s
 Grapple_ScriptUnbind	include/grapple/engine_script.h	/^.*Grapple_ScriptUnbind *(/;"	f
 Grapple_SetDebugTextSize	include/grapple/debug_text.h	/^.*Grapple_SetDebugTextSize *(/;"	f
 Grapple_SetDeviceMotion	include/grapple/engine_input.h	/^.*Grapple_SetDeviceMotion *(/;"	f

@@ -52,6 +52,34 @@ while (Grapple_GuiPumpEvents(gui)) {   /* false when the user quits */
 }
 ```
 
+### Inside the engine's loop, hand it the GUI instead
+
+Everything above assumes you own the loop. If the engine owns it —
+`Grapple_RunGame` — then it pumps events itself, *before* it calls any
+hook, so there is no hook in which you could open Nuklear's input window.
+Do not try: give the engine the GUI and it does the bracketing.
+
+```c
+const Grapple_EventSink sink = Grapple_GuiEventSink(gui);
+Grapple_EngineSetEventSink(engine, &sink);
+```
+
+That is the entire integration. No `InputBegin`, no `ProcessEvent`, no
+`InputEnd` anywhere in your hooks — build the UI in `update`, call
+`Grapple_GuiRender` in `post_render`, and clear the sink
+(`Grapple_EngineSetEventSink(engine, NULL)`) before destroying the GUI.
+
+Scripts get the pair as one call, because a struct of function pointers
+does not cross a binding:
+
+```lua
+GrappleC.AttachGui(engine, gui)
+```
+
+Nothing about `Grapple_EventSink` is GUI-specific — a debug console or a
+replay recorder installs the same way, and the struct lives in
+`grapple/event_sink.h` so neither module depends on the other.
+
 ## From Lua and Ruby
 
 The GUI is fully drivable from both script languages through the
@@ -107,6 +135,51 @@ GrappleC.GuiGridEndOwned(gui)
 ```
 
 Weights default to 1 (equal columns) and reset after each grid.
+
+### Rows, spacing and part-width cells
+
+A grid gives every row the same height, which stops being true the moment a
+panel has a heading, a row of buttons and a status line. Three calls cover
+the rest, in C and in scripts (`...Owned` for the gui-owned grid):
+
+| C | What it does |
+| --- | --- |
+| `Grapple_GuiGridRowHeight(&grid, h)` | height for the **next row only**; `<= 0` restores the grid default |
+| `Grapple_GuiGridSpacing(&grid, x, y)` | pixel gap between cells for the rest of this grid |
+| `Grapple_GuiGridCellPart(&grid, span, fraction, align)` | a cell holding a widget `fraction` as wide, pushed left, centre or right |
+
+```c
+Grapple_GuiGrid grid;
+Grapple_GuiGridBegin(ctx, &grid, 3, NULL, 0);   /* 0 = a line of the font */
+Grapple_GuiGridSpacing(&grid, 8, 8);
+
+Grapple_GuiGridCellSpan(&grid, 3);
+nk_label(ctx, "Settings", NK_TEXT_CENTERED);
+
+Grapple_GuiGridRowHeight(&grid, line * 2.4f);   /* the button row, taller */
+for (int i = 0; i < 3; ++i) {
+    Grapple_GuiGridCell(&grid);
+    nk_button_label(ctx, names[i]);
+}
+
+/* A quarter of the row, hugging the right edge. */
+Grapple_GuiGridCellPart(&grid, 3, 0.25f, GRAPPLE_GUI_ALIGN_RIGHT);
+nk_button_label(ctx, "Save");
+
+Grapple_GuiGridEnd(&grid);
+```
+
+`Grapple_GuiGridSpacing` pushes a Nuklear style value and `...GridEnd` pops
+it, so a dense grid and an airy one can share a panel without one leaking
+into the other.
+
+Two honest limits. Nuklear cannot measure a widget, so `fraction` is your
+estimate rather than shrink-to-fit — a layout that must emit widths before
+it has seen the widget cannot do better. And alignment needs blank space
+*after* the widget, which cannot be emitted until you have drawn it, so the
+trailing gap is settled by whatever grid call comes next; that is invisible
+in normal use but means a cell's space is not final until the following
+`Cell`, `NextRow` or `End`.
 
 ### Images
 

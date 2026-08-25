@@ -8281,6 +8281,10 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GRAPPLE_HOOK_RENDER");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_HOOK_POST_RENDER);
     lua_setfield(L, -2, "GRAPPLE_HOOK_POST_RENDER");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_HOOK_EVENT);
+    lua_setfield(L, -2, "GRAPPLE_HOOK_EVENT");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_HOOK_RESIZE);
+    lua_setfield(L, -2, "GRAPPLE_HOOK_RESIZE");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_HOOK_UNLOAD);
     lua_setfield(L, -2, "GRAPPLE_HOOK_UNLOAD");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_HOOK_COUNT);

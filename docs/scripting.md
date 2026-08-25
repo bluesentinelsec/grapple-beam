@@ -121,6 +121,62 @@ Functions that cannot cross a script boundary (callbacks, varargs,
 threading) are skipped **with the reason recorded** in
 [`COVERAGE.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/COVERAGE.md).
 
+
+### Some functions are hand-written, and not in `SCRIPT_API.md`
+
+The generator writes `SCRIPT_API.md` from the C headers, so anything a
+generator *cannot* produce is missing from it — including the engine hooks
+every game uses. The complete hand-written list:
+
+| Call | What it does |
+| --- | --- |
+| `GrappleC.OnLoad(engine, fn)` | once, before the loop; return `false` to abort start-up |
+| `GrappleC.OnFixedUpdate(engine, fn)` | `fn(step)` — the simulation, at a fixed rate |
+| `GrappleC.OnUpdate(engine, fn)` | `fn(dt)` — per-frame work |
+| `GrappleC.OnRender(engine, fn)` | `fn(alpha)` — drawing, interpolated |
+| `GrappleC.OnPostRender(engine, fn)` | drawing above the effect chain |
+| `GrappleC.OnEvent(engine, fn)` | `fn(event)` — one SDL_Event, borrowed for the call |
+| `GrappleC.OnResize(engine, fn)` | `fn(width, height)` — the new size in pixels |
+| `GrappleC.OnUnload(engine, fn)` | once, after the loop |
+| `GrappleC.AttachGui(engine, gui)` | let the engine drive a GUI's input; `nil` detaches |
+| `GrappleC.Run(engine)` | hand the loop over |
+| `GrappleC.SceneDefine` / `SceneOn` | see [Scenes from a script](#scenes-from-a-script) |
+| `SDL.LoadFile(path)` | file bytes from a real filesystem path, or `nil` |
+| `Grapple.read_file(path)` | file bytes **through the VFS** |
+
+Two of these are worth dwelling on.
+
+**`OnEvent` hands you a borrowed event.** It is the same `SDL_Event` handle
+the generated `SDL.*` and `GrappleC.Event*` accessors take, but it points at
+a value the engine owns and it stops being valid the moment your function
+returns. Read what you need; do not stash it.
+
+```lua
+GrappleC.OnEvent(engine, function(event)
+  if GrappleC.EventType(event) == SDL.EVENT_KEY_DOWN then
+    print(GrappleC.EventKeyScancode(event))
+  end
+end)
+```
+
+**`AttachGui` is how a GUI gets its input**, and it exists because the C
+equivalent — filling a `Grapple_EventSink` and calling
+`Grapple_EngineSetEventSink` — is a struct of function pointers, which does
+not cross a binding. With it attached, the engine brackets Nuklear's input
+around its own event pump and a script never calls `GuiInputBegin` at all.
+
+```lua
+GrappleC.AttachGui(engine, gui)   -- in OnLoad
+GrappleC.AttachGui(engine, nil)   -- in OnUnload, before destroying the gui
+```
+
+**`SDL.LoadFile` versus `Grapple.read_file`.** `read_file` goes through the
+VFS, which is what you want for game assets: it reads out of the mounted
+archive whether or not that archive is a directory today. `SDL.LoadFile`
+reads a real filesystem path that was never mounted — a system font, a file
+a dialog returned. Both return `nil` rather than raising when the file is
+not there, so walking a list of candidates needs no `pcall`.
+
 ## Scenes from a script
 
 Every other definition in this engine is a struct a script can build —

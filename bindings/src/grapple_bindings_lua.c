@@ -673,7 +673,12 @@ static int LSdlLoadFile(lua_State *L)
     void *data = SDL_LoadFile(luaL_checkstring(L, 1), &size);
     if (data == NULL)
     {
-        return Fail(L);
+        /* nil rather than an error: "does this path exist" is the normal way
+           to use this — walking a list of candidate font locations, say — and
+           raising would make the ordinary case need a pcall. Ruby's binding
+           returns nil for the same reason. */
+        lua_pushnil(L);
+        return 1;
     }
     lua_pushlstring(L, (const char *)data, size);
     SDL_free(data);

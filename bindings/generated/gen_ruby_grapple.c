@@ -10172,6 +10172,8 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_const(mrb, mod, "GRAPPLE_HOOK_UPDATE", mrb_int_value(mrb, (mrb_int)GRAPPLE_HOOK_UPDATE));
     mrb_define_const(mrb, mod, "GRAPPLE_HOOK_RENDER", mrb_int_value(mrb, (mrb_int)GRAPPLE_HOOK_RENDER));
     mrb_define_const(mrb, mod, "GRAPPLE_HOOK_POST_RENDER", mrb_int_value(mrb, (mrb_int)GRAPPLE_HOOK_POST_RENDER));
+    mrb_define_const(mrb, mod, "GRAPPLE_HOOK_EVENT", mrb_int_value(mrb, (mrb_int)GRAPPLE_HOOK_EVENT));
+    mrb_define_const(mrb, mod, "GRAPPLE_HOOK_RESIZE", mrb_int_value(mrb, (mrb_int)GRAPPLE_HOOK_RESIZE));
     mrb_define_const(mrb, mod, "GRAPPLE_HOOK_UNLOAD", mrb_int_value(mrb, (mrb_int)GRAPPLE_HOOK_UNLOAD));
     mrb_define_const(mrb, mod, "GRAPPLE_HOOK_COUNT", mrb_int_value(mrb, (mrb_int)GRAPPLE_HOOK_COUNT));
     mrb_define_const(mrb, mod, "GRAPPLE_SHAPE_BOX", mrb_int_value(mrb, (mrb_int)GRAPPLE_SHAPE_BOX));

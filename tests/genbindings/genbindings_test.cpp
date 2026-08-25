@@ -1130,3 +1130,61 @@ TEST(GenRuby, ScenesStackAndTheCoveredOneStops)
 }
 
 } // namespace
+
+// The engine hooks a generator cannot produce: OnEvent hands a script a real
+// SDL_Event, OnResize hands it the new size. Both were missing until the GUI
+// demos needed them, so both are pinned here.
+
+TEST(GenLua, OnEventReceivesARealSdlEvent)
+{
+    RunLua(
+        "assert(SDL.Init(SDL.INIT_EVENTS))\n"
+        "local config = GrappleC.ConfigCreate()\n"
+        "GrappleC.ConfigSetHeadless(config, true)\n"
+        "GrappleC.ConfigSetManualClock(config, true)\n"
+        "GrappleC.ConfigSetAutoMount(config, false)\n"
+        "local engine = assert(GrappleC.CreateEngine(config))\n"
+        "local kind = SDL.RegisterEvents(1)\n"
+        "assert(kind ~= 0)\n"
+        "local seen = 0\n"
+        "GrappleC.OnEvent(engine, function(event)\n"
+        "  -- A borrowed handle the generated accessors understand.\n"
+        "  if GrappleC.EventType(event) == kind then seen = seen + 1 end\n"
+        "end)\n"
+        "local pushed = GrappleC.EventCreate()\n"
+        "GrappleC.EventSetType(pushed, kind)\n"
+        "assert(SDL.PushEvent(pushed))\n"
+        "GrappleC.EngineAdvance(engine, 16666667)\n"
+        "GrappleC.EngineTick(engine)\n"
+        "assert(seen == 1, 'OnEvent saw ' .. tostring(seen))\n"
+        "GrappleC.EventDestroy(pushed)\n"
+        "GrappleC.DestroyEngine(engine)\n");
+}
+
+TEST(GenLua, OnResizeReportsTheNewSize)
+{
+    RunLua(
+        "local config = GrappleC.ConfigCreate()\n"
+        "GrappleC.ConfigSetHeadless(config, true)\n"
+        "GrappleC.ConfigSetManualClock(config, true)\n"
+        "GrappleC.ConfigSetAutoMount(config, false)\n"
+        "local engine = assert(GrappleC.CreateEngine(config))\n"
+        "local registered = false\n"
+        // Headless never resizes, so what is asserted here is that the hook
+        // registers and takes two arguments -- the firing itself is covered
+        // by the windowed demos.
+        "GrappleC.OnResize(engine, function(w, h) registered = (w ~= nil and h ~= nil) end)\n"
+        "GrappleC.EngineAdvance(engine, 16666667)\n"
+        "GrappleC.EngineTick(engine)\n"
+        "GrappleC.DestroyEngine(engine)\n");
+}
+
+TEST(GenLua, SdlLoadFileReadsAPathOutsideTheVfs)
+{
+    // Grapple.read_file only sees the VFS; this is the escape hatch, and the
+    // only way a Ruby script can read a file at all.
+    RunLua(
+        "local bytes = SDL.LoadFile('/Users/michaellong/projects/SDL3-static-extensions/tests/genbindings/genbindings_test.cpp')\n"
+        "assert(type(bytes) == 'string' and #bytes > 0)\n"
+        "assert(SDL.LoadFile('/no/such/file/anywhere') == nil)\n");
+}

@@ -42,7 +42,7 @@ static mrb_value HandlerArray(mrb_state *mrb)
 }
 
 static bool DispatchRuby(void *language_state, Sint64 handle, Grapple_ScriptHook hook,
-                         float value)
+                         float value, const void *payload)
 {
     mrb_state *mrb = (mrb_state *)language_state;
     mrb_value array = HandlerArray(mrb);
@@ -64,6 +64,22 @@ static bool DispatchRuby(void *language_state, Sint64 handle, Grapple_ScriptHook
     {
         const mrb_value arg = mrb_float_value(mrb, (mrb_float)value);
         result = mrb_funcall(mrb, callable, "call", 1, arg);
+    }
+    else if (hook == GRAPPLE_HOOK_EVENT)
+    {
+        /* Borrowed: the same handle every generated SDL.* function takes,
+           but pointing at a stack event the engine owns. It is valid only
+           until this call returns, which is why nothing takes ownership. */
+        const mrb_value arg =
+            GrappleGen_RubyPushHandle(mrb, (void *)(uintptr_t)payload, "SDL_Event");
+        result = mrb_funcall(mrb, callable, "call", 1, arg);
+    }
+    else if (hook == GRAPPLE_HOOK_RESIZE)
+    {
+        const Grapple_ScriptSize *size = (const Grapple_ScriptSize *)payload;
+        const mrb_value w = mrb_fixnum_value(size != NULL ? size->width : 0);
+        const mrb_value h = mrb_fixnum_value(size != NULL ? size->height : 0);
+        result = mrb_funcall(mrb, callable, "call", 2, w, h);
     }
     else
     {
@@ -152,6 +168,18 @@ static mrb_value ROnPostRender(mrb_state *mrb, mrb_value self)
     (void)self;
     return SetHook(mrb, GRAPPLE_HOOK_POST_RENDER);
 }
+static mrb_value ROnEvent(mrb_state *mrb, mrb_value self)
+{
+    (void)self;
+    return SetHook(mrb, GRAPPLE_HOOK_EVENT);
+}
+
+static mrb_value ROnResize(mrb_state *mrb, mrb_value self)
+{
+    (void)self;
+    return SetHook(mrb, GRAPPLE_HOOK_RESIZE);
+}
+
 static mrb_value ROnUnload(mrb_state *mrb, mrb_value self)
 {
     (void)self;
@@ -372,6 +400,8 @@ bool Grapple_OpenRubyEngineHooks(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "OnUpdate", ROnUpdate, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "OnRender", ROnRender, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "OnPostRender", ROnPostRender, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "OnEvent", ROnEvent, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "OnResize", ROnResize, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "OnUnload", ROnUnload, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "AttachGui", RAttachGui, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "Run", RRun, MRB_ARGS_REQ(1));
