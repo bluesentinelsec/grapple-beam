@@ -417,6 +417,13 @@ if(GRAPPLE_BEAM_BUILD_DEMOS AND GRAPPLE_BUILD_ENGINE AND GRAPPLE_BUILD_TTF)
   add_subdirectory(demos)
 endif()
 
+# Scratch programs for exercising an API by hand. Off by default and never
+# installed: they exist to find rough edges, not to ship.
+option(GRAPPLE_BEAM_BUILD_PRACTICE "Build the practice problems" OFF)
+if(GRAPPLE_BEAM_BUILD_PRACTICE AND GRAPPLE_BUILD_GUI)
+  add_subdirectory(practice)
+endif()
+
 if(GRAPPLE_BEAM_BUILD_TESTS)
   add_subdirectory(tests)
 endif()
