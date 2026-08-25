@@ -67,6 +67,11 @@ static const struct mrb_data_type kWidgetType = {"Grapple::Widget", WidgetFree};
 
 static struct RClass *g_widget_class = NULL;
 
+/* The engine a script built but has not run — see the note on the Lua side
+   in grapple_engine_lua.c. Ruby gets the same behaviour for the same
+   reason: a script should be able to describe callbacks and stop. */
+static Grapple_Engine *g_pending_engine = NULL;
+
 /* --- reading keyword arguments ------------------------------------------- */
 
 static mrb_value Key(mrb_state *mrb, mrb_value options, const char *name)
@@ -224,6 +229,25 @@ static mrb_value HandlerTable(mrb_state *mrb)
 }
 
 static mrb_value WidgetValue(mrb_state *mrb, Grapple_UiWidget *widget);
+
+/* A handler is a block or anything else that answers to `call` — which
+   includes method(:on_word_clicked). Blocks are idiomatic for a one-liner;
+   a named method reads better when the handler is worth a name, and a
+   script should not have to wrap one in a block to pass it. */
+static mrb_value HandlerFrom(mrb_state *mrb, mrb_value options, mrb_value block,
+                             const char *key)
+{
+    if (!mrb_nil_p(block))
+    {
+        return block;
+    }
+    const mrb_value named = Key(mrb, options, key);
+    if (!mrb_nil_p(named) && mrb_respond_to(mrb, named, mrb_intern_cstr(mrb, "call")))
+    {
+        return named;
+    }
+    return mrb_nil_value();
+}
 
 static void RememberHandler(mrb_state *mrb, Grapple_UiWidget *widget, mrb_value block)
 {
@@ -388,6 +412,8 @@ static mrb_value REngineNew(mrb_state *mrb, mrb_value self)
         mrb_raisef(mrb, E_RUNTIME_ERROR, "%s", SDL_GetError());
     }
 
+    g_pending_engine = engine;
+
     struct RClass *klass = mrb_class_get_under(mrb, mrb_module_get(mrb, "Grapple"), "Engine");
     struct RData *data = mrb_data_object_alloc(mrb, klass, engine, &kEngineType);
     return mrb_obj_value(data);
@@ -448,7 +474,12 @@ static mrb_value ROnUnload(mrb_state *mrb, mrb_value self)
 
 static mrb_value RRun(mrb_state *mrb, mrb_value self)
 {
-    return mrb_bool_value(Grapple_ScriptRun(EngineOf(mrb, self)));
+    Grapple_Engine *engine = EngineOf(mrb, self);
+    if (engine == g_pending_engine)
+    {
+        g_pending_engine = NULL; /* the script chose to run it itself */
+    }
+    return mrb_bool_value(Grapple_ScriptRun(engine));
 }
 
 static mrb_value RQuit(mrb_state *mrb, mrb_value self)
@@ -593,6 +624,8 @@ static mrb_value RUiButton(mrb_state *mrb, mrb_value self)
     mrb_value block = mrb_nil_value();
     mrb_get_args(mrb, "|H&", &options, &block);
 
+    block = HandlerFrom(mrb, options, block, "on_click");
+
     Grapple_UiButtonDef def = {0};
     def.text = OptString(mrb, options, "text", "");
     def.width = OptLength(mrb, options, "width");
@@ -616,6 +649,8 @@ static mrb_value RUiCheck(mrb_state *mrb, mrb_value self)
     mrb_value block = mrb_nil_value();
     mrb_get_args(mrb, "|H&", &options, &block);
 
+    block = HandlerFrom(mrb, options, block, "on_change");
+
     Grapple_UiCheckDef def = {0};
     def.text = OptString(mrb, options, "text", "");
     def.checked = OptBool(mrb, options, "checked", false);
@@ -638,6 +673,8 @@ static mrb_value RUiSlider(mrb_state *mrb, mrb_value self)
     mrb_value options = mrb_nil_value();
     mrb_value block = mrb_nil_value();
     mrb_get_args(mrb, "|H&", &options, &block);
+
+    block = HandlerFrom(mrb, options, block, "on_change");
 
     Grapple_UiSliderDef def = {0};
     def.value = OptNumber(mrb, options, "value", 0.0f);
@@ -663,6 +700,8 @@ static mrb_value RUiEntry(mrb_state *mrb, mrb_value self)
     mrb_value options = mrb_nil_value();
     mrb_value block = mrb_nil_value();
     mrb_get_args(mrb, "|H&", &options, &block);
+
+    block = HandlerFrom(mrb, options, block, "on_change");
 
     Grapple_UiEntryDef def = {0};
     def.text = OptString(mrb, options, "text", "");
@@ -818,5 +857,18 @@ bool Grapple_OpenRubyUi(mrb_state *mrb)
 
     mrb_define_module_function(mrb, module, "engine", REngineNew, MRB_ARGS_OPT(1));
     mrb_define_module_function(mrb, module, "ui", RUiOpen, MRB_ARGS_ARG(1, 1));
+    return true;
+}
+
+bool Grapple_RubyRunPendingEngine(mrb_state *mrb)
+{
+    (void)mrb;
+    Grapple_Engine *engine = g_pending_engine;
+    if (engine == NULL || !Grapple_ScriptHasHandlers(engine))
+    {
+        return false;
+    }
+    g_pending_engine = NULL;
+    Grapple_ScriptRun(engine);
     return true;
 }

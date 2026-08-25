@@ -1188,3 +1188,45 @@ TEST(GenLua, SdlLoadFileReadsAPathOutsideTheVfs)
         "assert(type(bytes) == 'string' and #bytes > 0)\n"
         "assert(SDL.LoadFile('/no/such/file/anywhere') == nil)\n");
 }
+
+// A script that registers callbacks and stops is describing a game, not
+// declining to run one — the bargain Love2D and Godot make. The runner
+// starts it; a script that calls run() itself must not be started twice.
+
+TEST(GenLua, PendingEngineRunsOnlyWhenItHasHandlers)
+{
+    lua_State *L = Grapple_CreateLuaState();
+    ASSERT_NE(L, nullptr);
+    ASSERT_TRUE(Grapple_OpenLuaBindings(L));
+
+    // An engine with no handlers is not a game and must not be run.
+    ASSERT_EQ(luaL_dostring(L,
+                            "engine = Grapple.engine{ headless = true,"
+                            "                         auto_mount = false }\n"),
+              LUA_OK)
+        << lua_tostring(L, -1);
+    EXPECT_FALSE(Grapple_LuaRunPendingEngine(L));
+
+    lua_close(L);
+}
+
+TEST(GenLua, RunClearsThePendingEngine)
+{
+    lua_State *L = Grapple_CreateLuaState();
+    ASSERT_NE(L, nullptr);
+    ASSERT_TRUE(Grapple_OpenLuaBindings(L));
+
+    // manual_clock keeps run() from blocking: it stops as soon as it is told
+    // to, which the load hook does on the first frame.
+    ASSERT_EQ(luaL_dostring(L,
+                            "engine = Grapple.engine{ headless = true,"
+                            "                         auto_mount = false }\n"
+                            "engine:on_load(function() engine:quit() return true end)\n"
+                            "engine:run()\n"),
+              LUA_OK)
+        << lua_tostring(L, -1);
+
+    // Already run by the script, so the runner must not run it again.
+    EXPECT_FALSE(Grapple_LuaRunPendingEngine(L));
+    lua_close(L);
+}

@@ -31,6 +31,20 @@
 
 #define ENGINE_MT "grapple.engine"
 
+/* The engine a script built but has not run.
+ *
+ * Love2D and Godot never make you start the loop: you describe the
+ * callbacks and the framework runs them. This is how a script here gets
+ * the same shape — the runner asks, after the script body has finished,
+ * whether an engine was left with handlers attached and no run() call, and
+ * starts it if so. A script that wants to own the `while` still calls
+ * run() itself, which clears this.
+ *
+ * Last engine wins. A script that builds two and runs neither gets the
+ * second one started, which is the only answer that does not require
+ * guessing. */
+static Grapple_Engine *g_pending_engine = NULL;
+
 typedef struct EngineBox
 {
     Grapple_Engine *engine;
@@ -249,6 +263,8 @@ static int LEngineNew(lua_State *L)
         return luaL_error(L, "%s", SDL_GetError());
     }
 
+    g_pending_engine = engine;
+
     EngineBox *box = (EngineBox *)lua_newuserdata(L, sizeof(*box));
     box->engine = engine;
     box->owned = true;
@@ -280,7 +296,12 @@ static int LOnUnload(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_UNLOAD); }
 
 static int LRun(lua_State *L)
 {
-    lua_pushboolean(L, Grapple_ScriptRun(CheckEngine(L)) ? 1 : 0);
+    Grapple_Engine *engine = CheckEngine(L);
+    if (engine == g_pending_engine)
+    {
+        g_pending_engine = NULL; /* the script chose to run it itself */
+    }
+    lua_pushboolean(L, Grapple_ScriptRun(engine) ? 1 : 0);
     return 1;
 }
 
@@ -334,6 +355,10 @@ static int LSize(lua_State *L)
 static int LEngineGc(lua_State *L)
 {
     EngineBox *box = (EngineBox *)luaL_checkudata(L, 1, ENGINE_MT);
+    if (box->engine == g_pending_engine)
+    {
+        g_pending_engine = NULL;
+    }
     if (box->engine != NULL && box->owned)
     {
         Grapple_DestroyEngine(box->engine);
@@ -380,5 +405,19 @@ bool Grapple_OpenLuaEngine(lua_State *L)
         lua_setfield(L, -2, "engine");
     }
     lua_pop(L, 1);
+    return true;
+}
+
+bool Grapple_LuaRunPendingEngine(lua_State *L)
+{
+    (void)L;
+    Grapple_Engine *engine = g_pending_engine;
+    if (engine == NULL || !Grapple_ScriptHasHandlers(engine))
+    {
+        /* No callbacks means the script was not describing a game. */
+        return false;
+    }
+    g_pending_engine = NULL;
+    Grapple_ScriptRun(engine);
     return true;
 }

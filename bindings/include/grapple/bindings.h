@@ -56,6 +56,17 @@ extern bool Grapple_OpenLuaEngine(lua_State *L);
 /** The same pair for Ruby: Grapple.engine(...) and Grapple.ui(engine). */
 extern bool Grapple_OpenRubyUi(mrb_state *mrb);
 
+/**
+ * Run an engine the script described but never started.
+ *
+ * Love2D and Godot do not make a script call the loop; this is what lets a
+ * script here stop after registering its callbacks. Returns false when
+ * there was nothing to run — no engine, or one with no handlers. Called by
+ * the runner once the script body has finished.
+ */
+extern bool Grapple_LuaRunPendingEngine(lua_State *L);
+extern bool Grapple_RubyRunPendingEngine(mrb_state *mrb);
+
 /** The engine behind either Ruby spelling. */
 extern Grapple_Engine *Grapple_RubyEngineAt(mrb_state *mrb, mrb_value value);
 

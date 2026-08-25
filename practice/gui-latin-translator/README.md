@@ -10,8 +10,8 @@ putting its English translation in a label.
 
 | File | Language | Lines |
 | --- | --- | --- |
-| [`latin.rb`](latin.rb) | Ruby | 37 |
-| [`latin.lua`](latin.lua) | Lua | 47 |
+| [`latin.lua`](latin.lua) | Lua | 69 |
+| [`latin.rb`](latin.rb) | Ruby | 70 |
 | [`latin_c.c`](latin_c.c) | C | 148 |
 | [`latin_cpp.cpp`](latin_cpp.cpp) | C++ | 160 |
 
@@ -28,6 +28,11 @@ than scaling it. Between them they cover the declarative engine
 (`Grapple.engine{...}`), the retained widget tree, `fit` widths that are
 measured rather than estimated, alignment, and callbacks per widget.
 
-The scripts are the shortest because Lua and Ruby already have the two
-things this style wants — a literal for named values, and a closure to hand
-to a button.
+The two scripts are written the way a Love2D or Godot script is: named
+callbacks the engine calls, no loop, and no `run()` — registering handlers
+is enough, and the runner starts the engine once the file has finished.
+Handlers are named functions rather than anonymous ones, and each is given
+the widget that fired, so one function serves the whole row of buttons.
+
+They are a few lines longer than the closure-based version they replaced,
+which is the trade: naming a handler costs a line and buys a name.

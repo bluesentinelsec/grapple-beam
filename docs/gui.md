@@ -155,6 +155,21 @@ answer = panel.label(text: "", align: :center)
 panel.button(text: "Clear", width: :fit, align: :right) { answer.set("") }
 ```
 
+A block is right for a one-liner. When a handler is worth a name, pass it as
+`on_click:` instead — anything that answers to `call`, so a method works
+without being wrapped in a block:
+
+```ruby
+def clear_clicked(_button)
+  $answer.set("")
+end
+
+panel.button(text: "Clear", on_click: method(:clear_clicked))
+```
+
+The handler is given the widget that fired, so one function can serve a row
+of buttons: the button knows which one it is.
+
 Lengths take the units as strings: `24`, `"2.4em"`, `"25%"`, `"fit"`.
 Widgets own their state (`answer:set(...)`, `entry:text()`,
 `check:checked()`), and are owned by their parent, so nothing needs

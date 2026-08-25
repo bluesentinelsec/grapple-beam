@@ -72,6 +72,12 @@ static int RunLua(const char *code, const char *script, int argc, char **argv)
         {
             rc = LuaReportError(L);
         }
+        else
+        {
+            /* A script that described callbacks and stopped meant for the
+               loop to run — the same bargain Love2D makes. */
+            Grapple_LuaRunPendingEngine(L);
+        }
     }
     else
     {
@@ -144,6 +150,10 @@ static int RunRuby(const char *code, const char *script, int argc, char **argv)
         snprintf(req, sizeof(req), "load '%s'", script);
         mrb_load_string(mrb, req);
         rc = RubyReportError(mrb);
+        if (rc == 0)
+        {
+            Grapple_RubyRunPendingEngine(mrb);
+        }
     }
     else
     {

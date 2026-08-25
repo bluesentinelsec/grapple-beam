@@ -157,6 +157,45 @@ accepts are `title`, `window`, `design`, `presentation`, `resizable`,
 `high_dpi`, `fullscreen`, `vsync`, `max_fps`, `tick_rate`, `auto_mount`,
 `headless`, `media`, `font_size` and `backend`.
 
+### You do not have to start the loop
+
+A script that registers callbacks and stops is describing a game, so the
+runner starts it once the file has finished — the same bargain Love2D and
+Godot make. This is a complete program:
+
+```lua
+local engine = Grapple.engine{ title = "My Game" }
+
+local function load()
+  -- build the world
+  return true
+end
+
+local function update(dt)
+  if engine:key_pressed("escape") then engine:quit() end
+end
+
+engine:on_load(load)
+engine:on_update(update)
+```
+
+There is no `run()` at the bottom, and named functions read better than
+anonymous ones once a handler is worth a name. Call `engine:run()` yourself
+if you want the loop to start at a particular point — doing so takes the
+engine off the runner's list, so it never starts twice. An engine with no
+handlers is never started, since that is not a game.
+
+Ruby is the same, with `method(:load)` where Lua passes the function:
+
+```ruby
+$engine.on_load(&method(:load_game))
+$engine.on_update(&method(:update))
+```
+
+One difference worth knowing: `update` is handed the frame delta whether or
+not it wants it, and Ruby counts arguments strictly where Lua ignores the
+extra one. `def update(_delta)`, not `def update`.
+
 For the widget tree that goes with it, see
 [the GUI page](gui.html#widgets-you-declare-once).
 

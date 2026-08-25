@@ -88,9 +88,13 @@ static bool DispatchRuby(void *language_state, Sint64 handle, Grapple_ScriptHook
 
     if (mrb->exc != NULL)
     {
-        /* An exception must not escape into the engine's C frames: report
-           it and carry on, so one bad frame does not end the game. */
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "engine hook raised");
+        /* An exception must not escape into the engine's C frames: report it
+           and carry on, so one bad frame does not end the game. Say what it
+           was — "engine hook raised" on its own leaves the author to guess,
+           which is exactly the wrong thing to do sixty times a second. */
+        const mrb_value message = mrb_funcall(mrb, mrb_obj_value(mrb->exc), "inspect", 0);
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "engine hook: %s",
+                     mrb_string_p(message) ? RSTRING_CSTR(mrb, message) : "raised");
         mrb->exc = NULL;
         return true;
     }
