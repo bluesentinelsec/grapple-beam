@@ -211,6 +211,9 @@ class _LibEmitter:
 
     def emit_stub(self, plan: ScriptPlan) -> None:
         fn = plan.fn
+        # Per-function state: a buffer one function allocates must not be
+        # freed by the next one's return handling.
+        self.blob_out_var = None
         self.w(f"static int GenL_{fn.name}(lua_State *L)")
         self.w("{")
         self.w("    (void)L;")
@@ -229,6 +232,20 @@ class _LibEmitter:
             v = f"a{i}"
             base = pp.info.base
             spell = self._param_spell(pp, params[i])
+            if pp.mode == "blob_out":
+                # The script asks for a length; the buffer is ours, and what
+                # was actually read comes back as a string after the call.
+                self.w(f"    lua_Integer want{i} = luaL_checkinteger(L, {arg_n});")
+                self.w(f"    if (want{i} < 0) {{ want{i} = 0; }}")
+                self.w(f"    void *{v} = (want{i} > 0) ? SDL_malloc((size_t)want{i}) : NULL;")
+                self.w(f"    if (want{i} > 0 && {v} == NULL) {{ return luaL_error(L, \"out of memory\"); }}")
+                call_args[i] = v
+                nxt = params[i + 1]
+                call_args[i + 1] = f"({nxt.type.spelling()})want{i}"
+                self.blob_out_var = (v, f"want{i}")
+                arg_n += 1
+                i += 2
+                continue
             if pp.mode == "blob_in":
                 self.w(f"    size_t len{i} = 0;")
                 self.w(f"    const char *{v} = lua_isnoneornil(L, {arg_n}) ? NULL"
@@ -319,6 +336,15 @@ class _LibEmitter:
         elif ret.kind == TK.BOOL:
             self.w("    lua_pushboolean(L, (int)rv);")
             nret += 1
+        elif getattr(self, "blob_out_var", None) is not None and ret.kind == TK.INT:
+            # The return is a byte count, so it sizes the string: a short
+            # read must not hand back the uninitialised tail of the buffer.
+            buf, want = self.blob_out_var
+            self.w(f"    if (rv > 0) {{ lua_pushlstring(L, (const char *){buf}, (size_t)rv); }}")
+            self.w("    else { lua_pushnil(L); }")
+            self.w(f"    SDL_free({buf});")
+            self.w(f"    (void){want};")
+            nret += 1
         elif ret.kind in (TK.INT, TK.ENUM):
             self.w("    lua_pushinteger(L, (lua_Integer)rv);")
             nret += 1
@@ -331,6 +357,18 @@ class _LibEmitter:
         elif ret.kind == TK.OWNED_STRING:
             self.w("    if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }")
             self.w(f"    if (rv != NULL) {{ {self.lib.free_fn}(rv); }}")
+            nret += 1
+        elif ret.kind == TK.STRING_LIST:
+            # A NULL-terminated char** becomes a table, 1-based, and the
+            # library frees the array afterwards: a script has no way to.
+            self.w("    if (rv == NULL) { lua_pushnil(L); } else {")
+            self.w("        lua_newtable(L);")
+            self.w("        for (int li = 0; rv[li] != NULL; ++li) {")
+            self.w("            lua_pushstring(L, rv[li]);")
+            self.w("            lua_rawseti(L, -2, li + 1);")
+            self.w("        }")
+            self.w(f"        {self.lib.free_list_fn}((void *)rv);")
+            self.w("    }")
             nret += 1
         elif ret.kind == TK.POD:
             self.w(f"    GenPush_{ret.base}(L, &rv);")
@@ -369,6 +407,8 @@ class _LibEmitter:
             return f"{const}{self._handle_ref(ret.base)} *"
         if ret.kind == TK.STRING:
             return "const char *"
+        if ret.kind == TK.STRING_LIST:
+            return "char **"
         if ret.kind == TK.OWNED_STRING:
             return "char *"
         if ret.kind == TK.POD:

@@ -1020,6 +1020,12 @@ function SDL.GetAudioFormatName(format) end
 ---@return integer
 function SDL.GetAudioStreamAvailable(stream) end
 
+---Calls `SDL_GetAudioStreamData`.
+---@param stream userdata
+---@param buf integer
+---@return integer
+function SDL.GetAudioStreamData(stream, buf) end
+
 ---Calls `SDL_GetAudioStreamDevice`.
 ---@param stream userdata
 ---@return integer
@@ -1099,6 +1105,11 @@ function SDL.GetCameraPosition(instance_id) end
 ---@param camera userdata
 ---@return integer
 function SDL.GetCameraProperties(camera) end
+
+---Calls `SDL_GetClipboardMimeTypes`.
+---@param num_mime_types integer
+---@return integer, integer
+function SDL.GetClipboardMimeTypes(num_mime_types) end
 
 ---Calls `SDL_GetClipboardText`.
 ---@return integer
@@ -1246,6 +1257,11 @@ function SDL.GetEnvironment() end
 ---@param name string?
 ---@return string?
 function SDL.GetEnvironmentVariable(env, name) end
+
+---Calls `SDL_GetEnvironmentVariables`.
+---@param env userdata
+---@return integer
+function SDL.GetEnvironmentVariables(env) end
 
 ---Calls `SDL_GetError`.
 ---@return string?
@@ -1396,6 +1412,11 @@ function SDL.GetGamepadMappingForGUID(guid) end
 ---@param instance_id integer
 ---@return integer
 function SDL.GetGamepadMappingForID(instance_id) end
+
+---Calls `SDL_GetGamepadMappings`.
+---@param count integer
+---@return integer, integer
+function SDL.GetGamepadMappings(count) end
 
 ---Calls `SDL_GetGamepadName`.
 ---@param gamepad userdata
@@ -2663,6 +2684,23 @@ function SDL.GetWindowSurfaceVSync(window, vsync) end
 ---@return string?
 function SDL.GetWindowTitle(window) end
 
+---Calls `SDL_GlobDirectory`.
+---@param path string?
+---@param pattern string?
+---@param flags integer
+---@param count integer
+---@return integer, integer
+function SDL.GlobDirectory(path, pattern, flags, count) end
+
+---Calls `SDL_GlobStorageDirectory`.
+---@param storage userdata
+---@param path string?
+---@param pattern string?
+---@param flags integer
+---@param count integer
+---@return integer, integer
+function SDL.GlobStorageDirectory(storage, path, pattern, flags, count) end
+
 ---Calls `SDL_HapticEffectSupported`.
 ---@param haptic userdata
 ---@param effect userdata
@@ -2815,6 +2853,11 @@ function SDL.IOFromDynamicMem() end
 ---@param mode string?
 ---@return userdata?
 function SDL.IOFromFile(file, mode) end
+
+---Calls `SDL_IOFromMem`.
+---@param mem integer
+---@return userdata?
+function SDL.IOFromMem(mem) end
 
 ---Calls `SDL_Init`.
 ---@param flags integer
@@ -3191,6 +3234,12 @@ function SDL.QuitSubSystem(flags) end
 ---@return boolean
 function SDL.RaiseWindow(window) end
 
+---Calls `SDL_ReadIO`.
+---@param context userdata
+---@param ptr integer
+---@return integer
+function SDL.ReadIO(context, ptr) end
+
 ---Calls `SDL_ReadS16BE`.
 ---@param src userdata
 ---@param value integer
@@ -3232,6 +3281,13 @@ function SDL.ReadS64LE(src, value) end
 ---@param value integer
 ---@return boolean, integer
 function SDL.ReadS8(src, value) end
+
+---Calls `SDL_ReadStorageFile`.
+---@param storage userdata
+---@param path string?
+---@param destination integer
+---@return boolean
+function SDL.ReadStorageFile(storage, path, destination) end
 
 ---Calls `SDL_ReadSurfacePixel`.
 ---@param surface userdata
@@ -4878,10 +4934,28 @@ function SDL.hid_free_enumeration(devs) end
 ---@return userdata?
 function SDL.hid_get_device_info(dev) end
 
+---Calls `SDL_hid_get_feature_report`.
+---@param dev userdata
+---@param data integer
+---@return integer
+function SDL.hid_get_feature_report(dev, data) end
+
+---Calls `SDL_hid_get_input_report`.
+---@param dev userdata
+---@param data integer
+---@return integer
+function SDL.hid_get_input_report(dev, data) end
+
 ---Calls `SDL_hid_get_properties`.
 ---@param dev userdata
 ---@return integer
 function SDL.hid_get_properties(dev) end
+
+---Calls `SDL_hid_get_report_descriptor`.
+---@param dev userdata
+---@param buf integer
+---@return integer
+function SDL.hid_get_report_descriptor(dev, buf) end
 
 ---Calls `SDL_hid_init`.
 ---@return integer
@@ -4891,6 +4965,19 @@ function SDL.hid_init() end
 ---@param path string?
 ---@return userdata?
 function SDL.hid_open_path(path) end
+
+---Calls `SDL_hid_read`.
+---@param dev userdata
+---@param data integer
+---@return integer
+function SDL.hid_read(dev, data) end
+
+---Calls `SDL_hid_read_timeout`.
+---@param dev userdata
+---@param data integer
+---@param milliseconds integer
+---@return integer
+function SDL.hid_read_timeout(dev, data, milliseconds) end
 
 ---Calls `SDL_hid_send_feature_report`.
 ---@param dev userdata
@@ -4999,6 +5086,13 @@ function MIX.CreateSineWaveAudio(mixer, hz, amplitude, ms) end
 ---@return userdata?
 function MIX.CreateTrack(mixer) end
 
+---Calls `MIX_DecodeAudio`.
+---@param audiodecoder userdata
+---@param buffer integer
+---@param spec table
+---@return integer
+function MIX.DecodeAudio(audiodecoder, buffer, spec) end
+
 ---Calls `MIX_DestroyAudio`.
 ---@param audio userdata
 function MIX.DestroyAudio(audio) end
@@ -5024,6 +5118,12 @@ function MIX.DestroyTrack(track) end
 ---@param frames integer
 ---@return integer
 function MIX.FramesToMS(sample_rate, frames) end
+
+---Calls `MIX_Generate`.
+---@param mixer userdata
+---@param buffer integer
+---@return integer
+function MIX.Generate(mixer, buffer) end
 
 ---Calls `MIX_GetAudioDecoder`.
 ---@param index integer
@@ -5143,6 +5243,12 @@ function MIX.GetTrackProperties(track) end
 ---@param track userdata
 ---@return integer
 function MIX.GetTrackRemaining(track) end
+
+---Calls `MIX_GetTrackTags`.
+---@param track userdata
+---@param count integer
+---@return integer, integer
+function MIX.GetTrackTags(track, count) end
 
 ---Calls `MIX_Init`.
 ---@return boolean
@@ -6681,6 +6787,12 @@ function NET.Init() end
 ---Calls `NET_Quit`.
 function NET.Quit() end
 
+---Calls `NET_ReadFromStreamSocket`.
+---@param sock userdata
+---@param buf integer
+---@return integer
+function NET.ReadFromStreamSocket(sock, buf) end
+
 ---Calls `NET_RefAddress`.
 ---@param address userdata
 ---@return userdata?
@@ -6774,6 +6886,11 @@ function PHYSFS.delete(filename) end
 ---@return integer
 function PHYSFS.deregisterArchiver(ext) end
 
+---Calls `PHYSFS_enumerateFiles`.
+---@param dir string?
+---@return integer
+function PHYSFS.enumerateFiles(dir) end
+
 ---Calls `PHYSFS_eof`.
 ---@param handle userdata
 ---@return integer
@@ -6801,6 +6918,10 @@ function PHYSFS.getAllocator() end
 ---Calls `PHYSFS_getBaseDir`.
 ---@return string?
 function PHYSFS.getBaseDir() end
+
+---Calls `PHYSFS_getCdRomDirs`.
+---@return integer
+function PHYSFS.getCdRomDirs() end
 
 ---Calls `PHYSFS_getDirSeparator`.
 ---@return string?
@@ -6834,6 +6955,10 @@ function PHYSFS.getPrefDir(org, app) end
 ---@param filename string?
 ---@return string?
 function PHYSFS.getRealDir(filename) end
+
+---Calls `PHYSFS_getSearchPath`.
+---@return integer
+function PHYSFS.getSearchPath() end
 
 ---Calls `PHYSFS_getWriteDir`.
 ---@return string?
@@ -6894,6 +7019,12 @@ function PHYSFS.openWrite(filename) end
 ---Calls `PHYSFS_permitSymbolicLinks`.
 ---@param allow integer
 function PHYSFS.permitSymbolicLinks(allow) end
+
+---Calls `PHYSFS_readBytes`.
+---@param handle userdata
+---@param buffer integer
+---@return integer
+function PHYSFS.readBytes(handle, buffer) end
 
 ---Calls `PHYSFS_readSBE16`.
 ---@param file userdata
@@ -9359,6 +9490,11 @@ function NK.buffer_init(arg0, arg1, size) end
 ---@param arg0 userdata
 function NK.buffer_init_default(arg0) end
 
+---Calls `nk_buffer_init_fixed`.
+---@param arg0 userdata
+---@param memory integer
+function NK.buffer_init_fixed(arg0, memory) end
+
 ---Calls `nk_buffer_mark`.
 ---@param arg0 userdata
 ---@param type integer
@@ -10282,6 +10418,14 @@ function NK.filter_oct(arg0, unicode) end
 ---@return userdata?
 function NK.font_atlas_add(arg0, arg1) end
 
+---Calls `nk_font_atlas_add_compressed`.
+---@param arg0 userdata
+---@param memory integer
+---@param height number
+---@param arg4 userdata
+---@return userdata?
+function NK.font_atlas_add_compressed(arg0, memory, height, arg4) end
+
 ---Calls `nk_font_atlas_add_compressed_base85`.
 ---@param arg0 userdata
 ---@param data string?
@@ -10296,6 +10440,14 @@ function NK.font_atlas_add_compressed_base85(arg0, data, height, config) end
 ---@param arg2 userdata
 ---@return userdata?
 function NK.font_atlas_add_default(arg0, height, arg2) end
+
+---Calls `nk_font_atlas_add_from_memory`.
+---@param atlas userdata
+---@param memory integer
+---@param height number
+---@param config userdata
+---@return userdata?
+function NK.font_atlas_add_from_memory(atlas, memory, height, config) end
 
 ---Calls `nk_font_atlas_begin`.
 ---@param arg0 userdata
@@ -10449,6 +10601,13 @@ function NK.init_custom(arg0, cmds, pool, arg3) end
 ---@param arg1 userdata
 ---@return boolean
 function NK.init_default(arg0, arg1) end
+
+---Calls `nk_init_fixed`.
+---@param arg0 userdata
+---@param memory integer
+---@param arg3 userdata
+---@return boolean
+function NK.init_fixed(arg0, memory, arg3) end
 
 ---Calls `nk_input_any_mouse_click_in_rect`.
 ---@param arg0 userdata
@@ -11363,6 +11522,11 @@ function NK.str_init(arg0, arg1, size) end
 ---@param arg0 userdata
 function NK.str_init_default(arg0) end
 
+---Calls `nk_str_init_fixed`.
+---@param arg0 userdata
+---@param memory integer
+function NK.str_init_fixed(arg0, memory) end
+
 ---Calls `nk_str_insert_at_char`.
 ---@param arg0 userdata
 ---@param pos integer
@@ -11698,6 +11862,11 @@ function NK.textedit_init(arg0, arg1, size) end
 ---Calls `nk_textedit_init_default`.
 ---@param arg0 userdata
 function NK.textedit_init_default(arg0) end
+
+---Calls `nk_textedit_init_fixed`.
+---@param arg0 userdata
+---@param memory integer
+function NK.textedit_init_fixed(arg0, memory) end
 
 ---Calls `nk_textedit_paste`.
 ---@param arg0 userdata

@@ -57,6 +57,22 @@ extern bool Grapple_OpenLuaEngine(lua_State *L);
 extern bool Grapple_OpenRubyUi(mrb_state *mrb);
 
 /**
+ * The command line a script's engine should inherit.
+ *
+ * The engine reads --fullscreen, --window-size and thirty-odd other options
+ * from the argc/argv in its config, and a script has no way to hand it any:
+ * the setters never exposed the fields, and a script does not have the
+ * process arguments to begin with. The runner calls this once with the
+ * engine-bound part of its own command line, and Grapple.engine{} passes it
+ * on, so those flags do what they say. Not copied — the pointers must
+ * outlive every engine, which the real argv does.
+ */
+extern void Grapple_SetScriptProcessArgs(int argc, char **argv);
+
+/** What the runner last set, for the engine constructors. */
+extern void Grapple_ScriptProcessArgs(int *argc, char ***argv);
+
+/**
  * Run an engine the script described but never started.
  *
  * Love2D and Godot do not make a script call the loop; this is what lets a

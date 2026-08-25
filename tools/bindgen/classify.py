@@ -39,6 +39,7 @@ class TK(PyEnum):
     POD = "pod"  # marshalable struct
     FUNCPTR = "funcptr"
     VOIDP = "voidp"
+    STRING_LIST = "string_list"  # NULL-terminated char**, caller frees
     OTHER = "other"
 
 
@@ -356,6 +357,17 @@ def plan_script(lib_key: str, functions: dict[str, Function], tt: TypeTable) -> 
             plans[name] = ScriptPlan(fn, ok=False, reason="variadic")
             continue
         ri = tt.info(fn.ret)
+        # A NULL-terminated char** is a list of strings, which every script
+        # language has. It was rejected as unmarshalable only because nothing
+        # walked it; the library's own free_list_fn releases it afterwards.
+        lib_for_ret = next(s for s in LIBRARIES if s.key == lib_key)
+        if (
+            ri.base == "char"
+            and ri.pointers == 2
+            and lib_for_ret.free_list_fn
+        ):
+            ri = TypeInfo(TK.STRING_LIST, base=ri.base, pointers=ri.pointers,
+                          is_const=ri.is_const, declared=ri.declared)
         if ri.kind in (TK.FUNCPTR, TK.OTHER, TK.VOIDP) or (
             ri.kind in (TK.INT, TK.FLOAT, TK.BOOL, TK.ENUM) and ri.pointers
         ):
@@ -389,6 +401,23 @@ def plan_script(lib_key: str, functions: dict[str, Function], tt: TypeTable) -> 
                 )
             ):
                 pplans.append(ParamPlan(i, p.name, pi, "blob_in"))
+                skip_next = True
+                continue
+            # (void *buffer, <int> len): the caller asks for a number of
+            # bytes and gets them back as a string. Reads were the whole
+            # reason PHYSFS_readBytes and SDL_ReadIO were unreachable —
+            # a script cannot be handed a buffer to fill, but it can be
+            # handed what was read.
+            elif (
+                pi.kind == TK.VOIDP
+                and not pi.is_const
+                and pi.pointers == 1
+                and i + 1 < len(fn.params)
+                and tt.info(fn.params[i + 1].type).kind == TK.INT
+                and tt.info(fn.params[i + 1].type).pointers == 0
+                and re.search(r"len|size|count|bytes|num", fn.params[i + 1].name, re.I)
+            ):
+                pplans.append(ParamPlan(i, p.name, pi, "blob_out"))
                 skip_next = True
                 continue
             if pi.kind in (TK.INT, TK.FLOAT, TK.BOOL, TK.ENUM) and pi.pointers == 0:

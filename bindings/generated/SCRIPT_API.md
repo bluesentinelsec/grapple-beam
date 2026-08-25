@@ -200,6 +200,7 @@ returns as an array.
 | `SDL.GetAudioDriver(index: integer)` | string|nil |
 | `SDL.GetAudioFormatName(format: integer)` | string|nil |
 | `SDL.GetAudioStreamAvailable(stream: SDL_AudioStream)` | integer |
+| `SDL.GetAudioStreamData(stream: SDL_AudioStream, buf: integer)` | integer |
 | `SDL.GetAudioStreamDevice(stream: SDL_AudioStream)` | integer |
 | `SDL.GetAudioStreamFormat(stream: SDL_AudioStream)` | boolean, src_spec: SDL_AudioSpec table, dst_spec: SDL_AudioSpec table |
 | `SDL.GetAudioStreamFrequencyRatio(stream: SDL_AudioStream)` | number |
@@ -216,6 +217,7 @@ returns as an array.
 | `SDL.GetCameraPermissionState(camera: SDL_Camera)` | integer |
 | `SDL.GetCameraPosition(instance_id: integer)` | integer |
 | `SDL.GetCameraProperties(camera: SDL_Camera)` | integer |
+| `SDL.GetClipboardMimeTypes(num_mime_types: integer)` | integer, num_mime_types: integer |
 | `SDL.GetClipboardText()` | string|nil |
 | `SDL.GetClosestFullscreenDisplayMode(displayID: integer, w: integer, h: integer, refresh_rate: number, include_high_density_modes: boolean, closest: SDL_DisplayMode)` | boolean |
 | `SDL.GetCurrentAudioDriver()` | string|nil |
@@ -244,6 +246,7 @@ returns as an array.
 | `SDL.GetDisplayUsableBounds(displayID: integer)` | boolean, rect: SDL_Rect table |
 | `SDL.GetEnvironment()` | SDL_Environment|nil |
 | `SDL.GetEnvironmentVariable(env: SDL_Environment, name: string|nil)` | string|nil |
+| `SDL.GetEnvironmentVariables(env: SDL_Environment)` | integer |
 | `SDL.GetError()` | string|nil |
 | `SDL.GetEventDescription(event: SDL_Event, buf: string, buflen: integer)` | integer |
 | `SDL.GetFloatProperty(props: integer, name: string|nil, default_value: number)` | number |
@@ -272,6 +275,7 @@ returns as an array.
 | `SDL.GetGamepadMapping(gamepad: SDL_Gamepad)` | string|nil |
 | `SDL.GetGamepadMappingForGUID(guid: SDL_GUID table)` | string|nil |
 | `SDL.GetGamepadMappingForID(instance_id: integer)` | string|nil |
+| `SDL.GetGamepadMappings(count: integer)` | integer, count: integer |
 | `SDL.GetGamepadName(gamepad: SDL_Gamepad)` | string|nil |
 | `SDL.GetGamepadNameForID(instance_id: integer)` | string|nil |
 | `SDL.GetGamepadPath(gamepad: SDL_Gamepad)` | string|nil |
@@ -503,6 +507,8 @@ returns as an array.
 | `SDL.GetWindowSurface(window: SDL_Window)` | SDL_Surface|nil |
 | `SDL.GetWindowSurfaceVSync(window: SDL_Window, vsync: integer)` | boolean, vsync: integer |
 | `SDL.GetWindowTitle(window: SDL_Window)` | string|nil |
+| `SDL.GlobDirectory(path: string|nil, pattern: string|nil, flags: integer, count: integer)` | integer, count: integer |
+| `SDL.GlobStorageDirectory(storage: SDL_Storage, path: string|nil, pattern: string|nil, flags: integer, count: integer)` | integer, count: integer |
 | `SDL.HapticEffectSupported(haptic: SDL_Haptic, effect: SDL_HapticEffect)` | boolean |
 | `SDL.HapticRumbleSupported(haptic: SDL_Haptic)` | boolean |
 | `SDL.HasARMSIMD()` | boolean |
@@ -537,6 +543,7 @@ returns as an array.
 | `SDL.IOFromConstMem(mem: string|nil)` | SDL_IOStream|nil |
 | `SDL.IOFromDynamicMem()` | SDL_IOStream|nil |
 | `SDL.IOFromFile(file: string|nil, mode: string|nil)` | SDL_IOStream|nil |
+| `SDL.IOFromMem(mem: integer)` | SDL_IOStream|nil |
 | `SDL.Init(flags: integer)` | boolean |
 | `SDL.InitHapticRumble(haptic: SDL_Haptic)` | boolean |
 | `SDL.InitSubSystem(flags: integer)` | boolean |
@@ -609,6 +616,7 @@ returns as an array.
 | `SDL.Quit()` | nil |
 | `SDL.QuitSubSystem(flags: integer)` | nil |
 | `SDL.RaiseWindow(window: SDL_Window)` | boolean |
+| `SDL.ReadIO(context: SDL_IOStream, ptr: integer)` | integer |
 | `SDL.ReadS16BE(src: SDL_IOStream, value: integer)` | boolean, value: integer |
 | `SDL.ReadS16LE(src: SDL_IOStream, value: integer)` | boolean, value: integer |
 | `SDL.ReadS32BE(src: SDL_IOStream, value: integer)` | boolean, value: integer |
@@ -616,6 +624,7 @@ returns as an array.
 | `SDL.ReadS64BE(src: SDL_IOStream, value: integer)` | boolean, value: integer |
 | `SDL.ReadS64LE(src: SDL_IOStream, value: integer)` | boolean, value: integer |
 | `SDL.ReadS8(src: SDL_IOStream, value: integer)` | boolean, value: integer |
+| `SDL.ReadStorageFile(storage: SDL_Storage, path: string|nil, destination: integer)` | boolean |
 | `SDL.ReadSurfacePixel(surface: SDL_Surface, x: integer, y: integer, r: integer, g: integer, b: integer, a: integer)` | boolean, r: integer, g: integer, b: integer, a: integer |
 | `SDL.ReadSurfacePixelFloat(surface: SDL_Surface, x: integer, y: integer, r: number, g: number, b: number, a: number)` | boolean, r: number, g: number, b: number, a: number |
 | `SDL.ReadU16BE(src: SDL_IOStream, value: integer)` | boolean, value: integer |
@@ -887,9 +896,14 @@ returns as an array.
 | `SDL.hid_exit()` | integer |
 | `SDL.hid_free_enumeration(devs: SDL_hid_device_info)` | nil |
 | `SDL.hid_get_device_info(dev: SDL_hid_device)` | SDL_hid_device_info|nil |
+| `SDL.hid_get_feature_report(dev: SDL_hid_device, data: integer)` | integer |
+| `SDL.hid_get_input_report(dev: SDL_hid_device, data: integer)` | integer |
 | `SDL.hid_get_properties(dev: SDL_hid_device)` | integer |
+| `SDL.hid_get_report_descriptor(dev: SDL_hid_device, buf: integer)` | integer |
 | `SDL.hid_init()` | integer |
 | `SDL.hid_open_path(path: string|nil)` | SDL_hid_device|nil |
+| `SDL.hid_read(dev: SDL_hid_device, data: integer)` | integer |
+| `SDL.hid_read_timeout(dev: SDL_hid_device, data: integer, milliseconds: integer)` | integer |
 | `SDL.hid_send_feature_report(dev: SDL_hid_device, data: string|nil)` | integer |
 | `SDL.hid_set_nonblocking(dev: SDL_hid_device, nonblock: integer)` | integer |
 | `SDL.hid_write(dev: SDL_hid_device, data: string|nil)` | integer |
@@ -912,12 +926,14 @@ returns as an array.
 | `MIX.CreateMixerDevice(devid: integer, spec: SDL_AudioSpec table)` | MIX_Mixer|nil |
 | `MIX.CreateSineWaveAudio(mixer: MIX_Mixer, hz: integer, amplitude: number, ms: integer)` | MIX_Audio|nil |
 | `MIX.CreateTrack(mixer: MIX_Mixer)` | MIX_Track|nil |
+| `MIX.DecodeAudio(audiodecoder: MIX_AudioDecoder, buffer: integer, spec: SDL_AudioSpec table)` | integer |
 | `MIX.DestroyAudio(audio: MIX_Audio)` | nil |
 | `MIX.DestroyAudioDecoder(audiodecoder: MIX_AudioDecoder)` | nil |
 | `MIX.DestroyGroup(group: MIX_Group)` | nil |
 | `MIX.DestroyMixer(mixer: MIX_Mixer)` | nil |
 | `MIX.DestroyTrack(track: MIX_Track)` | nil |
 | `MIX.FramesToMS(sample_rate: integer, frames: integer)` | integer |
+| `MIX.Generate(mixer: MIX_Mixer, buffer: integer)` | integer |
 | `MIX.GetAudioDecoder(index: integer)` | string|nil |
 | `MIX.GetAudioDecoderFormat(audiodecoder: MIX_AudioDecoder)` | boolean, spec: SDL_AudioSpec table |
 | `MIX.GetAudioDecoderProperties(audiodecoder: MIX_AudioDecoder)` | integer |
@@ -942,6 +958,7 @@ returns as an array.
 | `MIX.GetTrackPlaybackPosition(track: MIX_Track)` | integer |
 | `MIX.GetTrackProperties(track: MIX_Track)` | integer |
 | `MIX.GetTrackRemaining(track: MIX_Track)` | integer |
+| `MIX.GetTrackTags(track: MIX_Track, count: integer)` | integer, count: integer |
 | `MIX.Init()` | boolean |
 | `MIX.LoadAudio(mixer: MIX_Mixer, path: string|nil, predecode: boolean)` | MIX_Audio|nil |
 | `MIX.LoadAudioNoCopy(mixer: MIX_Mixer, data: string|nil, free_when_done: boolean)` | MIX_Audio|nil |
@@ -1214,6 +1231,7 @@ returns as an array.
 | `NET.GetStreamSocketPendingWrites(sock: NET_StreamSocket)` | integer |
 | `NET.Init()` | boolean |
 | `NET.Quit()` | nil |
+| `NET.ReadFromStreamSocket(sock: NET_StreamSocket, buf: integer)` | integer |
 | `NET.RefAddress(address: NET_Address)` | NET_Address|nil |
 | `NET.ResolveHostname(host: string|nil)` | NET_Address|nil |
 | `NET.SendDatagram(sock: NET_DatagramSocket, address: NET_Address, port: integer, buf: string|nil)` | boolean |
@@ -1236,12 +1254,14 @@ returns as an array.
 | `PHYSFS.deinit()` | integer |
 | `PHYSFS.delete(filename: string|nil)` | integer |
 | `PHYSFS.deregisterArchiver(ext: string|nil)` | integer |
+| `PHYSFS.enumerateFiles(dir: string|nil)` | integer |
 | `PHYSFS.eof(handle: PHYSFS_File)` | integer |
 | `PHYSFS.exists(fname: string|nil)` | integer |
 | `PHYSFS.fileLength(handle: PHYSFS_File)` | integer |
 | `PHYSFS.flush(handle: PHYSFS_File)` | integer |
 | `PHYSFS.getAllocator()` | PHYSFS_Allocator|nil |
 | `PHYSFS.getBaseDir()` | string|nil |
+| `PHYSFS.getCdRomDirs()` | integer |
 | `PHYSFS.getDirSeparator()` | string|nil |
 | `PHYSFS.getErrorByCode(code: integer)` | string|nil |
 | `PHYSFS.getLastErrorCode()` | integer |
@@ -1249,6 +1269,7 @@ returns as an array.
 | `PHYSFS.getMountPoint(dir: string|nil)` | string|nil |
 | `PHYSFS.getPrefDir(org: string|nil, app: string|nil)` | string|nil |
 | `PHYSFS.getRealDir(filename: string|nil)` | string|nil |
+| `PHYSFS.getSearchPath()` | integer |
 | `PHYSFS.getWriteDir()` | string|nil |
 | `PHYSFS.init(argv0: string|nil)` | integer |
 | `PHYSFS.isInit()` | integer |
@@ -1260,6 +1281,7 @@ returns as an array.
 | `PHYSFS.openRead(filename: string|nil)` | PHYSFS_File|nil |
 | `PHYSFS.openWrite(filename: string|nil)` | PHYSFS_File|nil |
 | `PHYSFS.permitSymbolicLinks(allow: integer)` | nil |
+| `PHYSFS.readBytes(handle: PHYSFS_File, buffer: integer)` | integer |
 | `PHYSFS.readSBE16(file: PHYSFS_File, val: integer)` | integer, val: integer |
 | `PHYSFS.readSBE32(file: PHYSFS_File, val: integer)` | integer, val: integer |
 | `PHYSFS.readSBE64(file: PHYSFS_File, val: integer)` | integer, val: integer |
@@ -1724,6 +1746,7 @@ returns as an array.
 | `NK.buffer_info(arg0: nk_memory_status, arg1: nk_buffer)` | nil |
 | `NK.buffer_init(arg0: nk_buffer, arg1: nk_allocator, size: integer)` | nil |
 | `NK.buffer_init_default(arg0: nk_buffer)` | nil |
+| `NK.buffer_init_fixed(arg0: nk_buffer, memory: integer)` | nil |
 | `NK.buffer_mark(arg0: nk_buffer, type: integer)` | nil |
 | `NK.buffer_push(arg0: nk_buffer, type: integer, memory: string|nil, align: integer)` | nil |
 | `NK.buffer_reset(arg0: nk_buffer, type: integer)` | nil |
@@ -1850,8 +1873,10 @@ returns as an array.
 | `NK.filter_hex(arg0: nk_text_edit, unicode: integer)` | boolean |
 | `NK.filter_oct(arg0: nk_text_edit, unicode: integer)` | boolean |
 | `NK.font_atlas_add(arg0: nk_font_atlas, arg1: nk_font_config)` | nk_font|nil |
+| `NK.font_atlas_add_compressed(arg0: nk_font_atlas, memory: integer, height: number, arg4: nk_font_config)` | nk_font|nil |
 | `NK.font_atlas_add_compressed_base85(arg0: nk_font_atlas, data: string|nil, height: number, config: nk_font_config)` | nk_font|nil |
 | `NK.font_atlas_add_default(arg0: nk_font_atlas, height: number, arg2: nk_font_config)` | nk_font|nil |
+| `NK.font_atlas_add_from_memory(atlas: nk_font_atlas, memory: integer, height: number, config: nk_font_config)` | nk_font|nil |
 | `NK.font_atlas_begin(arg0: nk_font_atlas)` | nil |
 | `NK.font_atlas_cleanup(atlas: nk_font_atlas)` | nil |
 | `NK.font_atlas_clear(arg0: nk_font_atlas)` | nil |
@@ -1877,6 +1902,7 @@ returns as an array.
 | `NK.init(arg0: nk_context, arg1: nk_allocator, arg2: nk_user_font)` | boolean |
 | `NK.init_custom(arg0: nk_context, cmds: nk_buffer, pool: nk_buffer, arg3: nk_user_font)` | boolean |
 | `NK.init_default(arg0: nk_context, arg1: nk_user_font)` | boolean |
+| `NK.init_fixed(arg0: nk_context, memory: integer, arg3: nk_user_font)` | boolean |
 | `NK.input_any_mouse_click_in_rect(arg0: nk_input, arg1: nk_rect table)` | boolean |
 | `NK.input_begin(arg0: nk_context)` | nil |
 | `NK.input_button(arg0: nk_context, arg1: integer, x: integer, y: integer, down: boolean)` | nil |
@@ -2013,6 +2039,7 @@ returns as an array.
 | `NK.str_get_const(arg0: nk_str)` | string|nil |
 | `NK.str_init(arg0: nk_str, arg1: nk_allocator, size: integer)` | nil |
 | `NK.str_init_default(arg0: nk_str)` | nil |
+| `NK.str_init_fixed(arg0: nk_str, memory: integer)` | nil |
 | `NK.str_insert_at_char(arg0: nk_str, pos: integer, arg2: string|nil, arg3: integer)` | integer |
 | `NK.str_insert_at_rune(arg0: nk_str, pos: integer, arg2: string|nil, arg3: integer)` | integer |
 | `NK.str_insert_str_char(arg0: nk_str, pos: integer, arg2: string|nil)` | integer |
@@ -2066,6 +2093,7 @@ returns as an array.
 | `NK.textedit_free(arg0: nk_text_edit)` | nil |
 | `NK.textedit_init(arg0: nk_text_edit, arg1: nk_allocator, size: integer)` | nil |
 | `NK.textedit_init_default(arg0: nk_text_edit)` | nil |
+| `NK.textedit_init_fixed(arg0: nk_text_edit, memory: integer)` | nil |
 | `NK.textedit_paste(arg0: nk_text_edit, arg1: string|nil, len: integer)` | boolean |
 | `NK.textedit_redo(arg0: nk_text_edit)` | nil |
 | `NK.textedit_select_all(arg0: nk_text_edit)` | nil |

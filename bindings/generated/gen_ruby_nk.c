@@ -306,6 +306,23 @@ static mrb_value GenR_nk_buffer_init_default(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_nk_buffer_init_fixed(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    struct nk_buffer *a0 = (struct nk_buffer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_buffer");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    nk_buffer_init_fixed(a0, a1, (nk_size)want1);
+    return mrb_nil_value();
+    }
+}
+
 static mrb_value GenR_nk_buffer_mark(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -2472,6 +2489,25 @@ static mrb_value GenR_nk_font_atlas_add(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_nk_font_atlas_add_compressed(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    struct nk_font_atlas *a0 = (struct nk_font_atlas *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const struct nk_font_config *a4 = (const struct nk_font_config *)GrappleGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "nk_font_config");
+    struct nk_font * rv = nk_font_atlas_add_compressed(a0, a1, (nk_size)want1, a3, a4);
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_font");
+    }
+}
+
 static mrb_value GenR_nk_font_atlas_add_compressed_base85(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -2499,6 +2535,25 @@ static mrb_value GenR_nk_font_atlas_add_default(mrb_state *mrb, mrb_value self)
     float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     const struct nk_font_config *a2 = (const struct nk_font_config *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_font_config");
     struct nk_font * rv = nk_font_atlas_add_default(a0, a1, a2);
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_font");
+    }
+}
+
+static mrb_value GenR_nk_font_atlas_add_from_memory(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    struct nk_font_atlas *a0 = (struct nk_font_atlas *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_font_atlas");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    const struct nk_font_config *a4 = (const struct nk_font_config *)GrappleGen_RubyCheckHandle(mrb, (argc > 3 ? argv[3] : mrb_nil_value()), "nk_font_config");
+    struct nk_font * rv = nk_font_atlas_add_from_memory(a0, a1, (nk_size)want1, a3, a4);
     return GrappleGen_RubyPushHandle(mrb, (void *)rv, "nk_font");
     }
 }
@@ -2874,6 +2929,24 @@ static mrb_value GenR_nk_init_default(mrb_state *mrb, mrb_value self)
     struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
     const struct nk_user_font *a1 = (const struct nk_user_font *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "nk_user_font");
     nk_bool rv = nk_init_default(a0, a1);
+    return mrb_bool_value((mrb_bool)(rv != 0));
+    }
+}
+
+static mrb_value GenR_nk_init_fixed(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_context");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    const struct nk_user_font *a3 = (const struct nk_user_font *)GrappleGen_RubyCheckHandle(mrb, (argc > 2 ? argv[2] : mrb_nil_value()), "nk_user_font");
+    nk_bool rv = nk_init_fixed(a0, a1, (nk_size)want1, a3);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
 }
@@ -5012,6 +5085,23 @@ static mrb_value GenR_nk_str_init_default(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_nk_str_init_fixed(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_str");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    nk_str_init_fixed(a0, a1, (nk_size)want1);
+    return mrb_nil_value();
+    }
+}
+
 static mrb_value GenR_nk_str_insert_at_char(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -5831,6 +5921,23 @@ static mrb_value GenR_nk_textedit_init_default(mrb_state *mrb, mrb_value self)
     {
     struct nk_text_edit *a0 = (struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
     nk_textedit_init_default(a0);
+    return mrb_nil_value();
+    }
+}
+
+static mrb_value GenR_nk_textedit_init_fixed(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    struct nk_text_edit *a0 = (struct nk_text_edit *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "nk_text_edit");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    nk_textedit_init_fixed(a0, a1, (nk_size)want1);
     return mrb_nil_value();
     }
 }
@@ -6919,6 +7026,7 @@ void GrappleGen_OpenRuby_nk(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "buffer_info", GenR_nk_buffer_info, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "buffer_init", GenR_nk_buffer_init, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "buffer_init_default", GenR_nk_buffer_init_default, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "buffer_init_fixed", GenR_nk_buffer_init_fixed, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "buffer_mark", GenR_nk_buffer_mark, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "buffer_push", GenR_nk_buffer_push, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "buffer_reset", GenR_nk_buffer_reset, MRB_ARGS_ANY());
@@ -7045,8 +7153,10 @@ void GrappleGen_OpenRuby_nk(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "filter_hex", GenR_nk_filter_hex, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "filter_oct", GenR_nk_filter_oct, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "font_atlas_add", GenR_nk_font_atlas_add, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "font_atlas_add_compressed", GenR_nk_font_atlas_add_compressed, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "font_atlas_add_compressed_base85", GenR_nk_font_atlas_add_compressed_base85, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "font_atlas_add_default", GenR_nk_font_atlas_add_default, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "font_atlas_add_from_memory", GenR_nk_font_atlas_add_from_memory, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "font_atlas_begin", GenR_nk_font_atlas_begin, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "font_atlas_cleanup", GenR_nk_font_atlas_cleanup, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "font_atlas_clear", GenR_nk_font_atlas_clear, MRB_ARGS_ANY());
@@ -7072,6 +7182,7 @@ void GrappleGen_OpenRuby_nk(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "init", GenR_nk_init, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "init_custom", GenR_nk_init_custom, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "init_default", GenR_nk_init_default, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "init_fixed", GenR_nk_init_fixed, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "input_any_mouse_click_in_rect", GenR_nk_input_any_mouse_click_in_rect, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "input_begin", GenR_nk_input_begin, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "input_button", GenR_nk_input_button, MRB_ARGS_ANY());
@@ -7208,6 +7319,7 @@ void GrappleGen_OpenRuby_nk(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "str_get_const", GenR_nk_str_get_const, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "str_init", GenR_nk_str_init, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "str_init_default", GenR_nk_str_init_default, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "str_init_fixed", GenR_nk_str_init_fixed, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "str_insert_at_char", GenR_nk_str_insert_at_char, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "str_insert_at_rune", GenR_nk_str_insert_at_rune, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "str_insert_str_char", GenR_nk_str_insert_str_char, MRB_ARGS_ANY());
@@ -7261,6 +7373,7 @@ void GrappleGen_OpenRuby_nk(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "textedit_free", GenR_nk_textedit_free, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "textedit_init", GenR_nk_textedit_init, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "textedit_init_default", GenR_nk_textedit_init_default, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "textedit_init_fixed", GenR_nk_textedit_init_fixed, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "textedit_paste", GenR_nk_textedit_paste, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "textedit_redo", GenR_nk_textedit_redo, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "textedit_select_all", GenR_nk_textedit_select_all, MRB_ARGS_ANY());

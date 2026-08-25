@@ -14,6 +14,8 @@
 #include <box2d/box2d.h>
 #include <cJSON.h>
 #include <gtest/gtest.h>
+#include <fstream>
+#include <filesystem>
 
 #include <mruby/compile.h>
 #include <mruby/string.h>
@@ -1183,10 +1185,21 @@ TEST(GenLua, SdlLoadFileReadsAPathOutsideTheVfs)
 {
     // Grapple.read_file only sees the VFS; this is the escape hatch, and the
     // only way a Ruby script can read a file at all.
-    RunLua(
-        "local bytes = SDL.LoadFile('/Users/michaellong/projects/SDL3-static-extensions/tests/genbindings/genbindings_test.cpp')\n"
-        "assert(type(bytes) == 'string' and #bytes > 0)\n"
-        "assert(SDL.LoadFile('/no/such/file/anywhere') == nil)\n");
+    //
+    // The file is written here rather than named in the source: a path that
+    // exists on the machine the test was written on is not a test, it is a
+    // machine-specific assertion that passes locally and fails everywhere.
+    const std::filesystem::path file =
+        std::filesystem::temp_directory_path() / "grapple_loadfile_probe.txt";
+    std::ofstream(file) << "outside the vfs";
+
+    const std::string script =
+        "local bytes = SDL.LoadFile('" + file.string() + "')\n"
+        "assert(type(bytes) == 'string', 'expected a string, got ' .. type(bytes))\n"
+        "assert(bytes == 'outside the vfs', 'got [' .. tostring(bytes) .. ']')\n"
+        // nil rather than an error, so walking a candidate list needs no pcall.
+        "assert(SDL.LoadFile('/no/such/file/anywhere') == nil)\n";
+    RunLua(script.c_str());
 }
 
 // A script that registers callbacks and stops is describing a game, not
@@ -1229,4 +1242,123 @@ TEST(GenLua, RunClearsThePendingEngine)
     // Already run by the script, so the runner must not run it again.
     EXPECT_FALSE(Grapple_LuaRunPendingEngine(L));
     lua_close(L);
+}
+
+// The engine's own flags reach a script's engine. They were parsed and
+// discarded for as long as this project has had them, because nothing put
+// the process arguments into the config.
+
+TEST(GenLua, EngineFlagsFromTheCommandLineTakeEffect)
+{
+    lua_State *L = Grapple_CreateLuaState();
+    ASSERT_NE(L, nullptr);
+    ASSERT_TRUE(Grapple_OpenLuaBindings(L));
+
+    char arg0[] = "grapple";
+    char flag[] = "--max-fps";
+    char value[] = "37";
+    char *args[] = {arg0, flag, value};
+    Grapple_SetScriptProcessArgs(3, args);
+
+    ASSERT_EQ(luaL_dostring(L,
+                            "engine = Grapple.engine{ headless = true,"
+                            "                         auto_mount = false }\n"),
+              LUA_OK)
+        << lua_tostring(L, -1);
+
+    lua_getglobal(L, "engine");
+    Grapple_Engine *engine = Grapple_LuaEngineAt(L, -1);
+    ASSERT_NE(engine, nullptr);
+
+    const Grapple_GraphicsSettings *gfx = Grapple_EngineGraphics(engine);
+    ASSERT_NE(gfx, nullptr);
+    EXPECT_EQ(gfx->max_fps, 37) << "--max-fps never reached the engine";
+
+    Grapple_SetScriptProcessArgs(0, nullptr);
+    lua_close(L);
+}
+
+TEST(GenLua, AGameSettingSurvivesWhatThePlayerDidNotAskAbout)
+{
+    lua_State *L = Grapple_CreateLuaState();
+    ASSERT_NE(L, nullptr);
+    ASSERT_TRUE(Grapple_OpenLuaBindings(L));
+
+    // Only --max-fps is on the line, so the game's own tick rate must not be
+    // reset to a default by the settings pass.
+    char arg0[] = "grapple";
+    char flag[] = "--max-fps";
+    char value[] = "45";
+    char *args[] = {arg0, flag, value};
+    Grapple_SetScriptProcessArgs(3, args);
+
+    ASSERT_EQ(luaL_dostring(L,
+                            "engine = Grapple.engine{ headless = true, tick_rate = 120,"
+                            "                         auto_mount = false }\n"),
+              LUA_OK)
+        << lua_tostring(L, -1);
+
+    lua_getglobal(L, "engine");
+    Grapple_Engine *engine = Grapple_LuaEngineAt(L, -1);
+    ASSERT_NE(engine, nullptr);
+    EXPECT_EQ(Grapple_EngineTickRate(engine), 120);
+    EXPECT_EQ(Grapple_EngineGraphics(engine)->max_fps, 45);
+
+    Grapple_SetScriptProcessArgs(0, nullptr);
+    lua_close(L);
+}
+
+// Two shapes the generator used to reject outright, and which are ordinary
+// in both languages: a list of strings, and a read that fills a buffer.
+//
+// The directory is made here rather than pointed at somewhere in the repo:
+// ctest runs from the build tree, so a relative path is a different place
+// than it is from a shell.
+
+namespace {
+
+std::string MakeReadableDir()
+{
+    const std::filesystem::path dir =
+        std::filesystem::temp_directory_path() / "grapple_bindgen_reads";
+    std::filesystem::create_directories(dir);
+    std::ofstream(dir / "alpha.txt") << "0123456789abcdefghijklmnop";
+    std::ofstream(dir / "beta.txt") << "second";
+    return dir.string();
+}
+
+} // namespace
+
+TEST(GenLua, StringListReturnsBecomeATable)
+{
+    const std::string dir = MakeReadableDir();
+    const std::string script =
+        "assert(PHYSFS.init('grapple'))\n"
+        "assert(PHYSFS.mount('" + dir + "', '/p', 1) ~= 0)\n"
+        "local files = PHYSFS.enumerateFiles('/p')\n"
+        "assert(type(files) == 'table', 'expected a table, got ' .. type(files))\n"
+        "local found = {}\n"
+        "for _, name in ipairs(files) do found[name] = true end\n"
+        "assert(found['alpha.txt'] and found['beta.txt'], 'listing incomplete')\n"
+        // Freeing the array is the binding's job; a script has no way to.
+        "PHYSFS.deinit()\n";
+    RunLua(script.c_str());
+}
+
+TEST(GenLua, BufferReadsComeBackAsAString)
+{
+    const std::string dir = MakeReadableDir();
+    const std::string script =
+        "assert(PHYSFS.init('grapple'))\n"
+        "assert(PHYSFS.mount('" + dir + "', '/p', 1) ~= 0)\n"
+        "local file = PHYSFS.openRead('/p/alpha.txt')\n"
+        "assert(file ~= nil)\n"
+        "local head = PHYSFS.readBytes(file, 10)\n"
+        "assert(type(head) == 'string', 'expected a string, got ' .. type(head))\n"
+        // Exactly what was asked for, and the right bytes: a wrong length
+        // here would mean handing back the uninitialised tail of a buffer.
+        "assert(head == '0123456789', 'got [' .. tostring(head) .. ']')\n"
+        "PHYSFS.close(file)\n"
+        "PHYSFS.deinit()\n";
+    RunLua(script.c_str());
 }

@@ -24,6 +24,10 @@ class LibrarySpec:
     includes: list[str] = field(default_factory=list)  # emit-time #includes
     error_fn: str | None = None  # C expr returning const char* last error
     free_fn: str | None = None  # frees char* returns owned by the caller
+    # Frees a NULL-terminated char** the library handed back. SDL uses the
+    # same free() for both; PhysFS has a dedicated one, and calling the
+    # wrong one is a heap corruption rather than a compile error.
+    free_list_fn: str | None = None
     exclude: set[str] = field(default_factory=set)  # function names to skip
 
 
@@ -31,6 +35,7 @@ LIBRARIES: list[LibrarySpec] = [
     LibrarySpec(
         key="sdl",
         free_fn="SDL_free",
+        free_list_fn="SDL_free",
         title="SDL3 core",
         macro_style="sdl",
         script_module="SDL",
@@ -54,6 +59,7 @@ LIBRARIES: list[LibrarySpec] = [
     LibrarySpec(
         key="mix",
         free_fn="SDL_free",
+        free_list_fn="SDL_free",
         title="SDL_mixer",
         macro_style="sdl",
         script_module="MIX",
@@ -65,6 +71,7 @@ LIBRARIES: list[LibrarySpec] = [
     LibrarySpec(
         key="img",
         free_fn="SDL_free",
+        free_list_fn="SDL_free",
         title="SDL_image",
         macro_style="sdl",
         script_module="IMG",
@@ -76,6 +83,7 @@ LIBRARIES: list[LibrarySpec] = [
     LibrarySpec(
         key="ttf",
         free_fn="SDL_free",
+        free_list_fn="SDL_free",
         title="SDL_ttf",
         macro_style="sdl",
         script_module="TTF",
@@ -87,6 +95,7 @@ LIBRARIES: list[LibrarySpec] = [
     LibrarySpec(
         key="net",
         free_fn="SDL_free",
+        free_list_fn="SDL_free",
         title="SDL_net",
         macro_style="sdl",
         script_module="NET",
@@ -104,6 +113,8 @@ LIBRARIES: list[LibrarySpec] = [
         headers=["vfs/include/physfs.h"],
         includes=["<physfs.h>"],
         error_fn="PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())",
+        free_fn="PHYSFS_freeList",
+        free_list_fn="PHYSFS_freeList",
     ),
     LibrarySpec(
         key="b2",
@@ -176,6 +187,7 @@ LIBRARIES: list[LibrarySpec] = [
     LibrarySpec(
         key="grapple",
         free_fn="SDL_free",
+        free_list_fn="SDL_free",
         title="Grapple modules",
         macro_style="grapple",
         script_module="GrappleC",

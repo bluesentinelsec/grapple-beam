@@ -159,6 +159,22 @@ static int GenL_NET_Quit(lua_State *L)
     return 0;
 }
 
+static int GenL_NET_ReadFromStreamSocket(lua_State *L)
+{
+    (void)L;
+    NET_StreamSocket *a0 = (NET_StreamSocket *)GrappleGen_LuaCheckHandle(L, 1, "NET_StreamSocket");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    int rv = NET_ReadFromStreamSocket(a0, a1, (int)want1);
+    if (rv > 0) { lua_pushlstring(L, (const char *)a1, (size_t)rv); }
+    else { lua_pushnil(L); }
+    SDL_free(a1);
+    (void)want1;
+    return 1;
+}
+
 static int GenL_NET_RefAddress(lua_State *L)
 {
     (void)L;
@@ -276,7 +292,7 @@ static int GenL_NET_WriteToStreamSocket(lua_State *L)
 int GrappleGen_OpenLua_net(lua_State *L);
 int GrappleGen_OpenLua_net(lua_State *L)
 {
-    lua_createtable(L, 0, 27);
+    lua_createtable(L, 0, 28);
     lua_pushcfunction(L, GenL_NET_CompareAddresses);
     lua_setfield(L, -2, "CompareAddresses");
     lua_pushcfunction(L, GenL_NET_CreateClient);
@@ -307,6 +323,8 @@ int GrappleGen_OpenLua_net(lua_State *L)
     lua_setfield(L, -2, "Init");
     lua_pushcfunction(L, GenL_NET_Quit);
     lua_setfield(L, -2, "Quit");
+    lua_pushcfunction(L, GenL_NET_ReadFromStreamSocket);
+    lua_setfield(L, -2, "ReadFromStreamSocket");
     lua_pushcfunction(L, GenL_NET_RefAddress);
     lua_setfield(L, -2, "RefAddress");
     lua_pushcfunction(L, GenL_NET_ResolveHostname);

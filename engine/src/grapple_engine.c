@@ -238,6 +238,28 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
             config->fullscreen ? GRAPPLE_WINDOW_BORDERLESS : GRAPPLE_WINDOW_WINDOWED;
     }
 
+    /* The command line has the last word, whichever branch ran.
+     *
+     * The engine has always known how to parse --fullscreen, --window-size,
+     * --with-safe-mode and thirty others, and never read them unless the
+     * game separately called Grapple_GraphicsResolve and passed the result
+     * back in. That made the flags dead for every game that did not know to
+     * do it -- including all of this project's own demos. LoadArgs touches
+     * only the settings that actually appear on the line, so a game's own
+     * choices survive anything the player did not ask about.
+     *
+     * Applied here, before the window is created, so --window-size is a
+     * window size rather than an instruction arriving too late. */
+    if (config->argc > 1 && config->argv != NULL)
+    {
+        if (Grapple_GraphicsLoadArgs(&engine->graphics, config->argc, config->argv) > 0)
+        {
+            Grapple_GraphicsClamp(&engine->graphics);
+            engine->presentation = engine->graphics.presentation;
+            engine->max_fps = engine->graphics.max_fps;
+        }
+    }
+
     if (config->headless)
     {
         /* No window: a software renderer over a surface the size of the

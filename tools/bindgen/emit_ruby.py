@@ -209,6 +209,9 @@ class _RubyEmitter:
 
     def emit_stub(self, plan: ScriptPlan) -> None:
         fn = plan.fn
+        # Per-function state: one function's buffer must not be freed by the
+        # next one's return handling.
+        self.blob_out_var = None
         self.w(f"static mrb_value GenR_{fn.name}(mrb_state *mrb, mrb_value self)")
         self.w("{")
         self.w("    const mrb_value *argv = NULL;")
@@ -234,6 +237,20 @@ class _RubyEmitter:
                 continue
             v = f"a{i}"
             base = pp.info.base
+            if pp.mode == "blob_out":
+                # The script asks for a length; the buffer is ours, and what
+                # was actually read comes back as a String after the call.
+                self.w(f"    mrb_int want{i} = GrappleGen_RubyToInt(mrb, {argval(arg_n)});")
+                self.w(f"    if (want{i} < 0) {{ want{i} = 0; }}")
+                self.w(f"    void *{v} = (want{i} > 0) ? SDL_malloc((size_t)want{i}) : NULL;")
+                self.w(f"    if (want{i} > 0 && {v} == NULL) {{ mrb_raise(mrb, E_RUNTIME_ERROR, \"out of memory\"); }}")
+                call_args[i] = v
+                nxt = params[i + 1]
+                call_args[i + 1] = f"({nxt.type.spelling()})want{i}"
+                self.blob_out_var = (v, f"want{i}")
+                arg_n += 1
+                i += 2
+                continue
             if pp.mode == "blob_in":
                 self.w(f"    size_t len{i} = 0;")
                 self.w(f"    const char *{v} = GrappleGen_RubyToBlob(mrb, {argval(arg_n)}, &len{i});")
@@ -318,6 +335,15 @@ class _RubyEmitter:
         primary = None
         if ret.kind == TK.BOOL:
             primary = "mrb_bool_value((mrb_bool)(rv != 0))"
+        elif getattr(self, "blob_out_var", None) is not None and ret.kind == TK.INT:
+            # The return is a byte count, so it sizes the String: a short
+            # read must not expose the uninitialised tail of the buffer.
+            buf, want = self.blob_out_var
+            self.w("    mrb_value rblob = mrb_nil_value();")
+            self.w(f"    if (rv > 0) {{ rblob = mrb_str_new(mrb, (const char *){buf}, (size_t)rv); }}")
+            self.w(f"    SDL_free({buf});")
+            self.w(f"    (void){want};")
+            primary = "rblob"
         elif ret.kind in (TK.INT, TK.ENUM):
             primary = "mrb_int_value(mrb, (mrb_int)rv)"
         elif ret.kind == TK.FLOAT:
@@ -328,6 +354,18 @@ class _RubyEmitter:
             self.w("    mrb_value rstr = rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv);")
             self.w(f"    if (rv != NULL) {{ {self.lib.free_fn}(rv); }}")
             primary = "rstr"
+        elif ret.kind == TK.STRING_LIST:
+            # A NULL-terminated char** becomes an Array, and the library
+            # frees the array afterwards: a script has no way to.
+            self.w("    mrb_value rlist = mrb_nil_value();")
+            self.w("    if (rv != NULL) {")
+            self.w("        rlist = mrb_ary_new(mrb);")
+            self.w("        for (int li = 0; rv[li] != NULL; ++li) {")
+            self.w("            mrb_ary_push(mrb, rlist, mrb_str_new_cstr(mrb, rv[li]));")
+            self.w("        }")
+            self.w(f"        {self.lib.free_list_fn}((void *)rv);")
+            self.w("    }")
+            primary = "rlist"
         elif ret.kind == TK.POD:
             primary = f"GenPush_{ret.base}(mrb, &rv)"
         elif ret.kind == TK.HANDLE:
@@ -367,6 +405,8 @@ class _RubyEmitter:
             return f"{const}{self._handle_ref(ret.base)} *"
         if ret.kind == TK.STRING:
             return "const char *"
+        if ret.kind == TK.STRING_LIST:
+            return "char **"
         if ret.kind == TK.OWNED_STRING:
             return "char *"
         if ret.kind == TK.POD:

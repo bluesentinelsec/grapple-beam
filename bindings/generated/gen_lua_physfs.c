@@ -80,6 +80,22 @@ static int GenL_PHYSFS_deregisterArchiver(lua_State *L)
     return 1;
 }
 
+static int GenL_PHYSFS_enumerateFiles(lua_State *L)
+{
+    (void)L;
+    const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
+    char ** rv = PHYSFS_enumerateFiles(a0);
+    if (rv == NULL) { lua_pushnil(L); } else {
+        lua_newtable(L);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            lua_pushstring(L, rv[li]);
+            lua_rawseti(L, -2, li + 1);
+        }
+        PHYSFS_freeList((void *)rv);
+    }
+    return 1;
+}
+
 static int GenL_PHYSFS_eof(lua_State *L)
 {
     (void)L;
@@ -129,6 +145,21 @@ static int GenL_PHYSFS_getBaseDir(lua_State *L)
     (void)L;
     const char * rv = PHYSFS_getBaseDir();
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
+    return 1;
+}
+
+static int GenL_PHYSFS_getCdRomDirs(lua_State *L)
+{
+    (void)L;
+    char ** rv = PHYSFS_getCdRomDirs();
+    if (rv == NULL) { lua_pushnil(L); } else {
+        lua_newtable(L);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            lua_pushstring(L, rv[li]);
+            lua_rawseti(L, -2, li + 1);
+        }
+        PHYSFS_freeList((void *)rv);
+    }
     return 1;
 }
 
@@ -192,6 +223,21 @@ static int GenL_PHYSFS_getRealDir(lua_State *L)
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
     const char * rv = PHYSFS_getRealDir(a0);
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
+    return 1;
+}
+
+static int GenL_PHYSFS_getSearchPath(lua_State *L)
+{
+    (void)L;
+    char ** rv = PHYSFS_getSearchPath();
+    if (rv == NULL) { lua_pushnil(L); } else {
+        lua_newtable(L);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            lua_pushstring(L, rv[li]);
+            lua_rawseti(L, -2, li + 1);
+        }
+        PHYSFS_freeList((void *)rv);
+    }
     return 1;
 }
 
@@ -297,6 +343,22 @@ static int GenL_PHYSFS_permitSymbolicLinks(lua_State *L)
     int a0 = (int)luaL_checkinteger(L, 1);
     PHYSFS_permitSymbolicLinks(a0);
     return 0;
+}
+
+static int GenL_PHYSFS_readBytes(lua_State *L)
+{
+    (void)L;
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_LuaCheckHandle(L, 1, "PHYSFS_File");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    PHYSFS_sint64 rv = PHYSFS_readBytes(a0, a1, (PHYSFS_uint64)want1);
+    if (rv > 0) { lua_pushlstring(L, (const char *)a1, (size_t)rv); }
+    else { lua_pushnil(L); }
+    SDL_free(a1);
+    (void)want1;
+    return 1;
 }
 
 static int GenL_PHYSFS_readSBE16(lua_State *L)
@@ -844,7 +906,7 @@ static int GenL_PHYSFS_writeULE64(lua_State *L)
 int GrappleGen_OpenLua_physfs(lua_State *L);
 int GrappleGen_OpenLua_physfs(lua_State *L)
 {
-    lua_createtable(L, 0, 83);
+    lua_createtable(L, 0, 87);
     lua_pushcfunction(L, GenL_PHYSFS_caseFold);
     lua_setfield(L, -2, "caseFold");
     lua_pushcfunction(L, GenL_PHYSFS_close);
@@ -855,6 +917,8 @@ int GrappleGen_OpenLua_physfs(lua_State *L)
     lua_setfield(L, -2, "delete");
     lua_pushcfunction(L, GenL_PHYSFS_deregisterArchiver);
     lua_setfield(L, -2, "deregisterArchiver");
+    lua_pushcfunction(L, GenL_PHYSFS_enumerateFiles);
+    lua_setfield(L, -2, "enumerateFiles");
     lua_pushcfunction(L, GenL_PHYSFS_eof);
     lua_setfield(L, -2, "eof");
     lua_pushcfunction(L, GenL_PHYSFS_exists);
@@ -867,6 +931,8 @@ int GrappleGen_OpenLua_physfs(lua_State *L)
     lua_setfield(L, -2, "getAllocator");
     lua_pushcfunction(L, GenL_PHYSFS_getBaseDir);
     lua_setfield(L, -2, "getBaseDir");
+    lua_pushcfunction(L, GenL_PHYSFS_getCdRomDirs);
+    lua_setfield(L, -2, "getCdRomDirs");
     lua_pushcfunction(L, GenL_PHYSFS_getDirSeparator);
     lua_setfield(L, -2, "getDirSeparator");
     lua_pushcfunction(L, GenL_PHYSFS_getErrorByCode);
@@ -881,6 +947,8 @@ int GrappleGen_OpenLua_physfs(lua_State *L)
     lua_setfield(L, -2, "getPrefDir");
     lua_pushcfunction(L, GenL_PHYSFS_getRealDir);
     lua_setfield(L, -2, "getRealDir");
+    lua_pushcfunction(L, GenL_PHYSFS_getSearchPath);
+    lua_setfield(L, -2, "getSearchPath");
     lua_pushcfunction(L, GenL_PHYSFS_getWriteDir);
     lua_setfield(L, -2, "getWriteDir");
     lua_pushcfunction(L, GenL_PHYSFS_init);
@@ -903,6 +971,8 @@ int GrappleGen_OpenLua_physfs(lua_State *L)
     lua_setfield(L, -2, "openWrite");
     lua_pushcfunction(L, GenL_PHYSFS_permitSymbolicLinks);
     lua_setfield(L, -2, "permitSymbolicLinks");
+    lua_pushcfunction(L, GenL_PHYSFS_readBytes);
+    lua_setfield(L, -2, "readBytes");
     lua_pushcfunction(L, GenL_PHYSFS_readSBE16);
     lua_setfield(L, -2, "readSBE16");
     lua_pushcfunction(L, GenL_PHYSFS_readSBE32);

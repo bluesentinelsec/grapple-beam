@@ -157,6 +157,24 @@ accepts are `title`, `window`, `design`, `presentation`, `resizable`,
 `high_dpi`, `fullscreen`, `vsync`, `max_fps`, `tick_rate`, `auto_mount`,
 `headless`, `media`, `font_size` and `backend`.
 
+### The engine's own flags reach your game
+
+`grapple` divides its command line three ways:
+
+```sh
+grapple --fullscreen game.lua -- --level 3
+#       ^engine        ^script    ^your game's own
+```
+
+Anything starting with `-` that the runner does not claim is the engine's —
+`--fullscreen`, `--window-size 1280x720`, `--max-fps`, `--with-safe-mode`
+and the rest — and `Grapple.engine{...}` passes them on, so they take
+effect. Settings the player did not mention are left alone, so a game's own
+`tick_rate` survives a `--max-fps` on the line.
+
+Everything after the script name (or after a bare `--`) reaches the script:
+`arg` in Lua, `ARGV` in Ruby.
+
 ### You do not have to start the loop
 
 A script that registers callbacks and stops is describing a game, so the

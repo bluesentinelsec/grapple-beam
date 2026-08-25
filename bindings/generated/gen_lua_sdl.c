@@ -2286,6 +2286,22 @@ static int GenL_SDL_GetAudioStreamAvailable(lua_State *L)
     return 1;
 }
 
+static int GenL_SDL_GetAudioStreamData(lua_State *L)
+{
+    (void)L;
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_AudioStream");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    int rv = SDL_GetAudioStreamData(a0, a1, (int)want1);
+    if (rv > 0) { lua_pushlstring(L, (const char *)a1, (size_t)rv); }
+    else { lua_pushnil(L); }
+    SDL_free(a1);
+    (void)want1;
+    return 1;
+}
+
 static int GenL_SDL_GetAudioStreamDevice(lua_State *L)
 {
     (void)L;
@@ -2437,6 +2453,23 @@ static int GenL_SDL_GetCameraProperties(lua_State *L)
     SDL_PropertiesID rv = SDL_GetCameraProperties(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
+}
+
+static int GenL_SDL_GetClipboardMimeTypes(lua_State *L)
+{
+    (void)L;
+    size_t io0 = (size_t)luaL_optinteger(L, 1, 0);
+    char ** rv = SDL_GetClipboardMimeTypes(&io0);
+    if (rv == NULL) { lua_pushnil(L); } else {
+        lua_newtable(L);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            lua_pushstring(L, rv[li]);
+            lua_rawseti(L, -2, li + 1);
+        }
+        SDL_free((void *)rv);
+    }
+    lua_pushinteger(L, (lua_Integer)io0);
+    return 2;
 }
 
 static int GenL_SDL_GetClipboardText(lua_State *L)
@@ -2722,6 +2755,22 @@ static int GenL_SDL_GetEnvironmentVariable(lua_State *L)
     return 1;
 }
 
+static int GenL_SDL_GetEnvironmentVariables(lua_State *L)
+{
+    (void)L;
+    SDL_Environment *a0 = (SDL_Environment *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Environment");
+    char ** rv = SDL_GetEnvironmentVariables(a0);
+    if (rv == NULL) { lua_pushnil(L); } else {
+        lua_newtable(L);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            lua_pushstring(L, rv[li]);
+            lua_rawseti(L, -2, li + 1);
+        }
+        SDL_free((void *)rv);
+    }
+    return 1;
+}
+
 static int GenL_SDL_GetError(lua_State *L)
 {
     (void)L;
@@ -2988,6 +3037,23 @@ static int GenL_SDL_GetGamepadMappingForID(lua_State *L)
     if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
     if (rv != NULL) { SDL_free(rv); }
     return 1;
+}
+
+static int GenL_SDL_GetGamepadMappings(lua_State *L)
+{
+    (void)L;
+    int io0 = (int)luaL_optinteger(L, 1, 0);
+    char ** rv = SDL_GetGamepadMappings(&io0);
+    if (rv == NULL) { lua_pushnil(L); } else {
+        lua_newtable(L);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            lua_pushstring(L, rv[li]);
+            lua_rawseti(L, -2, li + 1);
+        }
+        SDL_free((void *)rv);
+    }
+    lua_pushinteger(L, (lua_Integer)io0);
+    return 2;
 }
 
 static int GenL_SDL_GetGamepadName(lua_State *L)
@@ -5406,6 +5472,47 @@ static int GenL_SDL_GetWindowTitle(lua_State *L)
     return 1;
 }
 
+static int GenL_SDL_GlobDirectory(lua_State *L)
+{
+    (void)L;
+    const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
+    const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
+    SDL_GlobFlags a2 = (SDL_GlobFlags)luaL_checkinteger(L, 3);
+    int io3 = (int)luaL_optinteger(L, 4, 0);
+    char ** rv = SDL_GlobDirectory(a0, a1, a2, &io3);
+    if (rv == NULL) { lua_pushnil(L); } else {
+        lua_newtable(L);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            lua_pushstring(L, rv[li]);
+            lua_rawseti(L, -2, li + 1);
+        }
+        SDL_free((void *)rv);
+    }
+    lua_pushinteger(L, (lua_Integer)io3);
+    return 2;
+}
+
+static int GenL_SDL_GlobStorageDirectory(lua_State *L)
+{
+    (void)L;
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Storage");
+    const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
+    const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checkstring(L, 3);
+    SDL_GlobFlags a3 = (SDL_GlobFlags)luaL_checkinteger(L, 4);
+    int io4 = (int)luaL_optinteger(L, 5, 0);
+    char ** rv = SDL_GlobStorageDirectory(a0, a1, a2, a3, &io4);
+    if (rv == NULL) { lua_pushnil(L); } else {
+        lua_newtable(L);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            lua_pushstring(L, rv[li]);
+            lua_rawseti(L, -2, li + 1);
+        }
+        SDL_free((void *)rv);
+    }
+    lua_pushinteger(L, (lua_Integer)io4);
+    return 2;
+}
+
 static int GenL_SDL_HapticEffectSupported(lua_State *L)
 {
     (void)L;
@@ -5712,6 +5819,18 @@ static int GenL_SDL_IOFromFile(lua_State *L)
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     SDL_IOStream * rv = SDL_IOFromFile(a0, a1);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_IOStream", GenDtor_SDL_CloseIO);
+    return 1;
+}
+
+static int GenL_SDL_IOFromMem(lua_State *L)
+{
+    (void)L;
+    lua_Integer want0 = luaL_checkinteger(L, 1);
+    if (want0 < 0) { want0 = 0; }
+    void *a0 = (want0 > 0) ? SDL_malloc((size_t)want0) : NULL;
+    if (want0 > 0 && a0 == NULL) { return luaL_error(L, "out of memory"); }
+    SDL_IOStream * rv = SDL_IOFromMem(a0, (size_t)want0);
     GrappleGen_LuaPushOwned(L, (void *)rv, "SDL_IOStream", GenDtor_SDL_CloseIO);
     return 1;
 }
@@ -6403,6 +6522,22 @@ static int GenL_SDL_RaiseWindow(lua_State *L)
     return 1;
 }
 
+static int GenL_SDL_ReadIO(lua_State *L)
+{
+    (void)L;
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_LuaCheckHandle(L, 1, "SDL_IOStream");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    size_t rv = SDL_ReadIO(a0, a1, (size_t)want1);
+    if (rv > 0) { lua_pushlstring(L, (const char *)a1, (size_t)rv); }
+    else { lua_pushnil(L); }
+    SDL_free(a1);
+    (void)want1;
+    return 1;
+}
+
 static int GenL_SDL_ReadS16BE(lua_State *L)
 {
     (void)L;
@@ -6478,6 +6613,20 @@ static int GenL_SDL_ReadS8(lua_State *L)
     lua_pushboolean(L, (int)rv);
     lua_pushinteger(L, (lua_Integer)io1);
     return 2;
+}
+
+static int GenL_SDL_ReadStorageFile(lua_State *L)
+{
+    (void)L;
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Storage");
+    const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
+    lua_Integer want2 = luaL_checkinteger(L, 3);
+    if (want2 < 0) { want2 = 0; }
+    void *a2 = (want2 > 0) ? SDL_malloc((size_t)want2) : NULL;
+    if (want2 > 0 && a2 == NULL) { return luaL_error(L, "out of memory"); }
+    bool rv = SDL_ReadStorageFile(a0, a1, a2, (Uint64)want2);
+    lua_pushboolean(L, (int)rv);
+    return 1;
 }
 
 static int GenL_SDL_ReadSurfacePixel(lua_State *L)
@@ -9421,12 +9570,60 @@ static int GenL_SDL_hid_get_device_info(lua_State *L)
     return 1;
 }
 
+static int GenL_SDL_hid_get_feature_report(lua_State *L)
+{
+    (void)L;
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_LuaCheckHandle(L, 1, "SDL_hid_device");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    int rv = SDL_hid_get_feature_report(a0, a1, (size_t)want1);
+    if (rv > 0) { lua_pushlstring(L, (const char *)a1, (size_t)rv); }
+    else { lua_pushnil(L); }
+    SDL_free(a1);
+    (void)want1;
+    return 1;
+}
+
+static int GenL_SDL_hid_get_input_report(lua_State *L)
+{
+    (void)L;
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_LuaCheckHandle(L, 1, "SDL_hid_device");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    int rv = SDL_hid_get_input_report(a0, a1, (size_t)want1);
+    if (rv > 0) { lua_pushlstring(L, (const char *)a1, (size_t)rv); }
+    else { lua_pushnil(L); }
+    SDL_free(a1);
+    (void)want1;
+    return 1;
+}
+
 static int GenL_SDL_hid_get_properties(lua_State *L)
 {
     (void)L;
     SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_LuaCheckHandle(L, 1, "SDL_hid_device");
     SDL_PropertiesID rv = SDL_hid_get_properties(a0);
     lua_pushinteger(L, (lua_Integer)rv);
+    return 1;
+}
+
+static int GenL_SDL_hid_get_report_descriptor(lua_State *L)
+{
+    (void)L;
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_LuaCheckHandle(L, 1, "SDL_hid_device");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    int rv = SDL_hid_get_report_descriptor(a0, a1, (size_t)want1);
+    if (rv > 0) { lua_pushlstring(L, (const char *)a1, (size_t)rv); }
+    else { lua_pushnil(L); }
+    SDL_free(a1);
+    (void)want1;
     return 1;
 }
 
@@ -9444,6 +9641,39 @@ static int GenL_SDL_hid_open_path(lua_State *L)
     const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
     SDL_hid_device * rv = SDL_hid_open_path(a0);
     GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_hid_device");
+    return 1;
+}
+
+static int GenL_SDL_hid_read(lua_State *L)
+{
+    (void)L;
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_LuaCheckHandle(L, 1, "SDL_hid_device");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    int rv = SDL_hid_read(a0, a1, (size_t)want1);
+    if (rv > 0) { lua_pushlstring(L, (const char *)a1, (size_t)rv); }
+    else { lua_pushnil(L); }
+    SDL_free(a1);
+    (void)want1;
+    return 1;
+}
+
+static int GenL_SDL_hid_read_timeout(lua_State *L)
+{
+    (void)L;
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_LuaCheckHandle(L, 1, "SDL_hid_device");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    int a3 = (int)luaL_checkinteger(L, 3);
+    int rv = SDL_hid_read_timeout(a0, a1, (size_t)want1, a3);
+    if (rv > 0) { lua_pushlstring(L, (const char *)a1, (size_t)rv); }
+    else { lua_pushnil(L); }
+    SDL_free(a1);
+    (void)want1;
     return 1;
 }
 
@@ -9534,7 +9764,7 @@ static int GenL_SDL_utf8strnlen(lua_State *L)
 int GrappleGen_OpenLua_sdl(lua_State *L);
 int GrappleGen_OpenLua_sdl(lua_State *L)
 {
-    lua_createtable(L, 0, 874);
+    lua_createtable(L, 0, 888);
     lua_pushcfunction(L, GenL_SDL_AcquireCameraFrame);
     lua_setfield(L, -2, "AcquireCameraFrame");
     lua_pushcfunction(L, GenL_SDL_AcquireGPUCommandBuffer);
@@ -9887,6 +10117,8 @@ int GrappleGen_OpenLua_sdl(lua_State *L)
     lua_setfield(L, -2, "GetAudioFormatName");
     lua_pushcfunction(L, GenL_SDL_GetAudioStreamAvailable);
     lua_setfield(L, -2, "GetAudioStreamAvailable");
+    lua_pushcfunction(L, GenL_SDL_GetAudioStreamData);
+    lua_setfield(L, -2, "GetAudioStreamData");
     lua_pushcfunction(L, GenL_SDL_GetAudioStreamDevice);
     lua_setfield(L, -2, "GetAudioStreamDevice");
     lua_pushcfunction(L, GenL_SDL_GetAudioStreamFormat);
@@ -9919,6 +10151,8 @@ int GrappleGen_OpenLua_sdl(lua_State *L)
     lua_setfield(L, -2, "GetCameraPosition");
     lua_pushcfunction(L, GenL_SDL_GetCameraProperties);
     lua_setfield(L, -2, "GetCameraProperties");
+    lua_pushcfunction(L, GenL_SDL_GetClipboardMimeTypes);
+    lua_setfield(L, -2, "GetClipboardMimeTypes");
     lua_pushcfunction(L, GenL_SDL_GetClipboardText);
     lua_setfield(L, -2, "GetClipboardText");
     lua_pushcfunction(L, GenL_SDL_GetClosestFullscreenDisplayMode);
@@ -9975,6 +10209,8 @@ int GrappleGen_OpenLua_sdl(lua_State *L)
     lua_setfield(L, -2, "GetEnvironment");
     lua_pushcfunction(L, GenL_SDL_GetEnvironmentVariable);
     lua_setfield(L, -2, "GetEnvironmentVariable");
+    lua_pushcfunction(L, GenL_SDL_GetEnvironmentVariables);
+    lua_setfield(L, -2, "GetEnvironmentVariables");
     lua_pushcfunction(L, GenL_SDL_GetError);
     lua_setfield(L, -2, "GetError");
     lua_pushcfunction(L, GenL_SDL_GetEventDescription);
@@ -10031,6 +10267,8 @@ int GrappleGen_OpenLua_sdl(lua_State *L)
     lua_setfield(L, -2, "GetGamepadMappingForGUID");
     lua_pushcfunction(L, GenL_SDL_GetGamepadMappingForID);
     lua_setfield(L, -2, "GetGamepadMappingForID");
+    lua_pushcfunction(L, GenL_SDL_GetGamepadMappings);
+    lua_setfield(L, -2, "GetGamepadMappings");
     lua_pushcfunction(L, GenL_SDL_GetGamepadName);
     lua_setfield(L, -2, "GetGamepadName");
     lua_pushcfunction(L, GenL_SDL_GetGamepadNameForID);
@@ -10493,6 +10731,10 @@ int GrappleGen_OpenLua_sdl(lua_State *L)
     lua_setfield(L, -2, "GetWindowSurfaceVSync");
     lua_pushcfunction(L, GenL_SDL_GetWindowTitle);
     lua_setfield(L, -2, "GetWindowTitle");
+    lua_pushcfunction(L, GenL_SDL_GlobDirectory);
+    lua_setfield(L, -2, "GlobDirectory");
+    lua_pushcfunction(L, GenL_SDL_GlobStorageDirectory);
+    lua_setfield(L, -2, "GlobStorageDirectory");
     lua_pushcfunction(L, GenL_SDL_HapticEffectSupported);
     lua_setfield(L, -2, "HapticEffectSupported");
     lua_pushcfunction(L, GenL_SDL_HapticRumbleSupported);
@@ -10561,6 +10803,8 @@ int GrappleGen_OpenLua_sdl(lua_State *L)
     lua_setfield(L, -2, "IOFromDynamicMem");
     lua_pushcfunction(L, GenL_SDL_IOFromFile);
     lua_setfield(L, -2, "IOFromFile");
+    lua_pushcfunction(L, GenL_SDL_IOFromMem);
+    lua_setfield(L, -2, "IOFromMem");
     lua_pushcfunction(L, GenL_SDL_Init);
     lua_setfield(L, -2, "Init");
     lua_pushcfunction(L, GenL_SDL_InitHapticRumble);
@@ -10705,6 +10949,8 @@ int GrappleGen_OpenLua_sdl(lua_State *L)
     lua_setfield(L, -2, "QuitSubSystem");
     lua_pushcfunction(L, GenL_SDL_RaiseWindow);
     lua_setfield(L, -2, "RaiseWindow");
+    lua_pushcfunction(L, GenL_SDL_ReadIO);
+    lua_setfield(L, -2, "ReadIO");
     lua_pushcfunction(L, GenL_SDL_ReadS16BE);
     lua_setfield(L, -2, "ReadS16BE");
     lua_pushcfunction(L, GenL_SDL_ReadS16LE);
@@ -10719,6 +10965,8 @@ int GrappleGen_OpenLua_sdl(lua_State *L)
     lua_setfield(L, -2, "ReadS64LE");
     lua_pushcfunction(L, GenL_SDL_ReadS8);
     lua_setfield(L, -2, "ReadS8");
+    lua_pushcfunction(L, GenL_SDL_ReadStorageFile);
+    lua_setfield(L, -2, "ReadStorageFile");
     lua_pushcfunction(L, GenL_SDL_ReadSurfacePixel);
     lua_setfield(L, -2, "ReadSurfacePixel");
     lua_pushcfunction(L, GenL_SDL_ReadSurfacePixelFloat);
@@ -11261,12 +11509,22 @@ int GrappleGen_OpenLua_sdl(lua_State *L)
     lua_setfield(L, -2, "hid_free_enumeration");
     lua_pushcfunction(L, GenL_SDL_hid_get_device_info);
     lua_setfield(L, -2, "hid_get_device_info");
+    lua_pushcfunction(L, GenL_SDL_hid_get_feature_report);
+    lua_setfield(L, -2, "hid_get_feature_report");
+    lua_pushcfunction(L, GenL_SDL_hid_get_input_report);
+    lua_setfield(L, -2, "hid_get_input_report");
     lua_pushcfunction(L, GenL_SDL_hid_get_properties);
     lua_setfield(L, -2, "hid_get_properties");
+    lua_pushcfunction(L, GenL_SDL_hid_get_report_descriptor);
+    lua_setfield(L, -2, "hid_get_report_descriptor");
     lua_pushcfunction(L, GenL_SDL_hid_init);
     lua_setfield(L, -2, "hid_init");
     lua_pushcfunction(L, GenL_SDL_hid_open_path);
     lua_setfield(L, -2, "hid_open_path");
+    lua_pushcfunction(L, GenL_SDL_hid_read);
+    lua_setfield(L, -2, "hid_read");
+    lua_pushcfunction(L, GenL_SDL_hid_read_timeout);
+    lua_setfield(L, -2, "hid_read_timeout");
     lua_pushcfunction(L, GenL_SDL_hid_send_feature_report);
     lua_setfield(L, -2, "hid_send_feature_report");
     lua_pushcfunction(L, GenL_SDL_hid_set_nonblocking);

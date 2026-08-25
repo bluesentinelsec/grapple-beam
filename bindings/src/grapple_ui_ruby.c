@@ -406,6 +406,9 @@ static mrb_value REngineNew(mrb_state *mrb, mrb_value self)
     config.tick_rate = OptInt(mrb, options, "tick_rate", 0);
     config.media_path = OptString(mrb, options, "media", NULL);
 
+    /* The engine's own flags arrive here from the runner's command line. */
+    Grapple_ScriptProcessArgs(&config.argc, (char ***)&config.argv);
+
     Grapple_Engine *engine = Grapple_CreateEngine(&config);
     if (engine == NULL)
     {

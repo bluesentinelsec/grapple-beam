@@ -27,8 +27,18 @@
 
 static int Usage(void)
 {
-    fprintf(stderr, "usage: grapple [-l <lua|ruby>] [-e code] [script] [args...]\n");
-    fprintf(stderr, "       the language is inferred from a .lua or .rb script\n");
+    fprintf(stderr,
+            "usage: grapple [runner options] [engine options] [script] [-- args...]\n"
+            "\n"
+            "Runner:\n"
+            "  -l <lua|ruby>   language; inferred from a .lua or .rb script\n"
+            "  -e <code>       run a string instead of a file\n"
+            "  -h, --help      this text\n"
+            "  -V, --version   version\n"
+            "\n"
+            "Engine options (--fullscreen, --window-size WxH, --max-fps, --with-safe-mode\n"
+            "and others) are passed through to the engine the script creates.\n"
+            "Arguments after -- reach the script as `arg` (Lua) or ARGV (Ruby).\n");
     return 2;
 }
 
@@ -190,8 +200,27 @@ int main(int argc, char **argv)
     const char *script = NULL;
     int script_args_at = argc;
 
+    /* Three kinds of argument, and they were previously all one kind.
+     *
+     *   grapple --fullscreen game.lua -- --level 3
+     *           ^engine        ^script    ^the game's own
+     *
+     * Anything starting with '-' that this runner does not claim belongs to
+     * the engine — it parses --fullscreen, --window-size and thirty-odd
+     * others, and used to never see them because the first such argument was
+     * taken to be the script path. Everything after the script (or after a
+     * bare --) belongs to the game, and reaches it as `arg` / ARGV. */
+    char *engine_args[64];
+    int engine_argc = 0;
+    engine_args[engine_argc++] = argv[0];
+
     for (int i = 1; i < argc; ++i)
     {
+        if (strcmp(argv[i], "--") == 0)
+        {
+            script_args_at = i + 1;
+            break;
+        }
         if (strcmp(argv[i], "-l") == 0 && i + 1 < argc)
         {
             language = argv[++i];
@@ -200,13 +229,47 @@ int main(int argc, char **argv)
         {
             code = argv[++i];
         }
+        else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0)
+        {
+            Usage();
+            return 0;
+        }
+        else if (strcmp(argv[i], "-V") == 0 || strcmp(argv[i], "--version") == 0)
+        {
+            printf("grapple %s\n", GRAPPLE_BEAM_VERSION);
+            return 0;
+        }
+        else if (argv[i][0] == '-' && argv[i][1] != '\0')
+        {
+            /* The engine's. A value that does not itself look like a flag
+               comes with it, so `--window-size 640x360` stays together. */
+            if (engine_argc < (int)(sizeof(engine_args) / sizeof(engine_args[0])) - 2)
+            {
+                engine_args[engine_argc++] = argv[i];
+                if (i + 1 < argc && argv[i + 1][0] != '-')
+                {
+                    engine_args[engine_argc++] = argv[++i];
+                }
+            }
+        }
         else
         {
             script = argv[i];
             script_args_at = i + 1;
+            /* `game.lua -- --level 3` and `game.lua --level 3` should reach
+               the script the same way: the separator is punctuation between
+               two argument lists, not one of the arguments. */
+            if (script_args_at < argc && strcmp(argv[script_args_at], "--") == 0)
+            {
+                script_args_at++;
+            }
             break;
         }
     }
+
+    /* Handed to the engine a script builds, so the flags above actually do
+       something. Without this they parse and are discarded. */
+    Grapple_SetScriptProcessArgs(engine_argc, engine_args);
     /* `repl game.lua` should run the game. Requiring -l for a file whose
        extension already says which language it is makes the common case
        type more to say less; an explicit -l still wins, for a script with

@@ -257,6 +257,11 @@ static int LEngineNew(lua_State *L)
     config.tick_rate = OptInt(L, 1, "tick_rate", 0);
     config.media_path = OptString(L, 1, "media", NULL);
 
+    /* The engine's own flags — --fullscreen, --with-safe-mode, the rest —
+       arrive here from the runner's command line. A game that ignores
+       --with-safe-mode is a game a player cannot rescue. */
+    Grapple_ScriptProcessArgs(&config.argc, (char ***)&config.argv);
+
     Grapple_Engine *engine = Grapple_CreateEngine(&config);
     if (engine == NULL)
     {

@@ -95,6 +95,27 @@ static mrb_value GenR_PHYSFS_deregisterArchiver(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_PHYSFS_enumerateFiles(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    char ** rv = PHYSFS_enumerateFiles(a0);
+    mrb_value rlist = mrb_nil_value();
+    if (rv != NULL) {
+        rlist = mrb_ary_new(mrb);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            mrb_ary_push(mrb, rlist, mrb_str_new_cstr(mrb, rv[li]));
+        }
+        PHYSFS_freeList((void *)rv);
+    }
+    return rlist;
+    }
+}
+
 static mrb_value GenR_PHYSFS_eof(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -168,6 +189,26 @@ static mrb_value GenR_PHYSFS_getBaseDir(mrb_state *mrb, mrb_value self)
     {
     const char * rv = PHYSFS_getBaseDir();
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
+    }
+}
+
+static mrb_value GenR_PHYSFS_getCdRomDirs(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    char ** rv = PHYSFS_getCdRomDirs();
+    mrb_value rlist = mrb_nil_value();
+    if (rv != NULL) {
+        rlist = mrb_ary_new(mrb);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            mrb_ary_push(mrb, rlist, mrb_str_new_cstr(mrb, rv[li]));
+        }
+        PHYSFS_freeList((void *)rv);
+    }
+    return rlist;
     }
 }
 
@@ -259,6 +300,26 @@ static mrb_value GenR_PHYSFS_getRealDir(mrb_state *mrb, mrb_value self)
     const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char * rv = PHYSFS_getRealDir(a0);
     return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
+    }
+}
+
+static mrb_value GenR_PHYSFS_getSearchPath(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    char ** rv = PHYSFS_getSearchPath();
+    mrb_value rlist = mrb_nil_value();
+    if (rv != NULL) {
+        rlist = mrb_ary_new(mrb);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            mrb_ary_push(mrb, rlist, mrb_str_new_cstr(mrb, rv[li]));
+        }
+        PHYSFS_freeList((void *)rv);
+    }
+    return rlist;
     }
 }
 
@@ -408,6 +469,27 @@ static mrb_value GenR_PHYSFS_permitSymbolicLinks(mrb_state *mrb, mrb_value self)
     int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     PHYSFS_permitSymbolicLinks(a0);
     return mrb_nil_value();
+    }
+}
+
+static mrb_value GenR_PHYSFS_readBytes(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    PHYSFS_File *a0 = (PHYSFS_File *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "PHYSFS_File");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    PHYSFS_sint64 rv = PHYSFS_readBytes(a0, a1, (PHYSFS_uint64)want1);
+    mrb_value rblob = mrb_nil_value();
+    if (rv > 0) { rblob = mrb_str_new(mrb, (const char *)a1, (size_t)rv); }
+    SDL_free(a1);
+    (void)want1;
+    return rblob;
     }
 }
 
@@ -1208,12 +1290,14 @@ void GrappleGen_OpenRuby_physfs(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "deinit", GenR_PHYSFS_deinit, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "delete", GenR_PHYSFS_delete, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "deregisterArchiver", GenR_PHYSFS_deregisterArchiver, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "enumerateFiles", GenR_PHYSFS_enumerateFiles, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "eof", GenR_PHYSFS_eof, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "exists", GenR_PHYSFS_exists, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "fileLength", GenR_PHYSFS_fileLength, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "flush", GenR_PHYSFS_flush, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "getAllocator", GenR_PHYSFS_getAllocator, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "getBaseDir", GenR_PHYSFS_getBaseDir, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "getCdRomDirs", GenR_PHYSFS_getCdRomDirs, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "getDirSeparator", GenR_PHYSFS_getDirSeparator, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "getErrorByCode", GenR_PHYSFS_getErrorByCode, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "getLastErrorCode", GenR_PHYSFS_getLastErrorCode, MRB_ARGS_ANY());
@@ -1221,6 +1305,7 @@ void GrappleGen_OpenRuby_physfs(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "getMountPoint", GenR_PHYSFS_getMountPoint, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "getPrefDir", GenR_PHYSFS_getPrefDir, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "getRealDir", GenR_PHYSFS_getRealDir, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "getSearchPath", GenR_PHYSFS_getSearchPath, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "getWriteDir", GenR_PHYSFS_getWriteDir, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "init", GenR_PHYSFS_init, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "isInit", GenR_PHYSFS_isInit, MRB_ARGS_ANY());
@@ -1232,6 +1317,7 @@ void GrappleGen_OpenRuby_physfs(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "openRead", GenR_PHYSFS_openRead, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "openWrite", GenR_PHYSFS_openWrite, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "permitSymbolicLinks", GenR_PHYSFS_permitSymbolicLinks, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "readBytes", GenR_PHYSFS_readBytes, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "readSBE16", GenR_PHYSFS_readSBE16, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "readSBE32", GenR_PHYSFS_readSBE32, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "readSBE64", GenR_PHYSFS_readSBE64, MRB_ARGS_ANY());
