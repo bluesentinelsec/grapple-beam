@@ -40,10 +40,37 @@
  * starts it if so. A script that wants to own the `while` still calls
  * run() itself, which clears this.
  *
- * Last engine wins. A script that builds two and runs neither gets the
- * second one started, which is the only answer that does not require
- * guessing. */
-static Grapple_Engine *g_pending_engine = NULL;
+ * Kept in the state's registry rather than a C static. A static is shared
+ * by every interpreter in the process, so one state's unstarted engine
+ * could be started by another state's runner — which is not hypothetical:
+ * as a static it hung a CI machine for 48 minutes, one test's leftover
+ * engine being run headless by a later test with nothing to stop it.
+ *
+ * Last engine in a state wins. A script that builds two and runs neither
+ * gets the second, which is the only answer that needs no guessing. */
+#define PENDING_ENGINE_KEY "grapple.engine.pending"
+
+static void SetPendingEngine(lua_State *L, Grapple_Engine *engine)
+{
+    if (engine != NULL)
+    {
+        lua_pushlightuserdata(L, engine);
+    }
+    else
+    {
+        lua_pushnil(L);
+    }
+    lua_setfield(L, LUA_REGISTRYINDEX, PENDING_ENGINE_KEY);
+}
+
+static Grapple_Engine *PendingEngine(lua_State *L)
+{
+    lua_getfield(L, LUA_REGISTRYINDEX, PENDING_ENGINE_KEY);
+    Grapple_Engine *engine =
+        lua_islightuserdata(L, -1) ? (Grapple_Engine *)lua_touserdata(L, -1) : NULL;
+    lua_pop(L, 1);
+    return engine;
+}
 
 typedef struct EngineBox
 {
@@ -268,7 +295,7 @@ static int LEngineNew(lua_State *L)
         return luaL_error(L, "%s", SDL_GetError());
     }
 
-    g_pending_engine = engine;
+    SetPendingEngine(L, engine);
 
     EngineBox *box = (EngineBox *)lua_newuserdata(L, sizeof(*box));
     box->engine = engine;
@@ -302,9 +329,9 @@ static int LOnUnload(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_UNLOAD); }
 static int LRun(lua_State *L)
 {
     Grapple_Engine *engine = CheckEngine(L);
-    if (engine == g_pending_engine)
+    if (engine == PendingEngine(L))
     {
-        g_pending_engine = NULL; /* the script chose to run it itself */
+        SetPendingEngine(L, NULL); /* the script chose to run it itself */
     }
     lua_pushboolean(L, Grapple_ScriptRun(engine) ? 1 : 0);
     return 1;
@@ -360,9 +387,10 @@ static int LSize(lua_State *L)
 static int LEngineGc(lua_State *L)
 {
     EngineBox *box = (EngineBox *)luaL_checkudata(L, 1, ENGINE_MT);
-    if (box->engine == g_pending_engine)
+    if (box->engine == PendingEngine(L))
     {
-        g_pending_engine = NULL;
+        /* Collected before it ever ran: there is nothing left to start. */
+        SetPendingEngine(L, NULL);
     }
     if (box->engine != NULL && box->owned)
     {
@@ -415,14 +443,13 @@ bool Grapple_OpenLuaEngine(lua_State *L)
 
 bool Grapple_LuaRunPendingEngine(lua_State *L)
 {
-    (void)L;
-    Grapple_Engine *engine = g_pending_engine;
+    Grapple_Engine *engine = PendingEngine(L);
     if (engine == NULL || !Grapple_ScriptHasHandlers(engine))
     {
         /* No callbacks means the script was not describing a game. */
         return false;
     }
-    g_pending_engine = NULL;
+    SetPendingEngine(L, NULL);
     Grapple_ScriptRun(engine);
     return true;
 }

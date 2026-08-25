@@ -1394,3 +1394,35 @@ TEST(GenLua, DestroyingAConfigExplicitlyIsStillSafe)
         "collectgarbage('collect')\n"
         "collectgarbage('collect')\n");
 }
+
+// One interpreter's unstarted engine must never be started by another's.
+//
+// As a process-global this was not a theoretical worry: a leftover engine
+// from an earlier test was picked up by a later one and run headless with
+// nothing to stop it, hanging a CI machine for 48 minutes.
+
+TEST(GenLua, APendingEngineDoesNotLeakBetweenStates)
+{
+    lua_State *first = Grapple_CreateLuaState();
+    ASSERT_NE(first, nullptr);
+    ASSERT_TRUE(Grapple_OpenLuaBindings(first));
+
+    // Handlers, and deliberately never run: exactly what the runner starts.
+    ASSERT_EQ(luaL_dostring(first,
+                            "engine = Grapple.engine{ headless = true,"
+                            "                         auto_mount = false }\n"
+                            "engine:on_update(function() end)\n"),
+              LUA_OK)
+        << lua_tostring(first, -1);
+
+    // A second, independent interpreter has nothing pending. If this returns
+    // true it is about to run the *other* state's engine, and this test hangs
+    // rather than fails — which is precisely what happened on CI.
+    lua_State *second = Grapple_CreateLuaState();
+    ASSERT_NE(second, nullptr);
+    ASSERT_TRUE(Grapple_OpenLuaBindings(second));
+    EXPECT_FALSE(Grapple_LuaRunPendingEngine(second));
+
+    lua_close(second);
+    lua_close(first);
+}

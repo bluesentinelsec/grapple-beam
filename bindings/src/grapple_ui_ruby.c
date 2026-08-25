@@ -69,8 +69,25 @@ static struct RClass *g_widget_class = NULL;
 
 /* The engine a script built but has not run — see the note on the Lua side
    in grapple_engine_lua.c. Ruby gets the same behaviour for the same
-   reason: a script should be able to describe callbacks and stop. */
-static Grapple_Engine *g_pending_engine = NULL;
+   reason: a script should be able to describe callbacks and stop.
+   Hung off the interpreter rather than a C static, so one state's unstarted
+   engine can never be started by another's. */
+#define PENDING_ENGINE_IVAR "@__pending_engine"
+
+static void SetPendingEngine(mrb_state *mrb, Grapple_Engine *engine)
+{
+    struct RClass *module = mrb_module_get(mrb, "Grapple");
+    mrb_iv_set(mrb, mrb_obj_value(module), mrb_intern_cstr(mrb, PENDING_ENGINE_IVAR),
+               (engine != NULL) ? mrb_cptr_value(mrb, engine) : mrb_nil_value());
+}
+
+static Grapple_Engine *PendingEngine(mrb_state *mrb)
+{
+    struct RClass *module = mrb_module_get(mrb, "Grapple");
+    const mrb_value value =
+        mrb_iv_get(mrb, mrb_obj_value(module), mrb_intern_cstr(mrb, PENDING_ENGINE_IVAR));
+    return mrb_cptr_p(value) ? (Grapple_Engine *)mrb_cptr(value) : NULL;
+}
 
 /* --- reading keyword arguments ------------------------------------------- */
 
@@ -415,7 +432,7 @@ static mrb_value REngineNew(mrb_state *mrb, mrb_value self)
         mrb_raisef(mrb, E_RUNTIME_ERROR, "%s", SDL_GetError());
     }
 
-    g_pending_engine = engine;
+    SetPendingEngine(mrb, engine);
 
     struct RClass *klass = mrb_class_get_under(mrb, mrb_module_get(mrb, "Grapple"), "Engine");
     struct RData *data = mrb_data_object_alloc(mrb, klass, engine, &kEngineType);
@@ -478,9 +495,9 @@ static mrb_value ROnUnload(mrb_state *mrb, mrb_value self)
 static mrb_value RRun(mrb_state *mrb, mrb_value self)
 {
     Grapple_Engine *engine = EngineOf(mrb, self);
-    if (engine == g_pending_engine)
+    if (engine == PendingEngine(mrb))
     {
-        g_pending_engine = NULL; /* the script chose to run it itself */
+        SetPendingEngine(mrb, NULL); /* the script chose to run it itself */
     }
     return mrb_bool_value(Grapple_ScriptRun(engine));
 }
@@ -865,13 +882,12 @@ bool Grapple_OpenRubyUi(mrb_state *mrb)
 
 bool Grapple_RubyRunPendingEngine(mrb_state *mrb)
 {
-    (void)mrb;
-    Grapple_Engine *engine = g_pending_engine;
+    Grapple_Engine *engine = PendingEngine(mrb);
     if (engine == NULL || !Grapple_ScriptHasHandlers(engine))
     {
         return false;
     }
-    g_pending_engine = NULL;
+    SetPendingEngine(mrb, NULL);
     Grapple_ScriptRun(engine);
     return true;
 }
