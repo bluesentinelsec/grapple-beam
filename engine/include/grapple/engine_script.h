@@ -57,6 +57,8 @@ typedef enum Grapple_ScriptHook
     GRAPPLE_HOOK_UPDATE,
     GRAPPLE_HOOK_RENDER,
     GRAPPLE_HOOK_POST_RENDER,
+    GRAPPLE_HOOK_EVENT,
+    GRAPPLE_HOOK_RESIZE,
     GRAPPLE_HOOK_UNLOAD,
     GRAPPLE_HOOK_COUNT
 } Grapple_ScriptHook;
@@ -72,10 +74,27 @@ typedef enum Grapple_ScriptHook
  *
  * `value` carries the hook's argument: the step for a fixed update, the
  * delta for an update, the alpha for a render, and nothing for the rest.
+ *
+ * `payload` carries what does not fit in a float, and is NULL for every hook
+ * that does not name one below:
+ *
+ *   GRAPPLE_HOOK_EVENT   const SDL_Event *
+ *   GRAPPLE_HOOK_RESIZE  const Grapple_ScriptSize *
+ *
+ * The pointer is borrowed and only valid for the duration of the call: a
+ * language must copy anything it intends to keep.
+ *
  * The return value is only read for LOAD, where false aborts start-up.
  */
+typedef struct Grapple_ScriptSize
+{
+    int width;
+    int height;
+} Grapple_ScriptSize;
+
 typedef bool (*Grapple_ScriptDispatch)(void *language_state, Sint64 handle,
-                                         Grapple_ScriptHook hook, float value);
+                                         Grapple_ScriptHook hook, float value,
+                                         const void *payload);
 
 /** Release a handle when the engine is done with it, so the language can
  *  drop its reference and let the script function be collected. */

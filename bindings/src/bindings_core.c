@@ -4,6 +4,8 @@
  */
 #include "bindings_core.h"
 
+#include <grapple/bindings.h>
+
 #include <SDL3_image/SDL_image.h>
 #include <grapple/vfs.h>
 #include <physfs.h>
@@ -463,4 +465,29 @@ bool BindBody_ApplyImpulse(BindBody *body, float ix, float iy)
     const b2Vec2 impulse = {ix, iy};
     b2Body_ApplyLinearImpulseToCenter(body->body, impulse, true);
     return true;
+}
+
+/* --- the command line a script's engine inherits -------------------------- */
+
+/* Not copied: argv outlives everything in a normal program, and copying
+   would mean owning strings the engine keeps pointers into. */
+static int g_script_argc = 0;
+static char **g_script_argv = NULL;
+
+void Grapple_SetScriptProcessArgs(int argc, char **argv)
+{
+    g_script_argc = (argv != NULL) ? argc : 0;
+    g_script_argv = argv;
+}
+
+void Grapple_ScriptProcessArgs(int *argc, char ***argv)
+{
+    if (argc != NULL)
+    {
+        *argc = g_script_argc;
+    }
+    if (argv != NULL)
+    {
+        *argv = g_script_argv;
+    }
 }

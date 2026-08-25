@@ -3,6 +3,8 @@
 enable_language(C)
 add_executable(grapple main.c)
 target_link_libraries(grapple PRIVATE Grapple::Lua Grapple::Ruby Grapple::Bindings)
+# So --version reports the same number the release does, from one source.
+target_compile_definitions(grapple PRIVATE GRAPPLE_BEAM_VERSION="${PROJECT_VERSION}")
 set_target_properties(grapple PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Shipped alongside the library: the SDK is what you build a game against,

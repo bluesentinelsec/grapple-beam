@@ -68,6 +68,9 @@ GRAPPLE_DIR_UP	include/grapple/chiptune.h	/^.*GRAPPLE_DIR_UP/;"	e
 GRAPPLE_FILTER_AUTO	include/grapple/chiptune.h	/^.*GRAPPLE_FILTER_AUTO/;"	e
 GRAPPLE_FILTER_LINEAR	include/grapple/chiptune.h	/^.*GRAPPLE_FILTER_LINEAR/;"	e
 GRAPPLE_FILTER_NEAREST	include/grapple/chiptune.h	/^.*GRAPPLE_FILTER_NEAREST/;"	e
+GRAPPLE_GUI_ALIGN_CENTER	include/grapple/chiptune.h	/^.*GRAPPLE_GUI_ALIGN_CENTER/;"	e
+GRAPPLE_GUI_ALIGN_LEFT	include/grapple/chiptune.h	/^.*GRAPPLE_GUI_ALIGN_LEFT/;"	e
+GRAPPLE_GUI_ALIGN_RIGHT	include/grapple/chiptune.h	/^.*GRAPPLE_GUI_ALIGN_RIGHT/;"	e
 GRAPPLE_GUI_COLOR_BUTTON	include/grapple/chiptune.h	/^.*GRAPPLE_GUI_COLOR_BUTTON/;"	e
 GRAPPLE_GUI_COLOR_BUTTON_HOVER	include/grapple/chiptune.h	/^.*GRAPPLE_GUI_COLOR_BUTTON_HOVER/;"	e
 GRAPPLE_GUI_COLOR_BUTTON_TEXT	include/grapple/chiptune.h	/^.*GRAPPLE_GUI_COLOR_BUTTON_TEXT/;"	e
@@ -87,10 +90,12 @@ GRAPPLE_GUI_IMAGE_FILL	include/grapple/chiptune.h	/^.*GRAPPLE_GUI_IMAGE_FILL/;"	
 GRAPPLE_GUI_IMAGE_STRETCH	include/grapple/chiptune.h	/^.*GRAPPLE_GUI_IMAGE_STRETCH/;"	e
 GRAPPLE_GUI_IMAGE_ZOOM	include/grapple/chiptune.h	/^.*GRAPPLE_GUI_IMAGE_ZOOM/;"	e
 GRAPPLE_HOOK_COUNT	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_COUNT/;"	e
+GRAPPLE_HOOK_EVENT	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_EVENT/;"	e
 GRAPPLE_HOOK_FIXED_UPDATE	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_FIXED_UPDATE/;"	e
 GRAPPLE_HOOK_LOAD	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_LOAD/;"	e
 GRAPPLE_HOOK_POST_RENDER	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_POST_RENDER/;"	e
 GRAPPLE_HOOK_RENDER	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_RENDER/;"	e
+GRAPPLE_HOOK_RESIZE	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_RESIZE/;"	e
 GRAPPLE_HOOK_UNLOAD	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_UNLOAD/;"	e
 GRAPPLE_HOOK_UPDATE	include/grapple/chiptune.h	/^.*GRAPPLE_HOOK_UPDATE/;"	e
 GRAPPLE_INTERPOLATE_EXTRAPOLATE	include/grapple/chiptune.h	/^.*GRAPPLE_INTERPOLATE_EXTRAPOLATE/;"	e
@@ -425,10 +430,12 @@ Grapple_EngineRenderer	include/grapple/engine.h	/^.*Grapple_EngineRenderer *(/;"
 Grapple_EngineSafeRect	include/grapple/engine.h	/^.*Grapple_EngineSafeRect *(/;"	f
 Grapple_EngineSetClearColor	include/grapple/engine.h	/^.*Grapple_EngineSetClearColor *(/;"	f
 Grapple_EngineSetDisplay	include/grapple/engine_graphics.h	/^.*Grapple_EngineSetDisplay *(/;"	f
+Grapple_EngineSetEventSink	include/grapple/engine.h	/^.*Grapple_EngineSetEventSink *(/;"	f
 Grapple_EngineSetGraphics	include/grapple/engine_graphics.h	/^.*Grapple_EngineSetGraphics *(/;"	f
 Grapple_EngineSetHooks	include/grapple/engine.h	/^.*Grapple_EngineSetHooks *(/;"	f
 Grapple_EngineSetMaxFps	include/grapple/engine.h	/^.*Grapple_EngineSetMaxFps *(/;"	f
 Grapple_EngineSetMediaPassword	include/grapple/engine_media.h	/^.*Grapple_EngineSetMediaPassword *(/;"	f
+Grapple_EngineSetOverlay	include/grapple/engine.h	/^.*Grapple_EngineSetOverlay *(/;"	f
 Grapple_EngineSetPresentation	include/grapple/engine.h	/^.*Grapple_EngineSetPresentation *(/;"	f
 Grapple_EngineSetRefreshRate	include/grapple/engine.h	/^.*Grapple_EngineSetRefreshRate *(/;"	f
 Grapple_EngineSetTickRate	include/grapple/engine.h	/^.*Grapple_EngineSetTickRate *(/;"	f
@@ -603,10 +610,12 @@ Grapple_GraphicsSettings	include/grapple/chiptune.h	/^.*Grapple_GraphicsSettings
 Grapple_GraphicsShadowRays	include/grapple/engine_graphics.h	/^.*Grapple_GraphicsShadowRays *(/;"	f
 Grapple_GraphicsShadowSoftness	include/grapple/engine_graphics.h	/^.*Grapple_GraphicsShadowSoftness *(/;"	f
 Grapple_GraphicsToToml	include/grapple/engine_graphics.h	/^.*Grapple_GraphicsToToml *(/;"	f
+Grapple_GuiAlign	include/grapple/chiptune.h	/^.*Grapple_GuiAlign/;"	g
 Grapple_GuiContext	include/grapple/gui.h	/^.*Grapple_GuiContext *(/;"	f
 Grapple_GuiDrawCommandCount	include/grapple/gui.h	/^.*Grapple_GuiDrawCommandCount *(/;"	f
 Grapple_GuiDrawTexture	include/grapple/gui.h	/^.*Grapple_GuiDrawTexture *(/;"	f
 Grapple_GuiDrawTextureOverlay	include/grapple/gui.h	/^.*Grapple_GuiDrawTextureOverlay *(/;"	f
+Grapple_GuiEventSink	include/grapple/gui.h	/^.*Grapple_GuiEventSink *(/;"	f
 Grapple_GuiFontHeight	include/grapple/gui.h	/^.*Grapple_GuiFontHeight *(/;"	f
 Grapple_GuiFontSize	include/grapple/chiptune.h	/^.*Grapple_GuiFontSize/;"	g
 Grapple_GuiGlyphRange	include/grapple/chiptune.h	/^.*Grapple_GuiGlyphRange/;"	g
@@ -615,6 +624,8 @@ Grapple_GuiGridBegin	include/grapple/gui_grid.h	/^.*Grapple_GuiGridBegin *(/;"	f
 Grapple_GuiGridBeginOwned	include/grapple/gui.h	/^.*Grapple_GuiGridBeginOwned *(/;"	f
 Grapple_GuiGridCell	include/grapple/gui_grid.h	/^.*Grapple_GuiGridCell *(/;"	f
 Grapple_GuiGridCellOwned	include/grapple/gui.h	/^.*Grapple_GuiGridCellOwned *(/;"	f
+Grapple_GuiGridCellPart	include/grapple/gui_grid.h	/^.*Grapple_GuiGridCellPart *(/;"	f
+Grapple_GuiGridCellPartOwned	include/grapple/gui.h	/^.*Grapple_GuiGridCellPartOwned *(/;"	f
 Grapple_GuiGridCellSpan	include/grapple/gui_grid.h	/^.*Grapple_GuiGridCellSpan *(/;"	f
 Grapple_GuiGridCellSpanOwned	include/grapple/gui.h	/^.*Grapple_GuiGridCellSpanOwned *(/;"	f
 Grapple_GuiGridCreate	include/grapple/gui_grid.h	/^.*Grapple_GuiGridCreate *(/;"	f
@@ -623,6 +634,10 @@ Grapple_GuiGridEnd	include/grapple/gui_grid.h	/^.*Grapple_GuiGridEnd *(/;"	f
 Grapple_GuiGridEndOwned	include/grapple/gui.h	/^.*Grapple_GuiGridEndOwned *(/;"	f
 Grapple_GuiGridNextRow	include/grapple/gui_grid.h	/^.*Grapple_GuiGridNextRow *(/;"	f
 Grapple_GuiGridNextRowOwned	include/grapple/gui.h	/^.*Grapple_GuiGridNextRowOwned *(/;"	f
+Grapple_GuiGridRowHeight	include/grapple/gui_grid.h	/^.*Grapple_GuiGridRowHeight *(/;"	f
+Grapple_GuiGridRowHeightOwned	include/grapple/gui.h	/^.*Grapple_GuiGridRowHeightOwned *(/;"	f
+Grapple_GuiGridSpacing	include/grapple/gui_grid.h	/^.*Grapple_GuiGridSpacing *(/;"	f
+Grapple_GuiGridSpacingOwned	include/grapple/gui.h	/^.*Grapple_GuiGridSpacingOwned *(/;"	f
 Grapple_GuiGridWeight	include/grapple/gui.h	/^.*Grapple_GuiGridWeight *(/;"	f
 Grapple_GuiImage	include/grapple/gui.h	/^.*Grapple_GuiImage *(/;"	f
 Grapple_GuiImageMode	include/grapple/chiptune.h	/^.*Grapple_GuiImageMode/;"	g
@@ -638,6 +653,7 @@ Grapple_GuiPumpEvents	include/grapple/gui.h	/^.*Grapple_GuiPumpEvents *(/;"	f
 Grapple_GuiPushFont	include/grapple/gui.h	/^.*Grapple_GuiPushFont *(/;"	f
 Grapple_GuiPushStyleColor	include/grapple/gui.h	/^.*Grapple_GuiPushStyleColor *(/;"	f
 Grapple_GuiRender	include/grapple/gui.h	/^.*Grapple_GuiRender *(/;"	f
+Grapple_GuiRenderer	include/grapple/gui.h	/^.*Grapple_GuiRenderer *(/;"	f
 Grapple_GuiSaveFileButton	include/grapple/gui.h	/^.*Grapple_GuiSaveFileButton *(/;"	f
 Grapple_GuiSavedPath	include/grapple/gui.h	/^.*Grapple_GuiSavedPath *(/;"	f
 Grapple_GuiScale	include/grapple/gui.h	/^.*Grapple_GuiScale *(/;"	f
@@ -804,6 +820,7 @@ Grapple_ScriptSceneSetStateSize	include/grapple/engine_script.h	/^.*Grapple_Scri
 Grapple_ScriptSceneTransitionTo	include/grapple/engine_script.h	/^.*Grapple_ScriptSceneTransitionTo *(/;"	f
 Grapple_ScriptSetHook	include/grapple/engine_script.h	/^.*Grapple_ScriptSetHook *(/;"	f
 Grapple_ScriptSetSceneDispatch	include/grapple/engine_script.h	/^.*Grapple_ScriptSetSceneDispatch *(/;"	f
+Grapple_ScriptSize	include/grapple/chiptune.h	/^.*Grapple_ScriptSize/;"	s
 Grapple_ScriptUnbind	include/grapple/engine_script.h	/^.*Grapple_ScriptUnbind *(/;"	f
 Grapple_SetDebugTextSize	include/grapple/debug_text.h	/^.*Grapple_SetDebugTextSize *(/;"	f
 Grapple_SetDeviceMotion	include/grapple/engine_input.h	/^.*Grapple_SetDeviceMotion *(/;"	f
@@ -5974,6 +5991,7 @@ next	include/SDL3/SDL_assert.h	/^.*next/;"	m
 next	include/SDL3_ttf/SDL_textengine.h	/^.*next/;"	m
 next	include/cJSON.h	/^.*next/;"	m
 next	include/nuklear.h	/^.*next/;"	m
+next_row_height	include/grapple/chiptune.h	/^.*next_row_height/;"	m
 nfingers	include/SDL3/SDL_assert.h	/^.*nfingers/;"	m
 nhats	include/SDL3/SDL_assert.h	/^.*nhats/;"	m
 nk__begin	include/nuklear.h	/^.*nk__begin *(/;"	f
@@ -6735,6 +6753,7 @@ pattern	include/SDL3/SDL_assert.h	/^.*pattern/;"	m
 paxis	include/SDL3/SDL_assert.h	/^.*paxis/;"	m
 pbutton	include/SDL3/SDL_assert.h	/^.*pbutton/;"	m
 pen_state	include/SDL3/SDL_assert.h	/^.*pen_state/;"	m
+pending_tail	include/grapple/chiptune.h	/^.*pending_tail/;"	m
 percent	include/SDL3/SDL_assert.h	/^.*percent/;"	m
 period	include/SDL3/SDL_assert.h	/^.*period/;"	m
 periodic	include/SDL3/SDL_assert.h	/^.*periodic/;"	m
@@ -7001,6 +7020,7 @@ stringColor	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*stringColor *(/;"	f
 stringRGBA	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*stringRGBA *(/;"	f
 style	include/nuklear.h	/^.*style/;"	m
 style_items	include/nuklear.h	/^.*style_items/;"	m
+styled	include/grapple/chiptune.h	/^.*styled/;"	m
 supportsSymlinks	include/physfs.h	/^.*supportsSymlinks/;"	m
 surface	include/SDL3/SDL_assert.h	/^.*surface/;"	m
 sweepA	include/box2d/base.h	/^.*sweepA/;"	m

@@ -12,36 +12,36 @@ types). The full C API additionally stays reachable from C/C++.
 
 | Library | Functions | C++ raii | C++ status | C++ alias | Lua+Ruby bound | skipped |
 |---|---|---|---|---|---|---|
-| SDL3 core | 1205 | 545 | 143 | 492 | 874 | 331 |
-| SDL_mixer | 94 | 79 | 2 | 9 | 84 | 10 |
+| SDL3 core | 1205 | 545 | 143 | 492 | 888 | 317 |
+| SDL_mixer | 94 | 79 | 2 | 9 | 87 | 7 |
 | SDL_image | 84 | 27 | 20 | 36 | 81 | 3 |
 | SDL_ttf | 117 | 101 | 1 | 12 | 116 | 1 |
-| SDL_net | 34 | 15 | 1 | 15 | 27 | 7 |
-| PhysFS | 98 | 0 | 0 | 98 | 83 | 15 |
+| SDL_net | 34 | 15 | 1 | 15 | 28 | 6 |
+| PhysFS | 98 | 0 | 0 | 98 | 87 | 11 |
 | Box2D | 421 | 120 | 0 | 299 | 385 | 36 |
-| Nuklear | 534 | 0 | 0 | 534 | 429 | 105 |
+| Nuklear | 534 | 0 | 0 | 534 | 435 | 99 |
 | SDL3_gfx | 72 | 5 | 57 | 10 | 62 | 10 |
 | tomlc99 | 38 | 15 | 0 | 22 | 18 | 20 |
 | libyaml | 48 | 0 | 0 | 48 | 2 | 46 |
 | mog HTTP/S | 69 | 54 | 0 | 12 | 67 | 2 |
 | cJSON | 78 | 57 | 0 | 20 | 70 | 8 |
-| Grapple modules | 645 | 75 | 116 | 450 | 610 | 35 |
-| **Total** | 3537 | 1093 | 340 | 2057 | 2908 | 629 |
+| Grapple modules | 655 | 98 | 116 | 436 | 617 | 38 |
+| **Total** | 3547 | 1116 | 340 | 2043 | 2943 | 604 |
 
 ## Script-surface skip reasons
 
-- 299: unmarshalable parameter type
-- 142: unmarshalable return type
+- 281: unmarshalable parameter type
+- 134: unmarshalable return type
 - 76: stdlib clone
 - 53: math clone
 - 47: threading
-- 8: callback parameter
+- 9: callback parameter
 - 3: owned string, no free fn
 - 1: variadic
 
 ## Per-library skipped functions
 
-<details><summary>SDL3 core (331)</summary>
+<details><summary>SDL3 core (317)</summary>
 
 - `SDL_AcquireGPUSwapchainTexture` — param swapchain_texture: SDL_GPUTexture**
 - `SDL_AddAtomicInt` — threading
@@ -100,22 +100,18 @@ types). The full C API additionally stays reachable from C/C++.
 - `SDL_GetAudioDeviceChannelMap` — return type int*
 - `SDL_GetAudioPlaybackDevices` — return type SDL_AudioDeviceID*
 - `SDL_GetAudioRecordingDevices` — return type SDL_AudioDeviceID*
-- `SDL_GetAudioStreamData` — param buf: void*
 - `SDL_GetAudioStreamInputChannelMap` — return type int*
 - `SDL_GetAudioStreamOutputChannelMap` — return type int*
 - `SDL_GetCameraSupportedFormats` — return type SDL_CameraSpec**
 - `SDL_GetCameras` — return type SDL_CameraID*
 - `SDL_GetClipboardData` — return type void*
-- `SDL_GetClipboardMimeTypes` — return type char**
 - `SDL_GetCurrentThreadID` — threading
 - `SDL_GetDefaultAssertionHandler` — return type SDL_AssertionHandler
 - `SDL_GetDefaultLogOutputFunction` — return type SDL_LogOutputFunction
 - `SDL_GetDisplays` — return type SDL_DisplayID*
-- `SDL_GetEnvironmentVariables` — return type char**
 - `SDL_GetEventFilter` — param filter: SDL_EventFilter*
 - `SDL_GetFullscreenDisplayModes` — return type SDL_DisplayMode**
 - `SDL_GetGamepadBindings` — return type SDL_GamepadBinding**
-- `SDL_GetGamepadMappings` — return type char**
 - `SDL_GetGamepads` — return type SDL_JoystickID*
 - `SDL_GetHaptics` — return type SDL_HapticID*
 - `SDL_GetJoysticks` — return type SDL_JoystickID*
@@ -143,9 +139,6 @@ types). The full C API additionally stays reachable from C/C++.
 - `SDL_GetWindowICCProfile` — return type void*
 - `SDL_GetWindowMouseRect` — returns struct pointer
 - `SDL_GetWindows` — return type SDL_Window**
-- `SDL_GlobDirectory` — return type char**
-- `SDL_GlobStorageDirectory` — return type char**
-- `SDL_IOFromMem` — param mem: void*
 - `SDL_LoadFile` — return type void*
 - `SDL_LoadFileAsync` — param userdata: void*
 - `SDL_LoadFile_IO` — return type void*
@@ -172,9 +165,7 @@ types). The full C API additionally stays reachable from C/C++.
 - `SDL_PutAudioStreamDataNoCopy` — param callback: SDL_AudioStreamDataCompleteCallback
 - `SDL_PutAudioStreamPlanarData` — param channel_buffers: const void**
 - `SDL_ReadAsyncIO` — param ptr: void*
-- `SDL_ReadIO` — param ptr: void*
 - `SDL_ReadProcess` — return type void*
-- `SDL_ReadStorageFile` — param destination: void*
 - `SDL_RemoveEventWatch` — param filter: SDL_EventFilter
 - `SDL_RemoveHintCallback` — param callback: SDL_HintCallback
 - `SDL_RenderGeometry` — param indices: const int*
@@ -261,16 +252,11 @@ types). The full C API additionally stays reachable from C/C++.
 - `SDL_fmod` — math clone
 - `SDL_fmodf` — math clone
 - `SDL_free` — stdlib clone
-- `SDL_hid_get_feature_report` — param data: unsigned char*
 - `SDL_hid_get_indexed_string` — param string: wchar_t*
-- `SDL_hid_get_input_report` — param data: unsigned char*
 - `SDL_hid_get_manufacturer_string` — param string: wchar_t*
 - `SDL_hid_get_product_string` — param string: wchar_t*
-- `SDL_hid_get_report_descriptor` — param buf: unsigned char*
 - `SDL_hid_get_serial_number_string` — param string: wchar_t*
 - `SDL_hid_open` — param serial_number: const wchar_t*
-- `SDL_hid_read` — param data: unsigned char*
-- `SDL_hid_read_timeout` — param data: unsigned char*
 - `SDL_iconv` — param cd: SDL_iconv_t
 - `SDL_iconv_close` — param cd: SDL_iconv_t
 - `SDL_iconv_open` — return type SDL_iconv_t
@@ -377,12 +363,9 @@ types). The full C API additionally stays reachable from C/C++.
 
 </details>
 
-<details><summary>SDL_mixer (10)</summary>
+<details><summary>SDL_mixer (7)</summary>
 
-- `MIX_DecodeAudio` — param buffer: void*
-- `MIX_Generate` — param buffer: void*
 - `MIX_GetTaggedTracks` — return type MIX_Track**
-- `MIX_GetTrackTags` — return type char**
 - `MIX_SetGroupPostMixCallback` — param cb: MIX_GroupMixCallback
 - `MIX_SetPostMixCallback` — param cb: MIX_PostMixCallback
 - `MIX_SetTrackCookedCallback` — param cb: MIX_TrackMixCallback
@@ -406,29 +389,24 @@ types). The full C API additionally stays reachable from C/C++.
 
 </details>
 
-<details><summary>SDL_net (7)</summary>
+<details><summary>SDL_net (6)</summary>
 
 - `NET_AcceptClient` — param client_stream: NET_StreamSocket**
 - `NET_FreeLocalAddresses` — param addresses: NET_Address**
 - `NET_GetAddressBytes` — return type const void*
 - `NET_GetLocalAddresses` — return type NET_Address**
-- `NET_ReadFromStreamSocket` — param buf: void*
 - `NET_ReceiveDatagram` — param dgram: NET_Datagram**
 - `NET_WaitUntilInputAvailable` — param vsockets: void**
 
 </details>
 
-<details><summary>PhysFS (15)</summary>
+<details><summary>PhysFS (11)</summary>
 
 - `PHYSFS_enumerate` — param c: PHYSFS_EnumerateCallback
-- `PHYSFS_enumerateFiles` — return type char**
 - `PHYSFS_freeList` — param listVar: void*
-- `PHYSFS_getCdRomDirs` — return type char**
 - `PHYSFS_getCdRomDirsCallback` — param c: PHYSFS_StringCallback
-- `PHYSFS_getSearchPath` — return type char**
 - `PHYSFS_getSearchPathCallback` — param c: PHYSFS_StringCallback
 - `PHYSFS_mountMemory` — param del: <funcptr>*
-- `PHYSFS_readBytes` — param buffer: void*
 - `PHYSFS_supportedArchiveTypes` — return type const PHYSFS_ArchiveInfo**
 - `PHYSFS_ucs4stricmp` — param str1: const PHYSFS_uint32*
 - `PHYSFS_utf16stricmp` — param str1: const PHYSFS_uint16*
@@ -479,9 +457,8 @@ types). The full C API additionally stays reachable from C/C++.
 
 </details>
 
-<details><summary>Nuklear (105)</summary>
+<details><summary>Nuklear (99)</summary>
 
-- `nk_buffer_init_fixed` — param memory: void*
 - `nk_buffer_memory` — return type void*
 - `nk_buffer_memory_const` — return type const void*
 - `nk_button_image` — param img: struct nk_image
@@ -506,8 +483,6 @@ types). The full C API additionally stays reachable from C/C++.
 - `nk_edit_string` — param arg5: nk_plugin_filter
 - `nk_edit_string_zero_terminated` — param arg4: nk_plugin_filter
 - `nk_fill_polygon` — param points: const float*
-- `nk_font_atlas_add_compressed` — param memory: void*
-- `nk_font_atlas_add_from_memory` — param memory: void*
 - `nk_font_atlas_bake` — return type const void*
 - `nk_font_atlas_end` — param tex: nk_handle
 - `nk_font_chinese_glyph_ranges` — return type const nk_rune*
@@ -530,7 +505,6 @@ types). The full C API additionally stays reachable from C/C++.
 - `nk_image_handle` — return type struct nk_image
 - `nk_image_id` — return type struct nk_image
 - `nk_image_ptr` — return type struct nk_image
-- `nk_init_fixed` — param memory: void*
 - `nk_input_glyph` — param arg1: const nk_glyph
 - `nk_layout_row` — param ratio: const float*
 - `nk_menu_begin_image` — param arg2: struct nk_image
@@ -561,7 +535,6 @@ types). The full C API additionally stays reachable from C/C++.
 - `nk_str_at_char` — owned string, no free fn
 - `nk_str_at_rune` — owned string, no free fn
 - `nk_str_get` — owned string, no free fn
-- `nk_str_init_fixed` — param memory: void*
 - `nk_str_insert_str_runes` — param arg2: const nk_rune*
 - `nk_str_insert_text_runes` — param arg2: const nk_rune*
 - `nk_stroke_polygon` — param points: const float*
@@ -580,7 +553,6 @@ types). The full C API additionally stays reachable from C/C++.
 - `nk_subimage_handle` — return type struct nk_image
 - `nk_subimage_id` — return type struct nk_image
 - `nk_subimage_ptr` — return type struct nk_image
-- `nk_textedit_init_fixed` — param memory: void*
 - `nk_tree_element_image_push_hashed` — param arg2: struct nk_image
 - `nk_tree_image_push_hashed` — param arg2: struct nk_image
 - `nk_tree_state_image_push` — param arg2: struct nk_image
@@ -700,7 +672,7 @@ types). The full C API additionally stays reachable from C/C++.
 
 </details>
 
-<details><summary>Grapple modules (35)</summary>
+<details><summary>Grapple modules (38)</summary>
 
 - `Grapple_ActorEach` — param visit: <funcptr>*
 - `Grapple_ActorLight` — returns struct pointer
@@ -716,7 +688,9 @@ types). The full C API additionally stays reachable from C/C++.
 - `Grapple_EmitSignal` — param args: void*
 - `Grapple_EncryptData` — return type unsigned char*
 - `Grapple_EngineGraphics` — returns struct pointer
+- `Grapple_EngineSetEventSink` — param sink: const Grapple_EventSink*
 - `Grapple_EngineSetHooks` — param user: void*
+- `Grapple_EngineSetOverlay` — param draw: <funcptr>*
 - `Grapple_FingerHeldInRect` — returns struct pointer
 - `Grapple_FingerInRect` — returns struct pointer
 - `Grapple_GPUReadTransferBuffer` — return type void*
@@ -725,6 +699,7 @@ types). The full C API additionally stays reachable from C/C++.
 - `Grapple_GraphicsLoadArgs` — param argv: char**
 - `Grapple_GraphicsResolve` — param argv: char**
 - `Grapple_GraphicsSetArchiveReader` — param reader: Grapple_GraphicsReadFile
+- `Grapple_GuiEventSink` — return type Grapple_EventSink
 - `Grapple_GuiGridBegin` — param weights: const float*
 - `Grapple_LightDefCreate` — returns struct pointer
 - `Grapple_LoadVFSFile` — return type unsigned char*

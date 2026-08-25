@@ -14,6 +14,7 @@ add_library(Grapple_GUI STATIC
   # the Nuklear implementation.
   src/grapple_gui.c
   src/grapple_gui_grid.c
+  src/grapple_ui.c
 )
 add_library(Grapple::GUI ALIAS Grapple_GUI)
 
@@ -30,6 +31,10 @@ set_target_properties(Grapple_GUI PROPERTIES
 target_include_directories(Grapple_GUI SYSTEM
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    # grapple/event_sink.h: shared by modules that must not depend
+    # on each other.
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
 )
 
 # Grapple_GuiOpenFileButton drives the file dialogs in Grapple::Extras.

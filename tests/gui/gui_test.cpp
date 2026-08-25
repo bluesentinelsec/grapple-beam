@@ -12,6 +12,7 @@
 #include <SDL3/SDL.h>
 #include <grapple/gui.h>
 #include <grapple/gui_grid.h>
+#include <grapple/widgets.h>
 #include <gtest/gtest.h>
 
 #include <cstring>
@@ -1004,3 +1005,274 @@ TEST_F(GuiHarness, CountersReportTheLastFrame)
 }
 
 } // namespace
+
+// --- grid: per-row height, alignment, spacing ------------------------------
+
+TEST_F(GuiHarness, GridRowHeightOverridesOneRowOnly)
+{
+    struct nk_rect first = nk_rect(0, 0, 0, 0);
+    struct nk_rect tall = nk_rect(0, 0, 0, 0);
+    struct nk_rect after = nk_rect(0, 0, 0, 0);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
+
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    BeginFrame();
+    if (nk_begin(ctx, "grid", nk_rect(0, 0, 320, 300), NK_WINDOW_NO_SCROLLBAR))
+    {
+        Grapple_GuiGrid grid;
+        ASSERT_TRUE(Grapple_GuiGridBegin(ctx, &grid, 1, nullptr, 20.0f));
+
+        Grapple_GuiGridCell(&grid);
+        first = nk_widget_bounds(ctx);
+        nk_label(ctx, "a", NK_TEXT_LEFT);
+
+        Grapple_GuiGridRowHeight(&grid, 60.0f);
+        Grapple_GuiGridCell(&grid);
+        tall = nk_widget_bounds(ctx);
+        nk_label(ctx, "b", NK_TEXT_LEFT);
+
+        Grapple_GuiGridCell(&grid);
+        after = nk_widget_bounds(ctx);
+        nk_label(ctx, "c", NK_TEXT_LEFT);
+
+        Grapple_GuiGridEnd(&grid);
+    }
+    nk_end(ctx);
+
+    EXPECT_NEAR(first.h, 20.0f, 1.0f);
+    EXPECT_NEAR(tall.h, 60.0f, 1.0f);
+    // One-shot: the row after the override goes back to the grid default.
+    EXPECT_NEAR(after.h, 20.0f, 1.0f);
+}
+
+TEST_F(GuiHarness, GridCellPartPlacesAWidgetInsideItsCell)
+{
+    struct nk_rect full = nk_rect(0, 0, 0, 0);
+    struct nk_rect left = nk_rect(0, 0, 0, 0);
+    struct nk_rect right = nk_rect(0, 0, 0, 0);
+    struct nk_rect centered = nk_rect(0, 0, 0, 0);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
+
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    BeginFrame();
+    if (nk_begin(ctx, "grid", nk_rect(0, 0, 320, 300), NK_WINDOW_NO_SCROLLBAR))
+    {
+        Grapple_GuiGrid grid;
+        ASSERT_TRUE(Grapple_GuiGridBegin(ctx, &grid, 1, nullptr, 24.0f));
+
+        Grapple_GuiGridCell(&grid);
+        full = nk_widget_bounds(ctx);
+        nk_label(ctx, "full", NK_TEXT_LEFT);
+
+        Grapple_GuiGridCellPart(&grid, 1, 0.5f, GRAPPLE_GUI_ALIGN_LEFT);
+        left = nk_widget_bounds(ctx);
+        nk_label(ctx, "left", NK_TEXT_LEFT);
+
+        Grapple_GuiGridCellPart(&grid, 1, 0.5f, GRAPPLE_GUI_ALIGN_RIGHT);
+        right = nk_widget_bounds(ctx);
+        nk_label(ctx, "right", NK_TEXT_LEFT);
+
+        Grapple_GuiGridCellPart(&grid, 1, 0.5f, GRAPPLE_GUI_ALIGN_CENTER);
+        centered = nk_widget_bounds(ctx);
+        nk_label(ctx, "mid", NK_TEXT_LEFT);
+
+        Grapple_GuiGridEnd(&grid);
+    }
+    nk_end(ctx);
+
+    // Half a cell is half as wide, whatever the alignment.
+    EXPECT_NEAR(left.w, full.w * 0.5f, 3.0f);
+    EXPECT_NEAR(right.w, full.w * 0.5f, 3.0f);
+    EXPECT_NEAR(centered.w, full.w * 0.5f, 3.0f);
+
+    // And it sits where it was asked to sit.
+    EXPECT_NEAR(left.x, full.x, 2.0f);
+    EXPECT_GT(right.x, left.x + left.w * 0.5f);
+    EXPECT_GT(centered.x, left.x);
+    EXPECT_LT(centered.x, right.x);
+}
+
+TEST_F(GuiHarness, GridSpacingIsPoppedSoLaterWidgetsAreUnaffected)
+{
+    struct nk_rect before = nk_rect(0, 0, 0, 0);
+    struct nk_rect after = nk_rect(0, 0, 0, 0);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
+
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    BeginFrame();
+    if (nk_begin(ctx, "grid", nk_rect(0, 0, 320, 300), NK_WINDOW_NO_SCROLLBAR))
+    {
+        nk_layout_row_dynamic(ctx, 20, 1);
+        before = nk_widget_bounds(ctx);
+        nk_label(ctx, "plain", NK_TEXT_LEFT);
+
+        Grapple_GuiGrid grid;
+        ASSERT_TRUE(Grapple_GuiGridBegin(ctx, &grid, 2, nullptr, 20.0f));
+        Grapple_GuiGridSpacing(&grid, 24.0f, 24.0f);
+        Grapple_GuiGridCell(&grid);
+        nk_label(ctx, "a", NK_TEXT_LEFT);
+        Grapple_GuiGridCell(&grid);
+        nk_label(ctx, "b", NK_TEXT_LEFT);
+        Grapple_GuiGridEnd(&grid);
+
+        nk_layout_row_dynamic(ctx, 20, 1);
+        after = nk_widget_bounds(ctx);
+        nk_label(ctx, "plain again", NK_TEXT_LEFT);
+    }
+    nk_end(ctx);
+
+    // An unbalanced style stack would leak the wide spacing into everything
+    // drawn afterwards, so the width either side of the grid must match.
+    EXPECT_NEAR(before.w, after.w, 1.0f);
+}
+
+// --- the retained UI -------------------------------------------------------
+//
+// The layer's whole claim is that a widget declared once keeps its identity,
+// its state and its callback. These check the three things that would make
+// that claim false: that nothing draws, that a click reaches nobody, and that
+// "fit" is not actually measured.
+
+namespace {
+
+struct ClickCount
+{
+    int clicks = 0;
+};
+
+void CountClick(Grapple_UiWidget *, void *user)
+{
+    static_cast<ClickCount *>(user)->clicks++;
+}
+
+} // namespace
+
+TEST_F(GuiHarness, UiButtonClickReachesItsCallback)
+{
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+
+    ClickCount counter;
+    Grapple_UiPanelDef panel_def{};
+    panel_def.title = "ui";
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+    ASSERT_NE(panel, nullptr);
+
+    Grapple_UiButtonDef button_def{};
+    button_def.text = "Fire";
+    button_def.on_click = CountClick;
+    button_def.user = &counter;
+    Grapple_UiWidget *button = Grapple_UiButton(panel, &button_def);
+
+    // Frame 1 lays the tree out; the button's bounds come from the widget
+    // Nuklear actually placed, not from anything the test assumed.
+    BeginFrame();
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    Grapple_UiDraw(ui);
+
+    // Where the layer actually put the button, not where the test guessed.
+    float bx = 0.0f;
+    float by = 0.0f;
+    float bw = 0.0f;
+    float bh = 0.0f;
+    ASSERT_TRUE(Grapple_UiBounds(button, &bx, &by, &bw, &bh));
+    ASSERT_GT(bw, 0.0f);
+
+    const float cx = bx + bw / 2.0f;
+    const float cy = by + bh / 2.0f;
+    for (int phase = 0; phase < 2; ++phase)
+    {
+        BeginFrame();
+        Grapple_GuiInputBegin(gui_);
+        FeedMouseMove(cx, cy);
+        FeedButton(cx, cy, phase == 0);
+        Grapple_GuiInputEnd(gui_);
+        Grapple_UiDraw(ui);
+    }
+
+    EXPECT_EQ(counter.clicks, 1);
+    Grapple_DestroyUi(ui);
+}
+
+TEST_F(GuiHarness, UiFitIsMeasuredAndStretchIsNot)
+{
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+
+    Grapple_UiStripDef row_def{};
+    Grapple_UiWidget *row = Grapple_UiRow(panel, &row_def);
+
+    Grapple_UiButtonDef fitted{};
+    fitted.text = "Hi";
+    fitted.width = GRAPPLE_UI_FIT;
+    Grapple_UiWidget *narrow = Grapple_UiButton(row, &fitted);
+
+    Grapple_UiButtonDef stretched{};
+    stretched.text = "Also a button, considerably wider than the first";
+    Grapple_UiWidget *wide = Grapple_UiButton(row, &stretched);
+
+    BeginFrame();
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    Grapple_UiDraw(ui);
+
+    float narrow_w = 0.0f;
+    float wide_w = 0.0f;
+    ASSERT_TRUE(Grapple_UiBounds(narrow, nullptr, nullptr, &narrow_w, nullptr));
+    ASSERT_TRUE(Grapple_UiBounds(wide, nullptr, nullptr, &wide_w, nullptr));
+
+    // No exact pixel count is asserted -- the font decides that. What must
+    // hold is that "fit" was measured from the widget's own two characters
+    // while its stretched neighbour took everything left over, which is the
+    // sizing an immediate-mode layout cannot do at all.
+    EXPECT_GT(narrow_w, 0.0f);
+    EXPECT_LT(narrow_w, wide_w / 2.0f)
+        << "fit=" << narrow_w << " stretch=" << wide_w;
+
+    Grapple_DestroyUi(ui);
+}
+
+TEST_F(GuiHarness, UiWidgetStateOutlivesTheFrame)
+{
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+
+    Grapple_UiEntryDef entry_def{};
+    entry_def.text = "typed";
+    Grapple_UiWidget *entry = Grapple_UiEntry(panel, &entry_def);
+
+    Grapple_UiLabelDef label_def{};
+    Grapple_UiWidget *label = Grapple_UiLabel(panel, &label_def);
+    Grapple_UiSetText(label, "set once");
+
+    for (int frame = 0; frame < 3; ++frame)
+    {
+        BeginFrame();
+        Grapple_GuiInputBegin(gui_);
+        Grapple_GuiInputEnd(gui_);
+        Grapple_UiDraw(ui);
+    }
+
+    // The buffer belongs to the widget, which is the ceremony this layer
+    // removes: three frames later it is still there and still correct.
+    EXPECT_EQ(std::string(Grapple_UiText(entry)), "typed");
+    EXPECT_EQ(std::string(Grapple_UiText(label)), "set once");
+
+    Grapple_UiSetVisible(label, false);
+    EXPECT_FALSE(Grapple_UiVisible(label));
+
+    Grapple_DestroyUi(ui);
+}

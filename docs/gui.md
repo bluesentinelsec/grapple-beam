@@ -52,6 +52,148 @@ while (Grapple_GuiPumpEvents(gui)) {   /* false when the user quits */
 }
 ```
 
+### Inside the engine's loop, hand it the GUI instead
+
+Everything above assumes you own the loop. If the engine owns it —
+`Grapple_RunGame` — then it pumps events itself, *before* it calls any
+hook, so there is no hook in which you could open Nuklear's input window.
+Do not try: give the engine the GUI and it does the bracketing.
+
+```c
+const Grapple_EventSink sink = Grapple_GuiEventSink(gui);
+Grapple_EngineSetEventSink(engine, &sink);
+```
+
+That is the entire integration. No `InputBegin`, no `ProcessEvent`, no
+`InputEnd` anywhere in your hooks — build the UI in `update`, call
+`Grapple_GuiRender` in `post_render`, and clear the sink
+(`Grapple_EngineSetEventSink(engine, NULL)`) before destroying the GUI.
+
+Scripts get the pair as one call, because a struct of function pointers
+does not cross a binding:
+
+```lua
+GrappleC.AttachGui(engine, gui)
+```
+
+Nothing about `Grapple_EventSink` is GUI-specific — a debug console or a
+replay recorder installs the same way, and the struct lives in
+`grapple/event_sink.h` so neither module depends on the other.
+
+
+## Widgets you declare once
+
+Everything above is the immediate-mode API: you re-describe the interface
+every frame, and a widget is an `if` rather than a thing. That is the right
+model for a debug overlay that changes every frame, and the wrong one for a
+dialog that never changes.
+
+`<grapple/widgets.h>` is the other model — declare the tree once, bind
+callbacks, and let it draw itself:
+
+```c
+Grapple_Ui *ui = Grapple_OpenUi(Grapple_EngineRenderer(engine), 15.0f);
+const Grapple_EventSink sink = Grapple_UiEventSink(ui);
+Grapple_EngineSetEventSink(engine, &sink);
+Grapple_EngineSetOverlay(engine, Grapple_UiDrawCallback, ui);
+
+Grapple_UiWidget *panel = Grapple_UiPanel(ui, &(Grapple_UiPanelDef){
+    .title = "Settings", .fill = true, .padding = 12, .spacing = 8 });
+
+Grapple_UiSlider(panel, &(Grapple_UiSliderDef){
+    .value = 0.5f, .on_change = VolumeChanged, .user = app });
+
+Grapple_UiButton(panel, &(Grapple_UiButtonDef){
+    .text = "Close", .width = GRAPPLE_UI_FIT, .align = GRAPPLE_UI_RIGHT,
+    .on_click = Close, .user = app });
+```
+
+Those three setup lines are the entire per-frame cost: `Grapple_OpenUi`
+loads the platform's interface font, the sink gives it input, and the
+overlay draws it after everything else. No `nk_begin`, no `nk_end`, no
+input calls, and no re-declaring the panel sixty times a second.
+
+### Lengths, so a layout survives a font change
+
+| Written as | Means |
+| --- | --- |
+| `GRAPPLE_UI_PX(24)` | 24 pixels |
+| `GRAPPLE_UI_EM(2.4f)` | 2.4 lines of the current font |
+| `GRAPPLE_UI_PCT(0.25f)` | a quarter of the parent |
+| `GRAPPLE_UI_FIT` | exactly as wide as the widget's own content |
+| `{0}` (the default) | stretch to share what the fixed children left |
+
+`GRAPPLE_UI_FIT` is the one the immediate-mode API cannot offer. It measures
+the text with the live font *before* asking for the space, which is only
+possible because the widget was declared before the frame it appears in —
+the same reason `Grapple_GuiGridCellPart` has to take your estimate instead.
+
+### Containers
+
+`Grapple_UiRow` packs children side by side, `Grapple_UiColumn` stacks them,
+and a panel is a column. Fixed-width children keep their width and the rest
+share the remainder, which is Tk's `pack` and maps directly onto Nuklear's
+row template.
+
+### From Lua and Ruby
+
+Each language gets its own spelling of the same tree — a table in Lua,
+keyword arguments and a block in Ruby:
+
+```lua
+local ui = Grapple.ui(engine)
+local panel = ui:panel{ title = "Settings", padding = 12, spacing = 8 }
+local answer = panel:label{ text = "", align = "center" }
+panel:button{ text = "Clear", width = "fit", align = "right",
+              on_click = function() answer:set("") end }
+```
+
+```ruby
+ui = Grapple.ui(engine)
+panel = ui.panel(title: "Settings", padding: 12, spacing: 8)
+answer = panel.label(text: "", align: :center)
+panel.button(text: "Clear", width: :fit, align: :right) { answer.set("") }
+```
+
+A block is right for a one-liner. When a handler is worth a name, pass it as
+`on_click:` instead — anything that answers to `call`, so a method works
+without being wrapped in a block:
+
+```ruby
+def clear_clicked(_button)
+  $answer.set("")
+end
+
+panel.button(text: "Clear", on_click: method(:clear_clicked))
+```
+
+The handler is given the widget that fired, so one function can serve a row
+of buttons: the button knows which one it is.
+
+Lengths take the units as strings: `24`, `"2.4em"`, `"25%"`, `"fit"`.
+Widgets own their state (`answer:set(...)`, `entry:text()`,
+`check:checked()`), and are owned by their parent, so nothing needs
+destroying.
+
+### The escape hatch
+
+Any wrapper over an immediate-mode library will fail to cover something, and
+the answer is never "start again in the lower API":
+
+```c
+Grapple_UiRaw(panel, &(Grapple_UiRawDef){ .draw = DrawChart, .user = app });
+```
+
+The callback is handed a real `nk_context` at that point in the layout, so
+anything in this document is still available inside a tree.
+
+### Which one to use
+
+Retained for interfaces that persist: menus, dialogs, HUDs, editors.
+Immediate for interfaces that are genuinely different every frame, and for
+debug overlays where declaring a tree would cost more than redrawing one.
+They compose — a `raw` node is immediate mode inside a retained tree.
+
 ## From Lua and Ruby
 
 The GUI is fully drivable from both script languages through the
@@ -107,6 +249,51 @@ GrappleC.GuiGridEndOwned(gui)
 ```
 
 Weights default to 1 (equal columns) and reset after each grid.
+
+### Rows, spacing and part-width cells
+
+A grid gives every row the same height, which stops being true the moment a
+panel has a heading, a row of buttons and a status line. Three calls cover
+the rest, in C and in scripts (`...Owned` for the gui-owned grid):
+
+| C | What it does |
+| --- | --- |
+| `Grapple_GuiGridRowHeight(&grid, h)` | height for the **next row only**; `<= 0` restores the grid default |
+| `Grapple_GuiGridSpacing(&grid, x, y)` | pixel gap between cells for the rest of this grid |
+| `Grapple_GuiGridCellPart(&grid, span, fraction, align)` | a cell holding a widget `fraction` as wide, pushed left, centre or right |
+
+```c
+Grapple_GuiGrid grid;
+Grapple_GuiGridBegin(ctx, &grid, 3, NULL, 0);   /* 0 = a line of the font */
+Grapple_GuiGridSpacing(&grid, 8, 8);
+
+Grapple_GuiGridCellSpan(&grid, 3);
+nk_label(ctx, "Settings", NK_TEXT_CENTERED);
+
+Grapple_GuiGridRowHeight(&grid, line * 2.4f);   /* the button row, taller */
+for (int i = 0; i < 3; ++i) {
+    Grapple_GuiGridCell(&grid);
+    nk_button_label(ctx, names[i]);
+}
+
+/* A quarter of the row, hugging the right edge. */
+Grapple_GuiGridCellPart(&grid, 3, 0.25f, GRAPPLE_GUI_ALIGN_RIGHT);
+nk_button_label(ctx, "Save");
+
+Grapple_GuiGridEnd(&grid);
+```
+
+`Grapple_GuiGridSpacing` pushes a Nuklear style value and `...GridEnd` pops
+it, so a dense grid and an airy one can share a panel without one leaking
+into the other.
+
+Two honest limits. Nuklear cannot measure a widget, so `fraction` is your
+estimate rather than shrink-to-fit — a layout that must emit widths before
+it has seen the widget cannot do better. And alignment needs blank space
+*after* the widget, which cannot be emitted until you have drawn it, so the
+trailing gap is settled by whatever grid call comes next; that is invisible
+in normal use but means a cell's space is not final until the following
+`Cell`, `NextRow` or `End`.
 
 ### Images
 

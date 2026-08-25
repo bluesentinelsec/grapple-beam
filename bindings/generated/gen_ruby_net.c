@@ -224,6 +224,27 @@ static mrb_value GenR_NET_Quit(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_NET_ReadFromStreamSocket(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    NET_StreamSocket *a0 = (NET_StreamSocket *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "NET_StreamSocket");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    int rv = NET_ReadFromStreamSocket(a0, a1, (int)want1);
+    mrb_value rblob = mrb_nil_value();
+    if (rv > 0) { rblob = mrb_str_new(mrb, (const char *)a1, (size_t)rv); }
+    SDL_free(a1);
+    (void)want1;
+    return rblob;
+    }
+}
+
 static mrb_value GenR_NET_RefAddress(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -411,6 +432,7 @@ void GrappleGen_OpenRuby_net(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "GetStreamSocketPendingWrites", GenR_NET_GetStreamSocketPendingWrites, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "Init", GenR_NET_Init, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "Quit", GenR_NET_Quit, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "ReadFromStreamSocket", GenR_NET_ReadFromStreamSocket, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "RefAddress", GenR_NET_RefAddress, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ResolveHostname", GenR_NET_ResolveHostname, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "SendDatagram", GenR_NET_SendDatagram, MRB_ARGS_ANY());

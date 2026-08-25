@@ -210,6 +210,33 @@ static mrb_value GenR_MIX_CreateTrack(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_MIX_DecodeAudio(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    MIX_AudioDecoder *a0 = (MIX_AudioDecoder *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_AudioDecoder");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    SDL_AudioSpec tmp3;
+    const SDL_AudioSpec *a3 = NULL;
+    if (argc > 2 && mrb_hash_p(argv[2])) {
+        GenRead_SDL_AudioSpec(mrb, argv[2], &tmp3);
+        a3 = &tmp3;
+    }
+    int rv = MIX_DecodeAudio(a0, a1, (int)want1, a3);
+    mrb_value rblob = mrb_nil_value();
+    if (rv > 0) { rblob = mrb_str_new(mrb, (const char *)a1, (size_t)rv); }
+    SDL_free(a1);
+    (void)want1;
+    return rblob;
+    }
+}
+
 static mrb_value GenR_MIX_DestroyAudio(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -286,6 +313,27 @@ static mrb_value GenR_MIX_FramesToMS(mrb_state *mrb, mrb_value self)
     Sint64 a1 = (Sint64)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     Sint64 rv = MIX_FramesToMS(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
+    }
+}
+
+static mrb_value GenR_MIX_Generate(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Mixer");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    int rv = MIX_Generate(a0, a1, (int)want1);
+    mrb_value rblob = mrb_nil_value();
+    if (rv > 0) { rblob = mrb_str_new(mrb, (const char *)a1, (size_t)rv); }
+    SDL_free(a1);
+    (void)want1;
+    return rblob;
     }
 }
 
@@ -617,6 +665,31 @@ static mrb_value GenR_MIX_GetTrackRemaining(mrb_state *mrb, mrb_value self)
     MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
     Sint64 rv = MIX_GetTrackRemaining(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
+    }
+}
+
+static mrb_value GenR_MIX_GetTrackTags(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "MIX_Track");
+    int io1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    char ** rv = MIX_GetTrackTags(a0, &io1);
+    mrb_value rlist = mrb_nil_value();
+    if (rv != NULL) {
+        rlist = mrb_ary_new(mrb);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            mrb_ary_push(mrb, rlist, mrb_str_new_cstr(mrb, rv[li]));
+        }
+        SDL_free((void *)rv);
+    }
+    mrb_value rets[2];
+    rets[0] = rlist;
+    rets[1] = mrb_int_value(mrb, (mrb_int)io1);
+    return mrb_ary_new_from_values(mrb, 2, rets);
     }
 }
 
@@ -1298,12 +1371,14 @@ void GrappleGen_OpenRuby_mix(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "CreateMixerDevice", GenR_MIX_CreateMixerDevice, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "CreateSineWaveAudio", GenR_MIX_CreateSineWaveAudio, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "CreateTrack", GenR_MIX_CreateTrack, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "DecodeAudio", GenR_MIX_DecodeAudio, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "DestroyAudio", GenR_MIX_DestroyAudio, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "DestroyAudioDecoder", GenR_MIX_DestroyAudioDecoder, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "DestroyGroup", GenR_MIX_DestroyGroup, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "DestroyMixer", GenR_MIX_DestroyMixer, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "DestroyTrack", GenR_MIX_DestroyTrack, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "FramesToMS", GenR_MIX_FramesToMS, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "Generate", GenR_MIX_Generate, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetAudioDecoder", GenR_MIX_GetAudioDecoder, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetAudioDecoderFormat", GenR_MIX_GetAudioDecoderFormat, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetAudioDecoderProperties", GenR_MIX_GetAudioDecoderProperties, MRB_ARGS_ANY());
@@ -1328,6 +1403,7 @@ void GrappleGen_OpenRuby_mix(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "GetTrackPlaybackPosition", GenR_MIX_GetTrackPlaybackPosition, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetTrackProperties", GenR_MIX_GetTrackProperties, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetTrackRemaining", GenR_MIX_GetTrackRemaining, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "GetTrackTags", GenR_MIX_GetTrackTags, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "Init", GenR_MIX_Init, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "LoadAudio", GenR_MIX_LoadAudio, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "LoadAudioNoCopy", GenR_MIX_LoadAudioNoCopy, MRB_ARGS_ANY());

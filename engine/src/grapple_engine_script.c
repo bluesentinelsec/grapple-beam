@@ -70,14 +70,20 @@ static struct Grapple_ScriptBridge *Bridge(Grapple_Engine *engine, bool create)
 /* One trampoline per hook. Each is the C function pointer the engine wants,
    and each does the same thing: look up the script handle for its hook and
    ask the language to call it. */
-static bool Call(Grapple_Engine *engine, Grapple_ScriptHook hook, float value)
+static bool CallWith(Grapple_Engine *engine, Grapple_ScriptHook hook, float value,
+                     const void *payload)
 {
     struct Grapple_ScriptBridge *bridge = Bridge(engine, false);
     if (bridge == NULL || bridge->dispatch == NULL || !bridge->registered[hook])
     {
         return true;
     }
-    return bridge->dispatch(bridge->language_state, bridge->handles[hook], hook, value);
+    return bridge->dispatch(bridge->language_state, bridge->handles[hook], hook, value, payload);
+}
+
+static bool Call(Grapple_Engine *engine, Grapple_ScriptHook hook, float value)
+{
+    return CallWith(engine, hook, value, NULL);
 }
 
 static bool OnLoad(void *user)
@@ -99,6 +105,17 @@ static void OnRender(void *user, float alpha)
 static void OnPostRender(void *user)
 {
     Call((Grapple_Engine *)user, GRAPPLE_HOOK_POST_RENDER, 0.0f);
+}
+static void OnEvent(void *user, const SDL_Event *event)
+{
+    /* The event is borrowed for the length of the call: the language wraps
+       it as a handle and must not keep it. */
+    CallWith((Grapple_Engine *)user, GRAPPLE_HOOK_EVENT, 0.0f, event);
+}
+static void OnResize(void *user, int width, int height)
+{
+    const Grapple_ScriptSize size = {width, height};
+    CallWith((Grapple_Engine *)user, GRAPPLE_HOOK_RESIZE, 0.0f, &size);
 }
 static void OnUnload(void *user)
 {
@@ -130,6 +147,14 @@ static void Publish(Grapple_Engine *engine, struct Grapple_ScriptBridge *bridge)
     if (bridge->registered[GRAPPLE_HOOK_POST_RENDER])
     {
         bridge->hooks.post_render = OnPostRender;
+    }
+    if (bridge->registered[GRAPPLE_HOOK_EVENT])
+    {
+        bridge->hooks.event = OnEvent;
+    }
+    if (bridge->registered[GRAPPLE_HOOK_RESIZE])
+    {
+        bridge->hooks.resize = OnResize;
     }
     if (bridge->registered[GRAPPLE_HOOK_UNLOAD])
     {

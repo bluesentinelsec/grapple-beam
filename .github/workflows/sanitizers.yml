@@ -57,7 +57,7 @@ jobs:
         env:
           ASAN_OPTIONS: halt_on_error=1:abort_on_error=1:detect_leaks=1:detect_stack_use_after_return=1
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
-        run: ctest --test-dir build/sanitizer --output-on-failure --parallel
+        run: ctest --test-dir build/sanitizer --output-on-failure --parallel --timeout 300
 
       - name: Smoke run app under sanitizers
         env:

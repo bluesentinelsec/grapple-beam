@@ -15,6 +15,7 @@
  */
 #include <grapple/engine.h>
 #include <grapple/engine_script.h>
+#include <grapple/gui.h>
 #include <grapple/engine_scene.h>
 #include <grapple/lua.h>
 
@@ -27,7 +28,7 @@
    means the reference survives garbage collection for exactly as long as
    the engine holds it. */
 static bool DispatchLua(void *language_state, Sint64 handle, Grapple_ScriptHook hook,
-                        float value)
+                        float value, const void *payload)
 {
     lua_State *L = (lua_State *)language_state;
     lua_rawgeti(L, LUA_REGISTRYINDEX, (lua_Integer)handle);
@@ -46,6 +47,21 @@ static bool DispatchLua(void *language_state, Sint64 handle, Grapple_ScriptHook 
     {
         lua_pushnumber(L, (lua_Number)value);
         args = 1;
+    }
+    else if (hook == GRAPPLE_HOOK_EVENT)
+    {
+        /* Borrowed: the same handle every generated SDL.* function takes,
+           but pointing at a stack event the engine owns. It is valid only
+           until this call returns, which is why nothing takes ownership. */
+        GrappleGen_LuaPushHandle(L, (void *)(uintptr_t)payload, "SDL_Event");
+        args = 1;
+    }
+    else if (hook == GRAPPLE_HOOK_RESIZE)
+    {
+        const Grapple_ScriptSize *size = (const Grapple_ScriptSize *)payload;
+        lua_pushinteger(L, (lua_Integer)(size != NULL ? size->width : 0));
+        lua_pushinteger(L, (lua_Integer)(size != NULL ? size->height : 0));
+        args = 2;
     }
 
     if (lua_pcall(L, args, 1, 0) != LUA_OK)
@@ -76,6 +92,25 @@ static void ReleaseLua(void *language_state, Sint64 handle)
     luaL_unref((lua_State *)language_state, LUA_REGISTRYINDEX, (int)handle);
 }
 
+/* Bind one Lua function to one hook. Shared with the engine object in
+   grapple_engine_lua.c, which offers the same hooks as methods. */
+bool Grapple_LuaBindEngineHook(lua_State *L, Grapple_Engine *engine,
+                                 Grapple_ScriptHook hook, int fn_index)
+{
+    if (!Grapple_ScriptBind(engine, L, DispatchLua, ReleaseLua))
+    {
+        return false;
+    }
+    lua_pushvalue(L, fn_index);
+    const int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    if (!Grapple_ScriptSetHook(engine, hook, (Sint64)ref))
+    {
+        luaL_unref(L, LUA_REGISTRYINDEX, ref);
+        return false;
+    }
+    return true;
+}
+
 /* GrappleC.OnFixedUpdate(engine, function(step) ... end) and friends. */
 static int SetHook(lua_State *L, Grapple_ScriptHook hook)
 {
@@ -88,15 +123,8 @@ static int SetHook(lua_State *L, Grapple_ScriptHook hook)
     luaL_argcheck(L, engine != NULL, 1, "engine expected");
     luaL_checktype(L, 2, LUA_TFUNCTION);
 
-    if (!Grapple_ScriptBind(engine, L, DispatchLua, ReleaseLua))
+    if (!Grapple_LuaBindEngineHook(L, engine, hook, 2))
     {
-        return luaL_error(L, "could not bind Lua to this engine");
-    }
-    lua_pushvalue(L, 2);
-    const int ref = luaL_ref(L, LUA_REGISTRYINDEX);
-    if (!Grapple_ScriptSetHook(engine, hook, (Sint64)ref))
-    {
-        luaL_unref(L, LUA_REGISTRYINDEX, ref);
         return luaL_error(L, "%s", SDL_GetError());
     }
     lua_pushboolean(L, 1);
@@ -108,7 +136,35 @@ static int LOnFixedUpdate(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_FIXED_U
 static int LOnUpdate(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_UPDATE); }
 static int LOnRender(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_RENDER); }
 static int LOnPostRender(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_POST_RENDER); }
+static int LOnEvent(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_EVENT); }
+static int LOnResize(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_RESIZE); }
 static int LOnUnload(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_UNLOAD); }
+
+/* Let the engine drive a GUI's input.
+ *
+ * The C equivalent is two lines (Grapple_GuiEventSink then
+ * Grapple_EngineSetEventSink), but a sink is a struct of function pointers
+ * and there is no sane way to hand one across a script boundary — so
+ * scripts get the pair as a single call. Passing nil for the gui detaches.
+ */
+static int LAttachGui(lua_State *L)
+{
+    Grapple_Engine *engine =
+        (Grapple_Engine *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Engine");
+    luaL_argcheck(L, engine != NULL, 1, "engine expected");
+    if (lua_isnoneornil(L, 2))
+    {
+        Grapple_EngineSetEventSink(engine, NULL);
+        lua_pushboolean(L, 1);
+        return 1;
+    }
+    Grapple_Gui *gui = (Grapple_Gui *)GrappleGen_LuaCheckHandle(L, 2, "Grapple_Gui");
+    luaL_argcheck(L, gui != NULL, 2, "gui expected");
+    const Grapple_EventSink sink = Grapple_GuiEventSink(gui);
+    Grapple_EngineSetEventSink(engine, &sink);
+    lua_pushboolean(L, 1);
+    return 1;
+}
 
 /* Hand the loop over. Handlers fire from EngineTick too, so a script that
    would rather own the `while` simply does not call this. */
@@ -284,7 +340,10 @@ bool Grapple_OpenLuaEngineHooks(lua_State *L)
                                      {"OnUpdate", LOnUpdate},
                                      {"OnRender", LOnRender},
                                      {"OnPostRender", LOnPostRender},
+                                     {"OnEvent", LOnEvent},
+                                     {"OnResize", LOnResize},
                                      {"OnUnload", LOnUnload},
+                                     {"AttachGui", LAttachGui},
                                      {"Run", LRun},
                                      {NULL, NULL}};
     if (L == NULL)

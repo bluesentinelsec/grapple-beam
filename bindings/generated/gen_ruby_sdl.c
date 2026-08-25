@@ -3033,6 +3033,27 @@ static mrb_value GenR_SDL_GetAudioStreamAvailable(mrb_state *mrb, mrb_value self
     }
 }
 
+static mrb_value GenR_SDL_GetAudioStreamData(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    SDL_AudioStream *a0 = (SDL_AudioStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_AudioStream");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    int rv = SDL_GetAudioStreamData(a0, a1, (int)want1);
+    mrb_value rblob = mrb_nil_value();
+    if (rv > 0) { rblob = mrb_str_new(mrb, (const char *)a1, (size_t)rv); }
+    SDL_free(a1);
+    (void)want1;
+    return rblob;
+    }
+}
+
 static mrb_value GenR_SDL_GetAudioStreamDevice(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -3251,6 +3272,30 @@ static mrb_value GenR_SDL_GetCameraProperties(mrb_state *mrb, mrb_value self)
     SDL_Camera *a0 = (SDL_Camera *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Camera");
     SDL_PropertiesID rv = SDL_GetCameraProperties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
+    }
+}
+
+static mrb_value GenR_SDL_GetClipboardMimeTypes(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    size_t io0 = (size_t)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    char ** rv = SDL_GetClipboardMimeTypes(&io0);
+    mrb_value rlist = mrb_nil_value();
+    if (rv != NULL) {
+        rlist = mrb_ary_new(mrb);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            mrb_ary_push(mrb, rlist, mrb_str_new_cstr(mrb, rv[li]));
+        }
+        SDL_free((void *)rv);
+    }
+    mrb_value rets[2];
+    rets[0] = rlist;
+    rets[1] = mrb_int_value(mrb, (mrb_int)io0);
+    return mrb_ary_new_from_values(mrb, 2, rets);
     }
 }
 
@@ -3663,6 +3708,27 @@ static mrb_value GenR_SDL_GetEnvironmentVariable(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_SDL_GetEnvironmentVariables(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    SDL_Environment *a0 = (SDL_Environment *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Environment");
+    char ** rv = SDL_GetEnvironmentVariables(a0);
+    mrb_value rlist = mrb_nil_value();
+    if (rv != NULL) {
+        rlist = mrb_ary_new(mrb);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            mrb_ary_push(mrb, rlist, mrb_str_new_cstr(mrb, rv[li]));
+        }
+        SDL_free((void *)rv);
+    }
+    return rlist;
+    }
+}
+
 static mrb_value GenR_SDL_GetError(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -4043,6 +4109,30 @@ static mrb_value GenR_SDL_GetGamepadMappingForID(mrb_state *mrb, mrb_value self)
     mrb_value rstr = rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv);
     if (rv != NULL) { SDL_free(rv); }
     return rstr;
+    }
+}
+
+static mrb_value GenR_SDL_GetGamepadMappings(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    int io0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    char ** rv = SDL_GetGamepadMappings(&io0);
+    mrb_value rlist = mrb_nil_value();
+    if (rv != NULL) {
+        rlist = mrb_ary_new(mrb);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            mrb_ary_push(mrb, rlist, mrb_str_new_cstr(mrb, rv[li]));
+        }
+        SDL_free((void *)rv);
+    }
+    mrb_value rets[2];
+    rets[0] = rlist;
+    rets[1] = mrb_int_value(mrb, (mrb_int)io0);
+    return mrb_ary_new_from_values(mrb, 2, rets);
     }
 }
 
@@ -7512,6 +7602,61 @@ static mrb_value GenR_SDL_GetWindowTitle(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_SDL_GlobDirectory(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_GlobFlags a2 = (SDL_GlobFlags)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int io3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    char ** rv = SDL_GlobDirectory(a0, a1, a2, &io3);
+    mrb_value rlist = mrb_nil_value();
+    if (rv != NULL) {
+        rlist = mrb_ary_new(mrb);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            mrb_ary_push(mrb, rlist, mrb_str_new_cstr(mrb, rv[li]));
+        }
+        SDL_free((void *)rv);
+    }
+    mrb_value rets[2];
+    rets[0] = rlist;
+    rets[1] = mrb_int_value(mrb, (mrb_int)io3);
+    return mrb_ary_new_from_values(mrb, 2, rets);
+    }
+}
+
+static mrb_value GenR_SDL_GlobStorageDirectory(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    const char *a2 = GrappleGen_RubyToStr(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    SDL_GlobFlags a3 = (SDL_GlobFlags)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int io4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    char ** rv = SDL_GlobStorageDirectory(a0, a1, a2, a3, &io4);
+    mrb_value rlist = mrb_nil_value();
+    if (rv != NULL) {
+        rlist = mrb_ary_new(mrb);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            mrb_ary_push(mrb, rlist, mrb_str_new_cstr(mrb, rv[li]));
+        }
+        SDL_free((void *)rv);
+    }
+    mrb_value rets[2];
+    rets[0] = rlist;
+    rets[1] = mrb_int_value(mrb, (mrb_int)io4);
+    return mrb_ary_new_from_values(mrb, 2, rets);
+    }
+}
+
 static mrb_value GenR_SDL_HapticEffectSupported(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -7954,6 +8099,22 @@ static mrb_value GenR_SDL_IOFromFile(mrb_state *mrb, mrb_value self)
     const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     SDL_IOStream * rv = SDL_IOFromFile(a0, a1);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_IOStream", GenDtor_SDL_CloseIO);
+    }
+}
+
+static mrb_value GenR_SDL_IOFromMem(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    mrb_int want0 = GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    if (want0 < 0) { want0 = 0; }
+    void *a0 = (want0 > 0) ? SDL_malloc((size_t)want0) : NULL;
+    if (want0 > 0 && a0 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    SDL_IOStream * rv = SDL_IOFromMem(a0, (size_t)want0);
     return GrappleGen_RubyPushOwned(mrb, (void *)rv, "SDL_IOStream", GenDtor_SDL_CloseIO);
     }
 }
@@ -8948,6 +9109,27 @@ static mrb_value GenR_SDL_RaiseWindow(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_SDL_ReadIO(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    SDL_IOStream *a0 = (SDL_IOStream *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_IOStream");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    size_t rv = SDL_ReadIO(a0, a1, (size_t)want1);
+    mrb_value rblob = mrb_nil_value();
+    if (rv > 0) { rblob = mrb_str_new(mrb, (const char *)a1, (size_t)rv); }
+    SDL_free(a1);
+    (void)want1;
+    return rblob;
+    }
+}
+
 static mrb_value GenR_SDL_ReadS16BE(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -9064,6 +9246,24 @@ static mrb_value GenR_SDL_ReadS8(mrb_state *mrb, mrb_value self)
     rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
     rets[1] = mrb_int_value(mrb, (mrb_int)io1);
     return mrb_ary_new_from_values(mrb, 2, rets);
+    }
+}
+
+static mrb_value GenR_SDL_ReadStorageFile(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    SDL_Storage *a0 = (SDL_Storage *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Storage");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    mrb_int want2 = GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    if (want2 < 0) { want2 = 0; }
+    void *a2 = (want2 > 0) ? SDL_malloc((size_t)want2) : NULL;
+    if (want2 > 0 && a2 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    bool rv = SDL_ReadStorageFile(a0, a1, a2, (Uint64)want2);
+    return mrb_bool_value((mrb_bool)(rv != 0));
     }
 }
 
@@ -13175,6 +13375,48 @@ static mrb_value GenR_SDL_hid_get_device_info(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_SDL_hid_get_feature_report(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    int rv = SDL_hid_get_feature_report(a0, a1, (size_t)want1);
+    mrb_value rblob = mrb_nil_value();
+    if (rv > 0) { rblob = mrb_str_new(mrb, (const char *)a1, (size_t)rv); }
+    SDL_free(a1);
+    (void)want1;
+    return rblob;
+    }
+}
+
+static mrb_value GenR_SDL_hid_get_input_report(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    int rv = SDL_hid_get_input_report(a0, a1, (size_t)want1);
+    mrb_value rblob = mrb_nil_value();
+    if (rv > 0) { rblob = mrb_str_new(mrb, (const char *)a1, (size_t)rv); }
+    SDL_free(a1);
+    (void)want1;
+    return rblob;
+    }
+}
+
 static mrb_value GenR_SDL_hid_get_properties(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -13185,6 +13427,27 @@ static mrb_value GenR_SDL_hid_get_properties(mrb_state *mrb, mrb_value self)
     SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
     SDL_PropertiesID rv = SDL_hid_get_properties(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
+    }
+}
+
+static mrb_value GenR_SDL_hid_get_report_descriptor(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    int rv = SDL_hid_get_report_descriptor(a0, a1, (size_t)want1);
+    mrb_value rblob = mrb_nil_value();
+    if (rv > 0) { rblob = mrb_str_new(mrb, (const char *)a1, (size_t)rv); }
+    SDL_free(a1);
+    (void)want1;
+    return rblob;
     }
 }
 
@@ -13210,6 +13473,49 @@ static mrb_value GenR_SDL_hid_open_path(mrb_state *mrb, mrb_value self)
     const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
     SDL_hid_device * rv = SDL_hid_open_path(a0);
     return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_hid_device");
+    }
+}
+
+static mrb_value GenR_SDL_hid_read(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    int rv = SDL_hid_read(a0, a1, (size_t)want1);
+    mrb_value rblob = mrb_nil_value();
+    if (rv > 0) { rblob = mrb_str_new(mrb, (const char *)a1, (size_t)rv); }
+    SDL_free(a1);
+    (void)want1;
+    return rblob;
+    }
+}
+
+static mrb_value GenR_SDL_hid_read_timeout(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    SDL_hid_device *a0 = (SDL_hid_device *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_hid_device");
+    mrb_int want1 = GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { mrb_raise(mrb, E_RUNTIME_ERROR, "out of memory"); }
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int rv = SDL_hid_read_timeout(a0, a1, (size_t)want1, a3);
+    mrb_value rblob = mrb_nil_value();
+    if (rv > 0) { rblob = mrb_str_new(mrb, (const char *)a1, (size_t)rv); }
+    SDL_free(a1);
+    (void)want1;
+    return rblob;
     }
 }
 
@@ -13512,6 +13818,7 @@ void GrappleGen_OpenRuby_sdl(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "GetAudioDriver", GenR_SDL_GetAudioDriver, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetAudioFormatName", GenR_SDL_GetAudioFormatName, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetAudioStreamAvailable", GenR_SDL_GetAudioStreamAvailable, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "GetAudioStreamData", GenR_SDL_GetAudioStreamData, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetAudioStreamDevice", GenR_SDL_GetAudioStreamDevice, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetAudioStreamFormat", GenR_SDL_GetAudioStreamFormat, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetAudioStreamFrequencyRatio", GenR_SDL_GetAudioStreamFrequencyRatio, MRB_ARGS_ANY());
@@ -13528,6 +13835,7 @@ void GrappleGen_OpenRuby_sdl(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "GetCameraPermissionState", GenR_SDL_GetCameraPermissionState, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetCameraPosition", GenR_SDL_GetCameraPosition, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetCameraProperties", GenR_SDL_GetCameraProperties, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "GetClipboardMimeTypes", GenR_SDL_GetClipboardMimeTypes, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetClipboardText", GenR_SDL_GetClipboardText, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetClosestFullscreenDisplayMode", GenR_SDL_GetClosestFullscreenDisplayMode, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetCurrentAudioDriver", GenR_SDL_GetCurrentAudioDriver, MRB_ARGS_ANY());
@@ -13556,6 +13864,7 @@ void GrappleGen_OpenRuby_sdl(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "GetDisplayUsableBounds", GenR_SDL_GetDisplayUsableBounds, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetEnvironment", GenR_SDL_GetEnvironment, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetEnvironmentVariable", GenR_SDL_GetEnvironmentVariable, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "GetEnvironmentVariables", GenR_SDL_GetEnvironmentVariables, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetError", GenR_SDL_GetError, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetEventDescription", GenR_SDL_GetEventDescription, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetFloatProperty", GenR_SDL_GetFloatProperty, MRB_ARGS_ANY());
@@ -13584,6 +13893,7 @@ void GrappleGen_OpenRuby_sdl(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "GetGamepadMapping", GenR_SDL_GetGamepadMapping, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetGamepadMappingForGUID", GenR_SDL_GetGamepadMappingForGUID, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetGamepadMappingForID", GenR_SDL_GetGamepadMappingForID, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "GetGamepadMappings", GenR_SDL_GetGamepadMappings, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetGamepadName", GenR_SDL_GetGamepadName, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetGamepadNameForID", GenR_SDL_GetGamepadNameForID, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetGamepadPath", GenR_SDL_GetGamepadPath, MRB_ARGS_ANY());
@@ -13815,6 +14125,8 @@ void GrappleGen_OpenRuby_sdl(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "GetWindowSurface", GenR_SDL_GetWindowSurface, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetWindowSurfaceVSync", GenR_SDL_GetWindowSurfaceVSync, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GetWindowTitle", GenR_SDL_GetWindowTitle, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "GlobDirectory", GenR_SDL_GlobDirectory, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "GlobStorageDirectory", GenR_SDL_GlobStorageDirectory, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "HapticEffectSupported", GenR_SDL_HapticEffectSupported, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "HapticRumbleSupported", GenR_SDL_HapticRumbleSupported, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "HasARMSIMD", GenR_SDL_HasARMSIMD, MRB_ARGS_ANY());
@@ -13849,6 +14161,7 @@ void GrappleGen_OpenRuby_sdl(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "IOFromConstMem", GenR_SDL_IOFromConstMem, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "IOFromDynamicMem", GenR_SDL_IOFromDynamicMem, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "IOFromFile", GenR_SDL_IOFromFile, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "IOFromMem", GenR_SDL_IOFromMem, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "Init", GenR_SDL_Init, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "InitHapticRumble", GenR_SDL_InitHapticRumble, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "InitSubSystem", GenR_SDL_InitSubSystem, MRB_ARGS_ANY());
@@ -13921,6 +14234,7 @@ void GrappleGen_OpenRuby_sdl(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "Quit", GenR_SDL_Quit, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "QuitSubSystem", GenR_SDL_QuitSubSystem, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "RaiseWindow", GenR_SDL_RaiseWindow, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "ReadIO", GenR_SDL_ReadIO, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ReadS16BE", GenR_SDL_ReadS16BE, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ReadS16LE", GenR_SDL_ReadS16LE, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ReadS32BE", GenR_SDL_ReadS32BE, MRB_ARGS_ANY());
@@ -13928,6 +14242,7 @@ void GrappleGen_OpenRuby_sdl(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "ReadS64BE", GenR_SDL_ReadS64BE, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ReadS64LE", GenR_SDL_ReadS64LE, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ReadS8", GenR_SDL_ReadS8, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "ReadStorageFile", GenR_SDL_ReadStorageFile, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ReadSurfacePixel", GenR_SDL_ReadSurfacePixel, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ReadSurfacePixelFloat", GenR_SDL_ReadSurfacePixelFloat, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ReadU16BE", GenR_SDL_ReadU16BE, MRB_ARGS_ANY());
@@ -14199,9 +14514,14 @@ void GrappleGen_OpenRuby_sdl(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "hid_exit", GenR_SDL_hid_exit, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "hid_free_enumeration", GenR_SDL_hid_free_enumeration, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "hid_get_device_info", GenR_SDL_hid_get_device_info, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "hid_get_feature_report", GenR_SDL_hid_get_feature_report, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "hid_get_input_report", GenR_SDL_hid_get_input_report, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "hid_get_properties", GenR_SDL_hid_get_properties, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "hid_get_report_descriptor", GenR_SDL_hid_get_report_descriptor, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "hid_init", GenR_SDL_hid_init, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "hid_open_path", GenR_SDL_hid_open_path, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "hid_read", GenR_SDL_hid_read, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "hid_read_timeout", GenR_SDL_hid_read_timeout, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "hid_send_feature_report", GenR_SDL_hid_send_feature_report, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "hid_set_nonblocking", GenR_SDL_hid_set_nonblocking, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "hid_write", GenR_SDL_hid_write, MRB_ARGS_ANY());

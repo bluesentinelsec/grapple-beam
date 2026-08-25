@@ -252,6 +252,18 @@ static int GenL_nk_buffer_init_default(lua_State *L)
     return 0;
 }
 
+static int GenL_nk_buffer_init_fixed(lua_State *L)
+{
+    (void)L;
+    struct nk_buffer *a0 = (struct nk_buffer *)GrappleGen_LuaCheckHandle(L, 1, "nk_buffer");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    nk_buffer_init_fixed(a0, a1, (nk_size)want1);
+    return 0;
+}
+
 static int GenL_nk_buffer_mark(lua_State *L)
 {
     (void)L;
@@ -1831,6 +1843,21 @@ static int GenL_nk_font_atlas_add(lua_State *L)
     return 1;
 }
 
+static int GenL_nk_font_atlas_add_compressed(lua_State *L)
+{
+    (void)L;
+    struct nk_font_atlas *a0 = (struct nk_font_atlas *)GrappleGen_LuaCheckHandle(L, 1, "nk_font_atlas");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    float a3 = (float)luaL_checknumber(L, 3);
+    const struct nk_font_config *a4 = (const struct nk_font_config *)GrappleGen_LuaCheckHandle(L, 4, "nk_font_config");
+    struct nk_font * rv = nk_font_atlas_add_compressed(a0, a1, (nk_size)want1, a3, a4);
+    GrappleGen_LuaPushHandle(L, (void *)rv, "nk_font");
+    return 1;
+}
+
 static int GenL_nk_font_atlas_add_compressed_base85(lua_State *L)
 {
     (void)L;
@@ -1850,6 +1877,21 @@ static int GenL_nk_font_atlas_add_default(lua_State *L)
     float a1 = (float)luaL_checknumber(L, 2);
     const struct nk_font_config *a2 = (const struct nk_font_config *)GrappleGen_LuaCheckHandle(L, 3, "nk_font_config");
     struct nk_font * rv = nk_font_atlas_add_default(a0, a1, a2);
+    GrappleGen_LuaPushHandle(L, (void *)rv, "nk_font");
+    return 1;
+}
+
+static int GenL_nk_font_atlas_add_from_memory(lua_State *L)
+{
+    (void)L;
+    struct nk_font_atlas *a0 = (struct nk_font_atlas *)GrappleGen_LuaCheckHandle(L, 1, "nk_font_atlas");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    float a3 = (float)luaL_checknumber(L, 3);
+    const struct nk_font_config *a4 = (const struct nk_font_config *)GrappleGen_LuaCheckHandle(L, 4, "nk_font_config");
+    struct nk_font * rv = nk_font_atlas_add_from_memory(a0, a1, (nk_size)want1, a3, a4);
     GrappleGen_LuaPushHandle(L, (void *)rv, "nk_font");
     return 1;
 }
@@ -2109,6 +2151,20 @@ static int GenL_nk_init_default(lua_State *L)
     struct nk_context *a0 = (struct nk_context *)GrappleGen_LuaCheckHandle(L, 1, "nk_context");
     const struct nk_user_font *a1 = (const struct nk_user_font *)GrappleGen_LuaCheckHandle(L, 2, "nk_user_font");
     nk_bool rv = nk_init_default(a0, a1);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
+static int GenL_nk_init_fixed(lua_State *L)
+{
+    (void)L;
+    struct nk_context *a0 = (struct nk_context *)GrappleGen_LuaCheckHandle(L, 1, "nk_context");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    const struct nk_user_font *a3 = (const struct nk_user_font *)GrappleGen_LuaCheckHandle(L, 3, "nk_user_font");
+    nk_bool rv = nk_init_fixed(a0, a1, (nk_size)want1, a3);
     lua_pushboolean(L, (int)rv);
     return 1;
 }
@@ -3622,6 +3678,18 @@ static int GenL_nk_str_init_default(lua_State *L)
     return 0;
 }
 
+static int GenL_nk_str_init_fixed(lua_State *L)
+{
+    (void)L;
+    struct nk_str *a0 = (struct nk_str *)GrappleGen_LuaCheckHandle(L, 1, "nk_str");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    nk_str_init_fixed(a0, a1, (nk_size)want1);
+    return 0;
+}
+
 static int GenL_nk_str_insert_at_char(lua_State *L)
 {
     (void)L;
@@ -4194,6 +4262,18 @@ static int GenL_nk_textedit_init_default(lua_State *L)
     (void)L;
     struct nk_text_edit *a0 = (struct nk_text_edit *)GrappleGen_LuaCheckHandle(L, 1, "nk_text_edit");
     nk_textedit_init_default(a0);
+    return 0;
+}
+
+static int GenL_nk_textedit_init_fixed(lua_State *L)
+{
+    (void)L;
+    struct nk_text_edit *a0 = (struct nk_text_edit *)GrappleGen_LuaCheckHandle(L, 1, "nk_text_edit");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    nk_textedit_init_fixed(a0, a1, (nk_size)want1);
     return 0;
 }
 
@@ -4932,7 +5012,7 @@ static int GenL_nk_window_show_if(lua_State *L)
 int GrappleGen_OpenLua_nk(lua_State *L);
 int GrappleGen_OpenLua_nk(lua_State *L)
 {
-    lua_createtable(L, 0, 429);
+    lua_createtable(L, 0, 435);
     lua_pushcfunction(L, GenL_nk__begin);
     lua_setfield(L, -2, "_begin");
     lua_pushcfunction(L, GenL_nk__draw_begin);
@@ -4963,6 +5043,8 @@ int GrappleGen_OpenLua_nk(lua_State *L)
     lua_setfield(L, -2, "buffer_init");
     lua_pushcfunction(L, GenL_nk_buffer_init_default);
     lua_setfield(L, -2, "buffer_init_default");
+    lua_pushcfunction(L, GenL_nk_buffer_init_fixed);
+    lua_setfield(L, -2, "buffer_init_fixed");
     lua_pushcfunction(L, GenL_nk_buffer_mark);
     lua_setfield(L, -2, "buffer_mark");
     lua_pushcfunction(L, GenL_nk_buffer_push);
@@ -5215,10 +5297,14 @@ int GrappleGen_OpenLua_nk(lua_State *L)
     lua_setfield(L, -2, "filter_oct");
     lua_pushcfunction(L, GenL_nk_font_atlas_add);
     lua_setfield(L, -2, "font_atlas_add");
+    lua_pushcfunction(L, GenL_nk_font_atlas_add_compressed);
+    lua_setfield(L, -2, "font_atlas_add_compressed");
     lua_pushcfunction(L, GenL_nk_font_atlas_add_compressed_base85);
     lua_setfield(L, -2, "font_atlas_add_compressed_base85");
     lua_pushcfunction(L, GenL_nk_font_atlas_add_default);
     lua_setfield(L, -2, "font_atlas_add_default");
+    lua_pushcfunction(L, GenL_nk_font_atlas_add_from_memory);
+    lua_setfield(L, -2, "font_atlas_add_from_memory");
     lua_pushcfunction(L, GenL_nk_font_atlas_begin);
     lua_setfield(L, -2, "font_atlas_begin");
     lua_pushcfunction(L, GenL_nk_font_atlas_cleanup);
@@ -5269,6 +5355,8 @@ int GrappleGen_OpenLua_nk(lua_State *L)
     lua_setfield(L, -2, "init_custom");
     lua_pushcfunction(L, GenL_nk_init_default);
     lua_setfield(L, -2, "init_default");
+    lua_pushcfunction(L, GenL_nk_init_fixed);
+    lua_setfield(L, -2, "init_fixed");
     lua_pushcfunction(L, GenL_nk_input_any_mouse_click_in_rect);
     lua_setfield(L, -2, "input_any_mouse_click_in_rect");
     lua_pushcfunction(L, GenL_nk_input_begin);
@@ -5541,6 +5629,8 @@ int GrappleGen_OpenLua_nk(lua_State *L)
     lua_setfield(L, -2, "str_init");
     lua_pushcfunction(L, GenL_nk_str_init_default);
     lua_setfield(L, -2, "str_init_default");
+    lua_pushcfunction(L, GenL_nk_str_init_fixed);
+    lua_setfield(L, -2, "str_init_fixed");
     lua_pushcfunction(L, GenL_nk_str_insert_at_char);
     lua_setfield(L, -2, "str_insert_at_char");
     lua_pushcfunction(L, GenL_nk_str_insert_at_rune);
@@ -5647,6 +5737,8 @@ int GrappleGen_OpenLua_nk(lua_State *L)
     lua_setfield(L, -2, "textedit_init");
     lua_pushcfunction(L, GenL_nk_textedit_init_default);
     lua_setfield(L, -2, "textedit_init_default");
+    lua_pushcfunction(L, GenL_nk_textedit_init_fixed);
+    lua_setfield(L, -2, "textedit_init_fixed");
     lua_pushcfunction(L, GenL_nk_textedit_paste);
     lua_setfield(L, -2, "textedit_paste");
     lua_pushcfunction(L, GenL_nk_textedit_redo);

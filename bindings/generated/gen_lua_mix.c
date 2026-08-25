@@ -178,6 +178,28 @@ static int GenL_MIX_CreateTrack(lua_State *L)
     return 1;
 }
 
+static int GenL_MIX_DecodeAudio(lua_State *L)
+{
+    (void)L;
+    MIX_AudioDecoder *a0 = (MIX_AudioDecoder *)GrappleGen_LuaCheckHandle(L, 1, "MIX_AudioDecoder");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    SDL_AudioSpec tmp3;
+    const SDL_AudioSpec *a3 = NULL;
+    if (!lua_isnoneornil(L, 3)) {
+        GenRead_SDL_AudioSpec(L, 3, &tmp3);
+        a3 = &tmp3;
+    }
+    int rv = MIX_DecodeAudio(a0, a1, (int)want1, a3);
+    if (rv > 0) { lua_pushlstring(L, (const char *)a1, (size_t)rv); }
+    else { lua_pushnil(L); }
+    SDL_free(a1);
+    (void)want1;
+    return 1;
+}
+
 static int GenL_MIX_DestroyAudio(lua_State *L)
 {
     (void)L;
@@ -225,6 +247,22 @@ static int GenL_MIX_FramesToMS(lua_State *L)
     Sint64 a1 = (Sint64)luaL_checkinteger(L, 2);
     Sint64 rv = MIX_FramesToMS(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
+    return 1;
+}
+
+static int GenL_MIX_Generate(lua_State *L)
+{
+    (void)L;
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_LuaCheckHandle(L, 1, "MIX_Mixer");
+    lua_Integer want1 = luaL_checkinteger(L, 2);
+    if (want1 < 0) { want1 = 0; }
+    void *a1 = (want1 > 0) ? SDL_malloc((size_t)want1) : NULL;
+    if (want1 > 0 && a1 == NULL) { return luaL_error(L, "out of memory"); }
+    int rv = MIX_Generate(a0, a1, (int)want1);
+    if (rv > 0) { lua_pushlstring(L, (const char *)a1, (size_t)rv); }
+    else { lua_pushnil(L); }
+    SDL_free(a1);
+    (void)want1;
     return 1;
 }
 
@@ -453,6 +491,24 @@ static int GenL_MIX_GetTrackRemaining(lua_State *L)
     Sint64 rv = MIX_GetTrackRemaining(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
+}
+
+static int GenL_MIX_GetTrackTags(lua_State *L)
+{
+    (void)L;
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_LuaCheckHandle(L, 1, "MIX_Track");
+    int io1 = (int)luaL_optinteger(L, 2, 0);
+    char ** rv = MIX_GetTrackTags(a0, &io1);
+    if (rv == NULL) { lua_pushnil(L); } else {
+        lua_newtable(L);
+        for (int li = 0; rv[li] != NULL; ++li) {
+            lua_pushstring(L, rv[li]);
+            lua_rawseti(L, -2, li + 1);
+        }
+        SDL_free((void *)rv);
+    }
+    lua_pushinteger(L, (lua_Integer)io1);
+    return 2;
 }
 
 static int GenL_MIX_Init(lua_State *L)
@@ -937,7 +993,7 @@ static int GenL_MIX_Version(lua_State *L)
 int GrappleGen_OpenLua_mix(lua_State *L);
 int GrappleGen_OpenLua_mix(lua_State *L)
 {
-    lua_createtable(L, 0, 84);
+    lua_createtable(L, 0, 87);
     lua_pushcfunction(L, GenL_MIX_AudioFramesToMS);
     lua_setfield(L, -2, "AudioFramesToMS");
     lua_pushcfunction(L, GenL_MIX_AudioMSToFrames);
@@ -956,6 +1012,8 @@ int GrappleGen_OpenLua_mix(lua_State *L)
     lua_setfield(L, -2, "CreateSineWaveAudio");
     lua_pushcfunction(L, GenL_MIX_CreateTrack);
     lua_setfield(L, -2, "CreateTrack");
+    lua_pushcfunction(L, GenL_MIX_DecodeAudio);
+    lua_setfield(L, -2, "DecodeAudio");
     lua_pushcfunction(L, GenL_MIX_DestroyAudio);
     lua_setfield(L, -2, "DestroyAudio");
     lua_pushcfunction(L, GenL_MIX_DestroyAudioDecoder);
@@ -968,6 +1026,8 @@ int GrappleGen_OpenLua_mix(lua_State *L)
     lua_setfield(L, -2, "DestroyTrack");
     lua_pushcfunction(L, GenL_MIX_FramesToMS);
     lua_setfield(L, -2, "FramesToMS");
+    lua_pushcfunction(L, GenL_MIX_Generate);
+    lua_setfield(L, -2, "Generate");
     lua_pushcfunction(L, GenL_MIX_GetAudioDecoder);
     lua_setfield(L, -2, "GetAudioDecoder");
     lua_pushcfunction(L, GenL_MIX_GetAudioDecoderFormat);
@@ -1016,6 +1076,8 @@ int GrappleGen_OpenLua_mix(lua_State *L)
     lua_setfield(L, -2, "GetTrackProperties");
     lua_pushcfunction(L, GenL_MIX_GetTrackRemaining);
     lua_setfield(L, -2, "GetTrackRemaining");
+    lua_pushcfunction(L, GenL_MIX_GetTrackTags);
+    lua_setfield(L, -2, "GetTrackTags");
     lua_pushcfunction(L, GenL_MIX_Init);
     lua_setfield(L, -2, "Init");
     lua_pushcfunction(L, GenL_MIX_LoadAudio);

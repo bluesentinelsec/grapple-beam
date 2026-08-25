@@ -656,6 +656,47 @@ static void MakeMeta(lua_State *L, const char *name, const luaL_Reg *methods, lu
     lua_pop(L, 1);
 }
 
+
+/* SDL.LoadFile — bytes from a real filesystem path.
+ *
+ * Grapple.read_file reads through the VFS, which is the right default for
+ * game assets and no help at all for a file that was never mounted: a font
+ * in /System/Library/Fonts, a config beside the executable, a file the user
+ * picked from a dialog. Lua could fall back to io.open; mruby has no File
+ * class at all, so without this a Ruby script cannot read such a path by any
+ * means. The generator skips SDL_LoadFile because it returns void* with the
+ * length written through a pointer.
+ */
+static int LSdlLoadFile(lua_State *L)
+{
+    size_t size = 0;
+    void *data = SDL_LoadFile(luaL_checkstring(L, 1), &size);
+    if (data == NULL)
+    {
+        /* nil rather than an error: "does this path exist" is the normal way
+           to use this — walking a list of candidate font locations, say — and
+           raising would make the ordinary case need a pcall. Ruby's binding
+           returns nil for the same reason. */
+        lua_pushnil(L);
+        return 1;
+    }
+    lua_pushlstring(L, (const char *)data, size);
+    SDL_free(data);
+    return 1;
+}
+
+/* Add curated entries to a table the generator already created. */
+static void AddToModule(lua_State *L, const char *module, const char *name, lua_CFunction fn)
+{
+    lua_getglobal(L, module);
+    if (lua_istable(L, -1))
+    {
+        lua_pushcfunction(L, fn);
+        lua_setfield(L, -2, name);
+    }
+    lua_pop(L, 1);
+}
+
 extern int Grapple_OpenGeneratedLuaBindings(lua_State *L);
 
 bool Grapple_OpenLuaBindings(lua_State *L)
@@ -721,9 +762,22 @@ bool Grapple_OpenLuaBindings(lua_State *L)
      * PHYSFS, B2, NK, JSON, GrappleC tables); see
      * bindings/generated/COVERAGE.md. */
     Grapple_OpenGeneratedLuaBindings(L);
+    /* Reads that the generator could not express, patched onto the modules
+       it made. */
+    AddToModule(L, "SDL", "LoadFile", LSdlLoadFile);
     /* Engine hooks: the one thing a generator cannot produce, because it
      * has to turn a Lua function into something C can hold. */
     Grapple_OpenLuaEngineHooks(L);
+    /* One table instead of a run of setters. */
+    if (!Grapple_OpenLuaEngine(L))
+    {
+        return false;
+    }
+    /* Widgets you declare once, over the immediate-mode GUI. */
+    if (!Grapple_OpenLuaUi(L))
+    {
+        return false;
+    }
     /* Real regular expressions, which Lua patterns are not. */
     if (!Grapple_OpenLuaRegex(L))
     {

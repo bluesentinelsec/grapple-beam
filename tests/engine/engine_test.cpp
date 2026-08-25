@@ -639,3 +639,99 @@ TEST_F(EngineHarness, NullsAreHandled)
 }
 
 } // namespace
+
+// --- the event sink -------------------------------------------------------
+//
+// The sink exists so an immediate-mode GUI does not have to be driven by
+// hand. What matters is the bracketing: begin before the frame's events, end
+// after them, and both even in a frame where nothing arrived.
+
+namespace {
+
+struct SinkLog
+{
+    int begins = 0;
+    int ends = 0;
+    int events = 0;
+    // Recorded as a string so ordering is asserted, not just counts.
+    std::string order;
+};
+
+Grapple_EventSink MakeLoggingSink(SinkLog *log)
+{
+    Grapple_EventSink sink{};
+    sink.user = log;
+    sink.begin = [](void *user) {
+        auto *l = static_cast<SinkLog *>(user);
+        l->begins++;
+        l->order += 'B';
+    };
+    sink.event = [](void *user, const SDL_Event *) {
+        auto *l = static_cast<SinkLog *>(user);
+        l->events++;
+        l->order += 'e';
+    };
+    sink.end = [](void *user) {
+        auto *l = static_cast<SinkLog *>(user);
+        l->ends++;
+        l->order += 'E';
+    };
+    return sink;
+}
+
+} // namespace
+
+TEST_F(EngineHarness, EventSinkIsBracketedEveryFrameEvenWithNoEvents)
+{
+    SinkLog log;
+    const Grapple_EventSink sink = MakeLoggingSink(&log);
+    Grapple_EngineSetEventSink(engine_, &sink);
+
+    RunFrames(3, 16'666'667);
+
+    EXPECT_EQ(log.begins, 3);
+    EXPECT_EQ(log.ends, 3);
+    // A quiet frame still has to say so: Nuklear needs the empty bracket.
+    EXPECT_EQ(log.order, "BEBEBE");
+}
+
+TEST_F(EngineHarness, EventSinkSeesEventsBetweenBeginAndEnd)
+{
+    SinkLog log;
+    const Grapple_EventSink sink = MakeLoggingSink(&log);
+    Grapple_EngineSetEventSink(engine_, &sink);
+
+    // The harness starts SDL with no subsystems, and the event queue is not
+    // one of the things a headless engine brings up.
+    ASSERT_TRUE(SDL_InitSubSystem(SDL_INIT_EVENTS)) << SDL_GetError();
+
+    // A registered user event: SDL_PushEvent rejects the bare SDL_EVENT_USER
+    // value, which is a range start rather than a usable type.
+    const Uint32 kTestEvent = SDL_RegisterEvents(1);
+    ASSERT_NE(kTestEvent, 0u);
+    SDL_Event pushed{};
+    pushed.type = kTestEvent;
+    ASSERT_TRUE(SDL_PushEvent(&pushed)) << SDL_GetError();
+
+    RunFrames(1, 16'666'667);
+
+    EXPECT_GE(log.events, 1);
+    EXPECT_EQ(log.order.front(), 'B');
+    EXPECT_EQ(log.order.back(), 'E');
+    // No event may land outside a bracket.
+    EXPECT_EQ(log.order.find("EB"), std::string::npos) << log.order;
+}
+
+TEST_F(EngineHarness, ClearingTheSinkStopsTheCallbacks)
+{
+    SinkLog log;
+    const Grapple_EventSink sink = MakeLoggingSink(&log);
+    Grapple_EngineSetEventSink(engine_, &sink);
+    RunFrames(1, 16'666'667);
+    const int after_one = log.begins;
+
+    Grapple_EngineSetEventSink(engine_, nullptr);
+    RunFrames(2, 16'666'667);
+
+    EXPECT_EQ(log.begins, after_one);
+}

@@ -286,6 +286,11 @@ void Grapple_DestroyGui(Grapple_Gui *gui)
     SDL_free(gui);
 }
 
+SDL_Renderer *Grapple_GuiRenderer(Grapple_Gui *gui)
+{
+    return (gui != NULL) ? gui->renderer : NULL;
+}
+
 struct nk_context *Grapple_GuiContext(Grapple_Gui *gui)
 {
     return (gui != NULL) ? &gui->ctx : NULL;
@@ -684,6 +689,31 @@ void Grapple_GuiGridCellSpanOwned(Grapple_Gui *gui, int span)
     }
 }
 
+void Grapple_GuiGridRowHeightOwned(Grapple_Gui *gui, float height)
+{
+    if (gui != NULL && gui->grid_active)
+    {
+        Grapple_GuiGridRowHeight(&gui->grid, height);
+    }
+}
+
+void Grapple_GuiGridSpacingOwned(Grapple_Gui *gui, float x, float y)
+{
+    if (gui != NULL && gui->grid_active)
+    {
+        Grapple_GuiGridSpacing(&gui->grid, x, y);
+    }
+}
+
+void Grapple_GuiGridCellPartOwned(Grapple_Gui *gui, int span, float fraction,
+                                    Grapple_GuiAlign align)
+{
+    if (gui != NULL && gui->grid_active)
+    {
+        Grapple_GuiGridCellPart(&gui->grid, span, fraction, align);
+    }
+}
+
 void Grapple_GuiGridNextRowOwned(Grapple_Gui *gui)
 {
     if (gui != NULL && gui->grid_active)
@@ -986,6 +1016,35 @@ bool Grapple_GuiKeyPressed(Grapple_Gui *gui, int scancode)
 float Grapple_GuiScale(Grapple_Gui *gui)
 {
     return (gui != NULL) ? gui->scale : 1.0f;
+}
+
+/* Thin void* adapters: the sink's signatures are deliberately opaque so
+   that neither module needs the other's headers, and a function-pointer
+   cast (which is undefined behaviour, however well it usually works) is
+   never required. */
+static void SinkBegin(void *gui)
+{
+    Grapple_GuiInputBegin((Grapple_Gui *)gui);
+}
+
+static void SinkEvent(void *gui, const SDL_Event *event)
+{
+    Grapple_GuiProcessEvent((Grapple_Gui *)gui, event);
+}
+
+static void SinkEnd(void *gui)
+{
+    Grapple_GuiInputEnd((Grapple_Gui *)gui);
+}
+
+Grapple_EventSink Grapple_GuiEventSink(Grapple_Gui *gui)
+{
+    Grapple_EventSink sink = {0};
+    sink.user = gui;
+    sink.begin = SinkBegin;
+    sink.event = SinkEvent;
+    sink.end = SinkEnd;
+    return sink;
 }
 
 bool Grapple_GuiPumpEvents(Grapple_Gui *gui)

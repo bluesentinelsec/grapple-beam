@@ -15,6 +15,7 @@
  */
 #include <grapple/engine.h>
 #include <grapple/engine_script.h>
+#include <grapple/gui.h>
 #include <grapple/engine_scene.h>
 #include <grapple/ruby.h>
 
@@ -41,7 +42,7 @@ static mrb_value HandlerArray(mrb_state *mrb)
 }
 
 static bool DispatchRuby(void *language_state, Sint64 handle, Grapple_ScriptHook hook,
-                         float value)
+                         float value, const void *payload)
 {
     mrb_state *mrb = (mrb_state *)language_state;
     mrb_value array = HandlerArray(mrb);
@@ -64,6 +65,22 @@ static bool DispatchRuby(void *language_state, Sint64 handle, Grapple_ScriptHook
         const mrb_value arg = mrb_float_value(mrb, (mrb_float)value);
         result = mrb_funcall(mrb, callable, "call", 1, arg);
     }
+    else if (hook == GRAPPLE_HOOK_EVENT)
+    {
+        /* Borrowed: the same handle every generated SDL.* function takes,
+           but pointing at a stack event the engine owns. It is valid only
+           until this call returns, which is why nothing takes ownership. */
+        const mrb_value arg =
+            GrappleGen_RubyPushHandle(mrb, (void *)(uintptr_t)payload, "SDL_Event");
+        result = mrb_funcall(mrb, callable, "call", 1, arg);
+    }
+    else if (hook == GRAPPLE_HOOK_RESIZE)
+    {
+        const Grapple_ScriptSize *size = (const Grapple_ScriptSize *)payload;
+        const mrb_value w = mrb_fixnum_value(size != NULL ? size->width : 0);
+        const mrb_value h = mrb_fixnum_value(size != NULL ? size->height : 0);
+        result = mrb_funcall(mrb, callable, "call", 2, w, h);
+    }
     else
     {
         result = mrb_funcall(mrb, callable, "call", 0);
@@ -71,9 +88,13 @@ static bool DispatchRuby(void *language_state, Sint64 handle, Grapple_ScriptHook
 
     if (mrb->exc != NULL)
     {
-        /* An exception must not escape into the engine's C frames: report
-           it and carry on, so one bad frame does not end the game. */
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "engine hook raised");
+        /* An exception must not escape into the engine's C frames: report it
+           and carry on, so one bad frame does not end the game. Say what it
+           was — "engine hook raised" on its own leaves the author to guess,
+           which is exactly the wrong thing to do sixty times a second. */
+        const mrb_value message = mrb_funcall(mrb, mrb_obj_value(mrb->exc), "inspect", 0);
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "engine hook: %s",
+                     mrb_string_p(message) ? RSTRING_CSTR(mrb, message) : "raised");
         mrb->exc = NULL;
         return true;
     }
@@ -95,6 +116,21 @@ static void ReleaseRuby(void *language_state, Sint64 handle)
            index into this array, and compacting would move them. */
         mrb_ary_set(mrb, array, (mrb_int)handle, mrb_nil_value());
     }
+}
+
+/* Bind one block to one hook. Shared with the engine object in
+   grapple_ui_ruby.c, which offers the same hooks as methods. */
+bool Grapple_RubyBindEngineHook(mrb_state *mrb, Grapple_Engine *engine,
+                                  Grapple_ScriptHook hook, mrb_value block)
+{
+    if (!Grapple_ScriptBind(engine, mrb, DispatchRuby, ReleaseRuby))
+    {
+        return false;
+    }
+    mrb_value array = HandlerArray(mrb);
+    mrb_ary_push(mrb, array, block);
+    const Sint64 handle = (Sint64)(RARRAY_LEN(array) - 1);
+    return Grapple_ScriptSetHook(engine, hook, handle);
 }
 
 static mrb_value SetHook(mrb_state *mrb, Grapple_ScriptHook hook)
@@ -151,10 +187,56 @@ static mrb_value ROnPostRender(mrb_state *mrb, mrb_value self)
     (void)self;
     return SetHook(mrb, GRAPPLE_HOOK_POST_RENDER);
 }
+static mrb_value ROnEvent(mrb_state *mrb, mrb_value self)
+{
+    (void)self;
+    return SetHook(mrb, GRAPPLE_HOOK_EVENT);
+}
+
+static mrb_value ROnResize(mrb_state *mrb, mrb_value self)
+{
+    (void)self;
+    return SetHook(mrb, GRAPPLE_HOOK_RESIZE);
+}
+
 static mrb_value ROnUnload(mrb_state *mrb, mrb_value self)
 {
     (void)self;
     return SetHook(mrb, GRAPPLE_HOOK_UNLOAD);
+}
+
+/* Let the engine drive a GUI's input.
+ *
+ * The C equivalent is two lines (Grapple_GuiEventSink then
+ * Grapple_EngineSetEventSink), but a sink is a struct of function pointers
+ * and there is no sane way to hand one across a script boundary — so scripts
+ * get the pair as a single call. Passing nil for the gui detaches.
+ */
+static mrb_value RAttachGui(mrb_state *mrb, mrb_value self)
+{
+    (void)self;
+    mrb_value engine_value;
+    mrb_value gui_value = mrb_nil_value();
+    mrb_get_args(mrb, "o|o", &engine_value, &gui_value);
+    Grapple_Engine *engine =
+        (Grapple_Engine *)GrappleGen_RubyCheckHandle(mrb, engine_value, "Grapple_Engine");
+    if (engine == NULL)
+    {
+        mrb_raise(mrb, E_ARGUMENT_ERROR, "engine expected");
+    }
+    if (mrb_nil_p(gui_value))
+    {
+        Grapple_EngineSetEventSink(engine, NULL);
+        return mrb_true_value();
+    }
+    Grapple_Gui *gui = (Grapple_Gui *)GrappleGen_RubyCheckHandle(mrb, gui_value, "Grapple_Gui");
+    if (gui == NULL)
+    {
+        mrb_raise(mrb, E_ARGUMENT_ERROR, "gui expected");
+    }
+    const Grapple_EventSink sink = Grapple_GuiEventSink(gui);
+    Grapple_EngineSetEventSink(engine, &sink);
+    return mrb_true_value();
 }
 
 static mrb_value RRun(mrb_state *mrb, mrb_value self)
@@ -337,7 +419,10 @@ bool Grapple_OpenRubyEngineHooks(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "OnUpdate", ROnUpdate, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "OnRender", ROnRender, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "OnPostRender", ROnPostRender, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "OnEvent", ROnEvent, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "OnResize", ROnResize, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "OnUnload", ROnUnload, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "AttachGui", RAttachGui, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "Run", RRun, MRB_ARGS_REQ(1));
     mrb_define_module_function(mrb, mod, "SceneDefine", RSceneDefine, MRB_ARGS_REQ(2));
     mrb_define_module_function(mrb, mod, "SceneOn", RSceneOn, MRB_ARGS_ANY());

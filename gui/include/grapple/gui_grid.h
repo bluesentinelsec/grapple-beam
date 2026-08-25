@@ -19,6 +19,11 @@
  *   Grapple_GuiGridCell(&grid);          nk_label(ctx, "HP:", NK_TEXT_LEFT);
  *   Grapple_GuiGridCellSpan(&grid, 2);   nk_slider_int(ctx, 0, &hp, 100, 1);
  *
+ *   Grapple_GuiGridRowHeight(&grid, 44);            // this row only
+ *   Grapple_GuiGridCellPart(&grid, 3, 0.3f,         // a third of the row,
+ *                           GRAPPLE_GUI_ALIGN_RIGHT);  // hugging the right
+ *   nk_button_label(ctx, "Save");
+ *
  *   Grapple_GuiGridEnd(&grid);
  */
 #ifndef GRAPPLE_GUI_GRID_H
@@ -32,15 +37,26 @@ extern "C" {
 
 #define GRAPPLE_GUI_GRID_MAX_COLS 16
 
+/** Where a part-width widget sits inside the cell it was given. */
+typedef enum Grapple_GuiAlign
+{
+    GRAPPLE_GUI_ALIGN_LEFT = 0,
+    GRAPPLE_GUI_ALIGN_CENTER,
+    GRAPPLE_GUI_ALIGN_RIGHT
+} Grapple_GuiAlign;
+
 typedef struct Grapple_GuiGrid
 {
     struct nk_context *ctx;
     float weights[GRAPPLE_GUI_GRID_MAX_COLS];
     float total_weight;
     float row_height;
+    float next_row_height; /* one-shot override; 0 = use row_height */
+    float pending_tail;    /* trailing spacer owed by an aligned cell */
     int columns;
     int cursor;   /* next column index in the current row */
     bool row_open;
+    bool styled;  /* spacing was pushed and must be popped at End */
 } Grapple_GuiGrid;
 
 /**
@@ -75,6 +91,40 @@ extern void Grapple_GuiGridNextRow(Grapple_GuiGrid *grid);
 
 /** Finish the grid (closes the last row). */
 extern void Grapple_GuiGridEnd(Grapple_GuiGrid *grid);
+
+/**
+ * Height for the next row only, overriding the grid's own.
+ *
+ * A grid otherwise gives every row the same height, which is wrong the
+ * moment a panel has a heading, a row of buttons and a status line — three
+ * grids where one should do. Call this before the first cell of the row;
+ * `height` <= 0 restores the grid default for that row.
+ */
+extern void Grapple_GuiGridRowHeight(Grapple_GuiGrid *grid, float height);
+
+/**
+ * Space between cells, in pixels, for the rest of this grid.
+ *
+ * Nuklear's spacing is a window-wide style value; this pushes it for the
+ * grid and Grapple_GuiGridEnd pops it, so a dense grid and an airy one can
+ * sit in the same panel. Call before the first cell.
+ */
+extern void Grapple_GuiGridSpacing(Grapple_GuiGrid *grid, float x, float y);
+
+/**
+ * Claim `span` columns but give the widget only `fraction` of that width,
+ * placed by `align`; the remainder becomes blank space.
+ *
+ * This is what a full-width cell cannot express: a confirm button that hugs
+ * the right edge, a title centred over a wide row. `fraction` is clamped to
+ * (0, 1]; 1 is exactly Grapple_GuiGridCellSpan.
+ *
+ * Nuklear cannot measure a widget, so the fraction is the caller's estimate
+ * rather than a shrink-to-fit — the honest limit of a layout that has to
+ * emit widths before it has seen the widget.
+ */
+extern void Grapple_GuiGridCellPart(Grapple_GuiGrid *grid, int span, float fraction,
+                                      Grapple_GuiAlign align);
 
 #ifdef __cplusplus
 }

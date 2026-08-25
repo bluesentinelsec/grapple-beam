@@ -18,6 +18,8 @@
 #define GRAPPLE_BINDINGS_H
 
 #include <SDL3/SDL.h>
+#include <grapple/engine.h>
+#include <grapple/engine_script.h>
 #include <mruby.h>
 
 #ifdef __cplusplus
@@ -44,6 +46,56 @@ extern bool Grapple_OpenRubyEngineHooks(mrb_state *mrb);
  *  string.find and friends are untouched. Called for you by
  *  Grapple_OpenLuaBindings. */
 extern bool Grapple_OpenLuaRegex(lua_State *L);
+
+/** The retained widget tree, as `Grapple.ui(engine)`. See grapple/widgets.h. */
+extern bool Grapple_OpenLuaUi(lua_State *L);
+
+/** `Grapple.engine{...}`: one table instead of a run of setters. */
+extern bool Grapple_OpenLuaEngine(lua_State *L);
+
+/** The same pair for Ruby: Grapple.engine(...) and Grapple.ui(engine). */
+extern bool Grapple_OpenRubyUi(mrb_state *mrb);
+
+/**
+ * The command line a script's engine should inherit.
+ *
+ * The engine reads --fullscreen, --window-size and thirty-odd other options
+ * from the argc/argv in its config, and a script has no way to hand it any:
+ * the setters never exposed the fields, and a script does not have the
+ * process arguments to begin with. The runner calls this once with the
+ * engine-bound part of its own command line, and Grapple.engine{} passes it
+ * on, so those flags do what they say. Not copied — the pointers must
+ * outlive every engine, which the real argv does.
+ */
+extern void Grapple_SetScriptProcessArgs(int argc, char **argv);
+
+/** What the runner last set, for the engine constructors. */
+extern void Grapple_ScriptProcessArgs(int *argc, char ***argv);
+
+/**
+ * Run an engine the script described but never started.
+ *
+ * Love2D and Godot do not make a script call the loop; this is what lets a
+ * script here stop after registering its callbacks. Returns false when
+ * there was nothing to run — no engine, or one with no handlers. Called by
+ * the runner once the script body has finished.
+ */
+extern bool Grapple_LuaRunPendingEngine(lua_State *L);
+extern bool Grapple_RubyRunPendingEngine(mrb_state *mrb);
+
+/** The engine behind either Ruby spelling. */
+extern Grapple_Engine *Grapple_RubyEngineAt(mrb_state *mrb, mrb_value value);
+
+/** Bind one block to one engine hook. */
+extern bool Grapple_RubyBindEngineHook(mrb_state *mrb, Grapple_Engine *engine,
+                                         Grapple_ScriptHook hook, mrb_value block);
+
+/** The engine behind either spelling — the object or a generated handle. */
+extern Grapple_Engine *Grapple_LuaEngineAt(lua_State *L, int index);
+
+/** Bind one Lua function to one engine hook. Used by both spellings. */
+extern bool Grapple_LuaBindEngineHook(lua_State *L, Grapple_Engine *engine,
+                                        Grapple_ScriptHook hook, int fn_index);
 
 /** Install the `Grapple` module into an mruby state. */
 extern bool Grapple_OpenRubyBindings(mrb_state *mrb);

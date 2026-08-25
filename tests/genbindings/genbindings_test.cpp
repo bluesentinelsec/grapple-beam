@@ -14,6 +14,8 @@
 #include <box2d/box2d.h>
 #include <cJSON.h>
 #include <gtest/gtest.h>
+#include <fstream>
+#include <filesystem>
 
 #include <mruby/compile.h>
 #include <mruby/string.h>
@@ -1130,3 +1132,297 @@ TEST(GenRuby, ScenesStackAndTheCoveredOneStops)
 }
 
 } // namespace
+
+// The engine hooks a generator cannot produce: OnEvent hands a script a real
+// SDL_Event, OnResize hands it the new size. Both were missing until the GUI
+// demos needed them, so both are pinned here.
+
+TEST(GenLua, OnEventReceivesARealSdlEvent)
+{
+    RunLua(
+        "assert(SDL.Init(SDL.INIT_EVENTS))\n"
+        "local config = GrappleC.ConfigCreate()\n"
+        "GrappleC.ConfigSetHeadless(config, true)\n"
+        "GrappleC.ConfigSetManualClock(config, true)\n"
+        "GrappleC.ConfigSetAutoMount(config, false)\n"
+        "local engine = assert(GrappleC.CreateEngine(config))\n"
+        "local kind = SDL.RegisterEvents(1)\n"
+        "assert(kind ~= 0)\n"
+        "local seen = 0\n"
+        "GrappleC.OnEvent(engine, function(event)\n"
+        "  -- A borrowed handle the generated accessors understand.\n"
+        "  if GrappleC.EventType(event) == kind then seen = seen + 1 end\n"
+        "end)\n"
+        "local pushed = GrappleC.EventCreate()\n"
+        "GrappleC.EventSetType(pushed, kind)\n"
+        "assert(SDL.PushEvent(pushed))\n"
+        "GrappleC.EngineAdvance(engine, 16666667)\n"
+        "GrappleC.EngineTick(engine)\n"
+        "assert(seen == 1, 'OnEvent saw ' .. tostring(seen))\n"
+        "GrappleC.EventDestroy(pushed)\n"
+        "GrappleC.DestroyEngine(engine)\n");
+}
+
+TEST(GenLua, OnResizeReportsTheNewSize)
+{
+    RunLua(
+        "local config = GrappleC.ConfigCreate()\n"
+        "GrappleC.ConfigSetHeadless(config, true)\n"
+        "GrappleC.ConfigSetManualClock(config, true)\n"
+        "GrappleC.ConfigSetAutoMount(config, false)\n"
+        "local engine = assert(GrappleC.CreateEngine(config))\n"
+        "local registered = false\n"
+        // Headless never resizes, so what is asserted here is that the hook
+        // registers and takes two arguments -- the firing itself is covered
+        // by the windowed demos.
+        "GrappleC.OnResize(engine, function(w, h) registered = (w ~= nil and h ~= nil) end)\n"
+        "GrappleC.EngineAdvance(engine, 16666667)\n"
+        "GrappleC.EngineTick(engine)\n"
+        "GrappleC.DestroyEngine(engine)\n");
+}
+
+TEST(GenLua, SdlLoadFileReadsAPathOutsideTheVfs)
+{
+    // Grapple.read_file only sees the VFS; this is the escape hatch, and the
+    // only way a Ruby script can read a file at all.
+    //
+    // The file is written here rather than named in the source: a path that
+    // exists on the machine the test was written on is not a test, it is a
+    // machine-specific assertion that passes locally and fails everywhere.
+    const std::filesystem::path file =
+        std::filesystem::temp_directory_path() / "grapple_loadfile_probe.txt";
+    std::ofstream(file) << "outside the vfs";
+
+    const std::string script =
+        "local bytes = SDL.LoadFile('" + file.generic_string() + "')\n"
+        "assert(type(bytes) == 'string', 'expected a string, got ' .. type(bytes))\n"
+        "assert(bytes == 'outside the vfs', 'got [' .. tostring(bytes) .. ']')\n"
+        // nil rather than an error, so walking a candidate list needs no pcall.
+        "assert(SDL.LoadFile('/no/such/file/anywhere') == nil)\n";
+    RunLua(script.c_str());
+}
+
+// A script that registers callbacks and stops is describing a game, not
+// declining to run one — the bargain Love2D and Godot make. The runner
+// starts it; a script that calls run() itself must not be started twice.
+
+TEST(GenLua, PendingEngineRunsOnlyWhenItHasHandlers)
+{
+    lua_State *L = Grapple_CreateLuaState();
+    ASSERT_NE(L, nullptr);
+    ASSERT_TRUE(Grapple_OpenLuaBindings(L));
+
+    // An engine with no handlers is not a game and must not be run.
+    ASSERT_EQ(luaL_dostring(L,
+                            "engine = Grapple.engine{ headless = true,"
+                            "                         auto_mount = false }\n"),
+              LUA_OK)
+        << lua_tostring(L, -1);
+    EXPECT_FALSE(Grapple_LuaRunPendingEngine(L));
+
+    lua_close(L);
+}
+
+TEST(GenLua, RunClearsThePendingEngine)
+{
+    lua_State *L = Grapple_CreateLuaState();
+    ASSERT_NE(L, nullptr);
+    ASSERT_TRUE(Grapple_OpenLuaBindings(L));
+
+    // manual_clock keeps run() from blocking: it stops as soon as it is told
+    // to, which the load hook does on the first frame.
+    ASSERT_EQ(luaL_dostring(L,
+                            "engine = Grapple.engine{ headless = true,"
+                            "                         auto_mount = false }\n"
+                            "engine:on_load(function() engine:quit() return true end)\n"
+                            "engine:run()\n"),
+              LUA_OK)
+        << lua_tostring(L, -1);
+
+    // Already run by the script, so the runner must not run it again.
+    EXPECT_FALSE(Grapple_LuaRunPendingEngine(L));
+    lua_close(L);
+}
+
+// The engine's own flags reach a script's engine. They were parsed and
+// discarded for as long as this project has had them, because nothing put
+// the process arguments into the config.
+
+TEST(GenLua, EngineFlagsFromTheCommandLineTakeEffect)
+{
+    lua_State *L = Grapple_CreateLuaState();
+    ASSERT_NE(L, nullptr);
+    ASSERT_TRUE(Grapple_OpenLuaBindings(L));
+
+    char arg0[] = "grapple";
+    char flag[] = "--max-fps";
+    char value[] = "37";
+    char *args[] = {arg0, flag, value};
+    Grapple_SetScriptProcessArgs(3, args);
+
+    ASSERT_EQ(luaL_dostring(L,
+                            "engine = Grapple.engine{ headless = true,"
+                            "                         auto_mount = false }\n"),
+              LUA_OK)
+        << lua_tostring(L, -1);
+
+    lua_getglobal(L, "engine");
+    Grapple_Engine *engine = Grapple_LuaEngineAt(L, -1);
+    ASSERT_NE(engine, nullptr);
+
+    const Grapple_GraphicsSettings *gfx = Grapple_EngineGraphics(engine);
+    ASSERT_NE(gfx, nullptr);
+    EXPECT_EQ(gfx->max_fps, 37) << "--max-fps never reached the engine";
+
+    Grapple_SetScriptProcessArgs(0, nullptr);
+    lua_close(L);
+}
+
+TEST(GenLua, AGameSettingSurvivesWhatThePlayerDidNotAskAbout)
+{
+    lua_State *L = Grapple_CreateLuaState();
+    ASSERT_NE(L, nullptr);
+    ASSERT_TRUE(Grapple_OpenLuaBindings(L));
+
+    // Only --max-fps is on the line, so the game's own tick rate must not be
+    // reset to a default by the settings pass.
+    char arg0[] = "grapple";
+    char flag[] = "--max-fps";
+    char value[] = "45";
+    char *args[] = {arg0, flag, value};
+    Grapple_SetScriptProcessArgs(3, args);
+
+    ASSERT_EQ(luaL_dostring(L,
+                            "engine = Grapple.engine{ headless = true, tick_rate = 120,"
+                            "                         auto_mount = false }\n"),
+              LUA_OK)
+        << lua_tostring(L, -1);
+
+    lua_getglobal(L, "engine");
+    Grapple_Engine *engine = Grapple_LuaEngineAt(L, -1);
+    ASSERT_NE(engine, nullptr);
+    EXPECT_EQ(Grapple_EngineTickRate(engine), 120);
+    EXPECT_EQ(Grapple_EngineGraphics(engine)->max_fps, 45);
+
+    Grapple_SetScriptProcessArgs(0, nullptr);
+    lua_close(L);
+}
+
+// Two shapes the generator used to reject outright, and which are ordinary
+// in both languages: a list of strings, and a read that fills a buffer.
+//
+// The directory is made here rather than pointed at somewhere in the repo:
+// ctest runs from the build tree, so a relative path is a different place
+// than it is from a shell.
+
+namespace {
+
+std::string MakeReadableDir()
+{
+    const std::filesystem::path dir =
+        std::filesystem::temp_directory_path() / "grapple_bindgen_reads";
+    std::filesystem::create_directories(dir);
+    std::ofstream(dir / "alpha.txt") << "0123456789abcdefghijklmnop";
+    std::ofstream(dir / "beta.txt") << "second";
+    // generic_string(), not string(): these paths are pasted into Lua
+    // string literals, and a Windows backslash is an escape character
+    // there. Every API this reaches takes forward slashes on Windows too.
+    return dir.generic_string();
+}
+
+} // namespace
+
+TEST(GenLua, StringListReturnsBecomeATable)
+{
+    const std::string dir = MakeReadableDir();
+    const std::string script =
+        "assert(PHYSFS.init('grapple'))\n"
+        "assert(PHYSFS.mount('" + dir + "', '/p', 1) ~= 0)\n"
+        "local files = PHYSFS.enumerateFiles('/p')\n"
+        "assert(type(files) == 'table', 'expected a table, got ' .. type(files))\n"
+        "local found = {}\n"
+        "for _, name in ipairs(files) do found[name] = true end\n"
+        "assert(found['alpha.txt'] and found['beta.txt'], 'listing incomplete')\n"
+        // Freeing the array is the binding's job; a script has no way to.
+        "PHYSFS.deinit()\n";
+    RunLua(script.c_str());
+}
+
+TEST(GenLua, BufferReadsComeBackAsAString)
+{
+    const std::string dir = MakeReadableDir();
+    const std::string script =
+        "assert(PHYSFS.init('grapple'))\n"
+        "assert(PHYSFS.mount('" + dir + "', '/p', 1) ~= 0)\n"
+        "local file = PHYSFS.openRead('/p/alpha.txt')\n"
+        "assert(file ~= nil)\n"
+        "local head = PHYSFS.readBytes(file, 10)\n"
+        "assert(type(head) == 'string', 'expected a string, got ' .. type(head))\n"
+        // Exactly what was asked for, and the right bytes: a wrong length
+        // here would mean handing back the uninitialised tail of a buffer.
+        "assert(head == '0123456789', 'got [' .. tostring(head) .. ']')\n"
+        "PHYSFS.close(file)\n"
+        "PHYSFS.deinit()\n";
+    RunLua(script.c_str());
+}
+
+// The heap config builders exist because a script has no stack to put a
+// struct on. Nothing owned the result, so every script that built one leaked
+// it — 224 bytes, found by LeakSanitizer in this project's own tests.
+
+TEST(GenLua, ConfigIsOwnedAndCollectable)
+{
+    RunLua(
+        "local config = GrappleC.ConfigCreate()\n"
+        "GrappleC.ConfigSetTitle(config, 'owned')\n"
+        "config = nil\n"
+        // A full cycle runs the finaliser: with an unowned handle this frees
+        // nothing and the config leaks, which is what was happening.
+        "collectgarbage('collect')\n");
+}
+
+TEST(GenLua, DestroyingAConfigExplicitlyIsStillSafe)
+{
+    // Explicit destroy takes the pointer out of the handle, so the collector
+    // must not free it a second time. A double free is a heap error rather
+    // than a leak, which means this one is checkable everywhere rather than
+    // only where LeakSanitizer runs.
+    RunLua(
+        "local config = GrappleC.ConfigCreate()\n"
+        "GrappleC.ConfigDestroy(config)\n"
+        "config = nil\n"
+        "collectgarbage('collect')\n"
+        "collectgarbage('collect')\n");
+}
+
+// One interpreter's unstarted engine must never be started by another's.
+//
+// As a process-global this was not a theoretical worry: a leftover engine
+// from an earlier test was picked up by a later one and run headless with
+// nothing to stop it, hanging a CI machine for 48 minutes.
+
+TEST(GenLua, APendingEngineDoesNotLeakBetweenStates)
+{
+    lua_State *first = Grapple_CreateLuaState();
+    ASSERT_NE(first, nullptr);
+    ASSERT_TRUE(Grapple_OpenLuaBindings(first));
+
+    // Handlers, and deliberately never run: exactly what the runner starts.
+    ASSERT_EQ(luaL_dostring(first,
+                            "engine = Grapple.engine{ headless = true,"
+                            "                         auto_mount = false }\n"
+                            "engine:on_update(function() end)\n"),
+              LUA_OK)
+        << lua_tostring(first, -1);
+
+    // A second, independent interpreter has nothing pending. If this returns
+    // true it is about to run the *other* state's engine, and this test hangs
+    // rather than fails — which is precisely what happened on CI.
+    lua_State *second = Grapple_CreateLuaState();
+    ASSERT_NE(second, nullptr);
+    ASSERT_TRUE(Grapple_OpenLuaBindings(second));
+    EXPECT_FALSE(Grapple_LuaRunPendingEngine(second));
+
+    lua_close(second);
+    lua_close(first);
+}

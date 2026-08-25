@@ -121,6 +121,157 @@ Functions that cannot cross a script boundary (callbacks, varargs,
 threading) are skipped **with the reason recorded** in
 [`COVERAGE.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/COVERAGE.md).
 
+
+### The short way to open an engine
+
+`GrappleC.ConfigCreate` and its two dozen `ConfigSet*` functions still work,
+but a table says the same thing in one call, in any order, and complains
+about a key it does not recognise:
+
+```lua
+local engine = Grapple.engine{
+  title = "My Game",
+  window = { width = 1280, height = 720 },
+  presentation = "letterbox",   -- or "native", "expand", "integer", ...
+  tick_rate = 120,
+}
+```
+
+```ruby
+engine = Grapple.engine(
+  title: "My Game",
+  window: { width: 1280, height: 720 },
+  presentation: :letterbox,
+  tick_rate: 120
+)
+```
+
+`Grapple.engine{ titel = "..." }` answers *"unknown engine option 'titel' —
+did you mean 'title'?"*, which the setter form could not: a misspelled
+`ConfigSetTitel` is a nil call that fails much later, or never.
+
+The engine it returns carries the hooks as methods — `engine:on_update(fn)`,
+`engine:on_event(fn)`, `engine:run()`, `engine:quit()` — and takes key names
+rather than scancodes: `engine:key_pressed("escape")`. The keys the table
+accepts are `title`, `window`, `design`, `presentation`, `resizable`,
+`high_dpi`, `fullscreen`, `vsync`, `max_fps`, `tick_rate`, `auto_mount`,
+`headless`, `media`, `font_size` and `backend`.
+
+### The engine's own flags reach your game
+
+`grapple` divides its command line three ways:
+
+```sh
+grapple --fullscreen game.lua -- --level 3
+#       ^engine        ^script    ^your game's own
+```
+
+Anything starting with `-` that the runner does not claim is the engine's —
+`--fullscreen`, `--window-size 1280x720`, `--max-fps`, `--with-safe-mode`
+and the rest — and `Grapple.engine{...}` passes them on, so they take
+effect. Settings the player did not mention are left alone, so a game's own
+`tick_rate` survives a `--max-fps` on the line.
+
+Everything after the script name (or after a bare `--`) reaches the script:
+`arg` in Lua, `ARGV` in Ruby.
+
+### You do not have to start the loop
+
+A script that registers callbacks and stops is describing a game, so the
+runner starts it once the file has finished — the same bargain Love2D and
+Godot make. This is a complete program:
+
+```lua
+local engine = Grapple.engine{ title = "My Game" }
+
+local function load()
+  -- build the world
+  return true
+end
+
+local function update(dt)
+  if engine:key_pressed("escape") then engine:quit() end
+end
+
+engine:on_load(load)
+engine:on_update(update)
+```
+
+There is no `run()` at the bottom, and named functions read better than
+anonymous ones once a handler is worth a name. Call `engine:run()` yourself
+if you want the loop to start at a particular point — doing so takes the
+engine off the runner's list, so it never starts twice. An engine with no
+handlers is never started, since that is not a game.
+
+Ruby is the same, with `method(:load)` where Lua passes the function:
+
+```ruby
+$engine.on_load(&method(:load_game))
+$engine.on_update(&method(:update))
+```
+
+One difference worth knowing: `update` is handed the frame delta whether or
+not it wants it, and Ruby counts arguments strictly where Lua ignores the
+extra one. `def update(_delta)`, not `def update`.
+
+For the widget tree that goes with it, see
+[the GUI page](gui.html#widgets-you-declare-once).
+
+### Some functions are hand-written, and not in `SCRIPT_API.md`
+
+The generator writes `SCRIPT_API.md` from the C headers, so anything a
+generator *cannot* produce is missing from it — including the engine hooks
+every game uses. The complete hand-written list:
+
+| Call | What it does |
+| --- | --- |
+| `GrappleC.OnLoad(engine, fn)` | once, before the loop; return `false` to abort start-up |
+| `GrappleC.OnFixedUpdate(engine, fn)` | `fn(step)` — the simulation, at a fixed rate |
+| `GrappleC.OnUpdate(engine, fn)` | `fn(dt)` — per-frame work |
+| `GrappleC.OnRender(engine, fn)` | `fn(alpha)` — drawing, interpolated |
+| `GrappleC.OnPostRender(engine, fn)` | drawing above the effect chain |
+| `GrappleC.OnEvent(engine, fn)` | `fn(event)` — one SDL_Event, borrowed for the call |
+| `GrappleC.OnResize(engine, fn)` | `fn(width, height)` — the new size in pixels |
+| `GrappleC.OnUnload(engine, fn)` | once, after the loop |
+| `GrappleC.AttachGui(engine, gui)` | let the engine drive a GUI's input; `nil` detaches |
+| `GrappleC.Run(engine)` | hand the loop over |
+| `GrappleC.SceneDefine` / `SceneOn` | see [Scenes from a script](#scenes-from-a-script) |
+| `SDL.LoadFile(path)` | file bytes from a real filesystem path, or `nil` |
+| `Grapple.read_file(path)` | file bytes **through the VFS** |
+
+Two of these are worth dwelling on.
+
+**`OnEvent` hands you a borrowed event.** It is the same `SDL_Event` handle
+the generated `SDL.*` and `GrappleC.Event*` accessors take, but it points at
+a value the engine owns and it stops being valid the moment your function
+returns. Read what you need; do not stash it.
+
+```lua
+GrappleC.OnEvent(engine, function(event)
+  if GrappleC.EventType(event) == SDL.EVENT_KEY_DOWN then
+    print(GrappleC.EventKeyScancode(event))
+  end
+end)
+```
+
+**`AttachGui` is how a GUI gets its input**, and it exists because the C
+equivalent — filling a `Grapple_EventSink` and calling
+`Grapple_EngineSetEventSink` — is a struct of function pointers, which does
+not cross a binding. With it attached, the engine brackets Nuklear's input
+around its own event pump and a script never calls `GuiInputBegin` at all.
+
+```lua
+GrappleC.AttachGui(engine, gui)   -- in OnLoad
+GrappleC.AttachGui(engine, nil)   -- in OnUnload, before destroying the gui
+```
+
+**`SDL.LoadFile` versus `Grapple.read_file`.** `read_file` goes through the
+VFS, which is what you want for game assets: it reads out of the mounted
+archive whether or not that archive is a directory today. `SDL.LoadFile`
+reads a real filesystem path that was never mounted — a system font, a file
+a dialog returned. Both return `nil` rather than raising when the file is
+not there, so walking a list of candidates needs no `pcall`.
+
 ## Scenes from a script
 
 Every other definition in this engine is a struct a script can build —

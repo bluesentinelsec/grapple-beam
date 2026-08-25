@@ -67,7 +67,7 @@ jobs:
         run: cmake --build build/debug --parallel
 
       - name: Test Debug
-        run: ctest --test-dir build/debug --output-on-failure --parallel
+        run: ctest --test-dir build/debug --output-on-failure --parallel --timeout 120
 
       - name: Configure Release
         run: >
@@ -78,7 +78,7 @@ jobs:
         run: cmake --build build/release --parallel
 
       - name: Test Release
-        run: ctest --test-dir build/release --output-on-failure --parallel
+        run: ctest --test-dir build/release --output-on-failure --parallel --timeout 120
 
       - name: Benchmark (Release)
         run: |
