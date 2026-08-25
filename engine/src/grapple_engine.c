@@ -415,6 +415,14 @@ static void PumpEvents(Grapple_Engine *engine)
        once, and therefore the same for every fixed step in the frame. */
     Grapple_EngineInputBeginFrame(engine);
 
+    /* Open the sink before anything is drained. An immediate-mode GUI needs
+       this bracket and has no hook it could do it from, because hooks run
+       after the pump. */
+    if (engine->event_sink.begin != NULL)
+    {
+        engine->event_sink.begin(engine->event_sink.user);
+    }
+
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
@@ -442,11 +450,39 @@ static void PumpEvents(Grapple_Engine *engine)
             }
             DetectRefreshRate(engine); /* a move between displays changes it */
         }
+        if (engine->event_sink.event != NULL)
+        {
+            engine->event_sink.event(engine->event_sink.user, &event);
+        }
         Grapple_SceneDispatchEvent(engine, &event);
         if (engine->hooks != NULL && engine->hooks->event != NULL)
         {
             engine->hooks->event(engine->user, &event);
         }
+    }
+
+    /* Closed even when the queue was empty: "no events this frame" is
+       something an immediate-mode UI has to be told. */
+    if (engine->event_sink.end != NULL)
+    {
+        engine->event_sink.end(engine->event_sink.user);
+    }
+}
+
+void Grapple_EngineSetEventSink(Grapple_Engine *engine, const Grapple_EventSink *sink)
+{
+    if (engine == NULL)
+    {
+        return;
+    }
+    if (sink != NULL)
+    {
+        engine->event_sink = *sink;
+    }
+    else
+    {
+        const Grapple_EventSink none = {0};
+        engine->event_sink = none;
     }
 }
 

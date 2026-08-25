@@ -4,16 +4,14 @@
 -- platform UI font at display density, and a weighted grid instead of
 -- hard-coded coordinates. Escape closes it.
 --
--- Two places where the script version cannot follow the C one:
+-- One place where the script version differs from the C one: the grid must
+-- be the gui-owned family, because Grapple_GuiGridBegin takes a float array
+-- and did not cross the binding.
 --
---   * There is no OnEvent hook. C registers hooks.event and hands each
---     SDL_Event to Grapple_GuiProcessEvent; a script has no way to see an
---     event at all, so the mouse is fed to Nuklear from the engine's polled
---     input instead (NK.input_motion / NK.input_button below). That is
---     enough for buttons, and would not be enough for a text field.
---   * The grid must be the gui-owned one. GuiGridCreate() returns a grid
---     that no bound function can begin, because Grapple_GuiGridBegin takes a
---     float array and did not cross the binding.
+-- Input is not one of those places any more. GrappleC.AttachGui hands the
+-- GUI to the engine, which brackets Nuklear's input around its own event
+-- pump — the same arrangement C gets, and it covers the keyboard and wheel
+-- that polled mouse state could not.
 --
 -- Spellings worth noting: NK.end_ (`end` is a keyword) and NK.NK_* for
 -- Nuklear constants, which keep their prefix where SDL's drop it.
@@ -43,13 +41,11 @@ local FONT_CANDIDATES = {
 
 local function load_ui_font()
   for _, path in ipairs(FONT_CANDIDATES) do
-    local file = io.open(path, "rb")
-    if file then
-      local bytes = file:read("a")
-      file:close()
-      if bytes and #bytes > 0 then
-        return bytes
-      end
+    -- SDL.LoadFile rather than io.open: it reads a real filesystem path in
+    -- both languages, where Grapple.read_file only sees the VFS.
+    local bytes = SDL.LoadFile(path)
+    if bytes and #bytes > 0 then
+      return bytes
     end
   end
   return nil
@@ -83,6 +79,8 @@ GrappleC.OnLoad(engine, function()
     return false
   end
   ctx = GrappleC.GuiContext(gui)
+  -- The engine now drives the GUI's input for us.
+  GrappleC.AttachGui(engine, gui)
   return true
 end)
 
@@ -90,16 +88,6 @@ GrappleC.OnUpdate(engine, function(_dt)
   if GrappleC.KeyPressed(engine, SDL.SCANCODE_ESCAPE) then
     GrappleC.EngineQuit(engine)
   end
-
-  -- No OnEvent hook, so Nuklear is fed from polled state. The engine reports
-  -- the pointer in the same pixel space the GUI hit-tests in, so no scaling
-  -- is needed here.
-  local mouse_x, mouse_y = GrappleC.MousePosition(engine)
-  NK.input_begin(ctx)
-  NK.input_motion(ctx, mouse_x, mouse_y)
-  NK.input_button(ctx, NK.NK_BUTTON_LEFT, mouse_x, mouse_y,
-    GrappleC.MouseDown(engine, GrappleC.GRAPPLE_MOUSE_LEFT))
-  NK.input_end(ctx)
 
   -- The panel fills the window, in pixels, re-read every frame — which is
   -- what makes a resize reflow instead of scale.
@@ -109,42 +97,43 @@ GrappleC.OnUpdate(engine, function(_dt)
     NK.NK_WINDOW_NO_SCROLLBAR) then
     local line = GrappleC.GuiFontHeight(gui)
 
-    -- One column, so a full-width row. Height 0 means "one line of the
-    -- current font", which is why nothing here is in pixels.
-    GrappleC.GuiGridBeginOwned(gui, 1, 0)
-    GrappleC.GuiGridCellOwned(gui)
-    NK.label(ctx, "Implementation: Lua", NK.NK_TEXT_CENTERED)
-    GrappleC.GuiGridCellOwned(gui)
-    NK.label(ctx, "Click a Latin word:", NK.NK_TEXT_LEFT)
-    GrappleC.GuiGridEndOwned(gui)
+    -- One grid for the whole panel. Three equal columns, so a full-width row
+    -- is a span of three and "English:" plus its answer fall out as a 1:2
+    -- split with no weights to declare.
+    GrappleC.GuiGridBeginOwned(gui, 3, 0)
+    GrappleC.GuiGridSpacingOwned(gui, 8, 8)
 
-    -- A second grid only because a row height is per-grid, not per-row, and
-    -- buttons want more than one line.
-    GrappleC.GuiGridBeginOwned(gui, #WORDS, line * 2.4)
+    GrappleC.GuiGridCellSpanOwned(gui, 3)
+    NK.label(ctx, "Implementation: Lua", NK.NK_TEXT_CENTERED)
+    GrappleC.GuiGridCellSpanOwned(gui, 3)
+    NK.label(ctx, "Click a Latin word:", NK.NK_TEXT_LEFT)
+
+    -- Buttons want more than a line of text — this row only.
+    GrappleC.GuiGridRowHeightOwned(gui, line * 2.4)
     for _, word in ipairs(WORDS) do
       GrappleC.GuiGridCellOwned(gui)
       if NK.button_label(ctx, word.latin) then
         translation = word.english
       end
     end
-    GrappleC.GuiGridEndOwned(gui)
 
-    -- Label and answer on one row, the answer twice as wide. Weights are set
-    -- before Begin and reset by it, which is how the array parameter was
-    -- avoided for scripts.
-    GrappleC.GuiGridWeight(gui, 0, 1.0)
-    GrappleC.GuiGridWeight(gui, 1, 2.0)
-    GrappleC.GuiGridBeginOwned(gui, 2, line * 2.0)
+    GrappleC.GuiGridRowHeightOwned(gui, line * 2.0)
     GrappleC.GuiGridCellOwned(gui)
     NK.label(ctx, "English:", NK.NK_TEXT_RIGHT)
-    GrappleC.GuiGridCellOwned(gui)
+    GrappleC.GuiGridCellSpanOwned(gui, 2)
     NK.label(ctx, translation, NK.NK_TEXT_LEFT)
-    GrappleC.GuiGridEndOwned(gui)
 
-    GrappleC.GuiGridBeginOwned(gui, 1, 0)
-    GrappleC.GuiGridCellOwned(gui)
+    -- A quarter of the row, hugging the right.
+    GrappleC.GuiGridRowHeightOwned(gui, line * 1.8)
+    GrappleC.GuiGridCellPartOwned(gui, 3, 0.25, 2) -- 2 = align right
+    if NK.button_label(ctx, "Clear") then
+      translation = ""
+    end
+
+    GrappleC.GuiGridCellSpanOwned(gui, 3)
     NK.label(ctx, "Resize the window; the layout reflows. Escape closes.",
       NK.NK_TEXT_CENTERED)
+
     GrappleC.GuiGridEndOwned(gui)
   end
   NK.end_(ctx)
@@ -156,6 +145,8 @@ GrappleC.OnPostRender(engine, function()
 end)
 
 GrappleC.OnUnload(engine, function()
+  -- Detach before the GUI it points at goes away.
+  GrappleC.AttachGui(engine, nil)
   GrappleC.DestroyGui(gui)
   gui = nil
 end)

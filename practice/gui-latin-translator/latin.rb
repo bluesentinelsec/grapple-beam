@@ -3,22 +3,14 @@
 # Same program as latin_c.c: resizable window, the engine's loop, and a
 # weighted grid instead of hard-coded coordinates. Escape closes it.
 #
-# Three places where the script version cannot follow the C one:
+# One place where the script version differs from the C one: the grid must be
+# the gui-owned family, because Grapple_GuiGridBegin takes a float array and
+# did not cross the binding.
 #
-#   * There is no OnEvent hook. C registers hooks.event and hands each
-#     SDL_Event to Grapple_GuiProcessEvent; a script has no way to see an
-#     event at all, so the mouse is fed to Nuklear from the engine's polled
-#     input instead (NK.input_motion / NK.input_button below). That is enough
-#     for buttons, and would not be enough for a text field.
-#   * The grid must be the gui-owned one. GuiGridCreate() returns a grid that
-#     no bound function can begin, because Grapple_GuiGridBegin takes a float
-#     array and did not cross the binding.
-#   * **This one runs with the built-in font**, unlike every other version
-#     here. mruby has no File class, SDL_LoadFile is not bound, and
-#     PHYSFS.readBytes is not bound either, so a Ruby script cannot read the
-#     bytes of a system font — or of any other file on disk. Compare the text
-#     in this window with the C or Lua one to see what that costs on a Retina
-#     panel.
+# The other two differences are gone. GrappleC.AttachGui hands the GUI to the
+# engine, which brackets Nuklear's input around its own event pump; and
+# SDL.LoadFile reads a real filesystem path, which mruby could not do at all
+# before — no File class, and Grapple.read_file only sees the VFS.
 #
 # Spellings worth noting: NK.begin_ and NK.end_ (both are Ruby keywords) and
 # NK::NK_* for Nuklear constants, which keep their prefix where SDL's drop it.
@@ -34,8 +26,27 @@ WORDS = [
   { latin: "medium", english: "center" }
 ].freeze
 
+# The platform's UI font, or nil to fall back to Nuklear's built-in. The
+# built-in is a 13px bitmap face that does not survive being scaled up on a
+# Retina panel.
+FONT_CANDIDATES = [
+  "/System/Library/Fonts/SFNS.ttf",
+  "/System/Library/Fonts/Helvetica.ttc",
+  "C:/Windows/Fonts/segoeui.ttf",
+  "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+  "/usr/share/fonts/TTF/DejaVuSans.ttf"
+].freeze
+
+def load_ui_font
+  FONT_CANDIDATES.each do |path|
+    bytes = SDL.LoadFile(path)
+    return bytes if bytes && bytes.length.positive?
+  end
+  nil
+end
+
 config = GrappleC.ConfigCreate()
-GrappleC.ConfigSetTitle(config, "Latin Translator - Ruby (built-in font)")
+GrappleC.ConfigSetTitle(config, "Latin Translator - Ruby")
 GrappleC.ConfigSetWindowSize(config, WINDOW_WIDTH, WINDOW_HEIGHT)
 
 # Coordinates are pixels and the window is resizable, which together are what
@@ -56,30 +67,21 @@ $ctx = nil
 $translation = ""
 
 GrappleC.OnLoad($engine) do
-  # nil font: the built-in. See the note at the top — a Ruby script has no way
-  # to read a better one off disk. 15 is a point size, multiplied by the
-  # window's pixel density inside CreateGui.
-  $gui = GrappleC.CreateGui(GrappleC.EngineRenderer($engine), nil, 15)
+  # 15 is a point size, multiplied by the window's pixel density inside
+  # CreateGui, so this is 15pt on any display.
+  $gui = GrappleC.CreateGui(GrappleC.EngineRenderer($engine), load_ui_font, 15)
   if $gui.nil?
     false
   else
     $ctx = GrappleC.GuiContext($gui)
+    # The engine now drives the GUI's input for us.
+    GrappleC.AttachGui($engine, $gui)
     true
   end
 end
 
 GrappleC.OnUpdate($engine) do |_dt|
   GrappleC.EngineQuit($engine) if GrappleC.KeyPressed($engine, SDL::SCANCODE_ESCAPE)
-
-  # No OnEvent hook, so Nuklear is fed from polled state. The engine reports
-  # the pointer in the same pixel space the GUI hit-tests in, so no scaling is
-  # needed here.
-  mouse_x, mouse_y = GrappleC.MousePosition($engine)
-  NK.input_begin($ctx)
-  NK.input_motion($ctx, mouse_x, mouse_y)
-  NK.input_button($ctx, NK::NK_BUTTON_LEFT, mouse_x, mouse_y,
-                  GrappleC.MouseDown($engine, GrappleC::GRAPPLE_MOUSE_LEFT))
-  NK.input_end($ctx)
 
   # The panel fills the window, in pixels, re-read every frame — which is what
   # makes a resize reflow instead of scale.
@@ -89,40 +91,39 @@ GrappleC.OnUpdate($engine) do |_dt|
                NK::NK_WINDOW_NO_SCROLLBAR)
     line = GrappleC.GuiFontHeight($gui)
 
-    # One column, so a full-width row. Height 0 means "one line of the current
-    # font", which is why nothing here is in pixels.
-    GrappleC.GuiGridBeginOwned($gui, 1, 0)
-    GrappleC.GuiGridCellOwned($gui)
-    NK.label($ctx, "Implementation: Ruby", NK::NK_TEXT_CENTERED)
-    GrappleC.GuiGridCellOwned($gui)
-    NK.label($ctx, "Click a Latin word:", NK::NK_TEXT_LEFT)
-    GrappleC.GuiGridEndOwned($gui)
+    # One grid for the whole panel. Three equal columns, so a full-width row is
+    # a span of three and "English:" plus its answer fall out as a 1:2 split
+    # with no weights to declare.
+    GrappleC.GuiGridBeginOwned($gui, 3, 0)
+    GrappleC.GuiGridSpacingOwned($gui, 8, 8)
 
-    # A second grid only because a row height is per-grid, not per-row, and
-    # buttons want more than one line.
-    GrappleC.GuiGridBeginOwned($gui, WORDS.length, line * 2.4)
+    GrappleC.GuiGridCellSpanOwned($gui, 3)
+    NK.label($ctx, "Implementation: Ruby", NK::NK_TEXT_CENTERED)
+    GrappleC.GuiGridCellSpanOwned($gui, 3)
+    NK.label($ctx, "Click a Latin word:", NK::NK_TEXT_LEFT)
+
+    # Buttons want more than a line of text — this row only.
+    GrappleC.GuiGridRowHeightOwned($gui, line * 2.4)
     WORDS.each do |word|
       GrappleC.GuiGridCellOwned($gui)
       $translation = word[:english] if NK.button_label($ctx, word[:latin])
     end
-    GrappleC.GuiGridEndOwned($gui)
 
-    # Label and answer on one row, the answer twice as wide. Weights are set
-    # before Begin and reset by it, which is how the array parameter was
-    # avoided for scripts.
-    GrappleC.GuiGridWeight($gui, 0, 1.0)
-    GrappleC.GuiGridWeight($gui, 1, 2.0)
-    GrappleC.GuiGridBeginOwned($gui, 2, line * 2.0)
+    GrappleC.GuiGridRowHeightOwned($gui, line * 2.0)
     GrappleC.GuiGridCellOwned($gui)
     NK.label($ctx, "English:", NK::NK_TEXT_RIGHT)
-    GrappleC.GuiGridCellOwned($gui)
+    GrappleC.GuiGridCellSpanOwned($gui, 2)
     NK.label($ctx, $translation, NK::NK_TEXT_LEFT)
-    GrappleC.GuiGridEndOwned($gui)
 
-    GrappleC.GuiGridBeginOwned($gui, 1, 0)
-    GrappleC.GuiGridCellOwned($gui)
+    # A quarter of the row, hugging the right.
+    GrappleC.GuiGridRowHeightOwned($gui, line * 1.8)
+    GrappleC.GuiGridCellPartOwned($gui, 3, 0.25, 2) # 2 = align right
+    $translation = "" if NK.button_label($ctx, "Clear")
+
+    GrappleC.GuiGridCellSpanOwned($gui, 3)
     NK.label($ctx, "Resize the window; the layout reflows. Escape closes.",
              NK::NK_TEXT_CENTERED)
+
     GrappleC.GuiGridEndOwned($gui)
   end
   NK.end_($ctx)
@@ -134,6 +135,8 @@ GrappleC.OnPostRender($engine) do
 end
 
 GrappleC.OnUnload($engine) do
+  # Detach before the GUI it points at goes away.
+  GrappleC.AttachGui($engine, nil)
   GrappleC.DestroyGui($gui)
   $gui = nil
 end

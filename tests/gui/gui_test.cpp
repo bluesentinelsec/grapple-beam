@@ -1004,3 +1004,126 @@ TEST_F(GuiHarness, CountersReportTheLastFrame)
 }
 
 } // namespace
+
+// --- grid: per-row height, alignment, spacing ------------------------------
+
+TEST_F(GuiHarness, GridRowHeightOverridesOneRowOnly)
+{
+    struct nk_rect first = nk_rect(0, 0, 0, 0);
+    struct nk_rect tall = nk_rect(0, 0, 0, 0);
+    struct nk_rect after = nk_rect(0, 0, 0, 0);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
+
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    BeginFrame();
+    if (nk_begin(ctx, "grid", nk_rect(0, 0, 320, 300), NK_WINDOW_NO_SCROLLBAR))
+    {
+        Grapple_GuiGrid grid;
+        ASSERT_TRUE(Grapple_GuiGridBegin(ctx, &grid, 1, nullptr, 20.0f));
+
+        Grapple_GuiGridCell(&grid);
+        first = nk_widget_bounds(ctx);
+        nk_label(ctx, "a", NK_TEXT_LEFT);
+
+        Grapple_GuiGridRowHeight(&grid, 60.0f);
+        Grapple_GuiGridCell(&grid);
+        tall = nk_widget_bounds(ctx);
+        nk_label(ctx, "b", NK_TEXT_LEFT);
+
+        Grapple_GuiGridCell(&grid);
+        after = nk_widget_bounds(ctx);
+        nk_label(ctx, "c", NK_TEXT_LEFT);
+
+        Grapple_GuiGridEnd(&grid);
+    }
+    nk_end(ctx);
+
+    EXPECT_NEAR(first.h, 20.0f, 1.0f);
+    EXPECT_NEAR(tall.h, 60.0f, 1.0f);
+    // One-shot: the row after the override goes back to the grid default.
+    EXPECT_NEAR(after.h, 20.0f, 1.0f);
+}
+
+TEST_F(GuiHarness, GridCellPartPlacesAWidgetInsideItsCell)
+{
+    struct nk_rect full = nk_rect(0, 0, 0, 0);
+    struct nk_rect left = nk_rect(0, 0, 0, 0);
+    struct nk_rect right = nk_rect(0, 0, 0, 0);
+    struct nk_rect centered = nk_rect(0, 0, 0, 0);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
+
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    BeginFrame();
+    if (nk_begin(ctx, "grid", nk_rect(0, 0, 320, 300), NK_WINDOW_NO_SCROLLBAR))
+    {
+        Grapple_GuiGrid grid;
+        ASSERT_TRUE(Grapple_GuiGridBegin(ctx, &grid, 1, nullptr, 24.0f));
+
+        Grapple_GuiGridCell(&grid);
+        full = nk_widget_bounds(ctx);
+        nk_label(ctx, "full", NK_TEXT_LEFT);
+
+        Grapple_GuiGridCellPart(&grid, 1, 0.5f, GRAPPLE_GUI_ALIGN_LEFT);
+        left = nk_widget_bounds(ctx);
+        nk_label(ctx, "left", NK_TEXT_LEFT);
+
+        Grapple_GuiGridCellPart(&grid, 1, 0.5f, GRAPPLE_GUI_ALIGN_RIGHT);
+        right = nk_widget_bounds(ctx);
+        nk_label(ctx, "right", NK_TEXT_LEFT);
+
+        Grapple_GuiGridCellPart(&grid, 1, 0.5f, GRAPPLE_GUI_ALIGN_CENTER);
+        centered = nk_widget_bounds(ctx);
+        nk_label(ctx, "mid", NK_TEXT_LEFT);
+
+        Grapple_GuiGridEnd(&grid);
+    }
+    nk_end(ctx);
+
+    // Half a cell is half as wide, whatever the alignment.
+    EXPECT_NEAR(left.w, full.w * 0.5f, 3.0f);
+    EXPECT_NEAR(right.w, full.w * 0.5f, 3.0f);
+    EXPECT_NEAR(centered.w, full.w * 0.5f, 3.0f);
+
+    // And it sits where it was asked to sit.
+    EXPECT_NEAR(left.x, full.x, 2.0f);
+    EXPECT_GT(right.x, left.x + left.w * 0.5f);
+    EXPECT_GT(centered.x, left.x);
+    EXPECT_LT(centered.x, right.x);
+}
+
+TEST_F(GuiHarness, GridSpacingIsPoppedSoLaterWidgetsAreUnaffected)
+{
+    struct nk_rect before = nk_rect(0, 0, 0, 0);
+    struct nk_rect after = nk_rect(0, 0, 0, 0);
+    struct nk_context *ctx = Grapple_GuiContext(gui_);
+
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    BeginFrame();
+    if (nk_begin(ctx, "grid", nk_rect(0, 0, 320, 300), NK_WINDOW_NO_SCROLLBAR))
+    {
+        nk_layout_row_dynamic(ctx, 20, 1);
+        before = nk_widget_bounds(ctx);
+        nk_label(ctx, "plain", NK_TEXT_LEFT);
+
+        Grapple_GuiGrid grid;
+        ASSERT_TRUE(Grapple_GuiGridBegin(ctx, &grid, 2, nullptr, 20.0f));
+        Grapple_GuiGridSpacing(&grid, 24.0f, 24.0f);
+        Grapple_GuiGridCell(&grid);
+        nk_label(ctx, "a", NK_TEXT_LEFT);
+        Grapple_GuiGridCell(&grid);
+        nk_label(ctx, "b", NK_TEXT_LEFT);
+        Grapple_GuiGridEnd(&grid);
+
+        nk_layout_row_dynamic(ctx, 20, 1);
+        after = nk_widget_bounds(ctx);
+        nk_label(ctx, "plain again", NK_TEXT_LEFT);
+    }
+    nk_end(ctx);
+
+    // An unbalanced style stack would leak the wide spacing into everything
+    // drawn afterwards, so the width either side of the grid must match.
+    EXPECT_NEAR(before.w, after.w, 1.0f);
+}

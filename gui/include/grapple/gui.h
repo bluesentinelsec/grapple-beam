@@ -33,6 +33,8 @@
 #define GRAPPLE_GUI_H
 
 #include <SDL3/SDL.h>
+#include <grapple/event_sink.h>
+#include <grapple/gui_grid.h>
 #include <grapple/nuklear.h>
 
 #ifdef __cplusplus
@@ -104,6 +106,21 @@ extern bool Grapple_GuiProcessEvent(Grapple_Gui *gui, const SDL_Event *event);
 
 /** Finish input collection. */
 extern void Grapple_GuiInputEnd(Grapple_Gui *gui);
+
+/**
+ * This GUI packaged as an event sink, for a loop that pumps events itself.
+ *
+ * Hand the result to Grapple_EngineSetEventSink and the InputBegin /
+ * ProcessEvent / InputEnd trio above stops being your problem — the engine
+ * calls them, in the right places, every frame:
+ *
+ *   const Grapple_EventSink sink = Grapple_GuiEventSink(gui);
+ *   Grapple_EngineSetEventSink(engine, &sink);
+ *
+ * The sink borrows the GUI; destroying the GUI while a loop still holds the
+ * sink leaves that loop calling into freed memory, so clear it first.
+ */
+extern Grapple_EventSink Grapple_GuiEventSink(Grapple_Gui *gui);
 
 /**
  * True while the pointer is over / interacting with any Nuklear window —
@@ -219,6 +236,19 @@ extern void Grapple_GuiGridCellOwned(Grapple_Gui *gui);
 extern void Grapple_GuiGridCellSpanOwned(Grapple_Gui *gui, int span);
 
 /** Finish the current row early. */
+/** Height for the next row only; <= 0 restores the grid default.
+ *  See Grapple_GuiGridRowHeight. */
+extern void Grapple_GuiGridRowHeightOwned(Grapple_Gui *gui, float height);
+
+/** Pixel spacing between cells for the rest of this grid.
+ *  See Grapple_GuiGridSpacing. */
+extern void Grapple_GuiGridSpacingOwned(Grapple_Gui *gui, float x, float y);
+
+/** A cell of `span` columns holding a widget `fraction` as wide, aligned
+ *  within it. See Grapple_GuiGridCellPart. */
+extern void Grapple_GuiGridCellPartOwned(Grapple_Gui *gui, int span, float fraction,
+                                           Grapple_GuiAlign align);
+
 extern void Grapple_GuiGridNextRowOwned(Grapple_Gui *gui);
 
 /** Finish the grid. */

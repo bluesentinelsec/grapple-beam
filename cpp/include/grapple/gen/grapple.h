@@ -180,6 +180,9 @@ class GuiHandle {
     return ::Grapple_GuiProcessEvent(value_, event) ? Status() : Status::FromSdl();
   }
   void GuiInputEnd() { ::Grapple_GuiInputEnd(value_); }
+  Grapple_EventSink GuiEventSink() {
+    return ::Grapple_GuiEventSink(value_);
+  }
   Status GuiWantsInput() {
     return ::Grapple_GuiWantsInput(value_) ? Status() : Status::FromSdl();
   }
@@ -213,6 +216,9 @@ class GuiHandle {
   }
   void GuiGridCellOwned() { ::Grapple_GuiGridCellOwned(value_); }
   void GuiGridCellSpanOwned(int span) { ::Grapple_GuiGridCellSpanOwned(value_, span); }
+  void GuiGridRowHeightOwned(float height) { ::Grapple_GuiGridRowHeightOwned(value_, height); }
+  void GuiGridSpacingOwned(float x, float y) { ::Grapple_GuiGridSpacingOwned(value_, x, y); }
+  void GuiGridCellPartOwned(int span, float fraction, Grapple_GuiAlign align) { ::Grapple_GuiGridCellPartOwned(value_, span, fraction, align); }
   void GuiGridNextRowOwned() { ::Grapple_GuiGridNextRowOwned(value_); }
   void GuiGridEndOwned() { ::Grapple_GuiGridEndOwned(value_); }
   Status GuiImage(SDL_Texture *texture, Grapple_GuiImageMode mode) {
@@ -954,6 +960,7 @@ inline constexpr auto& EngineRenderScale = ::Grapple_EngineRenderScale;
 inline constexpr auto& EngineRenderer = ::Grapple_EngineRenderer;
 inline constexpr auto& EngineSafeRect = ::Grapple_EngineSafeRect;
 inline constexpr auto& EngineSetClearColor = ::Grapple_EngineSetClearColor;
+inline constexpr auto& EngineSetEventSink = ::Grapple_EngineSetEventSink;
 inline constexpr auto& EngineSetHooks = ::Grapple_EngineSetHooks;
 inline constexpr auto& EngineSetMaxFps = ::Grapple_EngineSetMaxFps;
 inline constexpr auto& EngineSetMediaPassword = ::Grapple_EngineSetMediaPassword;
@@ -1096,11 +1103,14 @@ inline constexpr auto& GraphicsShadowRays = ::Grapple_GraphicsShadowRays;
 inline constexpr auto& GraphicsShadowSoftness = ::Grapple_GraphicsShadowSoftness;
 inline constexpr auto& GraphicsToToml = ::Grapple_GraphicsToToml;
 inline constexpr auto& GuiGridCell = ::Grapple_GuiGridCell;
+inline constexpr auto& GuiGridCellPart = ::Grapple_GuiGridCellPart;
 inline constexpr auto& GuiGridCellSpan = ::Grapple_GuiGridCellSpan;
 inline constexpr auto& GuiGridCreate = ::Grapple_GuiGridCreate;
 inline constexpr auto& GuiGridDestroy = ::Grapple_GuiGridDestroy;
 inline constexpr auto& GuiGridEnd = ::Grapple_GuiGridEnd;
 inline constexpr auto& GuiGridNextRow = ::Grapple_GuiGridNextRow;
+inline constexpr auto& GuiGridRowHeight = ::Grapple_GuiGridRowHeight;
+inline constexpr auto& GuiGridSpacing = ::Grapple_GuiGridSpacing;
 inline constexpr auto& IdleSeconds = ::Grapple_IdleSeconds;
 inline constexpr auto& KeyModifiers = ::Grapple_KeyModifiers;
 inline constexpr auto& LastInputDevice = ::Grapple_LastInputDevice;

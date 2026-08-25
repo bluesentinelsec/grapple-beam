@@ -86,26 +86,22 @@ class Translator {
       return false;
     }
     gui_.reset(raw);
-    // Open the first frame's input window; every later frame opens its own
-    // at the end of Update.
-    Grapple_GuiInputBegin(gui_.get());
+    // Hand the GUI to the engine and input handling is done: the engine
+    // brackets Nuklear's input around its own event pump, every frame.
+    const Grapple_EventSink sink = Grapple_GuiEventSink(gui_.get());
+    Grapple_EngineSetEventSink(engine_, &sink);
     return true;
   }
 
+  // Only the program's own business: the GUI is fed by the sink.
   void Event(const SDL_Event& event) {
     if (event.type == SDL_EVENT_KEY_DOWN && event.key.scancode == SDL_SCANCODE_ESCAPE) {
       Grapple_EngineQuit(engine_);
     }
-    Grapple_GuiProcessEvent(gui_.get(), &event);
   }
 
   void Update() {
     nk_context* ctx = Grapple_GuiContext(gui_.get());
-
-    // Close the input window opened at the end of the last frame: the engine
-    // has already drained this frame's events into Event(), and Nuklear needs
-    // them all in before any widget is built.
-    Grapple_GuiInputEnd(gui_.get());
 
     // The panel fills the window, in pixels, re-read every frame — which is
     // what makes a resize reflow instead of scale.
@@ -118,56 +114,57 @@ class Translator {
                  NK_WINDOW_NO_SCROLLBAR)) {
       const float line = Grapple_GuiFontHeight(gui_.get());
 
-      // One column, so a full-width row. Height 0 means "one line of the
-      // current font", which is why nothing here is in pixels.
-      Grapple_GuiGrid header;
-      Grapple_GuiGridBegin(ctx, &header, 1, nullptr, 0);
-      Grapple_GuiGridCell(&header);
-      nk_label(ctx, "Implementation: C++", NK_TEXT_CENTERED);
-      Grapple_GuiGridCell(&header);
-      nk_label(ctx, "Click a Latin word:", NK_TEXT_LEFT);
-      Grapple_GuiGridEnd(&header);
+      // One grid for the whole panel. Three equal columns, so a full-width row
+      // is a span of three and "English:" plus its answer fall out as a 1:2
+      // split with no weights to declare.
+      Grapple_GuiGrid grid;
+      Grapple_GuiGridBegin(ctx, &grid, 3, nullptr, 0);
+      Grapple_GuiGridSpacing(&grid, 8.0f, 8.0f);
 
-      // A second grid only because a row height is per-grid, not per-row, and
-      // buttons want more than one line.
-      Grapple_GuiGrid buttons;
-      Grapple_GuiGridBegin(ctx, &buttons, static_cast<int>(kWords.size()), nullptr, line * 2.4f);
+      Grapple_GuiGridCellSpan(&grid, 3);
+      nk_label(ctx, "Implementation: C++", NK_TEXT_CENTERED);
+      Grapple_GuiGridCellSpan(&grid, 3);
+      nk_label(ctx, "Click a Latin word:", NK_TEXT_LEFT);
+
+      // Buttons want more than a line of text — this row only.
+      Grapple_GuiGridRowHeight(&grid, line * 2.4f);
       for (const Word& word : kWords) {
-        Grapple_GuiGridCell(&buttons);
+        Grapple_GuiGridCell(&grid);
         if (nk_button_label(ctx, CStr(word.latin))) {
           translation_ = word.english;
         }
       }
-      Grapple_GuiGridEnd(&buttons);
 
-      // Label and answer on one row, the answer twice as wide: column
-      // weights, exactly like Tk's grid.
-      static constexpr std::array<float, 2> kLabelThenAnswer{1.0f, 2.0f};
-      Grapple_GuiGrid result;
-      Grapple_GuiGridBegin(ctx, &result, 2, kLabelThenAnswer.data(), line * 2.0f);
-      Grapple_GuiGridCell(&result);
+      Grapple_GuiGridRowHeight(&grid, line * 2.0f);
+      Grapple_GuiGridCell(&grid);
       nk_label(ctx, "English:", NK_TEXT_RIGHT);
-      Grapple_GuiGridCell(&result);
+      Grapple_GuiGridCellSpan(&grid, 2);
       nk_label(ctx, translation_.empty() ? "" : CStr(translation_), NK_TEXT_LEFT);
-      Grapple_GuiGridEnd(&result);
 
-      Grapple_GuiGrid footer;
-      Grapple_GuiGridBegin(ctx, &footer, 1, nullptr, 0);
-      Grapple_GuiGridCell(&footer);
+      // A quarter of the row, hugging the right: what a full-width cell cannot
+      // say.
+      Grapple_GuiGridRowHeight(&grid, line * 1.8f);
+      Grapple_GuiGridCellPart(&grid, 3, 0.25f, GRAPPLE_GUI_ALIGN_RIGHT);
+      if (nk_button_label(ctx, "Clear")) {
+        translation_ = {};
+      }
+
+      Grapple_GuiGridCellSpan(&grid, 3);
       nk_label(ctx, "Resize the window; the layout reflows. Escape closes.", NK_TEXT_CENTERED);
-      Grapple_GuiGridEnd(&footer);
+
+      Grapple_GuiGridEnd(&grid);
     }
     nk_end(ctx);
-
-    // Open the next frame's input window now, because the engine pumps events
-    // before it calls any hook: there is no "start of frame" hook to do it in.
-    Grapple_GuiInputBegin(gui_.get());
   }
 
   // Over the finished frame, above any post-processing.
   void PostRender() { Grapple_GuiRender(gui_.get()); }
 
-  void Unload() { gui_.reset(); }
+  void Unload() {
+    // Clear the sink before the GUI it points at goes away.
+    Grapple_EngineSetEventSink(engine_, nullptr);
+    gui_.reset();
+  }
 
  private:
   struct GuiDeleter {

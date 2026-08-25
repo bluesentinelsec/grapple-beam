@@ -673,6 +673,33 @@ static mrb_value MB64Decode(mrb_state *mrb, mrb_value self)
 
 /* ------------------------------------------------------------ open ------ */
 
+
+/* SDL.LoadFile — bytes from a real filesystem path.
+ *
+ * Grapple.read_file reads through the VFS, which is the right default for
+ * game assets and no help at all for a file that was never mounted: a font
+ * in /System/Library/Fonts, a config beside the executable, a file the user
+ * picked from a dialog. Lua can fall back to io.open; mruby has no File
+ * class, so without this a Ruby script cannot read such a path by any means
+ * at all. The generator skips SDL_LoadFile because it returns void* with the
+ * length written through a pointer.
+ */
+static mrb_value MSdlLoadFile(mrb_state *mrb, mrb_value self)
+{
+    (void)self;
+    const char *path = NULL;
+    mrb_get_args(mrb, "z", &path);
+    size_t size = 0;
+    void *data = SDL_LoadFile(path, &size);
+    if (data == NULL)
+    {
+        return mrb_nil_value();
+    }
+    mrb_value str = mrb_str_new(mrb, (const char *)data, size);
+    SDL_free(data);
+    return str;
+}
+
 extern void Grapple_OpenGeneratedRubyBindings(mrb_state *mrb);
 
 bool Grapple_OpenRubyBindings(mrb_state *mrb)
@@ -755,6 +782,11 @@ bool Grapple_OpenRubyBindings(mrb_state *mrb)
     /* Generated flat mirror of the full C API; see
      * bindings/generated/COVERAGE.md. */
     Grapple_OpenGeneratedRubyBindings(mrb);
+    /* Reads the generator could not express, patched onto the module it
+       made. mrb_define_module returns the existing SDL module here rather
+       than creating a second one. */
+    mrb_define_module_function(mrb, mrb_define_module(mrb, "SDL"), "LoadFile", MSdlLoadFile,
+                               MRB_ARGS_REQ(1));
     /* Engine hooks: the one thing a generator cannot produce. */
     Grapple_OpenRubyEngineHooks(mrb);
     /* Ruby's Regexp is a library class here, not a language builtin. */

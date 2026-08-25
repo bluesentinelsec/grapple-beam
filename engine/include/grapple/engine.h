@@ -39,6 +39,7 @@
 #define GRAPPLE_ENGINE_H
 
 #include <SDL3/SDL.h>
+#include <grapple/event_sink.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -293,6 +294,22 @@ extern bool Grapple_RunGame(Grapple_Engine *engine, const Grapple_GameHooks *hoo
 /** One iteration of the loop, for a game that wants to own its own. Returns
  *  false once the engine has been asked to stop. */
 extern bool Grapple_EngineTick(Grapple_Engine *engine);
+
+/**
+ * Echo every event of every frame to `sink`, bracketed by its begin/end.
+ *
+ * This exists so that an immediate-mode GUI does not have to be driven by
+ * hand. The engine pumps events itself, before it calls any hook, so there
+ * is no hook in which a caller could open Nuklear's input window — hence
+ * the engine opening it:
+ *
+ *   const Grapple_EventSink sink = Grapple_GuiEventSink(gui);
+ *   Grapple_EngineSetEventSink(engine, &sink);
+ *
+ * The sink is copied. Pass NULL to remove it. The `event` hook still fires
+ * as before: a sink is an addition, not a replacement.
+ */
+extern void Grapple_EngineSetEventSink(Grapple_Engine *engine, const Grapple_EventSink *sink);
 
 /** Install the hooks without handing over the loop.
  *

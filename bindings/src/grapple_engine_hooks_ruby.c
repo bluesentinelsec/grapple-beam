@@ -15,6 +15,7 @@
  */
 #include <grapple/engine.h>
 #include <grapple/engine_script.h>
+#include <grapple/gui.h>
 #include <grapple/engine_scene.h>
 #include <grapple/ruby.h>
 
@@ -155,6 +156,40 @@ static mrb_value ROnUnload(mrb_state *mrb, mrb_value self)
 {
     (void)self;
     return SetHook(mrb, GRAPPLE_HOOK_UNLOAD);
+}
+
+/* Let the engine drive a GUI's input.
+ *
+ * The C equivalent is two lines (Grapple_GuiEventSink then
+ * Grapple_EngineSetEventSink), but a sink is a struct of function pointers
+ * and there is no sane way to hand one across a script boundary — so scripts
+ * get the pair as a single call. Passing nil for the gui detaches.
+ */
+static mrb_value RAttachGui(mrb_state *mrb, mrb_value self)
+{
+    (void)self;
+    mrb_value engine_value;
+    mrb_value gui_value = mrb_nil_value();
+    mrb_get_args(mrb, "o|o", &engine_value, &gui_value);
+    Grapple_Engine *engine =
+        (Grapple_Engine *)GrappleGen_RubyCheckHandle(mrb, engine_value, "Grapple_Engine");
+    if (engine == NULL)
+    {
+        mrb_raise(mrb, E_ARGUMENT_ERROR, "engine expected");
+    }
+    if (mrb_nil_p(gui_value))
+    {
+        Grapple_EngineSetEventSink(engine, NULL);
+        return mrb_true_value();
+    }
+    Grapple_Gui *gui = (Grapple_Gui *)GrappleGen_RubyCheckHandle(mrb, gui_value, "Grapple_Gui");
+    if (gui == NULL)
+    {
+        mrb_raise(mrb, E_ARGUMENT_ERROR, "gui expected");
+    }
+    const Grapple_EventSink sink = Grapple_GuiEventSink(gui);
+    Grapple_EngineSetEventSink(engine, &sink);
+    return mrb_true_value();
 }
 
 static mrb_value RRun(mrb_state *mrb, mrb_value self)
@@ -338,6 +373,7 @@ bool Grapple_OpenRubyEngineHooks(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "OnRender", ROnRender, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "OnPostRender", ROnPostRender, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "OnUnload", ROnUnload, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "AttachGui", RAttachGui, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "Run", RRun, MRB_ARGS_REQ(1));
     mrb_define_module_function(mrb, mod, "SceneDefine", RSceneDefine, MRB_ARGS_REQ(2));
     mrb_define_module_function(mrb, mod, "SceneOn", RSceneOn, MRB_ARGS_ANY());

@@ -10,11 +10,13 @@
  *      GRAPPLE_PRESENT_NATIVE means coordinates are pixels, so widening the
  *      window gives the widgets more room instead of stretching them.
  *   2. The loop belongs to the engine — Grapple_RunGame and its hooks. There
- *      is no `while (running)` here.
+ *      is no `while (running)` here, and no GUI input plumbing either: the
+ *      engine drives Nuklear's input through an event sink.
  *   3. The UI font is the platform's own, baked at the display's pixel
  *      density, so it is sharp on a Retina panel.
  *   4. Nothing places a widget at a hard-coded x/y. Grapple_GuiGrid takes
- *      column weights and the widgets follow, Tkinter-style.
+ *      column weights and the widgets follow, Tkinter-style — including a
+ *      per-row height and a part-width cell for the Clear button.
  *
  * Escape closes it.
  */
@@ -96,21 +98,24 @@ static bool Load(void *user)
         return false;
     }
 
-    /* Open the first frame's input window. Every later frame opens its own
-       at the end of Update — see the note there. */
-    Grapple_GuiInputBegin(app->gui);
+    /* Hand the GUI to the engine and input handling is done: the engine
+       brackets Nuklear's input around its own event pump, every frame, and
+       nothing below has to think about it again. */
+    const Grapple_EventSink sink = Grapple_GuiEventSink(app->gui);
+    Grapple_EngineSetEventSink(app->engine, &sink);
+
     app->translation = "";
     return true;
 }
 
 static void Event(void *user, const SDL_Event *event)
 {
+    /* Only the program's own business: the GUI is fed by the sink. */
     Translator *app = (Translator *)user;
     if (event->type == SDL_EVENT_KEY_DOWN && event->key.scancode == SDL_SCANCODE_ESCAPE)
     {
         Grapple_EngineQuit(app->engine);
     }
-    Grapple_GuiProcessEvent(app->gui, event);
 }
 
 static void Update(void *user, float dt)
@@ -118,11 +123,6 @@ static void Update(void *user, float dt)
     (void)dt;
     Translator *app = (Translator *)user;
     struct nk_context *ctx = Grapple_GuiContext(app->gui);
-
-    /* Close the input window opened at the end of the last frame. The engine
-       drained this frame's events into Event() above, and Nuklear needs them
-       all in before any widget is built. */
-    Grapple_GuiInputEnd(app->gui);
 
     /* The panel fills the window, in pixels, re-read every frame — which is
        what makes a resize reflow instead of scale. */
@@ -135,54 +135,51 @@ static void Update(void *user, float dt)
     {
         const float line = Grapple_GuiFontHeight(app->gui);
 
-        /* One column, so a full-width row. Height 0 means "one line of the
-           current font", which is why nothing here is in pixels. */
-        Grapple_GuiGrid header;
-        Grapple_GuiGridBegin(ctx, &header, 1, NULL, 0);
-        Grapple_GuiGridCell(&header);
-        nk_label(ctx, "Implementation: C", NK_TEXT_CENTERED);
-        Grapple_GuiGridCell(&header);
-        nk_label(ctx, "Click a Latin word:", NK_TEXT_LEFT);
-        Grapple_GuiGridEnd(&header);
+        /* One grid for the whole panel. Three equal columns, so a full-width
+           row is a span of three and the "English:" label plus its answer
+           fall out as a 1:2 split with no weights to declare. */
+        Grapple_GuiGrid grid;
+        Grapple_GuiGridBegin(ctx, &grid, 3, NULL, 0);
+        Grapple_GuiGridSpacing(&grid, 8.0f, 8.0f);
 
-        /* A second grid only because a row height is per-grid, not per-row,
-           and buttons want more than one line. */
-        Grapple_GuiGrid buttons;
-        Grapple_GuiGridBegin(ctx, &buttons, (int)SDL_arraysize(kWords), NULL, line * 2.4f);
+        Grapple_GuiGridCellSpan(&grid, 3);
+        nk_label(ctx, "Implementation: C", NK_TEXT_CENTERED);
+        Grapple_GuiGridCellSpan(&grid, 3);
+        nk_label(ctx, "Click a Latin word:", NK_TEXT_LEFT);
+
+        /* Buttons want more than a line of text — this row only. */
+        Grapple_GuiGridRowHeight(&grid, line * 2.4f);
         for (size_t i = 0; i < SDL_arraysize(kWords); ++i)
         {
-            Grapple_GuiGridCell(&buttons);
+            Grapple_GuiGridCell(&grid);
             if (nk_button_label(ctx, kWords[i].latin))
             {
                 app->translation = kWords[i].english;
             }
         }
-        Grapple_GuiGridEnd(&buttons);
 
-        /* Label and answer on one row, the answer twice as wide: column
-           weights, exactly like Tk's grid. */
-        static const float kLabelThenAnswer[] = {1.0f, 2.0f};
-        Grapple_GuiGrid result;
-        Grapple_GuiGridBegin(ctx, &result, 2, kLabelThenAnswer, line * 2.0f);
-        Grapple_GuiGridCell(&result);
+        Grapple_GuiGridRowHeight(&grid, line * 2.0f);
+        Grapple_GuiGridCell(&grid);
         nk_label(ctx, "English:", NK_TEXT_RIGHT);
-        Grapple_GuiGridCell(&result);
+        Grapple_GuiGridCellSpan(&grid, 2);
         nk_label(ctx, app->translation, NK_TEXT_LEFT);
-        Grapple_GuiGridEnd(&result);
 
-        Grapple_GuiGrid footer;
-        Grapple_GuiGridBegin(ctx, &footer, 1, NULL, 0);
-        Grapple_GuiGridCell(&footer);
+        /* A quarter of the row, hugging the right: what a full-width cell
+           cannot say. */
+        Grapple_GuiGridRowHeight(&grid, line * 1.8f);
+        Grapple_GuiGridCellPart(&grid, 3, 0.25f, GRAPPLE_GUI_ALIGN_RIGHT);
+        if (nk_button_label(ctx, "Clear"))
+        {
+            app->translation = "";
+        }
+
+        Grapple_GuiGridCellSpan(&grid, 3);
         nk_label(ctx, "Resize the window; the layout reflows. Escape closes.",
                  NK_TEXT_CENTERED);
-        Grapple_GuiGridEnd(&footer);
+
+        Grapple_GuiGridEnd(&grid);
     }
     nk_end(ctx);
-
-    /* Open the next frame's input window now, because the engine pumps
-       events before it calls any hook: there is no "start of frame" hook to
-       do it in. */
-    Grapple_GuiInputBegin(app->gui);
 }
 
 static void PostRender(void *user)
@@ -195,6 +192,8 @@ static void PostRender(void *user)
 static void Unload(void *user)
 {
     Translator *app = (Translator *)user;
+    /* Clear the sink before the GUI it points at goes away. */
+    Grapple_EngineSetEventSink(app->engine, NULL);
     Grapple_DestroyGui(app->gui);
     SDL_free(app->font_bytes);
     app->gui = NULL;

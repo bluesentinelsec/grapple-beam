@@ -2744,6 +2744,8 @@ module GrappleC
   def self.GuiGridBeginOwned: (untyped gui, Integer columns, Float row_height) -> bool
   def self.GuiGridCell: (untyped grid) -> void
   def self.GuiGridCellOwned: (untyped gui) -> void
+  def self.GuiGridCellPart: (untyped grid, Integer span, Float fraction, Integer align) -> void
+  def self.GuiGridCellPartOwned: (untyped gui, Integer span, Float fraction, Integer align) -> void
   def self.GuiGridCellSpan: (untyped grid, Integer span) -> void
   def self.GuiGridCellSpanOwned: (untyped gui, Integer span) -> void
   def self.GuiGridCreate: () -> untyped
@@ -2752,6 +2754,10 @@ module GrappleC
   def self.GuiGridEndOwned: (untyped gui) -> void
   def self.GuiGridNextRow: (untyped grid) -> void
   def self.GuiGridNextRowOwned: (untyped gui) -> void
+  def self.GuiGridRowHeight: (untyped grid, Float height) -> void
+  def self.GuiGridRowHeightOwned: (untyped gui, Float height) -> void
+  def self.GuiGridSpacing: (untyped grid, Float x, Float y) -> void
+  def self.GuiGridSpacingOwned: (untyped gui, Float x, Float y) -> void
   def self.GuiGridWeight: (untyped gui, Integer column, Float weight) -> bool
   def self.GuiImage: (untyped gui, untyped texture, Integer mode) -> bool
   def self.GuiInputBegin: (untyped gui) -> void

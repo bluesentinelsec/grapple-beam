@@ -4405,6 +4405,28 @@ static int GenL_Grapple_GuiGridCellOwned(lua_State *L)
     return 0;
 }
 
+static int GenL_Grapple_GuiGridCellPart(lua_State *L)
+{
+    (void)L;
+    Grapple_GuiGrid *a0 = (Grapple_GuiGrid *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_GuiGrid");
+    int a1 = (int)luaL_checkinteger(L, 2);
+    float a2 = (float)luaL_checknumber(L, 3);
+    Grapple_GuiAlign a3 = (Grapple_GuiAlign)luaL_checkinteger(L, 4);
+    Grapple_GuiGridCellPart(a0, a1, a2, a3);
+    return 0;
+}
+
+static int GenL_Grapple_GuiGridCellPartOwned(lua_State *L)
+{
+    (void)L;
+    Grapple_Gui *a0 = (Grapple_Gui *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Gui");
+    int a1 = (int)luaL_checkinteger(L, 2);
+    float a2 = (float)luaL_checknumber(L, 3);
+    Grapple_GuiAlign a3 = (Grapple_GuiAlign)luaL_checkinteger(L, 4);
+    Grapple_GuiGridCellPartOwned(a0, a1, a2, a3);
+    return 0;
+}
+
 static int GenL_Grapple_GuiGridCellSpan(lua_State *L)
 {
     (void)L;
@@ -4468,6 +4490,44 @@ static int GenL_Grapple_GuiGridNextRowOwned(lua_State *L)
     (void)L;
     Grapple_Gui *a0 = (Grapple_Gui *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Gui");
     Grapple_GuiGridNextRowOwned(a0);
+    return 0;
+}
+
+static int GenL_Grapple_GuiGridRowHeight(lua_State *L)
+{
+    (void)L;
+    Grapple_GuiGrid *a0 = (Grapple_GuiGrid *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_GuiGrid");
+    float a1 = (float)luaL_checknumber(L, 2);
+    Grapple_GuiGridRowHeight(a0, a1);
+    return 0;
+}
+
+static int GenL_Grapple_GuiGridRowHeightOwned(lua_State *L)
+{
+    (void)L;
+    Grapple_Gui *a0 = (Grapple_Gui *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Gui");
+    float a1 = (float)luaL_checknumber(L, 2);
+    Grapple_GuiGridRowHeightOwned(a0, a1);
+    return 0;
+}
+
+static int GenL_Grapple_GuiGridSpacing(lua_State *L)
+{
+    (void)L;
+    Grapple_GuiGrid *a0 = (Grapple_GuiGrid *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_GuiGrid");
+    float a1 = (float)luaL_checknumber(L, 2);
+    float a2 = (float)luaL_checknumber(L, 3);
+    Grapple_GuiGridSpacing(a0, a1, a2);
+    return 0;
+}
+
+static int GenL_Grapple_GuiGridSpacingOwned(lua_State *L)
+{
+    (void)L;
+    Grapple_Gui *a0 = (Grapple_Gui *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Gui");
+    float a1 = (float)luaL_checknumber(L, 2);
+    float a2 = (float)luaL_checknumber(L, 3);
+    Grapple_GuiGridSpacingOwned(a0, a1, a2);
     return 0;
 }
 
@@ -6678,7 +6738,7 @@ static int GenL_Grapple_WheelJointDefSetSpring(lua_State *L)
 int GrappleGen_OpenLua_grapple(lua_State *L);
 int GrappleGen_OpenLua_grapple(lua_State *L)
 {
-    lua_createtable(L, 0, 610);
+    lua_createtable(L, 0, 616);
     lua_pushcfunction(L, GenL_Grapple_ActionBind);
     lua_setfield(L, -2, "ActionBind");
     lua_pushcfunction(L, GenL_Grapple_ActionBindAxis);
@@ -7445,6 +7505,10 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GuiGridCell");
     lua_pushcfunction(L, GenL_Grapple_GuiGridCellOwned);
     lua_setfield(L, -2, "GuiGridCellOwned");
+    lua_pushcfunction(L, GenL_Grapple_GuiGridCellPart);
+    lua_setfield(L, -2, "GuiGridCellPart");
+    lua_pushcfunction(L, GenL_Grapple_GuiGridCellPartOwned);
+    lua_setfield(L, -2, "GuiGridCellPartOwned");
     lua_pushcfunction(L, GenL_Grapple_GuiGridCellSpan);
     lua_setfield(L, -2, "GuiGridCellSpan");
     lua_pushcfunction(L, GenL_Grapple_GuiGridCellSpanOwned);
@@ -7461,6 +7525,14 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GuiGridNextRow");
     lua_pushcfunction(L, GenL_Grapple_GuiGridNextRowOwned);
     lua_setfield(L, -2, "GuiGridNextRowOwned");
+    lua_pushcfunction(L, GenL_Grapple_GuiGridRowHeight);
+    lua_setfield(L, -2, "GuiGridRowHeight");
+    lua_pushcfunction(L, GenL_Grapple_GuiGridRowHeightOwned);
+    lua_setfield(L, -2, "GuiGridRowHeightOwned");
+    lua_pushcfunction(L, GenL_Grapple_GuiGridSpacing);
+    lua_setfield(L, -2, "GuiGridSpacing");
+    lua_pushcfunction(L, GenL_Grapple_GuiGridSpacingOwned);
+    lua_setfield(L, -2, "GuiGridSpacingOwned");
     lua_pushcfunction(L, GenL_Grapple_GuiGridWeight);
     lua_setfield(L, -2, "GuiGridWeight");
     lua_pushcfunction(L, GenL_Grapple_GuiImage);
@@ -8085,6 +8157,12 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GRAPPLE_QUALITY_MEDIUM");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_QUALITY_HIGH);
     lua_setfield(L, -2, "GRAPPLE_QUALITY_HIGH");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_GUI_ALIGN_LEFT);
+    lua_setfield(L, -2, "GRAPPLE_GUI_ALIGN_LEFT");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_GUI_ALIGN_CENTER);
+    lua_setfield(L, -2, "GRAPPLE_GUI_ALIGN_CENTER");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_GUI_ALIGN_RIGHT);
+    lua_setfield(L, -2, "GRAPPLE_GUI_ALIGN_RIGHT");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_GUI_FONT_SMALL);
     lua_setfield(L, -2, "GRAPPLE_GUI_FONT_SMALL");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_GUI_FONT_NORMAL);

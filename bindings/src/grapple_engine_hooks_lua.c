@@ -15,6 +15,7 @@
  */
 #include <grapple/engine.h>
 #include <grapple/engine_script.h>
+#include <grapple/gui.h>
 #include <grapple/engine_scene.h>
 #include <grapple/lua.h>
 
@@ -109,6 +110,32 @@ static int LOnUpdate(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_UPDATE); }
 static int LOnRender(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_RENDER); }
 static int LOnPostRender(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_POST_RENDER); }
 static int LOnUnload(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_UNLOAD); }
+
+/* Let the engine drive a GUI's input.
+ *
+ * The C equivalent is two lines (Grapple_GuiEventSink then
+ * Grapple_EngineSetEventSink), but a sink is a struct of function pointers
+ * and there is no sane way to hand one across a script boundary — so
+ * scripts get the pair as a single call. Passing nil for the gui detaches.
+ */
+static int LAttachGui(lua_State *L)
+{
+    Grapple_Engine *engine =
+        (Grapple_Engine *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Engine");
+    luaL_argcheck(L, engine != NULL, 1, "engine expected");
+    if (lua_isnoneornil(L, 2))
+    {
+        Grapple_EngineSetEventSink(engine, NULL);
+        lua_pushboolean(L, 1);
+        return 1;
+    }
+    Grapple_Gui *gui = (Grapple_Gui *)GrappleGen_LuaCheckHandle(L, 2, "Grapple_Gui");
+    luaL_argcheck(L, gui != NULL, 2, "gui expected");
+    const Grapple_EventSink sink = Grapple_GuiEventSink(gui);
+    Grapple_EngineSetEventSink(engine, &sink);
+    lua_pushboolean(L, 1);
+    return 1;
+}
 
 /* Hand the loop over. Handlers fire from EngineTick too, so a script that
    would rather own the `while` simply does not call this. */
@@ -285,6 +312,7 @@ bool Grapple_OpenLuaEngineHooks(lua_State *L)
                                      {"OnRender", LOnRender},
                                      {"OnPostRender", LOnPostRender},
                                      {"OnUnload", LOnUnload},
+                                     {"AttachGui", LAttachGui},
                                      {"Run", LRun},
                                      {NULL, NULL}};
     if (L == NULL)

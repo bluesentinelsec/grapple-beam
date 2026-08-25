@@ -6030,6 +6030,38 @@ static mrb_value GenR_Grapple_GuiGridCellOwned(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_Grapple_GuiGridCellPart(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_GuiGrid *a0 = (Grapple_GuiGrid *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_GuiGrid");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Grapple_GuiAlign a3 = (Grapple_GuiAlign)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Grapple_GuiGridCellPart(a0, a1, a2, a3);
+    return mrb_nil_value();
+    }
+}
+
+static mrb_value GenR_Grapple_GuiGridCellPartOwned(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_Gui *a0 = (Grapple_Gui *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_Gui");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Grapple_GuiAlign a3 = (Grapple_GuiAlign)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    Grapple_GuiGridCellPartOwned(a0, a1, a2, a3);
+    return mrb_nil_value();
+    }
+}
+
 static mrb_value GenR_Grapple_GuiGridCellSpan(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -6131,6 +6163,64 @@ static mrb_value GenR_Grapple_GuiGridNextRowOwned(mrb_state *mrb, mrb_value self
     {
     Grapple_Gui *a0 = (Grapple_Gui *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_Gui");
     Grapple_GuiGridNextRowOwned(a0);
+    return mrb_nil_value();
+    }
+}
+
+static mrb_value GenR_Grapple_GuiGridRowHeight(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_GuiGrid *a0 = (Grapple_GuiGrid *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_GuiGrid");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Grapple_GuiGridRowHeight(a0, a1);
+    return mrb_nil_value();
+    }
+}
+
+static mrb_value GenR_Grapple_GuiGridRowHeightOwned(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_Gui *a0 = (Grapple_Gui *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_Gui");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Grapple_GuiGridRowHeightOwned(a0, a1);
+    return mrb_nil_value();
+    }
+}
+
+static mrb_value GenR_Grapple_GuiGridSpacing(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_GuiGrid *a0 = (Grapple_GuiGrid *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_GuiGrid");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Grapple_GuiGridSpacing(a0, a1, a2);
+    return mrb_nil_value();
+    }
+}
+
+static mrb_value GenR_Grapple_GuiGridSpacingOwned(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_Gui *a0 = (Grapple_Gui *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_Gui");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Grapple_GuiGridSpacingOwned(a0, a1, a2);
     return mrb_nil_value();
     }
 }
@@ -9694,6 +9784,8 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "GuiGridBeginOwned", GenR_Grapple_GuiGridBeginOwned, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiGridCell", GenR_Grapple_GuiGridCell, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiGridCellOwned", GenR_Grapple_GuiGridCellOwned, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "GuiGridCellPart", GenR_Grapple_GuiGridCellPart, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "GuiGridCellPartOwned", GenR_Grapple_GuiGridCellPartOwned, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiGridCellSpan", GenR_Grapple_GuiGridCellSpan, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiGridCellSpanOwned", GenR_Grapple_GuiGridCellSpanOwned, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiGridCreate", GenR_Grapple_GuiGridCreate, MRB_ARGS_ANY());
@@ -9702,6 +9794,10 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "GuiGridEndOwned", GenR_Grapple_GuiGridEndOwned, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiGridNextRow", GenR_Grapple_GuiGridNextRow, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiGridNextRowOwned", GenR_Grapple_GuiGridNextRowOwned, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "GuiGridRowHeight", GenR_Grapple_GuiGridRowHeight, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "GuiGridRowHeightOwned", GenR_Grapple_GuiGridRowHeightOwned, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "GuiGridSpacing", GenR_Grapple_GuiGridSpacing, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "GuiGridSpacingOwned", GenR_Grapple_GuiGridSpacingOwned, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiGridWeight", GenR_Grapple_GuiGridWeight, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiImage", GenR_Grapple_GuiImage, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiInputBegin", GenR_Grapple_GuiInputBegin, MRB_ARGS_ANY());
@@ -10014,6 +10110,9 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_const(mrb, mod, "GRAPPLE_QUALITY_LOW", mrb_int_value(mrb, (mrb_int)GRAPPLE_QUALITY_LOW));
     mrb_define_const(mrb, mod, "GRAPPLE_QUALITY_MEDIUM", mrb_int_value(mrb, (mrb_int)GRAPPLE_QUALITY_MEDIUM));
     mrb_define_const(mrb, mod, "GRAPPLE_QUALITY_HIGH", mrb_int_value(mrb, (mrb_int)GRAPPLE_QUALITY_HIGH));
+    mrb_define_const(mrb, mod, "GRAPPLE_GUI_ALIGN_LEFT", mrb_int_value(mrb, (mrb_int)GRAPPLE_GUI_ALIGN_LEFT));
+    mrb_define_const(mrb, mod, "GRAPPLE_GUI_ALIGN_CENTER", mrb_int_value(mrb, (mrb_int)GRAPPLE_GUI_ALIGN_CENTER));
+    mrb_define_const(mrb, mod, "GRAPPLE_GUI_ALIGN_RIGHT", mrb_int_value(mrb, (mrb_int)GRAPPLE_GUI_ALIGN_RIGHT));
     mrb_define_const(mrb, mod, "GRAPPLE_GUI_FONT_SMALL", mrb_int_value(mrb, (mrb_int)GRAPPLE_GUI_FONT_SMALL));
     mrb_define_const(mrb, mod, "GRAPPLE_GUI_FONT_NORMAL", mrb_int_value(mrb, (mrb_int)GRAPPLE_GUI_FONT_NORMAL));
     mrb_define_const(mrb, mod, "GRAPPLE_GUI_FONT_LARGE", mrb_int_value(mrb, (mrb_int)GRAPPLE_GUI_FONT_LARGE));

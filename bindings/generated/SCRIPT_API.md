@@ -2770,6 +2770,8 @@ returns as an array.
 | `GrappleC.GuiGridBeginOwned(gui: Grapple_Gui, columns: integer, row_height: number)` | boolean |
 | `GrappleC.GuiGridCell(grid: Grapple_GuiGrid)` | nil |
 | `GrappleC.GuiGridCellOwned(gui: Grapple_Gui)` | nil |
+| `GrappleC.GuiGridCellPart(grid: Grapple_GuiGrid, span: integer, fraction: number, align: integer)` | nil |
+| `GrappleC.GuiGridCellPartOwned(gui: Grapple_Gui, span: integer, fraction: number, align: integer)` | nil |
 | `GrappleC.GuiGridCellSpan(grid: Grapple_GuiGrid, span: integer)` | nil |
 | `GrappleC.GuiGridCellSpanOwned(gui: Grapple_Gui, span: integer)` | nil |
 | `GrappleC.GuiGridCreate()` | Grapple_GuiGrid|nil |
@@ -2778,6 +2780,10 @@ returns as an array.
 | `GrappleC.GuiGridEndOwned(gui: Grapple_Gui)` | nil |
 | `GrappleC.GuiGridNextRow(grid: Grapple_GuiGrid)` | nil |
 | `GrappleC.GuiGridNextRowOwned(gui: Grapple_Gui)` | nil |
+| `GrappleC.GuiGridRowHeight(grid: Grapple_GuiGrid, height: number)` | nil |
+| `GrappleC.GuiGridRowHeightOwned(gui: Grapple_Gui, height: number)` | nil |
+| `GrappleC.GuiGridSpacing(grid: Grapple_GuiGrid, x: number, y: number)` | nil |
+| `GrappleC.GuiGridSpacingOwned(gui: Grapple_Gui, x: number, y: number)` | nil |
 | `GrappleC.GuiGridWeight(gui: Grapple_Gui, column: integer, weight: number)` | boolean |
 | `GrappleC.GuiImage(gui: Grapple_Gui, texture: SDL_Texture, mode: integer)` | boolean |
 | `GrappleC.GuiInputBegin(gui: Grapple_Gui)` | nil |

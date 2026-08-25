@@ -15763,6 +15763,20 @@ function GrappleC.GuiGridCell(grid) end
 ---@param gui userdata
 function GrappleC.GuiGridCellOwned(gui) end
 
+---Calls `Grapple_GuiGridCellPart`.
+---@param grid userdata
+---@param span integer
+---@param fraction number
+---@param align integer
+function GrappleC.GuiGridCellPart(grid, span, fraction, align) end
+
+---Calls `Grapple_GuiGridCellPartOwned`.
+---@param gui userdata
+---@param span integer
+---@param fraction number
+---@param align integer
+function GrappleC.GuiGridCellPartOwned(gui, span, fraction, align) end
+
 ---Calls `Grapple_GuiGridCellSpan`.
 ---@param grid userdata
 ---@param span integer
@@ -15796,6 +15810,28 @@ function GrappleC.GuiGridNextRow(grid) end
 ---Calls `Grapple_GuiGridNextRowOwned`.
 ---@param gui userdata
 function GrappleC.GuiGridNextRowOwned(gui) end
+
+---Calls `Grapple_GuiGridRowHeight`.
+---@param grid userdata
+---@param height number
+function GrappleC.GuiGridRowHeight(grid, height) end
+
+---Calls `Grapple_GuiGridRowHeightOwned`.
+---@param gui userdata
+---@param height number
+function GrappleC.GuiGridRowHeightOwned(gui, height) end
+
+---Calls `Grapple_GuiGridSpacing`.
+---@param grid userdata
+---@param x number
+---@param y number
+function GrappleC.GuiGridSpacing(grid, x, y) end
+
+---Calls `Grapple_GuiGridSpacingOwned`.
+---@param gui userdata
+---@param x number
+---@param y number
+function GrappleC.GuiGridSpacingOwned(gui, x, y) end
 
 ---Calls `Grapple_GuiGridWeight`.
 ---@param gui userdata

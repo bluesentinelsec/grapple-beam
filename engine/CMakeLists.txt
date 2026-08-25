@@ -59,6 +59,10 @@ set_target_properties(Grapple_Engine PROPERTIES
 target_include_directories(Grapple_Engine
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    # grapple/event_sink.h: shared by modules that must not depend
+    # on each other.
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
 )
 
 # Formats for tomlc99: config.toml is part of the settings contract, not an

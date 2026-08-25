@@ -25,13 +25,13 @@ types). The full C API additionally stays reachable from C/C++.
 | libyaml | 48 | 0 | 0 | 48 | 2 | 46 |
 | mog HTTP/S | 69 | 54 | 0 | 12 | 67 | 2 |
 | cJSON | 78 | 57 | 0 | 20 | 70 | 8 |
-| Grapple modules | 645 | 75 | 116 | 450 | 610 | 35 |
-| **Total** | 3537 | 1093 | 340 | 2057 | 2908 | 629 |
+| Grapple modules | 653 | 79 | 116 | 454 | 616 | 37 |
+| **Total** | 3545 | 1097 | 340 | 2061 | 2914 | 631 |
 
 ## Script-surface skip reasons
 
-- 299: unmarshalable parameter type
-- 142: unmarshalable return type
+- 300: unmarshalable parameter type
+- 143: unmarshalable return type
 - 76: stdlib clone
 - 53: math clone
 - 47: threading
@@ -700,7 +700,7 @@ types). The full C API additionally stays reachable from C/C++.
 
 </details>
 
-<details><summary>Grapple modules (35)</summary>
+<details><summary>Grapple modules (37)</summary>
 
 - `Grapple_ActorEach` — param visit: <funcptr>*
 - `Grapple_ActorLight` — returns struct pointer
@@ -716,6 +716,7 @@ types). The full C API additionally stays reachable from C/C++.
 - `Grapple_EmitSignal` — param args: void*
 - `Grapple_EncryptData` — return type unsigned char*
 - `Grapple_EngineGraphics` — returns struct pointer
+- `Grapple_EngineSetEventSink` — param sink: const Grapple_EventSink*
 - `Grapple_EngineSetHooks` — param user: void*
 - `Grapple_FingerHeldInRect` — returns struct pointer
 - `Grapple_FingerInRect` — returns struct pointer
@@ -725,6 +726,7 @@ types). The full C API additionally stays reachable from C/C++.
 - `Grapple_GraphicsLoadArgs` — param argv: char**
 - `Grapple_GraphicsResolve` — param argv: char**
 - `Grapple_GraphicsSetArchiveReader` — param reader: Grapple_GraphicsReadFile
+- `Grapple_GuiEventSink` — return type Grapple_EventSink
 - `Grapple_GuiGridBegin` — param weights: const float*
 - `Grapple_LightDefCreate` — returns struct pointer
 - `Grapple_LoadVFSFile` — return type unsigned char*
