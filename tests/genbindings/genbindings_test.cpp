@@ -1194,7 +1194,7 @@ TEST(GenLua, SdlLoadFileReadsAPathOutsideTheVfs)
     std::ofstream(file) << "outside the vfs";
 
     const std::string script =
-        "local bytes = SDL.LoadFile('" + file.string() + "')\n"
+        "local bytes = SDL.LoadFile('" + file.generic_string() + "')\n"
         "assert(type(bytes) == 'string', 'expected a string, got ' .. type(bytes))\n"
         "assert(bytes == 'outside the vfs', 'got [' .. tostring(bytes) .. ']')\n"
         // nil rather than an error, so walking a candidate list needs no pcall.
@@ -1324,7 +1324,10 @@ std::string MakeReadableDir()
     std::filesystem::create_directories(dir);
     std::ofstream(dir / "alpha.txt") << "0123456789abcdefghijklmnop";
     std::ofstream(dir / "beta.txt") << "second";
-    return dir.string();
+    // generic_string(), not string(): these paths are pasted into Lua
+    // string literals, and a Windows backslash is an escape character
+    // there. Every API this reaches takes forward slashes on Windows too.
+    return dir.generic_string();
 }
 
 } // namespace
@@ -1361,4 +1364,33 @@ TEST(GenLua, BufferReadsComeBackAsAString)
         "PHYSFS.close(file)\n"
         "PHYSFS.deinit()\n";
     RunLua(script.c_str());
+}
+
+// The heap config builders exist because a script has no stack to put a
+// struct on. Nothing owned the result, so every script that built one leaked
+// it — 224 bytes, found by LeakSanitizer in this project's own tests.
+
+TEST(GenLua, ConfigIsOwnedAndCollectable)
+{
+    RunLua(
+        "local config = GrappleC.ConfigCreate()\n"
+        "GrappleC.ConfigSetTitle(config, 'owned')\n"
+        "config = nil\n"
+        // A full cycle runs the finaliser: with an unowned handle this frees
+        // nothing and the config leaks, which is what was happening.
+        "collectgarbage('collect')\n");
+}
+
+TEST(GenLua, DestroyingAConfigExplicitlyIsStillSafe)
+{
+    // Explicit destroy takes the pointer out of the handle, so the collector
+    // must not free it a second time. A double free is a heap error rather
+    // than a leak, which means this one is checkable everywhere rather than
+    // only where LeakSanitizer runs.
+    RunLua(
+        "local config = GrappleC.ConfigCreate()\n"
+        "GrappleC.ConfigDestroy(config)\n"
+        "config = nil\n"
+        "collectgarbage('collect')\n"
+        "collectgarbage('collect')\n");
 }

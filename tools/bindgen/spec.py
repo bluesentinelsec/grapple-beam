@@ -377,6 +377,13 @@ RESOURCES: dict[str, list[ResourceSpec]] = {
                      ["Grapple_LoadTiledMap"]),
         ResourceSpec("Grapple_Gui", "GuiHandle", "Grapple_DestroyGui",
                      ["Grapple_CreateGui"]),
+        # The heap config builders exist because a script has no stack to
+        # put a struct on. Without an owner the script has no way to know it
+        # must free one either, so every game leaked its config -- 224 bytes
+        # a script, which LeakSanitizer found in this project's own tests.
+        # The engine copies what it needs, so collecting it later is safe.
+        ResourceSpec("Grapple_EngineConfig", "EngineConfigHandle",
+                     "Grapple_ConfigDestroy", ["Grapple_ConfigCreate"]),
         ResourceSpec("Grapple_Regex", "RegexHandle", "Grapple_DestroyRegex",
                      ["Grapple_CompileRegex"]),
         ResourceSpec("Grapple_LightScene", "LightSceneHandle",

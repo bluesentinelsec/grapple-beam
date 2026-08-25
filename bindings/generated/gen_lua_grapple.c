@@ -525,6 +525,12 @@ static void GenDtor_Grapple_DestroyGui(void *p)
     Grapple_DestroyGui(typed);
 }
 
+static void GenDtor_Grapple_ConfigDestroy(void *p)
+{
+    Grapple_EngineConfig *typed = (Grapple_EngineConfig *)p;
+    Grapple_ConfigDestroy(typed);
+}
+
 static void GenDtor_Grapple_DestroyRegex(void *p)
 {
     Grapple_Regex *typed = (Grapple_Regex *)p;
@@ -2014,14 +2020,14 @@ static int GenL_Grapple_ConfigCreate(lua_State *L)
 {
     (void)L;
     Grapple_EngineConfig * rv = Grapple_ConfigCreate();
-    GrappleGen_LuaPushHandle(L, (void *)rv, "Grapple_EngineConfig");
+    GrappleGen_LuaPushOwned(L, (void *)rv, "Grapple_EngineConfig", GenDtor_Grapple_ConfigDestroy);
     return 1;
 }
 
 static int GenL_Grapple_ConfigDestroy(lua_State *L)
 {
     (void)L;
-    Grapple_EngineConfig *a0 = (Grapple_EngineConfig *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_EngineConfig");
+    Grapple_EngineConfig *a0 = (Grapple_EngineConfig *)GrappleGen_LuaTakeHandle(L, 1, "Grapple_EngineConfig");
     Grapple_ConfigDestroy(a0);
     return 0;
 }

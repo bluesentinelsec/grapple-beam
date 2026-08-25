@@ -265,6 +265,75 @@ class GuiHandle {
   bool engaged_ = false;
 };
 
+// RAII owner for Grapple_EngineConfig (destroyed with Grapple_ConfigDestroy).
+class EngineConfigHandle {
+ public:
+  static Result<EngineConfigHandle> ConfigCreate() {
+    Grapple_EngineConfig* created_ = ::Grapple_ConfigCreate();
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return EngineConfigHandle(created_);
+  }
+
+  EngineConfigHandle() = default;
+  ~EngineConfigHandle() { reset(); }
+  EngineConfigHandle(EngineConfigHandle&& other) noexcept
+      : value_(other.value_), engaged_(other.engaged_) {
+    other.value_ = nullptr;
+    other.engaged_ = false;
+  }
+  EngineConfigHandle& operator=(EngineConfigHandle&& other) noexcept {
+    if (this != &other) {
+      reset();
+      value_ = other.value_;
+      engaged_ = other.engaged_;
+      other.value_ = nullptr;
+      other.engaged_ = false;
+    }
+    return *this;
+  }
+  EngineConfigHandle(const EngineConfigHandle&) = delete;
+  EngineConfigHandle& operator=(const EngineConfigHandle&) = delete;
+
+  Grapple_EngineConfig* get() const { return value_; }
+  Grapple_EngineConfig* release() {
+    Grapple_EngineConfig* out = value_;
+    value_ = nullptr;
+    engaged_ = false;
+    return out;
+  }
+  void reset() {
+    if (value_ != nullptr) ::Grapple_ConfigDestroy(value_);
+    value_ = nullptr;
+    engaged_ = false;
+  }
+
+  Grapple_Engine* CreateEngine() {
+    return ::Grapple_CreateEngine(value_);
+  }
+  void ConfigSetTitle(const char *title) { ::Grapple_ConfigSetTitle(value_, title); }
+  void ConfigSetWindowSize(int width, int height) { ::Grapple_ConfigSetWindowSize(value_, width, height); }
+  void ConfigSetDesignSize(int width, int height) { ::Grapple_ConfigSetDesignSize(value_, width, height); }
+  void ConfigSetPresentation(Grapple_EnginePresentation presentation) { ::Grapple_ConfigSetPresentation(value_, presentation); }
+  void ConfigSetFullscreen(bool fullscreen) { ::Grapple_ConfigSetFullscreen(value_, fullscreen); }
+  void ConfigSetVsync(bool vsync) { ::Grapple_ConfigSetVsync(value_, vsync); }
+  void ConfigSetMaxFps(int max_fps) { ::Grapple_ConfigSetMaxFps(value_, max_fps); }
+  void ConfigSetTickRate(int ticks_per_second) { ::Grapple_ConfigSetTickRate(value_, ticks_per_second); }
+  void ConfigSetBackend(Grapple_EngineBackend backend) { ::Grapple_ConfigSetBackend(value_, backend); }
+  void ConfigSetResizable(bool resizable) { ::Grapple_ConfigSetResizable(value_, resizable); }
+  void ConfigSetHighDpi(bool high_dpi) { ::Grapple_ConfigSetHighDpi(value_, high_dpi); }
+  void ConfigSetHeadless(bool headless) { ::Grapple_ConfigSetHeadless(value_, headless); }
+  void ConfigSetManualClock(bool manual) { ::Grapple_ConfigSetManualClock(value_, manual); }
+  void ConfigSetMediaPath(const char *path) { ::Grapple_ConfigSetMediaPath(value_, path); }
+  void ConfigSetAutoMount(bool enabled) { ::Grapple_ConfigSetAutoMount(value_, enabled); }
+  void ConfigSetGraphics(const Grapple_GraphicsSettings *graphics) { ::Grapple_ConfigSetGraphics(value_, graphics); }
+ private:
+  explicit EngineConfigHandle(Grapple_EngineConfig* value) : value_(value), engaged_(true) {}
+  Grapple_EngineConfig* value_{};
+  bool engaged_ = false;
+};
+
 // RAII owner for Grapple_Regex (destroyed with Grapple_DestroyRegex).
 class RegexHandle {
  public:
@@ -891,30 +960,11 @@ inline constexpr auto& CameraUpdate = ::Grapple_CameraUpdate;
 inline constexpr auto& CameraX = ::Grapple_CameraX;
 inline constexpr auto& CameraY = ::Grapple_CameraY;
 inline constexpr auto& CompressData = ::Grapple_CompressData;
-inline constexpr auto& ConfigCreate = ::Grapple_ConfigCreate;
-inline constexpr auto& ConfigDestroy = ::Grapple_ConfigDestroy;
-inline constexpr auto& ConfigSetAutoMount = ::Grapple_ConfigSetAutoMount;
-inline constexpr auto& ConfigSetBackend = ::Grapple_ConfigSetBackend;
-inline constexpr auto& ConfigSetDesignSize = ::Grapple_ConfigSetDesignSize;
-inline constexpr auto& ConfigSetFullscreen = ::Grapple_ConfigSetFullscreen;
-inline constexpr auto& ConfigSetGraphics = ::Grapple_ConfigSetGraphics;
-inline constexpr auto& ConfigSetHeadless = ::Grapple_ConfigSetHeadless;
-inline constexpr auto& ConfigSetHighDpi = ::Grapple_ConfigSetHighDpi;
-inline constexpr auto& ConfigSetManualClock = ::Grapple_ConfigSetManualClock;
-inline constexpr auto& ConfigSetMaxFps = ::Grapple_ConfigSetMaxFps;
-inline constexpr auto& ConfigSetMediaPath = ::Grapple_ConfigSetMediaPath;
-inline constexpr auto& ConfigSetPresentation = ::Grapple_ConfigSetPresentation;
-inline constexpr auto& ConfigSetResizable = ::Grapple_ConfigSetResizable;
-inline constexpr auto& ConfigSetTickRate = ::Grapple_ConfigSetTickRate;
-inline constexpr auto& ConfigSetTitle = ::Grapple_ConfigSetTitle;
-inline constexpr auto& ConfigSetVsync = ::Grapple_ConfigSetVsync;
-inline constexpr auto& ConfigSetWindowSize = ::Grapple_ConfigSetWindowSize;
 inline constexpr auto& ConnectSignal = ::Grapple_ConnectSignal;
 inline constexpr auto& CountSignalConnections = ::Grapple_CountSignalConnections;
 inline constexpr auto& CreateChipSFX = ::Grapple_CreateChipSFX;
 inline constexpr auto& CreateChipTone = ::Grapple_CreateChipTone;
 inline constexpr auto& CreateChipTune = ::Grapple_CreateChipTune;
-inline constexpr auto& CreateEngine = ::Grapple_CreateEngine;
 inline constexpr auto& CreateGuiWithGlyphs = ::Grapple_CreateGuiWithGlyphs;
 inline constexpr auto& CreateSignalEmitter = ::Grapple_CreateSignalEmitter;
 inline constexpr auto& DayNightAmbient = ::Grapple_DayNightAmbient;

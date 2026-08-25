@@ -431,6 +431,12 @@ static void GenDtor_Grapple_DestroyGui(void *p)
     Grapple_DestroyGui(typed);
 }
 
+static void GenDtor_Grapple_ConfigDestroy(void *p)
+{
+    Grapple_EngineConfig *typed = (Grapple_EngineConfig *)p;
+    Grapple_ConfigDestroy(typed);
+}
+
 static void GenDtor_Grapple_DestroyRegex(void *p)
 {
     Grapple_Regex *typed = (Grapple_Regex *)p;
@@ -2532,7 +2538,7 @@ static mrb_value GenR_Grapple_ConfigCreate(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "*", &argv, &argc);
     {
     Grapple_EngineConfig * rv = Grapple_ConfigCreate();
-    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "Grapple_EngineConfig");
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "Grapple_EngineConfig", GenDtor_Grapple_ConfigDestroy);
     }
 }
 
@@ -2543,7 +2549,7 @@ static mrb_value GenR_Grapple_ConfigDestroy(mrb_state *mrb, mrb_value self)
     (void)self;
     mrb_get_args(mrb, "*", &argv, &argc);
     {
-    Grapple_EngineConfig *a0 = (Grapple_EngineConfig *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_EngineConfig");
+    Grapple_EngineConfig *a0 = (Grapple_EngineConfig *)GrappleGen_RubyTakeHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_EngineConfig");
     Grapple_ConfigDestroy(a0);
     return mrb_nil_value();
     }

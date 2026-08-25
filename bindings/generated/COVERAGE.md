@@ -25,8 +25,8 @@ types). The full C API additionally stays reachable from C/C++.
 | libyaml | 48 | 0 | 0 | 48 | 2 | 46 |
 | mog HTTP/S | 69 | 54 | 0 | 12 | 67 | 2 |
 | cJSON | 78 | 57 | 0 | 20 | 70 | 8 |
-| Grapple modules | 655 | 80 | 116 | 455 | 617 | 38 |
-| **Total** | 3547 | 1098 | 340 | 2062 | 2943 | 604 |
+| Grapple modules | 655 | 98 | 116 | 436 | 617 | 38 |
+| **Total** | 3547 | 1116 | 340 | 2043 | 2943 | 604 |
 
 ## Script-surface skip reasons
 
