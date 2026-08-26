@@ -1400,7 +1400,10 @@ TEST_F(GuiHarness, UiImageWithNoUsableSourceFails)
 
 TEST(GuiStandalone, AFillingPanelFollowsTheWindowWidth)
 {
-    ASSERT_TRUE(SDL_Init(SDL_INIT_VIDEO)) << SDL_GetError();
+    // SDL_Init(0), not SDL_INIT_VIDEO: a software renderer over a surface
+    // needs no video subsystem, and asking for one fails on a machine with
+    // no display — which is every CI runner that is not macOS.
+    ASSERT_TRUE(SDL_Init(0)) << SDL_GetError();
 
     auto stretched_label_width = [](int surface_width) {
         SDL_Surface *surface =
