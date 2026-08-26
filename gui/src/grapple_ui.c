@@ -758,6 +758,16 @@ const char *Grapple_UiOption(Grapple_UiWidget *widget, int index)
     return widget->options[index];
 }
 
+/* Whoever can decode more than a bitmap, if anybody has said so. */
+static Grapple_UiImageLoader g_image_loader = NULL;
+static void *g_image_loader_user = NULL;
+
+void Grapple_UiSetImageLoader(Grapple_UiImageLoader loader, void *user)
+{
+    g_image_loader = loader;
+    g_image_loader_user = user;
+}
+
 Grapple_UiWidget *Grapple_UiImage(Grapple_UiWidget *parent, const Grapple_UiImageDef *def)
 {
     if (parent == NULL || def == NULL)
@@ -776,18 +786,24 @@ Grapple_UiWidget *Grapple_UiImage(Grapple_UiWidget *parent, const Grapple_UiImag
     }
     else if (def->path != NULL)
     {
-        /* Plain SDL, so this module still depends on nothing but SDL: that
-           means BMP only. A script wanting PNG loads it with IMG and passes
-           the texture instead. */
-        SDL_Surface *surface = SDL_LoadBMP(def->path);
-        if (surface == NULL)
+        SDL_Renderer *renderer = Grapple_GuiRenderer(parent->ui->gui);
+        if (g_image_loader != NULL)
         {
-            Grapple_UiRemove(node);
-            return NULL;
+            /* Somebody who can decode more than a bitmap — SDL_image, in
+               every build that has it. */
+            node->texture = g_image_loader(renderer, def->path, g_image_loader_user);
         }
-        node->texture =
-            SDL_CreateTextureFromSurface(Grapple_GuiRenderer(parent->ui->gui), surface);
-        SDL_DestroySurface(surface);
+        else
+        {
+            /* The fallback is plain SDL, so this module still links nothing
+               but SDL: that means BMP. */
+            SDL_Surface *surface = SDL_LoadBMP(def->path);
+            if (surface != NULL)
+            {
+                node->texture = SDL_CreateTextureFromSurface(renderer, surface);
+                SDL_DestroySurface(surface);
+            }
+        }
         if (node->texture == NULL)
         {
             Grapple_UiRemove(node);

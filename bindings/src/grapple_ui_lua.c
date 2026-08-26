@@ -27,6 +27,7 @@
 #include <lua.h>
 
 #include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
 #include <stdint.h>
 
 #define UI_MT "grapple.ui"
@@ -713,6 +714,16 @@ static void MakeMetatable(lua_State *L, const char *name, const luaL_Reg *method
     lua_pop(L, 1);
 }
 
+/* `path` should mean any image a script can name, not just a bitmap. The
+   GUI module cannot link SDL_image without dragging it into every build
+   that uses a GUI; the bindings already link it, so this is where the two
+   meet. */
+static SDL_Texture *LoadImageWithSdlImage(SDL_Renderer *renderer, const char *path, void *user)
+{
+    (void)user;
+    return IMG_LoadTexture(renderer, path);
+}
+
 bool Grapple_OpenLuaUi(lua_State *L)
 {
     static const luaL_Reg ui_methods[] = {
@@ -733,6 +744,7 @@ bool Grapple_OpenLuaUi(lua_State *L)
     {
         return SDL_InvalidParamError("L");
     }
+    Grapple_UiSetImageLoader(LoadImageWithSdlImage, NULL);
     MakeMetatable(L, UI_MT, ui_methods, LUiGc);
     MakeMetatable(L, WIDGET_MT, widget_methods, NULL);
 

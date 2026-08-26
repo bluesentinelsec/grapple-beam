@@ -1442,3 +1442,59 @@ TEST(GuiStandalone, AFillingPanelFollowsTheWindowWidth)
 
     SDL_Quit();
 }
+
+// `path` reads whatever the installed loader reads, and SDL_LoadBMP when
+// nothing is installed. A toolkit whose answer to "load this image" is
+// "only if it is a bitmap" is not much of an answer.
+
+namespace {
+
+int g_loader_calls = 0;
+
+SDL_Texture *CountingLoader(SDL_Renderer *renderer, const char *path, void *user)
+{
+    g_loader_calls++;
+    *static_cast<std::string *>(user) = path;
+    SDL_Surface *surface = SDL_CreateSurface(12, 34, SDL_PIXELFORMAT_RGBA32);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_DestroySurface(surface);
+    return texture;
+}
+
+} // namespace
+
+TEST_F(GuiHarness, AnInstalledImageLoaderHandlesPath)
+{
+    std::string seen;
+    g_loader_calls = 0;
+    Grapple_UiSetImageLoader(CountingLoader, &seen);
+
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+
+    Grapple_UiImageDef image_def{};
+    // A name the built-in loader could never read: no such file, and not a
+    // bitmap either. It works because the loader was asked instead.
+    image_def.path = "anything.png";
+    image_def.width = GRAPPLE_UI_FIT;
+    Grapple_UiWidget *image = Grapple_UiImage(panel, &image_def);
+    ASSERT_NE(image, nullptr);
+    EXPECT_EQ(g_loader_calls, 1);
+    EXPECT_EQ(seen, "anything.png");
+
+    BeginFrame();
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    Grapple_UiDraw(ui);
+
+    float w = 0.0f;
+    ASSERT_TRUE(Grapple_UiBounds(image, nullptr, nullptr, &w, nullptr));
+    EXPECT_NEAR(w, 12.0f, 2.0f) << "the loader's texture decided the size";
+
+    Grapple_DestroyUi(ui);
+
+    // Restore, so the next test sees the built-in.
+    Grapple_UiSetImageLoader(nullptr, nullptr);
+}

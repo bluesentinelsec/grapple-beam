@@ -313,6 +313,23 @@ extern Grapple_UiWidget *Grapple_UiImage(Grapple_UiWidget *parent,
                                              const Grapple_UiImageDef *def);
 
 /**
+ * How `path` turns into a texture.
+ *
+ * Left alone, it is SDL_LoadBMP — which is all this module can offer,
+ * because it depends on nothing but SDL, and it is a poor answer to "can
+ * your toolkit load an image". Install a loader and `path` reads whatever
+ * that loader reads: the script bindings install SDL_image's, so a Lua or
+ * Ruby program can say `path = "logo.png"` and mean it.
+ *
+ * Passing NULL restores the built-in. The loader is global, because it is a
+ * property of the program's linkage rather than of one panel.
+ */
+typedef SDL_Texture *(*Grapple_UiImageLoader)(SDL_Renderer *renderer, const char *path,
+                                                  void *user);
+
+extern void Grapple_UiSetImageLoader(Grapple_UiImageLoader loader, void *user);
+
+/**
  * A native message box, and the reason it is here rather than left to SDL:
  * the argument order of SDL_ShowSimpleMessageBox puts the window last and
  * the flags first, which is three things to remember for "say this".
