@@ -233,6 +233,22 @@ panel:progress{ value = 0.4 }
 is in both scripting languages. The widget owns the choice: `w:selected()`
 gives the index, `w:text()` the chosen label, and `w:options()` the list.
 
+### What a widget means, as opposed to what it says
+
+```lua
+row:image{ path = "two_of_clubs.jpg", value = "Two of Clubs", on_click = card_clicked }
+...
+local function card_clicked(image)
+  name_label:set(image:value_text())
+end
+```
+
+One handler shared between several widgets has to tell them apart, and the
+obvious place to hang that — the text — is a label the user reads. A picture
+does not have one at all, and a button's says *Exit* when what you want is
+*quit*. `value` is that second string: set it in the def, read it with
+`value_text()`, and the text stays free to be what the user sees.
+
 ### Firing a widget without a mouse
 
 ```lua

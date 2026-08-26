@@ -661,6 +661,7 @@ static mrb_value RUiButton(mrb_state *mrb, mrb_value self)
 
     Grapple_UiButtonDef def = {0};
     def.text = OptString(mrb, options, "text", "");
+    def.value = OptString(mrb, options, "value", NULL);
     def.width = OptLength(mrb, options, "width");
     def.height = OptLength(mrb, options, "height");
     def.align = OptAlign(mrb, options);
@@ -847,6 +848,7 @@ static mrb_value RUiImage(mrb_state *mrb, mrb_value self)
 
     Grapple_UiImageDef def = {0};
     def.path = OptString(mrb, options, "path", NULL);
+    def.value = OptString(mrb, options, "value", NULL);
     const mrb_value texture = Key(mrb, options, "texture");
     if (!mrb_nil_p(texture))
     {
@@ -988,6 +990,20 @@ static mrb_value RUiDisabled(mrb_state *mrb, mrb_value self)
     return self;
 }
 
+/* What the widget means, as opposed to what it shows. */
+static mrb_value RUiValueText(mrb_state *mrb, mrb_value self)
+{
+    mrb_value value = mrb_nil_value();
+    mrb_get_args(mrb, "|o", &value);
+    Grapple_UiWidget *widget = WidgetOf(mrb, self);
+    if (mrb_nil_p(value))
+    {
+        return mrb_str_new_cstr(mrb, Grapple_UiValueText(widget));
+    }
+    Grapple_UiSetValueText(widget, mrb_str_to_cstr(mrb, mrb_obj_as_string(mrb, value)));
+    return self;
+}
+
 static mrb_value RUiInvoke(mrb_state *mrb, mrb_value self)
 {
     Grapple_UiInvoke(WidgetOf(mrb, self));
@@ -1060,6 +1076,7 @@ bool Grapple_OpenRubyUi(mrb_state *mrb)
     mrb_define_method(mrb, widget, "visible", RUiVisible, MRB_ARGS_OPT(1));
     mrb_define_method(mrb, widget, "disabled", RUiDisabled, MRB_ARGS_OPT(1));
     mrb_define_method(mrb, widget, "invoke", RUiInvoke, MRB_ARGS_NONE());
+    mrb_define_method(mrb, widget, "value_text", RUiValueText, MRB_ARGS_OPT(1));
     mrb_define_method(mrb, widget, "remove", RUiRemove, MRB_ARGS_NONE());
     mrb_define_method(mrb, widget, "clear", RUiClear, MRB_ARGS_NONE());
 

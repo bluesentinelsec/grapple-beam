@@ -81,6 +81,9 @@ struct Grapple_UiWidget
     int option_count;
     int selected;
 
+    /* What the widget means, as opposed to what it shows. */
+    char *value_text;
+
     /* A picture. `owns_texture` is the difference between one this widget
        loaded and one the caller handed over and still owns. */
     SDL_Texture *texture;
@@ -423,6 +426,7 @@ static void DestroyNode(Grapple_UiWidget *node)
         DestroyNode(child);
         child = next;
     }
+    SDL_free(node->value_text);
     if (node->owns_texture && node->texture != NULL)
     {
         SDL_DestroyTexture(node->texture);
@@ -568,6 +572,7 @@ Grapple_UiWidget *Grapple_UiButton(Grapple_UiWidget *parent, const Grapple_UiBut
     node->height = def->height;
     node->align = def->align;
     node->disabled = def->disabled;
+    Grapple_UiSetValueText(node, def->value);
     node->on_click = def->on_click;
     node->user = def->user;
     return node;
@@ -806,6 +811,7 @@ Grapple_UiWidget *Grapple_UiImage(Grapple_UiWidget *parent, const Grapple_UiImag
         }
         node->owns_texture = true;
     }
+    Grapple_UiSetValueText(node, def->value);
     node->image_mode = def->mode;
     node->width = def->width;
     node->height = def->height;
@@ -956,6 +962,25 @@ bool Grapple_UiBounds(Grapple_UiWidget *widget, float *x, float *y, float *width
         *height = widget->last_bounds.h;
     }
     return true;
+}
+
+void Grapple_UiSetValueText(Grapple_UiWidget *widget, const char *value)
+{
+    if (widget == NULL)
+    {
+        return;
+    }
+    SDL_free(widget->value_text);
+    widget->value_text = (value != NULL) ? SDL_strdup(value) : NULL;
+}
+
+const char *Grapple_UiValueText(Grapple_UiWidget *widget)
+{
+    if (widget == NULL || widget->value_text == NULL)
+    {
+        return "";
+    }
+    return widget->value_text;
 }
 
 void *Grapple_UiUser(Grapple_UiWidget *widget)

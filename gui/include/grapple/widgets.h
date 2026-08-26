@@ -223,6 +223,7 @@ extern Grapple_UiWidget *Grapple_UiLabel(Grapple_UiWidget *parent,
 typedef struct Grapple_UiButtonDef
 {
     const char *text;
+    const char *value;     /**< what it means, as opposed to what it says */
     Grapple_UiLength width;
     Grapple_UiLength height;
     Grapple_UiAlign align;   /**< where the button sits in its slot */
@@ -298,6 +299,7 @@ extern Grapple_UiWidget *Grapple_UiEntry(Grapple_UiWidget *parent,
 typedef struct Grapple_UiImageDef
 {
     const char *path;      /**< any format SDL_image reads; owned by the widget */
+    const char *value;     /**< what this picture means; see Grapple_UiValueText */
     SDL_Texture *texture;  /**< or a texture you own; wins over path */
     Grapple_GuiImageMode mode;
     Grapple_UiLength width;
@@ -435,6 +437,21 @@ extern bool Grapple_UiDisabled(Grapple_UiWidget *widget);
  */
 extern bool Grapple_UiBounds(Grapple_UiWidget *widget, float *x, float *y, float *width,
                                float *height);
+
+/**
+ * Somewhere to hang a value on a widget: Tk's -value, a tag, a card's name.
+ *
+ * Without it a handler shared by several widgets has to tell them apart by
+ * their text, which reads well right up until the text is a label the user
+ * sees and the value is not — an image has no text of its own at all, and a
+ * button's is what it says rather than what it means.
+ *
+ * The string is copied. NULL clears it.
+ */
+extern void Grapple_UiSetValueText(Grapple_UiWidget *widget, const char *value);
+
+/** What Grapple_UiSetValueText last set, or "" — never NULL. */
+extern const char *Grapple_UiValueText(Grapple_UiWidget *widget);
 
 /** Whatever the def carried, for a callback that needs its own context. */
 extern void *Grapple_UiUser(Grapple_UiWidget *widget);

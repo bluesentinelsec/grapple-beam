@@ -305,6 +305,7 @@ static int LUiButton(lua_State *L)
 
     Grapple_UiButtonDef def = {0};
     def.text = OptString(L, options, "text", "");
+    def.value = OptString(L, options, "value", NULL);
     def.width = OptLength(L, options, "width");
     def.height = OptLength(L, options, "height");
     def.align = OptAlign(L, options, "align");
@@ -514,6 +515,7 @@ static int LUiImage(lua_State *L)
         def.texture = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, -1, "SDL_Texture");
     }
     lua_pop(L, 1);
+    def.value = OptString(L, options, "value", NULL);
     def.width = OptLength(L, options, "width");
     def.height = OptLength(L, options, "height");
     def.align = OptAlign(L, options, "align");
@@ -629,6 +631,21 @@ static int LUiDisabled(lua_State *L)
     return 1;
 }
 
+/* What the widget means, as opposed to what it shows. With an argument it
+   sets; without one it reads. */
+static int LUiValueText(lua_State *L)
+{
+    Grapple_UiWidget *widget = CheckWidget(L, 1);
+    if (lua_isnone(L, 2))
+    {
+        lua_pushstring(L, Grapple_UiValueText(widget));
+        return 1;
+    }
+    Grapple_UiSetValueText(widget, luaL_checkstring(L, 2));
+    lua_pushvalue(L, 1);
+    return 1;
+}
+
 static int LUiInvoke(lua_State *L)
 {
     Grapple_UiInvoke(CheckWidget(L, 1));
@@ -726,7 +743,7 @@ bool Grapple_OpenLuaUi(lua_State *L)
         {"selected", LUiSelected}, {"options", LUiOptions},
         {"text", LUiGetText},    {"checked", LUiGetChecked}, {"value", LUiGetValue},
         {"visible", LUiVisible}, {"disabled", LUiDisabled},  {"remove", LUiRemove},
-        {"invoke", LUiInvoke},
+        {"invoke", LUiInvoke},   {"value_text", LUiValueText},
         {"clear", LUiClear},     {NULL, NULL}};
 
     if (L == NULL)
