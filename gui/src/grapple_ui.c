@@ -17,6 +17,7 @@
 #include <grapple/widgets.h>
 
 #include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
 
 #define MAX_TEXT 1024
 
@@ -789,20 +790,14 @@ Grapple_UiWidget *Grapple_UiImage(Grapple_UiWidget *parent, const Grapple_UiImag
         SDL_Renderer *renderer = Grapple_GuiRenderer(parent->ui->gui);
         if (g_image_loader != NULL)
         {
-            /* Somebody who can decode more than a bitmap — SDL_image, in
-               every build that has it. */
+            /* Somebody with an opinion — an atlas, a pack file, a cache. */
             node->texture = g_image_loader(renderer, def->path, g_image_loader_user);
         }
         else
         {
-            /* The fallback is plain SDL, so this module still links nothing
-               but SDL: that means BMP. */
-            SDL_Surface *surface = SDL_LoadBMP(def->path);
-            if (surface != NULL)
-            {
-                node->texture = SDL_CreateTextureFromSurface(renderer, surface);
-                SDL_DestroySurface(surface);
-            }
+            /* SDL_image, which is vendored in this repository and linked
+               here: PNG, JPEG, QOI, WebP and the rest. */
+            node->texture = IMG_LoadTexture(renderer, def->path);
         }
         if (node->texture == NULL)
         {

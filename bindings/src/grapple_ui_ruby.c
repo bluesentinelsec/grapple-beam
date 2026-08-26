@@ -31,7 +31,6 @@
 #include <mruby/variable.h>
 
 #include <SDL3/SDL.h>
-#include <SDL3_image/SDL_image.h>
 
 #include <stdint.h>
 
@@ -1008,21 +1007,12 @@ static mrb_value RUiClear(mrb_state *mrb, mrb_value self)
     return self;
 }
 
-/* See the note in grapple_ui_lua.c: the bindings link SDL_image, so this is
-   where `path` stops meaning "a bitmap" and starts meaning "an image". */
-static SDL_Texture *LoadImageWithSdlImage(SDL_Renderer *renderer, const char *path, void *user)
-{
-    (void)user;
-    return IMG_LoadTexture(renderer, path);
-}
-
 bool Grapple_OpenRubyUi(mrb_state *mrb)
 {
     if (mrb == NULL)
     {
         return SDL_InvalidParamError("mrb");
     }
-    Grapple_UiSetImageLoader(LoadImageWithSdlImage, NULL);
     struct RClass *module = mrb_define_module(mrb, "Grapple");
 
     struct RClass *engine = mrb_define_class_under(mrb, module, "Engine", mrb->object_class);

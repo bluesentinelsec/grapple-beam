@@ -1443,9 +1443,9 @@ TEST(GuiStandalone, AFillingPanelFollowsTheWindowWidth)
     SDL_Quit();
 }
 
-// `path` reads whatever the installed loader reads, and SDL_LoadBMP when
-// nothing is installed. A toolkit whose answer to "load this image" is
-// "only if it is a bitmap" is not much of an answer.
+// `path` reads whatever the installed loader reads, and SDL_image when
+// nothing is installed. The hook is for a file that is not where its name
+// says it is: an atlas, a pack file, a cache.
 
 namespace {
 
@@ -1475,14 +1475,14 @@ TEST_F(GuiHarness, AnInstalledImageLoaderHandlesPath)
     Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
 
     Grapple_UiImageDef image_def{};
-    // A name the built-in loader could never read: no such file, and not a
-    // bitmap either. It works because the loader was asked instead.
-    image_def.path = "anything.png";
+    // A name nothing on disk answers to: it works because the loader was
+    // asked rather than the filesystem.
+    image_def.path = "not-a-real-file-anywhere.png";
     image_def.width = GRAPPLE_UI_FIT;
     Grapple_UiWidget *image = Grapple_UiImage(panel, &image_def);
     ASSERT_NE(image, nullptr);
     EXPECT_EQ(g_loader_calls, 1);
-    EXPECT_EQ(seen, "anything.png");
+    EXPECT_EQ(seen, "not-a-real-file-anywhere.png");
 
     BeginFrame();
     Grapple_GuiInputBegin(gui_);

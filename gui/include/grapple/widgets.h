@@ -289,17 +289,15 @@ extern Grapple_UiWidget *Grapple_UiEntry(Grapple_UiWidget *parent,
 /**
  * A picture, optionally one you can click.
  *
- * Give it either a `path` — a BMP, loaded with plain SDL and owned by the
- * widget — or a `texture` you loaded yourself and continue to own. Scripts
- * usually want the second: IMG.LoadTexture reads PNG and everything else,
- * and hands back exactly this.
+ * Give it either a `path`, loaded through SDL_image and owned by the
+ * widget, or a `texture` you loaded yourself and continue to own.
  *
  * With `on_click` set it is a button that happens to be a picture, which is
  * what a toolbar is made of.
  */
 typedef struct Grapple_UiImageDef
 {
-    const char *path;      /**< BMP; loaded and owned by the widget */
+    const char *path;      /**< any format SDL_image reads; owned by the widget */
     SDL_Texture *texture;  /**< or a texture you own; wins over path */
     Grapple_GuiImageMode mode;
     Grapple_UiLength width;
@@ -315,14 +313,13 @@ extern Grapple_UiWidget *Grapple_UiImage(Grapple_UiWidget *parent,
 /**
  * How `path` turns into a texture.
  *
- * Left alone, it is SDL_LoadBMP — which is all this module can offer,
- * because it depends on nothing but SDL, and it is a poor answer to "can
- * your toolkit load an image". Install a loader and `path` reads whatever
- * that loader reads: the script bindings install SDL_image's, so a Lua or
- * Ruby program can say `path = "logo.png"` and mean it.
+ * Left alone it is SDL_image, which reads everything a game is likely to
+ * ship. Install a loader when the file is not where the name says it is —
+ * an atlas, a pack file, a cache in front of the disk — and `path` becomes
+ * whatever that loader decides it means.
  *
- * Passing NULL restores the built-in. The loader is global, because it is a
- * property of the program's linkage rather than of one panel.
+ * Passing NULL restores the default. It is global because it is a property
+ * of the program rather than of one panel.
  */
 typedef SDL_Texture *(*Grapple_UiImageLoader)(SDL_Renderer *renderer, const char *path,
                                                   void *user);

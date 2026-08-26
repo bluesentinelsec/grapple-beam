@@ -188,28 +188,23 @@ is a button that happens to be a picture, which is what a toolbar is made
 of. `width = GRAPPLE_UI_FIT` means the image's own width, not a text
 measurement.
 
-What `path` can read depends on who is asking. In a script it is any format
-SDL_image handles, because the bindings install that loader — so
-`path = "logo.png"` means what it says:
+`path` reads whatever SDL_image reads — PNG, JPEG, QOI, WebP — because
+Grapple::GUI links the vendored SDL3_image. Naming the file is all any of
+the four languages has to do:
 
 ```lua
 panel:image{ path = "logo.png", on_click = show_about }
 ```
 
-In C the fallback is plain SDL, which means BMP, because Grapple::GUI links
-nothing but SDL and a GUI should not drag an image library into every build
-that uses one. A C program that wants more installs a loader once:
+Install a loader when the file is not where its name says it is — an atlas,
+a pack file, a cache in front of the disk:
 
 ```c
-static SDL_Texture *LoadImage(SDL_Renderer *r, const char *path, void *user)
-{
-    return IMG_LoadTexture(r, path);
-}
-Grapple_UiSetImageLoader(LoadImage, NULL);
+Grapple_UiSetImageLoader(LoadFromAtlas, atlas);
 ```
 
-Or skips the question entirely and hands over a texture it loaded itself,
-which the widget will use as-is and not take ownership of.
+Or hand over a texture you loaded yourself, which the widget uses as-is and
+does not take ownership of.
 
 A missing file gives you no widget rather than a picture-shaped hole that
 draws nothing and reports nothing.
