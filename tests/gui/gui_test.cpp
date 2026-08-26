@@ -14,6 +14,7 @@
 #include <grapple/gui_grid.h>
 #include <grapple/widgets.h>
 #include <gtest/gtest.h>
+#include <filesystem>
 
 #include <cstring>
 #include <string>
@@ -1273,6 +1274,122 @@ TEST_F(GuiHarness, UiWidgetStateOutlivesTheFrame)
 
     Grapple_UiSetVisible(label, false);
     EXPECT_FALSE(Grapple_UiVisible(label));
+
+    Grapple_DestroyUi(ui);
+}
+
+// --- the image widget ------------------------------------------------------
+//
+// A picture that can be clicked is what a toolbar is made of, and what the
+// textbook calls a PictureBox. These check the three claims: it loads, it
+// takes its size from the image rather than from a text measurement, and a
+// click on it reaches the handler.
+
+namespace {
+
+// A small BMP written here, so the test carries its own asset.
+std::string MakeBitmap(int width, int height)
+{
+    const std::filesystem::path file =
+        std::filesystem::temp_directory_path() / "grapple_ui_image.bmp";
+    SDL_Surface *surface = SDL_CreateSurface(width, height, SDL_PIXELFORMAT_RGBA32);
+    SDL_FillSurfaceRect(surface, nullptr, 0xFF3366CCu);
+    SDL_SaveBMP(surface, file.string().c_str());
+    SDL_DestroySurface(surface);
+    return file.string();
+}
+
+} // namespace
+
+TEST_F(GuiHarness, UiImageTakesItsSizeFromTheImage)
+{
+    const std::string path = MakeBitmap(64, 48);
+
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+
+    Grapple_UiImageDef image_def{};
+    image_def.path = path.c_str();
+    image_def.width = GRAPPLE_UI_FIT;
+    Grapple_UiWidget *image = Grapple_UiImage(panel, &image_def);
+    ASSERT_NE(image, nullptr) << "the bitmap did not load";
+
+    BeginFrame();
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    Grapple_UiDraw(ui);
+
+    float w = 0.0f;
+    float h = 0.0f;
+    ASSERT_TRUE(Grapple_UiBounds(image, nullptr, nullptr, &w, &h));
+    // "fit" for a picture is the picture's own width, not a text measurement.
+    EXPECT_NEAR(w, 64.0f, 2.0f);
+    EXPECT_NEAR(h, 48.0f, 2.0f);
+
+    Grapple_DestroyUi(ui);
+}
+
+TEST_F(GuiHarness, UiImageClickReachesItsCallback)
+{
+    const std::string path = MakeBitmap(80, 40);
+
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+
+    ClickCount counter;
+    Grapple_UiImageDef image_def{};
+    image_def.path = path.c_str();
+    image_def.on_click = CountClick;
+    image_def.user = &counter;
+    Grapple_UiWidget *image = Grapple_UiImage(panel, &image_def);
+    ASSERT_NE(image, nullptr);
+
+    BeginFrame();
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    Grapple_UiDraw(ui);
+
+    float x = 0.0f;
+    float y = 0.0f;
+    float w = 0.0f;
+    float h = 0.0f;
+    ASSERT_TRUE(Grapple_UiBounds(image, &x, &y, &w, &h));
+    const float cx = x + w / 2.0f;
+    const float cy = y + h / 2.0f;
+
+    for (int phase = 0; phase < 2; ++phase)
+    {
+        BeginFrame();
+        Grapple_GuiInputBegin(gui_);
+        FeedMouseMove(cx, cy);
+        FeedButton(cx, cy, phase == 0);
+        Grapple_GuiInputEnd(gui_);
+        Grapple_UiDraw(ui);
+    }
+
+    EXPECT_EQ(counter.clicks, 1);
+    Grapple_DestroyUi(ui);
+}
+
+TEST_F(GuiHarness, UiImageWithNoUsableSourceFails)
+{
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+
+    // A missing file is a NULL widget rather than a picture-shaped hole that
+    // draws nothing and says nothing.
+    Grapple_UiImageDef missing{};
+    missing.path = "/no/such/image/anywhere.bmp";
+    EXPECT_EQ(Grapple_UiImage(panel, &missing), nullptr);
 
     Grapple_DestroyUi(ui);
 }

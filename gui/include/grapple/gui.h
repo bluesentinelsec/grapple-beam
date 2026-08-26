@@ -280,6 +280,15 @@ typedef enum Grapple_GuiImageMode
 extern bool Grapple_GuiImage(Grapple_Gui *gui, SDL_Texture *texture,
                                Grapple_GuiImageMode mode);
 
+/** As Grapple_GuiImage, but the image is a button.
+ *
+ *  Nuklear can do this already — nk_button_image — but only through a
+ *  struct whose handle is a union, which is exactly the type that cannot
+ *  cross a script boundary. This takes the SDL_Texture, like its sibling.
+ *  \returns true on the frame the image is clicked. */
+extern bool Grapple_GuiImageButton(Grapple_Gui *gui, SDL_Texture *texture,
+                                       Grapple_GuiImageMode mode);
+
 /** Draw a texture at an explicit rectangle instead of in a widget slot.
  *
  *  Game UI rarely wants one image per layout cell: an inventory slot draws

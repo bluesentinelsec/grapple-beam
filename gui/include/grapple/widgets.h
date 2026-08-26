@@ -279,6 +279,90 @@ typedef struct Grapple_UiEntryDef
 extern Grapple_UiWidget *Grapple_UiEntry(Grapple_UiWidget *parent,
                                              const Grapple_UiEntryDef *def);
 
+/**
+ * A list of choices with one of them picked.
+ *
+ * `options` is a NULL-terminated array of labels, copied. The widget owns
+ * the selection: `Grapple_UiValue` reads it back as an index, and
+ * `Grapple_UiText` gives the chosen label.
+ */
+/**
+ * A picture, optionally one you can click.
+ *
+ * Give it either a `path` — a BMP, loaded with plain SDL and owned by the
+ * widget — or a `texture` you loaded yourself and continue to own. Scripts
+ * usually want the second: IMG.LoadTexture reads PNG and everything else,
+ * and hands back exactly this.
+ *
+ * With `on_click` set it is a button that happens to be a picture, which is
+ * what a toolbar is made of.
+ */
+typedef struct Grapple_UiImageDef
+{
+    const char *path;      /**< BMP; loaded and owned by the widget */
+    SDL_Texture *texture;  /**< or a texture you own; wins over path */
+    Grapple_GuiImageMode mode;
+    Grapple_UiLength width;
+    Grapple_UiLength height;
+    Grapple_UiAlign align;
+    Grapple_UiCallback on_click;
+    void *user;
+} Grapple_UiImageDef;
+
+extern Grapple_UiWidget *Grapple_UiImage(Grapple_UiWidget *parent,
+                                             const Grapple_UiImageDef *def);
+
+/**
+ * A native message box, and the reason it is here rather than left to SDL:
+ * the argument order of SDL_ShowSimpleMessageBox puts the window last and
+ * the flags first, which is three things to remember for "say this".
+ *
+ * Blocks until dismissed, which is what a message box is for.
+ */
+extern void Grapple_UiMessage(Grapple_Ui *ui, const char *title, const char *text);
+
+typedef struct Grapple_UiSelectDef
+{
+    const char *const *options;
+    int selected;          /**< index into options; 0 if out of range */
+    bool as_radio;         /**< draw every option, rather than a dropdown */
+    Grapple_UiLength width;
+    Grapple_UiLength height;
+    Grapple_UiAlign align;
+    Grapple_UiCallback on_change;
+    void *user;
+} Grapple_UiSelectDef;
+
+/** A dropdown: one row, opening onto the list. */
+extern Grapple_UiWidget *Grapple_UiSelect(Grapple_UiWidget *parent,
+                                              const Grapple_UiSelectDef *def);
+
+/** The same choice as a column of radio buttons, for a short list where
+ *  seeing every option at once is worth the space. */
+extern Grapple_UiWidget *Grapple_UiRadio(Grapple_UiWidget *parent,
+                                             const Grapple_UiSelectDef *def);
+
+typedef struct Grapple_UiProgressDef
+{
+    float value;
+    float max;    /**< 1.0 if left at zero */
+    bool editable; /**< draggable, like a slider without the handle */
+    Grapple_UiLength width;
+    Grapple_UiLength height;
+    Grapple_UiAlign align;
+    Grapple_UiCallback on_change;
+    void *user;
+} Grapple_UiProgressDef;
+
+extern Grapple_UiWidget *Grapple_UiProgress(Grapple_UiWidget *parent,
+                                                const Grapple_UiProgressDef *def);
+
+/** Which option a select or radio has: the index, and its label. */
+extern int Grapple_UiSelected(Grapple_UiWidget *widget);
+extern void Grapple_UiSetSelected(Grapple_UiWidget *widget, int index);
+extern int Grapple_UiOptionCount(Grapple_UiWidget *widget);
+extern const char *Grapple_UiOption(Grapple_UiWidget *widget, int index);
+
 typedef struct Grapple_UiSpacerDef
 {
     Grapple_UiLength width;

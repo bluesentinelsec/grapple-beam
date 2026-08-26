@@ -6261,6 +6261,21 @@ static mrb_value GenR_Grapple_GuiImage(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_Grapple_GuiImageButton(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_Gui *a0 = (Grapple_Gui *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_Gui");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
+    Grapple_GuiImageMode a2 = (Grapple_GuiImageMode)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    bool rv = Grapple_GuiImageButton(a0, a1, a2);
+    return mrb_bool_value((mrb_bool)(rv != 0));
+    }
+}
+
 static mrb_value GenR_Grapple_GuiInputBegin(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -9819,6 +9834,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "GuiGridSpacingOwned", GenR_Grapple_GuiGridSpacingOwned, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiGridWeight", GenR_Grapple_GuiGridWeight, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiImage", GenR_Grapple_GuiImage, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "GuiImageButton", GenR_Grapple_GuiImageButton, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiInputBegin", GenR_Grapple_GuiInputBegin, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiInputEnd", GenR_Grapple_GuiInputEnd, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiKeyPressed", GenR_Grapple_GuiKeyPressed, MRB_ARGS_ANY());

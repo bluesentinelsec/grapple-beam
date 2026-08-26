@@ -2788,6 +2788,7 @@ module GrappleC
   def self.GuiGridSpacingOwned: (untyped gui, Float x, Float y) -> void
   def self.GuiGridWeight: (untyped gui, Integer column, Float weight) -> bool
   def self.GuiImage: (untyped gui, untyped texture, Integer mode) -> bool
+  def self.GuiImageButton: (untyped gui, untyped texture, Integer mode) -> bool
   def self.GuiInputBegin: (untyped gui) -> void
   def self.GuiInputEnd: (untyped gui) -> void
   def self.GuiKeyPressed: (untyped gui, Integer scancode) -> bool

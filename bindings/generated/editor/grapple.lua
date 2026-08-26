@@ -16016,6 +16016,13 @@ function GrappleC.GuiGridWeight(gui, column, weight) end
 ---@return boolean
 function GrappleC.GuiImage(gui, texture, mode) end
 
+---Calls `Grapple_GuiImageButton`.
+---@param gui userdata
+---@param texture userdata
+---@param mode integer
+---@return boolean
+function GrappleC.GuiImageButton(gui, texture, mode) end
+
 ---Calls `Grapple_GuiInputBegin`.
 ---@param gui userdata
 function GrappleC.GuiInputBegin(gui) end

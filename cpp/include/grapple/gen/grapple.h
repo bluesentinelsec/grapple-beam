@@ -227,6 +227,9 @@ class GuiHandle {
   Status GuiImage(SDL_Texture *texture, Grapple_GuiImageMode mode) {
     return ::Grapple_GuiImage(value_, texture, mode) ? Status() : Status::FromSdl();
   }
+  Status GuiImageButton(SDL_Texture *texture, Grapple_GuiImageMode mode) {
+    return ::Grapple_GuiImageButton(value_, texture, mode) ? Status() : Status::FromSdl();
+  }
   Status GuiDrawTexture(SDL_Texture *texture, SDL_FRect rect, Grapple_GuiImageMode mode) {
     return ::Grapple_GuiDrawTexture(value_, texture, rect, mode) ? Status() : Status::FromSdl();
   }

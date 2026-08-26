@@ -809,6 +809,19 @@ bool Grapple_GuiImage(Grapple_Gui *gui, SDL_Texture *texture,
     return true;
 }
 
+bool Grapple_GuiImageButton(Grapple_Gui *gui, SDL_Texture *texture,
+                                Grapple_GuiImageMode mode)
+{
+    if (gui == NULL || texture == NULL)
+    {
+        SDL_InvalidParamError("gui/texture");
+        return false;
+    }
+    (void)mode; /* the button fits the image to its own slot */
+    struct nk_image img = nk_image_ptr(texture);
+    return nk_button_image(&gui->ctx, img) != 0;
+}
+
 bool Grapple_GuiDrawTexture(Grapple_Gui *gui, SDL_Texture *texture, SDL_FRect rect,
                               Grapple_GuiImageMode mode)
 {

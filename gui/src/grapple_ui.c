@@ -30,6 +30,10 @@ typedef enum NodeKind
     NODE_CHECK,
     NODE_SLIDER,
     NODE_ENTRY,
+    NODE_IMAGE,
+    NODE_SELECT,
+    NODE_RADIO,
+    NODE_PROGRESS,
     NODE_SPACER,
     NODE_RAW
 } NodeKind;
@@ -68,6 +72,19 @@ struct Grapple_UiWidget
     bool checked;
     float value, min, max, step;
     bool wrap;
+    bool editable;
+
+    /* A select's choices, owned and NULL-terminated like the array it was
+       given, so the caller's array need not outlive the call. */
+    char **options;
+    int option_count;
+    int selected;
+
+    /* A picture. `owns_texture` is the difference between one this widget
+       loaded and one the caller handed over and still owns. */
+    SDL_Texture *texture;
+    bool owns_texture;
+    Grapple_GuiImageMode image_mode;
 
     /* Where this node landed last frame, so something can be anchored to
        it. Nuklear knows only during the frame; the tree remembers. */
@@ -129,7 +146,10 @@ static float Chrome(Grapple_UiWidget *node)
     case NODE_BUTTON:
         return ctx->style.button.padding.x * 2.0f + ctx->style.button.border * 2.0f + 8.0f;
     case NODE_CHECK:
+    case NODE_RADIO:
         return ctx->style.checkbox.padding.x * 2.0f + LineHeight(node->ui) + 8.0f;
+    case NODE_SELECT:
+        return ctx->style.combo.button_padding.x * 2.0f + 8.0f;
     case NODE_ENTRY:
         return ctx->style.edit.padding.x * 2.0f + 8.0f;
     default:
@@ -161,6 +181,28 @@ static float ContentWidth(Grapple_UiWidget *node)
 {
     switch (node->kind)
     {
+    case NODE_SELECT:
+    case NODE_RADIO:
+    {
+        /* Wide enough for the longest choice: a dropdown that fits only the
+           option selected when it was built changes width as it is used. */
+        float widest = 0.0f;
+        for (int i = 0; i < node->option_count; ++i)
+        {
+            widest = SDL_max(widest, TextWidth(node->ui, node->options[i]));
+        }
+        return widest + Chrome(node) + LineHeight(node->ui);
+    }
+    case NODE_IMAGE:
+    {
+        /* "fit" for a picture means the picture's own width. */
+        float w = 0.0f;
+        if (node->texture != NULL)
+        {
+            SDL_GetTextureSize(node->texture, &w, NULL);
+        }
+        return w;
+    }
     case NODE_LABEL:
     case NODE_BUTTON:
     case NODE_CHECK:
@@ -182,9 +224,27 @@ static float RowHeightOf(Grapple_UiWidget *node, float available_height)
        exactly a line tall looks wrong in every toolkit. */
     switch (node->kind)
     {
+    case NODE_RADIO:
+    {
+        /* Every option is drawn, so the group needs the room for all of
+           them rather than the one row a leaf usually gets. */
+        const int count = (node->option_count > 0) ? node->option_count : 1;
+        return LineHeight(node->ui) * 1.9f * (float)count;
+    }
+    case NODE_IMAGE:
+    {
+        float h = 0.0f;
+        if (node->texture != NULL)
+        {
+            SDL_GetTextureSize(node->texture, NULL, &h);
+        }
+        return (h > 0.0f) ? h : LineHeight(node->ui) * 4.0f;
+    }
     case NODE_BUTTON:
     case NODE_ENTRY:
     case NODE_CHECK:
+    case NODE_SELECT:
+    case NODE_PROGRESS:
         return LineHeight(node->ui) * 1.9f;
     default:
         return LineHeight(node->ui) * 1.3f;
@@ -362,6 +422,15 @@ static void DestroyNode(Grapple_UiWidget *node)
         DestroyNode(child);
         child = next;
     }
+    if (node->owns_texture && node->texture != NULL)
+    {
+        SDL_DestroyTexture(node->texture);
+    }
+    for (int i = 0; i < node->option_count; ++i)
+    {
+        SDL_free(node->options[i]);
+    }
+    SDL_free(node->options);
     SDL_free(node->text);
     SDL_free(node);
 }
@@ -566,6 +635,188 @@ Grapple_UiWidget *Grapple_UiEntry(Grapple_UiWidget *parent, const Grapple_UiEntr
     node->on_change = def->on_change;
     node->user = def->user;
     return node;
+}
+
+/* Copy the caller's labels: a script's strings are garbage collected, and a
+   widget that outlives the table it was built from must not point into it. */
+static bool CopyOptions(Grapple_UiWidget *node, const char *const *options)
+{
+    int count = 0;
+    while (options != NULL && options[count] != NULL)
+    {
+        count++;
+    }
+    if (count == 0)
+    {
+        return true;
+    }
+    node->options = (char **)SDL_calloc((size_t)count, sizeof(char *));
+    if (node->options == NULL)
+    {
+        return false;
+    }
+    for (int i = 0; i < count; ++i)
+    {
+        node->options[i] = SDL_strdup(options[i]);
+        if (node->options[i] == NULL)
+        {
+            node->option_count = i;
+            return false;
+        }
+    }
+    node->option_count = count;
+    return true;
+}
+
+static Grapple_UiWidget *NewSelect(Grapple_UiWidget *parent, const Grapple_UiSelectDef *def,
+                                   NodeKind kind)
+{
+    if (parent == NULL || def == NULL)
+    {
+        SDL_InvalidParamError("parent/def");
+        return NULL;
+    }
+    Grapple_UiWidget *node = NewNode(parent->ui, parent, kind);
+    if (node == NULL || !CopyOptions(node, def->options))
+    {
+        return NULL;
+    }
+    node->selected = (def->selected >= 0 && def->selected < node->option_count)
+                         ? def->selected
+                         : 0;
+    node->width = def->width;
+    node->height = def->height;
+    node->align = def->align;
+    node->on_change = def->on_change;
+    node->user = def->user;
+    /* The chosen label is also the widget's text, so Grapple_UiText answers
+       the question a caller usually has. */
+    SetText(node, (node->option_count > 0) ? node->options[node->selected] : "", 0);
+    return node;
+}
+
+Grapple_UiWidget *Grapple_UiSelect(Grapple_UiWidget *parent, const Grapple_UiSelectDef *def)
+{
+    return NewSelect(parent, def, NODE_SELECT);
+}
+
+Grapple_UiWidget *Grapple_UiRadio(Grapple_UiWidget *parent, const Grapple_UiSelectDef *def)
+{
+    return NewSelect(parent, def, NODE_RADIO);
+}
+
+Grapple_UiWidget *Grapple_UiProgress(Grapple_UiWidget *parent,
+                                         const Grapple_UiProgressDef *def)
+{
+    if (parent == NULL || def == NULL)
+    {
+        SDL_InvalidParamError("parent/def");
+        return NULL;
+    }
+    Grapple_UiWidget *node = NewNode(parent->ui, parent, NODE_PROGRESS);
+    if (node == NULL)
+    {
+        return NULL;
+    }
+    node->max = (def->max > 0.0f) ? def->max : 1.0f;
+    node->value = SDL_clamp(def->value, 0.0f, node->max);
+    node->editable = def->editable;
+    node->width = def->width;
+    node->height = def->height;
+    node->align = def->align;
+    node->on_change = def->on_change;
+    node->user = def->user;
+    return node;
+}
+
+int Grapple_UiSelected(Grapple_UiWidget *widget)
+{
+    return (widget != NULL) ? widget->selected : -1;
+}
+
+void Grapple_UiSetSelected(Grapple_UiWidget *widget, int index)
+{
+    if (widget == NULL || index < 0 || index >= widget->option_count)
+    {
+        return;
+    }
+    widget->selected = index;
+    SetText(widget, widget->options[index], 0);
+}
+
+int Grapple_UiOptionCount(Grapple_UiWidget *widget)
+{
+    return (widget != NULL) ? widget->option_count : 0;
+}
+
+const char *Grapple_UiOption(Grapple_UiWidget *widget, int index)
+{
+    if (widget == NULL || index < 0 || index >= widget->option_count)
+    {
+        return "";
+    }
+    return widget->options[index];
+}
+
+Grapple_UiWidget *Grapple_UiImage(Grapple_UiWidget *parent, const Grapple_UiImageDef *def)
+{
+    if (parent == NULL || def == NULL)
+    {
+        SDL_InvalidParamError("parent/def");
+        return NULL;
+    }
+    Grapple_UiWidget *node = NewNode(parent->ui, parent, NODE_IMAGE);
+    if (node == NULL)
+    {
+        return NULL;
+    }
+    if (def->texture != NULL)
+    {
+        node->texture = def->texture; /* borrowed */
+    }
+    else if (def->path != NULL)
+    {
+        /* Plain SDL, so this module still depends on nothing but SDL: that
+           means BMP only. A script wanting PNG loads it with IMG and passes
+           the texture instead. */
+        SDL_Surface *surface = SDL_LoadBMP(def->path);
+        if (surface == NULL)
+        {
+            Grapple_UiRemove(node);
+            return NULL;
+        }
+        node->texture =
+            SDL_CreateTextureFromSurface(Grapple_GuiRenderer(parent->ui->gui), surface);
+        SDL_DestroySurface(surface);
+        if (node->texture == NULL)
+        {
+            Grapple_UiRemove(node);
+            return NULL;
+        }
+        node->owns_texture = true;
+    }
+    node->image_mode = def->mode;
+    node->width = def->width;
+    node->height = def->height;
+    node->align = def->align;
+    node->on_click = def->on_click;
+    node->user = def->user;
+    return node;
+}
+
+void Grapple_UiMessage(Grapple_Ui *ui, const char *title, const char *text)
+{
+    SDL_Window *window = NULL;
+    if (ui != NULL && ui->gui != NULL)
+    {
+        SDL_Renderer *renderer = Grapple_GuiRenderer(ui->gui);
+        if (renderer != NULL)
+        {
+            window = SDL_GetRenderWindow(renderer);
+        }
+    }
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, (title != NULL) ? title : "",
+                             (text != NULL) ? text : "", window);
 }
 
 Grapple_UiWidget *Grapple_UiSpacer(Grapple_UiWidget *parent, const Grapple_UiSpacerDef *def)
@@ -857,6 +1108,94 @@ static void DrawLeaf(Grapple_UiWidget *node)
         }
         break;
     }
+
+    case NODE_SELECT:
+    {
+        if (node->option_count == 0)
+        {
+            nk_spacing(ctx, 1);
+            break;
+        }
+        /* The popup is sized from the widget, so a dropdown does not open
+           into a box narrower than the row that spawned it. */
+        const struct nk_rect bounds = node->last_bounds;
+        const float row = LineHeight(node->ui) * 1.9f;
+        const float tall = row * (float)node->option_count + 8.0f;
+        const struct nk_vec2 size =
+            nk_vec2((bounds.w > 0.0f) ? bounds.w : 200.0f, SDL_min(tall, row * 8.0f));
+        if (nk_combo_begin_label(ctx, node->options[node->selected], size))
+        {
+            nk_layout_row_dynamic(ctx, row, 1);
+            for (int i = 0; i < node->option_count; ++i)
+            {
+                if (nk_combo_item_label(ctx, node->options[i], NK_TEXT_LEFT))
+                {
+                    if (i != node->selected)
+                    {
+                        Grapple_UiSetSelected(node, i);
+                        if (node->on_change != NULL)
+                        {
+                            node->on_change(node, node->user);
+                        }
+                    }
+                }
+            }
+            nk_combo_end(ctx);
+        }
+        break;
+    }
+
+    case NODE_RADIO:
+        /* One option per row, so the slot this leaf was given is only the
+           first of them; DrawColumn sizes the whole group. */
+        for (int i = 0; i < node->option_count; ++i)
+        {
+            if (nk_option_label(ctx, node->options[i], node->selected == i) &&
+                node->selected != i)
+            {
+                Grapple_UiSetSelected(node, i);
+                if (node->on_change != NULL)
+                {
+                    node->on_change(node, node->user);
+                }
+            }
+        }
+        break;
+
+    case NODE_PROGRESS:
+    {
+        /* Nuklear counts in whole units; the widget's own scale is a float,
+           so the value is carried at a fixed resolution across the call. */
+        const nk_size steps = 1000;
+        nk_size current = (nk_size)((node->value / node->max) * (float)steps);
+        if (nk_progress(ctx, &current, steps, node->editable ? nk_true : nk_false))
+        {
+            node->value = ((float)current / (float)steps) * node->max;
+            if (node->on_change != NULL)
+            {
+                node->on_change(node, node->user);
+            }
+        }
+        break;
+    }
+
+    case NODE_IMAGE:
+        if (node->texture == NULL)
+        {
+            nk_spacing(ctx, 1);
+        }
+        else if (node->on_click != NULL)
+        {
+            if (Grapple_GuiImageButton(node->ui->gui, node->texture, node->image_mode))
+            {
+                node->on_click(node, node->user);
+            }
+        }
+        else
+        {
+            Grapple_GuiImage(node->ui->gui, node->texture, node->image_mode);
+        }
+        break;
 
     case NODE_SPACER:
         nk_spacing(ctx, 1);

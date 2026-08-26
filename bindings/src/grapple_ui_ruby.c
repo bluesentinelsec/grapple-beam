@@ -740,6 +740,167 @@ static mrb_value RUiEntry(mrb_state *mrb, mrb_value self)
     return WidgetValue(mrb, widget);
 }
 
+/* `options: ["Easy", "Normal"]` becomes the NULL-terminated array the C API
+   wants. The strings belong to Ruby for the length of the call; the widget
+   copies them. */
+static const char **ReadOptions(mrb_state *mrb, mrb_value options, int *count)
+{
+    static const char *slots[64];
+    *count = 0;
+    const mrb_value list = Key(mrb, options, "options");
+    if (mrb_array_p(list))
+    {
+        const mrb_int n = RARRAY_LEN(list);
+        for (mrb_int i = 0; i < n && *count < (int)(sizeof(slots) / sizeof(slots[0])) - 1; ++i)
+        {
+            const mrb_value item = mrb_ary_ref(mrb, list, i);
+            if (mrb_string_p(item))
+            {
+                slots[(*count)++] = mrb_str_to_cstr(mrb, item);
+            }
+            else if (mrb_symbol_p(item))
+            {
+                slots[(*count)++] = mrb_sym_name(mrb, mrb_symbol(item));
+            }
+        }
+    }
+    slots[*count] = NULL;
+    return slots;
+}
+
+static mrb_value Select(mrb_state *mrb, mrb_value self, bool as_radio)
+{
+    mrb_value options = mrb_nil_value();
+    mrb_value block = mrb_nil_value();
+    mrb_get_args(mrb, "|H&", &options, &block);
+    block = HandlerFrom(mrb, options, block, "on_change");
+
+    int count = 0;
+    Grapple_UiSelectDef def = {0};
+    def.options = ReadOptions(mrb, options, &count);
+    /* 1-based in and out, matching Ruby's own conventions for a list of
+       choices rather than C's index. */
+    def.selected = OptInt(mrb, options, "selected", 1) - 1;
+    def.width = OptLength(mrb, options, "width");
+    def.height = OptLength(mrb, options, "height");
+    def.align = OptAlign(mrb, options);
+    if (!mrb_nil_p(block))
+    {
+        def.on_change = ScriptCallback;
+        def.user = mrb;
+    }
+
+    Grapple_UiWidget *parent = WidgetOf(mrb, self);
+    Grapple_UiWidget *widget =
+        as_radio ? Grapple_UiRadio(parent, &def) : Grapple_UiSelect(parent, &def);
+    RememberHandler(mrb, widget, block);
+    return WidgetValue(mrb, widget);
+}
+
+static mrb_value RUiSelect(mrb_state *mrb, mrb_value self) { return Select(mrb, self, false); }
+static mrb_value RUiRadio(mrb_state *mrb, mrb_value self) { return Select(mrb, self, true); }
+
+static mrb_value RUiProgress(mrb_state *mrb, mrb_value self)
+{
+    mrb_value options = mrb_nil_value();
+    mrb_value block = mrb_nil_value();
+    mrb_get_args(mrb, "|H&", &options, &block);
+    block = HandlerFrom(mrb, options, block, "on_change");
+
+    Grapple_UiProgressDef def = {0};
+    def.value = OptNumber(mrb, options, "value", 0.0f);
+    def.max = OptNumber(mrb, options, "max", 1.0f);
+    def.editable = OptBool(mrb, options, "editable", false);
+    def.width = OptLength(mrb, options, "width");
+    def.height = OptLength(mrb, options, "height");
+    def.align = OptAlign(mrb, options);
+    if (!mrb_nil_p(block))
+    {
+        def.on_change = ScriptCallback;
+        def.user = mrb;
+    }
+
+    Grapple_UiWidget *widget = Grapple_UiProgress(WidgetOf(mrb, self), &def);
+    RememberHandler(mrb, widget, block);
+    return WidgetValue(mrb, widget);
+}
+
+static mrb_value RUiImage(mrb_state *mrb, mrb_value self)
+{
+    mrb_value options = mrb_nil_value();
+    mrb_value block = mrb_nil_value();
+    mrb_get_args(mrb, "|H&", &options, &block);
+    block = HandlerFrom(mrb, options, block, "on_click");
+
+    Grapple_UiImageDef def = {0};
+    def.path = OptString(mrb, options, "path", NULL);
+    const mrb_value texture = Key(mrb, options, "texture");
+    if (!mrb_nil_p(texture))
+    {
+        def.texture = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, texture, "SDL_Texture");
+    }
+    def.width = OptLength(mrb, options, "width");
+    def.height = OptLength(mrb, options, "height");
+    def.align = OptAlign(mrb, options);
+    if (!mrb_nil_p(block))
+    {
+        def.on_click = ScriptCallback;
+        def.user = mrb;
+    }
+
+    Grapple_UiWidget *widget = Grapple_UiImage(WidgetOf(mrb, self), &def);
+    if (widget == NULL)
+    {
+        mrb_raisef(mrb, E_RUNTIME_ERROR, "could not load image '%s'",
+                   (def.path != NULL) ? def.path : "(texture)");
+    }
+    RememberHandler(mrb, widget, block);
+    return WidgetValue(mrb, widget);
+}
+
+static mrb_value RUiSelected(mrb_state *mrb, mrb_value self)
+{
+    mrb_value index = mrb_nil_value();
+    mrb_get_args(mrb, "|o", &index);
+    Grapple_UiWidget *widget = WidgetOf(mrb, self);
+    if (mrb_nil_p(index))
+    {
+        return mrb_fixnum_value(Grapple_UiSelected(widget) + 1);
+    }
+    Grapple_UiSetSelected(widget, (int)mrb_as_int(mrb, index) - 1);
+    return self;
+}
+
+static mrb_value RUiOptions(mrb_state *mrb, mrb_value self)
+{
+    Grapple_UiWidget *widget = WidgetOf(mrb, self);
+    const int count = Grapple_UiOptionCount(widget);
+    mrb_value list = mrb_ary_new_capa(mrb, count);
+    for (int i = 0; i < count; ++i)
+    {
+        mrb_ary_push(mrb, list, mrb_str_new_cstr(mrb, Grapple_UiOption(widget, i)));
+    }
+    return list;
+}
+
+static mrb_value RUiMessage(mrb_state *mrb, mrb_value self)
+{
+    /* ui.message("One") is the common case; a title is optional. */
+    const char *first = NULL;
+    const char *second = NULL;
+    mrb_get_args(mrb, "z|z", &first, &second);
+    Grapple_Ui *ui = (Grapple_Ui *)mrb_data_get_ptr(mrb, self, &kUiType);
+    if (second != NULL)
+    {
+        Grapple_UiMessage(ui, first, second);
+    }
+    else
+    {
+        Grapple_UiMessage(ui, "", first);
+    }
+    return mrb_nil_value();
+}
+
 static mrb_value RUiSpacer(mrb_state *mrb, mrb_value self)
 {
     mrb_value options = mrb_nil_value();
@@ -854,6 +1015,7 @@ bool Grapple_OpenRubyUi(mrb_state *mrb)
     struct RClass *ui = mrb_define_class_under(mrb, module, "Ui", mrb->object_class);
     MRB_SET_INSTANCE_TT(ui, MRB_TT_DATA);
     mrb_define_method(mrb, ui, "panel", RUiPanel, MRB_ARGS_OPT(1));
+    mrb_define_method(mrb, ui, "message", RUiMessage, MRB_ARGS_ARG(1, 1));
 
     struct RClass *widget = mrb_define_class_under(mrb, module, "Widget", mrb->object_class);
     MRB_SET_INSTANCE_TT(widget, MRB_TT_DATA);
@@ -866,6 +1028,12 @@ bool Grapple_OpenRubyUi(mrb_state *mrb)
     mrb_define_method(mrb, widget, "slider", RUiSlider, MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
     mrb_define_method(mrb, widget, "entry", RUiEntry, MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
     mrb_define_method(mrb, widget, "spacer", RUiSpacer, MRB_ARGS_OPT(1));
+    mrb_define_method(mrb, widget, "select", RUiSelect, MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
+    mrb_define_method(mrb, widget, "radio", RUiRadio, MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
+    mrb_define_method(mrb, widget, "progress", RUiProgress, MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
+    mrb_define_method(mrb, widget, "image", RUiImage, MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
+    mrb_define_method(mrb, widget, "selected", RUiSelected, MRB_ARGS_OPT(1));
+    mrb_define_method(mrb, widget, "options", RUiOptions, MRB_ARGS_NONE());
     mrb_define_method(mrb, widget, "set", RUiSet, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, widget, "text", RUiText, MRB_ARGS_NONE());
     mrb_define_method(mrb, widget, "checked?", RUiChecked, MRB_ARGS_NONE());
