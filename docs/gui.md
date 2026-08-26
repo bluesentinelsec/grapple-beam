@@ -224,6 +224,17 @@ panel:progress{ value = 0.4 }
 is in both scripting languages. The widget owns the choice: `w:selected()`
 gives the index, `w:text()` the chosen label, and `w:options()` the list.
 
+### Firing a widget without a mouse
+
+```lua
+button:invoke()
+```
+
+What Tk calls invoke: do what the widget does, as though it had been
+clicked. A keyboard shortcut, a menu item and a test all want that, and the
+last of those is why it exists here — a handler that silently never fires
+looks exactly like one that works until somebody clicks it.
+
 ### The escape hatch
 
 Any wrapper over an immediate-mode library will fail to cover something, and

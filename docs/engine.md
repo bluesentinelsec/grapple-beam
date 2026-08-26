@@ -1563,3 +1563,21 @@ that cannot move its own placeholders is not really a translation.
 `Grapple_TextFormat` returns one of a small rotating set of buffers, so
 several calls can appear in one expression without the second clobbering the
 first.
+
+## The window appears when it is ready, and in front
+
+The window is created hidden and shown once the renderer, the presentation
+and the saved display have all been applied. Two things follow from that.
+
+Start-up has no flicker: without it the window appears as an undecorated
+rectangle that then resizes, changes shape and sometimes jumps to another
+monitor while the player watches.
+
+And it opens *in front*. A window created by a program launched from a
+terminal otherwise opens behind whatever was already on screen on some
+platforms — the game is running, and appears to be missing. Showing it
+deliberately, and raising it, is what every other application does.
+
+A game that wants to choose the moment sets `start_hidden` in its config —
+a long load to finish first, say, or a splash to draw into the first frame —
+and calls `Grapple_EngineShowWindow` when it is ready.

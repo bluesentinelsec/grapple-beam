@@ -1023,6 +1023,7 @@ inline constexpr auto& EngineSetMediaPassword = ::Grapple_EngineSetMediaPassword
 inline constexpr auto& EngineSetOverlay = ::Grapple_EngineSetOverlay;
 inline constexpr auto& EngineSetRefreshRate = ::Grapple_EngineSetRefreshRate;
 inline constexpr auto& EngineSetTimeScale = ::Grapple_EngineSetTimeScale;
+inline constexpr auto& EngineShowWindow = ::Grapple_EngineShowWindow;
 inline constexpr auto& EngineStep = ::Grapple_EngineStep;
 inline constexpr auto& EngineStepsLastFrame = ::Grapple_EngineStepsLastFrame;
 inline constexpr auto& EngineTickRate = ::Grapple_EngineTickRate;

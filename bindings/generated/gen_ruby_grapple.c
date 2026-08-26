@@ -3713,6 +3713,19 @@ static mrb_value GenR_Grapple_EngineSetTimeScale(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_Grapple_EngineShowWindow(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_Engine");
+    Grapple_EngineShowWindow(a0);
+    return mrb_nil_value();
+    }
+}
+
 static mrb_value GenR_Grapple_EngineStep(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -9655,6 +9668,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "EngineSetRefreshRate", GenR_Grapple_EngineSetRefreshRate, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineSetTickRate", GenR_Grapple_EngineSetTickRate, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineSetTimeScale", GenR_Grapple_EngineSetTimeScale, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "EngineShowWindow", GenR_Grapple_EngineShowWindow, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineStep", GenR_Grapple_EngineStep, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineStepsLastFrame", GenR_Grapple_EngineStepsLastFrame, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineTick", GenR_Grapple_EngineTick, MRB_ARGS_ANY());

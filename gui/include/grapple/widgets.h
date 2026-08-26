@@ -425,6 +425,15 @@ extern bool Grapple_UiBounds(Grapple_UiWidget *widget, float *x, float *y, float
 /** Whatever the def carried, for a callback that needs its own context. */
 extern void *Grapple_UiUser(Grapple_UiWidget *widget);
 
+/**
+ * Fire a widget's action as though it had been clicked or changed.
+ *
+ * Tk calls this invoke, and it is the same idea: a keyboard shortcut, a
+ * menu item and a test all want to do what the button does without a mouse
+ * being involved. Does nothing for a widget with no handler.
+ */
+extern void Grapple_UiInvoke(Grapple_UiWidget *widget);
+
 /** Remove a widget and its children. The parent forgets it. */
 extern void Grapple_UiRemove(Grapple_UiWidget *widget);
 

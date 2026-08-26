@@ -32,6 +32,8 @@
 
 #include <SDL3/SDL.h>
 
+#include <stdint.h>
+
 #define HANDLERS_IVAR "@__ui_handlers"
 
 /* --- data types ---------------------------------------------------------- */
@@ -266,13 +268,24 @@ static mrb_value HandlerFrom(mrb_state *mrb, mrb_value options, mrb_value block,
     return mrb_nil_value();
 }
 
+/* The widget's address as an Integer.
+ *
+ * Not mrb_cptr_value: a cptr is not a hash key mruby can match, so every
+ * lookup missed and no handler ever fired. An Integer compares by value,
+ * which is the whole requirement here. */
+static mrb_value HandlerKey(mrb_state *mrb, Grapple_UiWidget *widget)
+{
+    (void)mrb;
+    return mrb_fixnum_value((mrb_int)(intptr_t)widget);
+}
+
 static void RememberHandler(mrb_state *mrb, Grapple_UiWidget *widget, mrb_value block)
 {
     if (widget == NULL || mrb_nil_p(block))
     {
         return;
     }
-    mrb_hash_set(mrb, HandlerTable(mrb), mrb_cptr_value(mrb, widget), block);
+    mrb_hash_set(mrb, HandlerTable(mrb), HandlerKey(mrb, widget), block);
 }
 
 static void ScriptCallback(Grapple_UiWidget *widget, void *user)
@@ -282,7 +295,7 @@ static void ScriptCallback(Grapple_UiWidget *widget, void *user)
     {
         return;
     }
-    const mrb_value block = mrb_hash_get(mrb, HandlerTable(mrb), mrb_cptr_value(mrb, widget));
+    const mrb_value block = mrb_hash_get(mrb, HandlerTable(mrb), HandlerKey(mrb, widget));
     if (mrb_nil_p(block))
     {
         return;
@@ -975,6 +988,12 @@ static mrb_value RUiDisabled(mrb_state *mrb, mrb_value self)
     return self;
 }
 
+static mrb_value RUiInvoke(mrb_state *mrb, mrb_value self)
+{
+    Grapple_UiInvoke(WidgetOf(mrb, self));
+    return self;
+}
+
 static mrb_value RUiRemove(mrb_state *mrb, mrb_value self)
 {
     Grapple_UiRemove(WidgetOf(mrb, self));
@@ -1040,6 +1059,7 @@ bool Grapple_OpenRubyUi(mrb_state *mrb)
     mrb_define_method(mrb, widget, "value", RUiValue, MRB_ARGS_NONE());
     mrb_define_method(mrb, widget, "visible", RUiVisible, MRB_ARGS_OPT(1));
     mrb_define_method(mrb, widget, "disabled", RUiDisabled, MRB_ARGS_OPT(1));
+    mrb_define_method(mrb, widget, "invoke", RUiInvoke, MRB_ARGS_NONE());
     mrb_define_method(mrb, widget, "remove", RUiRemove, MRB_ARGS_NONE());
     mrb_define_method(mrb, widget, "clear", RUiClear, MRB_ARGS_NONE());
 

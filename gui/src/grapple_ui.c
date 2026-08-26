@@ -994,6 +994,22 @@ static void Unlink(Grapple_UiWidget *widget)
     }
 }
 
+void Grapple_UiInvoke(Grapple_UiWidget *widget)
+{
+    if (widget == NULL)
+    {
+        return;
+    }
+    if (widget->on_click != NULL)
+    {
+        widget->on_click(widget, widget->user);
+    }
+    else if (widget->on_change != NULL)
+    {
+        widget->on_change(widget, widget->user);
+    }
+}
+
 void Grapple_UiRemove(Grapple_UiWidget *widget)
 {
     if (widget == NULL)

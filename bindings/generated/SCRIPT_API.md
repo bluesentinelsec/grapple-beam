@@ -2635,6 +2635,7 @@ returns as an array.
 | `GrappleC.EngineSetRefreshRate(engine: Grapple_Engine, hz: number)` | nil |
 | `GrappleC.EngineSetTickRate(engine: Grapple_Engine, ticks_per_second: integer)` | boolean |
 | `GrappleC.EngineSetTimeScale(engine: Grapple_Engine, scale: number)` | nil |
+| `GrappleC.EngineShowWindow(engine: Grapple_Engine)` | nil |
 | `GrappleC.EngineStep(engine: Grapple_Engine)` | number |
 | `GrappleC.EngineStepsLastFrame(engine: Grapple_Engine)` | integer |
 | `GrappleC.EngineTick(engine: Grapple_Engine)` | boolean |

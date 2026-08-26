@@ -629,6 +629,13 @@ static int LUiDisabled(lua_State *L)
     return 1;
 }
 
+static int LUiInvoke(lua_State *L)
+{
+    Grapple_UiInvoke(CheckWidget(L, 1));
+    lua_pushvalue(L, 1);
+    return 1;
+}
+
 static int LUiRemove(lua_State *L)
 {
     WidgetBox *box = (WidgetBox *)luaL_checkudata(L, 1, WIDGET_MT);
@@ -719,6 +726,7 @@ bool Grapple_OpenLuaUi(lua_State *L)
         {"selected", LUiSelected}, {"options", LUiOptions},
         {"text", LUiGetText},    {"checked", LUiGetChecked}, {"value", LUiGetValue},
         {"visible", LUiVisible}, {"disabled", LUiDisabled},  {"remove", LUiRemove},
+        {"invoke", LUiInvoke},
         {"clear", LUiClear},     {NULL, NULL}};
 
     if (L == NULL)

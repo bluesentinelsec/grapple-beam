@@ -2818,6 +2818,14 @@ static int GenL_Grapple_EngineSetTimeScale(lua_State *L)
     return 0;
 }
 
+static int GenL_Grapple_EngineShowWindow(lua_State *L)
+{
+    (void)L;
+    Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Engine");
+    Grapple_EngineShowWindow(a0);
+    return 0;
+}
+
 static int GenL_Grapple_EngineStep(lua_State *L)
 {
     (void)L;
@@ -6764,7 +6772,7 @@ static int GenL_Grapple_WheelJointDefSetSpring(lua_State *L)
 int GrappleGen_OpenLua_grapple(lua_State *L);
 int GrappleGen_OpenLua_grapple(lua_State *L)
 {
-    lua_createtable(L, 0, 618);
+    lua_createtable(L, 0, 619);
     lua_pushcfunction(L, GenL_Grapple_ActionBind);
     lua_setfield(L, -2, "ActionBind");
     lua_pushcfunction(L, GenL_Grapple_ActionBindAxis);
@@ -7205,6 +7213,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "EngineSetTickRate");
     lua_pushcfunction(L, GenL_Grapple_EngineSetTimeScale);
     lua_setfield(L, -2, "EngineSetTimeScale");
+    lua_pushcfunction(L, GenL_Grapple_EngineShowWindow);
+    lua_setfield(L, -2, "EngineShowWindow");
     lua_pushcfunction(L, GenL_Grapple_EngineStep);
     lua_setfield(L, -2, "EngineStep");
     lua_pushcfunction(L, GenL_Grapple_EngineStepsLastFrame);

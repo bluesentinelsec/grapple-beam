@@ -15035,6 +15035,10 @@ function GrappleC.EngineSetTickRate(engine, ticks_per_second) end
 ---@param scale number
 function GrappleC.EngineSetTimeScale(engine, scale) end
 
+---Calls `Grapple_EngineShowWindow`.
+---@param engine userdata
+function GrappleC.EngineShowWindow(engine) end
+
 ---Calls `Grapple_EngineStep`.
 ---@param engine userdata
 ---@return number

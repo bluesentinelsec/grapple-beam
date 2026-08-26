@@ -1393,3 +1393,52 @@ TEST_F(GuiHarness, UiImageWithNoUsableSourceFails)
 
     Grapple_DestroyUi(ui);
 }
+
+// A filling panel is re-measured every frame, which is what makes a resize
+// reflow the layout instead of scaling it. Two surfaces of different widths
+// stand in for a window before and after a drag.
+
+TEST(GuiStandalone, AFillingPanelFollowsTheWindowWidth)
+{
+    ASSERT_TRUE(SDL_Init(SDL_INIT_VIDEO)) << SDL_GetError();
+
+    auto stretched_label_width = [](int surface_width) {
+        SDL_Surface *surface =
+            SDL_CreateSurface(surface_width, 240, SDL_PIXELFORMAT_RGBA32);
+        SDL_Renderer *renderer = SDL_CreateSoftwareRenderer(surface);
+        Grapple_Gui *gui = Grapple_CreateGui(renderer, nullptr, 0, 0.0f);
+        Grapple_Ui *ui = Grapple_CreateUi(gui);
+
+        Grapple_UiPanelDef panel_def{};
+        panel_def.fill = true;
+        Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+
+        Grapple_UiLabelDef label_def{};
+        label_def.text = "stretches";
+        Grapple_UiWidget *label = Grapple_UiLabel(panel, &label_def);
+
+        Grapple_GuiInputBegin(gui);
+        Grapple_GuiInputEnd(gui);
+        SDL_RenderClear(renderer);
+        Grapple_UiDraw(ui);
+
+        float w = 0.0f;
+        Grapple_UiBounds(label, nullptr, nullptr, &w, nullptr);
+
+        Grapple_DestroyUi(ui);
+        Grapple_DestroyGui(gui);
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroySurface(surface);
+        return w;
+    };
+
+    const float narrow = stretched_label_width(320);
+    const float wide = stretched_label_width(640);
+
+    EXPECT_GT(narrow, 0.0f);
+    // Roughly twice the room, so the layout followed the window rather than
+    // being scaled up from a fixed design size.
+    EXPECT_GT(wide, narrow * 1.7f) << "narrow=" << narrow << " wide=" << wide;
+
+    SDL_Quit();
+}
