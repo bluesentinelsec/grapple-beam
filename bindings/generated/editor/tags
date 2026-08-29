@@ -440,6 +440,7 @@ Grapple_EngineSetPresentation	include/grapple/engine.h	/^.*Grapple_EngineSetPres
 Grapple_EngineSetRefreshRate	include/grapple/engine.h	/^.*Grapple_EngineSetRefreshRate *(/;"	f
 Grapple_EngineSetTickRate	include/grapple/engine.h	/^.*Grapple_EngineSetTickRate *(/;"	f
 Grapple_EngineSetTimeScale	include/grapple/engine.h	/^.*Grapple_EngineSetTimeScale *(/;"	f
+Grapple_EngineShowWindow	include/grapple/engine.h	/^.*Grapple_EngineShowWindow *(/;"	f
 Grapple_EngineStep	include/grapple/engine.h	/^.*Grapple_EngineStep *(/;"	f
 Grapple_EngineStepsLastFrame	include/grapple/engine.h	/^.*Grapple_EngineStepsLastFrame *(/;"	f
 Grapple_EngineTick	include/grapple/engine.h	/^.*Grapple_EngineTick *(/;"	f
@@ -640,6 +641,7 @@ Grapple_GuiGridSpacing	include/grapple/gui_grid.h	/^.*Grapple_GuiGridSpacing *(/
 Grapple_GuiGridSpacingOwned	include/grapple/gui.h	/^.*Grapple_GuiGridSpacingOwned *(/;"	f
 Grapple_GuiGridWeight	include/grapple/gui.h	/^.*Grapple_GuiGridWeight *(/;"	f
 Grapple_GuiImage	include/grapple/gui.h	/^.*Grapple_GuiImage *(/;"	f
+Grapple_GuiImageButton	include/grapple/gui.h	/^.*Grapple_GuiImageButton *(/;"	f
 Grapple_GuiImageMode	include/grapple/chiptune.h	/^.*Grapple_GuiImageMode/;"	g
 Grapple_GuiInputBegin	include/grapple/gui.h	/^.*Grapple_GuiInputBegin *(/;"	f
 Grapple_GuiInputEnd	include/grapple/gui.h	/^.*Grapple_GuiInputEnd *(/;"	f
@@ -7001,6 +7003,7 @@ stackUsed	include/box2d/base.h	/^.*stackUsed/;"	m
 stacks	include/nuklear.h	/^.*stacks/;"	m
 stage	include/SDL3/SDL_assert.h	/^.*stage/;"	m
 start	include/SDL3/SDL_assert.h	/^.*start/;"	m
+start_hidden	include/grapple/chiptune.h	/^.*start_hidden/;"	m
 state	include/SDL3/SDL_assert.h	/^.*state/;"	m
 state	include/box2d/base.h	/^.*state/;"	m
 state	include/nuklear.h	/^.*state/;"	m

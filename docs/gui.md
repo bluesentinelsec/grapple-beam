@@ -175,6 +175,75 @@ Widgets own their state (`answer:set(...)`, `entry:text()`,
 `check:checked()`), and are owned by their parent, so nothing needs
 destroying.
 
+### Pictures, and pictures you can click
+
+```c
+Grapple_UiImage(row, &(Grapple_UiImageDef){
+    .path = "One.bmp", .on_click = NumberClicked, .user = app });
+```
+
+Give it a `path` — a BMP, loaded with plain SDL and owned by the widget — or
+a `texture` you loaded yourself and continue to own. With `on_click` set it
+is a button that happens to be a picture, which is what a toolbar is made
+of. `width = GRAPPLE_UI_FIT` means the image's own width, not a text
+measurement.
+
+`path` reads whatever SDL_image reads — PNG, JPEG, QOI, WebP — because
+Grapple::GUI links the vendored SDL3_image. Naming the file is all any of
+the four languages has to do:
+
+```lua
+panel:image{ path = "logo.png", on_click = show_about }
+```
+
+Install a loader when the file is not where its name says it is — an atlas,
+a pack file, a cache in front of the disk:
+
+```c
+Grapple_UiSetImageLoader(LoadFromAtlas, atlas);
+```
+
+Or hand over a texture you loaded yourself, which the widget uses as-is and
+does not take ownership of.
+
+A missing file gives you no widget rather than a picture-shaped hole that
+draws nothing and reports nothing.
+
+### Saying something to the player
+
+```lua
+ui:message("One")                    -- text only
+ui:message("Number", "One")          -- title and text
+```
+
+A native message box, blocking until dismissed. It is here rather than left
+to `SDL.ShowSimpleMessageBox` because that call wants flags first and the
+window last, which is three things to remember for "say this".
+
+### Choosing between options
+
+```lua
+panel:select{ options = { "Easy", "Normal", "Hard" }, selected = 2,
+              on_change = difficulty_changed }   -- a dropdown
+panel:radio{ options = { "Easy", "Normal", "Hard" } }  -- all of them at once
+panel:progress{ value = 0.4 }
+```
+
+`selected` is 1-based going in and coming out, because that is what a list
+is in both scripting languages. The widget owns the choice: `w:selected()`
+gives the index, `w:text()` the chosen label, and `w:options()` the list.
+
+### Firing a widget without a mouse
+
+```lua
+button:invoke()
+```
+
+What Tk calls invoke: do what the widget does, as though it had been
+clicked. A keyboard shortcut, a menu item and a test all want that, and the
+last of those is why it exists here — a handler that silently never fires
+looks exactly like one that works until somebody clicks it.
+
 ### The escape hatch
 
 Any wrapper over an immediate-mode library will fail to cover something, and

@@ -227,6 +227,15 @@ typedef struct Grapple_EngineConfig
     bool no_auto_mount;
 
     /** Headless: software renderer, no window. For tests and tools. */
+    /** Leave the window hidden at creation.
+     *
+     *  The window is otherwise created hidden and shown once the renderer,
+     *  presentation and display have been applied — no start-up flicker,
+     *  and in front rather than behind whatever was already on screen. Set
+     *  this when the game wants to decide the moment itself: a loading
+     *  step to finish first, or a splash to draw into the first frame.
+     *  Show it with Grapple_EngineShowWindow. */
+    bool start_hidden;
     bool headless;
     /** Drive time with Grapple_EngineAdvance instead of the clock, so a
      *  test can simulate an hour of frames in a millisecond. */
@@ -321,6 +330,10 @@ extern void Grapple_EngineSetEventSink(Grapple_Engine *engine, const Grapple_Eve
  */
 extern void Grapple_EngineSetOverlay(Grapple_Engine *engine, void (*draw)(void *user),
                                        void *user);
+
+/** Show the window and put it in front. Called for you at creation unless
+ *  the config asked for start_hidden. */
+extern void Grapple_EngineShowWindow(Grapple_Engine *engine);
 
 /** Install the hooks without handing over the loop.
  *

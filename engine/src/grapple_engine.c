@@ -341,6 +341,18 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
             break;
         }
 
+        /* Created hidden, shown once everything is set up.
+         *
+         * Two reasons. A window that appears before its renderer, its
+         * presentation and its saved display have been applied shows the
+         * lot as visible flicker — an undecorated grey rectangle that
+         * resizes and jumps to another monitor while the player watches.
+         * And on macOS a window created by a program launched from a
+         * terminal opens behind whatever was already on screen, so the
+         * game is running and apparently missing. Showing it deliberately
+         * puts it in front, which is what every other application does. */
+        flags |= SDL_WINDOW_HIDDEN;
+
         if (!SDL_CreateWindowAndRenderer((config->title != NULL) ? config->title : "Grapple",
                                          width, height, flags, &engine->window,
                                          &engine->renderer))
@@ -380,6 +392,16 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
            creation, because borderless and exclusive differ after the fact. */
         Grapple_GraphicsSettings applied = engine->graphics;
         Grapple_EngineSetGraphics(engine, &applied);
+    }
+
+    if (engine->window != NULL && !config->start_hidden)
+    {
+        /* Everything above has been applied, so this is the first thing the
+           player sees and it is already correct. Raise as well as show:
+           showing a window does not reliably put it in front of the windows
+           that were there before it. */
+        SDL_ShowWindow(engine->window);
+        SDL_RaiseWindow(engine->window);
     }
 
     Grapple_EngineInputOpenGamepads(engine);
@@ -488,6 +510,15 @@ static void PumpEvents(Grapple_Engine *engine)
     if (engine->event_sink.end != NULL)
     {
         engine->event_sink.end(engine->event_sink.user);
+    }
+}
+
+void Grapple_EngineShowWindow(Grapple_Engine *engine)
+{
+    if (engine != NULL && engine->window != NULL)
+    {
+        SDL_ShowWindow(engine->window);
+        SDL_RaiseWindow(engine->window);
     }
 }
 

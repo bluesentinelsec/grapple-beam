@@ -392,6 +392,165 @@ static int LUiEntry(lua_State *L)
     return 1;
 }
 
+/* `options = { "Easy", "Normal", "Hard" }` becomes the NULL-terminated
+   array the C API wants. The strings stay owned by Lua for the length of
+   the call; the widget copies them. */
+static const char **ReadOptions(lua_State *L, int table, int *count)
+{
+    static const char *slots[64];
+    *count = 0;
+    lua_getfield(L, table, "options");
+    if (lua_istable(L, -1))
+    {
+        const int n = (int)lua_rawlen(L, -1);
+        for (int i = 0; i < n && *count < (int)(sizeof(slots) / sizeof(slots[0])) - 1; ++i)
+        {
+            lua_rawgeti(L, -1, i + 1);
+            if (lua_isstring(L, -1))
+            {
+                slots[(*count)++] = lua_tostring(L, -1);
+            }
+            lua_pop(L, 1);
+        }
+    }
+    lua_pop(L, 1);
+    slots[*count] = NULL;
+    return slots;
+}
+
+static int Select(lua_State *L, bool as_radio)
+{
+    Grapple_UiWidget *parent = CheckWidget(L, 1);
+    const int options = OptionsTable(L, 2);
+
+    int count = 0;
+    Grapple_UiSelectDef def = {0};
+    def.options = ReadOptions(L, options, &count);
+    /* 1-based on the way in and out, because that is what a Lua table is. */
+    def.selected = (int)OptNumber(L, options, "selected", 1.0f) - 1;
+    def.width = OptLength(L, options, "width");
+    def.height = OptLength(L, options, "height");
+    def.align = OptAlign(L, options, "align");
+    if (HasFunction(L, options, "on_change"))
+    {
+        def.on_change = ScriptCallback;
+        def.user = L;
+    }
+
+    Grapple_UiWidget *widget =
+        as_radio ? Grapple_UiRadio(parent, &def) : Grapple_UiSelect(parent, &def);
+    RememberCallback(L, options, "on_change", widget);
+    PushWidget(L, widget);
+    return 1;
+}
+
+static int LUiSelect(lua_State *L) { return Select(L, false); }
+static int LUiRadio(lua_State *L) { return Select(L, true); }
+
+static int LUiProgress(lua_State *L)
+{
+    Grapple_UiWidget *parent = CheckWidget(L, 1);
+    const int options = OptionsTable(L, 2);
+
+    Grapple_UiProgressDef def = {0};
+    def.value = OptNumber(L, options, "value", 0.0f);
+    def.max = OptNumber(L, options, "max", 1.0f);
+    def.editable = OptBool(L, options, "editable", false);
+    def.width = OptLength(L, options, "width");
+    def.height = OptLength(L, options, "height");
+    def.align = OptAlign(L, options, "align");
+    if (HasFunction(L, options, "on_change"))
+    {
+        def.on_change = ScriptCallback;
+        def.user = L;
+    }
+
+    Grapple_UiWidget *widget = Grapple_UiProgress(parent, &def);
+    RememberCallback(L, options, "on_change", widget);
+    PushWidget(L, widget);
+    return 1;
+}
+
+/* The chosen option, 1-based; with an argument, chooses one. */
+static int LUiSelected(lua_State *L)
+{
+    Grapple_UiWidget *widget = CheckWidget(L, 1);
+    if (lua_isnone(L, 2))
+    {
+        lua_pushinteger(L, (lua_Integer)Grapple_UiSelected(widget) + 1);
+        return 1;
+    }
+    Grapple_UiSetSelected(widget, (int)luaL_checkinteger(L, 2) - 1);
+    lua_pushvalue(L, 1);
+    return 1;
+}
+
+static int LUiOptions(lua_State *L)
+{
+    Grapple_UiWidget *widget = CheckWidget(L, 1);
+    const int count = Grapple_UiOptionCount(widget);
+    lua_newtable(L);
+    for (int i = 0; i < count; ++i)
+    {
+        lua_pushstring(L, Grapple_UiOption(widget, i));
+        lua_rawseti(L, -2, i + 1);
+    }
+    return 1;
+}
+
+static int LUiImage(lua_State *L)
+{
+    Grapple_UiWidget *parent = CheckWidget(L, 1);
+    const int options = OptionsTable(L, 2);
+
+    Grapple_UiImageDef def = {0};
+    def.path = OptString(L, options, "path", NULL);
+    /* A texture from IMG.LoadTexture, which reads every format SDL_image
+       does — the path form is BMP only, because the GUI module depends on
+       nothing but SDL. */
+    lua_getfield(L, options, "texture");
+    if (!lua_isnil(L, -1))
+    {
+        def.texture = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, -1, "SDL_Texture");
+    }
+    lua_pop(L, 1);
+    def.width = OptLength(L, options, "width");
+    def.height = OptLength(L, options, "height");
+    def.align = OptAlign(L, options, "align");
+    if (HasFunction(L, options, "on_click"))
+    {
+        def.on_click = ScriptCallback;
+        def.user = L;
+    }
+
+    Grapple_UiWidget *widget = Grapple_UiImage(parent, &def);
+    if (widget == NULL)
+    {
+        return luaL_error(L, "could not load image '%s'",
+                          (def.path != NULL) ? def.path : "(texture)");
+    }
+    RememberCallback(L, options, "on_click", widget);
+    PushWidget(L, widget);
+    return 1;
+}
+
+static int LUiMessage(lua_State *L)
+{
+    UiBox *box = (UiBox *)luaL_checkudata(L, 1, UI_MT);
+    /* ui:message("One") is the common case; a title is optional. */
+    const char *first = luaL_checkstring(L, 2);
+    const char *second = lua_isnoneornil(L, 3) ? NULL : luaL_checkstring(L, 3);
+    if (second != NULL)
+    {
+        Grapple_UiMessage(box->ui, first, second);
+    }
+    else
+    {
+        Grapple_UiMessage(box->ui, "", first);
+    }
+    return 0;
+}
+
 static int LUiSpacer(lua_State *L)
 {
     Grapple_UiWidget *parent = CheckWidget(L, 1);
@@ -466,6 +625,13 @@ static int LUiDisabled(lua_State *L)
         return 1;
     }
     Grapple_UiSetDisabled(widget, lua_toboolean(L, 2) != 0);
+    lua_pushvalue(L, 1);
+    return 1;
+}
+
+static int LUiInvoke(lua_State *L)
+{
+    Grapple_UiInvoke(CheckWidget(L, 1));
     lua_pushvalue(L, 1);
     return 1;
 }
@@ -549,13 +715,18 @@ static void MakeMetatable(lua_State *L, const char *name, const luaL_Reg *method
 
 bool Grapple_OpenLuaUi(lua_State *L)
 {
-    static const luaL_Reg ui_methods[] = {{"panel", LUiPanel}, {NULL, NULL}};
+    static const luaL_Reg ui_methods[] = {
+        {"panel", LUiPanel}, {"message", LUiMessage}, {NULL, NULL}};
     static const luaL_Reg widget_methods[] = {
         {"row", LUiRow},         {"column", LUiColumn},  {"label", LUiLabel},
         {"button", LUiButton},   {"check", LUiCheck},    {"slider", LUiSlider},
         {"entry", LUiEntry},     {"spacer", LUiSpacer},  {"set", LUiSet},
+        {"select", LUiSelect},   {"radio", LUiRadio},    {"progress", LUiProgress},
+        {"image", LUiImage},
+        {"selected", LUiSelected}, {"options", LUiOptions},
         {"text", LUiGetText},    {"checked", LUiGetChecked}, {"value", LUiGetValue},
         {"visible", LUiVisible}, {"disabled", LUiDisabled},  {"remove", LUiRemove},
+        {"invoke", LUiInvoke},
         {"clear", LUiClear},     {NULL, NULL}};
 
     if (L == NULL)

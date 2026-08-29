@@ -15035,6 +15035,10 @@ function GrappleC.EngineSetTickRate(engine, ticks_per_second) end
 ---@param scale number
 function GrappleC.EngineSetTimeScale(engine, scale) end
 
+---Calls `Grapple_EngineShowWindow`.
+---@param engine userdata
+function GrappleC.EngineShowWindow(engine) end
+
 ---Calls `Grapple_EngineStep`.
 ---@param engine userdata
 ---@return number
@@ -16015,6 +16019,13 @@ function GrappleC.GuiGridWeight(gui, column, weight) end
 ---@param mode integer
 ---@return boolean
 function GrappleC.GuiImage(gui, texture, mode) end
+
+---Calls `Grapple_GuiImageButton`.
+---@param gui userdata
+---@param texture userdata
+---@param mode integer
+---@return boolean
+function GrappleC.GuiImageButton(gui, texture, mode) end
 
 ---Calls `Grapple_GuiInputBegin`.
 ---@param gui userdata

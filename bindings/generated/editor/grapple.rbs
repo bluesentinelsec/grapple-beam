@@ -2609,6 +2609,7 @@ module GrappleC
   def self.EngineSetRefreshRate: (untyped engine, Float hz) -> void
   def self.EngineSetTickRate: (untyped engine, Integer ticks_per_second) -> bool
   def self.EngineSetTimeScale: (untyped engine, Float scale) -> void
+  def self.EngineShowWindow: (untyped engine) -> void
   def self.EngineStep: (untyped engine) -> Float
   def self.EngineStepsLastFrame: (untyped engine) -> Integer
   def self.EngineTick: (untyped engine) -> bool
@@ -2788,6 +2789,7 @@ module GrappleC
   def self.GuiGridSpacingOwned: (untyped gui, Float x, Float y) -> void
   def self.GuiGridWeight: (untyped gui, Integer column, Float weight) -> bool
   def self.GuiImage: (untyped gui, untyped texture, Integer mode) -> bool
+  def self.GuiImageButton: (untyped gui, untyped texture, Integer mode) -> bool
   def self.GuiInputBegin: (untyped gui) -> void
   def self.GuiInputEnd: (untyped gui) -> void
   def self.GuiKeyPressed: (untyped gui, Integer scancode) -> bool

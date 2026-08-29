@@ -3713,6 +3713,19 @@ static mrb_value GenR_Grapple_EngineSetTimeScale(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_Grapple_EngineShowWindow(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_Engine");
+    Grapple_EngineShowWindow(a0);
+    return mrb_nil_value();
+    }
+}
+
 static mrb_value GenR_Grapple_EngineStep(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -6257,6 +6270,21 @@ static mrb_value GenR_Grapple_GuiImage(mrb_state *mrb, mrb_value self)
     SDL_Texture *a1 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
     Grapple_GuiImageMode a2 = (Grapple_GuiImageMode)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = Grapple_GuiImage(a0, a1, a2);
+    return mrb_bool_value((mrb_bool)(rv != 0));
+    }
+}
+
+static mrb_value GenR_Grapple_GuiImageButton(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_Gui *a0 = (Grapple_Gui *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_Gui");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_RubyCheckHandle(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), "SDL_Texture");
+    Grapple_GuiImageMode a2 = (Grapple_GuiImageMode)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    bool rv = Grapple_GuiImageButton(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
 }
@@ -9640,6 +9668,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "EngineSetRefreshRate", GenR_Grapple_EngineSetRefreshRate, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineSetTickRate", GenR_Grapple_EngineSetTickRate, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineSetTimeScale", GenR_Grapple_EngineSetTimeScale, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "EngineShowWindow", GenR_Grapple_EngineShowWindow, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineStep", GenR_Grapple_EngineStep, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineStepsLastFrame", GenR_Grapple_EngineStepsLastFrame, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineTick", GenR_Grapple_EngineTick, MRB_ARGS_ANY());
@@ -9819,6 +9848,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "GuiGridSpacingOwned", GenR_Grapple_GuiGridSpacingOwned, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiGridWeight", GenR_Grapple_GuiGridWeight, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiImage", GenR_Grapple_GuiImage, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "GuiImageButton", GenR_Grapple_GuiImageButton, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiInputBegin", GenR_Grapple_GuiInputBegin, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiInputEnd", GenR_Grapple_GuiInputEnd, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "GuiKeyPressed", GenR_Grapple_GuiKeyPressed, MRB_ARGS_ANY());

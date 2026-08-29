@@ -2635,6 +2635,7 @@ returns as an array.
 | `GrappleC.EngineSetRefreshRate(engine: Grapple_Engine, hz: number)` | nil |
 | `GrappleC.EngineSetTickRate(engine: Grapple_Engine, ticks_per_second: integer)` | boolean |
 | `GrappleC.EngineSetTimeScale(engine: Grapple_Engine, scale: number)` | nil |
+| `GrappleC.EngineShowWindow(engine: Grapple_Engine)` | nil |
 | `GrappleC.EngineStep(engine: Grapple_Engine)` | number |
 | `GrappleC.EngineStepsLastFrame(engine: Grapple_Engine)` | integer |
 | `GrappleC.EngineTick(engine: Grapple_Engine)` | boolean |
@@ -2814,6 +2815,7 @@ returns as an array.
 | `GrappleC.GuiGridSpacingOwned(gui: Grapple_Gui, x: number, y: number)` | nil |
 | `GrappleC.GuiGridWeight(gui: Grapple_Gui, column: integer, weight: number)` | boolean |
 | `GrappleC.GuiImage(gui: Grapple_Gui, texture: SDL_Texture, mode: integer)` | boolean |
+| `GrappleC.GuiImageButton(gui: Grapple_Gui, texture: SDL_Texture, mode: integer)` | boolean |
 | `GrappleC.GuiInputBegin(gui: Grapple_Gui)` | nil |
 | `GrappleC.GuiInputEnd(gui: Grapple_Gui)` | nil |
 | `GrappleC.GuiKeyPressed(gui: Grapple_Gui, scancode: integer)` | boolean |

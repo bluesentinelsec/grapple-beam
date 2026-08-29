@@ -1426,3 +1426,51 @@ TEST(GenLua, APendingEngineDoesNotLeakBetweenStates)
     lua_close(second);
     lua_close(first);
 }
+
+// Widget handlers, in both languages.
+//
+// These exist because the Ruby half was broken from the day it shipped and
+// nothing noticed: the callback tests were Lua-only, so a Ruby button that
+// silently did nothing looked exactly like a working one until somebody
+// clicked it.
+//
+// invoke() is what makes this checkable without a mouse — the same thing Tk
+// offers for the same reason.
+
+TEST(GenLua, WidgetHandlersFire)
+{
+    RunLua(
+        "local engine = Grapple.engine{ headless = true, auto_mount = false }\n"
+        "local ui = Grapple.ui(engine)\n"
+        "local panel = ui:panel{}\n"
+        "local seen = nil\n"
+        "local function clicked(widget) seen = widget:text() end\n"
+        "local button = panel:button{ text = 'Hello', on_click = clicked }\n"
+        "button:invoke()\n"
+        "assert(seen == 'Hello', 'handler did not fire, got ' .. tostring(seen))\n"
+        // A second widget must reach its own handler, not the first's.
+        "local other = nil\n"
+        "panel:button{ text = 'Other', on_click = function(w) other = w:text() end }:invoke()\n"
+        "assert(other == 'Other', 'second handler got ' .. tostring(other))\n"
+        "assert(seen == 'Hello', 'first handler was overwritten')\n");
+}
+
+TEST(GenRuby, WidgetHandlersFire)
+{
+    RunRuby(
+        "$seen = nil\n"
+        "def clicked(widget) ; $seen = widget.text ; end\n"
+        "engine = Grapple.engine(headless: true, auto_mount: false)\n"
+        "ui = Grapple.ui(engine)\n"
+        "panel = ui.panel\n"
+        // A named method passed as on_click:, which is how a handler worth a
+        // name is written in Ruby.
+        "button = panel.button(text: 'Hello', on_click: method(:clicked))\n"
+        "button.invoke\n"
+        "raise \"handler did not fire, got #{$seen.inspect}\" unless $seen == 'Hello'\n"
+        // And as a block, the other spelling.
+        "$block_seen = nil\n"
+        "panel.button(text: 'Blocky') { |w| $block_seen = w.text }.invoke\n"
+        "raise \"block handler got #{$block_seen.inspect}\" unless $block_seen == 'Blocky'\n"
+        "raise 'first handler was overwritten' unless $seen == 'Hello'\n");
+}

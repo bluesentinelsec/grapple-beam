@@ -14,6 +14,7 @@
 #include <grapple/gui_grid.h>
 #include <grapple/widgets.h>
 #include <gtest/gtest.h>
+#include <filesystem>
 
 #include <cstring>
 #include <string>
@@ -1275,4 +1276,228 @@ TEST_F(GuiHarness, UiWidgetStateOutlivesTheFrame)
     EXPECT_FALSE(Grapple_UiVisible(label));
 
     Grapple_DestroyUi(ui);
+}
+
+// --- the image widget ------------------------------------------------------
+//
+// A picture that can be clicked is what a toolbar is made of, and what the
+// textbook calls a PictureBox. These check the three claims: it loads, it
+// takes its size from the image rather than from a text measurement, and a
+// click on it reaches the handler.
+
+namespace {
+
+// A small BMP written here, so the test carries its own asset.
+std::string MakeBitmap(int width, int height)
+{
+    const std::filesystem::path file =
+        std::filesystem::temp_directory_path() / "grapple_ui_image.bmp";
+    SDL_Surface *surface = SDL_CreateSurface(width, height, SDL_PIXELFORMAT_RGBA32);
+    SDL_FillSurfaceRect(surface, nullptr, 0xFF3366CCu);
+    SDL_SaveBMP(surface, file.string().c_str());
+    SDL_DestroySurface(surface);
+    return file.string();
+}
+
+} // namespace
+
+TEST_F(GuiHarness, UiImageTakesItsSizeFromTheImage)
+{
+    const std::string path = MakeBitmap(64, 48);
+
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+
+    Grapple_UiImageDef image_def{};
+    image_def.path = path.c_str();
+    image_def.width = GRAPPLE_UI_FIT;
+    Grapple_UiWidget *image = Grapple_UiImage(panel, &image_def);
+    ASSERT_NE(image, nullptr) << "the bitmap did not load";
+
+    BeginFrame();
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    Grapple_UiDraw(ui);
+
+    float w = 0.0f;
+    float h = 0.0f;
+    ASSERT_TRUE(Grapple_UiBounds(image, nullptr, nullptr, &w, &h));
+    // "fit" for a picture is the picture's own width, not a text measurement.
+    EXPECT_NEAR(w, 64.0f, 2.0f);
+    EXPECT_NEAR(h, 48.0f, 2.0f);
+
+    Grapple_DestroyUi(ui);
+}
+
+TEST_F(GuiHarness, UiImageClickReachesItsCallback)
+{
+    const std::string path = MakeBitmap(80, 40);
+
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+
+    ClickCount counter;
+    Grapple_UiImageDef image_def{};
+    image_def.path = path.c_str();
+    image_def.on_click = CountClick;
+    image_def.user = &counter;
+    Grapple_UiWidget *image = Grapple_UiImage(panel, &image_def);
+    ASSERT_NE(image, nullptr);
+
+    BeginFrame();
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    Grapple_UiDraw(ui);
+
+    float x = 0.0f;
+    float y = 0.0f;
+    float w = 0.0f;
+    float h = 0.0f;
+    ASSERT_TRUE(Grapple_UiBounds(image, &x, &y, &w, &h));
+    const float cx = x + w / 2.0f;
+    const float cy = y + h / 2.0f;
+
+    for (int phase = 0; phase < 2; ++phase)
+    {
+        BeginFrame();
+        Grapple_GuiInputBegin(gui_);
+        FeedMouseMove(cx, cy);
+        FeedButton(cx, cy, phase == 0);
+        Grapple_GuiInputEnd(gui_);
+        Grapple_UiDraw(ui);
+    }
+
+    EXPECT_EQ(counter.clicks, 1);
+    Grapple_DestroyUi(ui);
+}
+
+TEST_F(GuiHarness, UiImageWithNoUsableSourceFails)
+{
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+
+    // A missing file is a NULL widget rather than a picture-shaped hole that
+    // draws nothing and says nothing.
+    Grapple_UiImageDef missing{};
+    missing.path = "/no/such/image/anywhere.bmp";
+    EXPECT_EQ(Grapple_UiImage(panel, &missing), nullptr);
+
+    Grapple_DestroyUi(ui);
+}
+
+// A filling panel is re-measured every frame, which is what makes a resize
+// reflow the layout instead of scaling it. Two surfaces of different widths
+// stand in for a window before and after a drag.
+
+TEST(GuiStandalone, AFillingPanelFollowsTheWindowWidth)
+{
+    // SDL_Init(0), not SDL_INIT_VIDEO: a software renderer over a surface
+    // needs no video subsystem, and asking for one fails on a machine with
+    // no display — which is every CI runner that is not macOS.
+    ASSERT_TRUE(SDL_Init(0)) << SDL_GetError();
+
+    auto stretched_label_width = [](int surface_width) {
+        SDL_Surface *surface =
+            SDL_CreateSurface(surface_width, 240, SDL_PIXELFORMAT_RGBA32);
+        SDL_Renderer *renderer = SDL_CreateSoftwareRenderer(surface);
+        Grapple_Gui *gui = Grapple_CreateGui(renderer, nullptr, 0, 0.0f);
+        Grapple_Ui *ui = Grapple_CreateUi(gui);
+
+        Grapple_UiPanelDef panel_def{};
+        panel_def.fill = true;
+        Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+
+        Grapple_UiLabelDef label_def{};
+        label_def.text = "stretches";
+        Grapple_UiWidget *label = Grapple_UiLabel(panel, &label_def);
+
+        Grapple_GuiInputBegin(gui);
+        Grapple_GuiInputEnd(gui);
+        SDL_RenderClear(renderer);
+        Grapple_UiDraw(ui);
+
+        float w = 0.0f;
+        Grapple_UiBounds(label, nullptr, nullptr, &w, nullptr);
+
+        Grapple_DestroyUi(ui);
+        Grapple_DestroyGui(gui);
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroySurface(surface);
+        return w;
+    };
+
+    const float narrow = stretched_label_width(320);
+    const float wide = stretched_label_width(640);
+
+    EXPECT_GT(narrow, 0.0f);
+    // Roughly twice the room, so the layout followed the window rather than
+    // being scaled up from a fixed design size.
+    EXPECT_GT(wide, narrow * 1.7f) << "narrow=" << narrow << " wide=" << wide;
+
+    SDL_Quit();
+}
+
+// `path` reads whatever the installed loader reads, and SDL_image when
+// nothing is installed. The hook is for a file that is not where its name
+// says it is: an atlas, a pack file, a cache.
+
+namespace {
+
+int g_loader_calls = 0;
+
+SDL_Texture *CountingLoader(SDL_Renderer *renderer, const char *path, void *user)
+{
+    g_loader_calls++;
+    *static_cast<std::string *>(user) = path;
+    SDL_Surface *surface = SDL_CreateSurface(12, 34, SDL_PIXELFORMAT_RGBA32);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_DestroySurface(surface);
+    return texture;
+}
+
+} // namespace
+
+TEST_F(GuiHarness, AnInstalledImageLoaderHandlesPath)
+{
+    std::string seen;
+    g_loader_calls = 0;
+    Grapple_UiSetImageLoader(CountingLoader, &seen);
+
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+
+    Grapple_UiImageDef image_def{};
+    // A name nothing on disk answers to: it works because the loader was
+    // asked rather than the filesystem.
+    image_def.path = "not-a-real-file-anywhere.png";
+    image_def.width = GRAPPLE_UI_FIT;
+    Grapple_UiWidget *image = Grapple_UiImage(panel, &image_def);
+    ASSERT_NE(image, nullptr);
+    EXPECT_EQ(g_loader_calls, 1);
+    EXPECT_EQ(seen, "not-a-real-file-anywhere.png");
+
+    BeginFrame();
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    Grapple_UiDraw(ui);
+
+    float w = 0.0f;
+    ASSERT_TRUE(Grapple_UiBounds(image, nullptr, nullptr, &w, nullptr));
+    EXPECT_NEAR(w, 12.0f, 2.0f) << "the loader's texture decided the size";
+
+    Grapple_DestroyUi(ui);
+
+    // Restore, so the next test sees the built-in.
+    Grapple_UiSetImageLoader(nullptr, nullptr);
 }

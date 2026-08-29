@@ -38,7 +38,10 @@ target_include_directories(Grapple_GUI SYSTEM
 )
 
 # Grapple_GuiOpenFileButton drives the file dialogs in Grapple::Extras.
-target_link_libraries(Grapple_GUI PUBLIC SDL3::SDL3 Grapple::Extras)
+# Grapple::Image so a picture widget can be given a picture. Loading only
+# BMP would have been a strange thing for a GUI to offer, and the vendored
+# SDL3_image is right here.
+target_link_libraries(Grapple_GUI PUBLIC SDL3::SDL3 Grapple::Extras Grapple::Image)
 if(UNIX AND NOT APPLE)
   target_link_libraries(Grapple_GUI PRIVATE m)
 endif()

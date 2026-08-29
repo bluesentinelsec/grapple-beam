@@ -2818,6 +2818,14 @@ static int GenL_Grapple_EngineSetTimeScale(lua_State *L)
     return 0;
 }
 
+static int GenL_Grapple_EngineShowWindow(lua_State *L)
+{
+    (void)L;
+    Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Engine");
+    Grapple_EngineShowWindow(a0);
+    return 0;
+}
+
 static int GenL_Grapple_EngineStep(lua_State *L)
 {
     (void)L;
@@ -4555,6 +4563,17 @@ static int GenL_Grapple_GuiImage(lua_State *L)
     SDL_Texture *a1 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Texture");
     Grapple_GuiImageMode a2 = (Grapple_GuiImageMode)luaL_checkinteger(L, 3);
     bool rv = Grapple_GuiImage(a0, a1, a2);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
+static int GenL_Grapple_GuiImageButton(lua_State *L)
+{
+    (void)L;
+    Grapple_Gui *a0 = (Grapple_Gui *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Gui");
+    SDL_Texture *a1 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 2, "SDL_Texture");
+    Grapple_GuiImageMode a2 = (Grapple_GuiImageMode)luaL_checkinteger(L, 3);
+    bool rv = Grapple_GuiImageButton(a0, a1, a2);
     lua_pushboolean(L, (int)rv);
     return 1;
 }
@@ -6753,7 +6772,7 @@ static int GenL_Grapple_WheelJointDefSetSpring(lua_State *L)
 int GrappleGen_OpenLua_grapple(lua_State *L);
 int GrappleGen_OpenLua_grapple(lua_State *L)
 {
-    lua_createtable(L, 0, 617);
+    lua_createtable(L, 0, 619);
     lua_pushcfunction(L, GenL_Grapple_ActionBind);
     lua_setfield(L, -2, "ActionBind");
     lua_pushcfunction(L, GenL_Grapple_ActionBindAxis);
@@ -7194,6 +7213,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "EngineSetTickRate");
     lua_pushcfunction(L, GenL_Grapple_EngineSetTimeScale);
     lua_setfield(L, -2, "EngineSetTimeScale");
+    lua_pushcfunction(L, GenL_Grapple_EngineShowWindow);
+    lua_setfield(L, -2, "EngineShowWindow");
     lua_pushcfunction(L, GenL_Grapple_EngineStep);
     lua_setfield(L, -2, "EngineStep");
     lua_pushcfunction(L, GenL_Grapple_EngineStepsLastFrame);
@@ -7552,6 +7573,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GuiGridWeight");
     lua_pushcfunction(L, GenL_Grapple_GuiImage);
     lua_setfield(L, -2, "GuiImage");
+    lua_pushcfunction(L, GenL_Grapple_GuiImageButton);
+    lua_setfield(L, -2, "GuiImageButton");
     lua_pushcfunction(L, GenL_Grapple_GuiInputBegin);
     lua_setfield(L, -2, "GuiInputBegin");
     lua_pushcfunction(L, GenL_Grapple_GuiInputEnd);

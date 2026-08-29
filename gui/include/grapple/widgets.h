@@ -279,6 +279,104 @@ typedef struct Grapple_UiEntryDef
 extern Grapple_UiWidget *Grapple_UiEntry(Grapple_UiWidget *parent,
                                              const Grapple_UiEntryDef *def);
 
+/**
+ * A list of choices with one of them picked.
+ *
+ * `options` is a NULL-terminated array of labels, copied. The widget owns
+ * the selection: `Grapple_UiValue` reads it back as an index, and
+ * `Grapple_UiText` gives the chosen label.
+ */
+/**
+ * A picture, optionally one you can click.
+ *
+ * Give it either a `path`, loaded through SDL_image and owned by the
+ * widget, or a `texture` you loaded yourself and continue to own.
+ *
+ * With `on_click` set it is a button that happens to be a picture, which is
+ * what a toolbar is made of.
+ */
+typedef struct Grapple_UiImageDef
+{
+    const char *path;      /**< any format SDL_image reads; owned by the widget */
+    SDL_Texture *texture;  /**< or a texture you own; wins over path */
+    Grapple_GuiImageMode mode;
+    Grapple_UiLength width;
+    Grapple_UiLength height;
+    Grapple_UiAlign align;
+    Grapple_UiCallback on_click;
+    void *user;
+} Grapple_UiImageDef;
+
+extern Grapple_UiWidget *Grapple_UiImage(Grapple_UiWidget *parent,
+                                             const Grapple_UiImageDef *def);
+
+/**
+ * How `path` turns into a texture.
+ *
+ * Left alone it is SDL_image, which reads everything a game is likely to
+ * ship. Install a loader when the file is not where the name says it is —
+ * an atlas, a pack file, a cache in front of the disk — and `path` becomes
+ * whatever that loader decides it means.
+ *
+ * Passing NULL restores the default. It is global because it is a property
+ * of the program rather than of one panel.
+ */
+typedef SDL_Texture *(*Grapple_UiImageLoader)(SDL_Renderer *renderer, const char *path,
+                                                  void *user);
+
+extern void Grapple_UiSetImageLoader(Grapple_UiImageLoader loader, void *user);
+
+/**
+ * A native message box, and the reason it is here rather than left to SDL:
+ * the argument order of SDL_ShowSimpleMessageBox puts the window last and
+ * the flags first, which is three things to remember for "say this".
+ *
+ * Blocks until dismissed, which is what a message box is for.
+ */
+extern void Grapple_UiMessage(Grapple_Ui *ui, const char *title, const char *text);
+
+typedef struct Grapple_UiSelectDef
+{
+    const char *const *options;
+    int selected;          /**< index into options; 0 if out of range */
+    bool as_radio;         /**< draw every option, rather than a dropdown */
+    Grapple_UiLength width;
+    Grapple_UiLength height;
+    Grapple_UiAlign align;
+    Grapple_UiCallback on_change;
+    void *user;
+} Grapple_UiSelectDef;
+
+/** A dropdown: one row, opening onto the list. */
+extern Grapple_UiWidget *Grapple_UiSelect(Grapple_UiWidget *parent,
+                                              const Grapple_UiSelectDef *def);
+
+/** The same choice as a column of radio buttons, for a short list where
+ *  seeing every option at once is worth the space. */
+extern Grapple_UiWidget *Grapple_UiRadio(Grapple_UiWidget *parent,
+                                             const Grapple_UiSelectDef *def);
+
+typedef struct Grapple_UiProgressDef
+{
+    float value;
+    float max;    /**< 1.0 if left at zero */
+    bool editable; /**< draggable, like a slider without the handle */
+    Grapple_UiLength width;
+    Grapple_UiLength height;
+    Grapple_UiAlign align;
+    Grapple_UiCallback on_change;
+    void *user;
+} Grapple_UiProgressDef;
+
+extern Grapple_UiWidget *Grapple_UiProgress(Grapple_UiWidget *parent,
+                                                const Grapple_UiProgressDef *def);
+
+/** Which option a select or radio has: the index, and its label. */
+extern int Grapple_UiSelected(Grapple_UiWidget *widget);
+extern void Grapple_UiSetSelected(Grapple_UiWidget *widget, int index);
+extern int Grapple_UiOptionCount(Grapple_UiWidget *widget);
+extern const char *Grapple_UiOption(Grapple_UiWidget *widget, int index);
+
 typedef struct Grapple_UiSpacerDef
 {
     Grapple_UiLength width;
@@ -340,6 +438,15 @@ extern bool Grapple_UiBounds(Grapple_UiWidget *widget, float *x, float *y, float
 
 /** Whatever the def carried, for a callback that needs its own context. */
 extern void *Grapple_UiUser(Grapple_UiWidget *widget);
+
+/**
+ * Fire a widget's action as though it had been clicked or changed.
+ *
+ * Tk calls this invoke, and it is the same idea: a keyboard shortcut, a
+ * menu item and a test all want to do what the button does without a mouse
+ * being involved. Does nothing for a widget with no handler.
+ */
+extern void Grapple_UiInvoke(Grapple_UiWidget *widget);
 
 /** Remove a widget and its children. The parent forgets it. */
 extern void Grapple_UiRemove(Grapple_UiWidget *widget);

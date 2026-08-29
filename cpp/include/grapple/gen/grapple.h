@@ -227,6 +227,9 @@ class GuiHandle {
   Status GuiImage(SDL_Texture *texture, Grapple_GuiImageMode mode) {
     return ::Grapple_GuiImage(value_, texture, mode) ? Status() : Status::FromSdl();
   }
+  Status GuiImageButton(SDL_Texture *texture, Grapple_GuiImageMode mode) {
+    return ::Grapple_GuiImageButton(value_, texture, mode) ? Status() : Status::FromSdl();
+  }
   Status GuiDrawTexture(SDL_Texture *texture, SDL_FRect rect, Grapple_GuiImageMode mode) {
     return ::Grapple_GuiDrawTexture(value_, texture, rect, mode) ? Status() : Status::FromSdl();
   }
@@ -1020,6 +1023,7 @@ inline constexpr auto& EngineSetMediaPassword = ::Grapple_EngineSetMediaPassword
 inline constexpr auto& EngineSetOverlay = ::Grapple_EngineSetOverlay;
 inline constexpr auto& EngineSetRefreshRate = ::Grapple_EngineSetRefreshRate;
 inline constexpr auto& EngineSetTimeScale = ::Grapple_EngineSetTimeScale;
+inline constexpr auto& EngineShowWindow = ::Grapple_EngineShowWindow;
 inline constexpr auto& EngineStep = ::Grapple_EngineStep;
 inline constexpr auto& EngineStepsLastFrame = ::Grapple_EngineStepsLastFrame;
 inline constexpr auto& EngineTickRate = ::Grapple_EngineTickRate;
