@@ -1288,10 +1288,19 @@ TEST_F(GuiHarness, UiWidgetStateOutlivesTheFrame)
 namespace {
 
 // A small BMP written here, so the test carries its own asset.
+//
+// The name carries the test's own name: ctest runs tests as concurrent
+// processes, so a fixed filename means one test truncating the file another
+// is reading. That failed on Windows, where the sharing rules are strict,
+// and passed everywhere else — which is the worst way for it to behave.
 std::string MakeBitmap(int width, int height)
 {
-    const std::filesystem::path file =
-        std::filesystem::temp_directory_path() / "grapple_ui_image.bmp";
+    const ::testing::TestInfo *info =
+        ::testing::UnitTest::GetInstance()->current_test_info();
+    const std::string unique =
+        std::string("grapple_ui_image_") + ((info != nullptr) ? info->name() : "anon") +
+        ".bmp";
+    const std::filesystem::path file = std::filesystem::temp_directory_path() / unique;
     SDL_Surface *surface = SDL_CreateSurface(width, height, SDL_PIXELFORMAT_RGBA32);
     SDL_FillSurfaceRect(surface, nullptr, 0xFF3366CCu);
     SDL_SaveBMP(surface, file.string().c_str());

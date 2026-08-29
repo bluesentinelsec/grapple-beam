@@ -1189,6 +1189,8 @@ TEST(GenLua, SdlLoadFileReadsAPathOutsideTheVfs)
     // The file is written here rather than named in the source: a path that
     // exists on the machine the test was written on is not a test, it is a
     // machine-specific assertion that passes locally and fails everywhere.
+    // Named for the test that owns it: ctest runs tests in parallel
+    // processes, and a shared filename is a race rather than a fixture.
     const std::filesystem::path file =
         std::filesystem::temp_directory_path() / "grapple_loadfile_probe.txt";
     std::ofstream(file) << "outside the vfs";
@@ -1319,8 +1321,13 @@ namespace {
 
 std::string MakeReadableDir()
 {
+    // One directory per test, for the same reason: these run concurrently,
+    // and two tests writing the same files is a race, not a fixture.
+    const ::testing::TestInfo *info =
+        ::testing::UnitTest::GetInstance()->current_test_info();
     const std::filesystem::path dir =
-        std::filesystem::temp_directory_path() / "grapple_bindgen_reads";
+        std::filesystem::temp_directory_path() /
+        (std::string("grapple_bindgen_reads_") + ((info != nullptr) ? info->name() : "anon"));
     std::filesystem::create_directories(dir);
     std::ofstream(dir / "alpha.txt") << "0123456789abcdefghijklmnop";
     std::ofstream(dir / "beta.txt") << "second";
