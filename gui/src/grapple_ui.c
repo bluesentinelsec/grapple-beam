@@ -105,6 +105,11 @@ struct Grapple_Ui
 {
     Grapple_Gui *gui;
     bool owns_gui;
+    /* Drawing is the caller's to do, so forgetting it is a silent blank
+       window. Counted so the UI can say something rather than sulk. */
+    bool ever_drawn;
+    bool warned_not_drawn;
+    int frames_since_created;
     Grapple_UiWidget *first_panel;
     Grapple_UiWidget *last_panel;
     /* Nuklear identifies some widgets by call order, so every node needs a
@@ -1381,12 +1386,33 @@ static void DrawNode(Grapple_UiWidget *node, float available_width)
     }
 }
 
+/* Called once a frame by whoever owns the engine, whether or not this UI
+   was drawn, so that a UI which is never drawn can notice and say so. */
+void Grapple_UiNoteFrame(Grapple_Ui *ui)
+{
+    if (ui == NULL || ui->ever_drawn || ui->warned_not_drawn)
+    {
+        return;
+    }
+    ui->frames_since_created++;
+    /* A second at 60Hz: long enough that a UI built during a loading screen
+       is not accused, short enough to be seen. */
+    if (ui->frames_since_created > 60 && ui->first_panel != NULL)
+    {
+        ui->warned_not_drawn = true;
+        SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
+                    "a ui has widgets but has never been drawn — call ui:draw() "
+                    "from a render callback");
+    }
+}
+
 void Grapple_UiDraw(Grapple_Ui *ui)
 {
     if (ui == NULL || ui->gui == NULL)
     {
         return;
     }
+    ui->ever_drawn = true;
     struct nk_context *ctx = Grapple_GuiContext(ui->gui);
     if (ctx == NULL)
     {
@@ -1466,6 +1492,11 @@ void Grapple_UiDraw(Grapple_Ui *ui)
     }
 
     Grapple_GuiRender(ui->gui);
+}
+
+void Grapple_UiNoteFrameCallback(void *ui)
+{
+    Grapple_UiNoteFrame((Grapple_Ui *)ui);
 }
 
 void Grapple_UiDrawCallback(void *ui)

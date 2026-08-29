@@ -66,5 +66,10 @@ def update(_delta)
   $engine.quit if $engine.key_pressed?("escape")
 end
 
+def post_render
+  $ui.draw
+end
+
 $engine.on_load(&method(:load_ui))
 $engine.on_update(&method(:update))
+$engine.on_post_render(&method(:post_render))

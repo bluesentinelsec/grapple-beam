@@ -243,6 +243,14 @@ static int OptionsTable(lua_State *L, int index)
 
 /* --- constructors -------------------------------------------------------- */
 
+/* ui:draw() — the UI, over whatever has been drawn so far. */
+static int LUiDraw(lua_State *L)
+{
+    UiBox *box = (UiBox *)luaL_checkudata(L, 1, UI_MT);
+    Grapple_UiDraw(box->ui);
+    return 0;
+}
+
 static int LUiPanel(lua_State *L)
 {
     UiBox *box = (UiBox *)luaL_checkudata(L, 1, UI_MT);
@@ -686,9 +694,16 @@ static int LUiGc(lua_State *L)
 /*
  * Grapple.ui(engine [, { font_size = 15 }])
  *
- * Opens the GUI with the platform's interface font, points the engine's
- * input at it and installs it as the engine's overlay — so a script never
- * writes an input call, a render call, or a loop.
+ * Opens the GUI with the platform's interface font and points the engine's
+ * input at it. Drawing is deliberately not arranged here: call ui:draw()
+ * from a render callback.
+ *
+ * The two are not the same kind of decision. Input has one correct
+ * arrangement — Nuklear's bracket has to open before the engine pumps
+ * events and close after, and there is no hook a script could do that from,
+ * which is why the sink exists. When the UI is drawn is a real choice: over
+ * a transition or under it, skipped while paused, one panel before another.
+ * Hiding that choice hid the fact that a GUI is drawn at all.
  */
 static int LUiOpen(lua_State *L)
 {
@@ -706,7 +721,9 @@ static int LUiOpen(lua_State *L)
 
     const Grapple_EventSink sink = Grapple_UiEventSink(ui);
     Grapple_EngineSetEventSink(engine, &sink);
-    Grapple_EngineSetOverlay(engine, Grapple_UiDrawCallback, ui);
+    /* Not a draw: this only lets a UI notice it is never being drawn and
+       say so, instead of leaving a blank window unexplained. */
+    Grapple_EngineSetOverlay(engine, Grapple_UiNoteFrameCallback, ui);
 
     UiBox *box = (UiBox *)lua_newuserdata(L, sizeof(*box));
     box->ui = ui;
@@ -733,7 +750,7 @@ static void MakeMetatable(lua_State *L, const char *name, const luaL_Reg *method
 bool Grapple_OpenLuaUi(lua_State *L)
 {
     static const luaL_Reg ui_methods[] = {
-        {"panel", LUiPanel}, {"message", LUiMessage}, {NULL, NULL}};
+        {"panel", LUiPanel}, {"draw", LUiDraw}, {"message", LUiMessage}, {NULL, NULL}};
     static const luaL_Reg widget_methods[] = {
         {"row", LUiRow},         {"column", LUiColumn},  {"label", LUiLabel},
         {"button", LUiButton},   {"check", LUiCheck},    {"slider", LUiSlider},
