@@ -1288,10 +1288,19 @@ TEST_F(GuiHarness, UiWidgetStateOutlivesTheFrame)
 namespace {
 
 // A small BMP written here, so the test carries its own asset.
+//
+// The name carries the test's own name: ctest runs tests as concurrent
+// processes, so a fixed filename means one test truncating the file another
+// is reading. That failed on Windows, where the sharing rules are strict,
+// and passed everywhere else — which is the worst way for it to behave.
 std::string MakeBitmap(int width, int height)
 {
-    const std::filesystem::path file =
-        std::filesystem::temp_directory_path() / "grapple_ui_image.bmp";
+    const ::testing::TestInfo *info =
+        ::testing::UnitTest::GetInstance()->current_test_info();
+    const std::string unique =
+        std::string("grapple_ui_image_") + ((info != nullptr) ? info->name() : "anon") +
+        ".bmp";
+    const std::filesystem::path file = std::filesystem::temp_directory_path() / unique;
     SDL_Surface *surface = SDL_CreateSurface(width, height, SDL_PIXELFORMAT_RGBA32);
     SDL_FillSurfaceRect(surface, nullptr, 0xFF3366CCu);
     SDL_SaveBMP(surface, file.string().c_str());
@@ -1500,4 +1509,42 @@ TEST_F(GuiHarness, AnInstalledImageLoaderHandlesPath)
 
     // Restore, so the next test sees the built-in.
     Grapple_UiSetImageLoader(nullptr, nullptr);
+}
+
+// A widget's value is not its text.
+//
+// Sharing one handler between several widgets means telling them apart, and
+// the only place to hang that used to be the text — which is a label the
+// user reads, and which a picture does not have at all.
+
+TEST_F(GuiHarness, AWidgetsValueIsSeparateFromItsText)
+{
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+
+    Grapple_UiButtonDef button_def{};
+    button_def.text = "Exit";
+    button_def.value = "quit";
+    Grapple_UiWidget *button = Grapple_UiButton(panel, &button_def);
+    ASSERT_NE(button, nullptr);
+
+    EXPECT_EQ(std::string(Grapple_UiText(button)), "Exit");
+    EXPECT_EQ(std::string(Grapple_UiValueText(button)), "quit");
+
+    // Changing one leaves the other alone.
+    Grapple_UiSetText(button, "Close");
+    EXPECT_EQ(std::string(Grapple_UiValueText(button)), "quit");
+    Grapple_UiSetValueText(button, "cancel");
+    EXPECT_EQ(std::string(Grapple_UiText(button)), "Close");
+
+    // A widget that was never given one reads as empty rather than NULL.
+    Grapple_UiLabelDef label_def{};
+    label_def.text = "plain";
+    Grapple_UiWidget *label = Grapple_UiLabel(panel, &label_def);
+    EXPECT_EQ(std::string(Grapple_UiValueText(label)), "");
+
+    Grapple_DestroyUi(ui);
 }
