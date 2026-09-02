@@ -67,11 +67,11 @@ jobs:
         run: cmake --build build/debug --parallel
 
       - name: Test Debug
-        # Bounded so a hang fails this step rather than the job: a job killed
-        # by its own timeout has its log discarded, which is how three macOS
-        # hangs went undiagnosed.
+        # Bounded so a hang fails this step rather than the job. Note this
+        # cannot save a job whose runner has died — see the parallelism note
+        # below, which is what was actually killing macOS.
         timeout-minutes: 20
-        run: ctest --test-dir build/debug --output-on-failure --parallel --timeout 120
+        run: ctest --test-dir build/debug --output-on-failure --parallel 4 --timeout 120
 
       - name: Configure Release
         run: >
@@ -83,7 +83,7 @@ jobs:
 
       - name: Test Release
         timeout-minutes: 20
-        run: ctest --test-dir build/release --output-on-failure --parallel --timeout 120
+        run: ctest --test-dir build/release --output-on-failure --parallel 4 --timeout 120
 
       # ctest writes every test's output here as it goes, so the last entry
       # names whatever was running when a hang started. Uploaded even when

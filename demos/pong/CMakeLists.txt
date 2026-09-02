@@ -45,3 +45,15 @@ if(GRAPPLE_BEAM_BUILD_TESTS)
     endforeach()
   endif()
 endif()
+
+# Each of these runs a real engine — window, renderer, font atlas — for ten
+# seconds. Four at once, alongside everything else ctest is running, is what
+# a three-core CI runner does not have the memory for: the macOS runner
+# stopped answering the server three times before this was bounded.
+set_tests_properties(demo_pong_c PROPERTIES RUN_SERIAL TRUE)
+if(TARGET pong_cpp)
+  set_tests_properties(demo_pong_cpp PROPERTIES RUN_SERIAL TRUE)
+endif()
+if(TARGET grapple)
+  set_tests_properties(demo_pong_lua demo_pong_rb PROPERTIES RUN_SERIAL TRUE)
+endif()
