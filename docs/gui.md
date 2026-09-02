@@ -146,7 +146,23 @@ local panel = ui:panel{ title = "Settings", padding = 12, spacing = 8 }
 local answer = panel:label{ text = "", align = "center" }
 panel:button{ text = "Clear", width = "fit", align = "right",
               on_click = function() answer:set("") end }
+
+-- Drawn where you decide, not by itself.
+engine:on_post_render(function() ui:draw() end)
 ```
+
+`Grapple.ui` arranges input and nothing else. Input has one correct
+arrangement — Nuklear's bracket must open before the engine pumps events and
+close after, and no script hook runs at that point — so it is done for you.
+When the UI is drawn is a real decision, so it is yours: over a transition
+or under it, skipped while a menu is closed, one panel before another.
+
+`on_post_render` draws above the effect chain, which is usually what a menu
+wants; `on_render` draws inside it, so a CRT or bloom pass will treat the UI
+as part of the scene. Neither is a default worth guessing at.
+
+Forget the call and you get a window with no interface, so a UI that has
+widgets and has never been drawn logs once to say so.
 
 ```ruby
 ui = Grapple.ui(engine)

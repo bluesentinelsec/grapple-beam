@@ -588,13 +588,23 @@ static mrb_value RUiOpen(mrb_state *mrb, mrb_value self)
         mrb_raisef(mrb, E_RUNTIME_ERROR, "%s", SDL_GetError());
     }
 
+    /* Input is arranged here because it has one correct arrangement.
+       Drawing is not: call ui.draw from a render callback. */
     const Grapple_EventSink sink = Grapple_UiEventSink(ui);
     Grapple_EngineSetEventSink(engine, &sink);
-    Grapple_EngineSetOverlay(engine, Grapple_UiDrawCallback, ui);
+    /* Not a draw: this only lets a UI notice it is never being drawn. */
+    Grapple_EngineSetOverlay(engine, Grapple_UiNoteFrameCallback, ui);
 
     struct RClass *klass = mrb_class_get_under(mrb, mrb_module_get(mrb, "Grapple"), "Ui");
     struct RData *data = mrb_data_object_alloc(mrb, klass, ui, &kUiType);
     return mrb_obj_value(data);
+}
+
+/* ui.draw — the UI, over whatever has been drawn so far. */
+static mrb_value RUiDraw(mrb_state *mrb, mrb_value self)
+{
+    Grapple_UiDraw((Grapple_Ui *)mrb_data_get_ptr(mrb, self, &kUiType));
+    return self;
 }
 
 static mrb_value RUiPanel(mrb_state *mrb, mrb_value self)
@@ -1050,6 +1060,7 @@ bool Grapple_OpenRubyUi(mrb_state *mrb)
     struct RClass *ui = mrb_define_class_under(mrb, module, "Ui", mrb->object_class);
     MRB_SET_INSTANCE_TT(ui, MRB_TT_DATA);
     mrb_define_method(mrb, ui, "panel", RUiPanel, MRB_ARGS_OPT(1));
+    mrb_define_method(mrb, ui, "draw", RUiDraw, MRB_ARGS_NONE());
     mrb_define_method(mrb, ui, "message", RUiMessage, MRB_ARGS_ARG(1, 1));
 
     struct RClass *widget = mrb_define_class_under(mrb, module, "Widget", mrb->object_class);

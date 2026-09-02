@@ -171,6 +171,18 @@ extern void Grapple_UiDraw(Grapple_Ui *ui);
  *  function-pointer cast is needed to install it. */
 extern void Grapple_UiDrawCallback(void *ui);
 
+/**
+ * Tell the UI a frame has passed, drawn or not.
+ *
+ * Drawing belongs to whoever owns the loop, which means forgetting it gives
+ * a blank window and no explanation. Call this once a frame and a UI that
+ * has widgets and has never been drawn will say so, once.
+ */
+extern void Grapple_UiNoteFrame(Grapple_Ui *ui);
+
+/** Grapple_UiNoteFrame with the signature an engine overlay slot wants. */
+extern void Grapple_UiNoteFrameCallback(void *ui);
+
 /** True while the pointer is over the UI, so a game can ignore that click. */
 extern bool Grapple_UiWantsInput(Grapple_Ui *ui);
 

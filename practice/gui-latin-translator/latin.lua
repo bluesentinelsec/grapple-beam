@@ -65,5 +65,10 @@ local function update()
   end
 end
 
+local function post_render()
+  ui:draw()
+end
+
 engine:on_load(load)
 engine:on_update(update)
+engine:on_post_render(post_render)

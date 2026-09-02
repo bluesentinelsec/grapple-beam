@@ -1548,3 +1548,123 @@ TEST_F(GuiHarness, AWidgetsValueIsSeparateFromItsText)
 
     Grapple_DestroyUi(ui);
 }
+
+// Drawing belongs to whoever owns the loop, so forgetting it gives a blank
+// window. The UI notices and says so, once, rather than leaving that
+// unexplained — the cost of making the call explicit.
+
+namespace {
+
+std::string g_captured_log;
+
+void CaptureLog(void *, int, SDL_LogPriority, const char *message)
+{
+    g_captured_log += message;
+    g_captured_log += "\n";
+}
+
+// Watch what SDL logs for the duration of a test, then put it back.
+class LogCapture
+{
+  public:
+    LogCapture()
+    {
+        g_captured_log.clear();
+        SDL_GetLogOutputFunction(&previous_, &previous_user_);
+        SDL_SetLogOutputFunction(CaptureLog, nullptr);
+    }
+    ~LogCapture() { SDL_SetLogOutputFunction(previous_, previous_user_); }
+    const std::string &text() const { return g_captured_log; }
+
+  private:
+    SDL_LogOutputFunction previous_ = nullptr;
+    void *previous_user_ = nullptr;
+};
+
+int CountOccurrences(const std::string &haystack, const std::string &needle)
+{
+    int found = 0;
+    for (size_t at = haystack.find(needle); at != std::string::npos;
+         at = haystack.find(needle, at + needle.size()))
+    {
+        found++;
+    }
+    return found;
+}
+
+} // namespace
+
+TEST_F(GuiHarness, AUiThatIsNeverDrawnSaysSoExactlyOnce)
+{
+    LogCapture log;
+
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+    Grapple_UiLabelDef label_def{};
+    label_def.text = "unseen";
+    Grapple_UiLabel(panel, &label_def);
+
+    for (int frame = 0; frame < 200; ++frame)
+    {
+        Grapple_UiNoteFrame(ui);
+    }
+
+    // Once — a warning repeated every frame is noise, not help.
+    EXPECT_EQ(CountOccurrences(log.text(), "never been drawn"), 1) << log.text();
+
+    Grapple_DestroyUi(ui);
+}
+
+TEST_F(GuiHarness, ADrawnUiIsNeverAccusedOfNotBeingDrawn)
+{
+    LogCapture log;
+
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+    Grapple_UiLabelDef label_def{};
+    label_def.text = "seen";
+    Grapple_UiWidget *label = Grapple_UiLabel(panel, &label_def);
+
+    BeginFrame();
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    Grapple_UiDraw(ui);
+
+    for (int frame = 0; frame < 200; ++frame)
+    {
+        Grapple_UiNoteFrame(ui);
+    }
+
+    EXPECT_EQ(CountOccurrences(log.text(), "never been drawn"), 0) << log.text();
+
+    // Noting frames must not disturb the layout it already has.
+    float w = 0.0f;
+    EXPECT_TRUE(Grapple_UiBounds(label, nullptr, nullptr, &w, nullptr));
+    EXPECT_GT(w, 0.0f);
+
+    Grapple_DestroyUi(ui);
+}
+
+TEST_F(GuiHarness, AnEmptyUiIsNotAccused)
+{
+    LogCapture log;
+
+    // No widgets: a UI built and not yet populated is not a mistake, and
+    // saying so would train people to ignore the warning.
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+    for (int frame = 0; frame < 200; ++frame)
+    {
+        Grapple_UiNoteFrame(ui);
+    }
+    EXPECT_EQ(CountOccurrences(log.text(), "never been drawn"), 0) << log.text();
+    Grapple_DestroyUi(ui);
+}
