@@ -67,6 +67,10 @@ jobs:
         run: cmake --build build/debug --parallel
 
       - name: Test Debug
+        # Bounded so a hang fails this step rather than the job: a job killed
+        # by its own timeout has its log discarded, which is how three macOS
+        # hangs went undiagnosed.
+        timeout-minutes: 20
         run: ctest --test-dir build/debug --output-on-failure --parallel --timeout 120
 
       - name: Configure Release
@@ -78,7 +82,22 @@ jobs:
         run: cmake --build build/release --parallel
 
       - name: Test Release
+        timeout-minutes: 20
         run: ctest --test-dir build/release --output-on-failure --parallel --timeout 120
+
+      # ctest writes every test's output here as it goes, so the last entry
+      # names whatever was running when a hang started. Uploaded even when
+      # the steps above failed, which is the only time it is interesting.
+      - name: Upload ctest logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ctest-logs-${{ matrix.os }}
+          path: |
+            build/debug/Testing/Temporary/LastTest.log
+            build/release/Testing/Temporary/LastTest.log
+          if-no-files-found: ignore
+          retention-days: 7
 
       - name: Benchmark (Release)
         run: |
