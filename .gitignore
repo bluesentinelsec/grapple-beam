@@ -1,6 +1,7 @@
 # Build trees
 build/
 dist/
+log.md
 cmake-build-*/
 out/
 install/
