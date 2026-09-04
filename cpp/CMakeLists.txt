@@ -8,6 +8,7 @@
 
 add_library(Grapple_Cpp STATIC
   src/no_exceptions.cc
+  src/ui.cc
 )
 add_library(Grapple::Cpp ALIAS Grapple_Cpp)
 

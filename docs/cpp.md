@@ -46,7 +46,7 @@ Hand-written ergonomic wrappers for the game-loop essentials:
 | `grapple/filesystem.h` | `Vfs`, `Mount` (incl. encrypted archives, unmount-on-scope-exit) |
 | `grapple/extras.h` | span-based compress/encrypt/base64/hash, `SignalEmitter` + `ScopedConnection` |
 | `grapple/tilemap.h` | `TiledMap`, `TiledObject` |
-| `grapple/ui.h` | `Gui` |
+| `grapple/ui.h` | `Gui` (immediate mode), `Ui` and `Widget` ([retained GUI](cpp-gui.md)) |
 | `grapple/script.h` | `LuaState`, `RubyState` |
 
 All owners are move-only with deleted copies; destruction order is the

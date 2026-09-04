@@ -1,5 +1,6 @@
 add_executable(grapple_cpp_test
   cpp_test.cpp
+  widgets_test.cpp
 )
 target_link_libraries(grapple_cpp_test
   PRIVATE

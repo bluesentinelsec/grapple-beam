@@ -5,11 +5,9 @@
  * The C++ API is headers over the C one, so this is as much a test that the
  * headers were installed and agree with the objects as it is a link test.
  */
-#include <grapple/grapple.h>
-
 #include <SDL3/SDL.h>
-
 #include <cstdio>
+#include <grapple/grapple.h>
 
 int main()
 {
@@ -28,6 +26,32 @@ int main()
         std::fprintf(stderr, "Engine::Create failed: %s\n", engine.status().message().c_str());
         return 1;
     }
+
+    // Build a retained interface through the installed C++ wrapper. This
+    // checks that both the public declarations and the compiled wrapper ship
+    // in the C++ SDK archive.
+    grapple::Result<grapple::Ui> ui = grapple::Ui::CreateForEngine(*engine);
+    if (!ui.ok())
+    {
+        std::fprintf(stderr, "Ui::CreateForEngine failed: %s\n", ui.status().message().c_str());
+        return 1;
+    }
+    grapple::PanelOptions panel_options;
+    grapple::Result<grapple::Widget> panel = ui->AddPanel(panel_options);
+    if (!panel.ok())
+    {
+        std::fprintf(stderr, "Ui::AddPanel failed: %s\n", panel.status().message().c_str());
+        return 1;
+    }
+    grapple::LabelOptions label_options;
+    label_options.text = "Installed C++ UI";
+    grapple::Result<grapple::Widget> label = panel->AddLabel(label_options);
+    if (!label.ok())
+    {
+        std::fprintf(stderr, "Widget::AddLabel failed: %s\n", label.status().message().c_str());
+        return 1;
+    }
+    engine->on_post_render([&ui]() { ui->Draw(); });
 
     for (int i = 0; i < 5; ++i)
     {
