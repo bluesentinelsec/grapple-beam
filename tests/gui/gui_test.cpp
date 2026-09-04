@@ -1467,7 +1467,13 @@ SDL_Texture *CountingLoader(SDL_Renderer *renderer, const char *path, void *user
 {
     g_loader_calls++;
     *static_cast<std::string *>(user) = path;
-    SDL_Surface *surface = SDL_CreateSurface(12, 34, SDL_PIXELFORMAT_RGBA32);
+    if (SDL_strcmp(path, "missing.png") == 0)
+    {
+        SDL_SetError("deliberate test load failure");
+        return nullptr;
+    }
+    const int width = (SDL_strcmp(path, "replacement.png") == 0) ? 56 : 12;
+    SDL_Surface *surface = SDL_CreateSurface(width, 34, SDL_PIXELFORMAT_RGBA32);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_DestroySurface(surface);
     return texture;
@@ -1504,6 +1510,27 @@ TEST_F(GuiHarness, AnInstalledImageLoaderHandlesPath)
     float w = 0.0f;
     ASSERT_TRUE(Grapple_UiBounds(image, nullptr, nullptr, &w, nullptr));
     EXPECT_NEAR(w, 12.0f, 2.0f) << "the loader's texture decided the size";
+
+    ASSERT_TRUE(Grapple_UiSetImagePath(image, "replacement.png"));
+    EXPECT_EQ(g_loader_calls, 2);
+    EXPECT_EQ(seen, "replacement.png");
+
+    BeginFrame();
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    Grapple_UiDraw(ui);
+    ASSERT_TRUE(Grapple_UiBounds(image, nullptr, nullptr, &w, nullptr));
+    EXPECT_NEAR(w, 56.0f, 2.0f) << "the replacement texture decided the size";
+
+    EXPECT_FALSE(Grapple_UiSetImagePath(image, "missing.png"));
+    EXPECT_STREQ(SDL_GetError(), "deliberate test load failure");
+
+    BeginFrame();
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    Grapple_UiDraw(ui);
+    ASSERT_TRUE(Grapple_UiBounds(image, nullptr, nullptr, &w, nullptr));
+    EXPECT_NEAR(w, 56.0f, 2.0f) << "a failed load keeps the previous image";
 
     Grapple_DestroyUi(ui);
 

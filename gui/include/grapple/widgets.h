@@ -325,6 +325,32 @@ extern Grapple_UiWidget *Grapple_UiImage(Grapple_UiWidget *parent,
                                              const Grapple_UiImageDef *def);
 
 /**
+ * @brief Replace the file-backed image displayed by an image widget.
+ *
+ * The path is loaded through the installed image loader, or SDL_image when
+ * no custom loader is installed. The widget owns the resulting texture. If
+ * loading fails, the widget keeps displaying its previous image.
+ *
+ * @param widget Image widget to update.
+ * @param path Path understood by the active image loader.
+ * @return true when the new image was loaded and installed; false on error.
+ */
+extern bool Grapple_UiSetImagePath(Grapple_UiWidget *widget, const char *path);
+
+/**
+ * @brief Replace the texture displayed by an image widget.
+ *
+ * The texture remains owned by the caller and must outlive its use by the
+ * widget. Passing NULL clears the image.
+ *
+ * @param widget Image widget to update.
+ * @param texture Borrowed texture, or NULL to clear the image.
+ * @return true when the widget was updated; false when widget is invalid or
+ *         is not an image widget.
+ */
+extern bool Grapple_UiSetImageTexture(Grapple_UiWidget *widget, SDL_Texture *texture);
+
+/**
  * How `path` turns into a texture.
  *
  * Left alone it is SDL_image, which reads everything a game is likely to
