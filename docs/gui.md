@@ -346,6 +346,29 @@ panel:radio{ options = { "Easy", "Normal", "Hard" } }  -- all of them at once
 panel:progress{ value = 0.4 }
 ```
 
+Use `panel:list{options = {"Inches", "Feet", "Yards"}, selected = 2}`
+for an always-visible list box. In Ruby the same call is
+`panel.list(options: ["Inches", "Feet", "Yards"], selected: 2)`;
+C uses `Grapple_UiList` and C++ uses `AddList(ChoiceOptions)`.
+Lists share the selection state and callbacks of dropdowns and radios.
+Set a height to limit the visible area and scroll through longer lists.
+Radio groups and list boxes each occupy one parent layout cell, so two
+groups can be placed beside each other in a row.
+
+A panel can keep its own background and caption colors:
+
+```lua
+panel:colors({r = 255, g = 255, b = 0}, {r = 0, g = 0, b = 0})
+```
+
+Ruby uses `panel.colors({r: 255, g: 255, b: 0}, {r: 0, g: 0, b: 0})`.
+Channels are integers from 0 to 255; omitted RGB channels default to zero
+and alpha defaults to 255. C uses `Grapple_UiSetPanelColors(panel, bg, text)`;
+C++ uses `panel.SetPanelColors(bg, text)`, with `SDL_Color` values. Changes
+apply on the next draw and do not affect neighboring panels. Text colors
+apply to labels and radio/checkbox captions; buttons, entries and list
+selections keep their own theme. Calling this on a non-panel is an error.
+
 `selected` is 1-based going in and coming out, because that is what a list
 is in both scripting languages. The widget owns the choice: `w:selected()`
 gives the index, `w:text()` the chosen label, and `w:options()` the list.

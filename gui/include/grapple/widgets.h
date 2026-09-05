@@ -453,6 +453,24 @@ extern Grapple_UiWidget *Grapple_UiSelect(Grapple_UiWidget *parent,
 extern Grapple_UiWidget *Grapple_UiRadio(Grapple_UiWidget *parent,
                                              const Grapple_UiSelectDef *def);
 
+/**
+ * @brief Create a single-selection list box with visible, scrollable choices.
+ * @param parent Owning container; must outlive the returned widget.
+ * @param def Choice labels and settings, copied during this call. Indices are zero-based.
+ * @return An owned child, or NULL on invalid arguments or allocation failure.
+ */
+extern Grapple_UiWidget *Grapple_UiList(Grapple_UiWidget *parent, const Grapple_UiSelectDef *def);
+
+/**
+ * @brief Set a panel's body background and label colors without affecting other panels.
+ * @param panel Panel to configure; other widget kinds are rejected.
+ * @param background Body background color.
+ * @param text Color for labels and radio/checkbox captions inside the panel.
+ * @return True on success; false with SDL error for an invalid panel.
+ * @post Colors apply on the next draw. Buttons, entries and list selections keep their theme.
+ */
+extern bool Grapple_UiSetPanelColors(Grapple_UiWidget *panel, SDL_Color background, SDL_Color text);
+
 typedef struct Grapple_UiProgressDef
 {
     float value;
@@ -468,7 +486,7 @@ typedef struct Grapple_UiProgressDef
 extern Grapple_UiWidget *Grapple_UiProgress(Grapple_UiWidget *parent,
                                                 const Grapple_UiProgressDef *def);
 
-/** Which option a select or radio has: the index, and its label. */
+/** Which option a dropdown, radio group or list has: the index, and its label. */
 extern int Grapple_UiSelected(Grapple_UiWidget *widget);
 extern void Grapple_UiSetSelected(Grapple_UiWidget *widget, int index);
 extern int Grapple_UiOptionCount(Grapple_UiWidget *widget);

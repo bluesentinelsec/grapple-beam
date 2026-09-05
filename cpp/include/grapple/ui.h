@@ -275,6 +275,21 @@ class Widget {
   [[nodiscard]] Result<Widget> AddRadio(const ChoiceOptions& options);
 
   /**
+   * @brief Add a single-selection list box with visible, scrollable options.
+   * @param options Copied choice settings; selection indices are zero-based.
+   * @return An owned child handle, or an error on failure.
+   */
+  [[nodiscard]] Result<Widget> AddList(const ChoiceOptions& options);
+
+  /**
+   * @brief Set this panel's body and label colors for subsequent draws.
+   * @param background Body background color.
+   * @param text Label and radio/checkbox caption color.
+   * @return Success, or an error if this handle is not a panel.
+   */
+  [[nodiscard]] Status SetPanelColors(SDL_Color background, SDL_Color text);
+
+  /**
    * @brief Add a progress indicator.
    * @param options Range, state, layout, and optional callback settings.
    * @return A new progress handle, or an error if it cannot be created.
@@ -559,7 +574,7 @@ struct EntryOptions {
                                              focus, Enter alone, and SetText do not trigger it. */
 };
 
-/** @brief Settings shared by drop-down and radio choices. Indices are zero-based. */
+/** @brief Settings shared by drop-down, radio and list choices. Indices are zero-based. */
 struct ChoiceOptions {
   std::vector<std::string> options;      /**< Labels, copied by the widget. */
   int selected = 0;                      /**< Zero-based initial selection. */

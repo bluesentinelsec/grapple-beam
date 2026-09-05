@@ -1537,6 +1537,44 @@ TEST(GenLua, WidgetSetPreservesNumericStringsAsText)
            "assert(check:checked(), 'booleans must still update checkboxes')\n");
 }
 
+TEST(GenLua, ListsAndPanelColorsAreAvailable)
+{
+    RunLua("local engine = Grapple.engine{headless=true, auto_mount=false}\n"
+           "local ui = Grapple.ui(engine)\n"
+           "local panel = ui:panel{}\n"
+           "assert(panel:colors({r=255,g=255}, {}) == panel)\n"
+           "local seen\n"
+           "local list = panel:list{options={'Inches','Feet','Yards'}, selected=2, "
+           "on_change=function(w) seen=w:text() end}\n"
+           "assert(list:text() == 'Feet')\n"
+           "list:selected(3):invoke()\n"
+           "assert(seen == 'Yards')\n"
+           "assert(not pcall(function() list:colors({}, {}) end))\n"
+           "assert(not pcall(function() panel:colors({r=256}, {}) end))\n"
+           "assert(not pcall(function() panel:colors({r=1.5}, {}) end))\n"
+           "ui:draw()\n");
+}
+
+TEST(GenRuby, ListsAndPanelColorsAreAvailable)
+{
+    RunRuby(
+        "engine = Grapple.engine(headless:true, auto_mount:false)\n"
+        "ui = Grapple.ui(engine)\n"
+        "panel = ui.panel\n"
+        "raise 'not chainable' unless panel.colors({r:255,g:255}, {}).equal?(panel)\n"
+        "seen = nil\n"
+        "list = panel.list(options: ['Inches','Feet','Yards'], selected: 2) { |w| seen=w.text }\n"
+        "raise 'selection' unless list.text == 'Feet'\n"
+        "list.selected(3).invoke\n"
+        "raise 'callback' unless seen == 'Yards'\n"
+        "begin; list.colors({}, {}); raise 'accepted non-panel'; rescue ArgumentError; end\n"
+        "begin; panel.colors({r:256}, {}); raise 'accepted invalid color'; rescue ArgumentError; "
+        "end\n"
+        "begin; panel.colors({r:1.5}, {}); raise 'accepted fractional color'; rescue "
+        "ArgumentError; end\n"
+        "ui.draw\n");
+}
+
 TEST(GenLua, WidgetHandlersFire)
 {
     RunLua(
