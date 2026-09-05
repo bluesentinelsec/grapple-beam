@@ -178,19 +178,19 @@ if (!sky_result.ok()) {
 grapple::Widget sky = std::move(sky_result).value();
 
 grapple::ImageOptions image_options;
-image_options.path = "orion.png";
+image_options.path = "preview.png";
 grapple::Result<grapple::Widget> image = sky.AddImage(image_options);
 
-grapple::LabelOptions star_options;
-star_options.text = "Betelgeuse";
-star_options.width = grapple::UiLength::Fit();
-star_options.height = grapple::UiLength::Fit();
-grapple::Result<grapple::Widget> star = sky.AddLabel(star_options);
-if (!image.ok() || !star.ok()) {
+grapple::ButtonOptions close_options;
+close_options.text = "Close";
+close_options.width = grapple::UiLength::Fit();
+close_options.height = grapple::UiLength::Fit();
+grapple::Result<grapple::Widget> close = sky.AddButton(close_options);
+if (!image.ok() || !close.ok()) {
   return 1;
 }
-grapple::Status placed = star->Place(grapple::UiLength::Percent(0.18f),
-                                     grapple::UiLength::Percent(0.13f));
+grapple::Status placed = close->Place(grapple::UiLength::Percent(0.85f),
+                                      grapple::UiLength::Pixels(8.0f));
 if (!placed.ok()) {
   return 1;
 }
@@ -199,6 +199,36 @@ if (!placed.ok()) {
 Percentage positions follow the overlay when it resizes. `Place` uses the
 widget's top-left corner; its normal width and height options determine its
 size.
+
+When a label identifies a point inside an image, make it an annotation owned
+by that image. An annotation uses normalized image coordinates, so it follows
+the actual drawn image through aspect-preserving resizing and letterboxing:
+
+```cpp
+grapple::ImageOptions image_options;
+image_options.path = "orion.png";
+image_options.mode = grapple::UiImageMode::kZoom;
+grapple::Result<grapple::Widget> image = sky.AddImage(image_options);
+if (!image.ok()) {
+  return 1;
+}
+
+grapple::ImageAnnotationOptions name_options;
+name_options.text = "Betelgeuse";
+name_options.x = 0.238f;
+name_options.y = 0.170f;
+name_options.side = grapple::UiImageAnnotationSide::kLeft;
+name_options.gap = 6.0f;
+grapple::Result<grapple::Widget> name = image->AddAnnotation(name_options);
+if (!name.ok()) {
+  return 1;
+}
+name->SetVisible(false);
+```
+
+The side can be left, right, above, or below the point. The small pixel gap
+keeps the label legible without baking display-size-specific offsets into the
+caller. Annotation handles support the usual text and visibility changes.
 
 ## Widgets own their state
 

@@ -1482,6 +1482,9 @@ TEST(GenLua, ImageContentsCanChangeInPlace)
         "local image = overlay:image{ path = '" +
         heads +
         "', mode = 'zoom' }\n"
+        "local annotation = image:annotation{ text = 'star', x = 0.5, y = 0.5, "
+        "side = 'below', gap = 4 }\n"
+        "assert(annotation:visible(false) == annotation, 'annotation is not a widget')\n"
         "local label = overlay:label{ text = 'star', width = 'fit', height = 'fit' }\n"
         "assert(label:place{ x = '25%', y = 10 } == label, 'place is not chainable')\n"
         "assert(image:set_image('" +
@@ -1504,6 +1507,8 @@ TEST(GenRuby, ImageContentsCanChangeInPlace)
         "image = overlay.image(path: '" +
         heads +
         "', mode: :zoom)\n"
+        "annotation = image.annotation(text: 'star', x: 0.5, y: 0.5, side: :below, gap: 4)\n"
+        "raise 'annotation is not a widget' unless annotation.visible(false).equal?(annotation)\n"
         "label = overlay.label(text: 'star', width: :fit, height: :fit)\n"
         "raise 'place is not chainable' unless label.place(x: '25%', y: 10).equal?(label)\n"
         "raise 'set_image is not chainable' unless image.set_image('" +

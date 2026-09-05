@@ -142,14 +142,35 @@ creation order, and `Grapple_UiPlace` positions their top-left corners:
 ```c
 Grapple_UiWidget *sky = Grapple_UiOverlay(panel, &(Grapple_UiOverlayDef){
     .height = GRAPPLE_UI_PX(480) });
-Grapple_UiImage(sky, &(Grapple_UiImageDef){ .path = "orion.png" });
-Grapple_UiWidget *name = Grapple_UiLabel(sky, &(Grapple_UiLabelDef){
-    .text = "Betelgeuse", .width = GRAPPLE_UI_FIT, .height = GRAPPLE_UI_FIT });
-Grapple_UiPlace(name, GRAPPLE_UI_PCT(0.18f), GRAPPLE_UI_PCT(0.13f));
+Grapple_UiImage(sky, &(Grapple_UiImageDef){ .path = "preview.png" });
+Grapple_UiWidget *close = Grapple_UiButton(sky, &(Grapple_UiButtonDef){
+    .text = "Close", .width = GRAPPLE_UI_FIT, .height = GRAPPLE_UI_FIT });
+Grapple_UiPlace(close, GRAPPLE_UI_PCT(0.85f), GRAPPLE_UI_PX(8.0f));
 ```
 
 Percent positions follow the overlay when it resizes. Pixel and em positions
 are available for fixed and font-relative placement.
+
+For names, pins, or callouts tied to an image, use an annotation instead of a
+plain placed label. Its `x` and `y` are normalized image coordinates. They
+follow the image itself when `zoom`, `fill`, or letterboxing changes its drawn
+rectangle:
+
+```c
+Grapple_UiWidget *image = Grapple_UiImage(sky, &(Grapple_UiImageDef){
+    .path = "orion.png", .mode = GRAPPLE_GUI_IMAGE_ZOOM });
+Grapple_UiWidget *name = Grapple_UiImageAnnotation(image, &(Grapple_UiImageAnnotationDef){
+    .text = "Betelgeuse",
+    .x = 0.238f,
+    .y = 0.170f,
+    .side = GRAPPLE_UI_ANNOTATION_LEFT,
+    .gap = 6.0f });
+```
+
+`side` says where the text sits relative to the image point: `RIGHT`, `LEFT`,
+`ABOVE`, or `BELOW`. `gap` is the small pixel space between them. An annotation
+is owned by its image and supports the normal widget operations, including
+`Grapple_UiSetVisible` and `Grapple_UiSetText`.
 
 ### From Lua and Ruby
 
@@ -211,16 +232,34 @@ Overlay placement uses the same units and stays chainable:
 
 ```lua
 local sky = panel:overlay{ height = 480 }
-sky:image{ path = "orion.png" }
-sky:label{ text = "Betelgeuse", width = "fit", height = "fit" }
-   :place{ x = "18%", y = "13%" }
+sky:image{ path = "preview.png" }
+sky:button{ text = "Close", width = "fit", height = "fit" }
+   :place{ x = "85%", y = 8 }
 ```
 
 ```ruby
 sky = panel.overlay(height: 480)
-sky.image(path: "orion.png")
-sky.label(text: "Betelgeuse", width: :fit, height: :fit)
-   .place(x: "18%", y: "13%")
+sky.image(path: "preview.png")
+sky.button(text: "Close", width: :fit, height: :fit)
+   .place(x: "85%", y: 8)
+```
+
+Image-relative annotations are shorter and remain attached through resizing:
+
+```lua
+local image = sky:image{ path = "orion.png", mode = "zoom" }
+local name = image:annotation{
+  text = "Betelgeuse", x = 0.238, y = 0.170, side = "left", gap = 6
+}
+name:visible(false)
+```
+
+```ruby
+image = sky.image(path: "orion.png", mode: :zoom)
+name = image.annotation(
+  text: "Betelgeuse", x: 0.238, y: 0.170, side: :left, gap: 6
+)
+name.visible(false)
 ```
 
 ### Pictures, and pictures you can click

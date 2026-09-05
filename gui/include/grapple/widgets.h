@@ -113,6 +113,15 @@ typedef enum Grapple_UiAlign
     GRAPPLE_UI_RIGHT
 } Grapple_UiAlign;
 
+/** Which side of an image point an annotation occupies. */
+typedef enum Grapple_UiImageAnnotationSide
+{
+    GRAPPLE_UI_ANNOTATION_RIGHT = 0,
+    GRAPPLE_UI_ANNOTATION_LEFT,
+    GRAPPLE_UI_ANNOTATION_ABOVE,
+    GRAPPLE_UI_ANNOTATION_BELOW
+} Grapple_UiImageAnnotationSide;
+
 /** Something happened to `widget`. `user` is whatever the def carried. */
 typedef void (*Grapple_UiCallback)(Grapple_UiWidget *widget, void *user);
 
@@ -343,6 +352,33 @@ typedef struct Grapple_UiImageDef
 
 extern Grapple_UiWidget *Grapple_UiImage(Grapple_UiWidget *parent,
                                              const Grapple_UiImageDef *def);
+
+/** Settings for a short label attached to a point in an image. */
+typedef struct Grapple_UiImageAnnotationDef
+{
+    const char *text;                   /**< Displayed text, copied. */
+    float x;                            /**< Horizontal image coordinate, 0..1. */
+    float y;                            /**< Vertical image coordinate, 0..1. */
+    Grapple_UiImageAnnotationSide side; /**< Side of the point holding the label. */
+    float gap;                          /**< Gap between point and label, in pixels. */
+} Grapple_UiImageAnnotationDef;
+
+/**
+ * @brief Add a label that stays attached to a point in a zoomed image.
+ *
+ * The image must be a direct child of an overlay. Coordinates refer to the
+ * image content rather than its widget slot, so the annotation follows the
+ * same aspect-preserving resize and letterboxing as the image. The annotation
+ * is owned by the image and may be shown or hidden like any other widget.
+ *
+ * @param image Image widget that owns and positions the annotation.
+ * @param def Text, normalized coordinates, side, and pixel gap.
+ * @return The new annotation, or NULL when the arguments or parent layout are
+ *         invalid.
+ * @pre `def->x` and `def->y` are each between 0 and 1 inclusive.
+ */
+extern Grapple_UiWidget *Grapple_UiImageAnnotation(Grapple_UiWidget *image,
+                                                   const Grapple_UiImageAnnotationDef *def);
 
 /**
  * @brief Replace the file-backed image displayed by an image widget.

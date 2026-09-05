@@ -148,6 +148,24 @@ static Grapple_GuiImageMode OptImageMode(lua_State *L, int table)
     return GRAPPLE_GUI_IMAGE_STRETCH;
 }
 
+static Grapple_UiImageAnnotationSide OptAnnotationSide(lua_State *L, int table)
+{
+    const char *text = OptString(L, table, "side", "right");
+    if (SDL_strcasecmp(text, "left") == 0)
+    {
+        return GRAPPLE_UI_ANNOTATION_LEFT;
+    }
+    if (SDL_strcasecmp(text, "above") == 0)
+    {
+        return GRAPPLE_UI_ANNOTATION_ABOVE;
+    }
+    if (SDL_strcasecmp(text, "below") == 0)
+    {
+        return GRAPPLE_UI_ANNOTATION_BELOW;
+    }
+    return GRAPPLE_UI_ANNOTATION_RIGHT;
+}
+
 /* --- callbacks ----------------------------------------------------------- */
 
 /* Script functions live in one registry table keyed by the widget itself, so
@@ -573,6 +591,25 @@ static int LUiImage(lua_State *L)
     return 1;
 }
 
+static int LUiAnnotation(lua_State *L)
+{
+    Grapple_UiWidget *image = CheckWidget(L, 1);
+    const int options = OptionsTable(L, 2);
+    Grapple_UiImageAnnotationDef def = {0};
+    def.text = OptString(L, options, "text", "");
+    def.x = OptNumber(L, options, "x", 0.0f);
+    def.y = OptNumber(L, options, "y", 0.0f);
+    def.side = OptAnnotationSide(L, options);
+    def.gap = OptNumber(L, options, "gap", 6.0f);
+    Grapple_UiWidget *annotation = Grapple_UiImageAnnotation(image, &def);
+    if (annotation == NULL)
+    {
+        return luaL_error(L, "%s", SDL_GetError());
+    }
+    PushWidget(L, annotation);
+    return 1;
+}
+
 static int LUiMessage(lua_State *L)
 {
     UiBox *box = (UiBox *)luaL_checkudata(L, 1, UI_MT);
@@ -818,6 +855,7 @@ bool Grapple_OpenLuaUi(lua_State *L)
                                               {"radio", LUiRadio},
                                               {"progress", LUiProgress},
                                               {"image", LUiImage},
+                                              {"annotation", LUiAnnotation},
                                               {"set_image", LUiSetImage},
                                               {"place", LUiPlace},
                                               {"selected", LUiSelected},

@@ -25,11 +25,12 @@ char *Grapple_NuklearDtoa(char *buffer, double value)
 }
 
 #define NK_IMPLEMENTATION
-#include <grapple/nuklear.h>
+#include "grapple_gui_internal.h"
 
-#include <grapple/gui.h>
 #include <grapple/dialog.h>
+#include <grapple/gui.h>
 #include <grapple/gui_grid.h>
+#include <grapple/nuklear.h>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h> /* the web file button is driven with EM_ASM */
@@ -733,8 +734,8 @@ void Grapple_GuiGridEndOwned(Grapple_Gui *gui)
 
 /* Where a texture lands inside `slot` under a sizing mode. Shared by the
  * widget-slot, explicit-rect and overlay paths so all three agree. */
-static bool FitTexture(SDL_Texture *texture, struct nk_rect slot, Grapple_GuiImageMode mode,
-                       struct nk_rect *out)
+bool Grapple_GuiFitTexture(SDL_Texture *texture, struct nk_rect slot, Grapple_GuiImageMode mode,
+                           struct nk_rect *out)
 {
     float tex_w = 0.0f;
     float tex_h = 0.0f;
@@ -782,7 +783,7 @@ bool Grapple_GuiImage(Grapple_Gui *gui, SDL_Texture *texture,
     }
 
     struct nk_rect dst;
-    if (!FitTexture(texture, slot, mode, &dst))
+    if (!Grapple_GuiFitTexture(texture, slot, mode, &dst))
     {
         return false;
     }
@@ -845,7 +846,7 @@ bool Grapple_GuiDrawTexture(Grapple_Gui *gui, SDL_Texture *texture, SDL_FRect re
     }
     const struct nk_rect slot = nk_rect(rect.x, rect.y, rect.w, rect.h);
     struct nk_rect dst;
-    if (!FitTexture(texture, slot, mode, &dst))
+    if (!Grapple_GuiFitTexture(texture, slot, mode, &dst))
     {
         return false;
     }
@@ -1341,7 +1342,8 @@ bool Grapple_GuiRender(Grapple_Gui *gui)
         SDL_Texture *texture = gui->overlays[i].texture;
         const SDL_FRect r = gui->overlays[i].rect;
         struct nk_rect dst;
-        if (!FitTexture(texture, nk_rect(r.x, r.y, r.w, r.h), gui->overlays[i].mode, &dst))
+        if (!Grapple_GuiFitTexture(texture, nk_rect(r.x, r.y, r.w, r.h), gui->overlays[i].mode,
+                                   &dst))
         {
             continue;
         }

@@ -248,6 +248,24 @@ static Grapple_GuiImageMode OptImageMode(mrb_state *mrb, mrb_value options)
     return GRAPPLE_GUI_IMAGE_STRETCH;
 }
 
+static Grapple_UiImageAnnotationSide OptAnnotationSide(mrb_state *mrb, mrb_value options)
+{
+    const char *text = OptString(mrb, options, "side", "right");
+    if (SDL_strcasecmp(text, "left") == 0)
+    {
+        return GRAPPLE_UI_ANNOTATION_LEFT;
+    }
+    if (SDL_strcasecmp(text, "above") == 0)
+    {
+        return GRAPPLE_UI_ANNOTATION_ABOVE;
+    }
+    if (SDL_strcasecmp(text, "below") == 0)
+    {
+        return GRAPPLE_UI_ANNOTATION_BELOW;
+    }
+    return GRAPPLE_UI_ANNOTATION_RIGHT;
+}
+
 /* --- handlers ------------------------------------------------------------ */
 
 /* Blocks live in one array hung off the Grapple module, indexed by the
@@ -911,6 +929,24 @@ static mrb_value RUiImage(mrb_state *mrb, mrb_value self)
     return WidgetValue(mrb, widget);
 }
 
+static mrb_value RUiAnnotation(mrb_state *mrb, mrb_value self)
+{
+    mrb_value options = mrb_nil_value();
+    mrb_get_args(mrb, "H", &options);
+    Grapple_UiImageAnnotationDef def = {0};
+    def.text = OptString(mrb, options, "text", "");
+    def.x = OptNumber(mrb, options, "x", 0.0f);
+    def.y = OptNumber(mrb, options, "y", 0.0f);
+    def.side = OptAnnotationSide(mrb, options);
+    def.gap = OptNumber(mrb, options, "gap", 6.0f);
+    Grapple_UiWidget *annotation = Grapple_UiImageAnnotation(WidgetOf(mrb, self), &def);
+    if (annotation == NULL)
+    {
+        mrb_raisef(mrb, E_RUNTIME_ERROR, "%s", SDL_GetError());
+    }
+    return WidgetValue(mrb, annotation);
+}
+
 static mrb_value RUiSelected(mrb_state *mrb, mrb_value self)
 {
     mrb_value index = mrb_nil_value();
@@ -1131,6 +1167,7 @@ bool Grapple_OpenRubyUi(mrb_state *mrb)
     mrb_define_method(mrb, widget, "radio", RUiRadio, MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
     mrb_define_method(mrb, widget, "progress", RUiProgress, MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
     mrb_define_method(mrb, widget, "image", RUiImage, MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
+    mrb_define_method(mrb, widget, "annotation", RUiAnnotation, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, widget, "selected", RUiSelected, MRB_ARGS_OPT(1));
     mrb_define_method(mrb, widget, "options", RUiOptions, MRB_ARGS_NONE());
     mrb_define_method(mrb, widget, "set", RUiSet, MRB_ARGS_REQ(1));

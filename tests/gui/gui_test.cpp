@@ -1356,6 +1356,96 @@ std::string MakeBitmap(int width, int height)
 
 } // namespace
 
+TEST_F(GuiHarness, UiAnnotationTracksTheRenderedImageRatherThanItsSlot)
+{
+    const std::string path = MakeBitmap(40, 40);
+
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+
+    Grapple_UiOverlayDef overlay_def{};
+    overlay_def.height = GRAPPLE_UI_PX(100.0f);
+    Grapple_UiWidget *overlay = Grapple_UiOverlay(panel, &overlay_def);
+    ASSERT_NE(overlay, nullptr);
+
+    Grapple_UiImageDef image_def{};
+    image_def.path = path.c_str();
+    image_def.mode = GRAPPLE_GUI_IMAGE_ZOOM;
+    Grapple_UiWidget *image = Grapple_UiImage(overlay, &image_def);
+    ASSERT_NE(image, nullptr);
+
+    Grapple_UiImageAnnotationDef annotation_def{};
+    annotation_def.text = "star";
+    annotation_def.x = 0.25f;
+    annotation_def.y = 0.50f;
+    annotation_def.side = GRAPPLE_UI_ANNOTATION_RIGHT;
+    annotation_def.gap = 6.0f;
+    Grapple_UiWidget *annotation = Grapple_UiImageAnnotation(image, &annotation_def);
+    ASSERT_NE(annotation, nullptr);
+    Grapple_UiImageAnnotationDef left_def = annotation_def;
+    left_def.side = GRAPPLE_UI_ANNOTATION_LEFT;
+    Grapple_UiWidget *left = Grapple_UiImageAnnotation(image, &left_def);
+    ASSERT_NE(left, nullptr);
+    Grapple_UiImageAnnotationDef above_def = annotation_def;
+    above_def.side = GRAPPLE_UI_ANNOTATION_ABOVE;
+    Grapple_UiWidget *above = Grapple_UiImageAnnotation(image, &above_def);
+    ASSERT_NE(above, nullptr);
+    Grapple_UiImageAnnotationDef below_def = annotation_def;
+    below_def.side = GRAPPLE_UI_ANNOTATION_BELOW;
+    Grapple_UiWidget *below = Grapple_UiImageAnnotation(image, &below_def);
+    ASSERT_NE(below, nullptr);
+
+    BeginFrame();
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    Grapple_UiDraw(ui);
+
+    float image_x = 0.0f;
+    float image_y = 0.0f;
+    float image_width = 0.0f;
+    float image_height = 0.0f;
+    ASSERT_TRUE(Grapple_UiBounds(image, &image_x, &image_y, &image_width, &image_height));
+    float annotation_x = 0.0f;
+    float annotation_y = 0.0f;
+    float annotation_width = 0.0f;
+    float annotation_height = 0.0f;
+    ASSERT_TRUE(Grapple_UiBounds(annotation, &annotation_x, &annotation_y, &annotation_width,
+                                 &annotation_height));
+
+    const float rendered_size = SDL_min(image_width, image_height);
+    const float rendered_x = image_x + (image_width - rendered_size) * 0.5f;
+    const float rendered_y = image_y + (image_height - rendered_size) * 0.5f;
+    EXPECT_NEAR(annotation_x, rendered_x + rendered_size * 0.25f + 6.0f, 2.0f);
+    EXPECT_NEAR(annotation_y, rendered_y + rendered_size * 0.50f - annotation_height * 0.5f, 2.0f);
+
+    const float point_x = rendered_x + rendered_size * 0.25f;
+    const float point_y = rendered_y + rendered_size * 0.50f;
+    float left_x = 0.0f;
+    float left_y = 0.0f;
+    ASSERT_TRUE(Grapple_UiBounds(left, &left_x, &left_y, nullptr, nullptr));
+    EXPECT_NEAR(left_x, point_x - 6.0f - annotation_width, 2.0f);
+    EXPECT_NEAR(left_y, point_y - annotation_height * 0.5f, 2.0f);
+    float above_x = 0.0f;
+    float above_y = 0.0f;
+    ASSERT_TRUE(Grapple_UiBounds(above, &above_x, &above_y, nullptr, nullptr));
+    EXPECT_NEAR(above_x, point_x - annotation_width * 0.5f, 2.0f);
+    EXPECT_NEAR(above_y, point_y - 6.0f - annotation_height, 2.0f);
+    float below_x = 0.0f;
+    float below_y = 0.0f;
+    ASSERT_TRUE(Grapple_UiBounds(below, &below_x, &below_y, nullptr, nullptr));
+    EXPECT_NEAR(below_x, point_x - annotation_width * 0.5f, 2.0f);
+    EXPECT_NEAR(below_y, point_y + 6.0f, 2.0f);
+
+    Grapple_UiImageAnnotationDef invalid = annotation_def;
+    invalid.x = 1.1f;
+    EXPECT_EQ(Grapple_UiImageAnnotation(image, &invalid), nullptr);
+    EXPECT_EQ(Grapple_UiImageAnnotation(panel, &annotation_def), nullptr);
+    Grapple_DestroyUi(ui);
+}
+
 TEST_F(GuiHarness, UiImageTakesItsSizeFromTheImage)
 {
     const std::string path = MakeBitmap(64, 48);

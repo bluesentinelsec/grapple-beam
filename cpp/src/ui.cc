@@ -88,6 +88,20 @@ Grapple_GuiImageMode ToC(UiImageMode mode) {
   return GRAPPLE_GUI_IMAGE_STRETCH;
 }
 
+Grapple_UiImageAnnotationSide ToC(UiImageAnnotationSide side) {
+  switch (side) {
+    case UiImageAnnotationSide::kLeft:
+      return GRAPPLE_UI_ANNOTATION_LEFT;
+    case UiImageAnnotationSide::kAbove:
+      return GRAPPLE_UI_ANNOTATION_ABOVE;
+    case UiImageAnnotationSide::kBelow:
+      return GRAPPLE_UI_ANNOTATION_BELOW;
+    case UiImageAnnotationSide::kRight:
+      return GRAPPLE_UI_ANNOTATION_RIGHT;
+  }
+  return GRAPPLE_UI_ANNOTATION_RIGHT;
+}
+
 Status CreationError(const char* object) {
   const char* error = SDL_GetError();
   if (error != nullptr && error[0] != '\0') return Status::FromSdl();
@@ -274,6 +288,17 @@ Result<Widget> Widget::AddImage(const ImageOptions& options) {
   definition.on_click = callback == nullptr ? nullptr : &Widget::RunCallback;
   definition.user = callback;
   return Wrap(Grapple_UiImage(widget_, &definition));
+}
+
+Result<Widget> Widget::AddAnnotation(const ImageAnnotationOptions& options) {
+  if (!valid() || state_ == nullptr) return Status::Error("cannot add to an empty UI widget");
+  Grapple_UiImageAnnotationDef definition{};
+  definition.text = options.text.c_str();
+  definition.x = options.x;
+  definition.y = options.y;
+  definition.side = ToC(options.side);
+  definition.gap = options.gap;
+  return Wrap(Grapple_UiImageAnnotation(widget_, &definition));
 }
 
 Result<Widget> Widget::AddSpacer(const SpacerOptions& options) {

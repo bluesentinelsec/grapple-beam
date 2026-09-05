@@ -70,6 +70,7 @@ struct PanelOptions;
 struct LayoutOptions;
 struct OverlayOptions;
 struct LabelOptions;
+struct ImageAnnotationOptions;
 struct ButtonOptions;
 struct CheckOptions;
 struct SliderOptions;
@@ -153,6 +154,14 @@ enum class UiImageMode {
   kZoom,    /**< Fit inside the slot while preserving aspect ratio. */
   kCenter,  /**< Keep the native pixel size and centre the image. */
   kFill,    /**< Cover the slot while preserving aspect ratio and cropping. */
+};
+
+/** @brief Side of an image point occupied by an annotation. */
+enum class UiImageAnnotationSide {
+  kRight, /**< Place the annotation to the right of the point. */
+  kLeft,  /**< Place the annotation to the left of the point. */
+  kAbove, /**< Place the annotation above the point. */
+  kBelow, /**< Place the annotation below the point. */
 };
 
 /** @brief The pixel rectangle occupied by a widget during its last draw. */
@@ -278,6 +287,19 @@ class Widget {
    * @return A new image handle, or an error if it cannot be loaded or created.
    */
   [[nodiscard]] Result<Widget> AddImage(const ImageOptions& options);
+
+  /**
+   * @brief Add a label attached to a normalized point in this image.
+   *
+   * This widget must be an image that is a direct child of an overlay. The
+   * annotation remains attached to the image content when it is resized or
+   * letterboxed.
+   *
+   * @param options Text, image coordinates, side, and gap.
+   * @return A new annotation handle, or an error for an invalid parent or
+   *         coordinate.
+   */
+  [[nodiscard]] Result<Widget> AddAnnotation(const ImageAnnotationOptions& options);
 
   /**
    * @brief Add blank layout space.
@@ -482,6 +504,15 @@ struct LabelOptions {
   UiLength height = UiLength::Stretch(); /**< Requested height. */
   UiAlign align = UiAlign::kLeft;        /**< Text alignment. */
   bool wrap = false;                     /**< Whether long text wraps. */
+};
+
+/** @brief Settings for a short label attached to a point in an image. */
+struct ImageAnnotationOptions {
+  std::string text; /**< Displayed text, copied. */
+  float x = 0.0f;   /**< Horizontal image coordinate, 0..1. */
+  float y = 0.0f;   /**< Vertical image coordinate, 0..1. */
+  UiImageAnnotationSide side = UiImageAnnotationSide::kRight; /**< Label side. */
+  float gap = 6.0f;                                           /**< Point-to-label gap in pixels. */
 };
 
 /** @brief Settings for a push button. */

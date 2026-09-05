@@ -231,4 +231,53 @@ TEST(CppWidgets, PlacesWidgetsInsideAnOverlay)
     EXPECT_NEAR(label_bounds->y, background_bounds->y + background_bounds->height * 0.40f, 2.0f);
 }
 
+TEST(CppWidgets, AddsAnAnnotationOwnedByAnImage)
+{
+    grapple::Result<grapple::SdlInit> sdl = grapple::SdlInit::Create(0);
+    ASSERT_TRUE(sdl.ok()) << sdl.status().message();
+    grapple::Result<grapple::Surface> canvas = grapple::Surface::Create(320, 200);
+    ASSERT_TRUE(canvas.ok()) << canvas.status().message();
+    grapple::Result<grapple::Renderer> renderer = grapple::Renderer::CreateSoftware(*canvas);
+    ASSERT_TRUE(renderer.ok()) << renderer.status().message();
+    grapple::Result<grapple::Ui> ui_result = grapple::Ui::Open(renderer->get());
+    ASSERT_TRUE(ui_result.ok()) << ui_result.status().message();
+    grapple::Ui ui = std::move(ui_result).value();
+
+    grapple::PanelOptions panel_options;
+    grapple::Result<grapple::Widget> panel = ui.AddPanel(panel_options);
+    ASSERT_TRUE(panel.ok()) << panel.status().message();
+    grapple::OverlayOptions overlay_options;
+    overlay_options.height = grapple::UiLength::Pixels(100.0f);
+    grapple::Result<grapple::Widget> overlay = panel->AddOverlay(overlay_options);
+    ASSERT_TRUE(overlay.ok()) << overlay.status().message();
+
+    SDL_Texture *texture = SDL_CreateTexture(renderer->get(), SDL_PIXELFORMAT_RGBA32,
+                                             SDL_TEXTUREACCESS_TARGET, 40, 40);
+    ASSERT_NE(texture, nullptr);
+    grapple::ImageOptions image_options;
+    image_options.texture = texture;
+    image_options.mode = grapple::UiImageMode::kZoom;
+    grapple::Result<grapple::Widget> image = overlay->AddImage(image_options);
+    ASSERT_TRUE(image.ok()) << image.status().message();
+
+    grapple::ImageAnnotationOptions annotation_options;
+    annotation_options.text = "star";
+    annotation_options.x = 0.5f;
+    annotation_options.y = 0.5f;
+    annotation_options.side = grapple::UiImageAnnotationSide::kBelow;
+    grapple::Result<grapple::Widget> annotation = image->AddAnnotation(annotation_options);
+    ASSERT_TRUE(annotation.ok()) << annotation.status().message();
+
+    ui.Draw();
+    EXPECT_TRUE(annotation->Bounds().ok());
+    annotation->SetVisible(false);
+    annotation->SetText("hidden star");
+
+    grapple::ImageAnnotationOptions invalid_options = annotation_options;
+    invalid_options.x = -0.1f;
+    EXPECT_FALSE(image->AddAnnotation(invalid_options).ok());
+    EXPECT_FALSE(panel->AddAnnotation(annotation_options).ok());
+    SDL_DestroyTexture(texture);
+}
+
 } // namespace

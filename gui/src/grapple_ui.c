@@ -14,10 +14,11 @@
  * lets the rest share what is left; a column gives each child a row of its
  * own. That is Tk's pack, and it is about forty lines of it.
  */
-#include <grapple/widgets.h>
+#include "grapple_gui_internal.h"
 
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
+#include <grapple/widgets.h>
 
 #define MAX_TEXT 1024
 
@@ -33,6 +34,7 @@ typedef enum NodeKind
     NODE_SLIDER,
     NODE_ENTRY,
     NODE_IMAGE,
+    NODE_IMAGE_ANNOTATION,
     NODE_SELECT,
     NODE_RADIO,
     NODE_PROGRESS,
@@ -92,6 +94,13 @@ struct Grapple_UiWidget
     SDL_Texture *texture;
     bool owns_texture;
     Grapple_GuiImageMode image_mode;
+
+    /* An image annotation's point is normalized to the rendered image, not
+       the possibly letterboxed widget slot. */
+    float annotation_x;
+    float annotation_y;
+    float annotation_gap;
+    Grapple_UiImageAnnotationSide annotation_side;
 
     /* Where this node landed last frame, so something can be anchored to
        it. Nuklear knows only during the frame; the tree remembers. */
@@ -216,6 +225,7 @@ static float ContentWidth(Grapple_UiWidget *node)
         return w;
     }
     case NODE_LABEL:
+    case NODE_IMAGE_ANNOTATION:
     case NODE_BUTTON:
     case NODE_CHECK:
     case NODE_ENTRY:
@@ -897,6 +907,31 @@ Grapple_UiWidget *Grapple_UiImage(Grapple_UiWidget *parent, const Grapple_UiImag
     return node;
 }
 
+Grapple_UiWidget *Grapple_UiImageAnnotation(Grapple_UiWidget *image,
+                                            const Grapple_UiImageAnnotationDef *def)
+{
+    if (image == NULL || def == NULL || image->kind != NODE_IMAGE || image->parent == NULL ||
+        image->parent->kind != NODE_OVERLAY || !(def->x >= 0.0f && def->x <= 1.0f) ||
+        !(def->y >= 0.0f && def->y <= 1.0f) || !(def->gap >= 0.0f))
+    {
+        SDL_InvalidParamError("image/def");
+        return NULL;
+    }
+    Grapple_UiWidget *node = NewNode(image->ui, image, NODE_IMAGE_ANNOTATION);
+    if (node == NULL || !SetText(node, def->text, 0))
+    {
+        Grapple_UiRemove(node);
+        return NULL;
+    }
+    node->width = GRAPPLE_UI_FIT;
+    node->height = GRAPPLE_UI_FIT;
+    node->annotation_x = def->x;
+    node->annotation_y = def->y;
+    node->annotation_gap = def->gap;
+    node->annotation_side = def->side;
+    return node;
+}
+
 void Grapple_UiMessage(Grapple_Ui *ui, const char *title, const char *text)
 {
     SDL_Window *window = NULL;
@@ -1176,6 +1211,7 @@ static void DrawLeaf(Grapple_UiWidget *node)
     switch (node->kind)
     {
     case NODE_LABEL:
+    case NODE_IMAGE_ANNOTATION:
         if (node->wrap)
         {
             nk_label_wrap(ctx, node->text);
@@ -1459,11 +1495,82 @@ static void DrawColumn(Grapple_UiWidget *column, float available_width)
 /* An overlay is one Nuklear layout space. Direct children receive explicit
    rectangles, in creation order, so labels and controls can sit over an
    image without leaving the retained tree. */
+static int OverlayWidgetCount(Grapple_UiWidget *overlay)
+{
+    int count = 0;
+    for (Grapple_UiWidget *child = overlay->first_child; child != NULL; child = child->next_sibling)
+    {
+        if (!child->visible)
+        {
+            continue;
+        }
+        count++;
+        if (child->kind == NODE_IMAGE)
+        {
+            count += VisibleChildren(child);
+        }
+    }
+    return count;
+}
+
+static struct nk_rect ImageContentBounds(Grapple_UiWidget *image)
+{
+    struct nk_rect content;
+    if (image->texture == NULL || image->on_click != NULL ||
+        !Grapple_GuiFitTexture(image->texture, image->last_bounds, image->image_mode, &content))
+    {
+        return image->last_bounds;
+    }
+    return content;
+}
+
+static void DrawImageAnnotations(Grapple_UiWidget *image, Grapple_UiWidget *overlay)
+{
+    const struct nk_rect content = ImageContentBounds(image);
+    struct nk_context *ctx = Grapple_GuiContext(overlay->ui->gui);
+    const float image_x = Resolve(image, image->place_x, overlay->last_bounds.w, 0.0f);
+    const float image_y = Resolve(image, image->place_y, overlay->last_bounds.h, 0.0f);
+    const float space_x = image->last_bounds.x - image_x;
+    const float space_y = image->last_bounds.y - image_y;
+    for (Grapple_UiWidget *annotation = image->first_child; annotation != NULL;
+         annotation = annotation->next_sibling)
+    {
+        if (!annotation->visible)
+        {
+            continue;
+        }
+
+        const float width = ContentWidth(annotation);
+        const float height = RowHeightOf(annotation, 0.0f);
+        const float point_x = content.x + content.w * annotation->annotation_x;
+        const float point_y = content.y + content.h * annotation->annotation_y;
+        float x = point_x + annotation->annotation_gap;
+        float y = point_y - height * 0.5f;
+        if (annotation->annotation_side == GRAPPLE_UI_ANNOTATION_LEFT)
+        {
+            x = point_x - annotation->annotation_gap - width;
+        }
+        else if (annotation->annotation_side == GRAPPLE_UI_ANNOTATION_ABOVE)
+        {
+            x = point_x - width * 0.5f;
+            y = point_y - annotation->annotation_gap - height;
+        }
+        else if (annotation->annotation_side == GRAPPLE_UI_ANNOTATION_BELOW)
+        {
+            x = point_x - width * 0.5f;
+            y = point_y + annotation->annotation_gap;
+        }
+
+        nk_layout_space_push(ctx, nk_rect(x - space_x, y - space_y, width, height));
+        DrawLeaf(annotation);
+    }
+}
+
 static void DrawOverlay(Grapple_UiWidget *overlay, float available_width)
 {
     struct nk_context *ctx = Grapple_GuiContext(overlay->ui->gui);
     const float height = RowHeightOf(overlay, 0.0f);
-    nk_layout_space_begin(ctx, NK_STATIC, height, VisibleChildren(overlay));
+    nk_layout_space_begin(ctx, NK_STATIC, height, OverlayWidgetCount(overlay));
     overlay->last_bounds = nk_layout_space_bounds(ctx);
     overlay->drawn = true;
     const float space_width =
@@ -1492,6 +1599,10 @@ static void DrawOverlay(Grapple_UiWidget *overlay, float available_width)
 
         nk_layout_space_push(ctx, nk_rect(x, y, width, child_height));
         DrawLeaf(c);
+        if (c->kind == NODE_IMAGE)
+        {
+            DrawImageAnnotations(c, overlay);
+        }
     }
     nk_layout_space_end(ctx);
 }
