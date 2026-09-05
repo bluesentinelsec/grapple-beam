@@ -135,6 +135,22 @@ and a panel is a column. Fixed-width children keep their width and the rest
 share the remainder, which is Tk's `pack` and maps directly onto Nuklear's
 row template.
 
+Use `Grapple_UiOverlay` when widgets belong on top of one another, such as
+labels over a map or controls over a preview. Direct children are drawn in
+creation order, and `Grapple_UiPlace` positions their top-left corners:
+
+```c
+Grapple_UiWidget *sky = Grapple_UiOverlay(panel, &(Grapple_UiOverlayDef){
+    .height = GRAPPLE_UI_PX(480) });
+Grapple_UiImage(sky, &(Grapple_UiImageDef){ .path = "orion.png" });
+Grapple_UiWidget *name = Grapple_UiLabel(sky, &(Grapple_UiLabelDef){
+    .text = "Betelgeuse", .width = GRAPPLE_UI_FIT, .height = GRAPPLE_UI_FIT });
+Grapple_UiPlace(name, GRAPPLE_UI_PCT(0.18f), GRAPPLE_UI_PCT(0.13f));
+```
+
+Percent positions follow the overlay when it resizes. Pixel and em positions
+are available for fixed and font-relative placement.
+
 ### From Lua and Ruby
 
 Each language gets its own spelling of the same tree — a table in Lua,
@@ -190,6 +206,22 @@ Lengths take the units as strings: `24`, `"2.4em"`, `"25%"`, `"fit"`.
 Widgets own their state (`answer:set(...)`, `entry:text()`,
 `check:checked()`), and are owned by their parent, so nothing needs
 destroying.
+
+Overlay placement uses the same units and stays chainable:
+
+```lua
+local sky = panel:overlay{ height = 480 }
+sky:image{ path = "orion.png" }
+sky:label{ text = "Betelgeuse", width = "fit", height = "fit" }
+   :place{ x = "18%", y = "13%" }
+```
+
+```ruby
+sky = panel.overlay(height: 480)
+sky.image(path: "orion.png")
+sky.label(text: "Betelgeuse", width: :fit, height: :fit)
+   .place(x: "18%", y: "13%")
+```
 
 ### Pictures, and pictures you can click
 

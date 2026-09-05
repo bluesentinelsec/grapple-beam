@@ -664,6 +664,15 @@ static mrb_value Strip(mrb_state *mrb, mrb_value self, bool row)
 static mrb_value RUiRow(mrb_state *mrb, mrb_value self) { return Strip(mrb, self, true); }
 static mrb_value RUiColumn(mrb_state *mrb, mrb_value self) { return Strip(mrb, self, false); }
 
+static mrb_value RUiOverlay(mrb_state *mrb, mrb_value self)
+{
+    mrb_value options = mrb_nil_value();
+    mrb_get_args(mrb, "|H", &options);
+    Grapple_UiOverlayDef def = {0};
+    def.height = OptLength(mrb, options, "height");
+    return WidgetValue(mrb, Grapple_UiOverlay(WidgetOf(mrb, self), &def));
+}
+
 static mrb_value RUiLabel(mrb_state *mrb, mrb_value self)
 {
     mrb_value options = mrb_nil_value();
@@ -990,6 +999,18 @@ static mrb_value RUiSetImage(mrb_state *mrb, mrb_value self)
     return self;
 }
 
+static mrb_value RUiPlace(mrb_state *mrb, mrb_value self)
+{
+    mrb_value options = mrb_nil_value();
+    mrb_get_args(mrb, "H", &options);
+    if (!Grapple_UiPlace(WidgetOf(mrb, self), OptLength(mrb, options, "x"),
+                         OptLength(mrb, options, "y")))
+    {
+        mrb_raisef(mrb, E_RUNTIME_ERROR, "%s", SDL_GetError());
+    }
+    return self;
+}
+
 static mrb_value RUiText(mrb_state *mrb, mrb_value self)
 {
     return mrb_str_new_cstr(mrb, Grapple_UiText(WidgetOf(mrb, self)));
@@ -1099,6 +1120,7 @@ bool Grapple_OpenRubyUi(mrb_state *mrb)
     g_widget_class = widget;
     mrb_define_method(mrb, widget, "row", RUiRow, MRB_ARGS_OPT(1));
     mrb_define_method(mrb, widget, "column", RUiColumn, MRB_ARGS_OPT(1));
+    mrb_define_method(mrb, widget, "overlay", RUiOverlay, MRB_ARGS_OPT(1));
     mrb_define_method(mrb, widget, "label", RUiLabel, MRB_ARGS_OPT(1));
     mrb_define_method(mrb, widget, "button", RUiButton, MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
     mrb_define_method(mrb, widget, "check", RUiCheck, MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
@@ -1113,6 +1135,7 @@ bool Grapple_OpenRubyUi(mrb_state *mrb)
     mrb_define_method(mrb, widget, "options", RUiOptions, MRB_ARGS_NONE());
     mrb_define_method(mrb, widget, "set", RUiSet, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, widget, "set_image", RUiSetImage, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, widget, "place", RUiPlace, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, widget, "text", RUiText, MRB_ARGS_NONE());
     mrb_define_method(mrb, widget, "checked?", RUiChecked, MRB_ARGS_NONE());
     mrb_define_method(mrb, widget, "value", RUiValue, MRB_ARGS_NONE());

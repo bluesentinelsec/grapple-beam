@@ -129,6 +129,13 @@ Result<Widget> Widget::AddColumn(const LayoutOptions& options) {
   return Wrap(Grapple_UiColumn(widget_, &definition));
 }
 
+Result<Widget> Widget::AddOverlay(const OverlayOptions& options) {
+  if (!valid() || state_ == nullptr) return Status::Error("cannot add to an empty UI widget");
+  Grapple_UiOverlayDef definition{};
+  definition.height = ToC(options.height);
+  return Wrap(Grapple_UiOverlay(widget_, &definition));
+}
+
 Result<Widget> Widget::AddLabel(const LabelOptions& options) {
   if (!valid() || state_ == nullptr) return Status::Error("cannot add to an empty UI widget");
   Grapple_UiLabelDef definition{};
@@ -297,6 +304,11 @@ Status Widget::SetImage(const std::string& path) {
 
 Status Widget::SetImage(SDL_Texture* texture) {
   if (!Grapple_UiSetImageTexture(widget_, texture)) return Status::FromSdl();
+  return Status::Ok();
+}
+
+Status Widget::Place(UiLength x, UiLength y) {
+  if (!Grapple_UiPlace(widget_, ToC(x), ToC(y))) return Status::FromSdl();
   return Status::Ok();
 }
 

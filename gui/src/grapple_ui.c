@@ -26,6 +26,7 @@ typedef enum NodeKind
     NODE_PANEL = 0,
     NODE_ROW,
     NODE_COLUMN,
+    NODE_OVERLAY,
     NODE_LABEL,
     NODE_BUTTON,
     NODE_CHECK,
@@ -52,6 +53,8 @@ struct Grapple_UiWidget
        anything depends on the kind, and the defaults are all "stretch". */
     Grapple_UiLength width;
     Grapple_UiLength height;
+    Grapple_UiLength place_x;
+    Grapple_UiLength place_y;
     Grapple_UiAlign align;
     float spacing;
     float padding;
@@ -262,7 +265,8 @@ static float RowHeightOf(Grapple_UiWidget *node, float available_height)
 
 static bool IsContainer(const Grapple_UiWidget *node)
 {
-    return node->kind == NODE_PANEL || node->kind == NODE_ROW || node->kind == NODE_COLUMN;
+    return node->kind == NODE_PANEL || node->kind == NODE_ROW || node->kind == NODE_COLUMN ||
+           node->kind == NODE_OVERLAY;
 }
 
 static int VisibleChildren(Grapple_UiWidget *node)
@@ -540,6 +544,21 @@ Grapple_UiWidget *Grapple_UiRow(Grapple_UiWidget *parent, const Grapple_UiStripD
 Grapple_UiWidget *Grapple_UiColumn(Grapple_UiWidget *parent, const Grapple_UiStripDef *def)
 {
     return NewStrip(parent, def, NODE_COLUMN);
+}
+
+Grapple_UiWidget *Grapple_UiOverlay(Grapple_UiWidget *parent, const Grapple_UiOverlayDef *def)
+{
+    if (parent == NULL)
+    {
+        SDL_InvalidParamError("parent");
+        return NULL;
+    }
+    Grapple_UiWidget *node = NewNode(parent->ui, parent, NODE_OVERLAY);
+    if (node != NULL && def != NULL)
+    {
+        node->height = def->height;
+    }
+    return node;
 }
 
 Grapple_UiWidget *Grapple_UiLabel(Grapple_UiWidget *parent, const Grapple_UiLabelDef *def)
@@ -926,6 +945,17 @@ Grapple_UiWidget *Grapple_UiRaw(Grapple_UiWidget *parent, const Grapple_UiRawDef
     node->width = def->width;
     node->height = def->height;
     return node;
+}
+
+bool Grapple_UiPlace(Grapple_UiWidget *widget, Grapple_UiLength x, Grapple_UiLength y)
+{
+    if (widget == NULL || widget->parent == NULL || widget->parent->kind != NODE_OVERLAY)
+    {
+        return SDL_InvalidParamError("overlay child");
+    }
+    widget->place_x = x;
+    widget->place_y = y;
+    return true;
 }
 
 /* --- reading and changing ------------------------------------------------ */
@@ -1386,7 +1416,7 @@ static void DrawColumn(Grapple_UiWidget *column, float available_width)
         {
             continue;
         }
-        if (c->kind == NODE_ROW || c->kind == NODE_COLUMN)
+        if (c->kind == NODE_ROW || c->kind == NODE_COLUMN || c->kind == NODE_OVERLAY)
         {
             DrawNode(c, available_width);
             continue;
@@ -1426,11 +1456,55 @@ static void DrawColumn(Grapple_UiWidget *column, float available_width)
     }
 }
 
+/* An overlay is one Nuklear layout space. Direct children receive explicit
+   rectangles, in creation order, so labels and controls can sit over an
+   image without leaving the retained tree. */
+static void DrawOverlay(Grapple_UiWidget *overlay, float available_width)
+{
+    struct nk_context *ctx = Grapple_GuiContext(overlay->ui->gui);
+    const float height = RowHeightOf(overlay, 0.0f);
+    nk_layout_space_begin(ctx, NK_STATIC, height, VisibleChildren(overlay));
+    overlay->last_bounds = nk_layout_space_bounds(ctx);
+    overlay->drawn = true;
+    const float space_width =
+        overlay->last_bounds.w > 0.0f ? overlay->last_bounds.w : available_width;
+    const float space_height = overlay->last_bounds.h;
+
+    for (Grapple_UiWidget *c = overlay->first_child; c != NULL; c = c->next_sibling)
+    {
+        if (!c->visible)
+        {
+            continue;
+        }
+
+        const float x = Resolve(c, c->place_x, space_width, 0.0f);
+        const float y = Resolve(c, c->place_y, space_height, 0.0f);
+        float width = Resolve(c, c->width, space_width, ContentWidth(c));
+        float child_height = Resolve(c, c->height, space_height, LineHeight(c->ui));
+        if (width <= 0.0f)
+        {
+            width = SDL_max(0.0f, space_width - x);
+        }
+        if (child_height <= 0.0f)
+        {
+            child_height = SDL_max(0.0f, space_height - y);
+        }
+
+        nk_layout_space_push(ctx, nk_rect(x, y, width, child_height));
+        DrawLeaf(c);
+    }
+    nk_layout_space_end(ctx);
+}
+
 static void DrawNode(Grapple_UiWidget *node, float available_width)
 {
     if (node->kind == NODE_ROW)
     {
         DrawRow(node, available_width);
+    }
+    else if (node->kind == NODE_OVERLAY)
+    {
+        DrawOverlay(node, available_width);
     }
     else
     {

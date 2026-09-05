@@ -187,4 +187,48 @@ TEST(CppWidgets, ReplacesAnImageWithoutRebuildingTheWidgetTree)
     SDL_DestroyTexture(first);
 }
 
+TEST(CppWidgets, PlacesWidgetsInsideAnOverlay)
+{
+    grapple::Result<grapple::SdlInit> sdl = grapple::SdlInit::Create(0);
+    ASSERT_TRUE(sdl.ok()) << sdl.status().message();
+    grapple::Result<grapple::Surface> canvas = grapple::Surface::Create(320, 200);
+    ASSERT_TRUE(canvas.ok()) << canvas.status().message();
+    grapple::Result<grapple::Renderer> renderer = grapple::Renderer::CreateSoftware(*canvas);
+    ASSERT_TRUE(renderer.ok()) << renderer.status().message();
+    grapple::Result<grapple::Ui> ui_result = grapple::Ui::Open(renderer->get());
+    ASSERT_TRUE(ui_result.ok()) << ui_result.status().message();
+    grapple::Ui ui = std::move(ui_result).value();
+
+    grapple::PanelOptions panel_options;
+    grapple::Result<grapple::Widget> panel = ui.AddPanel(panel_options);
+    ASSERT_TRUE(panel.ok()) << panel.status().message();
+
+    grapple::OverlayOptions overlay_options;
+    overlay_options.height = grapple::UiLength::Pixels(120.0f);
+    grapple::Result<grapple::Widget> overlay = panel->AddOverlay(overlay_options);
+    ASSERT_TRUE(overlay.ok()) << overlay.status().message();
+
+    grapple::SpacerOptions background_options;
+    grapple::Result<grapple::Widget> background = overlay->AddSpacer(background_options);
+    ASSERT_TRUE(background.ok()) << background.status().message();
+
+    grapple::LabelOptions label_options;
+    label_options.text = "Orion";
+    label_options.width = grapple::UiLength::Fit();
+    label_options.height = grapple::UiLength::Fit();
+    grapple::Result<grapple::Widget> label = overlay->AddLabel(label_options);
+    ASSERT_TRUE(label.ok()) << label.status().message();
+    grapple::Status placed =
+        label->Place(grapple::UiLength::Percent(0.25f), grapple::UiLength::Percent(0.40f));
+    EXPECT_TRUE(placed.ok()) << placed.message();
+
+    ui.Draw();
+    grapple::Result<grapple::UiBounds> background_bounds = background->Bounds();
+    grapple::Result<grapple::UiBounds> label_bounds = label->Bounds();
+    ASSERT_TRUE(background_bounds.ok()) << background_bounds.status().message();
+    ASSERT_TRUE(label_bounds.ok()) << label_bounds.status().message();
+    EXPECT_NEAR(label_bounds->x, background_bounds->x + background_bounds->width * 0.25f, 2.0f);
+    EXPECT_NEAR(label_bounds->y, background_bounds->y + background_bounds->height * 0.40f, 2.0f);
+}
+
 } // namespace

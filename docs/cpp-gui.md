@@ -165,6 +165,41 @@ Stretch is the default. Fixed children keep their requested size, and
 stretching siblings share what remains. Layout is recalculated when the
 window or font changes; callers do not maintain coordinates.
 
+Use an overlay when widgets belong on top of one another, such as labels over
+a map or controls over a preview. Direct children draw in creation order:
+
+```cpp
+grapple::OverlayOptions sky_options;
+sky_options.height = grapple::UiLength::Pixels(480.0f);
+grapple::Result<grapple::Widget> sky_result = panel.AddOverlay(sky_options);
+if (!sky_result.ok()) {
+  return 1;
+}
+grapple::Widget sky = std::move(sky_result).value();
+
+grapple::ImageOptions image_options;
+image_options.path = "orion.png";
+grapple::Result<grapple::Widget> image = sky.AddImage(image_options);
+
+grapple::LabelOptions star_options;
+star_options.text = "Betelgeuse";
+star_options.width = grapple::UiLength::Fit();
+star_options.height = grapple::UiLength::Fit();
+grapple::Result<grapple::Widget> star = sky.AddLabel(star_options);
+if (!image.ok() || !star.ok()) {
+  return 1;
+}
+grapple::Status placed = star->Place(grapple::UiLength::Percent(0.18f),
+                                     grapple::UiLength::Percent(0.13f));
+if (!placed.ok()) {
+  return 1;
+}
+```
+
+Percentage positions follow the overlay when it resizes. `Place` uses the
+widget's top-left corner; its normal width and height options determine its
+size.
+
 ## Widgets own their state
 
 Keep a `Widget` handle when the program needs to read or change that widget.

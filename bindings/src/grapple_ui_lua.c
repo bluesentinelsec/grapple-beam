@@ -308,6 +308,16 @@ static int Strip(lua_State *L, bool row)
 static int LUiRow(lua_State *L) { return Strip(L, true); }
 static int LUiColumn(lua_State *L) { return Strip(L, false); }
 
+static int LUiOverlay(lua_State *L)
+{
+    Grapple_UiWidget *parent = CheckWidget(L, 1);
+    const int options = OptionsTable(L, 2);
+    Grapple_UiOverlayDef def = {0};
+    def.height = OptLength(L, options, "height");
+    PushWidget(L, Grapple_UiOverlay(parent, &def));
+    return 1;
+}
+
 static int LUiLabel(lua_State *L)
 {
     Grapple_UiWidget *parent = CheckWidget(L, 1);
@@ -626,6 +636,18 @@ static int LUiSetImage(lua_State *L)
     return 1;
 }
 
+static int LUiPlace(lua_State *L)
+{
+    Grapple_UiWidget *widget = CheckWidget(L, 1);
+    const int options = OptionsTable(L, 2);
+    if (!Grapple_UiPlace(widget, OptLength(L, options, "x"), OptLength(L, options, "y")))
+    {
+        return luaL_error(L, "%s", SDL_GetError());
+    }
+    lua_pushvalue(L, 1);
+    return 1;
+}
+
 static int LUiGetText(lua_State *L)
 {
     lua_pushstring(L, Grapple_UiText(CheckWidget(L, 1)));
@@ -782,17 +804,34 @@ bool Grapple_OpenLuaUi(lua_State *L)
 {
     static const luaL_Reg ui_methods[] = {
         {"panel", LUiPanel}, {"draw", LUiDraw}, {"message", LUiMessage}, {NULL, NULL}};
-    static const luaL_Reg widget_methods[] = {
-        {"row", LUiRow},         {"column", LUiColumn},  {"label", LUiLabel},
-        {"button", LUiButton},   {"check", LUiCheck},    {"slider", LUiSlider},
-        {"entry", LUiEntry},     {"spacer", LUiSpacer},  {"set", LUiSet},
-        {"select", LUiSelect},   {"radio", LUiRadio},    {"progress", LUiProgress},
-        {"image", LUiImage},     {"set_image", LUiSetImage},
-        {"selected", LUiSelected}, {"options", LUiOptions},
-        {"text", LUiGetText},    {"checked", LUiGetChecked}, {"value", LUiGetValue},
-        {"visible", LUiVisible}, {"disabled", LUiDisabled},  {"remove", LUiRemove},
-        {"invoke", LUiInvoke},   {"value_text", LUiValueText},
-        {"clear", LUiClear},     {NULL, NULL}};
+    static const luaL_Reg widget_methods[] = {{"row", LUiRow},
+                                              {"column", LUiColumn},
+                                              {"overlay", LUiOverlay},
+                                              {"label", LUiLabel},
+                                              {"button", LUiButton},
+                                              {"check", LUiCheck},
+                                              {"slider", LUiSlider},
+                                              {"entry", LUiEntry},
+                                              {"spacer", LUiSpacer},
+                                              {"set", LUiSet},
+                                              {"select", LUiSelect},
+                                              {"radio", LUiRadio},
+                                              {"progress", LUiProgress},
+                                              {"image", LUiImage},
+                                              {"set_image", LUiSetImage},
+                                              {"place", LUiPlace},
+                                              {"selected", LUiSelected},
+                                              {"options", LUiOptions},
+                                              {"text", LUiGetText},
+                                              {"checked", LUiGetChecked},
+                                              {"value", LUiGetValue},
+                                              {"visible", LUiVisible},
+                                              {"disabled", LUiDisabled},
+                                              {"remove", LUiRemove},
+                                              {"invoke", LUiInvoke},
+                                              {"value_text", LUiValueText},
+                                              {"clear", LUiClear},
+                                              {NULL, NULL}};
 
     if (L == NULL)
     {

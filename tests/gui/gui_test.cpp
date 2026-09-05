@@ -1242,6 +1242,52 @@ TEST_F(GuiHarness, UiFitIsMeasuredAndStretchIsNot)
     Grapple_DestroyUi(ui);
 }
 
+TEST_F(GuiHarness, UiOverlayPlacesChildrenOverTheSameArea)
+{
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+
+    Grapple_UiOverlayDef overlay_def{};
+    overlay_def.height = GRAPPLE_UI_PX(120.0f);
+    Grapple_UiWidget *overlay = Grapple_UiOverlay(panel, &overlay_def);
+    ASSERT_NE(overlay, nullptr);
+
+    Grapple_UiSpacerDef background_def{};
+    Grapple_UiWidget *background = Grapple_UiSpacer(overlay, &background_def);
+    ASSERT_NE(background, nullptr);
+
+    Grapple_UiLabelDef label_def{};
+    label_def.text = "placed";
+    label_def.width = GRAPPLE_UI_FIT;
+    label_def.height = GRAPPLE_UI_FIT;
+    Grapple_UiWidget *label = Grapple_UiLabel(overlay, &label_def);
+    ASSERT_NE(label, nullptr);
+    ASSERT_TRUE(Grapple_UiPlace(label, GRAPPLE_UI_PCT(0.25f), GRAPPLE_UI_PCT(0.40f)));
+
+    BeginFrame();
+    Grapple_GuiInputBegin(gui_);
+    Grapple_GuiInputEnd(gui_);
+    Grapple_UiDraw(ui);
+
+    float background_x = 0.0f;
+    float background_y = 0.0f;
+    float background_width = 0.0f;
+    float background_height = 0.0f;
+    ASSERT_TRUE(Grapple_UiBounds(background, &background_x, &background_y, &background_width,
+                                 &background_height));
+    float label_x = 0.0f;
+    float label_y = 0.0f;
+    ASSERT_TRUE(Grapple_UiBounds(label, &label_x, &label_y, nullptr, nullptr));
+    EXPECT_NEAR(label_x, background_x + background_width * 0.25f, 2.0f);
+    EXPECT_NEAR(label_y, background_y + background_height * 0.40f, 2.0f);
+
+    EXPECT_FALSE(Grapple_UiPlace(panel, GRAPPLE_UI_PX(1.0f), GRAPPLE_UI_PX(1.0f)));
+    Grapple_DestroyUi(ui);
+}
+
 TEST_F(GuiHarness, UiWidgetStateOutlivesTheFrame)
 {
     Grapple_Ui *ui = Grapple_CreateUi(gui_);

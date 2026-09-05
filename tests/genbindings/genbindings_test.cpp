@@ -1478,8 +1478,14 @@ TEST(GenLua, ImageContentsCanChangeInPlace)
         "local engine = Grapple.engine{ headless = true, auto_mount = false }\n"
         "local ui = Grapple.ui(engine)\n"
         "local panel = ui:panel{}\n"
-        "local image = panel:image{ path = '" + heads + "', mode = 'zoom' }\n"
-        "assert(image:set_image('" + tails + "') == image, 'set_image is not chainable')\n";
+        "local overlay = panel:overlay{ height = 100 }\n"
+        "local image = overlay:image{ path = '" +
+        heads +
+        "', mode = 'zoom' }\n"
+        "local label = overlay:label{ text = 'star', width = 'fit', height = 'fit' }\n"
+        "assert(label:place{ x = '25%', y = 10 } == label, 'place is not chainable')\n"
+        "assert(image:set_image('" +
+        tails + "') == image, 'set_image is not chainable')\n";
     RunLua(script.c_str());
 }
 
@@ -1494,9 +1500,14 @@ TEST(GenRuby, ImageContentsCanChangeInPlace)
         "engine = Grapple.engine(headless: true, auto_mount: false)\n"
         "ui = Grapple.ui(engine)\n"
         "panel = ui.panel\n"
-        "image = panel.image(path: '" + heads + "', mode: :zoom)\n"
-        "raise 'set_image is not chainable' unless image.set_image('" + tails +
-        "').equal?(image)\n";
+        "overlay = panel.overlay(height: 100)\n"
+        "image = overlay.image(path: '" +
+        heads +
+        "', mode: :zoom)\n"
+        "label = overlay.label(text: 'star', width: :fit, height: :fit)\n"
+        "raise 'place is not chainable' unless label.place(x: '25%', y: 10).equal?(label)\n"
+        "raise 'set_image is not chainable' unless image.set_image('" +
+        tails + "').equal?(image)\n";
     RunRuby(script.c_str());
 }
 

@@ -68,6 +68,7 @@ struct UiState;
 
 struct PanelOptions;
 struct LayoutOptions;
+struct OverlayOptions;
 struct LabelOptions;
 struct ButtonOptions;
 struct CheckOptions;
@@ -209,6 +210,13 @@ class Widget {
   [[nodiscard]] Result<Widget> AddColumn(const LayoutOptions& options);
 
   /**
+   * @brief Add a drawing area whose direct children can overlap.
+   * @param options Height setting for the new overlay.
+   * @return A new overlay handle, or an error if it cannot be created.
+   */
+  [[nodiscard]] Result<Widget> AddOverlay(const OverlayOptions& options);
+
+  /**
    * @brief Add a text label owned by this widget.
    * @param options Text and layout settings.
    * @return A new label handle, or an error if it cannot be created.
@@ -300,6 +308,14 @@ class Widget {
    * @return Success, or an error when this is not an image widget.
    */
   [[nodiscard]] Status SetImage(SDL_Texture* texture);
+
+  /**
+   * @brief Position this widget inside its overlay parent.
+   * @param x Horizontal coordinate within the overlay.
+   * @param y Vertical coordinate within the overlay.
+   * @return Success, or an error when the parent is not an overlay.
+   */
+  [[nodiscard]] Status Place(UiLength x, UiLength y);
 
   /**
    * @brief Replace this widget's displayed text. The widget copies it.
@@ -452,6 +468,11 @@ struct LayoutOptions {
   UiLength height = UiLength::Stretch(); /**< Row or child height. */
   float spacing = -1.0f;                 /**< Child spacing; negative inherits. */
   UiAlign align = UiAlign::kLeft;        /**< Alignment of narrower children. */
+};
+
+/** @brief Settings for a drawing area whose direct children may overlap. */
+struct OverlayOptions {
+  UiLength height = UiLength::Stretch(); /**< Requested height. */
 };
 
 /** @brief Settings for a text label. */

@@ -218,6 +218,26 @@ extern Grapple_UiWidget *Grapple_UiRow(Grapple_UiWidget *parent,
 extern Grapple_UiWidget *Grapple_UiColumn(Grapple_UiWidget *parent,
                                               const Grapple_UiStripDef *def);
 
+/** Settings for widgets that share one drawing area. */
+typedef struct Grapple_UiOverlayDef
+{
+    Grapple_UiLength height; /**< Requested height; stretch uses one text row. */
+} Grapple_UiOverlayDef;
+
+/**
+ * @brief Layer direct child widgets in one drawing area.
+ *
+ * Children are drawn in creation order, so later children appear over
+ * earlier ones. Use Grapple_UiPlace to position each child within the area.
+ * This is the retained equivalent of Tk's `place` geometry manager.
+ *
+ * @param parent Parent panel or column that owns the overlay.
+ * @param def Height setting, or NULL for a one-line default.
+ * @return The new overlay, or NULL on error.
+ */
+extern Grapple_UiWidget *Grapple_UiOverlay(Grapple_UiWidget *parent,
+                                           const Grapple_UiOverlayDef *def);
+
 /* --- widgets ------------------------------------------------------------ */
 
 typedef struct Grapple_UiLabelDef
@@ -443,6 +463,21 @@ typedef struct Grapple_UiRawDef
  */
 extern Grapple_UiWidget *Grapple_UiRaw(Grapple_UiWidget *parent,
                                            const Grapple_UiRawDef *def);
+
+/**
+ * @brief Position a widget inside its overlay parent.
+ *
+ * Pixel, em, and percentage coordinates are supported. Percentages are
+ * relative to the overlay's width or height. The position is the widget's
+ * top-left corner; its existing width and height determine its extent.
+ *
+ * @param widget Direct child of an overlay.
+ * @param x Horizontal coordinate within the overlay.
+ * @param y Vertical coordinate within the overlay.
+ * @return true on success; false when widget is NULL or its parent is not
+ *         an overlay.
+ */
+extern bool Grapple_UiPlace(Grapple_UiWidget *widget, Grapple_UiLength x, Grapple_UiLength y);
 
 /* --- reading and changing a widget -------------------------------------- */
 
