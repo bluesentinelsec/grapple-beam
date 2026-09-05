@@ -837,7 +837,9 @@ static const char **ReadOptions(mrb_state *mrb, mrb_value options, int *count)
     return slots;
 }
 
-static mrb_value Select(mrb_state *mrb, mrb_value self, bool as_radio)
+typedef Grapple_UiWidget *(*ChoiceFactory)(Grapple_UiWidget *, const Grapple_UiSelectDef *);
+
+static mrb_value Select(mrb_state *mrb, mrb_value self, ChoiceFactory create)
 {
     mrb_value options = mrb_nil_value();
     mrb_value block = mrb_nil_value();
@@ -860,14 +862,54 @@ static mrb_value Select(mrb_state *mrb, mrb_value self, bool as_radio)
     }
 
     Grapple_UiWidget *parent = WidgetOf(mrb, self);
-    Grapple_UiWidget *widget =
-        as_radio ? Grapple_UiRadio(parent, &def) : Grapple_UiSelect(parent, &def);
+    Grapple_UiWidget *widget = create(parent, &def);
     RememberHandler(mrb, widget, block);
     return WidgetValue(mrb, widget);
 }
 
-static mrb_value RUiSelect(mrb_state *mrb, mrb_value self) { return Select(mrb, self, false); }
-static mrb_value RUiRadio(mrb_state *mrb, mrb_value self) { return Select(mrb, self, true); }
+static mrb_value RUiSelect(mrb_state *mrb, mrb_value self)
+{
+    return Select(mrb, self, Grapple_UiSelect);
+}
+static mrb_value RUiRadio(mrb_state *mrb, mrb_value self)
+{
+    return Select(mrb, self, Grapple_UiRadio);
+}
+static mrb_value RUiList(mrb_state *mrb, mrb_value self)
+{
+    return Select(mrb, self, Grapple_UiList);
+}
+
+static SDL_Color ReadColor(mrb_state *mrb, mrb_value color)
+{
+    const char *keys[] = {"r", "g", "b", "a"};
+    Uint8 channels[4];
+    for (int i = 0; i < 4; ++i)
+    {
+        const mrb_value item = Key(mrb, color, keys[i]);
+        if (mrb_float_p(item))
+        {
+            const mrb_float channel = mrb_float(item);
+            if (!(channel >= 0 && channel <= 255) || channel != (mrb_float)(int)channel)
+                mrb_raise(mrb, E_ARGUMENT_ERROR, "color channels must be integers in 0..255");
+        }
+        const mrb_int value = mrb_nil_p(item) ? (i == 3 ? 255 : 0) : mrb_as_int(mrb, item);
+        if (value < 0 || value > 255)
+            mrb_raise(mrb, E_ARGUMENT_ERROR, "color channels must be 0..255");
+        channels[i] = (Uint8)value;
+    }
+    return (SDL_Color){channels[0], channels[1], channels[2], channels[3]};
+}
+
+static mrb_value RUiColors(mrb_state *mrb, mrb_value self)
+{
+    mrb_value background, text;
+    mrb_get_args(mrb, "HH", &background, &text);
+    if (!Grapple_UiSetPanelColors(WidgetOf(mrb, self), ReadColor(mrb, background),
+                                  ReadColor(mrb, text)))
+        mrb_raise(mrb, E_ARGUMENT_ERROR, SDL_GetError());
+    return self;
+}
 
 static mrb_value RUiProgress(mrb_state *mrb, mrb_value self)
 {
@@ -1165,6 +1207,8 @@ bool Grapple_OpenRubyUi(mrb_state *mrb)
     mrb_define_method(mrb, widget, "spacer", RUiSpacer, MRB_ARGS_OPT(1));
     mrb_define_method(mrb, widget, "select", RUiSelect, MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
     mrb_define_method(mrb, widget, "radio", RUiRadio, MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
+    mrb_define_method(mrb, widget, "list", RUiList, MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
+    mrb_define_method(mrb, widget, "colors", RUiColors, MRB_ARGS_REQ(2));
     mrb_define_method(mrb, widget, "progress", RUiProgress, MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
     mrb_define_method(mrb, widget, "image", RUiImage, MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
     mrb_define_method(mrb, widget, "annotation", RUiAnnotation, MRB_ARGS_REQ(1));

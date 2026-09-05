@@ -37,6 +37,7 @@ typedef enum NodeKind
     NODE_IMAGE_ANNOTATION,
     NODE_SELECT,
     NODE_RADIO,
+    NODE_LIST,
     NODE_PROGRESS,
     NODE_SPACER,
     NODE_RAW
@@ -69,11 +70,15 @@ struct Grapple_UiWidget
     bool movable;
     bool scrollable;
     bool no_border;
+    bool has_colors;
+    SDL_Color background_color;
+    SDL_Color text_color;
     float x, y, w, h;
 
     /* Widget state. An entry's buffer lives here rather than in the
        caller's hands, which is most of the ceremony this layer removes. */
     char *text;
+    char *entry_previous_text;
     int capacity;
     bool checked;
     float value, min, max, step;
@@ -204,7 +209,7 @@ static float ContentWidth(Grapple_UiWidget *node)
     {
     case NODE_SELECT:
     case NODE_RADIO:
-    {
+    case NODE_LIST: {
         /* Wide enough for the longest choice: a dropdown that fits only the
            option selected when it was built changes width as it is used. */
         float widest = 0.0f;
@@ -247,11 +252,13 @@ static float RowHeightOf(Grapple_UiWidget *node, float available_height)
     switch (node->kind)
     {
     case NODE_RADIO:
-    {
+    case NODE_LIST: {
         /* Every option is drawn, so the group needs the room for all of
            them rather than the one row a leaf usually gets. */
         const int count = (node->option_count > 0) ? node->option_count : 1;
-        return LineHeight(node->ui) * 1.9f * (float)count;
+        const struct nk_style_window *style = &Grapple_GuiContext(node->ui->gui)->style.window;
+        return (LineHeight(node->ui) * 1.9f + style->spacing.y) * (float)count +
+               2.0f * style->group_padding.y;
     }
     case NODE_IMAGE:
     {
@@ -456,6 +463,7 @@ static void DestroyNode(Grapple_UiWidget *node)
     }
     SDL_free(node->options);
     SDL_free(node->text);
+    SDL_free(node->entry_previous_text);
     SDL_free(node);
 }
 
@@ -669,6 +677,15 @@ Grapple_UiWidget *Grapple_UiEntry(Grapple_UiWidget *parent, const Grapple_UiEntr
     {
         return NULL;
     }
+    if (def->on_change != NULL)
+    {
+        node->entry_previous_text = (char *)SDL_malloc((size_t)node->capacity);
+        if (node->entry_previous_text == NULL)
+        {
+            Grapple_UiRemove(node);
+            return NULL;
+        }
+    }
     node->width = def->width;
     node->height = def->height;
     node->align = def->align;
@@ -724,6 +741,7 @@ static Grapple_UiWidget *NewSelect(Grapple_UiWidget *parent, const Grapple_UiSel
     node->selected = (def->selected >= 0 && def->selected < node->option_count)
                          ? def->selected
                          : 0;
+    SDL_snprintf(node->title, sizeof(node->title), "#choice_%u", parent->ui->next_id);
     node->width = def->width;
     node->height = def->height;
     node->align = def->align;
@@ -743,6 +761,23 @@ Grapple_UiWidget *Grapple_UiSelect(Grapple_UiWidget *parent, const Grapple_UiSel
 Grapple_UiWidget *Grapple_UiRadio(Grapple_UiWidget *parent, const Grapple_UiSelectDef *def)
 {
     return NewSelect(parent, def, NODE_RADIO);
+}
+
+Grapple_UiWidget *Grapple_UiList(Grapple_UiWidget *parent, const Grapple_UiSelectDef *def)
+{
+    return NewSelect(parent, def, NODE_LIST);
+}
+
+bool Grapple_UiSetPanelColors(Grapple_UiWidget *panel, SDL_Color background, SDL_Color text)
+{
+    if (panel == NULL || panel->kind != NODE_PANEL)
+    {
+        return SDL_InvalidParamError("panel");
+    }
+    panel->has_colors = true;
+    panel->background_color = background;
+    panel->text_color = text;
+    return true;
 }
 
 Grapple_UiWidget *Grapple_UiProgress(Grapple_UiWidget *parent,
@@ -1271,15 +1306,16 @@ static void DrawLeaf(Grapple_UiWidget *node)
 
     case NODE_ENTRY:
     {
-        const nk_flags state =
-            nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, node->text, node->capacity,
-                                           nk_filter_default);
-        if ((state & NK_EDIT_COMMITED) || (state & NK_EDIT_ACTIVE))
+        if (node->on_change != NULL)
         {
-            if (node->on_change != NULL && (state & NK_EDIT_COMMITED))
-            {
-                node->on_change(node, node->user);
-            }
+            SDL_strlcpy(node->entry_previous_text, node->text, (size_t)node->capacity);
+        }
+        nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, node->text, node->capacity,
+                                       nk_filter_default);
+        /* Nuklear reports focus and commit events, not changes to the buffer. */
+        if (node->on_change != NULL && SDL_strcmp(node->entry_previous_text, node->text) != 0)
+        {
+            node->on_change(node, node->user);
         }
         break;
     }
@@ -1321,19 +1357,27 @@ static void DrawLeaf(Grapple_UiWidget *node)
     }
 
     case NODE_RADIO:
-        /* One option per row, so the slot this leaf was given is only the
-           first of them; DrawColumn sizes the whole group. */
-        for (int i = 0; i < node->option_count; ++i)
+    case NODE_LIST:
+        /* A choice group must consume exactly one slot in its parent's layout. */
+        if (nk_group_begin(ctx, node->title, node->kind == NODE_LIST ? NK_WINDOW_BORDER : 0))
         {
-            if (nk_option_label(ctx, node->options[i], node->selected == i) &&
-                node->selected != i)
+            nk_layout_row_dynamic(ctx, LineHeight(node->ui) * 1.9f, 1);
+            for (int i = 0; i < node->option_count; ++i)
             {
-                Grapple_UiSetSelected(node, i);
-                if (node->on_change != NULL)
+                const bool chosen =
+                    node->kind == NODE_RADIO
+                        ? nk_option_label(ctx, node->options[i], node->selected == i)
+                        : nk_select_label(ctx, node->options[i], NK_TEXT_LEFT, node->selected == i);
+                if (chosen && node->selected != i)
                 {
-                    node->on_change(node, node->user);
+                    Grapple_UiSetSelected(node, i);
+                    if (node->on_change != NULL)
+                    {
+                        node->on_change(node, node->user);
+                    }
                 }
             }
+            nk_group_end(ctx);
         }
         break;
 
@@ -1709,12 +1753,33 @@ void Grapple_UiDraw(Grapple_Ui *ui)
                                nk_vec2(panel->spacing, panel->spacing));
         }
 
+        const struct nk_style_item background = ctx->style.window.fixed_background;
+        const struct nk_color text_color = ctx->style.text.color;
+        const struct nk_style_toggle option = ctx->style.option;
+        const struct nk_style_toggle checkbox = ctx->style.checkbox;
+        if (panel->has_colors)
+        {
+            const SDL_Color bg = panel->background_color;
+            const SDL_Color fg = panel->text_color;
+            const struct nk_color text = nk_rgba(fg.r, fg.g, fg.b, fg.a);
+            ctx->style.window.fixed_background =
+                nk_style_item_color(nk_rgba(bg.r, bg.g, bg.b, bg.a));
+            ctx->style.text.color = text;
+            ctx->style.option.text_normal = ctx->style.option.text_hover =
+                ctx->style.option.text_active = text;
+            ctx->style.checkbox.text_normal = ctx->style.checkbox.text_hover =
+                ctx->style.checkbox.text_active = text;
+        }
         if (nk_begin(ctx, panel->title, bounds, flags))
         {
             const struct nk_vec2 room = nk_window_get_content_region_size(ctx);
             DrawColumn(panel, room.x);
         }
         nk_end(ctx);
+        ctx->style.window.fixed_background = background;
+        ctx->style.text.color = text_color;
+        ctx->style.option = option;
+        ctx->style.checkbox = checkbox;
 
         /* Pop in the reverse order of the pushes: Nuklear's style stack is a
            stack, and unbalancing it corrupts every window after this one. */

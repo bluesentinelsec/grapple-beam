@@ -473,7 +473,9 @@ static const char **ReadOptions(lua_State *L, int table, int *count)
     return slots;
 }
 
-static int Select(lua_State *L, bool as_radio)
+typedef Grapple_UiWidget *(*ChoiceFactory)(Grapple_UiWidget *, const Grapple_UiSelectDef *);
+
+static int Select(lua_State *L, ChoiceFactory create)
 {
     Grapple_UiWidget *parent = CheckWidget(L, 1);
     const int options = OptionsTable(L, 2);
@@ -492,15 +494,51 @@ static int Select(lua_State *L, bool as_radio)
         def.user = L;
     }
 
-    Grapple_UiWidget *widget =
-        as_radio ? Grapple_UiRadio(parent, &def) : Grapple_UiSelect(parent, &def);
+    Grapple_UiWidget *widget = create(parent, &def);
     RememberCallback(L, options, "on_change", widget);
     PushWidget(L, widget);
     return 1;
 }
 
-static int LUiSelect(lua_State *L) { return Select(L, false); }
-static int LUiRadio(lua_State *L) { return Select(L, true); }
+static int LUiSelect(lua_State *L)
+{
+    return Select(L, Grapple_UiSelect);
+}
+static int LUiRadio(lua_State *L)
+{
+    return Select(L, Grapple_UiRadio);
+}
+static int LUiList(lua_State *L)
+{
+    return Select(L, Grapple_UiList);
+}
+
+static SDL_Color ReadColor(lua_State *L, int index)
+{
+    luaL_checktype(L, index, LUA_TTABLE);
+    const char *keys[] = {"r", "g", "b", "a"};
+    Uint8 channels[4];
+    for (int i = 0; i < 4; ++i)
+    {
+        lua_getfield(L, index, keys[i]);
+        const lua_Integer value = luaL_optinteger(L, -1, i == 3 ? 255 : 0);
+        luaL_argcheck(L, value >= 0 && value <= 255, index, "color channels must be 0..255");
+        channels[i] = (Uint8)value;
+        lua_pop(L, 1);
+    }
+    return (SDL_Color){channels[0], channels[1], channels[2], channels[3]};
+}
+
+static int LUiColors(lua_State *L)
+{
+    Grapple_UiWidget *panel = CheckWidget(L, 1);
+    const SDL_Color background = ReadColor(L, 2);
+    const SDL_Color text = ReadColor(L, 3);
+    if (!Grapple_UiSetPanelColors(panel, background, text))
+        return luaL_error(L, "%s", SDL_GetError());
+    lua_pushvalue(L, 1);
+    return 1;
+}
 
 static int LUiProgress(lua_State *L)
 {
@@ -649,7 +687,7 @@ static int LUiSet(lua_State *L)
     {
         Grapple_UiSetChecked(widget, lua_toboolean(L, 2) != 0);
     }
-    else if (lua_isnumber(L, 2))
+    else if (lua_type(L, 2) == LUA_TNUMBER)
     {
         Grapple_UiSetValue(widget, (float)lua_tonumber(L, 2));
     }
@@ -853,6 +891,8 @@ bool Grapple_OpenLuaUi(lua_State *L)
                                               {"set", LUiSet},
                                               {"select", LUiSelect},
                                               {"radio", LUiRadio},
+                                              {"list", LUiList},
+                                              {"colors", LUiColors},
                                               {"progress", LUiProgress},
                                               {"image", LUiImage},
                                               {"annotation", LUiAnnotation},
