@@ -88,6 +88,20 @@ Grapple_GuiImageMode ToC(UiImageMode mode) {
   return GRAPPLE_GUI_IMAGE_STRETCH;
 }
 
+Grapple_UiImageAnnotationSide ToC(UiImageAnnotationSide side) {
+  switch (side) {
+    case UiImageAnnotationSide::kLeft:
+      return GRAPPLE_UI_ANNOTATION_LEFT;
+    case UiImageAnnotationSide::kAbove:
+      return GRAPPLE_UI_ANNOTATION_ABOVE;
+    case UiImageAnnotationSide::kBelow:
+      return GRAPPLE_UI_ANNOTATION_BELOW;
+    case UiImageAnnotationSide::kRight:
+      return GRAPPLE_UI_ANNOTATION_RIGHT;
+  }
+  return GRAPPLE_UI_ANNOTATION_RIGHT;
+}
+
 Status CreationError(const char* object) {
   const char* error = SDL_GetError();
   if (error != nullptr && error[0] != '\0') return Status::FromSdl();
@@ -127,6 +141,13 @@ Result<Widget> Widget::AddColumn(const LayoutOptions& options) {
   definition.spacing = options.spacing;
   definition.align = ToC(options.align);
   return Wrap(Grapple_UiColumn(widget_, &definition));
+}
+
+Result<Widget> Widget::AddOverlay(const OverlayOptions& options) {
+  if (!valid() || state_ == nullptr) return Status::Error("cannot add to an empty UI widget");
+  Grapple_UiOverlayDef definition{};
+  definition.height = ToC(options.height);
+  return Wrap(Grapple_UiOverlay(widget_, &definition));
 }
 
 Result<Widget> Widget::AddLabel(const LabelOptions& options) {
@@ -269,6 +290,17 @@ Result<Widget> Widget::AddImage(const ImageOptions& options) {
   return Wrap(Grapple_UiImage(widget_, &definition));
 }
 
+Result<Widget> Widget::AddAnnotation(const ImageAnnotationOptions& options) {
+  if (!valid() || state_ == nullptr) return Status::Error("cannot add to an empty UI widget");
+  Grapple_UiImageAnnotationDef definition{};
+  definition.text = options.text.c_str();
+  definition.x = options.x;
+  definition.y = options.y;
+  definition.side = ToC(options.side);
+  definition.gap = options.gap;
+  return Wrap(Grapple_UiImageAnnotation(widget_, &definition));
+}
+
 Result<Widget> Widget::AddSpacer(const SpacerOptions& options) {
   if (!valid() || state_ == nullptr) return Status::Error("cannot add to an empty UI widget");
   Grapple_UiSpacerDef definition{};
@@ -297,6 +329,11 @@ Status Widget::SetImage(const std::string& path) {
 
 Status Widget::SetImage(SDL_Texture* texture) {
   if (!Grapple_UiSetImageTexture(widget_, texture)) return Status::FromSdl();
+  return Status::Ok();
+}
+
+Status Widget::Place(UiLength x, UiLength y) {
+  if (!Grapple_UiPlace(widget_, ToC(x), ToC(y))) return Status::FromSdl();
   return Status::Ok();
 }
 

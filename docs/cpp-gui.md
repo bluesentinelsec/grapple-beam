@@ -165,6 +165,71 @@ Stretch is the default. Fixed children keep their requested size, and
 stretching siblings share what remains. Layout is recalculated when the
 window or font changes; callers do not maintain coordinates.
 
+Use an overlay when widgets belong on top of one another, such as labels over
+a map or controls over a preview. Direct children draw in creation order:
+
+```cpp
+grapple::OverlayOptions sky_options;
+sky_options.height = grapple::UiLength::Pixels(480.0f);
+grapple::Result<grapple::Widget> sky_result = panel.AddOverlay(sky_options);
+if (!sky_result.ok()) {
+  return 1;
+}
+grapple::Widget sky = std::move(sky_result).value();
+
+grapple::ImageOptions image_options;
+image_options.path = "preview.png";
+grapple::Result<grapple::Widget> image = sky.AddImage(image_options);
+
+grapple::ButtonOptions close_options;
+close_options.text = "Close";
+close_options.width = grapple::UiLength::Fit();
+close_options.height = grapple::UiLength::Fit();
+grapple::Result<grapple::Widget> close = sky.AddButton(close_options);
+if (!image.ok() || !close.ok()) {
+  return 1;
+}
+grapple::Status placed = close->Place(grapple::UiLength::Percent(0.85f),
+                                      grapple::UiLength::Pixels(8.0f));
+if (!placed.ok()) {
+  return 1;
+}
+```
+
+Percentage positions follow the overlay when it resizes. `Place` uses the
+widget's top-left corner; its normal width and height options determine its
+size.
+
+When a label identifies a point inside an image, make it an annotation owned
+by that image. An annotation uses normalized image coordinates, so it follows
+the actual drawn image through aspect-preserving resizing and letterboxing:
+
+```cpp
+grapple::ImageOptions image_options;
+image_options.path = "orion.png";
+image_options.mode = grapple::UiImageMode::kZoom;
+grapple::Result<grapple::Widget> image = sky.AddImage(image_options);
+if (!image.ok()) {
+  return 1;
+}
+
+grapple::ImageAnnotationOptions name_options;
+name_options.text = "Betelgeuse";
+name_options.x = 0.238f;
+name_options.y = 0.170f;
+name_options.side = grapple::UiImageAnnotationSide::kLeft;
+name_options.gap = 6.0f;
+grapple::Result<grapple::Widget> name = image->AddAnnotation(name_options);
+if (!name.ok()) {
+  return 1;
+}
+name->SetVisible(false);
+```
+
+The side can be left, right, above, or below the point. The small pixel gap
+keeps the label legible without baking display-size-specific offsets into the
+caller. Annotation handles support the usual text and visibility changes.
+
 ## Widgets own their state
 
 Keep a `Widget` handle when the program needs to read or change that widget.

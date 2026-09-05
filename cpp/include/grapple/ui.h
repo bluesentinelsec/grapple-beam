@@ -68,7 +68,9 @@ struct UiState;
 
 struct PanelOptions;
 struct LayoutOptions;
+struct OverlayOptions;
 struct LabelOptions;
+struct ImageAnnotationOptions;
 struct ButtonOptions;
 struct CheckOptions;
 struct SliderOptions;
@@ -154,6 +156,14 @@ enum class UiImageMode {
   kFill,    /**< Cover the slot while preserving aspect ratio and cropping. */
 };
 
+/** @brief Side of an image point occupied by an annotation. */
+enum class UiImageAnnotationSide {
+  kRight, /**< Place the annotation to the right of the point. */
+  kLeft,  /**< Place the annotation to the left of the point. */
+  kAbove, /**< Place the annotation above the point. */
+  kBelow, /**< Place the annotation below the point. */
+};
+
 /** @brief The pixel rectangle occupied by a widget during its last draw. */
 struct UiBounds {
   float x = 0.0f;      /**< Left edge in renderer pixels. */
@@ -207,6 +217,13 @@ class Widget {
    * @return A new column handle, or an error if it cannot be created.
    */
   [[nodiscard]] Result<Widget> AddColumn(const LayoutOptions& options);
+
+  /**
+   * @brief Add a drawing area whose direct children can overlap.
+   * @param options Height setting for the new overlay.
+   * @return A new overlay handle, or an error if it cannot be created.
+   */
+  [[nodiscard]] Result<Widget> AddOverlay(const OverlayOptions& options);
 
   /**
    * @brief Add a text label owned by this widget.
@@ -272,6 +289,19 @@ class Widget {
   [[nodiscard]] Result<Widget> AddImage(const ImageOptions& options);
 
   /**
+   * @brief Add a label attached to a normalized point in this image.
+   *
+   * This widget must be an image that is a direct child of an overlay. The
+   * annotation remains attached to the image content when it is resized or
+   * letterboxed.
+   *
+   * @param options Text, image coordinates, side, and gap.
+   * @return A new annotation handle, or an error for an invalid parent or
+   *         coordinate.
+   */
+  [[nodiscard]] Result<Widget> AddAnnotation(const ImageAnnotationOptions& options);
+
+  /**
    * @brief Add blank layout space.
    * @param options Width and height settings.
    * @return A new spacer handle, or an error if it cannot be created.
@@ -300,6 +330,14 @@ class Widget {
    * @return Success, or an error when this is not an image widget.
    */
   [[nodiscard]] Status SetImage(SDL_Texture* texture);
+
+  /**
+   * @brief Position this widget inside its overlay parent.
+   * @param x Horizontal coordinate within the overlay.
+   * @param y Vertical coordinate within the overlay.
+   * @return Success, or an error when the parent is not an overlay.
+   */
+  [[nodiscard]] Status Place(UiLength x, UiLength y);
 
   /**
    * @brief Replace this widget's displayed text. The widget copies it.
@@ -454,6 +492,11 @@ struct LayoutOptions {
   UiAlign align = UiAlign::kLeft;        /**< Alignment of narrower children. */
 };
 
+/** @brief Settings for a drawing area whose direct children may overlap. */
+struct OverlayOptions {
+  UiLength height = UiLength::Stretch(); /**< Requested height. */
+};
+
 /** @brief Settings for a text label. */
 struct LabelOptions {
   std::string text;                      /**< Displayed text, copied. */
@@ -461,6 +504,15 @@ struct LabelOptions {
   UiLength height = UiLength::Stretch(); /**< Requested height. */
   UiAlign align = UiAlign::kLeft;        /**< Text alignment. */
   bool wrap = false;                     /**< Whether long text wraps. */
+};
+
+/** @brief Settings for a short label attached to a point in an image. */
+struct ImageAnnotationOptions {
+  std::string text; /**< Displayed text, copied. */
+  float x = 0.0f;   /**< Horizontal image coordinate, 0..1. */
+  float y = 0.0f;   /**< Vertical image coordinate, 0..1. */
+  UiImageAnnotationSide side = UiImageAnnotationSide::kRight; /**< Label side. */
+  float gap = 6.0f;                                           /**< Point-to-label gap in pixels. */
 };
 
 /** @brief Settings for a push button. */

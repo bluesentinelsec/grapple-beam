@@ -113,6 +113,15 @@ typedef enum Grapple_UiAlign
     GRAPPLE_UI_RIGHT
 } Grapple_UiAlign;
 
+/** Which side of an image point an annotation occupies. */
+typedef enum Grapple_UiImageAnnotationSide
+{
+    GRAPPLE_UI_ANNOTATION_RIGHT = 0,
+    GRAPPLE_UI_ANNOTATION_LEFT,
+    GRAPPLE_UI_ANNOTATION_ABOVE,
+    GRAPPLE_UI_ANNOTATION_BELOW
+} Grapple_UiImageAnnotationSide;
+
 /** Something happened to `widget`. `user` is whatever the def carried. */
 typedef void (*Grapple_UiCallback)(Grapple_UiWidget *widget, void *user);
 
@@ -217,6 +226,26 @@ extern Grapple_UiWidget *Grapple_UiRow(Grapple_UiWidget *parent,
 /** Children stacked, each on its own row. Tk's `pack -side top`. */
 extern Grapple_UiWidget *Grapple_UiColumn(Grapple_UiWidget *parent,
                                               const Grapple_UiStripDef *def);
+
+/** Settings for widgets that share one drawing area. */
+typedef struct Grapple_UiOverlayDef
+{
+    Grapple_UiLength height; /**< Requested height; stretch uses one text row. */
+} Grapple_UiOverlayDef;
+
+/**
+ * @brief Layer direct child widgets in one drawing area.
+ *
+ * Children are drawn in creation order, so later children appear over
+ * earlier ones. Use Grapple_UiPlace to position each child within the area.
+ * This is the retained equivalent of Tk's `place` geometry manager.
+ *
+ * @param parent Parent panel or column that owns the overlay.
+ * @param def Height setting, or NULL for a one-line default.
+ * @return The new overlay, or NULL on error.
+ */
+extern Grapple_UiWidget *Grapple_UiOverlay(Grapple_UiWidget *parent,
+                                           const Grapple_UiOverlayDef *def);
 
 /* --- widgets ------------------------------------------------------------ */
 
@@ -323,6 +352,33 @@ typedef struct Grapple_UiImageDef
 
 extern Grapple_UiWidget *Grapple_UiImage(Grapple_UiWidget *parent,
                                              const Grapple_UiImageDef *def);
+
+/** Settings for a short label attached to a point in an image. */
+typedef struct Grapple_UiImageAnnotationDef
+{
+    const char *text;                   /**< Displayed text, copied. */
+    float x;                            /**< Horizontal image coordinate, 0..1. */
+    float y;                            /**< Vertical image coordinate, 0..1. */
+    Grapple_UiImageAnnotationSide side; /**< Side of the point holding the label. */
+    float gap;                          /**< Gap between point and label, in pixels. */
+} Grapple_UiImageAnnotationDef;
+
+/**
+ * @brief Add a label that stays attached to a point in a zoomed image.
+ *
+ * The image must be a direct child of an overlay. Coordinates refer to the
+ * image content rather than its widget slot, so the annotation follows the
+ * same aspect-preserving resize and letterboxing as the image. The annotation
+ * is owned by the image and may be shown or hidden like any other widget.
+ *
+ * @param image Image widget that owns and positions the annotation.
+ * @param def Text, normalized coordinates, side, and pixel gap.
+ * @return The new annotation, or NULL when the arguments or parent layout are
+ *         invalid.
+ * @pre `def->x` and `def->y` are each between 0 and 1 inclusive.
+ */
+extern Grapple_UiWidget *Grapple_UiImageAnnotation(Grapple_UiWidget *image,
+                                                   const Grapple_UiImageAnnotationDef *def);
 
 /**
  * @brief Replace the file-backed image displayed by an image widget.
@@ -443,6 +499,21 @@ typedef struct Grapple_UiRawDef
  */
 extern Grapple_UiWidget *Grapple_UiRaw(Grapple_UiWidget *parent,
                                            const Grapple_UiRawDef *def);
+
+/**
+ * @brief Position a widget inside its overlay parent.
+ *
+ * Pixel, em, and percentage coordinates are supported. Percentages are
+ * relative to the overlay's width or height. The position is the widget's
+ * top-left corner; its existing width and height determine its extent.
+ *
+ * @param widget Direct child of an overlay.
+ * @param x Horizontal coordinate within the overlay.
+ * @param y Vertical coordinate within the overlay.
+ * @return true on success; false when widget is NULL or its parent is not
+ *         an overlay.
+ */
+extern bool Grapple_UiPlace(Grapple_UiWidget *widget, Grapple_UiLength x, Grapple_UiLength y);
 
 /* --- reading and changing a widget -------------------------------------- */
 

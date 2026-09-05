@@ -148,6 +148,24 @@ static Grapple_GuiImageMode OptImageMode(lua_State *L, int table)
     return GRAPPLE_GUI_IMAGE_STRETCH;
 }
 
+static Grapple_UiImageAnnotationSide OptAnnotationSide(lua_State *L, int table)
+{
+    const char *text = OptString(L, table, "side", "right");
+    if (SDL_strcasecmp(text, "left") == 0)
+    {
+        return GRAPPLE_UI_ANNOTATION_LEFT;
+    }
+    if (SDL_strcasecmp(text, "above") == 0)
+    {
+        return GRAPPLE_UI_ANNOTATION_ABOVE;
+    }
+    if (SDL_strcasecmp(text, "below") == 0)
+    {
+        return GRAPPLE_UI_ANNOTATION_BELOW;
+    }
+    return GRAPPLE_UI_ANNOTATION_RIGHT;
+}
+
 /* --- callbacks ----------------------------------------------------------- */
 
 /* Script functions live in one registry table keyed by the widget itself, so
@@ -307,6 +325,16 @@ static int Strip(lua_State *L, bool row)
 
 static int LUiRow(lua_State *L) { return Strip(L, true); }
 static int LUiColumn(lua_State *L) { return Strip(L, false); }
+
+static int LUiOverlay(lua_State *L)
+{
+    Grapple_UiWidget *parent = CheckWidget(L, 1);
+    const int options = OptionsTable(L, 2);
+    Grapple_UiOverlayDef def = {0};
+    def.height = OptLength(L, options, "height");
+    PushWidget(L, Grapple_UiOverlay(parent, &def));
+    return 1;
+}
 
 static int LUiLabel(lua_State *L)
 {
@@ -563,6 +591,25 @@ static int LUiImage(lua_State *L)
     return 1;
 }
 
+static int LUiAnnotation(lua_State *L)
+{
+    Grapple_UiWidget *image = CheckWidget(L, 1);
+    const int options = OptionsTable(L, 2);
+    Grapple_UiImageAnnotationDef def = {0};
+    def.text = OptString(L, options, "text", "");
+    def.x = OptNumber(L, options, "x", 0.0f);
+    def.y = OptNumber(L, options, "y", 0.0f);
+    def.side = OptAnnotationSide(L, options);
+    def.gap = OptNumber(L, options, "gap", 6.0f);
+    Grapple_UiWidget *annotation = Grapple_UiImageAnnotation(image, &def);
+    if (annotation == NULL)
+    {
+        return luaL_error(L, "%s", SDL_GetError());
+    }
+    PushWidget(L, annotation);
+    return 1;
+}
+
 static int LUiMessage(lua_State *L)
 {
     UiBox *box = (UiBox *)luaL_checkudata(L, 1, UI_MT);
@@ -621,6 +668,18 @@ static int LUiSetImage(lua_State *L)
     if (!Grapple_UiSetImagePath(widget, path))
     {
         return luaL_error(L, "could not load image '%s': %s", path, SDL_GetError());
+    }
+    lua_pushvalue(L, 1);
+    return 1;
+}
+
+static int LUiPlace(lua_State *L)
+{
+    Grapple_UiWidget *widget = CheckWidget(L, 1);
+    const int options = OptionsTable(L, 2);
+    if (!Grapple_UiPlace(widget, OptLength(L, options, "x"), OptLength(L, options, "y")))
+    {
+        return luaL_error(L, "%s", SDL_GetError());
     }
     lua_pushvalue(L, 1);
     return 1;
@@ -782,17 +841,35 @@ bool Grapple_OpenLuaUi(lua_State *L)
 {
     static const luaL_Reg ui_methods[] = {
         {"panel", LUiPanel}, {"draw", LUiDraw}, {"message", LUiMessage}, {NULL, NULL}};
-    static const luaL_Reg widget_methods[] = {
-        {"row", LUiRow},         {"column", LUiColumn},  {"label", LUiLabel},
-        {"button", LUiButton},   {"check", LUiCheck},    {"slider", LUiSlider},
-        {"entry", LUiEntry},     {"spacer", LUiSpacer},  {"set", LUiSet},
-        {"select", LUiSelect},   {"radio", LUiRadio},    {"progress", LUiProgress},
-        {"image", LUiImage},     {"set_image", LUiSetImage},
-        {"selected", LUiSelected}, {"options", LUiOptions},
-        {"text", LUiGetText},    {"checked", LUiGetChecked}, {"value", LUiGetValue},
-        {"visible", LUiVisible}, {"disabled", LUiDisabled},  {"remove", LUiRemove},
-        {"invoke", LUiInvoke},   {"value_text", LUiValueText},
-        {"clear", LUiClear},     {NULL, NULL}};
+    static const luaL_Reg widget_methods[] = {{"row", LUiRow},
+                                              {"column", LUiColumn},
+                                              {"overlay", LUiOverlay},
+                                              {"label", LUiLabel},
+                                              {"button", LUiButton},
+                                              {"check", LUiCheck},
+                                              {"slider", LUiSlider},
+                                              {"entry", LUiEntry},
+                                              {"spacer", LUiSpacer},
+                                              {"set", LUiSet},
+                                              {"select", LUiSelect},
+                                              {"radio", LUiRadio},
+                                              {"progress", LUiProgress},
+                                              {"image", LUiImage},
+                                              {"annotation", LUiAnnotation},
+                                              {"set_image", LUiSetImage},
+                                              {"place", LUiPlace},
+                                              {"selected", LUiSelected},
+                                              {"options", LUiOptions},
+                                              {"text", LUiGetText},
+                                              {"checked", LUiGetChecked},
+                                              {"value", LUiGetValue},
+                                              {"visible", LUiVisible},
+                                              {"disabled", LUiDisabled},
+                                              {"remove", LUiRemove},
+                                              {"invoke", LUiInvoke},
+                                              {"value_text", LUiValueText},
+                                              {"clear", LUiClear},
+                                              {NULL, NULL}};
 
     if (L == NULL)
     {
