@@ -228,6 +228,12 @@ Widgets own their state (`answer:set(...)`, `entry:text()`,
 `check:checked()`), and are owned by their parent, so nothing needs
 destroying.
 
+An entry's `on_change` handler runs once per draw when user input changes
+its text, including typing, deletion, and paste. Read the updated contents
+with `entry:text()` in Lua or `entry.text` in Ruby. Focus changes and Enter
+alone do not call the handler. Programmatic setters (`set`, C's
+`Grapple_UiSetText`, and C++'s `SetText`) do not emit change callbacks.
+
 Overlay placement uses the same units and stays chainable:
 
 ```lua

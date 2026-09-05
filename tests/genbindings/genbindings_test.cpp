@@ -1516,6 +1516,27 @@ TEST(GenRuby, ImageContentsCanChangeInPlace)
     RunRuby(script.c_str());
 }
 
+TEST(GenLua, WidgetSetPreservesNumericStringsAsText)
+{
+    RunLua("local engine = Grapple.engine{ headless = true, auto_mount = false }\n"
+           "local ui = Grapple.ui(engine)\n"
+           "local panel = ui:panel{}\n"
+           "local entry = panel:entry{}\n"
+           "local label = panel:label{}\n"
+           "for _, text in ipairs({'1', '0', '-1', '+0004', '1.5', '1e2', ' 10 '}) do\n"
+           "  assert(entry:set(text) == entry)\n"
+           "  label:set(text)\n"
+           "  assert(entry:text() == text, 'entry lost numeric text: ' .. text)\n"
+           "  assert(label:text() == text, 'label lost numeric text: ' .. text)\n"
+           "end\n"
+           "local slider = panel:slider{min = 0, max = 10}\n"
+           "slider:set(4)\n"
+           "assert(slider:value() == 4, 'numbers must still update numeric values')\n"
+           "local check = panel:check{}\n"
+           "check:set(true)\n"
+           "assert(check:checked(), 'booleans must still update checkboxes')\n");
+}
+
 TEST(GenLua, WidgetHandlersFire)
 {
     RunLua(

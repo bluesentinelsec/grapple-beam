@@ -649,7 +649,7 @@ static int LUiSet(lua_State *L)
     {
         Grapple_UiSetChecked(widget, lua_toboolean(L, 2) != 0);
     }
-    else if (lua_isnumber(L, 2))
+    else if (lua_type(L, 2) == LUA_TNUMBER)
     {
         Grapple_UiSetValue(widget, (float)lua_tonumber(L, 2));
     }

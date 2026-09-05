@@ -1288,6 +1288,82 @@ TEST_F(GuiHarness, UiOverlayPlacesChildrenOverTheSameArea)
     Grapple_DestroyUi(ui);
 }
 
+TEST_F(GuiHarness, UiEntryNotifiesOnlyWhenUserEditsText)
+{
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+    std::vector<std::string> changes;
+    Grapple_UiEntryDef entry_def{};
+    entry_def.text = "4";
+    entry_def.capacity = 8;
+    entry_def.on_change = [](Grapple_UiWidget *entry, void *user) {
+        static_cast<std::vector<std::string> *>(user)->emplace_back(Grapple_UiText(entry));
+    };
+    entry_def.user = &changes;
+    Grapple_UiWidget *entry = Grapple_UiEntry(panel, &entry_def);
+    ASSERT_NE(entry, nullptr);
+
+    auto draw = [&]() {
+        Grapple_GuiInputEnd(gui_);
+        Grapple_UiDraw(ui);
+        BeginFrame();
+        Grapple_GuiInputBegin(gui_);
+    };
+    auto key = [&](SDL_Keycode code, SDL_Keymod mod = SDL_KMOD_NONE) {
+        SDL_Event event{};
+        event.type = SDL_EVENT_KEY_DOWN;
+        event.key.key = code;
+        event.key.mod = mod;
+        Grapple_GuiProcessEvent(gui_, &event);
+        draw();
+        event.type = SDL_EVENT_KEY_UP;
+        Grapple_GuiProcessEvent(gui_, &event);
+        draw();
+    };
+    auto type = [&](const char *text) {
+        SDL_Event event{};
+        event.type = SDL_EVENT_TEXT_INPUT;
+        event.text.text = text;
+        Grapple_GuiProcessEvent(gui_, &event);
+        draw();
+    };
+
+    BeginFrame();
+    Grapple_GuiInputBegin(gui_);
+    draw();
+    float x = 0, y = 0, width = 0, height = 0;
+    ASSERT_TRUE(Grapple_UiBounds(entry, &x, &y, &width, &height));
+    FeedMouseMove(x + width / 2, y + height / 2);
+    FeedButton(x + width / 2, y + height / 2, true);
+    draw();
+    FeedButton(x + width / 2, y + height / 2, false);
+    draw();
+    EXPECT_TRUE(changes.empty()) << "Focus and idle frames do not change text";
+
+    key(SDLK_END);
+    type("2");
+    EXPECT_EQ(changes, (std::vector<std::string>{"42"}));
+    key(SDLK_BACKSPACE);
+    EXPECT_EQ(changes, (std::vector<std::string>{"42", "4"}));
+    key(SDLK_A, SDL_KMOD_CTRL);
+    type("9");
+    EXPECT_EQ(changes, (std::vector<std::string>{"42", "4", "9"}))
+        << "Replacing a selection with the same byte count is still a change";
+    key(SDLK_RETURN);
+    draw();
+    EXPECT_EQ(changes.size(), 3u);
+
+    Grapple_UiSetText(entry, "7");
+    draw();
+    EXPECT_STREQ(Grapple_UiText(entry), "7");
+    EXPECT_EQ(changes.size(), 3u) << "Programmatic setters do not emit user callbacks";
+    Grapple_GuiInputEnd(gui_);
+    Grapple_DestroyUi(ui);
+}
+
 TEST_F(GuiHarness, UiWidgetStateOutlivesTheFrame)
 {
     Grapple_Ui *ui = Grapple_CreateUi(gui_);

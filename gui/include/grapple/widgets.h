@@ -313,7 +313,8 @@ typedef struct Grapple_UiEntryDef
     Grapple_UiLength width;
     Grapple_UiLength height;
     Grapple_UiAlign align;
-    Grapple_UiCallback on_change;
+    Grapple_UiCallback on_change; /**< Called once per draw when user input changes the text.
+                                     Focus, Enter alone, and Grapple_UiSetText do not trigger it. */
     void *user;
 } Grapple_UiEntryDef;
 

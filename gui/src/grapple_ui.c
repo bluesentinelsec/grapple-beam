@@ -74,6 +74,7 @@ struct Grapple_UiWidget
     /* Widget state. An entry's buffer lives here rather than in the
        caller's hands, which is most of the ceremony this layer removes. */
     char *text;
+    char *entry_previous_text;
     int capacity;
     bool checked;
     float value, min, max, step;
@@ -456,6 +457,7 @@ static void DestroyNode(Grapple_UiWidget *node)
     }
     SDL_free(node->options);
     SDL_free(node->text);
+    SDL_free(node->entry_previous_text);
     SDL_free(node);
 }
 
@@ -668,6 +670,15 @@ Grapple_UiWidget *Grapple_UiEntry(Grapple_UiWidget *parent, const Grapple_UiEntr
     if (node == NULL || !SetText(node, def->text, (def->capacity > 0) ? def->capacity : 256))
     {
         return NULL;
+    }
+    if (def->on_change != NULL)
+    {
+        node->entry_previous_text = (char *)SDL_malloc((size_t)node->capacity);
+        if (node->entry_previous_text == NULL)
+        {
+            Grapple_UiRemove(node);
+            return NULL;
+        }
     }
     node->width = def->width;
     node->height = def->height;
@@ -1271,15 +1282,16 @@ static void DrawLeaf(Grapple_UiWidget *node)
 
     case NODE_ENTRY:
     {
-        const nk_flags state =
-            nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, node->text, node->capacity,
-                                           nk_filter_default);
-        if ((state & NK_EDIT_COMMITED) || (state & NK_EDIT_ACTIVE))
+        if (node->on_change != NULL)
         {
-            if (node->on_change != NULL && (state & NK_EDIT_COMMITED))
-            {
-                node->on_change(node, node->user);
-            }
+            SDL_strlcpy(node->entry_previous_text, node->text, (size_t)node->capacity);
+        }
+        nk_edit_string_zero_terminated(ctx, NK_EDIT_FIELD, node->text, node->capacity,
+                                       nk_filter_default);
+        /* Nuklear reports focus and commit events, not changes to the buffer. */
+        if (node->on_change != NULL && SDL_strcmp(node->entry_previous_text, node->text) != 0)
+        {
+            node->on_change(node, node->user);
         }
         break;
     }

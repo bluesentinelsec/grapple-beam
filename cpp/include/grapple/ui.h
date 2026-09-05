@@ -555,7 +555,8 @@ struct EntryOptions {
   UiLength width = UiLength::Stretch();  /**< Requested width. */
   UiLength height = UiLength::Stretch(); /**< Requested height. */
   UiAlign align = UiAlign::kLeft;        /**< Alignment within the parent. */
-  Widget::Callback on_change;            /**< Optional change callback. */
+  Widget::Callback on_change;            /**< Called once per draw when user input changes text;
+                                             focus, Enter alone, and SetText do not trigger it. */
 };
 
 /** @brief Settings shared by drop-down and radio choices. Indices are zero-based. */
