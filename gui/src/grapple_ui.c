@@ -779,6 +779,71 @@ void Grapple_UiSetImageLoader(Grapple_UiImageLoader loader, void *user)
     g_image_loader_user = user;
 }
 
+static bool IsImageWidget(Grapple_UiWidget *widget)
+{
+    if (widget == NULL || widget->kind != NODE_IMAGE)
+    {
+        return SDL_InvalidParamError("image widget");
+    }
+    return true;
+}
+
+static void ReplaceImageTexture(Grapple_UiWidget *widget, SDL_Texture *texture,
+                                bool owned)
+{
+    if (widget->texture == texture)
+    {
+        widget->owns_texture = owned;
+        return;
+    }
+    if (widget->owns_texture && widget->texture != NULL)
+    {
+        SDL_DestroyTexture(widget->texture);
+    }
+    widget->texture = texture;
+    widget->owns_texture = owned;
+}
+
+bool Grapple_UiSetImagePath(Grapple_UiWidget *widget, const char *path)
+{
+    if (!IsImageWidget(widget) || path == NULL || path[0] == '\0')
+    {
+        if (path == NULL || path[0] == '\0')
+        {
+            SDL_InvalidParamError("path");
+        }
+        return false;
+    }
+
+    SDL_Renderer *renderer = Grapple_GuiRenderer(widget->ui->gui);
+    SDL_Texture *texture = NULL;
+    if (g_image_loader != NULL)
+    {
+        texture = g_image_loader(renderer, path, g_image_loader_user);
+    }
+    else
+    {
+        texture = IMG_LoadTexture(renderer, path);
+    }
+    if (texture == NULL)
+    {
+        return false;
+    }
+
+    ReplaceImageTexture(widget, texture, true);
+    return true;
+}
+
+bool Grapple_UiSetImageTexture(Grapple_UiWidget *widget, SDL_Texture *texture)
+{
+    if (!IsImageWidget(widget))
+    {
+        return false;
+    }
+    ReplaceImageTexture(widget, texture, false);
+    return true;
+}
+
 Grapple_UiWidget *Grapple_UiImage(Grapple_UiWidget *parent, const Grapple_UiImageDef *def)
 {
     if (parent == NULL || def == NULL)
@@ -793,28 +858,15 @@ Grapple_UiWidget *Grapple_UiImage(Grapple_UiWidget *parent, const Grapple_UiImag
     }
     if (def->texture != NULL)
     {
-        node->texture = def->texture; /* borrowed */
+        Grapple_UiSetImageTexture(node, def->texture);
     }
     else if (def->path != NULL)
     {
-        SDL_Renderer *renderer = Grapple_GuiRenderer(parent->ui->gui);
-        if (g_image_loader != NULL)
-        {
-            /* Somebody with an opinion — an atlas, a pack file, a cache. */
-            node->texture = g_image_loader(renderer, def->path, g_image_loader_user);
-        }
-        else
-        {
-            /* SDL_image, which is vendored in this repository and linked
-               here: PNG, JPEG, QOI, WebP and the rest. */
-            node->texture = IMG_LoadTexture(renderer, def->path);
-        }
-        if (node->texture == NULL)
+        if (!Grapple_UiSetImagePath(node, def->path))
         {
             Grapple_UiRemove(node);
             return NULL;
         }
-        node->owns_texture = true;
     }
     Grapple_UiSetValueText(node, def->value);
     node->image_mode = def->mode;

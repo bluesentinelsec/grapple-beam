@@ -130,6 +130,24 @@ static Grapple_UiAlign OptAlign(lua_State *L, int table, const char *key)
     return GRAPPLE_UI_LEFT;
 }
 
+static Grapple_GuiImageMode OptImageMode(lua_State *L, int table)
+{
+    const char *text = OptString(L, table, "mode", "stretch");
+    if (SDL_strcasecmp(text, "zoom") == 0)
+    {
+        return GRAPPLE_GUI_IMAGE_ZOOM;
+    }
+    if (SDL_strcasecmp(text, "center") == 0 || SDL_strcasecmp(text, "centre") == 0)
+    {
+        return GRAPPLE_GUI_IMAGE_CENTER;
+    }
+    if (SDL_strcasecmp(text, "fill") == 0)
+    {
+        return GRAPPLE_GUI_IMAGE_FILL;
+    }
+    return GRAPPLE_GUI_IMAGE_STRETCH;
+}
+
 /* --- callbacks ----------------------------------------------------------- */
 
 /* Script functions live in one registry table keyed by the widget itself, so
@@ -524,6 +542,7 @@ static int LUiImage(lua_State *L)
     }
     lua_pop(L, 1);
     def.value = OptString(L, options, "value", NULL);
+    def.mode = OptImageMode(L, options);
     def.width = OptLength(L, options, "width");
     def.height = OptLength(L, options, "height");
     def.align = OptAlign(L, options, "align");
@@ -592,6 +611,18 @@ static int LUiSet(lua_State *L)
         Grapple_UiSetText(widget, luaL_checkstring(L, 2));
     }
     lua_pushvalue(L, 1); /* chainable */
+    return 1;
+}
+
+static int LUiSetImage(lua_State *L)
+{
+    Grapple_UiWidget *widget = CheckWidget(L, 1);
+    const char *path = luaL_checkstring(L, 2);
+    if (!Grapple_UiSetImagePath(widget, path))
+    {
+        return luaL_error(L, "could not load image '%s': %s", path, SDL_GetError());
+    }
+    lua_pushvalue(L, 1);
     return 1;
 }
 
@@ -756,7 +787,7 @@ bool Grapple_OpenLuaUi(lua_State *L)
         {"button", LUiButton},   {"check", LUiCheck},    {"slider", LUiSlider},
         {"entry", LUiEntry},     {"spacer", LUiSpacer},  {"set", LUiSet},
         {"select", LUiSelect},   {"radio", LUiRadio},    {"progress", LUiProgress},
-        {"image", LUiImage},
+        {"image", LUiImage},     {"set_image", LUiSetImage},
         {"selected", LUiSelected}, {"options", LUiOptions},
         {"text", LUiGetText},    {"checked", LUiGetChecked}, {"value", LUiGetValue},
         {"visible", LUiVisible}, {"disabled", LUiDisabled},  {"remove", LUiRemove},

@@ -286,6 +286,22 @@ class Widget {
   [[nodiscard]] Result<Widget> AddRaw(const RawOptions& options);
 
   /**
+   * @brief Replace the file-backed image displayed by this image widget.
+   * @param path Path understood by the active image loader.
+   * @return Success, or the image-loading error. A failed load leaves the
+   *         previous image unchanged.
+   */
+  [[nodiscard]] Status SetImage(const std::string& path);
+
+  /**
+   * @brief Replace the borrowed texture displayed by this image widget.
+   * @param texture Texture that remains owned by the caller, or nullptr to
+   *        clear the image. It must outlive its use by the widget.
+   * @return Success, or an error when this is not an image widget.
+   */
+  [[nodiscard]] Status SetImage(SDL_Texture* texture);
+
+  /**
    * @brief Replace this widget's displayed text. The widget copies it.
    * @param text New displayed text.
    */

@@ -230,6 +230,24 @@ static Grapple_UiAlign OptAlign(mrb_state *mrb, mrb_value options)
     return GRAPPLE_UI_LEFT;
 }
 
+static Grapple_GuiImageMode OptImageMode(mrb_state *mrb, mrb_value options)
+{
+    const char *text = OptString(mrb, options, "mode", "stretch");
+    if (SDL_strcasecmp(text, "zoom") == 0)
+    {
+        return GRAPPLE_GUI_IMAGE_ZOOM;
+    }
+    if (SDL_strcasecmp(text, "center") == 0 || SDL_strcasecmp(text, "centre") == 0)
+    {
+        return GRAPPLE_GUI_IMAGE_CENTER;
+    }
+    if (SDL_strcasecmp(text, "fill") == 0)
+    {
+        return GRAPPLE_GUI_IMAGE_FILL;
+    }
+    return GRAPPLE_GUI_IMAGE_STRETCH;
+}
+
 /* --- handlers ------------------------------------------------------------ */
 
 /* Blocks live in one array hung off the Grapple module, indexed by the
@@ -859,6 +877,7 @@ static mrb_value RUiImage(mrb_state *mrb, mrb_value self)
     Grapple_UiImageDef def = {0};
     def.path = OptString(mrb, options, "path", NULL);
     def.value = OptString(mrb, options, "value", NULL);
+    def.mode = OptImageMode(mrb, options);
     const mrb_value texture = Key(mrb, options, "texture");
     if (!mrb_nil_p(texture))
     {
@@ -955,6 +974,18 @@ static mrb_value RUiSet(mrb_state *mrb, mrb_value self)
     else
     {
         Grapple_UiSetText(widget, mrb_str_to_cstr(mrb, mrb_obj_as_string(mrb, value)));
+    }
+    return self;
+}
+
+static mrb_value RUiSetImage(mrb_state *mrb, mrb_value self)
+{
+    const char *path = NULL;
+    mrb_get_args(mrb, "z", &path);
+    if (!Grapple_UiSetImagePath(WidgetOf(mrb, self), path))
+    {
+        mrb_raisef(mrb, E_RUNTIME_ERROR, "could not load image '%s': %s", path,
+                   SDL_GetError());
     }
     return self;
 }
@@ -1081,6 +1112,7 @@ bool Grapple_OpenRubyUi(mrb_state *mrb)
     mrb_define_method(mrb, widget, "selected", RUiSelected, MRB_ARGS_OPT(1));
     mrb_define_method(mrb, widget, "options", RUiOptions, MRB_ARGS_NONE());
     mrb_define_method(mrb, widget, "set", RUiSet, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, widget, "set_image", RUiSetImage, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, widget, "text", RUiText, MRB_ARGS_NONE());
     mrb_define_method(mrb, widget, "checked?", RUiChecked, MRB_ARGS_NONE());
     mrb_define_method(mrb, widget, "value", RUiValue, MRB_ARGS_NONE());

@@ -1444,6 +1444,62 @@ TEST(GenLua, APendingEngineDoesNotLeakBetweenStates)
 // invoke() is what makes this checkable without a mouse — the same thing Tk
 // offers for the same reason.
 
+namespace
+{
+
+std::string MakeBindingBitmap(const char *side, int width)
+{
+    const ::testing::TestInfo *info =
+        ::testing::UnitTest::GetInstance()->current_test_info();
+    const std::string test_name = (info != nullptr) ? info->name() : "anon";
+    const std::filesystem::path path =
+        std::filesystem::temp_directory_path() /
+        (std::string("grapple_binding_image_") + test_name + "_" + side + ".bmp");
+    SDL_Surface *surface = SDL_CreateSurface(width, 24, SDL_PIXELFORMAT_RGBA32);
+    if (surface == nullptr || !SDL_SaveBMP(surface, path.string().c_str()))
+    {
+        SDL_DestroySurface(surface);
+        return {};
+    }
+    SDL_DestroySurface(surface);
+    return path.generic_string();
+}
+
+} // namespace
+
+TEST(GenLua, ImageContentsCanChangeInPlace)
+{
+    const std::string heads = MakeBindingBitmap("heads", 24);
+    const std::string tails = MakeBindingBitmap("tails", 32);
+    ASSERT_FALSE(heads.empty());
+    ASSERT_FALSE(tails.empty());
+
+    const std::string script =
+        "local engine = Grapple.engine{ headless = true, auto_mount = false }\n"
+        "local ui = Grapple.ui(engine)\n"
+        "local panel = ui:panel{}\n"
+        "local image = panel:image{ path = '" + heads + "', mode = 'zoom' }\n"
+        "assert(image:set_image('" + tails + "') == image, 'set_image is not chainable')\n";
+    RunLua(script.c_str());
+}
+
+TEST(GenRuby, ImageContentsCanChangeInPlace)
+{
+    const std::string heads = MakeBindingBitmap("heads", 24);
+    const std::string tails = MakeBindingBitmap("tails", 32);
+    ASSERT_FALSE(heads.empty());
+    ASSERT_FALSE(tails.empty());
+
+    const std::string script =
+        "engine = Grapple.engine(headless: true, auto_mount: false)\n"
+        "ui = Grapple.ui(engine)\n"
+        "panel = ui.panel\n"
+        "image = panel.image(path: '" + heads + "', mode: :zoom)\n"
+        "raise 'set_image is not chainable' unless image.set_image('" + tails +
+        "').equal?(image)\n";
+    RunRuby(script.c_str());
+}
+
 TEST(GenLua, WidgetHandlersFire)
 {
     RunLua(

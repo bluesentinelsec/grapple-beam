@@ -209,14 +209,38 @@ Grapple::GUI links the vendored SDL3_image. Naming the file is all any of
 the four languages has to do:
 
 ```lua
-panel:image{ path = "logo.png", on_click = show_about }
+panel:image{ path = "logo.png", mode = "zoom", on_click = show_about }
 ```
+
+Lua accepts `"stretch"`, `"zoom"`, `"center"`, or `"fill"` for `mode`;
+Ruby accepts the matching symbols. The default is stretch in both languages.
 
 Install a loader when the file is not where its name says it is — an atlas,
 a pack file, a cache in front of the disk:
 
 ```c
 Grapple_UiSetImageLoader(LoadFromAtlas, atlas);
+```
+
+An image widget can keep its place in the layout while its contents change:
+
+```c
+if (!Grapple_UiSetImagePath(coin, "images/tails.png")) {
+    SDL_Log("Could not change coin image: %s", SDL_GetError());
+}
+```
+
+The new path is loaded before the old owned texture is released, so a failed
+load leaves the previous picture visible. Use `Grapple_UiSetImageTexture` to
+switch to a caller-owned texture instead; passing `NULL` clears the picture.
+The high-level script methods are chainable:
+
+```lua
+coin:set_image("images/tails.png")
+```
+
+```ruby
+coin.set_image("images/tails.png")
 ```
 
 Or hand over a texture you loaded yourself, which the widget uses as-is and

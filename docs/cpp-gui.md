@@ -186,6 +186,20 @@ progress.SetVisible(true);
 save_button.SetDisabled(false);
 ```
 
+An image widget keeps its layout position when its contents change. This is
+useful for simple state displays such as a card face or traffic light:
+
+```cpp
+grapple::Status status = image.SetImage("images/tails.png");
+if (!status.ok()) {
+  SDL_Log("Could not change image: %s", status.message().c_str());
+}
+```
+
+A failed load leaves the previous image visible. `SetImage(SDL_Texture*)`
+uses a caller-owned texture instead; the texture must outlive its use by the
+widget, and `nullptr` clears the picture.
+
 A callback receives the widget that fired. One callback can therefore serve
 many buttons. `value` stores what a widget means separately from the text the
 player sees:

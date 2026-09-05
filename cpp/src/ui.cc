@@ -290,6 +290,16 @@ Result<Widget> Widget::AddRaw(const RawOptions& options) {
   return Wrap(Grapple_UiRaw(widget_, &definition));
 }
 
+Status Widget::SetImage(const std::string& path) {
+  if (!Grapple_UiSetImagePath(widget_, path.c_str())) return Status::FromSdl();
+  return Status::Ok();
+}
+
+Status Widget::SetImage(SDL_Texture* texture) {
+  if (!Grapple_UiSetImageTexture(widget_, texture)) return Status::FromSdl();
+  return Status::Ok();
+}
+
 void Widget::SetText(const std::string& text) { Grapple_UiSetText(widget_, text.c_str()); }
 
 std::string Widget::text() const {
