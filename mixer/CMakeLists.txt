@@ -19,6 +19,20 @@
 # The root project is CXX-only; the vendored SDL_mixer sources are C.
 enable_language(C)
 
+# Pinned in-tree source, never a system XML dependency (deps/expat.md).
+set(EXPAT_BUILD_TOOLS OFF CACHE BOOL "" FORCE)
+set(EXPAT_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(EXPAT_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(EXPAT_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(EXPAT_BUILD_FUZZERS OFF CACHE BOOL "" FORCE)
+set(EXPAT_BUILD_PKGCONFIG OFF CACHE BOOL "" FORCE)
+set(EXPAT_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
+set(EXPAT_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(EXPAT_DTD OFF CACHE BOOL "" FORCE)
+set(EXPAT_GE ON CACHE BOOL "" FORCE)
+add_subdirectory(src/expat)
+set_target_properties(expat PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 add_library(Grapple_Mixer STATIC
   src/SDL_mixer.c
   src/SDL_mixer_metadata_tags.c
@@ -49,6 +63,7 @@ add_library(Grapple_Mixer STATIC
   src/chip_effects.c
   src/chip_voice.c
   src/chip_player.c
+  src/chip_xml.c
 )
 add_library(Grapple::Mixer ALIAS Grapple_Mixer)
 
@@ -80,15 +95,16 @@ target_include_directories(Grapple_Mixer
 )
 
 target_link_libraries(Grapple_Mixer PUBLIC SDL3::SDL3)
+target_link_libraries(Grapple_Mixer PRIVATE expat)
 
 # Vendored upstream C: build quietly rather than under the project's
 # warnings-as-errors regime; our own code around it stays strict.
 
 # Original streaming synth code follows the project's strict C warning policy.
 if(MSVC)
-  set_source_files_properties(src/chip_midi.c src/chip_voice.c src/chip_player.c src/chip_song.c src/chip_effects.c
+  set_source_files_properties(src/chip_midi.c src/chip_voice.c src/chip_player.c src/chip_song.c src/chip_effects.c src/chip_xml.c
     PROPERTIES COMPILE_OPTIONS "/W4;/WX")
 else()
-  set_source_files_properties(src/chip_midi.c src/chip_voice.c src/chip_player.c src/chip_song.c src/chip_effects.c
+  set_source_files_properties(src/chip_midi.c src/chip_voice.c src/chip_player.c src/chip_song.c src/chip_effects.c src/chip_xml.c
     PROPERTIES COMPILE_OPTIONS "-Wall;-Wextra;-Wpedantic;-Werror;-Wconversion;-Wshadow")
 endif()
