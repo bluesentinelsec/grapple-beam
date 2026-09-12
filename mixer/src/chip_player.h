@@ -14,6 +14,7 @@ typedef struct ChipChannel
     int rpn_msb;
     int rpn_lsb;
     bool sustain;
+    bool percussion;
     bool sostenuto;
     float soft;
     float pitch;

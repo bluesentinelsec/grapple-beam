@@ -38,6 +38,7 @@ extern "C"
         float sustain;
         float release_step;
         float amplitude;
+        float instrument_gain, instrument_left, instrument_right;
         float age;
         float low;
         float band;

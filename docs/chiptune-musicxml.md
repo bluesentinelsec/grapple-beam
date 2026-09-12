@@ -233,3 +233,17 @@ wraps do not allocate. There are at most 32 private buses per player, each about
 1.6 MiB at 48 kHz, in addition to the five shared buses. Buffer size scales with
 sample rate. Voice/channel checkpoints are proportional to configured polyphony
 and part count; callback scratch space is about 4 KiB plus voice DSP stack.
+
+## Instruments within a part
+
+Instrument IDs are indexed per part (up to 256). A declared score instrument
+without MIDI metadata uses a pitched default. The first declared instrument is
+the default for notes without an ID; lexical ID order does not change it.
+Program, volume and pan are carried per note, so simultaneous instruments sharing
+a nominal MIDI channel do not overwrite each other's timbre or stereo placement.
+Explicit part controllers remain a separate layer. `sound/midi-instrument` changes
+resolve by source position and offset before navigation expansion, including
+multiple voices and out-of-order XML note traversal. They affect subsequent
+attacks; held notes retain their instrument. Repeats restore the source passage's
+instrument assignment. Unpitched instrument metadata selects percussion regardless
+of the nominal channel, unless an explicit preset or role name overrides it.

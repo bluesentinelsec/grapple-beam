@@ -767,3 +767,98 @@ TEST(ChipMusicXml, MemoryHelperOwnsItsParsedResultAndReportsInvalidInput)
     EXPECT_EQ(Grapple_LoadChipSongMemory(nullptr, 0, nullptr, &error), nullptr);
     EXPECT_EQ(error.code, GRAPPLE_CHIP_DIAGNOSTIC_INPUT);
 }
+
+TEST(ChipMusicXml, SameChannelInstrumentsKeepTheirOwnProgramVolumeAndPan)
+{
+    const auto song = LoadXml(
+        "<score-partwise><part-list><score-part id='P'><part-name>ensemble</part-name>"
+        "<score-instrument id='z'/><score-instrument id='a'/>"
+        "<midi-instrument id='z'><midi-channel>1</midi-channel><midi-program>33</midi-program>"
+        "<volume>25</volume><pan>-90</pan></midi-instrument>"
+        "<midi-instrument id='a'><midi-channel>1</midi-channel><midi-program>81</midi-program>"
+        "<volume>80</volume><pan>90</pan></midi-instrument></score-part></part-list><part id='P'>"
+        "<measure>" +
+        Note("1") + Note("1", "<instrument id='a'/>") + "</measure></part></score-partwise>");
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 2u);
+    EXPECT_EQ(notes[0].program, 32);
+    EXPECT_FLOAT_EQ(notes[0].instrument_gain, 0.25f);
+    EXPECT_FLOAT_EQ(notes[0].instrument_pan, -90);
+    EXPECT_EQ(notes[1].program, 80);
+    EXPECT_FLOAT_EQ(notes[1].instrument_gain, 0.8f);
+    EXPECT_FLOAT_EQ(notes[1].instrument_pan, 90);
+    const Player player(Grapple_CreateChipPlayer(song.get(), 8000, 16, false),
+                        Grapple_DestroyChipPlayer);
+    ASSERT_TRUE(player);
+    std::vector<float> pcm(1600);
+    ASSERT_EQ(Grapple_RenderChipPlayer(player.get(), pcm.data(), 800), 800);
+    Grapple_ChipMapping mapping{};
+    ASSERT_TRUE(Grapple_ReadChipTrackMapping(player.get(), 0, 0, &mapping));
+    EXPECT_EQ(mapping.preset, GRAPPLE_CHIP_PRESET_BASS);
+    EXPECT_EQ(mapping.reason, GRAPPLE_CHIP_MAPPING_PROGRAM);
+}
+
+TEST(ChipMusicXml, InstrumentChangesRespectOffsetsAndDocumentOrderIndependently)
+{
+    const auto song =
+        LoadXml("<score-partwise><part-list><score-part id='P'><part-name>ensemble</part-name>"
+                "<score-instrument id='i'/><midi-instrument id='i'><midi-program>33</midi-program>"
+                "</midi-instrument></score-part></part-list><part id='P'><measure>"
+                "<direction><offset>2</offset><sound><midi-instrument "
+                "id='i'><midi-program>89</midi-program>"
+                "<volume>50</volume></midi-instrument></sound></direction>" +
+                Note("1") + Note("1") + Note("1") + "<backup><duration>3</duration></backup>" +
+                Note("1", "<voice>2</voice>") + "</measure></part></score-partwise>");
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 4u);
+    for (const auto &note : notes)
+    {
+        const bool changed = note.tick >= 2u * static_cast<Uint64>(song->info.ticks_per_quarter);
+        EXPECT_EQ(note.program, changed ? 88 : 32);
+        EXPECT_FLOAT_EQ(note.instrument_gain, changed ? 0.5f : 1);
+    }
+}
+
+TEST(ChipMusicXml, UnpitchedMetadataChoosesDrumsOnAnyMidiChannel)
+{
+    const auto song = LoadXml(
+        "<score-partwise><part-list><score-part id='P'><part-name>kit</part-name>"
+        "<midi-instrument "
+        "id='snare'><midi-channel>1</midi-channel><midi-unpitched>39</midi-unpitched>"
+        "</midi-instrument></score-part></part-list><part id='P'><measure><note><unpitched/>"
+        "<duration>1</duration><instrument id='snare'/></note></measure></part></score-partwise>");
+    ASSERT_TRUE(song) << SDL_GetError();
+    ASSERT_EQ(Onsets(song.get()).size(), 1u);
+    EXPECT_TRUE(Onsets(song.get())[0].unpitched);
+    const Player player(Grapple_CreateChipPlayer(song.get(), 8000, 16, false),
+                        Grapple_DestroyChipPlayer);
+    ASSERT_TRUE(player);
+    float pcm[2];
+    ASSERT_EQ(Grapple_RenderChipPlayer(player.get(), pcm, 1), 1);
+    Grapple_ChipMapping mapping{};
+    ASSERT_TRUE(Grapple_ReadChipTrackMapping(player.get(), 0, 0, &mapping));
+    EXPECT_EQ(mapping.preset, GRAPPLE_CHIP_PRESET_DRUMS);
+    EXPECT_EQ(mapping.reason, GRAPPLE_CHIP_MAPPING_PERCUSSION);
+}
+
+TEST(ChipMusicXml, NamedInstrumentWithoutMidiMetadataStillHasAPitchedDefault)
+{
+    const auto song = LoadXml(
+        "<score-partwise><part-list><score-part id='P'><part-name>ensemble</part-name>"
+        "<score-instrument id='i'><instrument-name>Synth</instrument-name></score-instrument>"
+        "</score-part></part-list><part id='P'><measure>" +
+        Note("1", "<instrument id='i'/>") + "</measure></part></score-partwise>");
+    ASSERT_TRUE(song) << SDL_GetError();
+    EXPECT_EQ(Onsets(song.get())[0].program, 0);
+}
+
+TEST(ChipMusicXml, DifferentMicrotonalPitchesCannotBeTiedTogether)
+{
+    EXPECT_FALSE(
+        LoadXml(Score("<measure>" + Note("1", "<tie type='start'/>") +
+                      "<note><pitch><step>C</step><alter>0.5</alter><octave>4</octave></pitch>"
+                      "<duration>1</duration><tie type='stop'/></note></measure>")));
+    EXPECT_NE(std::string(SDL_GetError()).find("tie stop"), std::string::npos);
+}

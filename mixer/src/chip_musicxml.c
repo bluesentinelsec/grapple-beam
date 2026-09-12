@@ -480,54 +480,6 @@ static bool Attributes(ScoreReader *r, const ChipXmlNode *node)
     return !r->failed;
 }
 
-static const ChipXmlNode *Instrument(const ScoreReader *r, const char *id)
-{
-    const ChipXmlNode *first = NULL;
-    for (const ChipXmlNode *c = r->definition->children; c; c = c->next)
-        if (Named(c, "midi-instrument"))
-        {
-            if (!first)
-                first = c;
-            if (*id && SDL_strcmp(id, Chip_XmlAttribute(c, "id")) == 0)
-                return c;
-        }
-    return *id ? NULL : first;
-}
-
-static int Channel(ScoreReader *r, const ChipXmlNode *instrument)
-{
-    return Chip_ScoreInteger(r, instrument, Chip_XmlText(instrument, "midi-channel"),
-                             Chip_XmlChild(instrument, "midi-unpitched") ? 10 : 1, 1, 16) -
-           1;
-}
-
-static bool InitInstruments(ScoreReader *r)
-{
-    for (const ChipXmlNode *c = r->definition->children; c; c = c->next)
-    {
-        if (!Named(c, "midi-instrument"))
-            continue;
-        const int channel = Channel(r, c);
-        if (Chip_XmlChild(c, "midi-program"))
-        {
-            const int program =
-                Chip_ScoreInteger(r, c, Chip_XmlText(c, "midi-program"), 1, 1, 128) - 1;
-            if (r->song->tracks[r->part].first_program < 0)
-                r->song->tracks[r->part].first_program = program;
-            if (!Chip_ScoreControl(r, 0, 0xc0 | channel, program, 0, 0))
-                return false;
-        }
-        const int volume =
-            (int)SDL_round(Chip_ScoreDecimal(r, c, Chip_XmlText(c, "volume"), 100, 0, 100) * 1.27);
-        const double angle = Chip_ScoreDecimal(r, c, Chip_XmlText(c, "pan"), 0, -180, 180);
-        const int pan = (int)SDL_round((SDL_sin(angle * SDL_PI_D / 180) + 1) * 63.5);
-        if (!Chip_ScoreControl(r, 0, 0xb0 | channel, 7, volume, 0) ||
-            !Chip_ScoreControl(r, 0, 0xb0 | channel, 10, pan, 0))
-            return false;
-    }
-    return !r->failed;
-}
-
 int Chip_ScoreDynamic(const char *name)
 {
     static const char *const names[] = {"pppp", "ppp", "pp", "p",   "mp",
@@ -556,6 +508,8 @@ static bool Direction(ScoreReader *r, const ChipXmlNode *node, Sint64 cursor)
     if (cursor < 0)
         return Chip_ScoreError(r, node, "direction before measure start");
     if (!NavigationSound(r, sound))
+        return false;
+    if (!Chip_ReadInstrumentChange(r, sound, cursor))
         return false;
     const char *tempo = Chip_XmlAttribute(sound, "tempo");
     if (*tempo)
@@ -665,10 +619,14 @@ static bool Note(ScoreReader *r, const ChipXmlNode *node, Sint64 *cursor, Sint64
             SDL_min(127, (int)SDL_round(Chip_ScoreDecimal(r, node, dynamics, 100, 0, 1000) * 0.9));
     note.voice = Chip_XmlText(node, "voice");
     note.instrument = Chip_XmlAttribute(Chip_XmlChild(node, "instrument"), "id");
-    const ChipXmlNode *instrument = Instrument(r, note.instrument);
-    if (*note.instrument && !instrument)
-        return Chip_ScoreError(r, node, "unresolved instrument ID");
-    note.channel = Channel(r, instrument);
+    const ScoreInstrument *instrument = Chip_ScoreInstrument(r, node, note.instrument);
+    if (!instrument)
+        return false;
+    note.instrument = instrument->id;
+    note.channel = instrument->channel;
+    note.program = instrument->program;
+    note.instrument_gain = instrument->gain;
+    note.instrument_pan = instrument->pan;
     const ChipXmlNode *pitch = Chip_XmlChild(node, "pitch");
     if (pitch)
     {
@@ -698,10 +656,11 @@ static bool Note(ScoreReader *r, const ChipXmlNode *node, Sint64 *cursor, Sint64
         note.lower_pitch = base + natural[(index + 6) % 7] - (index == 0 ? 12 : 0) +
                            r->key[note.staff][(index + 6) % 7];
     }
-    else if (Chip_XmlChild(node, "unpitched") && Chip_XmlChild(instrument, "midi-unpitched"))
-        note.pitch = Chip_ScoreInteger(r, instrument, Chip_XmlText(instrument, "midi-unpitched"), 1,
-                                       1, 128) -
-                     1;
+    else if (Chip_XmlChild(node, "unpitched") && instrument->unpitched >= 0)
+    {
+        note.pitch = instrument->unpitched;
+        note.unpitched = true;
+    }
     else if (!note.rest)
         return Chip_ScoreError(r, node, "note needs pitch or mapped percussion instrument");
     if (note.pitch < 0 || note.pitch > 127)
@@ -821,7 +780,7 @@ Grapple_ChipSong *Chip_ParseMusicXml(const void *data, size_t size,
         r.ending = 0;
         SDL_strlcpy(r.song->tracks[r.part].name, Chip_XmlText(definition, "part-name"),
                     sizeof(r.song->tracks[r.part].name));
-        if (!InitInstruments(&r))
+        if (!Chip_InitScoreInstruments(&r))
         {
             r.failed = true;
             goto done;
@@ -881,6 +840,8 @@ done:
     SDL_free(r.controls);
     SDL_free(r.lengths);
     SDL_free(r.navigation);
+    SDL_free(r.instruments);
+    SDL_free(r.instrument_changes);
     if (r.failed)
     {
         Grapple_DestroyChipSong(r.song);

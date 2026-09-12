@@ -26,7 +26,10 @@ extern "C"
         Uint64 duration;     /* Nominal note duration in ticks, for per-note curves. */
         float value, target; /* Note gain automation (private status 0xf1). */
         Uint32 expression;   /* One-based expression index; zero is neutral. */
-        Uint32 note_id;      /* Zero preserves MIDI's oldest matching note-off semantics. */
+        bool instrument_data, unpitched;
+        Uint8 program;
+        float instrument_gain, instrument_pan;
+        Uint32 note_id; /* Zero preserves MIDI's oldest matching note-off semantics. */
     } ChipEvent;
 
     typedef struct ChipMeasurePosition

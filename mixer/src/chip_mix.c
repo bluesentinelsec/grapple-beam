@@ -107,13 +107,15 @@ bool Grapple_ReadChipTrackMapping(Grapple_ChipPlayer *p, int track, int channel,
     ChipEvent event = {0};
     event.track = (Uint16)track;
     event.status = (Uint8)(0x90 | channel);
+    event.unpitched =
+        p->channels[(p->song->independent_parts ? track * 16 : 0) + channel].percussion;
     mapping->preset = Chip_ResolvePreset(p, &event);
     mapping->program = p->channels[(p->song->independent_parts ? track * 16 : 0) + channel].program;
     mapping->channel = channel;
     mapping->reason =
         p->parts[track].preset != GRAPPLE_CHIP_PRESET_AUTO         ? GRAPPLE_CHIP_MAPPING_OVERRIDE
         : p->parts[track].named_preset != GRAPPLE_CHIP_PRESET_AUTO ? GRAPPLE_CHIP_MAPPING_NAME
-        : channel == 9                                             ? GRAPPLE_CHIP_MAPPING_PERCUSSION
+        : (channel == 9 || event.unpitched)                        ? GRAPPLE_CHIP_MAPPING_PERCUSSION
         : mapping->preset != GRAPPLE_CHIP_PRESET_LEAD              ? GRAPPLE_CHIP_MAPPING_PROGRAM
                                                                    : GRAPPLE_CHIP_MAPPING_DEFAULT;
     SDL_UnlockAudioStream(p->stream);

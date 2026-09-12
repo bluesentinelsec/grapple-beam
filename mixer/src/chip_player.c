@@ -105,7 +105,7 @@ Grapple_ChipPreset Chip_ResolvePreset(const Grapple_ChipPlayer *p, const ChipEve
     if (named_preset != GRAPPLE_CHIP_PRESET_AUTO)
         return named_preset;
     const int channel = event->status & 15;
-    if (channel == 9)
+    if (channel == 9 || event->unpitched)
         return GRAPPLE_CHIP_PRESET_DRUMS;
     const int program = p->channels[EventChannel(p, event)].program;
     if (program >= 32 && program <= 39)
@@ -134,6 +134,11 @@ static void StartNote(Grapple_ChipPlayer *p, const ChipEvent *event)
     }
     if (!selected)
         selected = oldest;
+    if (event->instrument_data)
+    {
+        p->channels[EventChannel(p, event)].program = event->program;
+        p->channels[EventChannel(p, event)].percussion = event->unpitched;
+    }
     const Grapple_ChipPreset preset = Chip_ResolvePreset(p, event);
     if (preset == GRAPPLE_CHIP_PRESET_DRUMS && (event->a == 42 || event->a == 44))
     {
@@ -176,6 +181,14 @@ static void StartNote(Grapple_ChipPlayer *p, const ChipEvent *event)
         selected->expression = *expression;
     selected->start_beat = (double)event->tick / p->song->info.ticks_per_quarter;
     selected->duration_beats = (double)event->duration / p->song->info.ticks_per_quarter;
+    if (event->instrument_data)
+    {
+        selected->instrument_gain = event->instrument_gain;
+        const float pan = event->instrument_pan * SDL_PI_F / 180;
+        const float angle = (SDL_sinf(pan) + 1) * SDL_PI_F / 4;
+        selected->instrument_left = SDL_cosf(angle) * 1.41421356f;
+        selected->instrument_right = SDL_sinf(angle) * 1.41421356f;
+    }
     selected->track = event->track;
     selected->channel = EventChannel(p, event);
     selected->note_id = event->note_id;
@@ -434,12 +447,14 @@ int Grapple_RenderChipPlayer(Grapple_ChipPlayer *p, float *stereo, int frames)
                                                          v->duration_beats) /
                                         12),
                     channel->modulation, p->sample_rate, effects->motion, motion_pulse) *
-                gain * envelope_gain * part->gain * channel->volume * channel->expression *
-                (1 - channel->soft * 0.3f);
+                gain * envelope_gain * v->instrument_gain * part->gain * channel->volume *
+                channel->expression * (1 - channel->soft * 0.3f);
             const float audible = !part->muted && (!any_solo || part->solo) ? 1.0f : 0.0f;
             float *bus = part->effects ? part_buses[v->track] : buses[v->preset];
-            bus[0] += sample * channel->pan_left * SDL_min(1, 1 - part->pan) * audible;
-            bus[1] += sample * channel->pan_right * SDL_min(1, 1 + part->pan) * audible;
+            bus[0] += sample * v->instrument_left * channel->pan_left * SDL_min(1, 1 - part->pan) *
+                      audible;
+            bus[1] += sample * v->instrument_right * channel->pan_right *
+                      SDL_min(1, 1 + part->pan) * audible;
         }
         float left = 0, right = 0;
         Uint64 quiet_limit = 0;

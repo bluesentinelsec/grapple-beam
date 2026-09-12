@@ -12,6 +12,20 @@ typedef struct ScoreNumber
 {
     Sint64 numerator, denominator;
 } ScoreNumber;
+typedef struct ScoreInstrument
+{
+    const char *id;
+    const ChipXmlNode *node;
+    int channel, program, unpitched;
+    float gain, pan;
+} ScoreInstrument;
+typedef struct ScoreInstrumentChange
+{
+    int part, measure;
+    Sint64 start;
+    const ChipXmlNode *node;
+    ScoreInstrument instrument;
+} ScoreInstrumentChange;
 typedef struct ScoreNote
 {
     int part, measure, staff, pitch, velocity, channel;
@@ -27,6 +41,9 @@ typedef struct ScoreNote
     bool grace, rest;
     Sint64 make_time;
     double upper_pitch, lower_pitch;
+    int program;
+    bool unpitched;
+    float instrument_gain, instrument_pan;
 } ScoreNote;
 typedef enum ScoreDirectionKind
 {
@@ -72,6 +89,11 @@ typedef struct ScoreReader
     int measures;
     ChipScoreMeasure *navigation;
     Uint32 ending;
+    ScoreInstrument *instruments;
+    int instrument_count;
+    const char *default_instrument;
+    ScoreInstrumentChange *instrument_changes;
+    size_t instrument_change_count, instrument_change_capacity;
 } ScoreReader;
 
 bool Chip_ScoreError(ScoreReader *r, const ChipXmlNode *node, const char *message);
@@ -95,5 +117,10 @@ bool Chip_RestoreDirections(ScoreReader *r, const ScoreControl *controls, size_t
 bool Chip_ApplySwing(ScoreReader *r);
 bool Chip_ApplyDirections(ScoreReader *r);
 int Chip_ScoreDynamic(const char *name);
+bool Chip_InitScoreInstruments(ScoreReader *r);
+const ScoreInstrument *Chip_ScoreInstrument(ScoreReader *r, const ChipXmlNode *node,
+                                            const char *id);
+bool Chip_ReadInstrumentChange(ScoreReader *r, const ChipXmlNode *sound, Sint64 cursor);
+bool Chip_ApplyInstrumentChanges(ScoreReader *r);
 bool Chip_CompileScore(ScoreReader *r);
 #endif

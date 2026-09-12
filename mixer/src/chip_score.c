@@ -308,7 +308,7 @@ static int SDLCALL CompareControls(const void *left, const void *right)
 
 bool Chip_CompileScore(ScoreReader *r)
 {
-    if (!Chip_PrepareDirections(r))
+    if (!Chip_ApplyInstrumentChanges(r) || !Chip_PrepareDirections(r))
         return false;
     if (r->control_count)
         SDL_qsort(r->controls, r->control_count, sizeof(*r->controls), CompareControls);
@@ -369,6 +369,7 @@ bool Chip_CompileScore(ScoreReader *r)
             {
                 const ScoreNote *a = &r->notes[active[t]];
                 if (a->part == n->part && a->staff == n->staff && a->pitch == n->pitch &&
+                    a->expression.tuning == n->expression.tuning &&
                     a->start + a->duration == n->start && SDL_strcmp(a->voice, n->voice) == 0 &&
                     SDL_strcmp(a->instrument, n->instrument) == 0)
                     break;
@@ -403,6 +404,11 @@ bool Chip_CompileScore(ScoreReader *r)
         event.status = (Uint8)(0x90 | n->channel);
         event.a = (Uint8)n->pitch;
         event.b = (Uint8)SDL_max(n->velocity, 1);
+        event.instrument_data = true;
+        event.unpitched = n->unpitched;
+        event.program = (Uint8)n->program;
+        event.instrument_gain = n->instrument_gain;
+        event.instrument_pan = n->instrument_pan;
         event.note_id = (Uint32)i + 1;
         event.duration = (Uint64)n->duration;
         if (!Chip_AppendExpression(r->song, &n->expression, &event.expression))
