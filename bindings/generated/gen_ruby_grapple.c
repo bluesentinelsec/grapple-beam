@@ -206,6 +206,20 @@ static mrb_value GenPush_Grapple_ChipDiagnostic(mrb_state *mrb, const Grapple_Ch
     GrappleGen_RubyHashSet(mrb, h, "measure", mrb_int_value(mrb, (mrb_int)in->measure));
     GrappleGen_RubyHashSet(mrb, h, "staff", mrb_int_value(mrb, (mrb_int)in->staff));
     GrappleGen_RubyHashSet(mrb, h, "line", mrb_int_value(mrb, (mrb_int)in->line));
+    {
+        mrb_value arr = mrb_ary_new_capa(mrb, (mrb_int)(64));
+        for (mrb_int gi = 0; gi < (mrb_int)(64); ++gi) {
+            mrb_ary_push(mrb, arr, mrb_int_value(mrb, (mrb_int)in->voice[gi]));
+        }
+        GrappleGen_RubyHashSet(mrb, h, "voice", arr);
+    }
+    {
+        mrb_value arr = mrb_ary_new_capa(mrb, (mrb_int)(64));
+        for (mrb_int gi = 0; gi < (mrb_int)(64); ++gi) {
+            mrb_ary_push(mrb, arr, mrb_int_value(mrb, (mrb_int)in->element[gi]));
+        }
+        GrappleGen_RubyHashSet(mrb, h, "element", arr);
+    }
     return h;
 }
 
@@ -255,6 +269,7 @@ static void GenRead_Grapple_ChipExpression(mrb_state *mrb, mrb_value h, Grapple_
     out->vibrato_beats = (float)GrappleGen_RubyFieldNum(mrb, h, "vibrato_beats");
     out->lane = (int)GrappleGen_RubyFieldInt(mrb, h, "lane");
     out->legato = (bool)GrappleGen_RubyFieldBool(mrb, h, "legato");
+    out->bend_accelerate = (bool)GrappleGen_RubyFieldBool(mrb, h, "bend_accelerate");
     out->stepped_pitch = (bool)GrappleGen_RubyFieldBool(mrb, h, "stepped_pitch");
 }
 
@@ -275,6 +290,7 @@ static mrb_value GenPush_Grapple_ChipExpression(mrb_state *mrb, const Grapple_Ch
     GrappleGen_RubyHashSet(mrb, h, "vibrato_beats", mrb_float_value(mrb, (mrb_float)in->vibrato_beats));
     GrappleGen_RubyHashSet(mrb, h, "lane", mrb_int_value(mrb, (mrb_int)in->lane));
     GrappleGen_RubyHashSet(mrb, h, "legato", mrb_bool_value((mrb_bool)(in->legato != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "bend_accelerate", mrb_bool_value((mrb_bool)(in->bend_accelerate != 0)));
     GrappleGen_RubyHashSet(mrb, h, "stepped_pitch", mrb_bool_value((mrb_bool)(in->stepped_pitch != 0)));
     return h;
 }
@@ -10989,6 +11005,10 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_const(mrb, mod, "GRAPPLE_CHIP_DIAGNOSTIC_UNSUPPORTED", mrb_int_value(mrb, (mrb_int)GRAPPLE_CHIP_DIAGNOSTIC_UNSUPPORTED));
     mrb_define_const(mrb, mod, "GRAPPLE_CHIP_DIAGNOSTIC_APPROXIMATION", mrb_int_value(mrb, (mrb_int)GRAPPLE_CHIP_DIAGNOSTIC_APPROXIMATION));
     mrb_define_const(mrb, mod, "GRAPPLE_CHIP_DIAGNOSTIC_STAFF_MIRROR", mrb_int_value(mrb, (mrb_int)GRAPPLE_CHIP_DIAGNOSTIC_STAFF_MIRROR));
+    mrb_define_const(mrb, mod, "GRAPPLE_CHIP_DIAGNOSTIC_RESOURCE", mrb_int_value(mrb, (mrb_int)GRAPPLE_CHIP_DIAGNOSTIC_RESOURCE));
+    mrb_define_const(mrb, mod, "GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE", mrb_int_value(mrb, (mrb_int)GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE));
+    mrb_define_const(mrb, mod, "GRAPPLE_CHIP_DIAGNOSTIC_CONFLICT", mrb_int_value(mrb, (mrb_int)GRAPPLE_CHIP_DIAGNOSTIC_CONFLICT));
+    mrb_define_const(mrb, mod, "GRAPPLE_CHIP_DIAGNOSTIC_EXPORTER_OMISSION", mrb_int_value(mrb, (mrb_int)GRAPPLE_CHIP_DIAGNOSTIC_EXPORTER_OMISSION));
     mrb_define_const(mrb, mod, "GRAPPLE_CHIP_DIAGNOSTIC_INFO", mrb_int_value(mrb, (mrb_int)GRAPPLE_CHIP_DIAGNOSTIC_INFO));
     mrb_define_const(mrb, mod, "GRAPPLE_CHIP_DIAGNOSTIC_WARNING", mrb_int_value(mrb, (mrb_int)GRAPPLE_CHIP_DIAGNOSTIC_WARNING));
     mrb_define_const(mrb, mod, "GRAPPLE_CHIP_DIAGNOSTIC_ERROR", mrb_int_value(mrb, (mrb_int)GRAPPLE_CHIP_DIAGNOSTIC_ERROR));

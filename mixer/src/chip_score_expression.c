@@ -13,7 +13,10 @@ bool Chip_ScoreApproximation(ScoreReader *r, const ScoreNote *note, const char *
                                          note->part,
                                          note->source_measure,
                                          note->staff + 1,
-                                         (Uint32)note->node->line};
+                                         (Uint32)note->node->line,
+                                         "",
+                                         ""};
+    Chip_DiagnosticContext(&diagnostic, note->node);
     return Chip_AddDiagnostic(r->song, diagnostic, message);
 }
 
@@ -31,16 +34,18 @@ static bool ReadNotation(ScoreReader *r, ScoreNote *n, const ChipXmlNode *node)
     {
         if (Named(c, "staccato"))
             n->gate = SDL_min(n->gate, r->options->staccato_gate);
-        else if (Named(c, "staccatissimo"))
+        else if (Named(c, "staccatissimo") || Named(c, "spiccato"))
             n->gate = SDL_min(n->gate, r->options->staccatissimo_gate);
         else if (Named(c, "detached-legato"))
             n->gate = SDL_min(n->gate, r->options->portato_gate);
         else if (Named(c, "tenuto"))
             n->gate = SDL_min(n->gate, 1);
-        else if (Named(c, "accent") || Named(c, "strong-accent"))
+        else if (Named(c, "unstress") || Named(c, "soft-accent"))
+            n->velocity = SDL_max(1, n->velocity - 12);
+        else if (Named(c, "accent") || Named(c, "strong-accent") || Named(c, "stress"))
         {
             if (!*Chip_XmlAttribute(n->node, "dynamics"))
-                n->velocity = SDL_min(127, n->velocity + (Named(c, "accent") ? 16 : 26));
+                n->velocity = SDL_min(127, n->velocity + (Named(c, "strong-accent") ? 26 : 16));
         }
         else if (Named(c, "bend"))
         {
@@ -48,6 +53,7 @@ static bool ReadNotation(ScoreReader *r, ScoreNote *n, const ChipXmlNode *node)
                 return Chip_ScoreError(r, c, "more than two bend segments on a note");
             const float amount =
                 (float)Chip_ScoreDecimal(r, c, Chip_XmlText(c, "bend-alter"), 0, -48, 48);
+            e->bend_accelerate |= SDL_strcmp(Chip_XmlAttribute(c, "accelerate"), "yes") == 0;
             const bool prebend = Chip_XmlChild(c, "pre-bend") != NULL;
             release |= Chip_XmlChild(c, "release") != NULL;
             if (bends == 1)
@@ -71,11 +77,24 @@ static bool ReadNotation(ScoreReader *r, ScoreNote *n, const ChipXmlNode *node)
                 e->bend_end = 0;
             }
         }
+        else if (Named(c, "scoop") || Named(c, "plop") || Named(c, "doit") || Named(c, "falloff"))
+        {
+            const bool ending = Named(c, "doit") || Named(c, "falloff");
+            const float interval = Named(c, "plop") || Named(c, "falloff") ? -2.0f : 2.0f;
+            e->bend_start = ending ? 0 : -interval;
+            e->bend_peak = e->bend_end = ending ? interval : 0;
+            e->bend_first = ending ? 0.75f : 0;
+            e->bend_middle = e->bend_last = ending ? 1 : 0.25f;
+        }
         else if (Named(c, "harmonic"))
         {
             e->brightness = 1.5f;
             e->gain *= 0.7f;
         }
+        else if (Named(c, "up-bow") || Named(c, "down-bow") || Named(c, "pluck"))
+            e->brightness = Named(c, "up-bow") ? 1.1f : 1.2f;
+        else if (Named(c, "half-muted") || Named(c, "harmon-mute"))
+            e->brightness = 0.6f;
         else if (Named(c, "fingernails") || Named(c, "snap-pizzicato") || Named(c, "tap"))
         {
             e->brightness = 1.6f;
@@ -92,12 +111,40 @@ static bool ReadNotation(ScoreReader *r, ScoreNote *n, const ChipXmlNode *node)
                 e->vibrato_depth = 0.35f;
             else if (SDL_strcasecmp(c->text, "slap") == 0 || SDL_strcasecmp(c->text, "pop") == 0)
                 e->brightness = 1.7f;
+            else if (SDL_strcasecmp(c->text, "let ring") == 0 ||
+                     SDL_strcasecmp(c->text, "let-ring") == 0)
+                n->let_ring = true;
+            else if (SDL_strcasecmp(c->text, "wide vibrato") == 0)
+                e->vibrato_depth = 0.7f;
+            else if (SDL_strcasecmp(c->text, "ghost note") == 0)
+                e->gain *= 0.6f;
+            else if (SDL_strcasecmp(c->text, "dead note") == 0)
+            {
+                e->noise = 0.85f;
+                n->gate = 0.2;
+            }
+            else if (SDL_strcasecmp(c->text, "rasgueado") == 0 ||
+                     SDL_strcasecmp(c->text, "upstroke") == 0 ||
+                     SDL_strcasecmp(c->text, "downstroke") == 0)
+            {
+                e->brightness = 1.5f;
+                e->noise = 0.15f;
+            }
             else if (SDL_strcasecmp(c->text, "palm mute") == 0)
             {
                 e->brightness = 0.35f;
                 n->gate = SDL_min(n->gate, 0.4);
             }
+            else if (!Chip_ScoreUnsupported(
+                         r, c, "Unrecognized technical text; encode pitch/timing explicitly"))
+                return false;
         }
+        if ((Named(c, "harmonic") || Named(c, "bend") || Named(c, "other-technical") ||
+             Named(c, "up-bow") || Named(c, "down-bow") || Named(c, "scoop") || Named(c, "plop") ||
+             Named(c, "doit") || Named(c, "falloff")) &&
+            !Chip_ScoreApproximation(
+                r, n, "Instrument gestures use the documented chiptune timbre/curve policy"))
+            return false;
         if (!Named(c, "bend") && !ReadNotation(r, n, c->children))
             return false;
     }
@@ -106,6 +153,10 @@ static bool ReadNotation(ScoreReader *r, ScoreNote *n, const ChipXmlNode *node)
 
 bool Chip_ReadNoteExpression(ScoreReader *r, ScoreNote *note)
 {
+    const ChipXmlNode *technical =
+        Chip_XmlChild(Chip_XmlChild(note->node, "notations"), "technical");
+    note->string_number =
+        Chip_ScoreInteger(r, technical, Chip_XmlText(technical, "string"), 0, 0, 32);
     const char *attack = Chip_XmlAttribute(note->node, "attack");
     const char *release = Chip_XmlAttribute(note->node, "release");
     if (*attack)
@@ -122,6 +173,11 @@ bool Chip_ReadNoteExpression(ScoreReader *r, ScoreNote *note)
         note->expression.noise = 0.85f;
         note->gate = 0.2;
     }
+    if (SDL_strcmp(Chip_XmlAttribute(note->node, "pizzicato"), "yes") == 0)
+    {
+        note->expression.brightness = 1.4f;
+        note->gate = SDL_min(note->gate, 0.6);
+    }
     return ReadNotation(r, note, Chip_XmlChild(note->node, "notations")) &&
            Chip_ValidExpression(&note->expression);
 }
@@ -133,6 +189,7 @@ typedef struct ScoreLine
     Uint32 slurs;
     size_t slides[16];
     bool stepped[16];
+    const ChipXmlNode *trill;
 } ScoreLine;
 
 static bool Connect(ScoreReader *r, ScoreNote *n, ScoreLine *line, const ChipXmlNode *node,
@@ -140,7 +197,20 @@ static bool Connect(ScoreReader *r, ScoreNote *n, ScoreLine *line, const ChipXml
 {
     for (const ChipXmlNode *c = node; c; c = c->next)
     {
-        if (Named(c, "slur") || Named(c, "hammer-on") || Named(c, "pull-off"))
+        if (Named(c, "wavy-line"))
+        {
+            const char *type = Chip_XmlAttribute(c, "type");
+            if (SDL_strcmp(type, "start") == 0)
+            {
+                line->trill = Chip_XmlChild(c->parent, "trill-mark");
+                if (!line->trill)
+                    line->trill = c;
+                n->ornament_override = line->trill;
+            }
+            else if (SDL_strcmp(type, "stop") == 0)
+                line->trill = NULL;
+        }
+        else if (Named(c, "slur") || Named(c, "hammer-on") || Named(c, "pull-off"))
         {
             const int number =
                 Chip_ScoreInteger(r, c, Chip_XmlAttribute(c, "number"), 1, 1, 16) - 1;
@@ -218,7 +288,8 @@ bool Chip_ResolveNoteExpression(ScoreReader *r)
         {
             if (count == 4096)
             {
-                ok = Chip_ScoreError(r, n->node, "logical voice limit exceeded");
+                ok = Chip_ScoreFail(r, n->node, GRAPPLE_CHIP_DIAGNOSTIC_RESOURCE,
+                                    "logical voice limit exceeded");
                 break;
             }
             lines[count].part = n->part;
@@ -226,6 +297,7 @@ bool Chip_ResolveNoteExpression(ScoreReader *r)
             lines[count].voice = n->voice;
             lines[count++].instrument = n->instrument;
         }
+        n->ornament_override = lines[lane].trill;
         n->expression.lane = (int)lane;
         n->expression.legato = lines[lane].slurs != 0;
         ok = Connect(r, n, &lines[lane], Chip_XmlChild(n->node, "notations"), i);

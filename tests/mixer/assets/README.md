@@ -47,3 +47,29 @@ or reformat these exports when changing the synthesized corpus.
 as deflated and stored MusicXML containers. Regenerate them with
 `python3 scripts/gen_musicxml_fixtures.py`. Both use fixed timestamps and a
 container manifest pointing at `scores/demo.musicxml`; neither is a new score.
+
+## MuseScore round-trip fixtures
+
+`c64-musescore.musicxml` is the author-authorized example re-exported by the
+locally installed MuseScore **4.1.1** as MusicXML **4.0**, on 2026-09-11. It has
+87 performance notes and the same known concert pitches, onsets/durations and
+ten-second duration as the Guitar Pro fixture. Preparation and export:
+
+```sh
+python3 scripts/prepare_musescore_fixture.py /tmp/c64-standard.musicxml
+"/Applications/MuseScore 4.app/Contents/MacOS/mscore" \
+  -o tests/mixer/assets/c64-musescore.musicxml /tmp/c64-standard.musicxml
+```
+
+`c64-musescore-tab-roundtrip.musicxml` is an **unmodified** MuseScore 4.1.1 export
+of `c64-composition-named.xml`. That application round trip changes the TAB
+pitches and replaces staff-specific transpose with part-wide transpose. Its
+staves consequently no longer have identical sounding pitches: default import
+correctly retains 142 notes. Explicit standard-staff selection (`staff = 1`)
+recovers the 87-note intended performance. This fixture prevents a tempting but
+incorrect blanket deletion of different TAB staves. The preparation script removes
+only the original example's mirrored TAB data before creating the first fixture;
+it is not a general MusicXML converter or engine heuristic.
+
+Both are derivatives of the user's permitted composition, not third-party songs.
+The tests use committed files and do not require MuseScore or temporary paths.

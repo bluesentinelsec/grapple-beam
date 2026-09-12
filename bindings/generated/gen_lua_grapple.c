@@ -243,7 +243,7 @@ static void GenPush_Grapple_Camera(lua_State *L, const Grapple_Camera *in)
 
 static void GenPush_Grapple_ChipDiagnostic(lua_State *L, const Grapple_ChipDiagnostic *in)
 {
-    lua_createtable(L, 0, 6);
+    lua_createtable(L, 0, 8);
     lua_pushinteger(L, (lua_Integer)in->code);
     lua_setfield(L, -2, "code");
     lua_pushinteger(L, (lua_Integer)in->severity);
@@ -256,6 +256,18 @@ static void GenPush_Grapple_ChipDiagnostic(lua_State *L, const Grapple_ChipDiagn
     lua_setfield(L, -2, "staff");
     lua_pushinteger(L, (lua_Integer)in->line);
     lua_setfield(L, -2, "line");
+    lua_createtable(L, (int)(64), 0);
+    for (int gi = 0; gi < (int)(64); ++gi) {
+        lua_pushinteger(L, (lua_Integer)in->voice[gi]);
+        lua_rawseti(L, -2, gi + 1);
+    }
+    lua_setfield(L, -2, "voice");
+    lua_createtable(L, (int)(64), 0);
+    for (int gi = 0; gi < (int)(64); ++gi) {
+        lua_pushinteger(L, (lua_Integer)in->element[gi]);
+        lua_rawseti(L, -2, gi + 1);
+    }
+    lua_setfield(L, -2, "element");
 }
 
 static void GenRead_Grapple_ChipEffects(lua_State *L, int idx, Grapple_ChipEffects *out)
@@ -311,12 +323,13 @@ static void GenRead_Grapple_ChipExpression(lua_State *L, int idx, Grapple_ChipEx
     out->vibrato_beats = (float)GrappleGen_LuaFieldNum(L, idx, "vibrato_beats");
     out->lane = (int)GrappleGen_LuaFieldInt(L, idx, "lane");
     out->legato = (bool)GrappleGen_LuaFieldBool(L, idx, "legato");
+    out->bend_accelerate = (bool)GrappleGen_LuaFieldBool(L, idx, "bend_accelerate");
     out->stepped_pitch = (bool)GrappleGen_LuaFieldBool(L, idx, "stepped_pitch");
 }
 
 static void GenPush_Grapple_ChipExpression(lua_State *L, const Grapple_ChipExpression *in)
 {
-    lua_createtable(L, 0, 15);
+    lua_createtable(L, 0, 16);
     lua_pushnumber(L, (lua_Number)in->tuning);
     lua_setfield(L, -2, "tuning");
     lua_pushnumber(L, (lua_Number)in->gain);
@@ -345,6 +358,8 @@ static void GenPush_Grapple_ChipExpression(lua_State *L, const Grapple_ChipExpre
     lua_setfield(L, -2, "lane");
     lua_pushboolean(L, (int)in->legato);
     lua_setfield(L, -2, "legato");
+    lua_pushboolean(L, (int)in->bend_accelerate);
+    lua_setfield(L, -2, "bend_accelerate");
     lua_pushboolean(L, (int)in->stepped_pitch);
     lua_setfield(L, -2, "stepped_pitch");
 }
@@ -8860,6 +8875,14 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GRAPPLE_CHIP_DIAGNOSTIC_APPROXIMATION");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_DIAGNOSTIC_STAFF_MIRROR);
     lua_setfield(L, -2, "GRAPPLE_CHIP_DIAGNOSTIC_STAFF_MIRROR");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_DIAGNOSTIC_RESOURCE);
+    lua_setfield(L, -2, "GRAPPLE_CHIP_DIAGNOSTIC_RESOURCE");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE);
+    lua_setfield(L, -2, "GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_DIAGNOSTIC_CONFLICT);
+    lua_setfield(L, -2, "GRAPPLE_CHIP_DIAGNOSTIC_CONFLICT");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_DIAGNOSTIC_EXPORTER_OMISSION);
+    lua_setfield(L, -2, "GRAPPLE_CHIP_DIAGNOSTIC_EXPORTER_OMISSION");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_DIAGNOSTIC_INFO);
     lua_setfield(L, -2, "GRAPPLE_CHIP_DIAGNOSTIC_INFO");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_DIAGNOSTIC_WARNING);

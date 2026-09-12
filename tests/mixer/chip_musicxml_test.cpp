@@ -1,5 +1,6 @@
 #include "chip_internal.h"
 
+#include <algorithm>
 #include <cmath>
 #include <grapple/chiptune.h>
 #include <gtest/gtest.h>
@@ -932,4 +933,161 @@ TEST(ChipMusicXml, UnmeteredMeasuresUseExplicitDurationsAndRejectEmptyAmbiguity)
     EXPECT_FALSE(LoadXml(Score("<measure><attributes><time><senza-misura/></time>"
                                "</attributes></measure>")));
     EXPECT_NE(std::string(SDL_GetError()).find("empty unmetered"), std::string::npos);
+}
+
+TEST(ChipMusicXml, DiagnosticsIdentifyVoiceElementAndMissingReferences)
+{
+    const auto xml =
+        Score("<measure>" +
+              Note("1", "<voice>inner</voice><staff>1</staff>"
+                        "<notations><technical><unknown-gesture/></technical></notations>") +
+              "</measure>");
+    Grapple_ChipDiagnostic error{};
+    Song song(Grapple_LoadChipSongMemory(xml.data(), xml.size(), nullptr, &error),
+              Grapple_DestroyChipSong);
+    EXPECT_FALSE(song);
+    EXPECT_EQ(error.code, GRAPPLE_CHIP_DIAGNOSTIC_UNSUPPORTED);
+    EXPECT_STREQ(error.voice, "inner");
+    EXPECT_STREQ(error.element, "unknown-gesture");
+    EXPECT_EQ(error.staff, 1);
+    const std::string duplicate = "<score-partwise><part-list><score-part id='p'/>"
+                                  "<score-part id='p'/></part-list><part id='p'><measure>" +
+                                  Note("1") + "</measure></part></score-partwise>";
+    song.reset(Grapple_LoadChipSongMemory(duplicate.data(), duplicate.size(), nullptr, &error));
+    EXPECT_FALSE(song);
+    EXPECT_EQ(error.code, GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE);
+    EXPECT_STREQ(error.element, "score-part");
+}
+
+TEST(ChipMusicXml, HarmonicBaseAndTouchProduceOneSoundingPartial)
+{
+    const auto song = LoadXml(Score(
+        "<measure>" +
+        Note("1", "<notations><technical><harmonic><artificial/><base-pitch/></harmonic></"
+                  "technical></notations>") +
+        "<note><chord/><pitch><step>F</step><octave>4</octave></pitch><duration>1</duration>"
+        "<notations><technical><harmonic><artificial/><touching-pitch/></harmonic></technical>"
+        "</notations></note></measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 1u);
+    EXPECT_EQ(notes[0].a, 84); // Fourth partial: two octaves above the base C4.
+}
+
+TEST(ChipMusicXml, LetRingUsesTheNextAttackOnTheSameString)
+{
+    const auto song = LoadXml(Score(
+        "<measure>" +
+        Note("1",
+             "<notations><technical><string>1</string><other-technical>let ring</other-technical>"
+             "</technical></notations>") +
+        Note("1", "<notations><technical><string>2</string>"
+                  "</technical></notations>") +
+        Note("1", "<notations><technical><string>1</string>"
+                  "</technical></notations>") +
+        "</measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 3u);
+    EXPECT_EQ(notes[0].duration, 2u * static_cast<Uint64>(song->info.ticks_per_quarter));
+    EXPECT_EQ(notes[1].duration, static_cast<Uint64>(song->info.ticks_per_quarter));
+}
+
+TEST(ChipMusicXml, TrillContinuationAndLongMordentsExpandAcrossNotes)
+{
+    const auto song = LoadXml(Score(
+        "<measure>" +
+        Note("1", "<voice>1</voice><notations><ornaments>"
+                  "<trill-mark beats='4'/><wavy-line type='start'/></ornaments></notations>") +
+        Note("1", "<voice>1</voice><notations><ornaments><wavy-line "
+                  "type='stop'/></ornaments></notations>") +
+        Note("1", "<voice>1</voice><notations><ornaments><mordent long='yes'/>"
+                  "</ornaments></notations>") +
+        "</measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 13u);
+    EXPECT_EQ(notes[1].a, 62);
+    EXPECT_EQ(notes[5].a, 62);
+    EXPECT_EQ(notes[9].a, 59);
+}
+
+TEST(ChipMusicXml, WhammyBarBendsUseIndependentAcceleratingCurves)
+{
+    const auto song = LoadXml(Score(
+        "<measure>" +
+        Note("1",
+             "<notations><technical>"
+             "<bend first-beat='0' last-beat='100' accelerate='yes'><bend-alter>-2</bend-alter>"
+             "<with-bar>dip</with-bar></bend></technical></notations>") +
+        Note("1", "<chord/><voice>other</voice>") + "</measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 2u);
+    const auto &bend = song->expressions[notes[0].expression - 1];
+    const auto &neutral = song->expressions[notes[1].expression - 1];
+    EXPECT_TRUE(bend.bend_accelerate);
+    EXPECT_NEAR(Chip_ExpressionPitch(&bend, 0.5, 1), -0.5, 1e-6);
+    EXPECT_EQ(Chip_ExpressionPitch(&neutral, 0.5, 1), 0);
+}
+
+TEST(ChipMusicXml, MuseScoreFourExportMatchesTheKnownGuitarProPerformance)
+{
+    const Song expected(Grapple_LoadChipSong(MIXER_TEST_ASSETS_DIR "/c64-composition-named.xml"),
+                        Grapple_DestroyChipSong);
+    const Song actual(Grapple_LoadChipSong(MIXER_TEST_ASSETS_DIR "/c64-musescore.musicxml"),
+                      Grapple_DestroyChipSong);
+    ASSERT_TRUE(expected && actual) << SDL_GetError();
+    EXPECT_DOUBLE_EQ(actual->info.duration_seconds, 10);
+    EXPECT_EQ(actual->info.track_count, 4);
+    const int counts[] = {20, 15, 20, 32};
+    for (int part = 0; part < 4; ++part)
+    {
+        auto a = Onsets(actual.get(), part), b = Onsets(expected.get(), part);
+        const auto order = [](const ChipEvent &left, const ChipEvent &right) {
+            return left.tick != right.tick ? left.tick < right.tick : left.a < right.a;
+        };
+        std::sort(a.begin(), a.end(), order);
+        std::sort(b.begin(), b.end(), order);
+        ASSERT_EQ(a.size(), static_cast<size_t>(counts[part]));
+        ASSERT_EQ(a.size(), b.size());
+        for (size_t i = 0; i < a.size(); ++i)
+        {
+            EXPECT_EQ(a[i].a, b[i].a);
+            EXPECT_EQ(a[i].tick * static_cast<Uint64>(expected->info.ticks_per_quarter),
+                      b[i].tick * static_cast<Uint64>(actual->info.ticks_per_quarter));
+            EXPECT_EQ(a[i].duration * static_cast<Uint64>(expected->info.ticks_per_quarter),
+                      b[i].duration * static_cast<Uint64>(actual->info.ticks_per_quarter));
+        }
+    }
+}
+
+TEST(ChipMusicXml, MuseScoreAlteredTabPitchesAreRetainedUnlessStaffIsSelected)
+{
+    const char *path = MIXER_TEST_ASSETS_DIR "/c64-musescore-tab-roundtrip.musicxml";
+    const Song full(Grapple_LoadChipSong(path), Grapple_DestroyChipSong);
+    ASSERT_TRUE(full) << SDL_GetError();
+    EXPECT_EQ(Onsets(full.get()).size(), 142u);
+    Grapple_ChipImportOptions policy;
+    ASSERT_TRUE(Grapple_GetChipImportDefaults(&policy));
+    policy.staff = 1;
+    const Song selected(Grapple_LoadChipSongEx(path, &policy, nullptr), Grapple_DestroyChipSong);
+    ASSERT_TRUE(selected) << SDL_GetError();
+    EXPECT_EQ(Onsets(selected.get()).size(), 87u);
+    EXPECT_DOUBLE_EQ(selected->info.duration_seconds, 10);
+}
+
+TEST(ChipMusicXml, TiesCanApplyOnlyOnSelectedRepeatPasses)
+{
+    const auto song =
+        LoadXml(Score("<measure>" + Note("1", "<tie type='start' time-only='1'/>") +
+                      "</measure><measure>" + Note("1", "<tie type='stop' time-only='1'/>") +
+                      "<barline><repeat direction='backward'/></barline></measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 3u);
+    const auto q = static_cast<Uint64>(song->info.ticks_per_quarter);
+    EXPECT_EQ(notes[0].duration, 2 * q);
+    EXPECT_EQ(notes[1].tick, 2 * q);
+    EXPECT_EQ(notes[2].tick, 3 * q);
 }

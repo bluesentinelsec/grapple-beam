@@ -94,7 +94,9 @@ static bool RemoveMirrors(ScoreReader *r)
                                                                part,
                                                                -1,
                                                                staff + 1,
-                                                               0};
+                                                               0,
+                                                               "",
+                                                               ""};
                     if (!Chip_AddDiagnostic(r->song, diagnostic,
                                             "Omitted TAB staff matching a standard-notation staff"))
                     {
@@ -207,8 +209,8 @@ static bool ExpandOrder(ScoreReader *r)
             ++total;
         r->navigation[m].repeat_count = SDL_max(r->navigation[m].repeat_count, total);
     }
-    int *order = NULL, count = 0;
-    if (!Chip_ScoreOrder(r->navigation, r->measures, &order, &count))
+    int *order = NULL, *visit_passes = NULL, count = 0;
+    if (!Chip_ScoreOrderWithPasses(r->navigation, r->measures, &order, &visit_passes, &count))
         return false;
     size_t *first_note = SDL_malloc((size_t)r->measures * sizeof(*first_note));
     size_t *first_control = SDL_malloc((size_t)r->measures * sizeof(*first_control));
@@ -264,7 +266,23 @@ static bool ExpandOrder(ScoreReader *r)
                                 sizeof(*r->notes)))
                 goto done;
             r->notes[r->note_count] = notes[i];
-            r->notes[r->note_count++].measure = visit;
+            ScoreNote *note = &r->notes[r->note_count++];
+            note->measure = visit;
+            note->tie_start = note->tie_stop = false;
+            for (const ChipXmlNode *tie = note->node->children; tie; tie = tie->next)
+            {
+                if (SDL_strcmp(tie->name, "tie") != 0)
+                    continue;
+                const char *only = Chip_XmlAttribute(tie, "time-only");
+                const Uint32 selected = *only ? Chip_ScorePasses(r, tie, only) : SDL_MAX_UINT32;
+                if (r->failed)
+                    goto done;
+                if (!(selected & (1u << (visit_passes[visit] - 1))))
+                    continue;
+                const char *type = Chip_XmlAttribute(tie, "type");
+                note->tie_start |= SDL_strcmp(type, "start") == 0;
+                note->tie_stop |= SDL_strcmp(type, "stop") == 0;
+            }
         }
         for (size_t i = first_control[source]; i != SIZE_MAX; i = next_control[i])
         {
@@ -285,6 +303,7 @@ static bool ExpandOrder(ScoreReader *r)
     ok = true;
 done:
     SDL_free(order);
+    SDL_free(visit_passes);
     SDL_free(first_note);
     SDL_free(first_control);
     SDL_free(next_note);
@@ -321,7 +340,8 @@ bool Chip_CompileScore(ScoreReader *r)
         if (previous_tempo && previous_tempo->measure == control->measure &&
             previous_tempo->start == control->start &&
             previous_tempo->event.tempo != control->event.tempo)
-            return Chip_ScoreError(r, NULL, "conflicting simultaneous global tempos");
+            return Chip_ScoreFail(r, NULL, GRAPPLE_CHIP_DIAGNOSTIC_CONFLICT,
+                                  "conflicting simultaneous global tempos");
         previous_tempo = control;
     }
     if (!RemoveMirrors(r) || !ExpandOrder(r))
@@ -335,7 +355,8 @@ bool Chip_CompileScore(ScoreReader *r)
         position += length;
         r->song->measures[m].end = (Uint64)position;
         if (position > 864000LL * r->song->info.ticks_per_quarter)
-            return Chip_ScoreError(r, NULL, "score length limit exceeded");
+            return Chip_ScoreFail(r, NULL, GRAPPLE_CHIP_DIAGNOSTIC_RESOURCE,
+                                  "score length limit exceeded");
     }
     r->song->info.duration_ticks = (Uint64)position;
     for (size_t i = 0; i < r->control_count; ++i)
@@ -352,7 +373,7 @@ bool Chip_CompileScore(ScoreReader *r)
     }
     for (size_t i = 0; i < r->note_count; ++i)
         r->notes[i].start += r->lengths[r->notes[i].measure];
-    if (!Chip_ResolveNoteExpression(r))
+    if (!Chip_ResolveNoteExpression(r) || !Chip_ResolveTechniques(r))
         return false;
     size_t active[4096];
     size_t ties = 0;
@@ -384,7 +405,8 @@ bool Chip_CompileScore(ScoreReader *r)
         if (n->tie_start)
         {
             if (ties == SDL_arraysize(active))
-                return Chip_ScoreError(r, NULL, "simultaneous tie limit exceeded");
+                return Chip_ScoreFail(r, NULL, GRAPPLE_CHIP_DIAGNOSTIC_RESOURCE,
+                                      "simultaneous tie limit exceeded");
             active[ties++] = target;
         }
     }

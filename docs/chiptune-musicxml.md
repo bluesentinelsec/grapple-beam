@@ -260,3 +260,42 @@ equalities compare their summed durations. Relationships are bounded to sixteen
 notes on each side; arbitrary text relations require explicit tempo instead.
 Unmetered measures (`senza-misura`) use their explicit note/rest/forward durations;
 an empty unmetered measure needs an explicit duration and fails otherwise.
+
+## Additional gestures and diagnostic locations
+
+Diagnostic records include the voice identifier, staff and local XML element name
+when available. Codes distinguish malformed score data, unsupported performance,
+missing/duplicate references, resource bounds, conflicts and missing sounding
+information. Unknown children in performance-sensitive technical, articulation,
+ornament and direction-type groups reject in strict mode and warn in permissive
+mode. Unknown technical text is diagnosed instead of silently treated as a sound.
+
+Harmonics use encoded sounding pitches when provided. A chord's explicit base and
+touching pitches are visual companions when it includes a sounding pitch; they do
+not create additional voices. Without a sounding pitch, paired octave, fifth,
+fourth, major-third and minor-third touch intervals select partials 2–6 of the
+base, retaining fractional semitone tuning. Other/ambiguous base-touch descriptions
+need an explicit sounding pitch. A plain harmonic mark brightens and softens its
+encoded note. This models a synth harmonic, not the physical string instrument.
+
+Recognized `other-technical` text includes `let ring`/`let-ring`, normal/wide
+vibrato, slap, pop, palm mute, ghost/dead note, upstroke, downstroke and rasgueado.
+Let-ring extends to the next attack on the encoded string (or voice if no string
+is supplied), capped at the bar end. Pick/bow/pluck directions, slap/pop/tap and
+rasgueado use documented bright/noisy attack approximations; explicit arpeggiate
+marks provide timed rolls. Pizzicato shortens the gate and brightens the attack.
+Scoop/plop/doit/falloff use two-semitone entry/exit bends. These are timbral policies
+for the C64 palette rather than claims of acoustic reproduction.
+
+Bends containing `with-bar` use the same independent pitch curve; marking multiple
+notes bends each without detuning unrelated parts. Acceleration is quadratic within
+each bend segment. MusicXML's bend `beats` counts discrete MIDI-like control samples;
+it does not specify musical duration, so the synth evaluates the continuous curve
+per sample instead of adding control quantization. Trill wavy-line continuations
+extend across notes in the logical voice. Long mordents use five attacks, explicit
+two-note endings use their half/whole-step neighbor, and shake/vertical/Haydn symbols
+use the corresponding configurable trill/turn approximation.
+
+Tie `time-only` attributes select the actual enclosing repeat pass, including
+nested repeats and endings. They are evaluated during order expansion before tie
+chains are joined, so a tie on the first pass need not suppress a second-pass attack.

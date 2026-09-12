@@ -9,54 +9,7 @@ static bool Named(const ChipXmlNode *node, const char *name)
     return node && SDL_strcmp(node->name, name) == 0;
 }
 
-bool Chip_ScoreError(ScoreReader *r, const ChipXmlNode *node, const char *message)
-{
-    if (r->failed)
-        return false;
-    r->failed = true;
-    if (r->error && r->error->code == GRAPPLE_CHIP_DIAGNOSTIC_NONE)
-        *r->error = (Grapple_ChipDiagnostic){
-            GRAPPLE_CHIP_DIAGNOSTIC_SCORE,  GRAPPLE_CHIP_DIAGNOSTIC_ERROR, r->part, r->measure, 0,
-            (Uint32)(node ? node->line : 0)};
-    return SDL_SetError("MusicXML: part %d measure %d line %lu: %s", r->part + 1, r->measure + 1,
-                        node ? node->line : 0, message);
-}
-
-static bool Unsupported(ScoreReader *r, const ChipXmlNode *node)
-{
-    char message[256];
-    SDL_snprintf(message, sizeof(message), "Playback of <%s> is not implemented", node->name);
-    const Grapple_ChipDiagnostic diagnostic = {GRAPPLE_CHIP_DIAGNOSTIC_UNSUPPORTED,
-                                               r->options->strict ? GRAPPLE_CHIP_DIAGNOSTIC_ERROR
-                                                                  : GRAPPLE_CHIP_DIAGNOSTIC_WARNING,
-                                               r->part,
-                                               r->measure,
-                                               0,
-                                               (Uint32)node->line};
-    if (r->options->strict)
-    {
-        if (r->error)
-            *r->error = diagnostic;
-        return Chip_ScoreError(r, node, message);
-    }
-    return Chip_AddDiagnostic(r->song, diagnostic, message);
-}
-
-static bool CheckPerformance(ScoreReader *r, const ChipXmlNode *node)
-{
-    static const char *const unsupported[] = {"other-notation"};
-    for (; node; node = node->next)
-    {
-        for (size_t i = 0; i < SDL_arraysize(unsupported); ++i)
-            if (Named(node, unsupported[i]) && !Unsupported(r, node))
-                return false;
-        if (!CheckPerformance(r, node->children))
-            return false;
-    }
-    return true;
-}
-
-static Uint32 Passes(ScoreReader *r, const ChipXmlNode *node, const char *text)
+Uint32 Chip_ScorePasses(ScoreReader *r, const ChipXmlNode *node, const char *text)
 {
     Uint32 result = 0;
     while (*text)
@@ -140,7 +93,7 @@ static bool Navigation(ScoreReader *r, const ChipXmlNode *measure)
         {
             const char *type = Chip_XmlAttribute(ending, "type");
             if (SDL_strcmp(type, "start") == 0)
-                r->ending = Passes(r, ending, Chip_XmlAttribute(ending, "number"));
+                r->ending = Chip_ScorePasses(r, ending, Chip_XmlAttribute(ending, "number"));
             else if (SDL_strcmp(type, "stop") == 0 || SDL_strcmp(type, "discontinue") == 0)
                 close_ending = true;
             else
@@ -187,7 +140,7 @@ static bool NavigationSound(ScoreReader *r, const ChipXmlNode *sound)
     m->repeat_start |= SDL_strcmp(Chip_XmlAttribute(sound, "forward-repeat"), "yes") == 0;
     const char *passes = Chip_XmlAttribute(sound, "time-only");
     if (*passes && (m->dacapo || m->dalsegno || m->tocoda))
-        m->jump_times = Passes(r, sound, passes);
+        m->jump_times = Chip_ScorePasses(r, sound, passes);
     return !r->failed;
 }
 
@@ -650,7 +603,8 @@ static bool Note(ScoreReader *r, const ChipXmlNode *node, Sint64 *cursor, Sint64
         note.unpitched = true;
     }
     else if (!note.rest)
-        return Chip_ScoreError(r, node, "note needs pitch or mapped percussion instrument");
+        return Chip_ScoreFail(r, node, GRAPPLE_CHIP_DIAGNOSTIC_EXPORTER_OMISSION,
+                              "note needs pitch or mapped percussion instrument");
     if (note.pitch < 0 || note.pitch > 127)
         return Chip_ScoreError(r, node, "sounding pitch outside 0..127");
     for (const ChipXmlNode *c = node->children; c; c = c->next)
@@ -672,7 +626,7 @@ static bool Measure(ScoreReader *r, const ChipXmlNode *node)
 {
     if (!Navigation(r, node))
         return false;
-    if (node && !CheckPerformance(r, node->children))
+    if (node && !Chip_CheckScorePerformance(r, node->children))
         return false;
     Sint64 cursor = 0, previous = 0, extent = 0;
     for (const ChipXmlNode *c = node ? node->children : NULL; c; c = c->next)
@@ -739,6 +693,8 @@ Grapple_ChipSong *Chip_ParseMusicXml(const void *data, size_t size,
         Chip_ScoreError(&r, root, "expected 1..256 score parts");
         goto done;
     }
+    if (!Chip_ValidateScoreReferences(&r, list))
+        goto done;
     Sint64 divisions = 1, fractions = 1;
     if (!Resolution(&r, root, &divisions, &fractions))
         goto done;
@@ -790,7 +746,8 @@ Grapple_ChipSong *Chip_ParseMusicXml(const void *data, size_t size,
                 }
             if (!container)
             {
-                Chip_ScoreError(&r, definition, "missing part contents");
+                Chip_ScoreFail(&r, definition, GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE,
+                               "missing part contents");
                 goto done;
             }
         }

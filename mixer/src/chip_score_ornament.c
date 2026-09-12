@@ -13,11 +13,14 @@ static const ChipXmlNode *Ornaments(const ScoreNote *n)
 
 static const ChipXmlNode *Mark(const ScoreNote *n)
 {
+    if (n->ornament_override)
+        return n->ornament_override;
     const ChipXmlNode *ornaments = Ornaments(n);
     for (const ChipXmlNode *c = ornaments ? ornaments->children : NULL; c; c = c->next)
-        if (Named(c, "trill-mark") || Named(c, "mordent") || Named(c, "inverted-mordent") ||
-            Named(c, "turn") || Named(c, "inverted-turn") || Named(c, "delayed-turn") ||
-            Named(c, "delayed-inverted-turn") || Named(c, "tremolo"))
+        if (Named(c, "trill-mark") || Named(c, "shake") || Named(c, "vertical-turn") ||
+            Named(c, "inverted-vertical-turn") || Named(c, "haydn") || Named(c, "mordent") ||
+            Named(c, "inverted-mordent") || Named(c, "turn") || Named(c, "inverted-turn") ||
+            Named(c, "delayed-turn") || Named(c, "delayed-inverted-turn") || Named(c, "tremolo"))
             return c;
     return NULL;
 }
@@ -105,9 +108,11 @@ static bool Expand(ScoreReader *r, ScoreNote n, const ScoreNote *partner, const 
             r, &n, "Ornaments use the documented configurable chiptune performance policy"))
         return false;
     const bool tremolo = Named(mark, "tremolo");
-    const bool trill = Named(mark, "trill-mark");
+    const bool trill =
+        Named(mark, "trill-mark") || Named(mark, "shake") || Named(mark, "wavy-line");
     const bool mordent = Named(mark, "mordent") || Named(mark, "inverted-mordent");
-    const bool inverted = Named(mark, "inverted-mordent") || Named(mark, "inverted-turn") ||
+    const bool inverted = Named(mark, "inverted-vertical-turn") ||
+                          Named(mark, "inverted-mordent") || Named(mark, "inverted-turn") ||
                           Named(mark, "delayed-inverted-turn");
     const bool delayed = Named(mark, "delayed-turn") || Named(mark, "delayed-inverted-turn");
     double upper = 0, lower = 0;
@@ -127,6 +132,8 @@ static bool Expand(ScoreReader *r, ScoreNote n, const ScoreNote *partner, const 
     int attacks = mordent                ? 3
                   : (!trill && !tremolo) ? 4
                                          : (int)SDL_min(65536, (duration + spacing - 1) / spacing);
+    if (mordent && SDL_strcmp(Chip_XmlAttribute(mark, "long"), "yes") == 0)
+        attacks = 5;
     const char *beats = Chip_XmlAttribute(mark, "beats");
     if (*beats)
         attacks = Chip_ScoreInteger(r, mark, beats, attacks, 2, 65536);
@@ -145,6 +152,11 @@ static bool Expand(ScoreReader *r, ScoreNote n, const ScoreNote *partner, const 
         Chip_ScoreDecimal(r, mark, Chip_XmlAttribute(mark, "second-beat"), 0, 0, 100) / 100;
     const double last =
         Chip_ScoreDecimal(r, mark, Chip_XmlAttribute(mark, "last-beat"), 100, 0, 100) / 100;
+    const char *ending = Chip_XmlAttribute(mark, "two-note-turn");
+    const double turn_interval = SDL_strcmp(ending, "whole") == 0 ? 2 : 1;
+    const bool ending_turn = *ending && SDL_strcmp(ending, "none") != 0;
+    if (ending_turn && SDL_strcmp(ending, "whole") != 0 && SDL_strcmp(ending, "half") != 0)
+        return Chip_ScoreError(r, mark, "invalid two-note-turn interval");
     const bool accelerate = SDL_strcmp(Chip_XmlAttribute(mark, "accelerate"), "yes") == 0;
     Sint64 previous = 0;
     for (int i = 0; i < attacks; ++i)
@@ -153,7 +165,7 @@ static bool Expand(ScoreReader *r, ScoreNote n, const ScoreNote *partner, const 
         note.skipped = false;
         Sint64 end =
             i + 1 == attacks ? available : (Sint64)SDL_round((double)available * (i + 1) / attacks);
-        if (mordent && !*beats)
+        if (mordent && !*beats && attacks == 3)
             end = i == 0   ? SDL_min(spacing, available / 3)
                   : i == 1 ? SDL_min(spacing * 2, available * 2 / 3)
                            : available;
@@ -193,9 +205,12 @@ static bool Expand(ScoreReader *r, ScoreNote n, const ScoreNote *partner, const 
                 static const int turn[] = {1, 0, -1, 0};
                 degree = turn[i % 4] * (inverted ? -1 : 1);
             }
-            const double pitch = degree > 0   ? upper
-                                 : degree < 0 ? lower
-                                              : (double)n.pitch + n.expression.tuning;
+            double pitch = degree > 0   ? upper
+                           : degree < 0 ? lower
+                                        : (double)n.pitch + n.expression.tuning;
+            if (ending_turn && (trill || mordent) && i >= attacks - 2)
+                pitch =
+                    (double)n.pitch + n.expression.tuning - (i == attacks - 2 ? turn_interval : 0);
             note.pitch = (int)SDL_floor(pitch);
             note.expression.tuning = (float)(pitch - note.pitch);
             if (note.pitch < 0 || note.pitch > 127)

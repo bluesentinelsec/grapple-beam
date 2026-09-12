@@ -21,6 +21,8 @@ extern "C"
         Uint32 jump_times;
     } ChipScoreMeasure;
 
+    bool Chip_ScoreOrderWithPasses(const ChipScoreMeasure *measures, int count, int **order,
+                                   int **passes, int *length);
     bool Chip_ScoreOrder(const ChipScoreMeasure *measures, int count, int **order, int *length);
 #ifdef __cplusplus
 }

@@ -39,10 +39,14 @@ GRAPPLE_BODY_DYNAMIC	include/grapple/chiptune.h	/^.*GRAPPLE_BODY_DYNAMIC/;"	e
 GRAPPLE_BODY_KINEMATIC	include/grapple/chiptune.h	/^.*GRAPPLE_BODY_KINEMATIC/;"	e
 GRAPPLE_BODY_STATIC	include/grapple/chiptune.h	/^.*GRAPPLE_BODY_STATIC/;"	e
 GRAPPLE_CHIP_DIAGNOSTIC_APPROXIMATION	include/grapple/chiptune.h	/^.*GRAPPLE_CHIP_DIAGNOSTIC_APPROXIMATION/;"	e
+GRAPPLE_CHIP_DIAGNOSTIC_CONFLICT	include/grapple/chiptune.h	/^.*GRAPPLE_CHIP_DIAGNOSTIC_CONFLICT/;"	e
+GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE	include/grapple/chiptune.h	/^.*GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE/;"	e
 GRAPPLE_CHIP_DIAGNOSTIC_ERROR	include/grapple/chiptune.h	/^.*GRAPPLE_CHIP_DIAGNOSTIC_ERROR/;"	e
+GRAPPLE_CHIP_DIAGNOSTIC_EXPORTER_OMISSION	include/grapple/chiptune.h	/^.*GRAPPLE_CHIP_DIAGNOSTIC_EXPORTER_OMISSION/;"	e
 GRAPPLE_CHIP_DIAGNOSTIC_INFO	include/grapple/chiptune.h	/^.*GRAPPLE_CHIP_DIAGNOSTIC_INFO/;"	e
 GRAPPLE_CHIP_DIAGNOSTIC_INPUT	include/grapple/chiptune.h	/^.*GRAPPLE_CHIP_DIAGNOSTIC_INPUT/;"	e
 GRAPPLE_CHIP_DIAGNOSTIC_NONE	include/grapple/chiptune.h	/^.*GRAPPLE_CHIP_DIAGNOSTIC_NONE/;"	e
+GRAPPLE_CHIP_DIAGNOSTIC_RESOURCE	include/grapple/chiptune.h	/^.*GRAPPLE_CHIP_DIAGNOSTIC_RESOURCE/;"	e
 GRAPPLE_CHIP_DIAGNOSTIC_SCORE	include/grapple/chiptune.h	/^.*GRAPPLE_CHIP_DIAGNOSTIC_SCORE/;"	e
 GRAPPLE_CHIP_DIAGNOSTIC_STAFF_MIRROR	include/grapple/chiptune.h	/^.*GRAPPLE_CHIP_DIAGNOSTIC_STAFF_MIRROR/;"	e
 GRAPPLE_CHIP_DIAGNOSTIC_UNSUPPORTED	include/grapple/chiptune.h	/^.*GRAPPLE_CHIP_DIAGNOSTIC_UNSUPPORTED/;"	e
@@ -5267,6 +5271,7 @@ beat	include/grapple/chiptune.h	/^.*beat/;"	m
 begin	include/nuklear.h	/^.*begin/;"	m
 beginCount	include/box2d/base.h	/^.*beginCount/;"	m
 beginEvents	include/box2d/base.h	/^.*beginEvents/;"	m
+bend_accelerate	include/grapple/chiptune.h	/^.*bend_accelerate/;"	m
 bend_end	include/grapple/chiptune.h	/^.*bend_end/;"	m
 bend_first	include/grapple/chiptune.h	/^.*bend_first/;"	m
 bend_last	include/grapple/chiptune.h	/^.*bend_last/;"	m
@@ -5631,6 +5636,7 @@ edit	include/SDL3/SDL_assert.h	/^.*edit/;"	m
 edit	include/nuklear.h	/^.*edit/;"	m
 edit_candidates	include/SDL3/SDL_assert.h	/^.*edit_candidates/;"	m
 elem_count	include/nuklear.h	/^.*elem_count/;"	m
+element	include/grapple/chiptune.h	/^.*element/;"	m
 element_count	include/nuklear.h	/^.*element_count/;"	m
 elements	include/nuklear.h	/^.*elements/;"	m
 ellipseColor	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*ellipseColor *(/;"	f
@@ -7375,6 +7381,7 @@ visible	include/grapple/chiptune.h	/^.*visible/;"	m
 visitorShapeId	include/box2d/base.h	/^.*visitorShapeId/;"	m
 vlineColor	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*vlineColor *(/;"	f
 vlineRGBA	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*vlineRGBA *(/;"	f
+voice	include/grapple/chiptune.h	/^.*voice/;"	m
 volume	include/grapple/chiptune.h	/^.*volume/;"	m
 vsync	include/grapple/chiptune.h	/^.*vsync/;"	m
 vulkan_10_physical_device_features	include/SDL3/SDL_assert.h	/^.*vulkan_10_physical_device_features/;"	m

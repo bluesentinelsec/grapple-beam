@@ -25,9 +25,12 @@ static int FindLabel(const ChipScoreMeasure *measures, int count, const char *la
     return found;
 }
 
-bool Chip_ScoreOrder(const ChipScoreMeasure *measures, int count, int **order, int *length)
+bool Chip_ScoreOrderWithPasses(const ChipScoreMeasure *measures, int count, int **order,
+                               int **passes, int *length)
 {
     *order = NULL;
+    if (passes)
+        *passes = NULL;
     *length = 0;
     if (!measures || count < 1 || count > SCORE_ORDER_LIMIT)
         return SDL_SetError("MusicXML: invalid score navigation input");
@@ -35,8 +38,9 @@ bool Chip_ScoreOrder(const ChipScoreMeasure *measures, int count, int **order, i
     Uint32 *visits = SDL_calloc((size_t)count, sizeof(*visits));
     bool *jumped_from = SDL_calloc((size_t)count, sizeof(*jumped_from));
     int *result = SDL_malloc(SCORE_ORDER_LIMIT * sizeof(*result));
+    int *result_passes = passes ? SDL_malloc(SCORE_ORDER_LIMIT * sizeof(*result_passes)) : NULL;
     bool ok = false;
-    if (!ends || !visits || !jumped_from || !result)
+    if (!ends || !visits || !jumped_from || !result || (passes && !result_passes))
         goto done;
     for (int i = 0; i < count; ++i)
         ends[i] = -1;
@@ -95,7 +99,11 @@ bool Chip_ScoreOrder(const ChipScoreMeasure *measures, int count, int **order, i
         const bool play = !m->endings || (m->endings & (1u << (pass - 1)));
         ++visits[measure];
         if (play)
+        {
+            if (result_passes)
+                result_passes[used] = pass;
             result[used++] = measure;
+        }
         if (play && m->fine && jumped)
             break;
         if (depth && frames[depth - 1].end == measure)
@@ -150,11 +158,20 @@ bool Chip_ScoreOrder(const ChipScoreMeasure *measures, int count, int **order, i
     *order = result;
     *length = used;
     result = NULL;
+    if (passes)
+        *passes = result_passes;
+    result_passes = NULL;
     ok = true;
 done:
     SDL_free(ends);
     SDL_free(visits);
     SDL_free(jumped_from);
     SDL_free(result);
+    SDL_free(result_passes);
     return ok;
+}
+
+bool Chip_ScoreOrder(const ChipScoreMeasure *measures, int count, int **order, int *length)
+{
+    return Chip_ScoreOrderWithPasses(measures, count, order, NULL, length);
 }

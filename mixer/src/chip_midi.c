@@ -190,7 +190,7 @@ Grapple_ChipSong *Grapple_LoadChipSong_IOEx(SDL_IOStream *io, bool closeio,
 {
     if (error)
         *error = (Grapple_ChipDiagnostic){
-            GRAPPLE_CHIP_DIAGNOSTIC_NONE, GRAPPLE_CHIP_DIAGNOSTIC_ERROR, -1, -1, 0, 0};
+            GRAPPLE_CHIP_DIAGNOSTIC_NONE, GRAPPLE_CHIP_DIAGNOSTIC_ERROR, -1, -1, 0, 0, "", ""};
     if (!io)
     {
         SDL_SetError("chiptune: NULL input stream");
@@ -319,7 +319,7 @@ Grapple_ChipSong *Grapple_LoadChipSongEx(const char *path, const Grapple_ChipImp
     {
         if (error)
             *error = (Grapple_ChipDiagnostic){
-                GRAPPLE_CHIP_DIAGNOSTIC_INPUT, GRAPPLE_CHIP_DIAGNOSTIC_ERROR, -1, -1, 0, 0};
+                GRAPPLE_CHIP_DIAGNOSTIC_INPUT, GRAPPLE_CHIP_DIAGNOSTIC_ERROR, -1, -1, 0, 0, "", ""};
         return NULL;
     }
     return Grapple_LoadChipSong_IOEx(io, true, options, error);

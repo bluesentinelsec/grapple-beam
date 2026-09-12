@@ -53,21 +53,26 @@ bool Chip_AppendExpression(Grapple_ChipSong *song, const Grapple_ChipExpression 
     return true;
 }
 
-static float Segment(float a, float b, double position, float first, float last)
+static float Segment(float a, float b, double position, float first, float last, bool accelerate)
 {
     if (position <= first)
         return a;
     if (position >= last || first == last)
         return b;
-    return a + (b - a) * (float)((position - first) / (last - first));
+    double fraction = (position - first) / (last - first);
+    if (accelerate)
+        fraction *= fraction;
+    return a + (b - a) * (float)fraction;
 }
 
 float Chip_ExpressionPitch(const Grapple_ChipExpression *e, double elapsed, double duration)
 {
     const double position = duration > 0 ? SDL_clamp(elapsed / duration, 0, 1) : 1;
     float bend = position < e->bend_middle
-                     ? Segment(e->bend_start, e->bend_peak, position, e->bend_first, e->bend_middle)
-                     : Segment(e->bend_peak, e->bend_end, position, e->bend_middle, e->bend_last);
+                     ? Segment(e->bend_start, e->bend_peak, position, e->bend_first, e->bend_middle,
+                               e->bend_accelerate)
+                     : Segment(e->bend_peak, e->bend_end, position, e->bend_middle, e->bend_last,
+                               e->bend_accelerate);
     if (e->stepped_pitch)
         bend = SDL_roundf(bend);
     return e->tuning + bend +

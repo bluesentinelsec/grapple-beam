@@ -27,7 +27,7 @@ const ScoreInstrument *Chip_ScoreInstrument(ScoreReader *r, const ChipXmlNode *n
     }
     if (low < r->instrument_count && SDL_strcmp(r->instruments[low].id, id) == 0)
         return &r->instruments[low];
-    Chip_ScoreError(r, node, "unresolved instrument ID");
+    Chip_ScoreFail(r, node, GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE, "unresolved instrument ID");
     return NULL;
 }
 
@@ -73,14 +73,16 @@ bool Chip_InitScoreInstruments(ScoreReader *r)
         if (index == r->instrument_count)
         {
             if (index == 256)
-                return Chip_ScoreError(r, c, "instrument limit exceeded (256 per part)");
+                return Chip_ScoreFail(r, c, GRAPPLE_CHIP_DIAGNOSTIC_RESOURCE,
+                                      "instrument limit exceeded (256 per part)");
             r->instruments[index] = (ScoreInstrument){id, NULL, 0, 0, -1, 1, 0};
             ++r->instrument_count;
         }
         if (Named(c, "midi-instrument"))
         {
             if (r->instruments[index].node)
-                return Chip_ScoreError(r, c, "duplicate MIDI instrument ID");
+                return Chip_ScoreFail(r, c, GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE,
+                                      "duplicate MIDI instrument ID");
             r->instruments[index].node = c;
             if (!ReadMetadata(r, &r->instruments[index], c))
                 return false;

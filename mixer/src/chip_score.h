@@ -39,6 +39,9 @@ typedef struct ScoreNote
     double gate;
     Sint64 attack, release;
     bool grace, rest;
+    bool let_ring;
+    int string_number;
+    const ChipXmlNode *ornament_override;
     Sint64 make_time;
     double upper_pitch, lower_pitch;
     int program;
@@ -97,6 +100,12 @@ typedef struct ScoreReader
     size_t instrument_change_count, instrument_change_capacity;
 } ScoreReader;
 
+void Chip_DiagnosticContext(Grapple_ChipDiagnostic *diagnostic, const ChipXmlNode *node);
+bool Chip_ScoreFail(ScoreReader *r, const ChipXmlNode *node, Grapple_ChipDiagnosticCode code,
+                    const char *message);
+bool Chip_CheckScorePerformance(ScoreReader *r, const ChipXmlNode *node);
+bool Chip_ScoreUnsupported(ScoreReader *r, const ChipXmlNode *node, const char *message);
+bool Chip_ValidateScoreReferences(ScoreReader *r, const ChipXmlNode *list);
 bool Chip_ScoreError(ScoreReader *r, const ChipXmlNode *node, const char *message);
 bool Chip_ScoreGrow(void **array, size_t *capacity, size_t count, size_t item_size);
 bool Chip_ScoreControl(ScoreReader *r, Sint64 start, int status, int a, int b, Uint32 tempo);
@@ -107,6 +116,7 @@ double Chip_ScoreDecimal(ScoreReader *r, const ChipXmlNode *node, const char *te
 Sint64 Chip_ScoreTicks(ScoreReader *r, const ChipXmlNode *node, const char *text);
 bool Chip_ScoreApproximation(ScoreReader *r, const ScoreNote *note, const char *message);
 bool Chip_ReadNoteExpression(ScoreReader *r, ScoreNote *note);
+bool Chip_ResolveTechniques(ScoreReader *r);
 bool Chip_ResolveNoteExpression(ScoreReader *r);
 bool Chip_ApplyScoreTiming(ScoreReader *r);
 bool Chip_ExpandOrnaments(ScoreReader *r);
@@ -125,5 +135,6 @@ bool Chip_ReadInstrumentChange(ScoreReader *r, const ChipXmlNode *sound, Sint64 
 bool Chip_ApplyInstrumentChanges(ScoreReader *r);
 bool Chip_ResolveMetronomes(ScoreReader *r);
 bool Chip_ReadMetronome(ScoreReader *r, const ChipXmlNode *node, Sint64 cursor);
+Uint32 Chip_ScorePasses(ScoreReader *r, const ChipXmlNode *node, const char *text);
 bool Chip_CompileScore(ScoreReader *r);
 #endif

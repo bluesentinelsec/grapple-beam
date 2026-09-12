@@ -157,7 +157,11 @@ extern "C"
         GRAPPLE_CHIP_DIAGNOSTIC_SCORE,
         GRAPPLE_CHIP_DIAGNOSTIC_UNSUPPORTED,
         GRAPPLE_CHIP_DIAGNOSTIC_APPROXIMATION,
-        GRAPPLE_CHIP_DIAGNOSTIC_STAFF_MIRROR
+        GRAPPLE_CHIP_DIAGNOSTIC_STAFF_MIRROR,
+        GRAPPLE_CHIP_DIAGNOSTIC_RESOURCE, /**< A documented size/complexity limit was exceeded. */
+        GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE,  /**< Missing or duplicate score identifier. */
+        GRAPPLE_CHIP_DIAGNOSTIC_CONFLICT,         /**< Contradictory performance instructions. */
+        GRAPPLE_CHIP_DIAGNOSTIC_EXPORTER_OMISSION /**< Required sounding information is absent. */
     } Grapple_ChipDiagnosticCode;
     /** @brief Source location and category; message text is retrieved separately. */
     typedef struct Grapple_ChipDiagnostic
@@ -165,9 +169,11 @@ extern "C"
         Grapple_ChipDiagnosticCode code;         /**< NONE means no failure in an error output. */
         Grapple_ChipDiagnosticSeverity severity; /**< Informational, warning or error. */
         int part;                                /**< Zero-based part, or -1 if unavailable. */
-        int measure; /**< Zero-based source measure, or -1 if unavailable. */
-        int staff;   /**< One-based staff, or 0 if unavailable. */
-        Uint32 line; /**< One-based XML line, or 0 if unavailable. */
+        int measure;      /**< Zero-based source measure, or -1 if unavailable. */
+        int staff;        /**< One-based staff, or 0 if unavailable. */
+        Uint32 line;      /**< One-based XML line, or 0 if unavailable. */
+        char voice[64];   /**< Source voice identifier when available; truncated, NUL-terminated. */
+        char element[64]; /**< Local XML element name when available; truncated, NUL-terminated. */
     } Grapple_ChipDiagnostic;
     /** @brief Score interpretation policy; obtain defaults before overriding fields. */
     typedef struct Grapple_ChipImportOptions
@@ -446,7 +452,8 @@ extern "C"
         float vibrato_beats; /**< Vibrato period in quarter-note beats, 0.01..16. Default 0.25. */
         int lane;            /**< Logical monophonic line within a part, 0..65535. */
         bool legato; /**< Reuse the preceding voice in the lane without restarting its envelope. */
-        bool stepped_pitch; /**< Quantize the bend to semitone steps for chromatic glissando. */
+        bool bend_accelerate; /**< Accelerate bend segments quadratically; default false. */
+        bool stepped_pitch;   /**< Quantize the bend to semitone steps for chromatic glissando. */
     } Grapple_ChipExpression;
 
     /** @brief Initialize neutral per-note expression.

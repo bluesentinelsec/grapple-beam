@@ -10,7 +10,7 @@ Grapple_ChipSong *Grapple_LoadChipSongMemory(const void *data, size_t size,
         SDL_SetError("chiptune: invalid or oversized input buffer");
         if (error)
             *error = (Grapple_ChipDiagnostic){
-                GRAPPLE_CHIP_DIAGNOSTIC_INPUT, GRAPPLE_CHIP_DIAGNOSTIC_ERROR, -1, -1, 0, 0};
+                GRAPPLE_CHIP_DIAGNOSTIC_INPUT, GRAPPLE_CHIP_DIAGNOSTIC_ERROR, -1, -1, 0, 0, "", ""};
         return NULL;
     }
     return Grapple_LoadChipSong_IOEx(SDL_IOFromConstMem(data, size), true, options, error);

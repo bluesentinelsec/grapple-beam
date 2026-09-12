@@ -29,7 +29,7 @@ To embed playback, initialize SDL audio and `MIX_Init()`, then:
 
 ```c
 Grapple_ChipSong *song = Grapple_LoadChipSong("level.musicxml");
-if (!song) { /* report SDL_GetError() */ }
+if (!song) { return false; /* report SDL_GetError() */ }
 Grapple_ChipPlayer *player = Grapple_PlayChipSong(song, true);
 Grapple_DestroyChipSong(song); /* player keeps its own reference */
 /* Keep player alive while the game runs. */

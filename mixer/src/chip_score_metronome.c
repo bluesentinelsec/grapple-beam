@@ -152,8 +152,8 @@ bool Chip_ResolveMetronomes(ScoreReader *r)
             if (c->kind == SCORE_METRIC)
             {
                 if (ratio != 0 && ratio != c->value)
-                    return Chip_ScoreError(r, c->node,
-                                           "conflicting simultaneous metric modulations");
+                    return Chip_ScoreFail(r, c->node, GRAPPLE_CHIP_DIAGNOSTIC_CONFLICT,
+                                          "conflicting simultaneous metric modulations");
                 ratio = c->value;
             }
         }
