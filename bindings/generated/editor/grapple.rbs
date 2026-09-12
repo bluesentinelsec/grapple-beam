@@ -2473,6 +2473,8 @@ module GrappleC
   def self.ActorVelocity: (untyped actor, Float x, Float y) -> [Float, Float]
   def self.ActorWakeBody: (untyped actor) -> void
   def self.ActorWorld: (untyped actor) -> Hash[Symbol, untyped]
+  def self.AddChipNote: (untyped composer, Hash[Symbol, untyped] note) -> bool
+  def self.AddChipTempo: (untyped composer, Integer tick, Float bpm) -> bool
   def self.AddDarkZone: (untyped scene, Hash[Symbol, untyped] rect, Hash[Symbol, untyped] ambient) -> bool
   def self.AddLight: (untyped scene, Hash[Symbol, untyped] light) -> bool
   def self.AddOccluderRect: (untyped scene, Hash[Symbol, untyped] rect) -> bool
@@ -2505,6 +2507,7 @@ module GrappleC
   def self.BodyDefSetSize: (Float width, Float height) -> Hash[Symbol, untyped]
   def self.BodyDefSetType: (Integer type) -> Hash[Symbol, untyped]
   def self.BodyDefault: () -> Hash[Symbol, untyped]
+  def self.BuildChipSong: (untyped composer, Integer end_tick) -> untyped
   def self.CameraBegin: (untyped engine, Hash[Symbol, untyped] camera) -> bool
   def self.CameraDestroy: () -> Hash[Symbol, untyped]
   def self.CameraEnd: (untyped engine) -> void
@@ -2525,6 +2528,7 @@ module GrappleC
   def self.CameraVisible: (Hash[Symbol, untyped] camera, Hash[Symbol, untyped] world) -> bool
   def self.CameraX: () -> [Float, Hash[Symbol, untyped]]
   def self.CameraY: () -> [Float, Hash[Symbol, untyped]]
+  def self.ChipPlayerPlaying: (untyped player) -> bool
   def self.CompileRegex: (String? pattern, String? flags) -> untyped
   def self.ConfigCreate: () -> untyped
   def self.ConfigDestroy: (untyped config) -> void
@@ -2545,6 +2549,8 @@ module GrappleC
   def self.ConfigSetVsync: (untyped config, bool vsync) -> void
   def self.ConfigSetWindowSize: (untyped config, Integer width, Integer height) -> void
   def self.CountSignalConnections: (untyped emitter, String? signal) -> Integer
+  def self.CreateChipComposer: (Integer tracks, Integer ticks_per_quarter) -> untyped
+  def self.CreateChipPlayer: (untyped song, Integer sample_rate, Integer voices, bool loop) -> untyped
   def self.CreateChipSFX: (untyped mixer, Integer which) -> untyped
   def self.CreateChipTone: (untyped mixer, Hash[Symbol, untyped] desc) -> untyped
   def self.CreateChipTune: (untyped mixer, String? mml) -> untyped
@@ -2556,6 +2562,9 @@ module GrappleC
   def self.CryptoSelfTest: () -> bool
   def self.DayNightAmbient: (Float hours) -> Hash[Symbol, untyped]
   def self.DayNightSunlight: (Float hours) -> Float
+  def self.DestroyChipComposer: (untyped composer) -> void
+  def self.DestroyChipPlayer: (untyped player) -> void
+  def self.DestroyChipSong: (untyped song) -> void
   def self.DestroyEngine: (untyped engine) -> void
   def self.DestroyGui: (untyped gui) -> void
   def self.DestroyLightScene: (untyped scene) -> void
@@ -2747,6 +2756,8 @@ module GrappleC
   def self.GamepadSetLED: (untyped engine, Integer player, Integer red, Integer green, Integer blue) -> bool
   def self.GamepadStick: (untyped engine, Integer player, Integer side, Float x, Float y) -> [Float, Float]
   def self.GamepadStopRumble: (untyped engine, Integer player) -> void
+  def self.GetChipPlayerPeakVoices: (untyped player) -> Integer
+  def self.GetChipPresetEffects: (Integer preset) -> [bool, Hash[Symbol, untyped]]
   def self.GraphicsClamp: () -> Hash[Symbol, untyped]
   def self.GraphicsConfigError: () -> String?
   def self.GraphicsConfigPath: () -> String?
@@ -2844,6 +2855,7 @@ module GrappleC
   def self.LightSetPreset: (untyped engine, Integer preset) -> void
   def self.LightSunlight: (untyped engine) -> Float
   def self.LightUsesShaders: (untyped scene) -> bool
+  def self.LoadChipSong: (String? path) -> untyped
   def self.LoadTextFile: (String? path) -> Integer
   def self.LoadTexture: (untyped engine, String? path) -> Integer
   def self.LoadTextureAsync: (untyped engine, String? path) -> Integer
@@ -2867,6 +2879,7 @@ module GrappleC
   def self.MouseReleased: (untyped engine, Integer button) -> bool
   def self.MouseWheel: (untyped engine, Float x, Float y) -> [Float, Float]
   def self.OpenVFSRead: (String? vfsPath) -> untyped
+  def self.PauseChipPlayer: (untyped player) -> void
   def self.PhysicsBodyCount: (untyped engine) -> Integer
   def self.PhysicsGravity: (untyped engine, Float x, Float y) -> [Float, Float]
   def self.PhysicsOverlap: (untyped engine, Hash[Symbol, untyped] area, Integer mask, Integer out, Integer capacity) -> [Integer, Integer]
@@ -2877,6 +2890,7 @@ module GrappleC
   def self.PhysicsSetPaused: (untyped engine, bool paused) -> void
   def self.PhysicsSetPixelsPerMetre: (untyped engine, Float pixels) -> void
   def self.PhysicsSetSubSteps: (untyped engine, Integer sub_steps) -> void
+  def self.PlayChipPlayer: (untyped player) -> bool
   def self.PrismaticJointDefCreate: () -> untyped
   def self.PrismaticJointDefDestroy: (untyped def_) -> void
   def self.PrismaticJointDefSetAnchors: (untyped def_, Float ax, Float ay, Float bx, Float by) -> void
@@ -2885,6 +2899,7 @@ module GrappleC
   def self.PrismaticJointDefSetLimit: (untyped def_, bool enabled, Float lower, Float upper) -> void
   def self.PrismaticJointDefSetMotor: (untyped def_, bool enabled, Float speed, Float max_force) -> void
   def self.QuitDebugText: () -> void
+  def self.ReadChipSongInfo: (untyped song) -> [bool, Hash[Symbol, untyped]]
   def self.RegexEscape: (String? text) -> Integer
   def self.RegexFlags: (untyped regex) -> String?
   def self.RegexGroup: (untyped regex, Integer group) -> String?
@@ -2903,6 +2918,7 @@ module GrappleC
   def self.RenderLighting: (untyped scene) -> bool
   def self.RenderOverlay: (untyped engine, Float alpha) -> Integer
   def self.RenderWorld: (untyped engine, Hash[Symbol, untyped] camera, Float alpha) -> Integer
+  def self.ResetChipPlayer: (untyped player) -> void
   def self.RevoluteJointDefCreate: () -> untyped
   def self.RevoluteJointDefDestroy: (untyped def_) -> void
   def self.RevoluteJointDefSetAnchors: (untyped def_, Float ax, Float ay, Float bx, Float by) -> void
@@ -2946,6 +2962,9 @@ module GrappleC
   def self.ScriptSceneTransitionTo: (untyped engine, String? name, Integer transition, Float seconds) -> bool
   def self.ScriptSetHook: (untyped engine, Integer hook, Integer handle) -> bool
   def self.ScriptUnbind: (untyped engine) -> void
+  def self.SetChipPart: (untyped composer, Integer track, String? name, Integer preset, Float gain) -> bool
+  def self.SetChipPresetEffects: (untyped player, Integer preset, Hash[Symbol, untyped] effects) -> bool
+  def self.SetChipTrackPreset: (untyped player, Integer track, Integer preset, Float gain) -> bool
   def self.SetDebugTextSize: (Float ptsize) -> void
   def self.SetDeviceMotion: (untyped engine, bool enabled) -> bool
   def self.SetDirectionRepeat: (untyped engine, Float delay_seconds, Float interval_seconds) -> void
@@ -2974,6 +2993,7 @@ module GrappleC
   def self.SpriteSetSource: (untyped sprite, Float x, Float y, Float w, Float h) -> void
   def self.SpriteSetTexture: (untyped sprite, untyped texture) -> void
   def self.SpriteSetVisible: (untyped sprite, bool visible) -> void
+  def self.StopChipPlayer: (untyped player) -> void
   def self.Text: (untyped engine, String? key) -> String?
   def self.TextCount: (untyped engine, String? language) -> Integer
   def self.TextHas: (untyped engine, String? key) -> bool

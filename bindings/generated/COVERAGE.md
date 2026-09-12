@@ -25,8 +25,8 @@ types). The full C API additionally stays reachable from C/C++.
 | libyaml | 48 | 0 | 0 | 48 | 2 | 46 |
 | mog HTTP/S | 69 | 54 | 0 | 12 | 67 | 2 |
 | cJSON | 78 | 57 | 0 | 20 | 70 | 8 |
-| Grapple modules | 657 | 99 | 116 | 437 | 619 | 38 |
-| **Total** | 3549 | 1117 | 340 | 2044 | 2945 | 604 |
+| Grapple modules | 682 | 120 | 117 | 437 | 639 | 43 |
+| **Total** | 3574 | 1138 | 341 | 2044 | 2965 | 609 |
 
 ## Script-surface skip reasons
 
@@ -37,6 +37,11 @@ types). The full C API additionally stays reachable from C/C++.
 - 47: threading
 - 9: callback parameter
 - 3: owned string, no free fn
+- 1: input stream ownership requires C/C++
+- 1: borrowed metadata; use ReadChipSongInfo in scripts
+- 1: borrowed metadata requires C/C++
+- 1: borrowed stream requires C/C++; use PlayChipPlayer in scripts
+- 1: sized PCM output buffer requires C/C++
 - 1: variadic
 
 ## Per-library skipped functions
@@ -672,7 +677,7 @@ types). The full C API additionally stays reachable from C/C++.
 
 </details>
 
-<details><summary>Grapple modules (38)</summary>
+<details><summary>Grapple modules (43)</summary>
 
 - `Grapple_ActorEach` — param visit: <funcptr>*
 - `Grapple_ActorLight` — returns struct pointer
@@ -694,6 +699,9 @@ types). The full C API additionally stays reachable from C/C++.
 - `Grapple_FingerHeldInRect` — returns struct pointer
 - `Grapple_FingerInRect` — returns struct pointer
 - `Grapple_GPUReadTransferBuffer` — return type void*
+- `Grapple_GetChipPlayerStream` — borrowed stream requires C/C++; use PlayChipPlayer in scripts
+- `Grapple_GetChipSongInfo` — borrowed metadata; use ReadChipSongInfo in scripts
+- `Grapple_GetChipTrackInfo` — borrowed metadata requires C/C++
 - `Grapple_GetFinger` — returns struct pointer
 - `Grapple_GraphicsArgsConfigPath` — param argv: char**
 - `Grapple_GraphicsLoadArgs` — param argv: char**
@@ -702,8 +710,10 @@ types). The full C API additionally stays reachable from C/C++.
 - `Grapple_GuiEventSink` — return type Grapple_EventSink
 - `Grapple_GuiGridBegin` — param weights: const float*
 - `Grapple_LightDefCreate` — returns struct pointer
+- `Grapple_LoadChipSong_IO` — input stream ownership requires C/C++
 - `Grapple_LoadVFSFile` — return type unsigned char*
 - `Grapple_PhysicsSetCollisionCallback` — param callback: Grapple_CollisionCallback
+- `Grapple_RenderChipPlayer` — sized PCM output buffer requires C/C++
 - `Grapple_RunGame` — param user: void*
 - `Grapple_SaveRead` — return type void*
 - `Grapple_SceneState` — return type void*

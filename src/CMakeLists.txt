@@ -1,6 +1,9 @@
 # Library implementation components.
 # Each logical subdirectory owns a CMakeLists.txt that lists sources explicitly.
 add_subdirectory(version)
+if(GRAPPLE_BUILD_MIXER AND GRAPPLE_BEAM_BUILD_APP)
+  add_subdirectory(chiptune_preview)
+endif()
 # Example for new code:
 #   add_subdirectory(parser)
 
@@ -19,6 +22,9 @@ if(GRAPPLE_BEAM_BUILD_APP)
   endif()
   if(GRAPPLE_BEAM_WITH_SPDLOG)
     target_link_libraries(${PROJECT_NAME}_app PRIVATE spdlog::spdlog)
+  endif()
+  if(GRAPPLE_BUILD_MIXER)
+    target_compile_definitions(${PROJECT_NAME}_app PRIVATE GRAPPLE_APP_CHIPTUNE)
   endif()
   cppboot_set_project_warnings(${PROJECT_NAME}_app)
 endif()

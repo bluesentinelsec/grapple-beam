@@ -14299,6 +14299,19 @@ function GrappleC.ActorWakeBody(actor) end
 ---@return table
 function GrappleC.ActorWorld(actor) end
 
+---Calls `Grapple_AddChipNote`.
+---@param composer userdata
+---@param note table
+---@return boolean
+function GrappleC.AddChipNote(composer, note) end
+
+---Calls `Grapple_AddChipTempo`.
+---@param composer userdata
+---@param tick integer
+---@param bpm number
+---@return boolean
+function GrappleC.AddChipTempo(composer, tick, bpm) end
+
 ---Calls `Grapple_AddDarkZone`.
 ---@param scene userdata
 ---@param rect table
@@ -14474,6 +14487,12 @@ function GrappleC.BodyDefSetType(type) end
 ---@return table
 function GrappleC.BodyDefault() end
 
+---Calls `Grapple_BuildChipSong`.
+---@param composer userdata
+---@param end_tick integer
+---@return userdata?
+function GrappleC.BuildChipSong(composer, end_tick) end
+
 ---Calls `Grapple_CameraBegin`.
 ---@param engine userdata
 ---@param camera table
@@ -14595,6 +14614,11 @@ function GrappleC.CameraX() end
 ---@return number, table
 function GrappleC.CameraY() end
 
+---Calls `Grapple_ChipPlayerPlaying`.
+---@param player userdata
+---@return boolean
+function GrappleC.ChipPlayerPlaying(player) end
+
 ---Calls `Grapple_CompileRegex`.
 ---@param pattern string?
 ---@param flags string?
@@ -14697,6 +14721,20 @@ function GrappleC.ConfigSetWindowSize(config, width, height) end
 ---@return integer
 function GrappleC.CountSignalConnections(emitter, signal) end
 
+---Calls `Grapple_CreateChipComposer`.
+---@param tracks integer
+---@param ticks_per_quarter integer
+---@return userdata?
+function GrappleC.CreateChipComposer(tracks, ticks_per_quarter) end
+
+---Calls `Grapple_CreateChipPlayer`.
+---@param song userdata
+---@param sample_rate integer
+---@param voices integer
+---@param loop boolean
+---@return userdata?
+function GrappleC.CreateChipPlayer(song, sample_rate, voices, loop) end
+
 ---Calls `Grapple_CreateChipSFX`.
 ---@param mixer userdata
 ---@param which integer
@@ -14757,6 +14795,18 @@ function GrappleC.DayNightAmbient(hours) end
 ---@param hours number
 ---@return number
 function GrappleC.DayNightSunlight(hours) end
+
+---Calls `Grapple_DestroyChipComposer`.
+---@param composer userdata
+function GrappleC.DestroyChipComposer(composer) end
+
+---Calls `Grapple_DestroyChipPlayer`.
+---@param player userdata
+function GrappleC.DestroyChipPlayer(player) end
+
+---Calls `Grapple_DestroyChipSong`.
+---@param song userdata
+function GrappleC.DestroyChipSong(song) end
 
 ---Calls `Grapple_DestroyEngine`.
 ---@param engine userdata
@@ -15800,6 +15850,16 @@ function GrappleC.GamepadStick(engine, player, side, x, y) end
 ---@param player integer
 function GrappleC.GamepadStopRumble(engine, player) end
 
+---Calls `Grapple_GetChipPlayerPeakVoices`.
+---@param player userdata
+---@return integer
+function GrappleC.GetChipPlayerPeakVoices(player) end
+
+---Calls `Grapple_GetChipPresetEffects`.
+---@param preset integer
+---@return boolean, table
+function GrappleC.GetChipPresetEffects(preset) end
+
 ---Calls `Grapple_GraphicsClamp`.
 ---@return table
 function GrappleC.GraphicsClamp() end
@@ -16330,6 +16390,11 @@ function GrappleC.LightSunlight(engine) end
 ---@return boolean
 function GrappleC.LightUsesShaders(scene) end
 
+---Calls `Grapple_LoadChipSong`.
+---@param path string?
+---@return userdata?
+function GrappleC.LoadChipSong(path) end
+
 ---Calls `Grapple_LoadTextFile`.
 ---@param path string?
 ---@return integer
@@ -16460,6 +16525,10 @@ function GrappleC.MouseWheel(engine, x, y) end
 ---@return userdata?
 function GrappleC.OpenVFSRead(vfsPath) end
 
+---Calls `Grapple_PauseChipPlayer`.
+---@param player userdata
+function GrappleC.PauseChipPlayer(player) end
+
 ---Calls `Grapple_PhysicsBodyCount`.
 ---@param engine userdata
 ---@return integer
@@ -16522,6 +16591,11 @@ function GrappleC.PhysicsSetPixelsPerMetre(engine, pixels) end
 ---@param sub_steps integer
 function GrappleC.PhysicsSetSubSteps(engine, sub_steps) end
 
+---Calls `Grapple_PlayChipPlayer`.
+---@param player userdata
+---@return boolean
+function GrappleC.PlayChipPlayer(player) end
+
 ---Calls `Grapple_PrismaticJointDefCreate`.
 ---@return userdata?
 function GrappleC.PrismaticJointDefCreate() end
@@ -16566,6 +16640,11 @@ function GrappleC.PrismaticJointDefSetMotor(def_, enabled, speed, max_force) end
 
 ---Calls `Grapple_QuitDebugText`.
 function GrappleC.QuitDebugText() end
+
+---Calls `Grapple_ReadChipSongInfo`.
+---@param song userdata
+---@return boolean, table
+function GrappleC.ReadChipSongInfo(song) end
 
 ---Calls `Grapple_RegexEscape`.
 ---@param text string?
@@ -16674,6 +16753,10 @@ function GrappleC.RenderOverlay(engine, alpha) end
 ---@param alpha number
 ---@return integer
 function GrappleC.RenderWorld(engine, camera, alpha) end
+
+---Calls `Grapple_ResetChipPlayer`.
+---@param player userdata
+function GrappleC.ResetChipPlayer(player) end
 
 ---Calls `Grapple_RevoluteJointDefCreate`.
 ---@return userdata?
@@ -16931,6 +17014,30 @@ function GrappleC.ScriptSetHook(engine, hook, handle) end
 ---@param engine userdata
 function GrappleC.ScriptUnbind(engine) end
 
+---Calls `Grapple_SetChipPart`.
+---@param composer userdata
+---@param track integer
+---@param name string?
+---@param preset integer
+---@param gain number
+---@return boolean
+function GrappleC.SetChipPart(composer, track, name, preset, gain) end
+
+---Calls `Grapple_SetChipPresetEffects`.
+---@param player userdata
+---@param preset integer
+---@param effects table
+---@return boolean
+function GrappleC.SetChipPresetEffects(player, preset, effects) end
+
+---Calls `Grapple_SetChipTrackPreset`.
+---@param player userdata
+---@param track integer
+---@param preset integer
+---@param gain number
+---@return boolean
+function GrappleC.SetChipTrackPreset(player, track, preset, gain) end
+
 ---Calls `Grapple_SetDebugTextSize`.
 ---@param ptsize number
 function GrappleC.SetDebugTextSize(ptsize) end
@@ -17087,6 +17194,10 @@ function GrappleC.SpriteSetTexture(sprite, texture) end
 ---@param sprite userdata
 ---@param visible boolean
 function GrappleC.SpriteSetVisible(sprite, visible) end
+
+---Calls `Grapple_StopChipPlayer`.
+---@param player userdata
+function GrappleC.StopChipPlayer(player) end
 
 ---Calls `Grapple_Text`.
 ---@param engine userdata

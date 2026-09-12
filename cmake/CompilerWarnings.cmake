@@ -10,11 +10,11 @@ function(cppboot_set_project_warnings target_name)
       -Werror
       -Wconversion
       -Wshadow
-      -Wnon-virtual-dtor
-      -Wold-style-cast
+      $<$<COMPILE_LANGUAGE:CXX>:-Wnon-virtual-dtor>
+      $<$<COMPILE_LANGUAGE:CXX>:-Wold-style-cast>
       -Wcast-align
       -Wunused
-      -Woverloaded-virtual
+      $<$<COMPILE_LANGUAGE:CXX>:-Woverloaded-virtual>
     )
   endif()
 endfunction()

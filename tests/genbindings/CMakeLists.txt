@@ -1,5 +1,6 @@
 add_executable(grapple_genbindings_test
   genbindings_test.cpp
+  chiptune_bindings_test.cpp
 )
 target_link_libraries(grapple_genbindings_test
   PRIVATE

@@ -37,7 +37,7 @@ and browser WebAssembly, and CI proves all of it on every push.
 
 | Need | Module | Under the hood |
 |------|--------|----------------|
-| Audio: mixing, music, SFX, MIDI, chiptunes | `Grapple::Mixer` | SDL3_mixer 3.2.4 + vendored codecs, TiMidity, original MML synth |
+| Audio: mixing, music, SFX, MIDI, chiptunes | `Grapple::Mixer` | SDL3_mixer 3.2.4 + vendored codecs, TiMidity, MML + streaming SID-style MIDI synth |
 | 2D drawing primitives | `Grapple::Gfx` | SDL3_gfx + original GPU-batched equivalents |
 | Image loading/saving (13 formats) | `Grapple::Image` | SDL3_image, all-static codecs |
 | Text and fonts, i18n shaping + BiDi | `Grapple::TTF` | SDL3_ttf + static FreeType, HarfBuzz, SheenBidi |

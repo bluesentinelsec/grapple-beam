@@ -1,6 +1,7 @@
 add_executable(grapple_mixer_test
   mixer_test.cpp
   chiptune_test.cpp
+  chip_player_test.cpp
 )
 target_link_libraries(grapple_mixer_test
   PRIVATE
@@ -11,6 +12,7 @@ target_compile_definitions(grapple_mixer_test PRIVATE
   MIXER_TEST_ASSETS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets"
   MIXER_GM_PATCHES_DIR="${CMAKE_SOURCE_DIR}/mixer/gm-patches"
 )
+target_include_directories(grapple_mixer_test PRIVATE ${CMAKE_SOURCE_DIR}/mixer/src)
 cppboot_set_project_warnings(grapple_mixer_test)
 gtest_discover_tests(grapple_mixer_test DISCOVERY_TIMEOUT 60)
 
