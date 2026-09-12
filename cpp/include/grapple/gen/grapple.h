@@ -15,6 +15,7 @@
 #include <grapple/engine.h>
 #include <grapple/engine_actor.h>
 #include <grapple/engine_assets.h>
+#include <grapple/engine_backend.h>
 #include <grapple/engine_binding.h>
 #include <grapple/engine_camera.h>
 #include <grapple/engine_config.h>
@@ -625,6 +626,9 @@ class EngineConfigHandle {
   void ConfigSetMaxFps(int max_fps) { ::Grapple_ConfigSetMaxFps(value_, max_fps); }
   void ConfigSetTickRate(int ticks_per_second) { ::Grapple_ConfigSetTickRate(value_, ticks_per_second); }
   void ConfigSetBackend(Grapple_EngineBackend backend) { ::Grapple_ConfigSetBackend(value_, backend); }
+  Status ConfigSetRendererBackend(const char *name) {
+    return ::Grapple_ConfigSetRendererBackend(value_, name) ? Status() : Status::FromSdl();
+  }
   void ConfigSetResizable(bool resizable) { ::Grapple_ConfigSetResizable(value_, resizable); }
   void ConfigSetHighDpi(bool high_dpi) { ::Grapple_ConfigSetHighDpi(value_, high_dpi); }
   void ConfigSetHeadless(bool headless) { ::Grapple_ConfigSetHeadless(value_, headless); }
@@ -1056,6 +1060,12 @@ inline Status MouseReleased(Grapple_Engine *engine, Grapple_MouseButton button) 
 inline Status PhysicsPaused(Grapple_Engine *engine) {
   return ::Grapple_PhysicsPaused(engine) ? Status() : Status::FromSdl();
 }
+inline Status ProbeRenderBackend(const char *name, Grapple_RenderBackendInfo *info) {
+  return ::Grapple_ProbeRenderBackend(name, info) ? Status() : Status::FromSdl();
+}
+inline Status RenderBackendValid(const char *name) {
+  return ::Grapple_RenderBackendValid(name) ? Status() : Status::FromSdl();
+}
 inline Status RenderDebugText(SDL_Renderer *renderer, float x, float y, const char *text) {
   return ::Grapple_RenderDebugText(renderer, x, y, text) ? Status() : Status::FromSdl();
 }
@@ -1272,6 +1282,7 @@ inline constexpr auto& CameraY = ::Grapple_CameraY;
 inline constexpr auto& CompressData = ::Grapple_CompressData;
 inline constexpr auto& ConnectSignal = ::Grapple_ConnectSignal;
 inline constexpr auto& CountSignalConnections = ::Grapple_CountSignalConnections;
+inline constexpr auto& CreateBackendRenderer = ::Grapple_CreateBackendRenderer;
 inline constexpr auto& CreateChipSFX = ::Grapple_CreateChipSFX;
 inline constexpr auto& CreateChipTone = ::Grapple_CreateChipTone;
 inline constexpr auto& CreateChipTune = ::Grapple_CreateChipTune;
@@ -1538,6 +1549,8 @@ inline constexpr auto& PrismaticJointDefSetLimit = ::Grapple_PrismaticJointDefSe
 inline constexpr auto& PrismaticJointDefSetMotor = ::Grapple_PrismaticJointDefSetMotor;
 inline constexpr auto& QuitDebugText = ::Grapple_QuitDebugText;
 inline constexpr auto& RegexEscape = ::Grapple_RegexEscape;
+inline constexpr auto& RenderBackendCount = ::Grapple_RenderBackendCount;
+inline constexpr auto& RenderBackendName = ::Grapple_RenderBackendName;
 inline constexpr auto& RenderLastStats = ::Grapple_RenderLastStats;
 inline constexpr auto& RenderOverlay = ::Grapple_RenderOverlay;
 inline constexpr auto& RenderWorld = ::Grapple_RenderWorld;

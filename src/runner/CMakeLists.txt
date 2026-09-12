@@ -1,7 +1,10 @@
 # Interpreter hosting stays in a library; src/main.cpp is the sole desktop entrypoint.
 enable_language(C)
-add_library(grapple_runner STATIC runner.c)
-target_link_libraries(grapple_runner PRIVATE Grapple::Lua Grapple::Ruby Grapple::Bindings)
+if(NOT TARGET CLI11::CLI11)
+  message(FATAL_ERROR "The engine CLI requires GRAPPLE_BEAM_WITH_CLI11=ON; use GRAPPLE_BEAM_BUILD_APP=OFF for a library-only build")
+endif()
+add_library(grapple_runner STATIC runner.c options.cpp)
+target_link_libraries(grapple_runner PRIVATE CLI11::CLI11 Grapple::Lua Grapple::Ruby Grapple::Bindings Grapple::Engine)
 grapple_set_project_warnings(grapple_runner)
 add_executable(${PROJECT_NAME}_app ${PROJECT_SOURCE_DIR}/src/main.cpp)
 set_target_properties(${PROJECT_NAME}_app PROPERTIES OUTPUT_NAME grapple-beam)

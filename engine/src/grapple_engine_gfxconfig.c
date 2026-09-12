@@ -85,13 +85,14 @@ static bool ParseWindowMode(const char *text, Grapple_WindowMode *out)
         *out = GRAPPLE_WINDOW_WINDOWED;
         return true;
     }
-    if (SDL_strcasecmp(text, "borderless") == 0 || SDL_strcasecmp(text, "fullscreen") == 0 ||
+    if (SDL_strcasecmp(text, "fullscreen-borderless") == 0 ||
+        SDL_strcasecmp(text, "borderless") == 0 || SDL_strcasecmp(text, "fullscreen") == 0 ||
         SDL_strcasecmp(text, "desktop") == 0)
     {
         *out = GRAPPLE_WINDOW_BORDERLESS;
         return true;
     }
-    if (SDL_strcasecmp(text, "exclusive") == 0)
+    if (SDL_strcasecmp(text, "fullscreen-exclusive") == 0 || SDL_strcasecmp(text, "exclusive") == 0)
     {
         *out = GRAPPLE_WINDOW_EXCLUSIVE;
         return true;
@@ -151,9 +152,9 @@ static const char *WindowModeName(Grapple_WindowMode mode)
     switch (mode)
     {
     case GRAPPLE_WINDOW_BORDERLESS:
-        return "borderless";
+        return "fullscreen-borderless";
     case GRAPPLE_WINDOW_EXCLUSIVE:
-        return "exclusive";
+        return "fullscreen-exclusive";
     case GRAPPLE_WINDOW_WINDOWED:
     default:
         return "windowed";
@@ -566,7 +567,8 @@ int Grapple_GraphicsLoadArgs(Grapple_GraphicsSettings *s, int argc, char *const 
         }
         else if (OPT("--max-fps") && value != NULL)
         {
-            s->max_fps = SDL_atoi(value);
+            s->max_fps = SDL_strcmp(value, "display") == 0 ? 0 :
+                         SDL_strcmp(value, "unlimited") == 0 ? -1 : SDL_atoi(value);
             changed++;
         }
         else if (OPT("--fullscreen"))
@@ -597,7 +599,6 @@ int Grapple_GraphicsLoadArgs(Grapple_GraphicsSettings *s, int argc, char *const 
             {
                 s->window_width = w;
                 s->window_height = h;
-                s->window_mode = GRAPPLE_WINDOW_WINDOWED;
                 changed++;
             }
         }

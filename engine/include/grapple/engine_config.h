@@ -69,6 +69,12 @@ extern void Grapple_ConfigSetMaxFps(Grapple_EngineConfig *config, int max_fps);
 extern void Grapple_ConfigSetTickRate(Grapple_EngineConfig *config, int ticks_per_second);
 extern void Grapple_ConfigSetBackend(Grapple_EngineConfig *config,
                                        Grapple_EngineBackend backend);
+/** @brief Select a concrete renderer, copying the name into the config builder.
+ * @param config Owned builder returned by Grapple_ConfigCreate().
+ * @param name Canonical name from engine_backend.h, or "auto".
+ * @return True on success; false with SDL_GetError() for invalid input or OOM.
+ * The caller may release name immediately after this call. */
+extern bool Grapple_ConfigSetRendererBackend(Grapple_EngineConfig *config, const char *name);
 extern void Grapple_ConfigSetResizable(Grapple_EngineConfig *config, bool resizable);
 extern void Grapple_ConfigSetHighDpi(Grapple_EngineConfig *config, bool high_dpi);
 extern void Grapple_ConfigSetHeadless(Grapple_EngineConfig *config, bool headless);

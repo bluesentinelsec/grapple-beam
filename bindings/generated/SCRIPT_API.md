@@ -2572,12 +2572,14 @@ returns as an array.
 | `GrappleC.ConfigSetMaxFps(config: Grapple_EngineConfig, max_fps: integer)` | nil |
 | `GrappleC.ConfigSetMediaPath(config: Grapple_EngineConfig, path: string|nil)` | nil |
 | `GrappleC.ConfigSetPresentation(config: Grapple_EngineConfig, presentation: integer)` | nil |
+| `GrappleC.ConfigSetRendererBackend(config: Grapple_EngineConfig, name: string|nil)` | boolean |
 | `GrappleC.ConfigSetResizable(config: Grapple_EngineConfig, resizable: boolean)` | nil |
 | `GrappleC.ConfigSetTickRate(config: Grapple_EngineConfig, ticks_per_second: integer)` | nil |
 | `GrappleC.ConfigSetTitle(config: Grapple_EngineConfig, title: string|nil)` | nil |
 | `GrappleC.ConfigSetVsync(config: Grapple_EngineConfig, vsync: boolean)` | nil |
 | `GrappleC.ConfigSetWindowSize(config: Grapple_EngineConfig, width: integer, height: integer)` | nil |
 | `GrappleC.CountSignalConnections(emitter: Grapple_SignalEmitter, signal: string|nil)` | integer |
+| `GrappleC.CreateBackendRenderer(window: SDL_Window, name: string|nil)` | SDL_Renderer|nil |
 | `GrappleC.CreateChipComposer(tracks: integer, ticks_per_quarter: integer)` | Grapple_ChipComposer|nil |
 | `GrappleC.CreateChipPlayer(song: Grapple_ChipSong, sample_rate: integer, voices: integer, loop: boolean)` | Grapple_ChipPlayer|nil |
 | `GrappleC.CreateChipSFX(mixer: MIX_Mixer, which: integer)` | MIX_Audio|nil |
@@ -2935,6 +2937,7 @@ returns as an array.
 | `GrappleC.PrismaticJointDefSetBodies(def: b2PrismaticJointDef, a: b2BodyId table, b: b2BodyId table)` | nil |
 | `GrappleC.PrismaticJointDefSetLimit(def: b2PrismaticJointDef, enabled: boolean, lower: number, upper: number)` | nil |
 | `GrappleC.PrismaticJointDefSetMotor(def: b2PrismaticJointDef, enabled: boolean, speed: number, max_force: number)` | nil |
+| `GrappleC.ProbeRenderBackend(name: string|nil)` | boolean, info: Grapple_RenderBackendInfo table |
 | `GrappleC.QuitDebugText()` | nil |
 | `GrappleC.ReadChipDiagnostic(song: Grapple_ChipSong, index: integer)` | boolean, diagnostic: Grapple_ChipDiagnostic table |
 | `GrappleC.ReadChipPlayerPosition(player: Grapple_ChipPlayer)` | boolean, position: Grapple_ChipPosition table |
@@ -2956,6 +2959,9 @@ returns as an array.
 | `GrappleC.RegexPattern(regex: Grapple_Regex)` | string|nil |
 | `GrappleC.RegexReplace(regex: Grapple_Regex, text: string|nil, replacement: string|nil, all: boolean)` | string|nil |
 | `GrappleC.RegexSearch(regex: Grapple_Regex, text: string|nil, start: integer)` | boolean |
+| `GrappleC.RenderBackendCount()` | integer |
+| `GrappleC.RenderBackendName(index: integer)` | string|nil |
+| `GrappleC.RenderBackendValid(name: string|nil)` | boolean |
 | `GrappleC.RenderDebugText(renderer: SDL_Renderer, x: number, y: number, text: string|nil)` | boolean |
 | `GrappleC.RenderLastStats(engine: Grapple_Engine)` | Grapple_RenderStats table |
 | `GrappleC.RenderLighting(scene: Grapple_LightScene)` | boolean |

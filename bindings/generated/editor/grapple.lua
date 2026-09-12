@@ -14713,6 +14713,12 @@ function GrappleC.ConfigSetMediaPath(config, path) end
 ---@param presentation integer
 function GrappleC.ConfigSetPresentation(config, presentation) end
 
+---Calls `Grapple_ConfigSetRendererBackend`.
+---@param config userdata
+---@param name string?
+---@return boolean
+function GrappleC.ConfigSetRendererBackend(config, name) end
+
 ---Calls `Grapple_ConfigSetResizable`.
 ---@param config userdata
 ---@param resizable boolean
@@ -14744,6 +14750,12 @@ function GrappleC.ConfigSetWindowSize(config, width, height) end
 ---@param signal string?
 ---@return integer
 function GrappleC.CountSignalConnections(emitter, signal) end
+
+---Calls `Grapple_CreateBackendRenderer`.
+---@param window userdata
+---@param name string?
+---@return userdata?
+function GrappleC.CreateBackendRenderer(window, name) end
 
 ---Calls `Grapple_CreateChipComposer`.
 ---@param tracks integer
@@ -16704,6 +16716,11 @@ function GrappleC.PrismaticJointDefSetLimit(def_, enabled, lower, upper) end
 ---@param max_force number
 function GrappleC.PrismaticJointDefSetMotor(def_, enabled, speed, max_force) end
 
+---Calls `Grapple_ProbeRenderBackend`.
+---@param name string?
+---@return boolean, table
+function GrappleC.ProbeRenderBackend(name) end
+
 ---Calls `Grapple_QuitDebugText`.
 function GrappleC.QuitDebugText() end
 
@@ -16825,6 +16842,20 @@ function GrappleC.RegexReplace(regex, text, replacement, all) end
 ---@param start integer
 ---@return boolean
 function GrappleC.RegexSearch(regex, text, start) end
+
+---Calls `Grapple_RenderBackendCount`.
+---@return integer
+function GrappleC.RenderBackendCount() end
+
+---Calls `Grapple_RenderBackendName`.
+---@param index integer
+---@return string?
+function GrappleC.RenderBackendName(index) end
+
+---Calls `Grapple_RenderBackendValid`.
+---@param name string?
+---@return boolean
+function GrappleC.RenderBackendValid(name) end
 
 ---Calls `Grapple_RenderDebugText`.
 ---@param renderer userdata

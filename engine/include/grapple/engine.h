@@ -240,6 +240,11 @@ typedef struct Grapple_EngineConfig
     /** Drive time with Grapple_EngineAdvance instead of the clock, so a
      *  test can simulate an hour of frames in a millisecond. */
     bool manual_clock;
+    /** Concrete renderer selection ("auto", "directx11", "directx12", "vulkan",
+     * "metal", "opengl", "opengles2", or "software"). NULL preserves the legacy
+     * backend enum preference. Borrowed until Grapple_CreateEngine returns.
+     * Explicit choices never fall back; --backend overrides this field. */
+    const char *renderer_backend;
 } Grapple_EngineConfig;
 
 /**

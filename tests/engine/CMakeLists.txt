@@ -2,6 +2,7 @@ add_executable(grapple_engine_test
   engine_test.cpp
   scene_test.cpp
   graphics_test.cpp
+  backend_test.cpp
   camera_test.cpp
   actor_test.cpp
   render_test.cpp

@@ -2546,12 +2546,14 @@ module GrappleC
   def self.ConfigSetMaxFps: (untyped config, Integer max_fps) -> void
   def self.ConfigSetMediaPath: (untyped config, String? path) -> void
   def self.ConfigSetPresentation: (untyped config, Integer presentation) -> void
+  def self.ConfigSetRendererBackend: (untyped config, String? name) -> bool
   def self.ConfigSetResizable: (untyped config, bool resizable) -> void
   def self.ConfigSetTickRate: (untyped config, Integer ticks_per_second) -> void
   def self.ConfigSetTitle: (untyped config, String? title) -> void
   def self.ConfigSetVsync: (untyped config, bool vsync) -> void
   def self.ConfigSetWindowSize: (untyped config, Integer width, Integer height) -> void
   def self.CountSignalConnections: (untyped emitter, String? signal) -> Integer
+  def self.CreateBackendRenderer: (untyped window, String? name) -> untyped
   def self.CreateChipComposer: (Integer tracks, Integer ticks_per_quarter) -> untyped
   def self.CreateChipPlayer: (untyped song, Integer sample_rate, Integer voices, bool loop) -> untyped
   def self.CreateChipSFX: (untyped mixer, Integer which) -> untyped
@@ -2909,6 +2911,7 @@ module GrappleC
   def self.PrismaticJointDefSetBodies: (untyped def_, Hash[Symbol, untyped] a, Hash[Symbol, untyped] b) -> void
   def self.PrismaticJointDefSetLimit: (untyped def_, bool enabled, Float lower, Float upper) -> void
   def self.PrismaticJointDefSetMotor: (untyped def_, bool enabled, Float speed, Float max_force) -> void
+  def self.ProbeRenderBackend: (String? name) -> [bool, Hash[Symbol, untyped]]
   def self.QuitDebugText: () -> void
   def self.ReadChipDiagnostic: (untyped song, Integer index) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipPlayerPosition: (untyped player) -> [bool, Hash[Symbol, untyped]]
@@ -2930,6 +2933,9 @@ module GrappleC
   def self.RegexPattern: (untyped regex) -> String?
   def self.RegexReplace: (untyped regex, String? text, String? replacement, bool all) -> String?
   def self.RegexSearch: (untyped regex, String? text, Integer start) -> bool
+  def self.RenderBackendCount: () -> Integer
+  def self.RenderBackendName: (Integer index) -> String?
+  def self.RenderBackendValid: (String? name) -> bool
   def self.RenderDebugText: (untyped renderer, Float x, Float y, String? text) -> bool
   def self.RenderLastStats: (untyped engine) -> Hash[Symbol, untyped]
   def self.RenderLighting: (untyped scene) -> bool

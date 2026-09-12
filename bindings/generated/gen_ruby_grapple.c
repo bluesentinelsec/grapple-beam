@@ -13,6 +13,7 @@
 #include <grapple/engine.h>
 #include <grapple/engine_actor.h>
 #include <grapple/engine_assets.h>
+#include <grapple/engine_backend.h>
 #include <grapple/engine_binding.h>
 #include <grapple/engine_camera.h>
 #include <grapple/engine_config.h>
@@ -573,6 +574,50 @@ static mrb_value GenPush_Grapple_RayHit(mrb_state *mrb, const Grapple_RayHit *in
     GrappleGen_RubyHashSet(mrb, h, "normal_x", mrb_float_value(mrb, (mrb_float)in->normal_x));
     GrappleGen_RubyHashSet(mrb, h, "normal_y", mrb_float_value(mrb, (mrb_float)in->normal_y));
     GrappleGen_RubyHashSet(mrb, h, "fraction", mrb_float_value(mrb, (mrb_float)in->fraction));
+    return h;
+}
+
+static mrb_value GenPush_Grapple_RenderBackendInfo(mrb_state *mrb, const Grapple_RenderBackendInfo *in)
+{
+    mrb_value h = mrb_hash_new(mrb);
+    {
+        size_t length = 0;
+        while (length < sizeof(in->name) && in->name[length]) ++length;
+        GrappleGen_RubyHashSet(mrb, h, "name", mrb_str_new(mrb, in->name, (mrb_int)length));
+    }
+    {
+        size_t length = 0;
+        while (length < sizeof(in->label) && in->label[length]) ++length;
+        GrappleGen_RubyHashSet(mrb, h, "label", mrb_str_new(mrb, in->label, (mrb_int)length));
+    }
+    {
+        size_t length = 0;
+        while (length < sizeof(in->renderer) && in->renderer[length]) ++length;
+        GrappleGen_RubyHashSet(mrb, h, "renderer", mrb_str_new(mrb, in->renderer, (mrb_int)length));
+    }
+    {
+        size_t length = 0;
+        while (length < sizeof(in->api_version) && in->api_version[length]) ++length;
+        GrappleGen_RubyHashSet(mrb, h, "api_version", mrb_str_new(mrb, in->api_version, (mrb_int)length));
+    }
+    {
+        size_t length = 0;
+        while (length < sizeof(in->device) && in->device[length]) ++length;
+        GrappleGen_RubyHashSet(mrb, h, "device", mrb_str_new(mrb, in->device, (mrb_int)length));
+    }
+    {
+        size_t length = 0;
+        while (length < sizeof(in->driver) && in->driver[length]) ++length;
+        GrappleGen_RubyHashSet(mrb, h, "driver", mrb_str_new(mrb, in->driver, (mrb_int)length));
+    }
+    {
+        size_t length = 0;
+        while (length < sizeof(in->error) && in->error[length]) ++length;
+        GrappleGen_RubyHashSet(mrb, h, "error", mrb_str_new(mrb, in->error, (mrb_int)length));
+    }
+    GrappleGen_RubyHashSet(mrb, h, "compiled", mrb_bool_value((mrb_bool)(in->compiled != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "available", mrb_bool_value((mrb_bool)(in->available != 0)));
+    GrappleGen_RubyHashSet(mrb, h, "opengl_effects", mrb_bool_value((mrb_bool)(in->opengl_effects != 0)));
     return h;
 }
 
@@ -3059,6 +3104,20 @@ static mrb_value GenR_Grapple_ConfigSetPresentation(mrb_state *mrb, mrb_value se
     }
 }
 
+static mrb_value GenR_Grapple_ConfigSetRendererBackend(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_EngineConfig *a0 = (Grapple_EngineConfig *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_EngineConfig");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    bool rv = Grapple_ConfigSetRendererBackend(a0, a1);
+    return mrb_bool_value((mrb_bool)(rv != 0));
+    }
+}
+
 static mrb_value GenR_Grapple_ConfigSetResizable(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -3141,6 +3200,20 @@ static mrb_value GenR_Grapple_CountSignalConnections(mrb_state *mrb, mrb_value s
     const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int rv = Grapple_CountSignalConnections(a0, a1);
     return mrb_int_value(mrb, (mrb_int)rv);
+    }
+}
+
+static mrb_value GenR_Grapple_CreateBackendRenderer(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "SDL_Window");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    SDL_Renderer * rv = Grapple_CreateBackendRenderer(a0, a1);
+    return GrappleGen_RubyPushHandle(mrb, (void *)rv, "SDL_Renderer");
     }
 }
 
@@ -8268,6 +8341,24 @@ static mrb_value GenR_Grapple_PrismaticJointDefSetMotor(mrb_state *mrb, mrb_valu
     }
 }
 
+static mrb_value GenR_Grapple_ProbeRenderBackend(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    Grapple_RenderBackendInfo out1;
+    memset(&out1, 0, sizeof(out1));
+    bool rv = Grapple_ProbeRenderBackend(a0, &out1);
+    mrb_value rets[2];
+    rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
+    rets[1] = GenPush_Grapple_RenderBackendInfo(mrb, &out1);
+    return mrb_ary_new_from_values(mrb, 2, rets);
+    }
+}
+
 static mrb_value GenR_Grapple_QuitDebugText(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -8592,6 +8683,44 @@ static mrb_value GenR_Grapple_RegexSearch(mrb_state *mrb, mrb_value self)
     const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
     int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     bool rv = Grapple_RegexSearch(a0, a1, a2);
+    return mrb_bool_value((mrb_bool)(rv != 0));
+    }
+}
+
+static mrb_value GenR_Grapple_RenderBackendCount(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    int rv = Grapple_RenderBackendCount();
+    return mrb_int_value(mrb, (mrb_int)rv);
+    }
+}
+
+static mrb_value GenR_Grapple_RenderBackendName(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    int a0 = (int)GrappleGen_RubyToInt(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    const char * rv = Grapple_RenderBackendName(a0);
+    return (rv == NULL ? mrb_nil_value() : mrb_str_new_cstr(mrb, rv));
+    }
+}
+
+static mrb_value GenR_Grapple_RenderBackendValid(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    bool rv = Grapple_RenderBackendValid(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
 }
@@ -10537,12 +10666,14 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "ConfigSetMaxFps", GenR_Grapple_ConfigSetMaxFps, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ConfigSetMediaPath", GenR_Grapple_ConfigSetMediaPath, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ConfigSetPresentation", GenR_Grapple_ConfigSetPresentation, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "ConfigSetRendererBackend", GenR_Grapple_ConfigSetRendererBackend, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ConfigSetResizable", GenR_Grapple_ConfigSetResizable, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ConfigSetTickRate", GenR_Grapple_ConfigSetTickRate, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ConfigSetTitle", GenR_Grapple_ConfigSetTitle, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ConfigSetVsync", GenR_Grapple_ConfigSetVsync, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ConfigSetWindowSize", GenR_Grapple_ConfigSetWindowSize, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "CountSignalConnections", GenR_Grapple_CountSignalConnections, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "CreateBackendRenderer", GenR_Grapple_CreateBackendRenderer, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "CreateChipComposer", GenR_Grapple_CreateChipComposer, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "CreateChipPlayer", GenR_Grapple_CreateChipPlayer, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "CreateChipSFX", GenR_Grapple_CreateChipSFX, MRB_ARGS_ANY());
@@ -10900,6 +11031,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "PrismaticJointDefSetBodies", GenR_Grapple_PrismaticJointDefSetBodies, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PrismaticJointDefSetLimit", GenR_Grapple_PrismaticJointDefSetLimit, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PrismaticJointDefSetMotor", GenR_Grapple_PrismaticJointDefSetMotor, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "ProbeRenderBackend", GenR_Grapple_ProbeRenderBackend, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "QuitDebugText", GenR_Grapple_QuitDebugText, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ReadChipDiagnostic", GenR_Grapple_ReadChipDiagnostic, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ReadChipPlayerPosition", GenR_Grapple_ReadChipPlayerPosition, MRB_ARGS_ANY());
@@ -10921,6 +11053,9 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "RegexPattern", GenR_Grapple_RegexPattern, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "RegexReplace", GenR_Grapple_RegexReplace, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "RegexSearch", GenR_Grapple_RegexSearch, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "RenderBackendCount", GenR_Grapple_RenderBackendCount, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "RenderBackendName", GenR_Grapple_RenderBackendName, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "RenderBackendValid", GenR_Grapple_RenderBackendValid, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "RenderDebugText", GenR_Grapple_RenderDebugText, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "RenderLastStats", GenR_Grapple_RenderLastStats, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "RenderLighting", GenR_Grapple_RenderLighting, MRB_ARGS_ANY());

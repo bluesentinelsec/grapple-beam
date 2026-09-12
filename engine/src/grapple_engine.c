@@ -12,10 +12,10 @@
  *   [4] alpha    render *between* steps, so the display rate and the
  *                simulation rate need not agree
  */
-#include <grapple/engine.h>
-
 #include "engine_internal.h"
 
+#include <grapple/engine.h>
+#include <grapple/engine_backend.h>
 #include <grapple/engine_script.h>
 
 #ifdef __EMSCRIPTEN__
@@ -147,10 +147,9 @@ static void ApplyPresentation(Grapple_Engine *engine)
 
     /* Pixel art wants nearest, everything else wants linear. Setting it as
        the renderer's default means a game never has to remember. */
-    SDL_SetDefaultTextureScaleMode(engine->renderer,
-                                   (engine->presentation == GRAPPLE_PRESENT_INTEGER)
-                                       ? SDL_SCALEMODE_NEAREST
-                                       : SDL_SCALEMODE_LINEAR);
+    SDL_SetDefaultTextureScaleMode(
+        engine->renderer, (engine->presentation == GRAPPLE_PRESENT_INTEGER) ? SDL_SCALEMODE_NEAREST
+                                                                            : SDL_SCALEMODE_LINEAR);
 }
 
 /* The display's refresh rate, so the smoothing above has something to snap
@@ -178,6 +177,34 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
         config = &defaults;
     }
 
+    Grapple_EngineConfig launch = *config;
+    for (int i = 1; i < launch.argc && launch.argv != NULL; ++i)
+    {
+        const char *arg = launch.argv[i];
+        if (SDL_strncmp(arg, "--backend=", 10) == 0)
+            launch.renderer_backend = arg + 10;
+        else if (SDL_strcmp(arg, "--backend") == 0 && i + 1 < launch.argc)
+            launch.renderer_backend = launch.argv[++i];
+        else if (SDL_strcmp(arg, "--with-safe-mode") == 0)
+        {
+            launch.fixed_size = false;
+            launch.renderer_backend = "software";
+        }
+    }
+    if (launch.renderer_backend != NULL && !Grapple_RenderBackendValid(launch.renderer_backend))
+    {
+        SDL_SetError("unknown renderer backend '%s'", launch.renderer_backend);
+        return NULL;
+    }
+    if (launch.headless && launch.renderer_backend != NULL &&
+        SDL_strcmp(launch.renderer_backend, "auto") != 0 &&
+        SDL_strcmp(launch.renderer_backend, "software") != 0)
+    {
+        SDL_SetError("headless rendering requires the software backend");
+        return NULL;
+    }
+    config = &launch;
+
     Grapple_Engine *engine = (Grapple_Engine *)SDL_calloc(1, sizeof(*engine));
     if (engine == NULL)
     {
@@ -187,8 +214,7 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
     engine->tick_rate = (config->tick_rate > 0) ? SDL_clamp(config->tick_rate, 10, 480) : 60;
     engine->step_ns = NS_PER_SECOND / (Uint64)engine->tick_rate;
     engine->max_steps = (config->max_steps_per_frame > 0) ? config->max_steps_per_frame : 5;
-    const float max_frame = (config->max_frame_seconds > 0.0f) ? config->max_frame_seconds
-                                                               : 0.25f;
+    const float max_frame = (config->max_frame_seconds > 0.0f) ? config->max_frame_seconds : 0.25f;
     engine->max_frame_ns = (Uint64)((double)max_frame * (double)NS_PER_SECOND);
     engine->interpolation = config->interpolation;
     engine->max_fps = config->max_fps;
@@ -267,12 +293,11 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
         /* The surface stands in for the window, so a test can ask for a
            16:10 or ultrawide "display" and check what the design space
            does about it. */
-        const int surface_w = (config->window_width > 0) ? config->window_width
-                                                         : engine->design_width;
-        const int surface_h = (config->window_height > 0) ? config->window_height
-                                                          : engine->design_height;
-        SDL_Surface *surface = SDL_CreateSurface(surface_w, surface_h,
-                                                 SDL_PIXELFORMAT_ARGB8888);
+        const int surface_w =
+            (config->window_width > 0) ? config->window_width : engine->design_width;
+        const int surface_h =
+            (config->window_height > 0) ? config->window_height : engine->design_height;
+        SDL_Surface *surface = SDL_CreateSurface(surface_w, surface_h, SDL_PIXELFORMAT_ARGB8888);
         if (surface == NULL)
         {
             SDL_free(engine);
@@ -299,10 +324,6 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
         if (!config->low_dpi)
         {
             flags |= SDL_WINDOW_HIGH_PIXEL_DENSITY;
-        }
-        if (config->fullscreen)
-        {
-            flags |= SDL_WINDOW_FULLSCREEN;
         }
         /* Settings win over the plain config fields, so a player's saved
            window size and monitor are honoured at creation rather than
@@ -353,11 +374,25 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
          * puts it in front, which is what every other application does. */
         flags |= SDL_WINDOW_HIDDEN;
 
-        if (!SDL_CreateWindowAndRenderer((config->title != NULL) ? config->title : "Grapple",
-                                         width, height, flags, &engine->window,
-                                         &engine->renderer))
+        const char *title = config->title != NULL ? config->title : "Grapple";
+        bool created;
+        if (config->renderer_backend != NULL)
         {
-            SDL_free(engine);
+            engine->window = SDL_CreateWindow(title, width, height, flags);
+            if (engine->window != NULL)
+                engine->renderer =
+                    Grapple_CreateBackendRenderer(engine->window, config->renderer_backend);
+            created = engine->renderer != NULL;
+        }
+        else
+            created = SDL_CreateWindowAndRenderer(title, width, height, flags, &engine->window,
+                                                  &engine->renderer);
+        if (!created)
+        {
+            char error[512];
+            SDL_strlcpy(error, SDL_GetError(), sizeof(error));
+            Grapple_DestroyEngine(engine);
+            SDL_SetError("%s", error);
             return NULL;
         }
         /* Vsync unless asked otherwise: it costs nothing, it stops the loop
@@ -386,7 +421,7 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
             Grapple_EngineSetDisplay(engine, engine->graphics.display);
         }
     }
-    if (config->graphics != NULL && engine->window != NULL)
+    if (engine->window != NULL)
     {
         /* Window mode is the one setting that cannot be folded into window
            creation, because borderless and exclusive differ after the fact. */
@@ -583,8 +618,7 @@ static void LimitFrameRate(Grapple_Engine *engine)
     }
 }
 
-void Grapple_EngineSetHooks(Grapple_Engine *engine, const Grapple_GameHooks *hooks,
-                              void *user)
+void Grapple_EngineSetHooks(Grapple_Engine *engine, const Grapple_GameHooks *hooks, void *user)
 {
     if (engine != NULL)
     {
@@ -662,8 +696,7 @@ bool Grapple_EngineTick(Grapple_Engine *engine)
         engine->alpha = 1.0f;
         break;
     case GRAPPLE_INTERPOLATE_EXTRAPOLATE:
-        engine->alpha = 1.0f + (float)((double)engine->accumulator_ns /
-                                       (double)engine->step_ns);
+        engine->alpha = 1.0f + (float)((double)engine->accumulator_ns / (double)engine->step_ns);
         break;
     case GRAPPLE_INTERPOLATE_LERP:
     default:
@@ -872,9 +905,8 @@ bool Grapple_EngineSetTickRate(Grapple_Engine *engine, int ticks_per_second)
     const Uint64 step = NS_PER_SECOND / (Uint64)rate;
     /* Carry the accumulated time across as a fraction of a step, so
        changing the rate from an options menu does not stutter. */
-    const double fraction = (engine->step_ns > 0)
-                                ? (double)engine->accumulator_ns / (double)engine->step_ns
-                                : 0.0;
+    const double fraction =
+        (engine->step_ns > 0) ? (double)engine->accumulator_ns / (double)engine->step_ns : 0.0;
     engine->tick_rate = rate;
     engine->step_ns = step;
     engine->accumulator_ns = (Uint64)(fraction * (double)step);
@@ -912,8 +944,7 @@ void Grapple_EngineDesignSize(Grapple_Engine *engine, int *width, int *height)
     }
 }
 
-bool Grapple_EngineSetPresentation(Grapple_Engine *engine,
-                                     Grapple_EnginePresentation mode)
+bool Grapple_EngineSetPresentation(Grapple_Engine *engine, Grapple_EnginePresentation mode)
 {
     if (engine == NULL)
     {
@@ -1090,7 +1121,7 @@ void Grapple_EngineSetClearColor(Grapple_Engine *engine, SDL_FColor color)
 }
 
 void Grapple_EngineWindowToDesign(Grapple_Engine *engine, float window_x, float window_y,
-                                    float *design_x, float *design_y)
+                                  float *design_x, float *design_y)
 {
     if (engine == NULL)
     {

@@ -731,7 +731,7 @@ TEST(GraphicsArgs, ReadsWindowSizeAndDisplay)
     Grapple_GraphicsLoadArgs(&s, args.argc(), args.argv());
     EXPECT_EQ(s.window_width, 1600);
     EXPECT_EQ(s.window_height, 900);
-    EXPECT_EQ(s.window_mode, GRAPPLE_WINDOW_WINDOWED) << "asking for a size implies windowed";
+    EXPECT_EQ(s.window_mode, GRAPPLE_WINDOW_BORDERLESS) << "size does not select window mode";
     EXPECT_EQ(s.display, 1);
 
     // Nonsense leaves it alone rather than producing a 0x0 window.
