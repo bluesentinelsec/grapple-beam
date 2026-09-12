@@ -7,6 +7,11 @@ what a whole game looks like when the loop belongs to the engine.
 Every demo is built on the opinionated loop — `Grapple_RunGame` and its hooks.
 None of them contains a `while (running)`.
 
+## Chiptune playback
+
+The [C chiptune demo](chiptune/README.md) loads and plays MIDI, MusicXML and MXL
+through the library and engine loop. It also demonstrates offline WAV export.
+
 ## Pong
 
 The same game four times, once per supported language. They are deliberately
