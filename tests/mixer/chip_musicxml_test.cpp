@@ -1229,3 +1229,32 @@ TEST(ChipMusicXml, InteriorNavigationMustNotSilentlyMoveToBarlines)
                       "<barline location='middle'><repeat direction='backward'/></barline>" +
                       Note("1") + "</measure>")));
 }
+
+TEST(ChipMusicXml, FermataOnTiedContinuationHoldsEnsembleAtItsWrittenEnd)
+{
+    const auto song =
+        LoadXml(Score("<measure>" + Note("1", "<tie type='start'/>") +
+                      Note("1", "<tie type='stop'/><notations><fermata/></notations>") + Note("1") +
+                      "</measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 2u);
+    const auto ppqn = static_cast<Uint64>(song->info.ticks_per_quarter);
+    EXPECT_EQ(notes[0].duration, 5 * ppqn / 2);
+    EXPECT_EQ(notes[1].tick, 5 * ppqn / 2);
+    EXPECT_DOUBLE_EQ(song->info.duration_seconds, 1.75);
+    const auto breath =
+        LoadXml(Score("<measure>" + Note("1", "<tie type='start'/>") +
+                      Note("1", "<tie type='stop'/><notations><articulations><breath-mark/>"
+                                "</articulations></notations>") +
+                      "</measure>"));
+    ASSERT_TRUE(breath) << SDL_GetError();
+    for (size_t i = 0; i < breath->count; ++i)
+    {
+        if ((breath->events[i].status >> 4) == 8)
+        {
+            EXPECT_EQ(breath->events[i].tick,
+                      185u * static_cast<Uint64>(breath->info.ticks_per_quarter) / 100);
+        }
+    }
+}

@@ -32,7 +32,9 @@ static bool ReadNotation(ScoreReader *r, ScoreNote *n, const ChipXmlNode *node)
     bool release = false;
     for (const ChipXmlNode *c = node; c; c = c->next)
     {
-        if (Named(c, "staccato"))
+        if (Named(c, "breath-mark"))
+            n->gate = SDL_min(n->gate, r->options->breath_gate);
+        else if (Named(c, "staccato"))
             n->gate = SDL_min(n->gate, r->options->staccato_gate);
         else if (Named(c, "staccatissimo") || Named(c, "spiccato"))
             n->gate = SDL_min(n->gate, r->options->staccatissimo_gate);

@@ -108,8 +108,8 @@ bool Chip_ReadDirections(ScoreReader *r, const ChipXmlNode *node, const ChipXmlN
             {
                 c.kind = SCORE_SECTION;
                 c.voice = mark->text ? mark->text : "";
-                if (*c.voice && !Append(r, c))
-                    return false;
+                if (!*c.voice)
+                    continue;
             }
             else if (Named(mark, "dynamics") && mark->children && !*dynamics)
             {

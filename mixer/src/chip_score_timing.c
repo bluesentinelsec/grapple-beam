@@ -297,20 +297,20 @@ bool Chip_ApplyScoreTiming(ScoreReader *r)
     for (size_t i = 0; ok && i < r->note_count; ++i)
     {
         ScoreNote *n = &r->notes[i];
-        if (n->skipped || n->grace)
+        if ((n->skipped && !n->tied_continuation) || n->grace)
             continue;
+        const Sint64 duration =
+            n->curve_first ? r->curves[n->curve_first - 1].duration : n->duration;
         const ChipXmlNode *notation = Chip_XmlChild(n->node, "notations");
         if (Find(notation, "fermata"))
-            ok = Pause(&pauses, &count, &capacity, n->start + n->duration,
-                       (Sint64)SDL_round((double)n->duration * (r->options->fermata_factor - 1)),
-                       true);
+            ok =
+                Pause(&pauses, &count, &capacity, n->start + duration,
+                      (Sint64)SDL_round((double)duration * (r->options->fermata_factor - 1)), true);
         if (ok && Find(notation, "caesura"))
             ok = Pause(
-                &pauses, &count, &capacity, n->start + n->duration,
+                &pauses, &count, &capacity, n->start + duration,
                 (Sint64)SDL_round(r->options->caesura_beats * r->song->info.ticks_per_quarter),
                 false);
-        if (Find(notation, "breath-mark"))
-            n->gate = SDL_min(n->gate, r->options->breath_gate);
     }
     if (ok && count)
     {

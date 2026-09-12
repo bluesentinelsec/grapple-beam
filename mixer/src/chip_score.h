@@ -38,7 +38,7 @@ typedef struct ScoreNote
     Sint64 start, duration;
     const char *voice;
     const char *instrument;
-    bool tab, skipped, tie_start, tie_stop;
+    bool tab, skipped, tie_start, tie_stop, tied_continuation;
     const ChipXmlNode *node;
     int source_measure;
     Grapple_ChipExpression expression;

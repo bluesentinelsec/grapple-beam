@@ -247,7 +247,9 @@ static bool Resolution(ScoreReader *r, const ChipXmlNode *node, Sint64 *division
         if (Named(node, "grace") || Named(node, "ornaments") || Named(node, "arpeggiate") ||
             Named(node, "swing") || Named(node, "metronome") || Named(node, "wedge") ||
             Named(node, "words") || Named(node, "fermata") || Named(node, "caesura") ||
-            Named(node, "staccato") || Named(node, "staccatissimo") ||
+            Named(node, "staccato") || Named(node, "staccatissimo") || Named(node, "breath-mark") ||
+            Named(node, "spiccato") ||
+            (Named(node, "note") && SDL_strcmp(Chip_XmlAttribute(node, "pizzicato"), "yes") == 0) ||
             Named(node, "detached-legato") || Named(node, "stopped") || Named(node, "notehead") ||
             Named(node, "other-technical"))
         {

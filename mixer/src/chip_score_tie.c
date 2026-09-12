@@ -56,6 +56,7 @@ bool Chip_ResolveTies(ScoreReader *r)
             first->release = n->release;
             first->duration = combined;
             n->skipped = true;
+            n->tied_continuation = true;
             active[t] = active[--ties];
         }
         if (n->tie_start)
