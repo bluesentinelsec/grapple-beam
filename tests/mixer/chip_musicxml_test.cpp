@@ -862,3 +862,74 @@ TEST(ChipMusicXml, DifferentMicrotonalPitchesCannotBeTiedTogether)
                       "<duration>1</duration><tie type='stop'/></note></measure>")));
     EXPECT_NE(std::string(SDL_GetError()).find("tie stop"), std::string::npos);
 }
+
+TEST(ChipMusicXml, AllMetronomeBeatUnitsAndTiedUnitsUseQuarterBeatTempo)
+{
+    const std::vector<std::pair<std::string, std::string>> units = {
+        {"maxima", "3.75"}, {"long", "7.5"},    {"breve", "15"},   {"whole", "30"},
+        {"half", "60"},     {"quarter", "120"}, {"eighth", "240"}, {"16th", "480"},
+        {"32nd", "960"},    {"64th", "1920"},   {"128th", "3840"}, {"256th", "7680"},
+        {"512th", "15360"}, {"1024th", "30720"}};
+    for (const auto &[unit, bpm] : units)
+    {
+        const auto song = LoadXml(Score("<measure><direction><direction-type><metronome>"
+                                        "<beat-unit>" +
+                                        unit + "</beat-unit><per-minute>" + bpm +
+                                        "</per-minute></metronome></direction-type></direction>" +
+                                        Note("1") + "</measure>"));
+        ASSERT_TRUE(song) << unit << SDL_GetError();
+        EXPECT_DOUBLE_EQ(song->info.duration_seconds, 0.5) << unit;
+    }
+    const auto tied = LoadXml(Score(
+        "<measure><direction><direction-type><metronome>"
+        "<beat-unit>quarter</beat-unit><beat-unit-tied><beat-unit>eighth</beat-unit>"
+        "</beat-unit-tied><per-minute>80</per-minute></metronome></direction-type></direction>" +
+        Note("1") + "</measure>"));
+    ASSERT_TRUE(tied) << SDL_GetError();
+    EXPECT_DOUBLE_EQ(tied->info.duration_seconds, 0.5);
+}
+
+TEST(ChipMusicXml, MetricModulationChangesTempoAtItsNotatedPosition)
+{
+    const auto song =
+        LoadXml(Score("<measure>" + Note("1") +
+                      "<direction><direction-type><metronome><beat-unit>quarter</beat-unit>"
+                      "<beat-unit>eighth</beat-unit></metronome></direction-type></direction>" +
+                      Note("1") + "</measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    EXPECT_DOUBLE_EQ(song->info.duration_seconds, 1.5);
+}
+
+TEST(ChipMusicXml, MetronomeSwingRelationshipChangesOnlyUntupletedEighths)
+{
+    const auto song = LoadXml(Score(
+        "<measure><direction><direction-type><metronome>"
+        "<metronome-note><metronome-type>eighth</metronome-type></metronome-note>"
+        "<metronome-note><metronome-type>eighth</metronome-type></metronome-note>"
+        "<metronome-relation>equals</metronome-relation>"
+        "<metronome-note><metronome-type>quarter</metronome-type><metronome-tuplet type='start'>"
+        "<actual-notes>3</actual-notes><normal-notes>2</normal-notes></metronome-tuplet></"
+        "metronome-note>"
+        "<metronome-note><metronome-type>eighth</metronome-type><metronome-tuplet type='stop'>"
+        "<actual-notes>3</actual-notes><normal-notes>2</normal-notes></metronome-tuplet></"
+        "metronome-note>"
+        "</metronome></direction-type></direction>" +
+        Note("0.5", "<type>eighth</type>") + Note("0.5", "<type>eighth</type>") + "</measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 2u);
+    EXPECT_EQ(notes[1].tick * 3, 2u * static_cast<Uint64>(song->info.ticks_per_quarter));
+    EXPECT_DOUBLE_EQ(song->info.duration_seconds, 0.5);
+}
+
+TEST(ChipMusicXml, UnmeteredMeasuresUseExplicitDurationsAndRejectEmptyAmbiguity)
+{
+    const auto song =
+        LoadXml(Score("<measure><attributes><time><senza-misura/></time></attributes>" +
+                      Note("1.25") + "</measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    EXPECT_DOUBLE_EQ(song->info.duration_seconds, 0.625);
+    EXPECT_FALSE(LoadXml(Score("<measure><attributes><time><senza-misura/></time>"
+                               "</attributes></measure>")));
+    EXPECT_NE(std::string(SDL_GetError()).find("empty unmetered"), std::string::npos);
+}

@@ -247,3 +247,16 @@ multiple voices and out-of-order XML note traversal. They affect subsequent
 attacks; held notes retain their instrument. Repeats restore the source passage's
 instrument assignment. Unpitched instrument metadata selects percussion regardless
 of the nominal channel, unless an explicit preset or role name overrides it.
+
+## Metronome relationships and unmetered music
+
+Beat units cover maxima through 1024th, dots and tied units. Metric equalities
+scale the preceding quarter-note tempo by the new/old notated beat duration.
+Explicit BPM at the same position takes precedence. Duplicate equivalent
+relationships across parts apply once; conflicting metric ratios fail. The
+common two-eighths = quarter/eighth-triplet metronome relationship sets swing
+instead of changing the total beat duration. Other complete metric-note
+equalities compare their summed durations. Relationships are bounded to sixteen
+notes on each side; arbitrary text relations require explicit tempo instead.
+Unmetered measures (`senza-misura`) use their explicit note/rest/forward durations;
+an empty unmetered measure needs an explicit duration and fails otherwise.

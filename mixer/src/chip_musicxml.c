@@ -288,17 +288,18 @@ static bool Resolution(ScoreReader *r, const ChipXmlNode *node, Sint64 *division
             *fractions *= n.denominator / Gcd(n.denominator, *fractions);
         }
         if (Named(node, "grace") || Named(node, "ornaments") || Named(node, "arpeggiate") ||
-            Named(node, "swing") || Named(node, "wedge") || Named(node, "words") ||
-            Named(node, "fermata") || Named(node, "caesura") || Named(node, "staccato") ||
-            Named(node, "staccatissimo") || Named(node, "detached-legato") ||
-            Named(node, "stopped") || Named(node, "notehead") || Named(node, "other-technical"))
+            Named(node, "swing") || Named(node, "metronome") || Named(node, "wedge") ||
+            Named(node, "words") || Named(node, "fermata") || Named(node, "caesura") ||
+            Named(node, "staccato") || Named(node, "staccatissimo") ||
+            Named(node, "detached-legato") || Named(node, "stopped") || Named(node, "notehead") ||
+            Named(node, "other-technical"))
         {
             const Sint64 factor = 1000 / Gcd(1000, *fractions);
             if (factor > SCORE_MAX_RESOLUTION / *fractions)
                 return Chip_ScoreError(r, node, "articulation timing resolution exceeds limit");
             *fractions *= factor;
         }
-        if (Named(node, "swing") || Named(node, "words"))
+        if (Named(node, "swing") || Named(node, "words") || Named(node, "metronome"))
         {
             const int first =
                 Named(node, "swing")
@@ -443,6 +444,11 @@ static bool Attributes(ScoreReader *r, const ChipXmlNode *node)
                 SDL_strcmp(Chip_XmlText(c, "sign"), "TAB") == 0;
         else if (Named(c, "time"))
         {
+            if (Chip_XmlChild(c, "senza-misura"))
+            {
+                r->meter = 0;
+                continue;
+            }
             Sint64 meter = 0;
             int beats = 0;
             for (const ChipXmlNode *t = c->children; t; t = t->next)
@@ -534,42 +540,24 @@ static bool Direction(ScoreReader *r, const ChipXmlNode *node, Sint64 cursor)
             if (SDL_isalpha((unsigned char)*words))
                 instruction[length++] = (char)SDL_tolower((unsigned char)*words);
         instruction[length] = 0;
-        if (SDL_strcmp(instruction, "dc") == 0 || SDL_strcmp(instruction, "dcalfine") == 0 ||
-            SDL_strcmp(instruction, "dcalcoda") == 0)
+        if (SDL_strcmp(instruction, "dacapo") == 0 ||
+            SDL_strcmp(instruction, "dacapoalfine") == 0 ||
+            SDL_strcmp(instruction, "dacapoalcoda") == 0 || SDL_strcmp(instruction, "dc") == 0 ||
+            SDL_strcmp(instruction, "dcalfine") == 0 || SDL_strcmp(instruction, "dcalcoda") == 0)
             navigation->dacapo = true;
         if (!navigation->dalsegno &&
-            (SDL_strcmp(instruction, "ds") == 0 || SDL_strcmp(instruction, "dsalfine") == 0 ||
-             SDL_strcmp(instruction, "dsalcoda") == 0))
+            (SDL_strcmp(instruction, "dalsegno") == 0 ||
+             SDL_strcmp(instruction, "dalsegnoalfine") == 0 ||
+             SDL_strcmp(instruction, "dalsegnoalcoda") == 0 || SDL_strcmp(instruction, "ds") == 0 ||
+             SDL_strcmp(instruction, "dsalfine") == 0 || SDL_strcmp(instruction, "dsalcoda") == 0))
             navigation->dalsegno = "default";
         if (!navigation->tocoda && SDL_strcmp(instruction, "tocoda") == 0)
             navigation->tocoda = "default";
         if (SDL_strcmp(instruction, "fine") == 0)
             navigation->fine = true;
         const ChipXmlNode *metronome = Chip_XmlChild(c, "metronome");
-        if (metronome && !*tempo)
-        {
-            const char *unit = Chip_XmlText(metronome, "beat-unit");
-            double beats = SDL_strcmp(unit, "whole") == 0    ? 4
-                           : SDL_strcmp(unit, "half") == 0   ? 2
-                           : SDL_strcmp(unit, "eighth") == 0 ? 0.5
-                           : SDL_strcmp(unit, "16th") == 0   ? 0.25
-                                                             : 1;
-            double dot = beats / 2;
-            for (const ChipXmlNode *m = metronome->children; m; m = m->next)
-                if (Named(m, "beat-unit-dot"))
-                {
-                    beats += dot;
-                    dot /= 2;
-                }
-            const double bpm =
-                Chip_ScoreDecimal(r, metronome, Chip_XmlText(metronome, "per-minute"), 120, 1,
-                                  10000) *
-                beats;
-            if (bpm < 20 || bpm > 600)
-                return Chip_ScoreError(r, metronome, "tempo outside 20..600 quarter beats/minute");
-            if (!Chip_ScoreControl(r, cursor, 0, 0, 0, (Uint32)SDL_round(60000000 / bpm)))
-                return false;
-        }
+        if (metronome && !*tempo && !Chip_ReadMetronome(r, metronome, cursor))
+            return false;
     }
     return !r->failed && Chip_ReadDirections(r, node, sound, cursor);
 }
@@ -716,7 +704,11 @@ static bool Measure(ScoreReader *r, const ChipXmlNode *node)
         }
     }
     if (!extent && node)
+    {
+        if (!r->meter)
+            return Chip_ScoreError(r, node, "empty unmetered measure needs explicit durations");
         extent = r->meter;
+    }
     r->lengths[r->measure] = SDL_max(r->lengths[r->measure], extent);
     return !r->failed;
 }

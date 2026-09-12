@@ -294,6 +294,11 @@ bool Chip_PrepareDirections(ScoreReader *r)
         r->controls[i].event.tick =
             (Uint64)(positions[r->controls[i].measure] + r->controls[i].start);
     SDL_qsort(r->controls, r->control_count, sizeof(*r->controls), Compare);
+    if (!Chip_ResolveMetronomes(r))
+    {
+        SDL_free(positions);
+        return false;
+    }
     const size_t count = r->control_count;
     bool ok = true;
     for (size_t i = 0; ok && i < count; ++i)

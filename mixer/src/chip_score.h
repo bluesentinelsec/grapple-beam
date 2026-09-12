@@ -52,7 +52,8 @@ typedef enum ScoreDirectionKind
     SCORE_WEDGE,
     SCORE_PEDAL,
     SCORE_SWING,
-    SCORE_TEMPO_RAMP
+    SCORE_TEMPO_RAMP,
+    SCORE_METRIC
 } ScoreDirectionKind;
 typedef struct ScoreControl
 {
@@ -122,5 +123,7 @@ const ScoreInstrument *Chip_ScoreInstrument(ScoreReader *r, const ChipXmlNode *n
                                             const char *id);
 bool Chip_ReadInstrumentChange(ScoreReader *r, const ChipXmlNode *sound, Sint64 cursor);
 bool Chip_ApplyInstrumentChanges(ScoreReader *r);
+bool Chip_ResolveMetronomes(ScoreReader *r);
+bool Chip_ReadMetronome(ScoreReader *r, const ChipXmlNode *node, Sint64 cursor);
 bool Chip_CompileScore(ScoreReader *r);
 #endif
