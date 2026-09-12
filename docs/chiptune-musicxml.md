@@ -36,10 +36,9 @@ Scores that exceed exact arithmetic/resource limits fail explicitly.
 
 ## Pending implementation
 
-Score navigation/repeats,
-expressive articulations/ornaments and guitar techniques, microtonal pitch,
+Expressive articulations/ornaments and guitar techniques, microtonal pitch,
 advanced transport and the final support matrix remain tracked on the issue.
-Grace notes and repeats currently fail explicitly. Other expressive constructs
+Grace notes currently fail explicitly. Other expressive constructs
 are not yet guaranteed to affect playback; this importer is under development.
 
 Expat is vendored and built statically from pinned source; see `deps/expat.md`.
@@ -77,3 +76,20 @@ The staff policy is 0 for automatic mirror detection, -1 to retain every
 staff, or 1..32 to select a staff in multi-staff parts. Single-staff parts
 such as percussion remain present. Expressive timing fields are defined for
 the upcoming interpretation slice; they do not yet enable pending techniques.
+
+## Score navigation
+
+Forward/backward and implicit repeats, nested repeats, numbered/ranged alternate
+endings, repeat counts, explicit D.C./D.S./segno/coda/to-coda/fine instructions,
+`time-only` jump passes and `after-jump` repeats compile into a finite playback
+order. Common D.C./D.S./Fine words and unnamed segno/coda signs are also recognized.
+Tempo/program/controllers are restored from the source score at navigation
+boundaries. The song retains source-measure positions for transport queries.
+Navigation is bounded to 65,536 expanded measure visits, repeat depth 32, and
+32 numbered passes; ambiguous/missing targets and unmatched repeat starts fail.
+
+MusicXML `measure-repeat` and octave-shift display marks do not duplicate notes
+or apply an extra octave shift: the performed notes are already encoded in the
+file. Explicit `transpose` instructions still apply to written pitches. Cue
+notes do not generate audio. Explicit dynamics use the MusicXML forte reference
+of velocity 90, and sound offsets override containing direction offsets.

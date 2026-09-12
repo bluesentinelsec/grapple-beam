@@ -290,3 +290,142 @@ TEST(ChipMusicXml, StaffSelectionCanKeepMirrorsOrChooseNotationOrTab)
         EXPECT_EQ(Grapple_GetChipDiagnosticCount(song.get()), staff == 0 ? 3 : 0);
     }
 }
+
+TEST(ChipMusicXml, RepeatsRestoreTempoAndExposeSourceMeasureOrder)
+{
+    const auto song = LoadXml(Score(
+        "<measure><attributes><divisions>1</divisions></attributes><sound tempo='90'/>" +
+        Note("1") +
+        "</measure><measure><barline location='left'><repeat direction='forward'/></barline>" +
+        Note("1") + "</measure><measure><sound tempo='60'/>" + Note("1") +
+        "<barline><repeat direction='backward'/></barline></measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const int expected[] = {0, 1, 2, 1, 2};
+    ASSERT_EQ(song->measure_count, 5);
+    for (int i = 0; i < 5; ++i)
+        EXPECT_EQ(song->measures[i].source, expected[i]);
+    EXPECT_EQ(Onsets(song.get()).size(), 5u);
+    EXPECT_NEAR(song->info.duration_seconds, 4, 0.000002);
+}
+
+TEST(ChipMusicXml, AlternateEndingsAndNestedRepeatsExpandOncePerPass)
+{
+    const auto endings = LoadXml(Score(
+        "<measure><attributes><divisions>1</divisions></attributes>"
+        "<barline location='left'><repeat direction='forward'/></barline>" +
+        Note("1") +
+        "</measure><measure><barline location='left'><ending number='1' type='start'/></barline>" +
+        Note("1") +
+        "<barline><ending number='1' type='stop'/><repeat "
+        "direction='backward'/></barline></measure>"
+        "<measure><barline location='left'><ending number='2' type='start'/></barline>" +
+        Note("1") + "<barline><ending number='2' type='stop'/></barline></measure>"));
+    ASSERT_TRUE(endings) << SDL_GetError();
+    ASSERT_EQ(endings->measure_count, 4);
+    EXPECT_EQ(endings->measures[0].source, 0);
+    EXPECT_EQ(endings->measures[1].source, 1);
+    EXPECT_EQ(endings->measures[2].source, 0);
+    EXPECT_EQ(endings->measures[3].source, 2);
+    const std::string forward = "<barline location='left'><repeat direction='forward'/></barline>";
+    const std::string back = "<barline><repeat direction='backward'/></barline>";
+    const auto nested =
+        LoadXml(Score("<measure>" + forward + Note("1") + "</measure><measure>" + forward +
+                      Note("1") + "</measure><measure>" + Note("1") + back + "</measure><measure>" +
+                      Note("1") + back + "</measure>"));
+    ASSERT_TRUE(nested) << SDL_GetError();
+    const int order[] = {0, 1, 2, 1, 2, 3, 0, 1, 2, 1, 2, 3};
+    ASSERT_EQ(nested->measure_count, 12);
+    for (int i = 0; i < 12; ++i)
+        EXPECT_EQ(nested->measures[i].source, order[i]);
+}
+
+TEST(ChipMusicXml, DaCapoFineAndDalSegnoCodaUseExplicitNavigation)
+{
+    const auto dc = LoadXml(Score("<measure>" + Note("1") + "</measure><measure>" + Note("1") +
+                                  "<sound fine='yes'/></measure><measure>" + Note("1") +
+                                  "<sound dacapo='yes'/></measure>"));
+    ASSERT_TRUE(dc) << SDL_GetError();
+    ASSERT_EQ(dc->measure_count, 5);
+    EXPECT_EQ(dc->measures[4].source, 1);
+    const auto ds = LoadXml(Score(
+        "<measure><sound segno='S'/>" + Note("1") + "</measure><measure>" + Note("1") +
+        "<sound tocoda='C'/></measure><measure>" + Note("1") +
+        "<sound dalsegno='S'/></measure><measure><sound coda='C'/>" + Note("1") + "</measure>"));
+    ASSERT_TRUE(ds) << SDL_GetError();
+    const int order[] = {0, 1, 2, 0, 1, 3};
+    ASSERT_EQ(ds->measure_count, 6);
+    for (int i = 0; i < 6; ++i)
+        EXPECT_EQ(ds->measures[i].source, order[i]);
+}
+
+TEST(ChipMusicXml, MeasureRepeatAndOctaveShiftDisplayDoNotDuplicateOrTransposeNotes)
+{
+    const auto song = LoadXml(
+        Score("<measure><attributes><measure-style><measure-repeat type='start'>1</measure-repeat>"
+              "</measure-style></attributes><direction><direction-type><octave-shift type='down' "
+              "size='8'/>"
+              "</direction-type></direction>" +
+              Note("1") + "</measure><measure>" + Note("1") + "</measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 2u);
+    EXPECT_EQ(notes[0].a, 60);
+    EXPECT_EQ(notes[1].a, 60);
+}
+
+TEST(ChipMusicXml, MissingNavigationTargetsAndUnpairedRepeatStartsFail)
+{
+    EXPECT_FALSE(LoadXml(Score("<measure>" + Note("1") + "<sound dalsegno='missing'/></measure>")));
+    EXPECT_FALSE(LoadXml(Score("<measure><barline location='left'><repeat direction='forward'/>"
+                               "</barline>" +
+                               Note("1") + "</measure>")));
+}
+
+TEST(ChipMusicXml, CommonNavigationWordsAndExplicitJumpPassesAreHonored)
+{
+    const auto words = LoadXml(Score(
+        "<measure>" + Note("1") +
+        "<direction><direction-type><words>Fine</words></direction-type></direction></measure>"
+        "<measure>" +
+        Note("1") +
+        "<direction><direction-type><words>D.C. al "
+        "Fine</words></direction-type></direction></measure>"));
+    ASSERT_TRUE(words) << SDL_GetError();
+    EXPECT_EQ(words->measure_count, 3);
+    const auto passes =
+        LoadXml(Score("<measure>" + Note("1") + "<sound dacapo='yes' time-only='1,2'/></measure>"));
+    ASSERT_TRUE(passes) << SDL_GetError();
+    EXPECT_EQ(passes->measure_count, 3);
+}
+
+TEST(ChipMusicXml, SoundDynamicsUseFortePercentAndExplicitSoundOffsetTakesPriority)
+{
+    auto note = Note("1");
+    note.replace(0, 6, "<note dynamics='50'>");
+    const auto song = LoadXml(Score(
+        "<measure><attributes><divisions>2</divisions></attributes>"
+        "<direction><offset>1</offset><sound tempo='60'><offset>0</offset></sound></direction>" +
+        note + "</measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    ASSERT_EQ(Onsets(song.get()).size(), 1u);
+    EXPECT_EQ(Onsets(song.get())[0].b, 45);
+    EXPECT_DOUBLE_EQ(song->info.duration_seconds, 0.5);
+}
+
+TEST(ChipMusicXml, NumberedEndingsDetermineAdditionalRepeatPasses)
+{
+    const auto song = LoadXml(
+        Score("<measure>" + Note("1") +
+              "</measure><measure>"
+              "<barline location='left'><ending number='1,2' type='start'/></barline>" +
+              Note("1") +
+              "<barline><ending number='1,2' type='stop'/><repeat "
+              "direction='backward'/></barline></measure>"
+              "<measure><barline location='left'><ending number='3' type='start'/></barline>" +
+              Note("1") + "<barline><ending number='3' type='stop'/></barline></measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const int order[] = {0, 1, 0, 1, 0, 2};
+    ASSERT_EQ(song->measure_count, 6);
+    for (int i = 0; i < 6; ++i)
+        EXPECT_EQ(song->measures[i].source, order[i]);
+}

@@ -26,6 +26,12 @@ extern "C"
         Uint32 note_id; /* Zero preserves MIDI's oldest matching note-off semantics. */
     } ChipEvent;
 
+    typedef struct ChipMeasurePosition
+    {
+        Uint64 start, end;
+        int source;
+    } ChipMeasurePosition;
+
     struct Grapple_ChipSong
     {
         SDL_AtomicInt references;
@@ -41,6 +47,8 @@ extern "C"
         Grapple_ChipDiagnostic *diagnostics;
         char **diagnostic_messages;
         int diagnostic_count;
+        ChipMeasurePosition *measures;
+        int measure_count;
     };
 
     Grapple_ChipSong *Chip_NewSong(int tracks, int ppqn);

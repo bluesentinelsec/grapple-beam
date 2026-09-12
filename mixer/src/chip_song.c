@@ -126,6 +126,7 @@ void Grapple_DestroyChipSong(Grapple_ChipSong *song)
             SDL_free(song->diagnostic_messages[i]);
         SDL_free(song->diagnostics);
         SDL_free(song->diagnostic_messages);
+        SDL_free(song->measures);
         SDL_free(song);
     }
 }
