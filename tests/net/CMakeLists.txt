@@ -6,7 +6,7 @@ target_link_libraries(grapple_net_test
     Grapple::Net
     GTest::gtest_main
 )
-cppboot_set_project_warnings(grapple_net_test)
+grapple_set_project_warnings(grapple_net_test)
 gtest_discover_tests(grapple_net_test DISCOVERY_TIMEOUT 60 PROPERTIES TIMEOUT 120)
 
 # Link audit: static Grapple::Net + static SDL3 must depend only on

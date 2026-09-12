@@ -22,6 +22,7 @@ extern "C"
         Uint32 note_id;
         Grapple_ChipExpression expression;
         double start_beat, duration_beats;
+        double expression_beat, expression_duration;
         float gain_start, gain_target;
         double gain_beat, gain_duration;
         Uint32 noise;

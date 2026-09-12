@@ -327,6 +327,24 @@ static int SDLCALL CompareControls(const void *left, const void *right)
 
 bool Chip_CompileScore(ScoreReader *r)
 {
+    size_t retained = 0;
+    for (size_t i = 0; i < r->control_count; ++i)
+    {
+        const ScoreControl *c = &r->controls[i];
+        if (c->kind == SCORE_NAVIGATION_BOUNDARY)
+        {
+            if (c->start != (c->value == 1 ? r->lengths[c->measure] : 0))
+            {
+                r->part = c->event.track;
+                r->measure = c->measure;
+                return Chip_ScoreFail(r, c->node, GRAPPLE_CHIP_DIAGNOSTIC_UNSUPPORTED,
+                                      "split the measure at an interior navigation boundary");
+            }
+        }
+        else
+            r->controls[retained++] = *c;
+    }
+    r->control_count = retained;
     if (!Chip_ApplyInstrumentChanges(r) || !Chip_PrepareDirections(r))
         return false;
     if (r->control_count)
@@ -375,43 +393,8 @@ bool Chip_CompileScore(ScoreReader *r)
         r->notes[i].start += r->lengths[r->notes[i].measure];
     if (!Chip_ResolveNoteExpression(r) || !Chip_ResolveTechniques(r))
         return false;
-    size_t active[4096];
-    size_t ties = 0;
-    for (size_t i = 0; i < r->note_count; ++i)
-    {
-        ScoreNote *n = &r->notes[i];
-        if (n->skipped)
-            continue;
-        size_t target = i;
-        if (n->tie_stop)
-        {
-            size_t t;
-            for (t = 0; t < ties; ++t)
-            {
-                const ScoreNote *a = &r->notes[active[t]];
-                if (a->part == n->part && a->staff == n->staff && a->pitch == n->pitch &&
-                    a->expression.tuning == n->expression.tuning &&
-                    a->start + a->duration == n->start && SDL_strcmp(a->voice, n->voice) == 0 &&
-                    SDL_strcmp(a->instrument, n->instrument) == 0)
-                    break;
-            }
-            if (t == ties)
-                return Chip_ScoreError(r, NULL, "tie stop without a matching adjacent start");
-            target = active[t];
-            r->notes[target].duration += n->duration;
-            n->skipped = true;
-            active[t] = active[--ties];
-        }
-        if (n->tie_start)
-        {
-            if (ties == SDL_arraysize(active))
-                return Chip_ScoreFail(r, NULL, GRAPPLE_CHIP_DIAGNOSTIC_RESOURCE,
-                                      "simultaneous tie limit exceeded");
-            active[ties++] = target;
-        }
-    }
-    if (ties)
-        return Chip_ScoreError(r, NULL, "unterminated tie");
+    if (!Chip_ResolveTies(r))
+        return false;
     if (!Chip_ApplySwing(r) || !Chip_ApplyScoreTiming(r) || !Chip_ExpandOrnaments(r) ||
         !Chip_ApplyDirections(r))
         return false;
@@ -448,7 +431,7 @@ bool Chip_CompileScore(ScoreReader *r)
         event.duration = (Uint64)n->duration;
         if (!Chip_AppendExpression(r->song, &n->expression, &event.expression))
             return false;
-        if (!Chip_AppendEvent(r->song, event))
+        if (!Chip_AppendEvent(r->song, event) || !Chip_EmitTieCurves(r, n, event))
             return false;
         const Sint64 end =
             n->start + SDL_max(1, (Sint64)SDL_round((double)n->duration * n->gate)) + n->release;

@@ -348,6 +348,13 @@ bool Chip_ApplyScoreTiming(ScoreReader *r)
                 n->attack = 0;
             }
         }
+        for (size_t i = 0; ok && i < r->curve_count; ++i)
+        {
+            ScoreCurve *curve = &r->curves[i];
+            const Sint64 start = Map(pauses, count, curve->start, true);
+            curve->duration = Map(pauses, count, curve->start + curve->duration, false) - start;
+            curve->start = start;
+        }
         for (size_t i = 0; ok && i < r->control_count; ++i)
         {
             ScoreControl *c = &r->controls[i];

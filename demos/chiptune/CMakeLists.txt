@@ -2,7 +2,7 @@
 add_executable(chiptune_demo play.c)
 set_target_properties(chiptune_demo PROPERTIES OUTPUT_NAME chiptune-demo)
 target_link_libraries(chiptune_demo PRIVATE Grapple::Engine Grapple::Mixer Grapple::TTF)
-cppboot_set_project_warnings(chiptune_demo)
+grapple_set_project_warnings(chiptune_demo)
 
 if(GRAPPLE_BEAM_BUILD_TESTS)
   foreach(extension mid xml)

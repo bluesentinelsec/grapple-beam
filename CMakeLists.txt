@@ -251,7 +251,7 @@ target_include_directories(${PROJECT_NAME}_lib
     $<INSTALL_INTERFACE:include>
 )
 
-cppboot_set_project_warnings(${PROJECT_NAME}_lib)
+grapple_set_project_warnings(${PROJECT_NAME}_lib)
 
 # Preferred third-party deps are linked on the *app* (and optionally tests), not
 # the library. Static libraries propagate private deps into install(EXPORT);

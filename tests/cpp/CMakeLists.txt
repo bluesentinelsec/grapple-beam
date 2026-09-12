@@ -11,7 +11,7 @@ target_link_libraries(grapple_cpp_test
 target_compile_definitions(grapple_cpp_test PRIVATE
   CPP_TEST_ASSETS_DIR="${CMAKE_SOURCE_DIR}/tests/vfs/assets"
 )
-cppboot_set_project_warnings(grapple_cpp_test)
+grapple_set_project_warnings(grapple_cpp_test)
 gtest_discover_tests(grapple_cpp_test DISCOVERY_TIMEOUT 60)
 
 find_package(Python3 COMPONENTS Interpreter)

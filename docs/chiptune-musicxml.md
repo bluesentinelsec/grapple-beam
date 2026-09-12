@@ -312,3 +312,10 @@ Code composers use `AddChipSection(name, start_tick, end_tick)` for explicit bou
 Sections sort by start and name, with a limit of 4,096 and names of 127 UTF-8 bytes.
 Pass a section's bounds to `SetChipPlayerLoop`, or its start to `SeekChipPlayer`.
 Lua/Ruby return names and diagnostic text fields as strings.
+
+Tied notes retain each written bend/release span and the final articulation while
+using one sustained synth voice. A continuation without another bend holds the
+preceding bend's endpoint. Seeking reconstructs the active expression segment.
+Navigation targets must be at measure starts and jumps at measure ends; split a
+measure at an interior navigation/repeat boundary. The importer diagnoses interior
+boundaries instead of silently moving them to a barline, even in permissive mode.

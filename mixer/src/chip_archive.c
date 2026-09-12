@@ -161,7 +161,7 @@ void *Chip_ReadMxl(const void *input, size_t size, size_t *output_size)
         entry->compressed = Read32(p + 20);
         entry->size = Read32(p + 24);
         entry->offset = Read32(p + 42);
-        if ((entry->flags & (Uint16)~0x080eu) || (entry->method != 0 && entry->method != 8) ||
+        if ((entry->flags & ~0x080eu) || (entry->method != 0 && entry->method != 8) ||
             entry->size > ZIP_MAX_ENTRY || entry->compressed > ZIP_MAX_ENTRY ||
             entry->size > ZIP_MAX_TOTAL - total)
         {

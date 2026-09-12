@@ -122,6 +122,19 @@ class ChipPlayer : public ::testing::Test
     }
 };
 
+TEST_F(ChipPlayer, ChorusFractionalReadWrapStaysInsideRingBuffer)
+{
+    ChipEffectBus bus;
+    ASSERT_TRUE(Chip_EffectsInit(&bus, GRAPPLE_CHIP_PRESET_BASS, 48000));
+    bus.chorus_pos = 768;
+    float left = 1, right = 1;
+    Chip_EffectsProcess(&bus, 48000, 0.5f, &left, &right);
+    EXPECT_TRUE(std::isfinite(left));
+    EXPECT_TRUE(std::isfinite(right));
+    EXPECT_NEAR(left, 0.85f, 0.0001f);
+    Chip_EffectsDestroy(&bus);
+}
+
 TEST_F(ChipPlayer, MidiMarkersExposeSectionBounds)
 {
     Bytes track;

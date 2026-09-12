@@ -27,4 +27,4 @@ set_property(TARGET grapple_web_demo APPEND PROPERTY
 # SDL2 (input/audio/textures): add to BOTH compile and link options:
 #   target_compile_options(grapple_web_demo PRIVATE "SHELL:-sUSE_SDL=2")
 #   target_link_options(grapple_web_demo PRIVATE "SHELL:-sUSE_SDL=2")
-cppboot_set_project_warnings(grapple_web_demo)
+grapple_set_project_warnings(grapple_web_demo)

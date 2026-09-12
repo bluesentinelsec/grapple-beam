@@ -181,6 +181,8 @@ static void StartNote(Grapple_ChipPlayer *p, const ChipEvent *event)
         selected->expression = *expression;
     selected->start_beat = (double)event->tick / p->song->info.ticks_per_quarter;
     selected->duration_beats = (double)event->duration / p->song->info.ticks_per_quarter;
+    selected->expression_beat = selected->start_beat;
+    selected->expression_duration = selected->duration_beats;
     if (event->instrument_data)
     {
         selected->instrument_gain = event->instrument_gain;
@@ -326,6 +328,20 @@ void Chip_DispatchEvent(Grapple_ChipPlayer *p, const ChipEvent *event)
         Chip_UpdateBeat(p);
         return;
     }
+    if (event->status == 0xf2)
+    {
+        for (int i = 0; i < p->voice_count; ++i)
+        {
+            ChipSynthVoice *v = &p->voices[i];
+            if (v->active && v->track == event->track && v->note_id == event->note_id)
+            {
+                v->expression = p->song->expressions[event->expression - 1];
+                v->expression_beat = (double)event->tick / p->song->info.ticks_per_quarter;
+                v->expression_duration = (double)event->duration / p->song->info.ticks_per_quarter;
+            }
+        }
+        return;
+    }
     if (event->status == 0xf1)
     {
         for (int i = 0; i < p->voice_count; ++i)
@@ -442,10 +458,10 @@ int Grapple_RenderChipPlayer(Grapple_ChipPlayer *p, float *stereo, int frames)
             const float sample =
                 Chip_VoiceSampleMotion(
                     v,
-                    channel->pitch *
-                        SDL_powf(2, Chip_ExpressionPitch(&v->expression, p->beat - v->start_beat,
-                                                         v->duration_beats) /
-                                        12),
+                    channel->pitch * SDL_powf(2, Chip_ExpressionPitch(&v->expression,
+                                                                      p->beat - v->expression_beat,
+                                                                      v->expression_duration) /
+                                                     12),
                     channel->modulation, p->sample_rate, effects->motion, motion_pulse) *
                 gain * envelope_gain * v->instrument_gain * part->gain * channel->volume *
                 channel->expression * (1 - channel->soft * 0.3f);

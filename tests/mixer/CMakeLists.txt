@@ -16,7 +16,7 @@ target_compile_definitions(grapple_mixer_test PRIVATE
   MIXER_GM_PATCHES_DIR="${CMAKE_SOURCE_DIR}/mixer/gm-patches"
 )
 target_include_directories(grapple_mixer_test PRIVATE ${CMAKE_SOURCE_DIR}/mixer/src)
-cppboot_set_project_warnings(grapple_mixer_test)
+grapple_set_project_warnings(grapple_mixer_test)
 gtest_discover_tests(grapple_mixer_test DISCOVERY_TIMEOUT 60)
 
 # Link audit: static Grapple::Mixer + static SDL3 must depend only on

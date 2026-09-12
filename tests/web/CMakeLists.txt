@@ -17,4 +17,4 @@ target_link_options(grapple_web_test
     "SHELL:--embed-file ${CMAKE_SOURCE_DIR}/tests/image/assets/sample.png@/assets/sample.png"
     "SHELL:--embed-file ${CMAKE_SOURCE_DIR}/tests/image/assets/rgbrgb.gif@/assets/rgbrgb.gif"
 )
-cppboot_set_project_warnings(grapple_web_test)
+grapple_set_project_warnings(grapple_web_test)

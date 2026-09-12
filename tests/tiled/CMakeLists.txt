@@ -11,7 +11,7 @@ target_link_libraries(grapple_tiled_test
 target_compile_definitions(grapple_tiled_test PRIVATE
   TILED_TEST_ASSETS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets"
 )
-cppboot_set_project_warnings(grapple_tiled_test)
+grapple_set_project_warnings(grapple_tiled_test)
 gtest_discover_tests(grapple_tiled_test DISCOVERY_TIMEOUT 60)
 
 find_package(Python3 COMPONENTS Interpreter)

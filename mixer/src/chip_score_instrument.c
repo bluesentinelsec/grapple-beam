@@ -60,6 +60,7 @@ bool Chip_InitScoreInstruments(ScoreReader *r)
     r->instrument_count = 0;
     if (!r->instruments)
         return false;
+    bool declared[256] = {false};
     for (const ChipXmlNode *c = r->definition->children; c; c = c->next)
     {
         if (!Named(c, "score-instrument") && !Named(c, "midi-instrument"))
@@ -77,6 +78,13 @@ bool Chip_InitScoreInstruments(ScoreReader *r)
                                       "instrument limit exceeded (256 per part)");
             r->instruments[index] = (ScoreInstrument){id, NULL, 0, 0, -1, 1, 0};
             ++r->instrument_count;
+        }
+        if (Named(c, "score-instrument"))
+        {
+            if (declared[index])
+                return Chip_ScoreFail(r, c, GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE,
+                                      "duplicate score instrument ID");
+            declared[index] = true;
         }
         if (Named(c, "midi-instrument"))
         {

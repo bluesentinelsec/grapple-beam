@@ -6,7 +6,7 @@ target_link_libraries(grapple_regex_test
     Grapple::Regex
     GTest::gtest_main
 )
-cppboot_set_project_warnings(grapple_regex_test)
+grapple_set_project_warnings(grapple_regex_test)
 gtest_discover_tests(grapple_regex_test DISCOVERY_TIMEOUT 60)
 
 find_package(Python3 COMPONENTS Interpreter)

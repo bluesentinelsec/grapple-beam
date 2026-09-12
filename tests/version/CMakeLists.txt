@@ -6,5 +6,5 @@ target_link_libraries(grapple_version_test
     ${PROJECT_NAME}_lib
     GTest::gtest_main
 )
-cppboot_set_project_warnings(grapple_version_test)
+grapple_set_project_warnings(grapple_version_test)
 gtest_discover_tests(grapple_version_test DISCOVERY_TIMEOUT 60)

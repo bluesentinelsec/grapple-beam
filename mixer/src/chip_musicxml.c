@@ -58,6 +58,10 @@ static bool Navigation(ScoreReader *r, const ChipXmlNode *measure)
         if (!Named(c, "barline"))
             continue;
         const ChipXmlNode *repeat = Chip_XmlChild(c, "repeat");
+        if ((repeat || Chip_XmlChild(c, "ending")) &&
+            SDL_strcmp(Chip_XmlAttribute(c, "location"), "middle") == 0)
+            return Chip_ScoreFail(r, c, GRAPPLE_CHIP_DIAGNOSTIC_UNSUPPORTED,
+                                  "split the measure at an interior repeat/ending boundary");
         if (repeat)
         {
             const char *direction = Chip_XmlAttribute(repeat, "direction");
@@ -456,6 +460,22 @@ int Chip_ScoreDynamic(const char *name)
     return 80;
 }
 
+static bool NavigationBoundary(ScoreReader *r, const ChipXmlNode *node, Sint64 cursor, bool end)
+{
+    if (!Chip_ScoreGrow((void **)&r->controls, &r->control_capacity, r->control_count,
+                        sizeof(*r->controls)))
+        return false;
+    ScoreControl control = {0};
+    control.kind = SCORE_NAVIGATION_BOUNDARY;
+    control.measure = r->measure;
+    control.event.track = (Uint16)r->part;
+    control.start = cursor;
+    control.value = end ? 1 : 0;
+    control.node = node;
+    r->controls[r->control_count++] = control;
+    return true;
+}
+
 static bool Direction(ScoreReader *r, const ChipXmlNode *node, Sint64 cursor)
 {
     const ChipXmlNode *sound = Named(node, "sound") ? node : Chip_XmlChild(node, "sound");
@@ -467,6 +487,15 @@ static bool Direction(ScoreReader *r, const ChipXmlNode *node, Sint64 cursor)
     if (cursor < 0)
         return Chip_ScoreError(r, node, "direction before measure start");
     if (!NavigationSound(r, sound))
+        return false;
+    if ((*Chip_XmlAttribute(sound, "segno") || *Chip_XmlAttribute(sound, "coda") ||
+         SDL_strcmp(Chip_XmlAttribute(sound, "forward-repeat"), "yes") == 0) &&
+        !NavigationBoundary(r, sound, cursor, false))
+        return false;
+    if ((*Chip_XmlAttribute(sound, "dalsegno") || *Chip_XmlAttribute(sound, "tocoda") ||
+         *Chip_XmlAttribute(sound, "fine") ||
+         SDL_strcmp(Chip_XmlAttribute(sound, "dacapo"), "yes") == 0) &&
+        !NavigationBoundary(r, sound, cursor, true))
         return false;
     if (!Chip_ReadInstrumentChange(r, sound, cursor))
         return false;
@@ -482,6 +511,10 @@ static bool Direction(ScoreReader *r, const ChipXmlNode *node, Sint64 cursor)
         if (!Named(c, "direction-type"))
             continue;
         ChipScoreMeasure *navigation = &r->navigation[r->measure];
+        if ((Chip_XmlChild(c, "segno") || Chip_XmlChild(c, "coda")) &&
+            !NavigationBoundary(r, c, cursor, false))
+            return false;
+        bool jump_word = false;
         if (Chip_XmlChild(c, "segno") && !navigation->segno)
             navigation->segno = "default";
         if (Chip_XmlChild(c, "coda") && !navigation->coda)
@@ -497,17 +530,32 @@ static bool Direction(ScoreReader *r, const ChipXmlNode *node, Sint64 cursor)
             SDL_strcmp(instruction, "dacapoalfine") == 0 ||
             SDL_strcmp(instruction, "dacapoalcoda") == 0 || SDL_strcmp(instruction, "dc") == 0 ||
             SDL_strcmp(instruction, "dcalfine") == 0 || SDL_strcmp(instruction, "dcalcoda") == 0)
+        {
             navigation->dacapo = true;
-        if (!navigation->dalsegno &&
-            (SDL_strcmp(instruction, "dalsegno") == 0 ||
+            jump_word = true;
+        }
+        if ((SDL_strcmp(instruction, "dalsegno") == 0 ||
              SDL_strcmp(instruction, "dalsegnoalfine") == 0 ||
              SDL_strcmp(instruction, "dalsegnoalcoda") == 0 || SDL_strcmp(instruction, "ds") == 0 ||
              SDL_strcmp(instruction, "dsalfine") == 0 || SDL_strcmp(instruction, "dsalcoda") == 0))
-            navigation->dalsegno = "default";
-        if (!navigation->tocoda && SDL_strcmp(instruction, "tocoda") == 0)
-            navigation->tocoda = "default";
+        {
+            if (!navigation->dalsegno)
+                navigation->dalsegno = "default";
+            jump_word = true;
+        }
+        if (SDL_strcmp(instruction, "tocoda") == 0)
+        {
+            if (!navigation->tocoda)
+                navigation->tocoda = "default";
+            jump_word = true;
+        }
         if (SDL_strcmp(instruction, "fine") == 0)
+        {
             navigation->fine = true;
+            jump_word = true;
+        }
+        if (jump_word && !NavigationBoundary(r, c, cursor, true))
+            return false;
         const ChipXmlNode *metronome = Chip_XmlChild(c, "metronome");
         if (metronome && !*tempo && !Chip_ReadMetronome(r, metronome, cursor))
             return false;
@@ -787,6 +835,7 @@ done:
     Chip_XmlDestroy(root);
     SDL_free(r.notes);
     SDL_free(r.controls);
+    SDL_free(r.curves);
     SDL_free(r.lengths);
     SDL_free(r.navigation);
     SDL_free(r.instruments);

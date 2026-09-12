@@ -6,7 +6,7 @@ target_link_libraries(grapple_light_test
     Grapple::Light
     GTest::gtest_main
 )
-cppboot_set_project_warnings(grapple_light_test)
+grapple_set_project_warnings(grapple_light_test)
 gtest_discover_tests(grapple_light_test DISCOVERY_TIMEOUT 60)
 
 find_package(Python3 COMPONENTS Interpreter)

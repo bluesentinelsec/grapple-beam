@@ -79,12 +79,13 @@ void Chip_EffectsDestroy(ChipEffectBus *b)
 
 static float ReadDelay(const float *buffer, int size, int position, float frames, int channel)
 {
-    float index = (float)position - frames;
+    /* Float addition can round a slightly negative read position up to size. */
+    double index = (double)position - (double)frames;
     if (index < 0)
-        index += (float)size;
+        index += (double)size;
     const int first = (int)index;
     const int second = (first + 1) % size;
-    const float fraction = index - (float)first;
+    const float fraction = (float)(index - (double)first);
     return buffer[first * 2 + channel] * (1 - fraction) + buffer[second * 2 + channel] * fraction;
 }
 

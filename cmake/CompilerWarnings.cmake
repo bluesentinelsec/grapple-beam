@@ -1,5 +1,5 @@
 # Treat warnings as errors to force good habits from day one.
-function(cppboot_set_project_warnings target_name)
+function(grapple_set_project_warnings target_name)
   if(MSVC)
     target_compile_options(${target_name} PRIVATE /W4 /WX /permissive-)
   else()

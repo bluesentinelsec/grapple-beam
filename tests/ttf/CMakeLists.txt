@@ -14,7 +14,7 @@ target_include_directories(grapple_ttf_test SYSTEM PRIVATE
 target_compile_definitions(grapple_ttf_test PRIVATE
   TTF_TEST_ASSETS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets"
 )
-cppboot_set_project_warnings(grapple_ttf_test)
+grapple_set_project_warnings(grapple_ttf_test)
 gtest_discover_tests(grapple_ttf_test DISCOVERY_TIMEOUT 60)
 
 # Link audit: static Grapple::TTF + static minimal FreeType + static SDL3

@@ -26,6 +26,12 @@ typedef struct ScoreInstrumentChange
     const ChipXmlNode *node;
     ScoreInstrument instrument;
 } ScoreInstrumentChange;
+typedef struct ScoreCurve
+{
+    Sint64 start, duration;
+    Grapple_ChipExpression expression;
+    size_t next;
+} ScoreCurve;
 typedef struct ScoreNote
 {
     int part, measure, staff, pitch, velocity, channel;
@@ -41,6 +47,7 @@ typedef struct ScoreNote
     bool grace, rest;
     bool let_ring;
     int string_number;
+    size_t curve_first, curve_last;
     const ChipXmlNode *ornament_override;
     Sint64 make_time;
     double upper_pitch, lower_pitch;
@@ -57,7 +64,8 @@ typedef enum ScoreDirectionKind
     SCORE_SWING,
     SCORE_TEMPO_RAMP,
     SCORE_METRIC,
-    SCORE_SECTION
+    SCORE_SECTION,
+    SCORE_NAVIGATION_BOUNDARY
 } ScoreDirectionKind;
 typedef struct ScoreControl
 {
@@ -88,6 +96,8 @@ typedef struct ScoreReader
     int velocity[SCORE_MAX_STAVES];
     ScoreNote *notes;
     size_t note_count, note_capacity;
+    ScoreCurve *curves;
+    size_t curve_count, curve_capacity;
     ScoreControl *controls;
     size_t control_count, control_capacity;
     Sint64 *lengths;
@@ -116,6 +126,8 @@ double Chip_ScoreDecimal(ScoreReader *r, const ChipXmlNode *node, const char *te
                          double low, double high);
 Sint64 Chip_ScoreTicks(ScoreReader *r, const ChipXmlNode *node, const char *text);
 bool Chip_ScoreApproximation(ScoreReader *r, const ScoreNote *note, const char *message);
+bool Chip_ResolveTies(ScoreReader *r);
+bool Chip_EmitTieCurves(ScoreReader *r, const ScoreNote *note, ChipEvent event);
 bool Chip_ReadNoteExpression(ScoreReader *r, ScoreNote *note);
 bool Chip_ResolveTechniques(ScoreReader *r);
 bool Chip_ResolveNoteExpression(ScoreReader *r);

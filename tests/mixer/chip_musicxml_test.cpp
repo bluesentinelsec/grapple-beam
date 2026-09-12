@@ -1,4 +1,5 @@
 #include "chip_internal.h"
+#include "chip_player.h"
 
 #include <algorithm>
 #include <cmath>
@@ -1116,4 +1117,111 @@ TEST(ChipMusicXml, RehearsalSectionsRetainSourceAndExpandedLoopBounds)
     ASSERT_TRUE(player);
     EXPECT_TRUE(
         Grapple_SetChipPlayerLoop(player.get(), section.start_tick, section.end_tick, true));
+}
+
+TEST(ChipMusicXml, TiesPreserveBendReleaseSpansAndFinalArticulation)
+{
+    const auto song = LoadXml(
+        Score("<measure>" +
+              Note("1", "<tie type='start'/><notations><technical><bend><bend-alter>2</bend-alter>"
+                        "</bend></technical></notations>") +
+              Note("1", "<tie type='stop'/><tie type='start'/><notations><technical><bend>"
+                        "<bend-alter>2</bend-alter><release/></bend></technical></notations>") +
+              Note("1", "<tie type='stop'/><notations><articulations><staccato/>"
+                        "</articulations></notations>") +
+              "</measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto onsets = Onsets(song.get());
+    ASSERT_EQ(onsets.size(), 1u);
+    const auto ppqn = static_cast<Uint64>(song->info.ticks_per_quarter);
+    EXPECT_EQ(onsets[0].duration, 3 * ppqn);
+    int updates = 0;
+    for (size_t i = 0; i < song->count; ++i)
+    {
+        const auto &event = song->events[i];
+        if (event.status == 0xf2)
+        {
+            EXPECT_EQ(event.tick, static_cast<Uint64>(updates) * ppqn);
+            EXPECT_EQ(event.duration, ppqn);
+            ++updates;
+        }
+        if ((event.status >> 4) == 8)
+            EXPECT_EQ(event.tick, 5 * ppqn / 2);
+    }
+    EXPECT_EQ(updates, 3);
+    Player player(Grapple_CreateChipPlayer(song.get(), 8000, 8, false), Grapple_DestroyChipPlayer);
+    ASSERT_TRUE(player);
+    std::vector<float> pcm(8002);
+    EXPECT_EQ(Grapple_RenderChipPlayer(player.get(), pcm.data(), 4001), 4001);
+    EXPECT_EQ(Grapple_GetChipPlayerPeakVoices(player.get()), 1);
+    EXPECT_FLOAT_EQ(player->voices[0].expression.bend_start, 2);
+    EXPECT_FLOAT_EQ(player->voices[0].expression.bend_end, 0);
+    EXPECT_GT(player->voices[0].age, 0.49f);
+    ASSERT_TRUE(Grapple_SeekChipPlayer(player.get(), ppqn + ppqn / 2));
+    EXPECT_FLOAT_EQ(player->voices[0].expression.bend_start, 2);
+}
+
+TEST(ChipMusicXml, DuplicateScoreInstrumentDefinitionsFail)
+{
+    const std::string xml =
+        "<score-partwise><part-list><score-part id='P'>"
+        "<score-instrument id='I'/><score-instrument id='I'/></score-part></part-list>"
+        "<part id='P'><measure>" +
+        Note("1") + "</measure></part></score-partwise>";
+    Grapple_ChipDiagnostic error{};
+    const Song song(Grapple_LoadChipSongMemory(xml.data(), xml.size(), nullptr, &error),
+                    Grapple_DestroyChipSong);
+    EXPECT_FALSE(song);
+    EXPECT_EQ(error.code, GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE);
+}
+
+TEST(ChipMusicXml, BoundedDeterministicMutationCorpusLoadsOrFailsCleanly)
+{
+    Uint32 random = 0x9e3779b9u;
+    for (const char *file :
+         {"c64-composition-named.xml", "c64-composition.mxl", "c64-composition-named.mid"})
+    {
+        size_t size = 0;
+        const std::string path = std::string(MIXER_TEST_ASSETS_DIR) + "/" + file;
+        void *data = SDL_LoadFile(path.c_str(), &size);
+        ASSERT_NE(data, nullptr);
+        const std::string original(static_cast<const char *>(data), size);
+        SDL_free(data);
+        for (size_t trial = 0; trial < 96; ++trial)
+        {
+            std::string bytes = original;
+            random = random * 1664525u + 1013904223u;
+            const size_t offset = random % bytes.size();
+            if (trial % 3 == 0)
+                bytes.resize(offset);
+            else if (trial % 3 == 1)
+                bytes[offset] = static_cast<char>(random >> 24);
+            else
+                bytes.erase(offset, std::min<size_t>(7, bytes.size() - offset));
+            const Song song(
+                Grapple_LoadChipSongMemory(bytes.data(), bytes.size(), nullptr, nullptr),
+                Grapple_DestroyChipSong);
+            if (!song)
+                continue;
+            Player player(Grapple_CreateChipPlayer(song.get(), 8000, 8, false),
+                          Grapple_DestroyChipPlayer);
+            ASSERT_TRUE(player) << SDL_GetError();
+            float pcm[128];
+            EXPECT_GE(Grapple_RenderChipPlayer(player.get(), pcm, 64), 0);
+            for (float sample : pcm)
+                EXPECT_TRUE(std::isfinite(sample));
+        }
+    }
+}
+
+TEST(ChipMusicXml, InteriorNavigationMustNotSilentlyMoveToBarlines)
+{
+    EXPECT_FALSE(
+        LoadXml(Score("<measure>" + Note("1") + "<sound segno='S'/>" + Note("1") + "</measure>")));
+    EXPECT_FALSE(LoadXml(
+        Score("<measure>" + Note("1") + "<sound dacapo='yes'/>" + Note("1") + "</measure>")));
+    EXPECT_FALSE(
+        LoadXml(Score("<measure>" + Note("1") +
+                      "<barline location='middle'><repeat direction='backward'/></barline>" +
+                      Note("1") + "</measure>")));
 }

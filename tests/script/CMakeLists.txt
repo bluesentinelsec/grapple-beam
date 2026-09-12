@@ -9,7 +9,7 @@ target_link_libraries(grapple_script_test
 target_compile_definitions(grapple_script_test PRIVATE
   SCRIPT_TEST_ASSETS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets"
 )
-cppboot_set_project_warnings(grapple_script_test)
+grapple_set_project_warnings(grapple_script_test)
 gtest_discover_tests(grapple_script_test DISCOVERY_TIMEOUT 60)
 
 # The runner itself, driven end to end.
