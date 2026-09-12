@@ -290,6 +290,36 @@ class ChipPlayer {
   int GetChipPlayerPeakVoices() {
     return ::Grapple_GetChipPlayerPeakVoices(value_);
   }
+  Status ReadChipPlayerPosition(Grapple_ChipPosition *position) {
+    return ::Grapple_ReadChipPlayerPosition(value_, position) ? Status() : Status::FromSdl();
+  }
+  Status SeekChipPlayer(Uint64 tick) {
+    return ::Grapple_SeekChipPlayer(value_, tick) ? Status() : Status::FromSdl();
+  }
+  Status SetChipPlayerLoop(Uint64 start_tick, Uint64 end_tick, bool enabled) {
+    return ::Grapple_SetChipPlayerLoop(value_, start_tick, end_tick, enabled) ? Status() : Status::FromSdl();
+  }
+  Status SetChipPlayerTempo(double scale) {
+    return ::Grapple_SetChipPlayerTempo(value_, scale) ? Status() : Status::FromSdl();
+  }
+  Status SetChipPlayerGain(float gain) {
+    return ::Grapple_SetChipPlayerGain(value_, gain) ? Status() : Status::FromSdl();
+  }
+  Status SetChipTrackMix(int track, const Grapple_ChipTrackMix *mix) {
+    return ::Grapple_SetChipTrackMix(value_, track, mix) ? Status() : Status::FromSdl();
+  }
+  Status ReadChipTrackMix(int track, Grapple_ChipTrackMix *mix) {
+    return ::Grapple_ReadChipTrackMix(value_, track, mix) ? Status() : Status::FromSdl();
+  }
+  Status SetChipTrackEffects(int track, const Grapple_ChipEffects *effects) {
+    return ::Grapple_SetChipTrackEffects(value_, track, effects) ? Status() : Status::FromSdl();
+  }
+  Status ReadChipTrackEffects(int track, Grapple_ChipPreset preset, Grapple_ChipEffects *effects) {
+    return ::Grapple_ReadChipTrackEffects(value_, track, preset, effects) ? Status() : Status::FromSdl();
+  }
+  Status ReadChipTrackMapping(int track, int channel, Grapple_ChipMapping *mapping) {
+    return ::Grapple_ReadChipTrackMapping(value_, track, channel, mapping) ? Status() : Status::FromSdl();
+  }
   Status SetChipPresetEffects(Grapple_ChipPreset preset, const Grapple_ChipEffects *effects) {
     return ::Grapple_SetChipPresetEffects(value_, preset, effects) ? Status() : Status::FromSdl();
   }

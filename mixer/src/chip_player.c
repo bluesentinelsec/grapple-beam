@@ -1,60 +1,5 @@
 /* Original Grapple code (zlib). Sample-clock sequencer and SDL streaming adapter. */
-#include "chip_effects.h"
-#include "chip_internal.h"
-#include "chip_voice.h"
-
-typedef struct ChipChannel
-{
-    int program;
-    int bend;
-    int bend_semitones;
-    int bend_cents;
-    int rpn_msb;
-    int rpn_lsb;
-    bool sustain;
-    bool sostenuto;
-    float soft;
-    float pitch;
-    float volume;
-    float expression;
-    float pan_left;
-    float pan_right;
-    float modulation;
-} ChipChannel;
-
-typedef struct ChipPart
-{
-    Grapple_ChipPreset preset;
-    Grapple_ChipPreset named_preset;
-    float gain;
-} ChipPart;
-
-struct Grapple_ChipPlayer
-{
-    const Grapple_ChipSong *song;
-    SDL_AudioStream *stream;
-    MIX_Mixer *managed_mixer;
-    MIX_Track *managed_track;
-    ChipEffectBus effects[GRAPPLE_CHIP_PRESET_DRUMS + 1];
-    bool effect_used[GRAPPLE_CHIP_PRESET_DRUMS + 1];
-    double beat;
-    Uint32 tempo;
-    Uint64 quiet_frames;
-    ChipSynthVoice *voices;
-    ChipPart *parts;
-    ChipChannel *channels;
-    int channel_count;
-    int sample_rate;
-    int voice_count;
-    int peak_voices;
-    bool loop;
-    bool ended;
-    bool flushed;
-    size_t event;
-    Uint64 frame;
-    Uint64 end_frame;
-    Uint64 serial;
-};
+#include "chip_player.h"
 
 static void UpdateBend(ChipChannel *channel)
 {
@@ -83,7 +28,7 @@ static int EventChannel(const Grapple_ChipPlayer *p, const ChipEvent *event)
     return (p->song->independent_parts ? event->track * 16 : 0) + (event->status & 15);
 }
 
-static void Rewind(Grapple_ChipPlayer *p)
+void Chip_PlayerRewind(Grapple_ChipPlayer *p)
 {
     SDL_memset(p->voices, 0, (size_t)p->voice_count * sizeof(*p->voices));
     for (int i = 0; i < p->channel_count; ++i)
@@ -102,9 +47,13 @@ static void Rewind(Grapple_ChipPlayer *p)
         if ((event->status >> 4) == 12)
             p->channels[EventChannel(p, event)].program = event->a;
     }
+    p->clock = p->clock_error = p->tempo_frame = 0;
+    p->tempo_tick = 0;
     p->beat = 0;
     p->tempo = 500000;
     p->quiet_frames = 0;
+    p->tail_frames = 0;
+    p->fade_frames = p->loop ? (Uint64)((double)p->sample_rate * 0.002) : 0;
     p->event = 0;
     p->frame = 0;
     p->serial = 0;
@@ -147,7 +96,7 @@ static Grapple_ChipPreset PresetFromName(const char *name)
     return GRAPPLE_CHIP_PRESET_AUTO;
 }
 
-static Grapple_ChipPreset ResolvePreset(const Grapple_ChipPlayer *p, const ChipEvent *event)
+Grapple_ChipPreset Chip_ResolvePreset(const Grapple_ChipPlayer *p, const ChipEvent *event)
 {
     const Grapple_ChipPreset preset = p->parts[event->track].preset;
     if (preset != GRAPPLE_CHIP_PRESET_AUTO)
@@ -185,7 +134,7 @@ static void StartNote(Grapple_ChipPlayer *p, const ChipEvent *event)
     }
     if (!selected)
         selected = oldest;
-    const Grapple_ChipPreset preset = ResolvePreset(p, event);
+    const Grapple_ChipPreset preset = Chip_ResolvePreset(p, event);
     if (preset == GRAPPLE_CHIP_PRESET_DRUMS && (event->a == 42 || event->a == 44))
     {
         for (int i = 0; i < p->voice_count; ++i)
@@ -204,6 +153,7 @@ static void StartNote(Grapple_ChipPlayer *p, const ChipEvent *event)
             ChipSynthVoice *v = &p->voices[i];
             if (v->active && v->track == event->track && v->preset == preset &&
                 v->expression.lane == expression->lane && v->start_beat < p->beat &&
+                (!v->released || p->beat <= v->start_beat + v->duration_beats + 0.00001) &&
                 (!legato || v->serial > selected->serial))
             {
                 selected = v;
@@ -224,7 +174,7 @@ static void StartNote(Grapple_ChipPlayer *p, const ChipEvent *event)
     }
     if (expression)
         selected->expression = *expression;
-    selected->start_beat = p->beat;
+    selected->start_beat = (double)event->tick / p->song->info.ticks_per_quarter;
     selected->duration_beats = (double)event->duration / p->song->info.ticks_per_quarter;
     selected->track = event->track;
     selected->channel = EventChannel(p, event);
@@ -353,11 +303,14 @@ static void ControlChange(Grapple_ChipPlayer *p, int channel_index, int control,
     }
 }
 
-static void DispatchEvent(Grapple_ChipPlayer *p, const ChipEvent *event)
+void Chip_DispatchEvent(Grapple_ChipPlayer *p, const ChipEvent *event)
 {
     if (event->tempo)
     {
         p->tempo = event->tempo;
+        p->tempo_tick = event->tick;
+        p->tempo_frame = Chip_FrameAtTime(p, event->time);
+        Chip_UpdateBeat(p);
         return;
     }
     if (event->status == 0xf1)
@@ -413,15 +366,18 @@ int Grapple_RenderChipPlayer(Grapple_ChipPlayer *p, float *stereo, int frames)
     if (frames == 0)
         return 0;
     SDL_memset(stereo, 0, (size_t)frames * 2 * sizeof(float));
+    bool any_solo = false;
+    for (int i = 0; i < p->song->info.track_count; ++i)
+        any_solo = any_solo || p->parts[i].solo;
     int written = 0;
     while (written < frames)
     {
-        if (p->loop && p->frame >= p->end_frame)
-            Rewind(p);
+        if (p->loop && p->clock >= p->loop_end_frame)
+            Chip_LoopBoundary(p);
         while (p->event < p->song->count &&
                Chip_TimeToFrame(p->song, p->song->events[p->event].time, p->sample_rate) <=
                    p->frame)
-            DispatchEvent(p, &p->song->events[p->event++]);
+            Chip_DispatchEvent(p, &p->song->events[p->event++]);
         if (p->frame >= p->end_frame && !p->ended)
         {
             for (int i = 0; i < p->voice_count; ++i)
@@ -430,6 +386,17 @@ int Grapple_RenderChipPlayer(Grapple_ChipPlayer *p, float *stereo, int frames)
             p->ended = true;
         }
         float buses[GRAPPLE_CHIP_PRESET_DRUMS + 1][2] = {{0}};
+        float part_buses[CHIP_SONG_MAX_TRACKS][2] = {{0}};
+        float part_pulse[CHIP_SONG_MAX_TRACKS] = {0};
+        for (int i = 0; i < p->song->info.track_count; ++i)
+            if (p->parts[i].effects)
+            {
+                const double spacing = p->parts[i].effects->settings.pulse_beats;
+                part_pulse[i] = spacing > 0
+                                    ? (float)(0.5 + 0.5 * SDL_cos(2 * SDL_PI_D *
+                                                                  SDL_fmod(p->beat / spacing, 1)))
+                                    : 1;
+            }
         float pulse[GRAPPLE_CHIP_PRESET_DRUMS + 1] = {0};
         for (int bus = GRAPPLE_CHIP_PRESET_LEAD; bus <= GRAPPLE_CHIP_PRESET_DRUMS; ++bus)
         {
@@ -447,8 +414,11 @@ int Grapple_RenderChipPlayer(Grapple_ChipPlayer *p, float *stereo, int frames)
                 continue;
             ++active;
             const ChipChannel *channel = &p->channels[v->channel];
-            const Grapple_ChipEffects *effects = &p->effects[v->preset].settings;
-            const float shape = pulse[v->preset] * pulse[v->preset];
+            const ChipPart *part = &p->parts[v->track];
+            const Grapple_ChipEffects *effects =
+                part->effects ? &part->effects->settings : &p->effects[v->preset].settings;
+            const float motion_pulse = part->effects ? part_pulse[v->track] : pulse[v->preset];
+            const float shape = motion_pulse * motion_pulse;
             const float gain = 1.0f - effects->pulse_depth * (1.0f - shape);
             const float envelope_gain =
                 v->gain_start +
@@ -463,11 +433,13 @@ int Grapple_RenderChipPlayer(Grapple_ChipPlayer *p, float *stereo, int frames)
                         SDL_powf(2, Chip_ExpressionPitch(&v->expression, p->beat - v->start_beat,
                                                          v->duration_beats) /
                                         12),
-                    channel->modulation, p->sample_rate, effects->motion, pulse[v->preset]) *
-                gain * envelope_gain * p->parts[v->track].gain * channel->volume *
-                channel->expression;
-            buses[v->preset][0] += sample * channel->pan_left;
-            buses[v->preset][1] += sample * channel->pan_right;
+                    channel->modulation, p->sample_rate, effects->motion, motion_pulse) *
+                gain * envelope_gain * part->gain * channel->volume * channel->expression *
+                (1 - channel->soft * 0.3f);
+            const float audible = !part->muted && (!any_solo || part->solo) ? 1.0f : 0.0f;
+            float *bus = part->effects ? part_buses[v->track] : buses[v->preset];
+            bus[0] += sample * channel->pan_left * SDL_min(1, 1 - part->pan) * audible;
+            bus[1] += sample * channel->pan_right * SDL_min(1, 1 + part->pan) * audible;
         }
         float left = 0, right = 0;
         Uint64 quiet_limit = 0;
@@ -478,13 +450,36 @@ int Grapple_RenderChipPlayer(Grapple_ChipPlayer *p, float *stereo, int frames)
                 p->effect_used[bus] = true;
             if (!p->effect_used[bus])
                 continue;
-            Chip_EffectsProcess(effects, p->sample_rate, (float)p->tempo / 1000000.0f,
-                                &buses[bus][0], &buses[bus][1]);
+            Chip_EffectsProcess(effects, p->sample_rate,
+                                (float)((double)p->tempo / (1000000.0 * p->speed)), &buses[bus][0],
+                                &buses[bus][1]);
             left += buses[bus][0];
             right += buses[bus][1];
             if (effects->settings.delay > 0)
                 quiet_limit = SDL_max(quiet_limit, (Uint64)effects->delay_frames + 2u);
             if (effects->settings.reverb > 0 || effects->settings.chorus > 0)
+                quiet_limit = SDL_max(quiet_limit, (Uint64)p->sample_rate / 10u);
+        }
+        for (int i = 0; i < p->song->info.track_count; ++i)
+        {
+            ChipPart *part = &p->parts[i];
+            if (!part->effects)
+                continue;
+            if (part_buses[i][0] != 0 || part_buses[i][1] != 0)
+                part->effect_used = true;
+            if (!part->effect_used)
+                continue;
+            Chip_EffectsProcess(part->effects, p->sample_rate,
+                                (float)((double)p->tempo / (1000000.0 * p->speed)),
+                                &part_buses[i][0], &part_buses[i][1]);
+            if (!part->muted && (!any_solo || part->solo))
+            {
+                left += part_buses[i][0];
+                right += part_buses[i][1];
+            }
+            if (part->effects->settings.delay > 0)
+                quiet_limit = SDL_max(quiet_limit, (Uint64)part->effects->delay_frames + 2u);
+            if (part->effects->settings.reverb > 0 || part->effects->settings.chorus > 0)
                 quiet_limit = SDL_max(quiet_limit, (Uint64)p->sample_rate / 10u);
         }
         p->peak_voices = SDL_max(p->peak_voices, active);
@@ -495,18 +490,30 @@ int Grapple_RenderChipPlayer(Grapple_ChipPlayer *p, float *stereo, int frames)
         /* Wait longer than the longest echo gap before declaring a wet bus drained. */
 
         if (p->ended && ((active == 0 && p->quiet_frames > quiet_limit) ||
-                         p->frame >= p->end_frame + (Uint64)p->sample_rate * 12u))
+                         p->tail_frames >= (Uint64)p->sample_rate * 12u))
             break;
-        p->beat += 1000000.0 / ((double)p->tempo * p->sample_rate);
+
         float edge_gain = 1.0f;
         if (p->loop)
+            edge_gain = (float)SDL_min(1.0L, (p->loop_end_frame - p->clock) /
+                                                 (p->sample_rate * 0.002L * p->speed));
+        if (p->fade_frames)
         {
-            const Uint64 edge = SDL_min(p->frame, p->end_frame - p->frame - 1);
-            edge_gain = SDL_min(1.0f, (float)edge / ((float)p->sample_rate * 0.002f));
+            edge_gain *= 1.0f - (float)p->fade_frames / ((float)p->sample_rate * 0.002f);
+            --p->fade_frames;
         }
+        left *= p->master_gain;
+        right *= p->master_gain;
         stereo[(size_t)written * 2] = (left / SDL_sqrtf(1.0f + left * left)) * edge_gain;
         stereo[(size_t)written * 2 + 1] = (right / SDL_sqrtf(1.0f + right * right)) * edge_gain;
-        ++p->frame;
+        if (p->ended)
+            ++p->tail_frames;
+        const long double step = (long double)p->speed - p->clock_error;
+        const long double next = p->clock + step;
+        p->clock_error = (next - p->clock) - step;
+        p->clock = next;
+        p->frame = (Uint64)p->clock;
+        Chip_UpdateBeat(p);
         ++written;
     }
     return written;
@@ -553,7 +560,11 @@ Grapple_ChipPlayer *Grapple_CreateChipPlayer(const Grapple_ChipSong *song, int s
     Chip_RetainSong(song);
     p->sample_rate = sample_rate;
     p->voice_count = voices;
-    p->loop = loop;
+    p->speed = 1;
+    p->master_gain = 1;
+    p->loop_start_tick = 0;
+    p->loop_end_tick = song->info.duration_ticks;
+    p->loop_end_frame = Chip_FrameAtTime(p, song->end_time);
     p->end_frame = Chip_TimeToFrame(song, song->end_time, sample_rate);
     p->voices = SDL_calloc((size_t)voices, sizeof(*p->voices));
     p->parts = SDL_calloc((size_t)song->info.track_count, sizeof(*p->parts));
@@ -572,7 +583,9 @@ Grapple_ChipPlayer *Grapple_CreateChipPlayer(const Grapple_ChipSong *song, int s
     for (int bus = GRAPPLE_CHIP_PRESET_LEAD; bus <= GRAPPLE_CHIP_PRESET_DRUMS; ++bus)
         if (!Chip_EffectsInit(&p->effects[bus], (Grapple_ChipPreset)bus, sample_rate))
             goto fail;
-    Rewind(p);
+    Chip_PlayerRewind(p);
+    if (loop && !Grapple_SetChipPlayerLoop(p, 0, song->info.duration_ticks, true))
+        goto fail;
     if (!SDL_SetAudioStreamGetCallback(p->stream, StreamAudio, p))
         goto fail;
     return p;
@@ -589,6 +602,14 @@ void Grapple_DestroyChipPlayer(Grapple_ChipPlayer *p)
         SDL_DestroyAudioStream(p->stream);
         for (int bus = GRAPPLE_CHIP_PRESET_LEAD; bus <= GRAPPLE_CHIP_PRESET_DRUMS; ++bus)
             Chip_EffectsDestroy(&p->effects[bus]);
+        Chip_DestroyCheckpoint(p->checkpoint);
+        if (p->parts)
+            for (int i = 0; i < p->song->info.track_count; ++i)
+                if (p->parts[i].effects)
+                {
+                    Chip_EffectsDestroy(p->parts[i].effects);
+                    SDL_free(p->parts[i].effects);
+                }
         Grapple_DestroyChipSong((Grapple_ChipSong *)p->song);
         SDL_free(p->parts);
         SDL_free(p->channels);
@@ -611,8 +632,17 @@ bool Grapple_SetChipTrackPreset(Grapple_ChipPlayer *p, int track, Grapple_ChipPr
         return SDL_SetError("chiptune: invalid track preset or gain");
     if (!SDL_LockAudioStream(p->stream))
         return false;
+    const Grapple_ChipPreset prior_preset = p->parts[track].preset;
+    const float prior_gain = p->parts[track].gain;
     p->parts[track].preset = preset;
     p->parts[track].gain = gain;
+    if (!Chip_RefreshCheckpoint(p))
+    {
+        p->parts[track].preset = prior_preset;
+        p->parts[track].gain = prior_gain;
+        SDL_UnlockAudioStream(p->stream);
+        return false;
+    }
     SDL_UnlockAudioStream(p->stream);
     return true;
 }
@@ -622,10 +652,10 @@ void Grapple_ResetChipPlayer(Grapple_ChipPlayer *p)
     if (p && SDL_LockAudioStream(p->stream))
     {
         SDL_ClearAudioStream(p->stream);
-        Rewind(p);
-        for (int bus = GRAPPLE_CHIP_PRESET_LEAD; bus <= GRAPPLE_CHIP_PRESET_DRUMS; ++bus)
-            Chip_EffectsClear(&p->effects[bus]);
-        SDL_zeroa(p->effect_used);
+        Chip_PlayerRewind(p);
+        Chip_ClearPlayerEffects(p);
+        p->loop_count = 0;
+        p->positioned = false;
         p->peak_voices = 0;
         SDL_UnlockAudioStream(p->stream);
     }
@@ -677,10 +707,18 @@ bool Grapple_PlayChipPlayer(Grapple_ChipPlayer *p)
         }
     }
     if (MIX_TrackPaused(p->managed_track))
+    {
+        p->positioned = false;
         return MIX_ResumeTrack(p->managed_track);
+    }
     if (MIX_TrackPlaying(p->managed_track))
+    {
+        p->positioned = false;
         return true;
-    Grapple_ResetChipPlayer(p);
+    }
+    if (!p->positioned)
+        Grapple_ResetChipPlayer(p);
+    p->positioned = false;
     return MIX_PlayTrack(p->managed_track, 0);
 }
 

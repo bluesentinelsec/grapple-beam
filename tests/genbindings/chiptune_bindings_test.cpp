@@ -53,6 +53,16 @@ TEST_F(ChipBindings, CppComposesDeclarativeNotesWithRaii)
     ASSERT_TRUE(song.ok());
     auto player = grapple::ext::ChipPlayer::CreateChipPlayer(song->get(), 8000, 64, false);
     ASSERT_TRUE(player.ok());
+    Grapple_ChipPosition position{};
+    ASSERT_TRUE(player->SetChipPlayerLoop(0, 1920, true).ok());
+    ASSERT_TRUE(player->SetChipPlayerTempo(1).ok());
+    ASSERT_TRUE(player->SeekChipPlayer(480).ok());
+    ASSERT_TRUE(player->ReadChipPlayerPosition(&position).ok());
+    EXPECT_EQ(position.tick, 480u);
+    ASSERT_TRUE(player->SetChipPlayerGain(0.8f).ok());
+    const Grapple_ChipTrackMix mix{1, 0, false, false};
+    ASSERT_TRUE(player->SetChipTrackMix(0, &mix).ok());
+    player->ResetChipPlayer();
     composer->reset();
     song->reset();
     std::vector<float> pcm(16000);
@@ -106,6 +116,21 @@ local song = assert(G.BuildChipSong(composer, 1920))
 local ok, info = G.ReadChipSongInfo(song)
 assert(ok and info.duration_seconds == 2)
 local player = assert(G.PlayChipSong(song, true))
+G.PauseChipPlayer(player)
+assert(G.SetChipPlayerLoop(player, 480, 1920, true))
+assert(G.SetChipPlayerTempo(player, 1.5))
+assert(G.SeekChipPlayer(player, 960))
+local ok, position = G.ReadChipPlayerPosition(player)
+assert(ok and position.tick == 960)
+assert(G.SetChipPlayerGain(player, 0.8))
+assert(G.SetChipTrackMix(player, 0, {gain=1, pan=-0.2, muted=false, solo=true}))
+local ok, mix = G.ReadChipTrackMix(player, 0)
+assert(ok and mix.solo)
+local ok, mapping = G.ReadChipTrackMapping(player, 0, 0)
+assert(ok and mapping.preset == G.GRAPPLE_CHIP_PRESET_HARMONY)
+local ok, wet = G.GetChipPresetEffects(G.GRAPPLE_CHIP_PRESET_HARMONY)
+assert(ok and G.SetChipTrackEffects(player, 0, wet))
+assert(G.SetChipTrackEffects(player, 0, nil))
 local file_player = assert(G.PlayChipFile(chip_xml_fixture, false))
 G.DestroyChipPlayer(file_player)
 G.DestroyChipComposer(composer)
@@ -162,6 +187,21 @@ song = g.BuildChipSong(composer, 1920)
 ok, info = g.ReadChipSongInfo(song)
 raise 'duration' unless ok && info[:duration_seconds] == 2
 player = g.PlayChipSong(song, true)
+g.PauseChipPlayer(player)
+raise 'loop' unless g.SetChipPlayerLoop(player, 480, 1920, true)
+raise 'tempo' unless g.SetChipPlayerTempo(player, 1.5)
+raise 'seek' unless g.SeekChipPlayer(player, 960)
+ok, position = g.ReadChipPlayerPosition(player)
+raise 'position' unless ok && position[:tick] == 960
+raise 'gain' unless g.SetChipPlayerGain(player, 0.8)
+raise 'mix' unless g.SetChipTrackMix(player, 0, {gain: 1, pan: -0.2, muted: false, solo: true})
+ok, mix = g.ReadChipTrackMix(player, 0)
+raise 'read mix' unless ok && mix[:solo]
+ok, mapping = g.ReadChipTrackMapping(player, 0, 0)
+raise 'mapping' unless ok && mapping[:preset] == g::GRAPPLE_CHIP_PRESET_HARMONY
+ok, wet = g.GetChipPresetEffects(g::GRAPPLE_CHIP_PRESET_HARMONY)
+raise 'private effects' unless ok && g.SetChipTrackEffects(player, 0, wet)
+raise 'restore effects' unless g.SetChipTrackEffects(player, 0, nil)
 file_player = g.PlayChipFile($chip_xml_fixture, false)
 raise 'file helper' unless file_player
 g.DestroyChipPlayer(file_player)

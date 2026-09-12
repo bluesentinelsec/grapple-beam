@@ -2909,7 +2909,11 @@ module GrappleC
   def self.PrismaticJointDefSetMotor: (untyped def_, bool enabled, Float speed, Float max_force) -> void
   def self.QuitDebugText: () -> void
   def self.ReadChipDiagnostic: (untyped song, Integer index) -> [bool, Hash[Symbol, untyped]]
+  def self.ReadChipPlayerPosition: (untyped player) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipSongInfo: (untyped song) -> [bool, Hash[Symbol, untyped]]
+  def self.ReadChipTrackEffects: (untyped player, Integer track, Integer preset) -> [bool, Hash[Symbol, untyped]]
+  def self.ReadChipTrackMapping: (untyped player, Integer track, Integer channel) -> [bool, Hash[Symbol, untyped]]
+  def self.ReadChipTrackMix: (untyped player, Integer track) -> [bool, Hash[Symbol, untyped]]
   def self.RegexEscape: (String? text) -> Integer
   def self.RegexFlags: (untyped regex) -> String?
   def self.RegexGroup: (untyped regex, Integer group) -> String?
@@ -2973,8 +2977,14 @@ module GrappleC
   def self.ScriptSceneTransitionTo: (untyped engine, String? name, Integer transition, Float seconds) -> bool
   def self.ScriptSetHook: (untyped engine, Integer hook, Integer handle) -> bool
   def self.ScriptUnbind: (untyped engine) -> void
+  def self.SeekChipPlayer: (untyped player, Integer tick) -> bool
   def self.SetChipPart: (untyped composer, Integer track, String? name, Integer preset, Float gain) -> bool
+  def self.SetChipPlayerGain: (untyped player, Float gain) -> bool
+  def self.SetChipPlayerLoop: (untyped player, Integer start_tick, Integer end_tick, bool enabled) -> bool
+  def self.SetChipPlayerTempo: (untyped player, Float scale) -> bool
   def self.SetChipPresetEffects: (untyped player, Integer preset, Hash[Symbol, untyped] effects) -> bool
+  def self.SetChipTrackEffects: (untyped player, Integer track, Hash[Symbol, untyped] effects) -> bool
+  def self.SetChipTrackMix: (untyped player, Integer track, Hash[Symbol, untyped] mix) -> bool
   def self.SetChipTrackPreset: (untyped player, Integer track, Integer preset, Float gain) -> bool
   def self.SetDebugTextSize: (Float ptsize) -> void
   def self.SetDeviceMotion: (untyped engine, bool enabled) -> bool

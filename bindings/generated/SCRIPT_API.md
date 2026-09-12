@@ -2935,7 +2935,11 @@ returns as an array.
 | `GrappleC.PrismaticJointDefSetMotor(def: b2PrismaticJointDef, enabled: boolean, speed: number, max_force: number)` | nil |
 | `GrappleC.QuitDebugText()` | nil |
 | `GrappleC.ReadChipDiagnostic(song: Grapple_ChipSong, index: integer)` | boolean, diagnostic: Grapple_ChipDiagnostic table |
+| `GrappleC.ReadChipPlayerPosition(player: Grapple_ChipPlayer)` | boolean, position: Grapple_ChipPosition table |
 | `GrappleC.ReadChipSongInfo(song: Grapple_ChipSong)` | boolean, info: Grapple_ChipSongInfo table |
+| `GrappleC.ReadChipTrackEffects(player: Grapple_ChipPlayer, track: integer, preset: integer)` | boolean, effects: Grapple_ChipEffects table |
+| `GrappleC.ReadChipTrackMapping(player: Grapple_ChipPlayer, track: integer, channel: integer)` | boolean, mapping: Grapple_ChipMapping table |
+| `GrappleC.ReadChipTrackMix(player: Grapple_ChipPlayer, track: integer)` | boolean, mix: Grapple_ChipTrackMix table |
 | `GrappleC.RegexEscape(text: string|nil)` | string|nil |
 | `GrappleC.RegexFlags(regex: Grapple_Regex)` | string|nil |
 | `GrappleC.RegexGroup(regex: Grapple_Regex, group: integer)` | string|nil |
@@ -2999,8 +3003,14 @@ returns as an array.
 | `GrappleC.ScriptSceneTransitionTo(engine: Grapple_Engine, name: string|nil, transition: integer, seconds: number)` | boolean |
 | `GrappleC.ScriptSetHook(engine: Grapple_Engine, hook: integer, handle: integer)` | boolean |
 | `GrappleC.ScriptUnbind(engine: Grapple_Engine)` | nil |
+| `GrappleC.SeekChipPlayer(player: Grapple_ChipPlayer, tick: integer)` | boolean |
 | `GrappleC.SetChipPart(composer: Grapple_ChipComposer, track: integer, name: string|nil, preset: integer, gain: number)` | boolean |
+| `GrappleC.SetChipPlayerGain(player: Grapple_ChipPlayer, gain: number)` | boolean |
+| `GrappleC.SetChipPlayerLoop(player: Grapple_ChipPlayer, start_tick: integer, end_tick: integer, enabled: boolean)` | boolean |
+| `GrappleC.SetChipPlayerTempo(player: Grapple_ChipPlayer, scale: number)` | boolean |
 | `GrappleC.SetChipPresetEffects(player: Grapple_ChipPlayer, preset: integer, effects: Grapple_ChipEffects table)` | boolean |
+| `GrappleC.SetChipTrackEffects(player: Grapple_ChipPlayer, track: integer, effects: Grapple_ChipEffects table)` | boolean |
+| `GrappleC.SetChipTrackMix(player: Grapple_ChipPlayer, track: integer, mix: Grapple_ChipTrackMix table)` | boolean |
 | `GrappleC.SetChipTrackPreset(player: Grapple_ChipPlayer, track: integer, preset: integer, gain: number)` | boolean |
 | `GrappleC.SetDebugTextSize(ptsize: number)` | nil |
 | `GrappleC.SetDeviceMotion(engine: Grapple_Engine, enabled: boolean)` | boolean |

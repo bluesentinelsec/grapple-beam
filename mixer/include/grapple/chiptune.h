@@ -533,6 +533,124 @@ extern "C"
         float
             pulse_depth; /**< Harmony amplitude pulse depth, 0..1; zero leaves sustained volume. */
     } Grapple_ChipEffects;
+
+    /** @brief Independent game mix controls; pan balances the imported stereo image. */
+    typedef struct Grapple_ChipTrackMix
+    {
+        float gain; /**< Linear gain, 0..2; initialize to 1. */
+        float pan;  /**< Stereo balance, -1 left to +1 right; 0 preserves score pan. */
+        bool muted; /**< Suppress new dry/effect input; private bus output is also muted. */
+        bool solo;  /**< When any part is solo, only solo parts supply new audio. */
+    } Grapple_ChipTrackMix;
+
+    /** @brief Why a channel of a part receives its current default instrument. */
+    typedef enum Grapple_ChipMappingReason
+    {
+        GRAPPLE_CHIP_MAPPING_OVERRIDE,   /**< Explicit composer/player preset. */
+        GRAPPLE_CHIP_MAPPING_NAME,       /**< First recognized whole role word in the name. */
+        GRAPPLE_CHIP_MAPPING_PERCUSSION, /**< Percussion channel/instrument metadata. */
+        GRAPPLE_CHIP_MAPPING_PROGRAM,    /**< Bass or pad GM program family. */
+        GRAPPLE_CHIP_MAPPING_DEFAULT     /**< Remaining pitched instrument uses lead. */
+    } Grapple_ChipMappingReason;
+
+    /** @brief Resolved instrument mapping for one part/channel at the render cursor. */
+    typedef struct Grapple_ChipMapping
+    {
+        Grapple_ChipPreset preset;        /**< Current resolved preset. */
+        Grapple_ChipMappingReason reason; /**< Mapping precedence step. */
+        int program;                      /**< Current zero-based GM program. */
+        int channel;                      /**< Queried zero-based MIDI channel, 0..15. */
+    } Grapple_ChipMapping;
+
+    /** @brief Next render position; device buffering may make audible playback slightly earlier. */
+    typedef struct Grapple_ChipPosition
+    {
+        double seconds;      /**< Unscaled score time, clamped at the musical end during tails. */
+        double beat;         /**< Quarter beats from the expanded performance start. */
+        Uint64 tick;         /**< Floor of the expanded performance tick. */
+        int source_measure;  /**< Zero-based source MusicXML measure, or -1 for MIDI/code. */
+        int measure_visit;   /**< Zero-based expanded measure visit, or -1. */
+        double measure_beat; /**< Quarter beats from this visit's start. */
+        Uint64 loop_count;   /**< Completed transport loops since reset, seek or loop setup. */
+    } Grapple_ChipPosition;
+
+    /**
+     * @brief Read the next render position, including repeated source-measure mapping.
+     * @param player Live player. @param position Caller-owned output.
+     * @return True on success; false for invalid arguments or a stream-lock failure.
+     */
+    extern bool Grapple_ReadChipPlayerPosition(Grapple_ChipPlayer *player,
+                                               Grapple_ChipPosition *position);
+    /**
+     * @brief Seek to a tick in the expanded performance on the control/loading thread.
+     * @param player Live player. @param tick Tick, 0..song duration; before an active loop end.
+     * @return True, or false with SDL_GetError().
+     * @details Reconstructs tempo/controllers/held notes and approximate envelope age in bounded
+     * event/voice work. Clears queued PCM and effect/filter history, then fades in over 2 ms.
+     * Does not change pause state. A subsequent Play starts at the seek position.
+     * Historical noise/filter/reverb samples are not reproduced. Caller serializes control calls;
+     * these APIs lock the SDL stream against its callback. Direct Render calls need caller locking.
+     */
+    extern bool Grapple_SeekChipPlayer(Grapple_ChipPlayer *player, Uint64 tick);
+    /**
+     * @brief Configure an intro followed by a repeating interval in expanded performance ticks.
+     * @param player Live player. @param start_tick Inclusive repeat start.
+     * @param end_tick Exclusive repeat end. @param enabled False disables looping.
+     * @return True, or false for invalid bounds/allocation failure.
+     * @details Keeps the current intro position if before end; otherwise seeks to start. Prepares
+     * a controller/voice checkpoint on the calling thread. Interval must span at least four native
+     * sample frames. Loop boundaries restore notes crossing start, discard notes crossing end,
+     * retain effect tails and fade edges over 2 ms. Pulse phase follows source beats. Fractional
+     * frame overflow carries across iterations. No checkpoint allocation occurs in the callback.
+     */
+    extern bool Grapple_SetChipPlayerLoop(Grapple_ChipPlayer *player, Uint64 start_tick,
+                                          Uint64 end_tick, bool enabled);
+    /**
+     * @brief Scale runtime tempo without transposing pitches.
+     * @param player Live player. @param scale Multiplier, 0.25..4; default 1.
+     * @return True, or false for invalid arguments/allocation failure.
+     * @details Effects and expression follow the scaled beat clock; ADSR remains in real seconds.
+     * Rebuilds an active loop checkpoint on the control thread. Current cursor is preserved.
+     */
+    extern bool Grapple_SetChipPlayerTempo(Grapple_ChipPlayer *player, double scale);
+    /** @brief Set master gain before clipping control. @param player Live player.
+     * @param gain Linear gain, 0..2; default 1. @return True, or false on invalid input. */
+    extern bool Grapple_SetChipPlayerGain(Grapple_ChipPlayer *player, float gain);
+    /** @brief Set a part's mix without changing its instrument. @param player Live player.
+     * @param track Zero-based part. @param mix Copied settings. @return True, or false on error.
+     * @details Shared preset tails continue after mute/solo changes; private bus output follows
+     * mute/solo immediately. Master gain zero suppresses all tails. No notes are discarded. */
+    extern bool Grapple_SetChipTrackMix(Grapple_ChipPlayer *player, int track,
+                                        const Grapple_ChipTrackMix *mix);
+    /** @brief Read current part mix. @param player Live player. @param track Zero-based part.
+     * @param mix Caller-owned output. @return True, or false on error. */
+    extern bool Grapple_ReadChipTrackMix(Grapple_ChipPlayer *player, int track,
+                                         Grapple_ChipTrackMix *mix);
+    /**
+     * @brief Route a part to its own effect bus, independent of its preset peers.
+     * @param player Live player. @param track Zero-based part.
+     * @param effects Copied settings, or NULL to restore shared preset routing.
+     * @return True, or false for invalid input/allocation/resource failure.
+     * @details Allocates on the control thread; at most 32 private buses per player. Each consumes
+     * the same delay/reverb buffer size as one preset bus. Replacing a private bus clears its
+     * tails; tails already sent into a shared bus remain there. A private bus applies to every
+     * channel and note in the part. Preset-wide edits never modify private settings.
+     */
+    extern bool Grapple_SetChipTrackEffects(Grapple_ChipPlayer *player, int track,
+                                            const Grapple_ChipEffects *effects);
+    /** @brief Read effective private/shared settings for a part and preset.
+     * @param player Live player. @param track Zero-based part.
+     * @param preset Fallback preset for a part using shared routing, LEAD..DRUMS.
+     * @param effects Caller-owned output. @return True, or false on error. */
+    extern bool Grapple_ReadChipTrackEffects(Grapple_ChipPlayer *player, int track,
+                                             Grapple_ChipPreset preset,
+                                             Grapple_ChipEffects *effects);
+    /** @brief Inspect current mapping, including channels in mixed-instrument MIDI tracks.
+     * @param player Live player. @param track Zero-based part. @param channel MIDI channel 0..15.
+     * @param mapping Caller-owned output. @return True, or false on error. */
+    extern bool Grapple_ReadChipTrackMapping(Grapple_ChipPlayer *player, int track, int channel,
+                                             Grapple_ChipMapping *mapping);
+
     /**
      * @brief Retrieve the built-in effect settings for an instrument.
      * @param preset Explicit instrument (LEAD through DRUMS); AUTO is invalid.

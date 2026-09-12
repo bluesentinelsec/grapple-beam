@@ -16700,10 +16700,35 @@ function GrappleC.QuitDebugText() end
 ---@return boolean, table
 function GrappleC.ReadChipDiagnostic(song, index) end
 
+---Calls `Grapple_ReadChipPlayerPosition`.
+---@param player userdata
+---@return boolean, table
+function GrappleC.ReadChipPlayerPosition(player) end
+
 ---Calls `Grapple_ReadChipSongInfo`.
 ---@param song userdata
 ---@return boolean, table
 function GrappleC.ReadChipSongInfo(song) end
+
+---Calls `Grapple_ReadChipTrackEffects`.
+---@param player userdata
+---@param track integer
+---@param preset integer
+---@return boolean, table
+function GrappleC.ReadChipTrackEffects(player, track, preset) end
+
+---Calls `Grapple_ReadChipTrackMapping`.
+---@param player userdata
+---@param track integer
+---@param channel integer
+---@return boolean, table
+function GrappleC.ReadChipTrackMapping(player, track, channel) end
+
+---Calls `Grapple_ReadChipTrackMix`.
+---@param player userdata
+---@param track integer
+---@return boolean, table
+function GrappleC.ReadChipTrackMix(player, track) end
 
 ---Calls `Grapple_RegexEscape`.
 ---@param text string?
@@ -17081,6 +17106,12 @@ function GrappleC.ScriptSetHook(engine, hook, handle) end
 ---@param engine userdata
 function GrappleC.ScriptUnbind(engine) end
 
+---Calls `Grapple_SeekChipPlayer`.
+---@param player userdata
+---@param tick integer
+---@return boolean
+function GrappleC.SeekChipPlayer(player, tick) end
+
 ---Calls `Grapple_SetChipPart`.
 ---@param composer userdata
 ---@param track integer
@@ -17090,12 +17121,46 @@ function GrappleC.ScriptUnbind(engine) end
 ---@return boolean
 function GrappleC.SetChipPart(composer, track, name, preset, gain) end
 
+---Calls `Grapple_SetChipPlayerGain`.
+---@param player userdata
+---@param gain number
+---@return boolean
+function GrappleC.SetChipPlayerGain(player, gain) end
+
+---Calls `Grapple_SetChipPlayerLoop`.
+---@param player userdata
+---@param start_tick integer
+---@param end_tick integer
+---@param enabled boolean
+---@return boolean
+function GrappleC.SetChipPlayerLoop(player, start_tick, end_tick, enabled) end
+
+---Calls `Grapple_SetChipPlayerTempo`.
+---@param player userdata
+---@param scale number
+---@return boolean
+function GrappleC.SetChipPlayerTempo(player, scale) end
+
 ---Calls `Grapple_SetChipPresetEffects`.
 ---@param player userdata
 ---@param preset integer
 ---@param effects table
 ---@return boolean
 function GrappleC.SetChipPresetEffects(player, preset, effects) end
+
+---Calls `Grapple_SetChipTrackEffects`.
+---@param player userdata
+---@param track integer
+---@param effects table
+---@return boolean
+function GrappleC.SetChipTrackEffects(player, track, effects) end
+
+---Calls `Grapple_SetChipTrackMix`.
+---@param player userdata
+---@param track integer
+---@param mix table
+---@return boolean
+function GrappleC.SetChipTrackMix(player, track, mix) end
 
 ---Calls `Grapple_SetChipTrackPreset`.
 ---@param player userdata

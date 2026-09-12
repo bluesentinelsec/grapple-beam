@@ -2,6 +2,7 @@ add_executable(grapple_mixer_test
   mixer_test.cpp
   chiptune_test.cpp
   chip_player_test.cpp
+  chip_transport_test.cpp
   chip_xml_test.cpp
   chip_musicxml_test.cpp
 )

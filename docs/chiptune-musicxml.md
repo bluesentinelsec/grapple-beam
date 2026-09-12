@@ -188,3 +188,48 @@ beats. Ramps compile at 32 steps per quarter, capped at 4,096 steps, and use the
 same exact tempo integration as MIDI. This is a documented interpretation of
 specific musical words, not arbitrary natural-language processing. Scoped
 controllers/dynamics and active curves are restored when revisiting a passage.
+
+## Game transport and independent mixing
+
+`ReadChipPlayerPosition` reports the next render cursor: seconds, quarter beats,
+ticks, source MusicXML measure and expanded measure visit. MIDI and code songs
+have no source-measure map (`-1`). The audible device position trails the render
+cursor by its buffering. `SeekChipPlayer` accepts expanded ticks and reconstructs
+controllers, tempo, held notes and approximate envelope age without synthesizing
+the entire preceding song. It clears queued PCM, filter/noise history and wet
+tails, with a 2 ms fade-in; it does not reproduce a historical reverb waveform.
+Pause state is preserved, and seeking before first play chooses the starting point.
+
+`SetChipPlayerLoop(start, end, enabled)` supports an intro followed by an interval.
+Loop starts are inclusive and ends exclusive. Prepare loops on the loading/control
+thread: a bounded checkpoint restores controller and voice state at each wrap,
+with no allocation or event-history scan in the callback. Notes spanning the start
+are restored, notes spanning the end are discarded, effect tails carry across,
+and edges fade over 2 ms. Pulse phase returns to the source beat at loop start.
+Fractional sample overflow carries across loops; the frame clock uses compensated
+addition for runtime tempo scaling. Score repeats and game loops are separate.
+
+`SetChipPlayerTempo` scales speed from 0.25 to 4 without transposing notes. Pulse,
+delay and expression follow beats; ADSR remains in real seconds. Reset/stop clears
+sound and rewinds while preserving mix, effects, tempo scale and loop settings.
+`SetChipPlayerGain` controls the complete output including wet tails before the
+soft clipping stage. Musical end drains tails for up to twelve real seconds.
+
+`SetChipTrackMix` sets gain, stereo balance, mute and solo without changing notes
+or roles. Shared preset-bus tails continue when a contributing part is muted;
+master gain zero silences everything. `SetChipTrackEffects` assigns a private bus
+with copied settings, so one harmony can change independently. Private bus output
+follows mute/solo immediately. NULL restores shared routing. Replacing a private
+bus clears its old tail; it cannot remove a tail already mixed into a shared bus.
+Preset-wide edits leave private buses unchanged. `ReadChipTrackEffects` and
+`ReadChipTrackMapping` expose effective settings and mapping precedence, including
+the current channel program for mixed-instrument MIDI tracks.
+
+Control calls are serialized by the caller and lock the SDL stream against the
+managed callback. Direct PCM rendering requires caller serialization with control
+calls. Loop/tempo/preset changes may rebuild a checkpoint, and effect overrides
+allocate; call them on a control/loading thread. Render, note dispatch and loop
+wraps do not allocate. There are at most 32 private buses per player, each about
+1.6 MiB at 48 kHz, in addition to the five shared buses. Buffer size scales with
+sample rate. Voice/channel checkpoints are proportional to configured polyphony
+and part count; callback scratch space is about 4 KiB plus voice DSP stack.
