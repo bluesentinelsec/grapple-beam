@@ -1,3 +1,4 @@
+#include "launch.hpp"
 #include "runner.h"
 
 #include <CLI/CLI.hpp>
@@ -14,78 +15,6 @@
 
 namespace
 {
-struct Setting
-{
-    const char *name;
-    const char *values;
-    const char *description;
-};
-
-constexpr Setting kChoices[] = {
-    {"window-mode", "windowed|fullscreen-exclusive|fullscreen-borderless",
-     "Window presentation mode"},
-    {"vsync", "on|off", "Synchronize presentation with display refresh"},
-    {"presentation", "letterbox|expand|overscan|integer|stretch|native",
-     "Logical canvas presentation"},
-    {"filter", "auto|nearest|linear", "Texture filtering"},
-    {"particles", "off|low|medium|high", "Particle budget (consumed by game)"},
-    {"lights", "off|low|medium|high", "Dynamic light budget (consumed by game)"},
-    {"shadows", "off|low|medium|high", "Shadow budget (consumed by game)"},
-    {"antialias", "off|fxaa", "Post-process anti-aliasing"},
-    {"color-blind", "none|protanopia|deuteranopia|tritanopia", "Color-vision correction"},
-    {"reduced-flashing", "on|off", "Constrain engine-controlled flashing effects"},
-    {"backend", "auto|directx11|directx12|vulkan|metal|opengl|opengles2|software",
-     "Concrete renderer selection"},
-};
-
-struct NumericSetting
-{
-    const char *name;
-    double minimum;
-    double maximum;
-    bool integer;
-};
-
-constexpr NumericSetting kNumbers[] = {
-    {"display", 0, 65535, true},   {"render-scale", 0.25, 2, false},
-    {"bloom", 0, 1, false},        {"bloom-threshold", 0, 1, false},
-    {"crt", 0, 1, false},          {"crt-curvature", 0, 1, false},
-    {"pixelation", 1, 64, true},   {"chromatic-aberration", 0, 1, false},
-    {"brightness", 0.5, 2, false}, {"contrast", 0.5, 2, false},
-    {"saturation", 0, 2, false},   {"screen-shake", 0, 1, false},
-    {"ui-scale", 0.5, 3, false},
-};
-
-std::string ValidateNumber(const std::string &value, double minimum, double maximum, bool integer)
-{
-    if (value.empty() || value.find_first_of(" \t\n\r") != std::string::npos)
-        return "expected a number";
-    if (integer && value.find_first_not_of("0123456789") != std::string::npos)
-        return "expected an unsigned decimal integer";
-    char *end = nullptr;
-    errno = 0;
-    const double number = std::strtod(value.c_str(), &end);
-    if (end == value.c_str() || *end != '\0' || errno == ERANGE || !std::isfinite(number))
-        return "expected a finite number";
-    if (number < minimum || number > maximum)
-        return "value is outside the documented range";
-    return {};
-}
-
-std::vector<std::string> SplitChoices(const std::string &text)
-{
-    std::vector<std::string> result;
-    std::size_t start = 0;
-    for (;;)
-    {
-        const auto end = text.find('|', start);
-        result.push_back(text.substr(start, end - start));
-        if (end == std::string::npos)
-            return result;
-        start = end + 1;
-    }
-}
-
 std::string Replacement(const std::string &option)
 {
     if (option == "--fullscreen")
@@ -97,7 +26,7 @@ std::string Replacement(const std::string &option)
     if (option == "--with-safe-mode")
         return "use --safe-mode";
     if (option == "--with-default-settings")
-        return "use --default-settings (configuration recovery is pending)";
+        return "use --default-settings";
     if (option == "-e")
         return "use eval --language lua|ruby --code SOURCE";
     if (option == "--media-password")
@@ -169,25 +98,138 @@ class ProcessArgs
 };
 } // namespace
 
+namespace
+{
+int ListDisplays(const Grapple_Settings *settings, bool modes)
+{
+    if (!SDL_InitSubSystem(SDL_INIT_VIDEO))
+    {
+        std::cerr << "error: " << SDL_GetError() << '\n';
+        return 1;
+    }
+    int count = 0;
+    SDL_DisplayID *ids = SDL_GetDisplays(&count);
+    if (!ids)
+    {
+        std::cerr << "error: " << SDL_GetError() << '\n';
+        SDL_QuitSubSystem(SDL_INIT_VIDEO);
+        return 1;
+    }
+    int selected = 0;
+    std::string display = Grapple_SettingsGet(settings, "display");
+    if (display == "primary")
+    {
+        for (int i = 0; i < count; ++i)
+            if (ids[i] == SDL_GetPrimaryDisplay())
+                selected = i;
+    }
+    else
+        selected = SDL_atoi(display.c_str());
+    if (selected < 0 || selected >= count)
+    {
+        std::cerr << "error: no display " << display << '\n';
+        SDL_free(ids);
+        SDL_QuitSubSystem(SDL_INIT_VIDEO);
+        return 2;
+    }
+    for (int i = 0; i < count; ++i)
+    {
+        if (modes && i != selected)
+            continue;
+        const auto *desktop = SDL_GetDesktopDisplayMode(ids[i]);
+        std::cout << i << ": " << SDL_GetDisplayName(ids[i])
+                  << (ids[i] == SDL_GetPrimaryDisplay() ? " (primary)" : "");
+        if (desktop)
+            std::cout << " " << desktop->w << "x" << desktop->h << " @ " << desktop->refresh_rate
+                      << " Hz";
+        std::cout << '\n';
+        if (modes)
+        {
+            int n = 0;
+            SDL_DisplayMode **available = SDL_GetFullscreenDisplayModes(ids[i], &n);
+            if (!available)
+            {
+                std::cerr << "error: " << SDL_GetError() << '\n';
+                SDL_free(ids);
+                SDL_QuitSubSystem(SDL_INIT_VIDEO);
+                return 1;
+            }
+            for (int j = 0; j < n; ++j)
+                std::cout << "  " << available[j]->w << "x" << available[j]->h << " @ "
+                          << available[j]->refresh_rate << " Hz\n";
+            if (n == 0)
+                std::cout << "  no exclusive display modes reported\n";
+            SDL_free(available);
+        }
+    }
+    SDL_free(ids);
+    SDL_QuitSubSystem(SDL_INIT_VIDEO);
+    return 0;
+}
+class WorkingDirectory
+{
+  public:
+    explicit WorkingDirectory(const std::filesystem::path &next)
+        : previous_(std::filesystem::current_path())
+    {
+        std::filesystem::current_path(next);
+    }
+    ~WorkingDirectory()
+    {
+        std::error_code error;
+        std::filesystem::current_path(previous_, error);
+    }
+
+  private:
+    std::filesystem::path previous_;
+};
+class LaunchSettings
+{
+  public:
+    explicit LaunchSettings(const Grapple_Settings *s) : previous_(Grapple_GetLaunchSettings())
+    {
+        Grapple_SetLaunchSettings(s);
+    }
+    ~LaunchSettings()
+    {
+        Grapple_SetLaunchSettings(previous_);
+    }
+
+  private:
+    const Grapple_Settings *previous_;
+};
+} // namespace
 int GrappleRunner_Run(int argc, char **argv, const char *version)
 {
-    CLI::App app{"Run a Lua or Ruby game. Engine options precede the script; trailing arguments "
-                 "belong to the game.",
+    using namespace grapple::runner;
+    CLI::App app{"Run a Lua/Ruby project or script. Engine options precede the project; -- "
+                 "introduces game arguments.",
                  "grapple-beam"};
     app.set_version_flag("-V,--version", std::string("grapple-beam ") + version);
-    app.set_help_all_flag("--help-all", "Show all implemented options");
-    std::string language;
-    app.add_option("-l,--language", language, "Language; inferred from .lua or .rb")
+    app.set_help_all_flag("--help-all", "Include registered settings and advanced options");
+    LaunchRequest request;
+    app.add_option("-l,--language", request.language,
+                   "Language inferred from project or entrypoint")
         ->check(CLI::IsMember({"lua", "ruby"}))
         ->take_last();
-
-    const bool repl = argc > 1 && std::string(argv[1]) == "repl";
-    const bool eval = argc > 1 && std::string(argv[1]) == "eval";
+    const bool repl = argc > 1 && std::string(argv[1]) == "repl",
+               eval = argc > 1 && std::string(argv[1]) == "eval";
     const bool developer = repl || eval;
-    std::string code;
-    bool list_backends = false;
-    bool safe_mode = false;
-    std::vector<std::string> engine_args{argv[0]};
+    std::string code, quality;
+    bool backends = false, displays = false, modes = false;
+    SettingsPtr cli{Grapple_CreateSettings(), Grapple_DestroySettings};
+    if (!cli)
+    {
+        std::cerr << SDL_GetError() << '\n';
+        return 1;
+    }
+    auto set = [&](const std::string &key, const std::string &raw) {
+        std::string value = raw;
+        if (!value.empty() && (key == "media" || key == "engine.media"))
+            value = std::filesystem::absolute(raw).lexically_normal().string();
+        if (!Grapple_SettingsSet(cli.get(), key.c_str(), value.c_str(), "CLI"))
+            throw CLI::ValidationError(key, SDL_GetError());
+    };
     if (developer)
     {
         app.description(repl ? "Interactive Lua/Ruby shell" : "Evaluate Lua/Ruby source");
@@ -197,65 +239,72 @@ int GrappleRunner_Run(int argc, char **argv, const char *version)
     }
     else
     {
-        app.add_flag("--list-backends", list_backends,
-                     "Probe concrete renderers and report API/device versions");
-        app.add_flag("--safe-mode", safe_mode,
-                     "Use conservative engine settings; do not save them");
-        const auto add = [&](const std::string &name, const std::string &description) {
-            return app
-                .add_option_function<std::string>(
-                    "--" + name,
-                    [&, name](const std::string &value) {
-                        engine_args.push_back("--" + name + "=" + value);
-                    },
-                    description)
-                ->expected(1)
-                ->trigger_on_parse();
-        };
-        for (const auto &setting : kChoices)
-            add(setting.name, setting.description)
-                ->check(CLI::IsMember(SplitChoices(setting.values)))
-                ->type_name(setting.values);
-        for (const auto &setting : kNumbers)
+        app.add_flag("--list-backends", backends, "Probe concrete renderers and report versions");
+        app.add_flag("--list-displays", displays, "List displays without launching a project");
+        app.add_flag("--list-display-modes", modes, "List exclusive modes for --display");
+        app.add_flag("--print-settings", request.print,
+                     "Resolve requested settings and sources, then exit");
+        app.add_flag("--safe-mode", request.safe,
+                     "Bypass configuration scripts/files; use recovery defaults");
+        app.add_flag("--default-settings", request.defaults,
+                     "Ignore player settings for this launch");
+        app.add_flag("--reset-settings", request.reset,
+                     "Back up player settings and restore game defaults");
+        app.add_option_function<std::string>(
+               "--config",
+               [&](const std::string &v) {
+                   request.configs.push_back(std::filesystem::absolute(v));
+               },
+               "Explicit TOML overlay (repeatable)")
+            ->expected(1)
+            ->trigger_on_parse();
+        app.add_option_function<std::string>(
+               "--config-script",
+               [&](const std::string &v) {
+                   request.scripts.push_back(std::filesystem::absolute(v));
+               },
+               "Explicit Lua/Ruby settings overlay (repeatable)")
+            ->expected(1)
+            ->trigger_on_parse();
+        app.add_option("--quality", quality,
+                       "Preset: low=.75 scale/no FXAA; medium/high=1 scale/FXAA; matching budgets")
+            ->check(CLI::IsMember({"low", "medium", "high"}))
+            ->take_last();
+        app.add_option_function<std::string>(
+               "--set",
+               [&](const std::string &v) {
+                   auto eq = v.find('=');
+                   if (eq == std::string::npos)
+                       throw CLI::ValidationError("--set", "expected REGISTERED.KEY=VALUE");
+                   set(v.substr(0, eq), v.substr(eq + 1));
+               },
+               "Advanced typed override; keys listed below")
+            ->expected(1)
+            ->trigger_on_parse();
+        std::string footer = "Advanced keys (use --set KEY=VALUE):\n";
+        for (int i = 0; i < Grapple_SettingCount(); ++i)
         {
-            const std::string range =
-                std::to_string(setting.minimum) + ".." + std::to_string(setting.maximum);
-            add(setting.name, "Range " + range)
-                ->check(CLI::Validator(
-                    [setting](std::string &value) {
-                        return ValidateNumber(value, setting.minimum, setting.maximum,
-                                              setting.integer);
-                    },
-                    range));
+            std::string key = Grapple_SettingKey(i), name = Grapple_SettingOption(i);
+            if (name.empty())
+            {
+                footer += "  " + key + " (" + Grapple_SettingChoices(i) + ")\n";
+                continue;
+            }
+            app.add_option_function<std::string>(
+                   "--" + name, [&, key](const std::string &v) { set(key, v); },
+                   key + "; inherited default " + Grapple_SettingsGet(cli.get(), key.c_str()))
+                ->expected(1)
+                ->trigger_on_parse()
+                ->type_name(Grapple_SettingChoices(i));
         }
-        add("max-fps", "Frame limiter: display, unlimited, or integer 10..1000")
-            ->check(CLI::Validator(
-                [](std::string &value) {
-                    if (value == "display" || value == "unlimited")
-                        return std::string{};
-                    return ValidateNumber(value, 10, 1000, true);
-                },
-                "display|unlimited|10..1000"));
-        add("window-size", "Windowed dimensions; does not change window mode")
-            ->check(CLI::Validator(
-                [](std::string &value) {
-                    const auto x = value.find('x');
-                    if (x == std::string::npos)
-                        return std::string("expected WIDTHxHEIGHT");
-                    auto error = ValidateNumber(value.substr(0, x), 320, 16384, true);
-                    return error.empty() ? ValidateNumber(value.substr(x + 1), 240, 16384, true)
-                                         : error;
-                },
-                "WIDTHxHEIGHT"));
-        add("media", "Advanced asset directory/archive override")->check(CLI::ExistingPath);
+        app.footer(footer + "\nExamples:\n  grapple-beam --window-mode windowed .\n  grapple-beam "
+                            "--config player.toml ./game -- --level forest\n");
     }
-
     std::vector<char *> option_args{argv[0]};
-    const char *script = nullptr;
     int game_at = argc;
     for (int i = developer ? 2 : 1; i < argc; ++i)
     {
-        const std::string token = argv[i];
+        std::string token = argv[i];
         if (token == "--")
         {
             game_at = i + 1;
@@ -268,21 +317,19 @@ int GrappleRunner_Run(int argc, char **argv, const char *version)
                 std::cerr << "error: use -- before evaluation arguments\n";
                 return 2;
             }
-            script = argv[i];
+            request.project = argv[i];
             game_at = i + 1;
             if (game_at < argc && std::string(argv[game_at]) == "--")
                 ++game_at;
             break;
         }
-        const std::string key = token.substr(0, token.find('='));
+        std::string key = token.substr(0, token.find('='));
         const auto *option = app.get_option_no_throw(key);
-        if (option == nullptr)
+        if (!option)
         {
-            const auto replacement = Replacement(key);
+            auto replacement = Replacement(key);
             std::cerr << "error: " << key << ": "
-                      << (replacement.empty() ? "unknown or not yet implemented option; see --help"
-                                              : replacement)
-                      << '\n';
+                      << (replacement.empty() ? "unknown option; see --help" : replacement) << '\n';
             return 2;
         }
         option_args.push_back(argv[i]);
@@ -302,44 +349,64 @@ int GrappleRunner_Run(int argc, char **argv, const char *version)
     }
     catch (const CLI::ParseError &error)
     {
-        const int result = app.exit(error);
-        return result == 0 ? 0 : 2;
+        return app.exit(error) == 0 ? 0 : 2;
     }
-    if (list_backends)
+    catch (const std::exception &error)
     {
-        if (script != nullptr || engine_args.size() != 1 || safe_mode)
-        {
-            std::cerr << "error: --list-backends does not take a game or launch settings\n";
-            return 2;
-        }
-        return ListBackends();
-    }
-    if (!developer && script == nullptr)
-    {
-        std::cerr << "error: a .lua or .rb script is required; project discovery is not "
-                     "implemented yet\n";
+        std::cerr << "error: " << error.what() << '\n';
         return 2;
     }
-    if (script != nullptr)
+    try
     {
-        const auto extension = std::filesystem::path(script).extension().string();
-        const std::string inferred = extension == ".lua" ? "lua" : extension == ".rb" ? "ruby" : "";
-        if (inferred.empty() || (!language.empty() && language != inferred))
+        if (developer)
+            return GrappleRunner_Execute(request.language.c_str(), eval ? code.c_str() : nullptr,
+                                         nullptr, argc - game_at, argv + game_at);
+        if (static_cast<int>(backends) + static_cast<int>(displays) + static_cast<int>(modes) > 1)
+            throw std::runtime_error("enumeration actions are mutually exclusive");
+        if (backends || displays || modes)
         {
-            std::cerr << "error: language must agree with a .lua or .rb entrypoint\n";
-            return 2;
+            if (!request.project.empty() || request.safe || request.defaults || request.reset ||
+                request.print || !request.configs.empty() || !request.scripts.empty() ||
+                !quality.empty())
+                throw std::runtime_error(
+                    "enumeration actions do not launch or configure a project");
+            for (int i = 0; i < Grapple_SettingCount(); ++i)
+            {
+                const auto *key = Grapple_SettingKey(i);
+                if (std::string(Grapple_SettingsSource(cli.get(), key)) != "engine defaults" &&
+                    !(modes && std::string(key) == "display.display"))
+                    throw std::runtime_error(
+                        "launch settings are not valid with this enumeration action");
+            }
+            return backends ? ListBackends() : ListDisplays(cli.get(), modes);
         }
-        language = inferred;
-        std::error_code error;
-        if (!std::filesystem::is_regular_file(script, error))
+        if (!quality.empty())
         {
-            std::cerr << "error: script is not a readable regular file: " << script << '\n';
-            return 2;
+            SettingsPtr preset{Grapple_CreateSettings(), Grapple_DestroySettings};
+            if (!preset || !Grapple_SettingsQuality(preset.get(), quality.c_str(), "CLI quality") ||
+                !Grapple_SettingsOverlay(preset.get(), cli.get()))
+                throw std::runtime_error(SDL_GetError());
+            cli.swap(preset);
         }
+        auto launch = ResolveLaunch(request, cli.get());
+        if (request.print)
+        {
+            PrintSettings(launch.settings.get());
+            std::cout << "Player configuration directory: " << launch.preferences.string() << '\n';
+            return 0;
+        }
+        WorkingDirectory directory(launch.root);
+        ApplyAudioSettings(launch.settings.get());
+        LaunchSettings installed(launch.settings.get());
+        std::vector<std::string> no_args{argv[0]};
+        ProcessArgs process_args(no_args);
+        auto script = launch.entry.string();
+        return GrappleRunner_Execute(launch.language.c_str(), nullptr, script.c_str(),
+                                     argc - game_at, argv + game_at);
     }
-    if (safe_mode)
-        engine_args.insert(engine_args.begin() + 1, "--with-safe-mode");
-    ProcessArgs process_args(engine_args);
-    return GrappleRunner_Execute(language.c_str(), eval ? code.c_str() : nullptr, script,
-                                 argc - game_at, argv + game_at);
+    catch (const std::exception &error)
+    {
+        std::cerr << "error: " << error.what() << '\n';
+        return 2;
+    }
 }

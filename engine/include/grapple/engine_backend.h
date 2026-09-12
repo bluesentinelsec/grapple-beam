@@ -54,6 +54,12 @@ extern "C"
      */
     extern SDL_Renderer *Grapple_CreateBackendRenderer(SDL_Window *window, const char *name);
 
+    /** @brief Describe an existing renderer without creating another window.
+     * @param renderer Borrowed renderer, accessed on the main thread. @param info Output.
+     * @return Success. Empty version/device fields mean not reported by this query. */
+    extern bool Grapple_DescribeRenderBackend(SDL_Renderer *renderer,
+                                              Grapple_RenderBackendInfo *info);
+
     /** @brief Probe a concrete renderer using a temporary hidden window.
      * @param name Canonical concrete name ("auto" is not an enumeration entry).
      * @param info Output, copied in full; retained after probe resources are freed.

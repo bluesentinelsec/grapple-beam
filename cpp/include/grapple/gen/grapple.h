@@ -5,6 +5,7 @@
 #ifndef GRAPPLE_CPP_GEN_GRAPPLE_H_
 #define GRAPPLE_CPP_GEN_GRAPPLE_H_
 
+#include <grapple/audio_bus.h>
 #include <grapple/base64.h>
 #include <grapple/bidi.h>
 #include <grapple/chiptune.h>
@@ -28,6 +29,7 @@
 #include <grapple/engine_save.h>
 #include <grapple/engine_scene.h>
 #include <grapple/engine_script.h>
+#include <grapple/engine_settings.h>
 #include <grapple/engine_text.h>
 #include <grapple/gpu_build.h>
 #include <grapple/gui.h>
@@ -636,6 +638,9 @@ class EngineConfigHandle {
   void ConfigSetMediaPath(const char *path) { ::Grapple_ConfigSetMediaPath(value_, path); }
   void ConfigSetAutoMount(bool enabled) { ::Grapple_ConfigSetAutoMount(value_, enabled); }
   void ConfigSetGraphics(const Grapple_GraphicsSettings *graphics) { ::Grapple_ConfigSetGraphics(value_, graphics); }
+  Grapple_Settings* SettingsCapture(const Grapple_GraphicsSettings *graphics) {
+    return ::Grapple_SettingsCapture(value_, graphics);
+  }
  private:
   explicit EngineConfigHandle(Grapple_EngineConfig* value) : value_(value), engaged_(true) {}
   Grapple_EngineConfig* value_{};
@@ -889,8 +894,17 @@ inline Status ActorSetSprite(Grapple_Actor *actor, const Grapple_Sprite *sprite)
 inline Status AnyInput(Grapple_Engine *engine) {
   return ::Grapple_AnyInput(engine) ? Status() : Status::FromSdl();
 }
+inline Status ApplyAudioBus(Grapple_AudioBus bus, float *pcm, int samples) {
+  return ::Grapple_ApplyAudioBus(bus, pcm, samples) ? Status() : Status::FromSdl();
+}
 inline Status AssetsReady(Grapple_Engine *engine) {
   return ::Grapple_AssetsReady(engine) ? Status() : Status::FromSdl();
+}
+inline Status AttachAudioBuses(MIX_Mixer *mixer) {
+  return ::Grapple_AttachAudioBuses(mixer) ? Status() : Status::FromSdl();
+}
+inline Status AudioMuted() {
+  return ::Grapple_AudioMuted() ? Status() : Status::FromSdl();
 }
 inline Status BidiBaseIsRTL(const char *utf8, int length) {
   return ::Grapple_BidiBaseIsRTL(utf8, length) ? Status() : Status::FromSdl();
@@ -909,6 +923,9 @@ inline Status CameraVisible(const Grapple_Camera *camera, SDL_FRect world) {
 }
 inline Status CryptoSelfTest() {
   return ::Grapple_CryptoSelfTest() ? Status() : Status::FromSdl();
+}
+inline Status DescribeRenderBackend(SDL_Renderer *renderer, Grapple_RenderBackendInfo *info) {
+  return ::Grapple_DescribeRenderBackend(renderer, info) ? Status() : Status::FromSdl();
 }
 inline Status DialogDeliverSave(const char *path) {
   return ::Grapple_DialogDeliverSave(path) ? Status() : Status::FromSdl();
@@ -1069,6 +1086,9 @@ inline Status RenderBackendValid(const char *name) {
 inline Status RenderDebugText(SDL_Renderer *renderer, float x, float y, const char *text) {
   return ::Grapple_RenderDebugText(renderer, x, y, text) ? Status() : Status::FromSdl();
 }
+inline Status RouteAudioTrack(MIX_Track *track, Grapple_AudioBus bus) {
+  return ::Grapple_RouteAudioTrack(track, bus) ? Status() : Status::FromSdl();
+}
 inline Status RunGame(Grapple_Engine *engine, const Grapple_GameHooks *hooks, void *user) {
   return ::Grapple_RunGame(engine, hooks, user) ? Status() : Status::FromSdl();
 }
@@ -1147,6 +1167,9 @@ inline Status ScriptSetHook(Grapple_Engine *engine, Grapple_ScriptHook hook, Sin
 inline Status ScriptSetSceneDispatch(Grapple_Engine *engine, Grapple_ScriptSceneDispatch dispatch) {
   return ::Grapple_ScriptSetSceneDispatch(engine, dispatch) ? Status() : Status::FromSdl();
 }
+inline Status SetAudioBusGain(Grapple_AudioBus bus, float gain) {
+  return ::Grapple_SetAudioBusGain(bus, gain) ? Status() : Status::FromSdl();
+}
 inline Status SetDeviceMotion(Grapple_Engine *engine, bool enabled) {
   return ::Grapple_SetDeviceMotion(engine, enabled) ? Status() : Status::FromSdl();
 }
@@ -1155,6 +1178,30 @@ inline Status SetGamepadMotion(Grapple_Engine *engine, int player, bool enabled)
 }
 inline Status SetMouseCapture(Grapple_Engine *engine, bool captured) {
   return ::Grapple_SetMouseCapture(engine, captured) ? Status() : Status::FromSdl();
+}
+inline Status SettingsApply(const Grapple_Settings *settings, Grapple_EngineConfig *config, Grapple_GraphicsSettings *graphics, bool overrides_only) {
+  return ::Grapple_SettingsApply(settings, config, graphics, overrides_only) ? Status() : Status::FromSdl();
+}
+inline Status SettingsLoadFile(Grapple_Settings *settings, const char *path) {
+  return ::Grapple_SettingsLoadFile(settings, path) ? Status() : Status::FromSdl();
+}
+inline Status SettingsLoadToml(Grapple_Settings *settings, const char *toml, const char *source) {
+  return ::Grapple_SettingsLoadToml(settings, toml, source) ? Status() : Status::FromSdl();
+}
+inline Status SettingsOverlay(Grapple_Settings *settings, const Grapple_Settings *overlay) {
+  return ::Grapple_SettingsOverlay(settings, overlay) ? Status() : Status::FromSdl();
+}
+inline Status SettingsQuality(Grapple_Settings *settings, const char *quality, const char *source) {
+  return ::Grapple_SettingsQuality(settings, quality, source) ? Status() : Status::FromSdl();
+}
+inline Status SettingsSaveChanges(const Grapple_Settings *changes, const char *path) {
+  return ::Grapple_SettingsSaveChanges(changes, path) ? Status() : Status::FromSdl();
+}
+inline Status SettingsSet(Grapple_Settings *settings, const char *key, const char *value, const char *source) {
+  return ::Grapple_SettingsSet(settings, key, value, source) ? Status() : Status::FromSdl();
+}
+inline Status SettingsSetPlayerPath(Grapple_Settings *settings, const char *path) {
+  return ::Grapple_SettingsSetPlayerPath(settings, path) ? Status() : Status::FromSdl();
 }
 inline Status ShowOpenFileDialog(SDL_Window *window, const char *filter_name, const char *filter_pattern, const char *default_location) {
   return ::Grapple_ShowOpenFileDialog(window, filter_name, filter_pattern, default_location) ? Status() : Status::FromSdl();
@@ -1279,14 +1326,17 @@ inline constexpr auto& CameraSplit = ::Grapple_CameraSplit;
 inline constexpr auto& CameraUpdate = ::Grapple_CameraUpdate;
 inline constexpr auto& CameraX = ::Grapple_CameraX;
 inline constexpr auto& CameraY = ::Grapple_CameraY;
+inline constexpr auto& CloneSettings = ::Grapple_CloneSettings;
 inline constexpr auto& CompressData = ::Grapple_CompressData;
 inline constexpr auto& ConnectSignal = ::Grapple_ConnectSignal;
 inline constexpr auto& CountSignalConnections = ::Grapple_CountSignalConnections;
+inline constexpr auto& CreateAudioMixer = ::Grapple_CreateAudioMixer;
 inline constexpr auto& CreateBackendRenderer = ::Grapple_CreateBackendRenderer;
 inline constexpr auto& CreateChipSFX = ::Grapple_CreateChipSFX;
 inline constexpr auto& CreateChipTone = ::Grapple_CreateChipTone;
 inline constexpr auto& CreateChipTune = ::Grapple_CreateChipTune;
 inline constexpr auto& CreateGuiWithGlyphs = ::Grapple_CreateGuiWithGlyphs;
+inline constexpr auto& CreateSettings = ::Grapple_CreateSettings;
 inline constexpr auto& CreateSignalEmitter = ::Grapple_CreateSignalEmitter;
 inline constexpr auto& DayNightAmbient = ::Grapple_DayNightAmbient;
 inline constexpr auto& DayNightSunlight = ::Grapple_DayNightSunlight;
@@ -1294,6 +1344,7 @@ inline constexpr auto& DecodeDataBase64 = ::Grapple_DecodeDataBase64;
 inline constexpr auto& DecompressData = ::Grapple_DecompressData;
 inline constexpr auto& DecryptData = ::Grapple_DecryptData;
 inline constexpr auto& DestroyEngine = ::Grapple_DestroyEngine;
+inline constexpr auto& DestroySettings = ::Grapple_DestroySettings;
 inline constexpr auto& DestroySignalEmitter = ::Grapple_DestroySignalEmitter;
 inline constexpr auto& DeviceAccelerometer = ::Grapple_DeviceAccelerometer;
 inline constexpr auto& DeviceGyro = ::Grapple_DeviceGyro;
@@ -1311,6 +1362,7 @@ inline constexpr auto& DistanceJointDefSetSpring = ::Grapple_DistanceJointDefSet
 inline constexpr auto& EmitSignal = ::Grapple_EmitSignal;
 inline constexpr auto& EncodeDataBase64 = ::Grapple_EncodeDataBase64;
 inline constexpr auto& EncryptData = ::Grapple_EncryptData;
+inline constexpr auto& EngineActualSettings = ::Grapple_EngineActualSettings;
 inline constexpr auto& EngineAdvance = ::Grapple_EngineAdvance;
 inline constexpr auto& EngineAlpha = ::Grapple_EngineAlpha;
 inline constexpr auto& EngineAssetScale = ::Grapple_EngineAssetScale;
@@ -1332,6 +1384,7 @@ inline constexpr auto& EnginePresentation_ = ::Grapple_EnginePresentation_;
 inline constexpr auto& EngineQuit = ::Grapple_EngineQuit;
 inline constexpr auto& EngineRenderScale = ::Grapple_EngineRenderScale;
 inline constexpr auto& EngineRenderer = ::Grapple_EngineRenderer;
+inline constexpr auto& EngineRequestedSettings = ::Grapple_EngineRequestedSettings;
 inline constexpr auto& EngineSafeRect = ::Grapple_EngineSafeRect;
 inline constexpr auto& EngineSetClearColor = ::Grapple_EngineSetClearColor;
 inline constexpr auto& EngineSetEventSink = ::Grapple_EngineSetEventSink;
@@ -1346,6 +1399,7 @@ inline constexpr auto& EngineStep = ::Grapple_EngineStep;
 inline constexpr auto& EngineStepsLastFrame = ::Grapple_EngineStepsLastFrame;
 inline constexpr auto& EngineTickRate = ::Grapple_EngineTickRate;
 inline constexpr auto& EngineTimeScale = ::Grapple_EngineTimeScale;
+inline constexpr auto& EngineUiPoints = ::Grapple_EngineUiPoints;
 inline constexpr auto& EngineViewRect = ::Grapple_EngineViewRect;
 inline constexpr auto& EngineWindow = ::Grapple_EngineWindow;
 inline constexpr auto& EngineWindowToDesign = ::Grapple_EngineWindowToDesign;
@@ -1460,8 +1514,10 @@ inline constexpr auto& GamepadGyro = ::Grapple_GamepadGyro;
 inline constexpr auto& GamepadName = ::Grapple_GamepadName;
 inline constexpr auto& GamepadStick = ::Grapple_GamepadStick;
 inline constexpr auto& GamepadStopRumble = ::Grapple_GamepadStopRumble;
+inline constexpr auto& GetAudioBusGain = ::Grapple_GetAudioBusGain;
 inline constexpr auto& GetChipExpressionDefaults = ::Grapple_GetChipExpressionDefaults;
 inline constexpr auto& GetFinger = ::Grapple_GetFinger;
+inline constexpr auto& GetLaunchSettings = ::Grapple_GetLaunchSettings;
 inline constexpr auto& GraphicsArgsConfigPath = ::Grapple_GraphicsArgsConfigPath;
 inline constexpr auto& GraphicsClamp = ::Grapple_GraphicsClamp;
 inline constexpr auto& GraphicsConfigError = ::Grapple_GraphicsConfigError;
@@ -1575,11 +1631,22 @@ inline constexpr auto& SceneName = ::Grapple_SceneName;
 inline constexpr auto& SceneSetTransitionColor = ::Grapple_SceneSetTransitionColor;
 inline constexpr auto& SceneState = ::Grapple_SceneState;
 inline constexpr auto& ScriptUnbind = ::Grapple_ScriptUnbind;
+inline constexpr auto& SetAudioMuted = ::Grapple_SetAudioMuted;
 inline constexpr auto& SetDebugTextSize = ::Grapple_SetDebugTextSize;
 inline constexpr auto& SetDirectionRepeat = ::Grapple_SetDirectionRepeat;
 inline constexpr auto& SetGamepadDeadzone = ::Grapple_SetGamepadDeadzone;
+inline constexpr auto& SetLaunchSettings = ::Grapple_SetLaunchSettings;
 inline constexpr auto& SetTextInput = ::Grapple_SetTextInput;
 inline constexpr auto& SetTriggerThreshold = ::Grapple_SetTriggerThreshold;
+inline constexpr auto& SettingChoices = ::Grapple_SettingChoices;
+inline constexpr auto& SettingCount = ::Grapple_SettingCount;
+inline constexpr auto& SettingKey = ::Grapple_SettingKey;
+inline constexpr auto& SettingOption = ::Grapple_SettingOption;
+inline constexpr auto& SettingPolicy = ::Grapple_SettingPolicy;
+inline constexpr auto& SettingsGet = ::Grapple_SettingsGet;
+inline constexpr auto& SettingsPlayerPath = ::Grapple_SettingsPlayerPath;
+inline constexpr auto& SettingsSource = ::Grapple_SettingsSource;
+inline constexpr auto& SettingsToToml = ::Grapple_SettingsToToml;
 inline constexpr auto& SpriteCreate = ::Grapple_SpriteCreate;
 inline constexpr auto& SpriteDefault = ::Grapple_SpriteDefault;
 inline constexpr auto& SpriteDestroy = ::Grapple_SpriteDestroy;

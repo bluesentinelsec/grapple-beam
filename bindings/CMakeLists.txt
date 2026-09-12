@@ -34,6 +34,7 @@ endforeach()
 
 add_library(Grapple_Bindings STATIC
   src/bindings_core.c
+  src/grapple_settings_script.c
   src/grapple_bindings_lua.c
   src/grapple_engine_hooks_lua.c
   src/grapple_engine_hooks_ruby.c

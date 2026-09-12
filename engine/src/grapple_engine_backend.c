@@ -122,6 +122,28 @@ bool Grapple_ProbeRenderBackend(const char *name, Grapple_RenderBackendInfo *inf
         SDL_DestroyWindow(window);
         return true;
     }
+    Grapple_DescribeRenderBackend(renderer, info);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    return true;
+}
+
+bool Grapple_DescribeRenderBackend(SDL_Renderer *renderer, Grapple_RenderBackendInfo *info)
+{
+    if (!renderer || !info)
+        return SDL_InvalidParamError("renderer/info");
+    SDL_zero(*info);
+    const char *name = SDL_GetRendererName(renderer);
+    SDL_strlcpy(info->name, name, sizeof(info->name));
+    SDL_strlcpy(info->label, name, sizeof(info->label));
+    for (int i = 0; i < Grapple_RenderBackendCount(); ++i)
+        if (!SDL_strcmp(kBackends[i].renderer, name))
+        {
+            SDL_strlcpy(info->name, kBackends[i].name, sizeof(info->name));
+            SDL_strlcpy(info->label, kBackends[i].label, sizeof(info->label));
+            break;
+        }
+    info->compiled = true;
     info->available = true;
     SDL_strlcpy(info->renderer, SDL_GetRendererName(renderer), sizeof(info->renderer));
     info->opengl_effects =
@@ -131,7 +153,5 @@ bool Grapple_ProbeRenderBackend(const char *name, Grapple_RenderBackendInfo *inf
         SDL_FlushRenderer(renderer);
         DescribeGL(info);
     }
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
     return true;
 }

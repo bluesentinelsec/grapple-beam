@@ -17,6 +17,7 @@
 #include <grapple/engine.h>
 #include <grapple/engine_backend.h>
 #include <grapple/engine_script.h>
+#include <grapple/engine_settings.h>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -168,6 +169,15 @@ static void DetectRefreshRate(Grapple_Engine *engine)
     }
 }
 
+static Grapple_Engine *StartupFailure(Grapple_Engine *engine)
+{
+    char error[512];
+    SDL_strlcpy(error, SDL_GetError(), sizeof(error));
+    Grapple_DestroyEngine(engine);
+    SDL_SetError("%s", error);
+    return NULL;
+}
+
 Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
 {
     Grapple_EngineConfig defaults;
@@ -178,6 +188,27 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
     }
 
     Grapple_EngineConfig launch = *config;
+    Grapple_GraphicsSettings launch_graphics;
+    const Grapple_Settings *settings = Grapple_GetLaunchSettings();
+    if (settings != NULL)
+    {
+        launch_graphics = config->graphics != NULL ? *config->graphics : Grapple_GraphicsDefaults();
+        if (config->graphics == NULL)
+        {
+            launch_graphics.presentation = launch.presentation;
+            launch_graphics.vsync = !launch.no_vsync;
+            launch_graphics.max_fps = launch.max_fps;
+            launch_graphics.window_width = launch.window_width;
+            launch_graphics.window_height = launch.window_height;
+            launch_graphics.primary_display = true;
+            if (launch.headless)
+                launch_graphics.window_mode = GRAPPLE_WINDOW_WINDOWED;
+        }
+        Grapple_SettingsApply(settings, &launch, &launch_graphics, true);
+        if (launch.renderer_backend == NULL && launch.backend == GRAPPLE_BACKEND_OPENGL)
+            launch.renderer_backend = "auto";
+        launch.graphics = &launch_graphics;
+    }
     for (int i = 1; i < launch.argc && launch.argv != NULL; ++i)
     {
         const char *arg = launch.argv[i];
@@ -211,7 +242,7 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
         return NULL;
     }
 
-    engine->tick_rate = (config->tick_rate > 0) ? SDL_clamp(config->tick_rate, 10, 480) : 60;
+    engine->tick_rate = (config->tick_rate > 0) ? SDL_clamp(config->tick_rate, 1, 1000) : 60;
     engine->step_ns = NS_PER_SECOND / (Uint64)engine->tick_rate;
     engine->max_steps = (config->max_steps_per_frame > 0) ? config->max_steps_per_frame : 5;
     const float max_frame = (config->max_frame_seconds > 0.0f) ? config->max_frame_seconds : 0.25f;
@@ -228,8 +259,7 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
 
     if (!Grapple_EngineInputInit(engine))
     {
-        SDL_free(engine);
-        return NULL;
+        return StartupFailure(engine);
     }
 
     /* Assets first: the settings below may want the config.toml the game
@@ -237,6 +267,8 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
     if (!config->no_auto_mount)
     {
         Grapple_EngineMountMedia(engine, config->media_path, config->argc, config->argv);
+        if (config->media_path && *config->media_path && engine->media_source == GRAPPLE_MEDIA_NONE)
+            return StartupFailure(engine);
         Grapple_EngineInstallConfigReader();
     }
 
@@ -264,18 +296,7 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
             config->fullscreen ? GRAPPLE_WINDOW_BORDERLESS : GRAPPLE_WINDOW_WINDOWED;
     }
 
-    /* The command line has the last word, whichever branch ran.
-     *
-     * The engine has always known how to parse --fullscreen, --window-size,
-     * --with-safe-mode and thirty others, and never read them unless the
-     * game separately called Grapple_GraphicsResolve and passed the result
-     * back in. That made the flags dead for every game that did not know to
-     * do it -- including all of this project's own demos. LoadArgs touches
-     * only the settings that actually appear on the line, so a game's own
-     * choices survive anything the player did not ask about.
-     *
-     * Applied here, before the window is created, so --window-size is a
-     * window size rather than an instruction arriving too late. */
+    /* Legacy embedders may still supply engine argv; the runner uses typed settings. */
     if (config->argc > 1 && config->argv != NULL)
     {
         if (Grapple_GraphicsLoadArgs(&engine->graphics, config->argc, config->argv) > 0)
@@ -293,22 +314,22 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
         /* The surface stands in for the window, so a test can ask for a
            16:10 or ultrawide "display" and check what the design space
            does about it. */
-        const int surface_w =
-            (config->window_width > 0) ? config->window_width : engine->design_width;
-        const int surface_h =
-            (config->window_height > 0) ? config->window_height : engine->design_height;
+        const int surface_w = (engine->graphics.window_width > 0) ? engine->graphics.window_width
+                              : (config->window_width > 0)        ? config->window_width
+                                                                  : engine->design_width;
+        const int surface_h = (engine->graphics.window_height > 0) ? engine->graphics.window_height
+                              : (config->window_height > 0)        ? config->window_height
+                                                                   : engine->design_height;
         SDL_Surface *surface = SDL_CreateSurface(surface_w, surface_h, SDL_PIXELFORMAT_ARGB8888);
         if (surface == NULL)
         {
-            SDL_free(engine);
-            return NULL;
+            return StartupFailure(engine);
         }
         engine->renderer = SDL_CreateSoftwareRenderer(surface);
         if (engine->renderer == NULL)
         {
             SDL_DestroySurface(surface);
-            SDL_free(engine);
-            return NULL;
+            return StartupFailure(engine);
         }
         /* A software renderer does *not* take ownership of the surface it
            draws into, so we keep it and free it ourselves. */
@@ -389,16 +410,12 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
                                                   &engine->renderer);
         if (!created)
         {
-            char error[512];
-            SDL_strlcpy(error, SDL_GetError(), sizeof(error));
-            Grapple_DestroyEngine(engine);
-            SDL_SetError("%s", error);
-            return NULL;
+            return StartupFailure(engine);
         }
         /* Vsync unless asked otherwise: it costs nothing, it stops the loop
            free-running at four figures, and it quantises the frame delta
            for the smoothing above. */
-        SDL_SetRenderVSync(engine->renderer, engine->graphics.vsync ? 1 : 0);
+
         DetectRefreshRate(engine);
     }
 
@@ -406,28 +423,26 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
        scales it to whatever the display is. */
     ApplyPresentation(engine);
     Grapple_EngineApplyFilter(engine);
-    if (engine->window != NULL)
+    engine->requested_settings = Grapple_SettingsCapture(config, &engine->graphics);
+    if (!engine->requested_settings ||
+        (settings && !Grapple_SettingsOverlay(engine->requested_settings, settings)) ||
+        !Grapple_EngineSetGraphics(engine, &engine->graphics))
     {
-        /* A saved monitor index may name a display that has since been
-           unplugged. Clamping here rather than trusting the file is what
-           stops a game opening invisibly on a monitor that is not there. */
-        const int displays = Grapple_EngineDisplayCount();
-        if (engine->graphics.display >= displays)
-        {
-            engine->graphics.display = 0;
-        }
-        if (engine->graphics.display > 0)
-        {
-            Grapple_EngineSetDisplay(engine, engine->graphics.display);
-        }
+        return StartupFailure(engine);
     }
-    if (engine->window != NULL)
-    {
-        /* Window mode is the one setting that cannot be folded into window
-           creation, because borderless and exclusive differ after the fact. */
-        Grapple_GraphicsSettings applied = engine->graphics;
-        Grapple_EngineSetGraphics(engine, &applied);
-    }
+
+    if (settings && engine->window && !Grapple_EngineEffectsAvailable(engine) &&
+        ((!engine->graphics.effects_disabled &&
+          (engine->graphics.antialias != GRAPPLE_AA_OFF || engine->graphics.bloom > 0 ||
+           engine->graphics.crt > 0 || engine->graphics.crt_curvature > 0 ||
+           engine->graphics.chromatic_aberration > 0 || engine->graphics.pixelation > 1)) ||
+         engine->graphics.brightness != 1 || engine->graphics.contrast != 1 ||
+         engine->graphics.saturation != 1 ||
+         engine->graphics.color_blind != GRAPPLE_COLORBLIND_NONE))
+        SDL_LogWarn(SDL_LOG_CATEGORY_RENDER,
+                    "renderer '%s' cannot apply requested post-processing; inspect "
+                    "EngineActualSettings for effective values",
+                    SDL_GetRendererName(engine->renderer));
 
     if (engine->window != NULL && !config->start_hidden)
     {
@@ -482,6 +497,7 @@ void Grapple_DestroyEngine(Grapple_Engine *engine)
     {
         SDL_DestroySurface(engine->headless_surface); /* after the renderer */
     }
+    Grapple_DestroySettings(engine->requested_settings);
     SDL_free(engine);
 }
 
@@ -874,6 +890,7 @@ void Grapple_EngineSetMaxFps(Grapple_Engine *engine, int max_fps)
     if (engine != NULL)
     {
         engine->max_fps = max_fps;
+        engine->graphics.max_fps = max_fps;
     }
 }
 

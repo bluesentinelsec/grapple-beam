@@ -14369,6 +14369,13 @@ function GrappleC.AddOccluderSegment(scene, x1, y1, x2, y2) end
 ---@return boolean
 function GrappleC.AnyInput(engine) end
 
+---Calls `Grapple_ApplyAudioBus`.
+---@param bus integer
+---@param pcm number
+---@param samples integer
+---@return boolean, number
+function GrappleC.ApplyAudioBus(bus, pcm, samples) end
+
 ---Calls `Grapple_AssetPath`.
 ---@param engine userdata
 ---@param id integer
@@ -14429,6 +14436,15 @@ function GrappleC.AssetsSetWorkers(engine, workers) end
 ---Calls `Grapple_AssetsWait`.
 ---@param engine userdata
 function GrappleC.AssetsWait(engine) end
+
+---Calls `Grapple_AttachAudioBuses`.
+---@param mixer userdata
+---@return boolean
+function GrappleC.AttachAudioBuses(mixer) end
+
+---Calls `Grapple_AudioMuted`.
+---@return boolean
+function GrappleC.AudioMuted() end
 
 ---Calls `Grapple_BidiBaseIsRTL`.
 ---@param utf8 string?
@@ -14643,6 +14659,11 @@ function GrappleC.CameraY() end
 ---@return boolean
 function GrappleC.ChipPlayerPlaying(player) end
 
+---Calls `Grapple_CloneSettings`.
+---@param settings userdata
+---@return userdata?
+function GrappleC.CloneSettings(settings) end
+
 ---Calls `Grapple_CompileRegex`.
 ---@param pattern string?
 ---@param flags string?
@@ -14751,6 +14772,12 @@ function GrappleC.ConfigSetWindowSize(config, width, height) end
 ---@return integer
 function GrappleC.CountSignalConnections(emitter, signal) end
 
+---Calls `Grapple_CreateAudioMixer`.
+---@param device integer
+---@param spec table
+---@return userdata?
+function GrappleC.CreateAudioMixer(device, spec) end
+
 ---Calls `Grapple_CreateBackendRenderer`.
 ---@param window userdata
 ---@param name string?
@@ -14814,6 +14841,10 @@ function GrappleC.CreateGuiWithGlyphs(renderer, font_data, font_size, range) end
 ---@return userdata?
 function GrappleC.CreateLightScene(renderer) end
 
+---Calls `Grapple_CreateSettings`.
+---@return userdata?
+function GrappleC.CreateSettings() end
+
 ---Calls `Grapple_CreateSignalEmitter`.
 ---@return userdata?
 function GrappleC.CreateSignalEmitter() end
@@ -14831,6 +14862,11 @@ function GrappleC.DayNightAmbient(hours) end
 ---@param hours number
 ---@return number
 function GrappleC.DayNightSunlight(hours) end
+
+---Calls `Grapple_DescribeRenderBackend`.
+---@param renderer userdata
+---@return boolean, table
+function GrappleC.DescribeRenderBackend(renderer) end
 
 ---Calls `Grapple_DestroyChipComposer`.
 ---@param composer userdata
@@ -14859,6 +14895,10 @@ function GrappleC.DestroyLightScene(scene) end
 ---Calls `Grapple_DestroyRegex`.
 ---@param regex userdata
 function GrappleC.DestroyRegex(regex) end
+
+---Calls `Grapple_DestroySettings`.
+---@param settings userdata
+function GrappleC.DestroySettings(settings) end
 
 ---Calls `Grapple_DestroySignalEmitter`.
 ---@param emitter userdata
@@ -14960,6 +15000,11 @@ function GrappleC.DrawPhysicsWorld(world, renderer, config) end
 ---@param outputSize integer
 ---@return integer, integer
 function GrappleC.EncodeDataBase64(data, outputSize) end
+
+---Calls `Grapple_EngineActualSettings`.
+---@param engine userdata
+---@return userdata?
+function GrappleC.EngineActualSettings(engine) end
 
 ---Calls `Grapple_EngineAdvance`.
 ---@param engine userdata
@@ -15068,6 +15113,11 @@ function GrappleC.EngineRenderScale(engine) end
 ---@return userdata?
 function GrappleC.EngineRenderer(engine) end
 
+---Calls `Grapple_EngineRequestedSettings`.
+---@param engine userdata
+---@return userdata?
+function GrappleC.EngineRequestedSettings(engine) end
+
 ---Calls `Grapple_EngineSafeRect`.
 ---@param engine userdata
 ---@return table
@@ -15149,6 +15199,12 @@ function GrappleC.EngineTickRate(engine) end
 ---@param engine userdata
 ---@return number
 function GrappleC.EngineTimeScale(engine) end
+
+---Calls `Grapple_EngineUiPoints`.
+---@param engine userdata
+---@param points number
+---@return number
+function GrappleC.EngineUiPoints(engine, points) end
 
 ---Calls `Grapple_EngineViewRect`.
 ---@param engine userdata
@@ -15886,6 +15942,11 @@ function GrappleC.GamepadStick(engine, player, side, x, y) end
 ---@param player integer
 function GrappleC.GamepadStopRumble(engine, player) end
 
+---Calls `Grapple_GetAudioBusGain`.
+---@param bus integer
+---@return number
+function GrappleC.GetAudioBusGain(bus) end
+
 ---Calls `Grapple_GetChipDiagnosticCount`.
 ---@param song userdata
 ---@return integer
@@ -15919,6 +15980,10 @@ function GrappleC.GetChipPresetEffects(preset) end
 ---@param song userdata
 ---@return integer
 function GrappleC.GetChipSectionCount(song) end
+
+---Calls `Grapple_GetLaunchSettings`.
+---@return userdata?
+function GrappleC.GetLaunchSettings() end
 
 ---Calls `Grapple_GraphicsClamp`.
 ---@return table
@@ -16939,6 +17004,12 @@ function GrappleC.RevoluteJointDefSetMotor(def_, enabled, degrees_per_second, ma
 ---@param damping number
 function GrappleC.RevoluteJointDefSetSpring(def_, enabled, hertz, damping) end
 
+---Calls `Grapple_RouteAudioTrack`.
+---@param track userdata
+---@param bus integer
+---@return boolean
+function GrappleC.RouteAudioTrack(track, bus) end
+
 ---Calls `Grapple_SHA256`.
 ---@param data string
 ---@param digest integer
@@ -17162,6 +17233,16 @@ function GrappleC.ScriptUnbind(engine) end
 ---@return boolean
 function GrappleC.SeekChipPlayer(player, tick) end
 
+---Calls `Grapple_SetAudioBusGain`.
+---@param bus integer
+---@param gain number
+---@return boolean
+function GrappleC.SetAudioBusGain(bus, gain) end
+
+---Calls `Grapple_SetAudioMuted`.
+---@param muted boolean
+function GrappleC.SetAudioMuted(muted) end
+
 ---Calls `Grapple_SetChipPart`.
 ---@param composer userdata
 ---@param track integer
@@ -17248,6 +17329,10 @@ function GrappleC.SetGamepadDeadzone(engine, deadzone) end
 ---@return boolean
 function GrappleC.SetGamepadMotion(engine, player, enabled) end
 
+---Calls `Grapple_SetLaunchSettings`.
+---@param settings userdata
+function GrappleC.SetLaunchSettings(settings) end
+
 ---Calls `Grapple_SetLightAmbient`.
 ---@param scene userdata
 ---@param ambient table
@@ -17298,6 +17383,112 @@ function GrappleC.SetTextInput(engine, enabled) end
 ---@param engine userdata
 ---@param threshold number
 function GrappleC.SetTriggerThreshold(engine, threshold) end
+
+---Calls `Grapple_SettingChoices`.
+---@param index integer
+---@return string?
+function GrappleC.SettingChoices(index) end
+
+---Calls `Grapple_SettingCount`.
+---@return integer
+function GrappleC.SettingCount() end
+
+---Calls `Grapple_SettingKey`.
+---@param index integer
+---@return string?
+function GrappleC.SettingKey(index) end
+
+---Calls `Grapple_SettingOption`.
+---@param index integer
+---@return string?
+function GrappleC.SettingOption(index) end
+
+---Calls `Grapple_SettingPolicy`.
+---@param key string?
+---@return string?
+function GrappleC.SettingPolicy(key) end
+
+---Calls `Grapple_SettingsApply`.
+---@param settings userdata
+---@param config userdata
+---@param overrides_only boolean
+---@return boolean, table
+function GrappleC.SettingsApply(settings, config, overrides_only) end
+
+---Calls `Grapple_SettingsCapture`.
+---@param config userdata
+---@param graphics table
+---@return userdata?
+function GrappleC.SettingsCapture(config, graphics) end
+
+---Calls `Grapple_SettingsGet`.
+---@param settings userdata
+---@param key string?
+---@return string?
+function GrappleC.SettingsGet(settings, key) end
+
+---Calls `Grapple_SettingsLoadFile`.
+---@param settings userdata
+---@param path string?
+---@return boolean
+function GrappleC.SettingsLoadFile(settings, path) end
+
+---Calls `Grapple_SettingsLoadToml`.
+---@param settings userdata
+---@param toml string?
+---@param source string?
+---@return boolean
+function GrappleC.SettingsLoadToml(settings, toml, source) end
+
+---Calls `Grapple_SettingsOverlay`.
+---@param settings userdata
+---@param overlay userdata
+---@return boolean
+function GrappleC.SettingsOverlay(settings, overlay) end
+
+---Calls `Grapple_SettingsPlayerPath`.
+---@param settings userdata
+---@return string?
+function GrappleC.SettingsPlayerPath(settings) end
+
+---Calls `Grapple_SettingsQuality`.
+---@param settings userdata
+---@param quality string?
+---@param source string?
+---@return boolean
+function GrappleC.SettingsQuality(settings, quality, source) end
+
+---Calls `Grapple_SettingsSaveChanges`.
+---@param changes userdata
+---@param path string?
+---@return boolean
+function GrappleC.SettingsSaveChanges(changes, path) end
+
+---Calls `Grapple_SettingsSet`.
+---@param settings userdata
+---@param key string?
+---@param value string?
+---@param source string?
+---@return boolean
+function GrappleC.SettingsSet(settings, key, value, source) end
+
+---Calls `Grapple_SettingsSetPlayerPath`.
+---@param settings userdata
+---@param path string?
+---@return boolean
+function GrappleC.SettingsSetPlayerPath(settings, path) end
+
+---Calls `Grapple_SettingsSource`.
+---@param settings userdata
+---@param key string?
+---@return string?
+function GrappleC.SettingsSource(settings, key) end
+
+---Calls `Grapple_SettingsToToml`.
+---@param settings userdata
+---@param overrides_only boolean
+---@return integer
+function GrappleC.SettingsToToml(settings, overrides_only) end
 
 ---Calls `Grapple_ShowOpenFileDialog`.
 ---@param window userdata

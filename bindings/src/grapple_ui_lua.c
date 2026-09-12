@@ -16,17 +16,15 @@
  * "2.4em" is font-relative, "25%" is a share of the parent, "fit" is as
  * wide as the content.
  */
-#include <grapple/bindings.h>
-#include <grapple/engine.h>
-#include <grapple/widgets.h>
-
 #include "bindings_core.h"
 #include "gen_support_lua.h"
 
+#include <SDL3/SDL.h>
+#include <grapple/bindings.h>
+#include <grapple/engine.h>
+#include <grapple/widgets.h>
 #include <lauxlib.h>
 #include <lua.h>
-
-#include <SDL3/SDL.h>
 #include <stdint.h>
 
 #define UI_MT "grapple.ui"
@@ -185,8 +183,7 @@ static void CallbackTable(lua_State *L)
 
 static void PushWidget(lua_State *L, Grapple_UiWidget *widget);
 
-static void RememberCallback(lua_State *L, int table, const char *key,
-                             Grapple_UiWidget *widget)
+static void RememberCallback(lua_State *L, int table, const char *key, Grapple_UiWidget *widget)
 {
     lua_getfield(L, table, key);
     if (!lua_isfunction(L, -1))
@@ -194,11 +191,11 @@ static void RememberCallback(lua_State *L, int table, const char *key,
         lua_pop(L, 1);
         return;
     }
-    CallbackTable(L);          /* ... fn cbtable */
+    CallbackTable(L); /* ... fn cbtable */
     lua_pushlightuserdata(L, widget);
-    lua_pushvalue(L, -3);      /* the function */
-    lua_rawset(L, -3);         /* cbtable[widget] = fn */
-    lua_pop(L, 2);             /* cbtable, fn */
+    lua_pushvalue(L, -3); /* the function */
+    lua_rawset(L, -3);    /* cbtable[widget] = fn */
+    lua_pop(L, 2);        /* cbtable, fn */
 }
 
 static void ScriptCallback(Grapple_UiWidget *widget, void *user)
@@ -323,8 +320,14 @@ static int Strip(lua_State *L, bool row)
     return 1;
 }
 
-static int LUiRow(lua_State *L) { return Strip(L, true); }
-static int LUiColumn(lua_State *L) { return Strip(L, false); }
+static int LUiRow(lua_State *L)
+{
+    return Strip(L, true);
+}
+static int LUiColumn(lua_State *L)
+{
+    return Strip(L, false);
+}
 
 static int LUiOverlay(lua_State *L)
 {
@@ -841,7 +844,8 @@ static int LUiOpen(lua_State *L)
     const int options = OptionsTable(L, 2);
     const float points = OptNumber(L, options, "font_size", 0.0f);
 
-    Grapple_Ui *ui = Grapple_OpenUi(Grapple_EngineRenderer(engine), points);
+    Grapple_Ui *ui =
+        Grapple_OpenUi(Grapple_EngineRenderer(engine), Grapple_EngineUiPoints(engine, points));
     if (ui == NULL)
     {
         return luaL_error(L, "%s", SDL_GetError());
@@ -860,8 +864,7 @@ static int LUiOpen(lua_State *L)
     return 1;
 }
 
-static void MakeMetatable(lua_State *L, const char *name, const luaL_Reg *methods,
-                          lua_CFunction gc)
+static void MakeMetatable(lua_State *L, const char *name, const luaL_Reg *methods, lua_CFunction gc)
 {
     luaL_newmetatable(L, name);
     if (gc != NULL)

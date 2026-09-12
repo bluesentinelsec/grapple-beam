@@ -1,5 +1,6 @@
 add_executable(grapple_mixer_test
   mixer_test.cpp
+  audio_bus_test.cpp
   chiptune_test.cpp
   chip_player_test.cpp
   chip_transport_test.cpp

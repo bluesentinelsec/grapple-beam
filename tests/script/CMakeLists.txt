@@ -59,3 +59,9 @@ if(TARGET grapple-beam_app AND Python3_Interpreter_FOUND)
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/runner/cli_contract.py
             $<TARGET_FILE:grapple-beam_app>)
 endif()
+
+if(TARGET grapple-beam_app AND Python3_Interpreter_FOUND)
+  add_test(NAME runner_settings_contract
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/runner/settings_contract.py
+            $<TARGET_FILE:grapple-beam_app>)
+endif()

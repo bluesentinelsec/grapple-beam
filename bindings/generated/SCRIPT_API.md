@@ -2509,6 +2509,7 @@ returns as an array.
 | `GrappleC.AddOccluderRect(scene: Grapple_LightScene, rect: SDL_FRect table)` | boolean |
 | `GrappleC.AddOccluderSegment(scene: Grapple_LightScene, x1: number, y1: number, x2: number, y2: number)` | boolean |
 | `GrappleC.AnyInput(engine: Grapple_Engine)` | boolean |
+| `GrappleC.ApplyAudioBus(bus: integer, pcm: number, samples: integer)` | boolean, pcm: number |
 | `GrappleC.AssetPath(engine: Grapple_Engine, id: integer)` | string|nil |
 | `GrappleC.AssetRelease(engine: Grapple_Engine, id: integer)` | nil |
 | `GrappleC.AssetRetain(engine: Grapple_Engine, id: integer)` | nil |
@@ -2521,6 +2522,8 @@ returns as an array.
 | `GrappleC.AssetsSetFrameBudget(engine: Grapple_Engine, milliseconds: number)` | nil |
 | `GrappleC.AssetsSetWorkers(engine: Grapple_Engine, workers: integer)` | nil |
 | `GrappleC.AssetsWait(engine: Grapple_Engine)` | nil |
+| `GrappleC.AttachAudioBuses(mixer: MIX_Mixer)` | boolean |
+| `GrappleC.AudioMuted()` | boolean |
 | `GrappleC.BidiBaseIsRTL(utf8: string|nil, length: integer)` | boolean |
 | `GrappleC.BindingFromString(text: string|nil)` | boolean, out: Grapple_Binding table |
 | `GrappleC.BindingToString(binding: Grapple_Binding table, buffer: string, size: integer)` | string|nil |
@@ -2558,6 +2561,7 @@ returns as an array.
 | `GrappleC.CameraX()` | number, camera: Grapple_Camera table |
 | `GrappleC.CameraY()` | number, camera: Grapple_Camera table |
 | `GrappleC.ChipPlayerPlaying(player: Grapple_ChipPlayer)` | boolean |
+| `GrappleC.CloneSettings(settings: Grapple_Settings)` | Grapple_Settings|nil |
 | `GrappleC.CompileRegex(pattern: string|nil, flags: string|nil)` | Grapple_Regex|nil |
 | `GrappleC.ConfigCreate()` | Grapple_EngineConfig|nil |
 | `GrappleC.ConfigDestroy(config: Grapple_EngineConfig)` | nil |
@@ -2579,6 +2583,7 @@ returns as an array.
 | `GrappleC.ConfigSetVsync(config: Grapple_EngineConfig, vsync: boolean)` | nil |
 | `GrappleC.ConfigSetWindowSize(config: Grapple_EngineConfig, width: integer, height: integer)` | nil |
 | `GrappleC.CountSignalConnections(emitter: Grapple_SignalEmitter, signal: string|nil)` | integer |
+| `GrappleC.CreateAudioMixer(device: integer, spec: SDL_AudioSpec table)` | MIX_Mixer|nil |
 | `GrappleC.CreateBackendRenderer(window: SDL_Window, name: string|nil)` | SDL_Renderer|nil |
 | `GrappleC.CreateChipComposer(tracks: integer, ticks_per_quarter: integer)` | Grapple_ChipComposer|nil |
 | `GrappleC.CreateChipPlayer(song: Grapple_ChipSong, sample_rate: integer, voices: integer, loop: boolean)` | Grapple_ChipPlayer|nil |
@@ -2589,10 +2594,12 @@ returns as an array.
 | `GrappleC.CreateGui(renderer: SDL_Renderer, font_data: string|nil, font_size: number)` | Grapple_Gui|nil |
 | `GrappleC.CreateGuiWithGlyphs(renderer: SDL_Renderer, font_data: string|nil, font_size: number, range: integer)` | Grapple_Gui|nil |
 | `GrappleC.CreateLightScene(renderer: SDL_Renderer)` | Grapple_LightScene|nil |
+| `GrappleC.CreateSettings()` | Grapple_Settings|nil |
 | `GrappleC.CreateSignalEmitter()` | Grapple_SignalEmitter|nil |
 | `GrappleC.CryptoSelfTest()` | boolean |
 | `GrappleC.DayNightAmbient(hours: number)` | SDL_FColor table |
 | `GrappleC.DayNightSunlight(hours: number)` | number |
+| `GrappleC.DescribeRenderBackend(renderer: SDL_Renderer)` | boolean, info: Grapple_RenderBackendInfo table |
 | `GrappleC.DestroyChipComposer(composer: Grapple_ChipComposer)` | nil |
 | `GrappleC.DestroyChipPlayer(player: Grapple_ChipPlayer)` | nil |
 | `GrappleC.DestroyChipSong(song: Grapple_ChipSong)` | nil |
@@ -2600,6 +2607,7 @@ returns as an array.
 | `GrappleC.DestroyGui(gui: Grapple_Gui)` | nil |
 | `GrappleC.DestroyLightScene(scene: Grapple_LightScene)` | nil |
 | `GrappleC.DestroyRegex(regex: Grapple_Regex)` | nil |
+| `GrappleC.DestroySettings(settings: Grapple_Settings)` | nil |
 | `GrappleC.DestroySignalEmitter(emitter: Grapple_SignalEmitter)` | nil |
 | `GrappleC.DeviceAccelerometer(engine: Grapple_Engine, x: number, y: number, z: number)` | x: number, y: number, z: number |
 | `GrappleC.DeviceGyro(engine: Grapple_Engine, x: number, y: number, z: number)` | x: number, y: number, z: number |
@@ -2618,6 +2626,7 @@ returns as an array.
 | `GrappleC.DistanceJointDefSetSpring(def: b2DistanceJointDef, enabled: boolean, hertz: number, damping: number)` | nil |
 | `GrappleC.DrawPhysicsWorld(world: b2WorldId table, renderer: SDL_Renderer, config: Grapple_PhysicsDrawConfig table)` | boolean |
 | `GrappleC.EncodeDataBase64(data: string|nil, outputSize: integer)` | string|nil, outputSize: integer |
+| `GrappleC.EngineActualSettings(engine: Grapple_Engine)` | Grapple_Settings|nil |
 | `GrappleC.EngineAdvance(engine: Grapple_Engine, nanoseconds: integer)` | nil |
 | `GrappleC.EngineAlpha(engine: Grapple_Engine)` | number |
 | `GrappleC.EngineAssetScale(engine: Grapple_Engine)` | integer |
@@ -2639,6 +2648,7 @@ returns as an array.
 | `GrappleC.EngineQuit(engine: Grapple_Engine)` | nil |
 | `GrappleC.EngineRenderScale(engine: Grapple_Engine)` | number |
 | `GrappleC.EngineRenderer(engine: Grapple_Engine)` | SDL_Renderer|nil |
+| `GrappleC.EngineRequestedSettings(engine: Grapple_Engine)` | Grapple_Settings|nil |
 | `GrappleC.EngineSafeRect(engine: Grapple_Engine)` | SDL_FRect table |
 | `GrappleC.EngineSetClearColor(engine: Grapple_Engine, color: SDL_FColor table)` | nil |
 | `GrappleC.EngineSetDisplay(engine: Grapple_Engine, index: integer)` | boolean |
@@ -2655,6 +2665,7 @@ returns as an array.
 | `GrappleC.EngineTick(engine: Grapple_Engine)` | boolean |
 | `GrappleC.EngineTickRate(engine: Grapple_Engine)` | integer |
 | `GrappleC.EngineTimeScale(engine: Grapple_Engine)` | number |
+| `GrappleC.EngineUiPoints(engine: Grapple_Engine, points: number)` | number |
 | `GrappleC.EngineViewRect(engine: Grapple_Engine)` | SDL_FRect table |
 | `GrappleC.EngineWindow(engine: Grapple_Engine)` | SDL_Window|nil |
 | `GrappleC.EngineWindowToDesign(engine: Grapple_Engine, window_x: number, window_y: number, design_x: number, design_y: number)` | design_x: number, design_y: number |
@@ -2787,6 +2798,7 @@ returns as an array.
 | `GrappleC.GamepadSetLED(engine: Grapple_Engine, player: integer, red: integer, green: integer, blue: integer)` | boolean |
 | `GrappleC.GamepadStick(engine: Grapple_Engine, player: integer, side: integer, x: number, y: number)` | x: number, y: number |
 | `GrappleC.GamepadStopRumble(engine: Grapple_Engine, player: integer)` | nil |
+| `GrappleC.GetAudioBusGain(bus: integer)` | number |
 | `GrappleC.GetChipDiagnosticCount(song: Grapple_ChipSong)` | integer |
 | `GrappleC.GetChipDiagnosticMessage(song: Grapple_ChipSong, index: integer)` | string|nil |
 | `GrappleC.GetChipExpressionDefaults()` | expression: Grapple_ChipExpression table |
@@ -2794,6 +2806,7 @@ returns as an array.
 | `GrappleC.GetChipPlayerPeakVoices(player: Grapple_ChipPlayer)` | integer |
 | `GrappleC.GetChipPresetEffects(preset: integer)` | boolean, effects: Grapple_ChipEffects table |
 | `GrappleC.GetChipSectionCount(song: Grapple_ChipSong)` | integer |
+| `GrappleC.GetLaunchSettings()` | Grapple_Settings|nil |
 | `GrappleC.GraphicsClamp()` | settings: Grapple_GraphicsSettings table |
 | `GrappleC.GraphicsConfigError()` | string|nil |
 | `GrappleC.GraphicsConfigPath()` | string|nil |
@@ -2976,6 +2989,7 @@ returns as an array.
 | `GrappleC.RevoluteJointDefSetLimit(def: b2RevoluteJointDef, min_degrees: number, max_degrees: number)` | nil |
 | `GrappleC.RevoluteJointDefSetMotor(def: b2RevoluteJointDef, enabled: boolean, degrees_per_second: number, max_torque: number)` | nil |
 | `GrappleC.RevoluteJointDefSetSpring(def: b2RevoluteJointDef, enabled: boolean, hertz: number, damping: number)` | nil |
+| `GrappleC.RouteAudioTrack(track: MIX_Track, bus: integer)` | boolean |
 | `GrappleC.SHA256(data: string|nil, digest: integer)` | boolean, digest: integer |
 | `GrappleC.SampleLight(scene: Grapple_LightScene, x: number, y: number)` | number |
 | `GrappleC.SaveChipSongWav(song: Grapple_ChipSong, path: string|nil, sample_rate: integer, voices: integer)` | boolean |
@@ -3013,6 +3027,8 @@ returns as an array.
 | `GrappleC.ScriptSetHook(engine: Grapple_Engine, hook: integer, handle: integer)` | boolean |
 | `GrappleC.ScriptUnbind(engine: Grapple_Engine)` | nil |
 | `GrappleC.SeekChipPlayer(player: Grapple_ChipPlayer, tick: integer)` | boolean |
+| `GrappleC.SetAudioBusGain(bus: integer, gain: number)` | boolean |
+| `GrappleC.SetAudioMuted(muted: boolean)` | nil |
 | `GrappleC.SetChipPart(composer: Grapple_ChipComposer, track: integer, name: string|nil, preset: integer, gain: number)` | boolean |
 | `GrappleC.SetChipPlayerGain(player: Grapple_ChipPlayer, gain: number)` | boolean |
 | `GrappleC.SetChipPlayerLoop(player: Grapple_ChipPlayer, start_tick: integer, end_tick: integer, enabled: boolean)` | boolean |
@@ -3026,6 +3042,7 @@ returns as an array.
 | `GrappleC.SetDirectionRepeat(engine: Grapple_Engine, delay_seconds: number, interval_seconds: number)` | nil |
 | `GrappleC.SetGamepadDeadzone(engine: Grapple_Engine, deadzone: number)` | nil |
 | `GrappleC.SetGamepadMotion(engine: Grapple_Engine, player: integer, enabled: boolean)` | boolean |
+| `GrappleC.SetLaunchSettings(settings: Grapple_Settings)` | nil |
 | `GrappleC.SetLightAmbient(scene: Grapple_LightScene, ambient: SDL_FColor table)` | nil |
 | `GrappleC.SetLightDebugDraw(scene: Grapple_LightScene, enabled: boolean)` | nil |
 | `GrappleC.SetLightMapScale(scene: Grapple_LightScene, scale: number)` | nil |
@@ -3036,6 +3053,24 @@ returns as an array.
 | `GrappleC.SetMouseCapture(engine: Grapple_Engine, captured: boolean)` | boolean |
 | `GrappleC.SetTextInput(engine: Grapple_Engine, enabled: boolean)` | nil |
 | `GrappleC.SetTriggerThreshold(engine: Grapple_Engine, threshold: number)` | nil |
+| `GrappleC.SettingChoices(index: integer)` | string|nil |
+| `GrappleC.SettingCount()` | integer |
+| `GrappleC.SettingKey(index: integer)` | string|nil |
+| `GrappleC.SettingOption(index: integer)` | string|nil |
+| `GrappleC.SettingPolicy(key: string|nil)` | string|nil |
+| `GrappleC.SettingsApply(settings: Grapple_Settings, config: Grapple_EngineConfig, overrides_only: boolean)` | boolean, graphics: Grapple_GraphicsSettings table |
+| `GrappleC.SettingsCapture(config: Grapple_EngineConfig, graphics: Grapple_GraphicsSettings table)` | Grapple_Settings|nil |
+| `GrappleC.SettingsGet(settings: Grapple_Settings, key: string|nil)` | string|nil |
+| `GrappleC.SettingsLoadFile(settings: Grapple_Settings, path: string|nil)` | boolean |
+| `GrappleC.SettingsLoadToml(settings: Grapple_Settings, toml: string|nil, source: string|nil)` | boolean |
+| `GrappleC.SettingsOverlay(settings: Grapple_Settings, overlay: Grapple_Settings)` | boolean |
+| `GrappleC.SettingsPlayerPath(settings: Grapple_Settings)` | string|nil |
+| `GrappleC.SettingsQuality(settings: Grapple_Settings, quality: string|nil, source: string|nil)` | boolean |
+| `GrappleC.SettingsSaveChanges(changes: Grapple_Settings, path: string|nil)` | boolean |
+| `GrappleC.SettingsSet(settings: Grapple_Settings, key: string|nil, value: string|nil, source: string|nil)` | boolean |
+| `GrappleC.SettingsSetPlayerPath(settings: Grapple_Settings, path: string|nil)` | boolean |
+| `GrappleC.SettingsSource(settings: Grapple_Settings, key: string|nil)` | string|nil |
+| `GrappleC.SettingsToToml(settings: Grapple_Settings, overrides_only: boolean)` | string|nil |
 | `GrappleC.ShowOpenFileDialog(window: SDL_Window, filter_name: string|nil, filter_pattern: string|nil, default_location: string|nil)` | boolean |
 | `GrappleC.ShowSaveFileDialog(window: SDL_Window, filter_name: string|nil, filter_pattern: string|nil, default_location: string|nil)` | boolean |
 | `GrappleC.SpriteCreate()` | Grapple_Sprite|nil |

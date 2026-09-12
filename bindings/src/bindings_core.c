@@ -4,9 +4,9 @@
  */
 #include "bindings_core.h"
 
-#include <grapple/bindings.h>
-
 #include <SDL3_image/SDL_image.h>
+#include <grapple/audio_bus.h>
+#include <grapple/bindings.h>
 #include <grapple/vfs.h>
 #include <physfs.h>
 
@@ -215,7 +215,7 @@ BindAudio *BindAudio_Open(void)
     {
         return NULL;
     }
-    audio->mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
+    audio->mixer = Grapple_CreateAudioMixer(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
     if (audio->mixer == NULL)
     {
         SDL_free(audio);
@@ -279,13 +279,30 @@ void BindSound_Destroy(BindSound *sound)
 
 BindTrack *BindAudio_Play(BindAudio *audio, BindSound *sound, int loops)
 {
+    return BindAudio_PlayBus(audio, sound, loops, "sfx");
+}
+
+BindTrack *BindAudio_PlayBus(BindAudio *audio, BindSound *sound, int loops, const char *bus)
+{
+    const char *names[] = {"master", "music", "sfx", "speech", "ambient"};
+    int category = -1;
+    for (int i = 0; i < GRAPPLE_AUDIO_BUS_COUNT; ++i)
+        if (bus && SDL_strcmp(bus, names[i]) == 0)
+            category = i;
+    if (category < 0)
+    {
+        SDL_SetError("audio bus must be master, music, sfx, speech or ambient");
+        return NULL;
+    }
     BindTrack *track = (BindTrack *)SDL_calloc(1, sizeof(BindTrack));
     if (track == NULL)
     {
         return NULL;
     }
     track->track = MIX_CreateTrack(audio->mixer);
-    if (track->track == NULL || !MIX_SetTrackAudio(track->track, sound->audio))
+    if (track->track == NULL ||
+        !Grapple_RouteAudioTrack(track->track, (Grapple_AudioBus)category) ||
+        !MIX_SetTrackAudio(track->track, sound->audio))
     {
         BindTrack_Destroy(track);
         return NULL;

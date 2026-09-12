@@ -14,14 +14,14 @@
  * A block is the handler, which is what a Ruby programmer would expect and
  * what an `on_click:` key would have got in the way of.
  */
+#include "gen_support_ruby.h"
+
+#include <SDL3/SDL.h>
 #include <grapple/bindings.h>
 #include <grapple/engine.h>
 #include <grapple/engine_input.h>
 #include <grapple/engine_script.h>
 #include <grapple/widgets.h>
-
-#include "gen_support_ruby.h"
-
 #include <mruby.h>
 #include <mruby/array.h>
 #include <mruby/class.h>
@@ -29,9 +29,6 @@
 #include <mruby/hash.h>
 #include <mruby/string.h>
 #include <mruby/variable.h>
-
-#include <SDL3/SDL.h>
-
 #include <stdint.h>
 
 #define HANDLERS_IVAR "@__ui_handlers"
@@ -143,8 +140,7 @@ static int OptInt(mrb_state *mrb, mrb_value options, const char *name, int fallb
     return (int)OptNumber(mrb, options, name, (float)fallback);
 }
 
-static void OptSize(mrb_state *mrb, mrb_value options, const char *name, int *width,
-                    int *height)
+static void OptSize(mrb_state *mrb, mrb_value options, const char *name, int *width, int *height)
 {
     const mrb_value value = Key(mrb, options, name);
     if (mrb_hash_p(value))
@@ -289,8 +285,7 @@ static mrb_value WidgetValue(mrb_state *mrb, Grapple_UiWidget *widget);
    includes method(:on_word_clicked). Blocks are idiomatic for a one-liner;
    a named method reads better when the handler is worth a name, and a
    script should not have to wrap one in a block to pass it. */
-static mrb_value HandlerFrom(mrb_state *mrb, mrb_value options, mrb_value block,
-                             const char *key)
+static mrb_value HandlerFrom(mrb_state *mrb, mrb_value options, mrb_value block, const char *key)
 {
     if (!mrb_nil_p(block))
     {
@@ -374,9 +369,9 @@ Grapple_Engine *Grapple_RubyEngineAt(mrb_state *mrb, mrb_value value)
 /* --- Grapple.engine ------------------------------------------------------ */
 
 static const char *const kEngineKeys[] = {
-    "title",      "window",   "design", "presentation", "resizable", "high_dpi",
-    "fullscreen", "vsync",    "max_fps", "tick_rate",   "auto_mount", "headless",
-    "media",      "font_size", "backend",
+    "title",      "window",     "design", "presentation", "resizable",
+    "high_dpi",   "fullscreen", "vsync",  "max_fps",      "tick_rate",
+    "auto_mount", "headless",   "media",  "font_size",    "backend",
 };
 
 static void CheckKeys(mrb_state *mrb, mrb_value options)
@@ -389,7 +384,7 @@ static void CheckKeys(mrb_state *mrb, mrb_value options)
     for (mrb_int i = 0; i < RARRAY_LEN(keys); ++i)
     {
         const mrb_value key = mrb_ary_ref(mrb, keys, i);
-        const char *name = mrb_symbol_p(key)  ? mrb_sym_name(mrb, mrb_symbol(key))
+        const char *name = mrb_symbol_p(key)   ? mrb_sym_name(mrb, mrb_symbol(key))
                            : mrb_string_p(key) ? mrb_str_to_cstr(mrb, key)
                                                : NULL;
         if (name == NULL)
@@ -441,6 +436,7 @@ static mrb_value REngineNew(mrb_state *mrb, mrb_value self)
 
     Grapple_EngineConfig config = {0};
     config.title = OptString(mrb, options, "title", NULL);
+    config.renderer_backend = OptString(mrb, options, "backend", NULL);
 
     int window_w = 0;
     int window_h = 0;
@@ -565,7 +561,7 @@ static SDL_Scancode ScancodeArg(mrb_state *mrb)
     {
         return (SDL_Scancode)mrb_fixnum(key);
     }
-    const char *name = mrb_string_p(key) ? mrb_str_to_cstr(mrb, key)
+    const char *name = mrb_string_p(key)   ? mrb_str_to_cstr(mrb, key)
                        : mrb_symbol_p(key) ? mrb_sym_name(mrb, mrb_symbol(key))
                                            : NULL;
     if (name == NULL)
@@ -618,7 +614,8 @@ static mrb_value RUiOpen(mrb_state *mrb, mrb_value self)
         mrb_raise(mrb, E_ARGUMENT_ERROR, "engine expected");
     }
     Grapple_Ui *ui =
-        Grapple_OpenUi(Grapple_EngineRenderer(engine), OptNumber(mrb, options, "font_size", 0.0f));
+        Grapple_OpenUi(Grapple_EngineRenderer(engine),
+                       Grapple_EngineUiPoints(engine, OptNumber(mrb, options, "font_size", 0.0f)));
     if (ui == NULL)
     {
         mrb_raisef(mrb, E_RUNTIME_ERROR, "%s", SDL_GetError());
@@ -679,8 +676,14 @@ static mrb_value Strip(mrb_state *mrb, mrb_value self, bool row)
     return WidgetValue(mrb, row ? Grapple_UiRow(parent, &def) : Grapple_UiColumn(parent, &def));
 }
 
-static mrb_value RUiRow(mrb_state *mrb, mrb_value self) { return Strip(mrb, self, true); }
-static mrb_value RUiColumn(mrb_state *mrb, mrb_value self) { return Strip(mrb, self, false); }
+static mrb_value RUiRow(mrb_state *mrb, mrb_value self)
+{
+    return Strip(mrb, self, true);
+}
+static mrb_value RUiColumn(mrb_state *mrb, mrb_value self)
+{
+    return Strip(mrb, self, false);
+}
 
 static mrb_value RUiOverlay(mrb_state *mrb, mrb_value self)
 {
@@ -1071,8 +1074,7 @@ static mrb_value RUiSetImage(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "z", &path);
     if (!Grapple_UiSetImagePath(WidgetOf(mrb, self), path))
     {
-        mrb_raisef(mrb, E_RUNTIME_ERROR, "could not load image '%s': %s", path,
-                   SDL_GetError());
+        mrb_raisef(mrb, E_RUNTIME_ERROR, "could not load image '%s': %s", path, SDL_GetError());
     }
     return self;
 }

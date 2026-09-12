@@ -31,6 +31,7 @@ void Grapple_CameraInit(Grapple_Camera *camera, Grapple_Engine *engine)
     }
     SDL_zerop(camera);
     camera->zoom = 1.0f;
+    camera->shake_scale = engine ? engine->graphics.screen_shake : 1.0f;
     camera->viewport = Grapple_EngineViewRect(engine);
 }
 
@@ -103,6 +104,7 @@ void Grapple_CameraUpdate(Grapple_Camera *camera, Grapple_Engine *engine, float 
     {
         return;
     }
+    camera->shake_scale = engine ? engine->graphics.screen_shake : 1.0f;
     camera->zoom = ClampF(camera->zoom, ZOOM_MIN, ZOOM_MAX);
     if (camera->viewport.w <= 0.0f || camera->viewport.h <= 0.0f)
     {
@@ -113,10 +115,10 @@ void Grapple_CameraUpdate(Grapple_Camera *camera, Grapple_Engine *engine, float 
         dt = 0.0f;
     }
 
-    const float want_x = camera->x + DeadzoneDelta(camera->x, camera->target_x,
-                                                   camera->deadzone_w, camera->zoom);
-    const float want_y = camera->y + DeadzoneDelta(camera->y, camera->target_y,
-                                                   camera->deadzone_h, camera->zoom);
+    const float want_x =
+        camera->x + DeadzoneDelta(camera->x, camera->target_x, camera->deadzone_w, camera->zoom);
+    const float want_y =
+        camera->y + DeadzoneDelta(camera->y, camera->target_y, camera->deadzone_h, camera->zoom);
 
     if (camera->smoothing > 0.0f && dt > 0.0f)
     {
@@ -190,7 +192,7 @@ static void ShakeOffset(const Grapple_Camera *camera, float *dx, float *dy)
         return;
     }
     const float falloff = camera->shake_remaining / camera->shake_seconds;
-    const float scale = camera->shake_amount * falloff;
+    const float scale = camera->shake_amount * falloff * camera->shake_scale;
     *dx = ((float)SDL_randf() * 2.0f - 1.0f) * scale;
     *dy = ((float)SDL_randf() * 2.0f - 1.0f) * scale;
 }
@@ -216,8 +218,7 @@ bool Grapple_CameraBegin(Grapple_Engine *engine, const Grapple_Camera *camera)
     /* The viewport is in design coordinates, which is the space the game
        composed in — SDL applies the logical presentation on top. */
     const SDL_Rect viewport = {(int)(camera->viewport.x + 0.5f), (int)(camera->viewport.y + 0.5f),
-                               (int)(camera->viewport.w + 0.5f),
-                               (int)(camera->viewport.h + 0.5f)};
+                               (int)(camera->viewport.w + 0.5f), (int)(camera->viewport.h + 0.5f)};
     if (!SDL_SetRenderViewport(renderer, &viewport))
     {
         return false;
@@ -245,8 +246,8 @@ void Grapple_CameraEnd(Grapple_Engine *engine)
     SDL_SetRenderViewport(renderer, NULL);
 }
 
-void Grapple_CameraPoint(const Grapple_Camera *camera, float world_x, float world_y,
-                           float *out_x, float *out_y)
+void Grapple_CameraPoint(const Grapple_Camera *camera, float world_x, float world_y, float *out_x,
+                         float *out_y)
 {
     if (camera == NULL)
     {
@@ -287,7 +288,7 @@ bool Grapple_CameraVisible(const Grapple_Camera *camera, SDL_FRect world)
 }
 
 bool Grapple_CameraScreenToWorld(const Grapple_Camera *camera, float screen_x, float screen_y,
-                                   float *world_x, float *world_y)
+                                 float *world_x, float *world_y)
 {
     if (camera == NULL)
     {
@@ -315,8 +316,8 @@ bool Grapple_CameraScreenToWorld(const Grapple_Camera *camera, float screen_x, f
 
 /* --- split screen -------------------------------------------------------- */
 
-int Grapple_CameraSplit(Grapple_Engine *engine, Grapple_SplitMode mode, int count,
-                          float gap, Grapple_Camera *cameras)
+int Grapple_CameraSplit(Grapple_Engine *engine, Grapple_SplitMode mode, int count, float gap,
+                        Grapple_Camera *cameras)
 {
     if (cameras == NULL)
     {

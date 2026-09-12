@@ -12,6 +12,7 @@
 #include "engine_internal.h"
 
 #include <grapple/engine_graphics.h>
+#include <grapple/engine_settings.h>
 
 /* --- defaults ------------------------------------------------------------ */
 
@@ -204,8 +205,7 @@ void Grapple_GraphicsClamp(Grapple_GraphicsSettings *s)
     }
 }
 
-bool Grapple_GraphicsEqual(const Grapple_GraphicsSettings *a,
-                             const Grapple_GraphicsSettings *b)
+bool Grapple_GraphicsEqual(const Grapple_GraphicsSettings *a, const Grapple_GraphicsSettings *b)
 {
     if (a == NULL || b == NULL)
     {
@@ -213,10 +213,9 @@ bool Grapple_GraphicsEqual(const Grapple_GraphicsSettings *a,
     }
     /* Field by field rather than memcmp: the struct has padding, and two
        structs that differ only in padding are the same settings. */
-    return a->vsync == b->vsync && a->max_fps == b->max_fps &&
-           a->window_mode == b->window_mode && a->window_width == b->window_width &&
-           a->window_height == b->window_height && a->display == b->display &&
-           a->presentation == b->presentation &&
+    return a->vsync == b->vsync && a->max_fps == b->max_fps && a->window_mode == b->window_mode &&
+           a->window_width == b->window_width && a->window_height == b->window_height &&
+           a->display == b->display && a->presentation == b->presentation &&
            a->render_scale == b->render_scale && a->filter == b->filter &&
            a->particles == b->particles && a->dynamic_lights == b->dynamic_lights &&
            a->shadows == b->shadows && a->bloom == b->bloom &&
@@ -226,7 +225,9 @@ bool Grapple_GraphicsEqual(const Grapple_GraphicsSettings *a,
            a->brightness == b->brightness && a->contrast == b->contrast &&
            a->saturation == b->saturation && a->color_blind == b->color_blind &&
            a->reduced_flashing == b->reduced_flashing && a->screen_shake == b->screen_shake &&
-           a->ui_scale == b->ui_scale;
+           a->ui_scale == b->ui_scale && a->fullscreen_width == b->fullscreen_width &&
+           a->fullscreen_height == b->fullscreen_height && a->refresh_rate == b->refresh_rate &&
+           a->primary_display == b->primary_display && a->effects_disabled == b->effects_disabled;
 }
 
 /* --- budgets, turned into numbers ---------------------------------------- */
@@ -417,35 +418,10 @@ bool Grapple_EngineSetDisplay(Grapple_Engine *engine, int index)
         return false;
     }
 
-    /* Leave fullscreen before moving. A fullscreen window is owned by its
-       display, so repositioning it while fullscreen either does nothing or
-       leaves it half on each monitor. */
-    const Grapple_WindowMode mode = engine->graphics.window_mode;
-    if (mode != GRAPPLE_WINDOW_WINDOWED)
-    {
-        SDL_SetWindowFullscreen(engine->window, false);
-        SDL_SyncWindow(engine->window);
-    }
-
-    SDL_SetWindowPosition(engine->window, SDL_WINDOWPOS_CENTERED_DISPLAY(id),
-                          SDL_WINDOWPOS_CENTERED_DISPLAY(id));
-    SDL_SyncWindow(engine->window);
-
-    if (mode != GRAPPLE_WINDOW_WINDOWED)
-    {
-        SDL_SetWindowFullscreenMode(engine->window,
-                                    (mode == GRAPPLE_WINDOW_EXCLUSIVE)
-                                        ? SDL_GetDesktopDisplayMode(id)
-                                        : NULL);
-        SDL_SetWindowFullscreen(engine->window, true);
-        SDL_SyncWindow(engine->window);
-    }
-
-    engine->graphics.display = index;
-    /* The new monitor may be a different size or density, so the design
-       space has to be re-fitted to it before anything draws. */
-    Grapple_EngineSetPresentation(engine, engine->presentation);
-    return true;
+    Grapple_GraphicsSettings next = engine->graphics;
+    next.display = index;
+    next.primary_display = false;
+    return Grapple_EngineSetGraphics(engine, &next);
 }
 
 /* --- applying to a running engine ---------------------------------------- */
@@ -472,63 +448,130 @@ bool Grapple_EngineSetGraphics(Grapple_Engine *engine, const Grapple_GraphicsSet
     Grapple_GraphicsClamp(&next);
 
     const Grapple_GraphicsSettings previous = engine->graphics;
-    engine->graphics = next;
-
-    if (engine->renderer == NULL)
+    if (engine->window != NULL)
     {
-        return true; /* settings-only engine: nothing to apply them to yet */
-    }
-
-    if (next.vsync != previous.vsync || engine->frame_count == 0)
-    {
-        SDL_SetRenderVSync(engine->renderer, next.vsync ? 1 : SDL_RENDERER_VSYNC_DISABLED);
-    }
-
-    engine->max_fps = next.max_fps;
-
-    if (next.presentation != previous.presentation || engine->frame_count == 0)
-    {
-        Grapple_EngineSetPresentation(engine, next.presentation);
-    }
-
-    if (engine->window != NULL && next.display != previous.display)
-    {
-        Grapple_EngineSetDisplay(engine, next.display);
-    }
-
-    if (engine->window != NULL && next.window_mode == GRAPPLE_WINDOW_WINDOWED &&
-        next.window_width > 0 && next.window_height > 0 &&
-        (next.window_width != previous.window_width ||
-         next.window_height != previous.window_height ||
-         next.window_mode != previous.window_mode))
-    {
-        SDL_SetWindowSize(engine->window, next.window_width, next.window_height);
-    }
-
-    if (engine->window != NULL &&
-        (next.window_mode != previous.window_mode || engine->frame_count == 0))
-    {
-        switch (next.window_mode)
+        int count = 0;
+        SDL_DisplayID *displays = SDL_GetDisplays(&count);
+        if (displays == NULL || count == 0)
         {
-        case GRAPPLE_WINDOW_BORDERLESS:
-            /* A NULL display mode is what makes SDL's fullscreen the
-               borderless-desktop kind rather than a mode switch. */
-            SDL_SetWindowFullscreenMode(engine->window, NULL);
-            SDL_SetWindowFullscreen(engine->window, true);
-            break;
-        case GRAPPLE_WINDOW_EXCLUSIVE: {
-            const SDL_DisplayID display = SDL_GetDisplayForWindow(engine->window);
-            const SDL_DisplayMode *mode = SDL_GetDesktopDisplayMode(display);
-            SDL_SetWindowFullscreenMode(engine->window, mode);
-            SDL_SetWindowFullscreen(engine->window, true);
-            break;
+            SDL_free(displays);
+            return SDL_SetError("no displays available");
         }
-        case GRAPPLE_WINDOW_WINDOWED:
-        default:
-            SDL_SetWindowFullscreen(engine->window, false);
-            break;
+        const SDL_DisplayID primary = SDL_GetPrimaryDisplay();
+        int primary_index = 0;
+        for (int i = 0; i < count; ++i)
+            if (displays[i] == primary)
+                primary_index = i;
+        if (next.primary_display)
+            next.display = primary_index;
+        if (next.display >= count)
+        {
+            const Grapple_Settings *launch = Grapple_GetLaunchSettings();
+            const char *source = launch ? Grapple_SettingsSource(launch, "display") : NULL;
+            if (source && SDL_strcmp(source, "CLI") == 0)
+            {
+                SDL_free(displays);
+                return SDL_SetError("display %d is unavailable (found %d)", next.display, count);
+            }
+            SDL_Log("saved display %d unavailable; using primary display %d", next.display,
+                    primary_index);
+            next.display = primary_index;
+        }
+        const SDL_DisplayID display = displays[next.display];
+        SDL_free(displays);
+        const SDL_DisplayMode *selected = NULL;
+        SDL_DisplayMode **modes = NULL;
+        if (next.window_mode == GRAPPLE_WINDOW_EXCLUSIVE)
+        {
+            const SDL_DisplayMode *desktop = SDL_GetDesktopDisplayMode(display);
+            if (desktop == NULL)
+                return false;
+            const int width = next.fullscreen_width > 0 ? next.fullscreen_width : desktop->w;
+            const int height = next.fullscreen_height > 0 ? next.fullscreen_height : desktop->h;
+            const float rate = next.refresh_rate > 0 ? next.refresh_rate : desktop->refresh_rate;
+            int mode_count = 0;
+            modes = SDL_GetFullscreenDisplayModes(display, &mode_count);
+            for (int i = 0; modes && i < mode_count; ++i)
+                if (modes[i]->w == width && modes[i]->h == height &&
+                    SDL_fabsf(modes[i]->refresh_rate - rate) < .1f)
+                {
+                    selected = modes[i];
+                    break;
+                }
+            if (selected == NULL)
+            {
+                SDL_free(modes);
+                return SDL_SetError("display %d does not support exclusive %dx%d at %.3f Hz; use "
+                                    "--list-display-modes",
+                                    next.display, width, height, (double)rate);
+            }
+            next.fullscreen_width = selected->w;
+            next.fullscreen_height = selected->h;
+            next.refresh_rate = selected->refresh_rate;
+        }
+        bool ok = true;
+        const bool mode_change = next.window_mode != previous.window_mode ||
+                                 next.display != previous.display || engine->frame_count == 0 ||
+                                 next.fullscreen_width != previous.fullscreen_width ||
+                                 next.fullscreen_height != previous.fullscreen_height ||
+                                 next.refresh_rate != previous.refresh_rate;
+        if (mode_change)
+        {
+            ok = SDL_SetWindowFullscreen(engine->window, false) && SDL_SyncWindow(engine->window);
+            if (ok)
+                ok = SDL_SetWindowPosition(engine->window, SDL_WINDOWPOS_CENTERED_DISPLAY(display),
+                                           SDL_WINDOWPOS_CENTERED_DISPLAY(display));
+            if (ok)
+                ok = SDL_SetWindowFullscreenMode(engine->window, selected);
+            if (ok && next.window_mode != GRAPPLE_WINDOW_WINDOWED)
+                ok = SDL_SetWindowFullscreen(engine->window, true);
+        }
+        SDL_free(modes);
+        if (ok && next.window_mode == GRAPPLE_WINDOW_WINDOWED && next.window_width > 0 &&
+            next.window_height > 0)
+            ok = SDL_SetWindowSize(engine->window, next.window_width, next.window_height);
+        if (ok)
+            ok = SDL_SyncWindow(engine->window);
+        if (!ok)
+        {
+            /* A platform can reject a transition after moving the window. Reflect the
+               state it actually reached, while retaining the failure for the caller. */
+            const SDL_WindowFlags flags = SDL_GetWindowFlags(engine->window);
+            engine->graphics.window_mode =
+                !(flags & SDL_WINDOW_FULLSCREEN)              ? GRAPPLE_WINDOW_WINDOWED
+                : SDL_GetWindowFullscreenMode(engine->window) ? GRAPPLE_WINDOW_EXCLUSIVE
+                                                              : GRAPPLE_WINDOW_BORDERLESS;
+            SDL_GetWindowSize(engine->window, &engine->graphics.window_width,
+                              &engine->graphics.window_height);
+            return false;
         }
     }
+    if (engine->renderer != NULL)
+    {
+        if (engine->headless_surface != NULL)
+            next.vsync = false;
+        if (next.vsync != previous.vsync || engine->frame_count == 0)
+        {
+            if (!SDL_SetRenderVSync(engine->renderer, next.vsync ? 1 : SDL_RENDERER_VSYNC_DISABLED))
+                SDL_Log("renderer cannot apply requested vsync: %s", SDL_GetError());
+        }
+        int interval = 0;
+        if (SDL_GetRenderVSync(engine->renderer, &interval))
+            next.vsync = interval != SDL_RENDERER_VSYNC_DISABLED;
+        else
+            next.vsync = false;
+    }
+    if (engine->window)
+    {
+        const SDL_DisplayMode *mode =
+            SDL_GetCurrentDisplayMode(SDL_GetDisplayForWindow(engine->window));
+        if (mode && mode->refresh_rate > 0)
+            Grapple_EngineSetRefreshRate(engine, mode->refresh_rate);
+    }
+    engine->graphics = next;
+    engine->max_fps = next.max_fps;
+    if (next.presentation != previous.presentation || engine->frame_count == 0)
+        Grapple_EngineSetPresentation(engine, next.presentation);
 
     Grapple_EngineApplyFilter(engine);
     Grapple_EnginePostFXInvalidate(engine);
@@ -555,8 +598,13 @@ void Grapple_EngineApplyFilter(Grapple_Engine *engine)
         /* Integer scaling exists for pixel art, and pixel art wants point
            sampling — so AUTO follows the presentation mode. */
         mode = (engine->presentation == GRAPPLE_PRESENT_INTEGER) ? SDL_SCALEMODE_NEAREST
-                                                                   : SDL_SCALEMODE_LINEAR;
+                                                                 : SDL_SCALEMODE_LINEAR;
         break;
     }
     SDL_SetDefaultTextureScaleMode(engine->renderer, mode);
+}
+
+float Grapple_EngineUiPoints(Grapple_Engine *engine, float points)
+{
+    return (points > 0.0f ? points : 15.0f) * (engine ? engine->graphics.ui_scale : 1.0f);
 }

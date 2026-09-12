@@ -26,6 +26,9 @@ enable_language(C)
 add_library(Grapple_Engine STATIC
   src/grapple_engine.c
   src/grapple_engine_backend.c
+  src/grapple_settings.c
+  src/grapple_engine_settings.c
+  src/grapple_settings_io.c
   src/grapple_engine_scene.c
   src/grapple_engine_graphics.c
   src/grapple_engine_gfxconfig.c

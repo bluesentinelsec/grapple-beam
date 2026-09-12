@@ -33,7 +33,6 @@
  * write and looks like ghosting; this looks like light.
  */
 #include "engine_internal.h"
-
 #include "post_shaders.h"
 
 /* --- the slice of GL this needs, loaded at runtime ----------------------- */
@@ -117,8 +116,7 @@ typedef void (*PFN_glBufferData)(GLenum, long, const void *, GLenum);
 typedef void (*PFN_glDeleteBuffers)(GLsizei, const GLuint *);
 typedef void (*PFN_glEnableVertexAttribArray)(GLuint);
 typedef void (*PFN_glDisableVertexAttribArray)(GLuint);
-typedef void (*PFN_glVertexAttribPointer)(GLuint, GLint, GLenum, GLboolean, GLsizei,
-                                          const void *);
+typedef void (*PFN_glVertexAttribPointer)(GLuint, GLint, GLenum, GLboolean, GLsizei, const void *);
 typedef void (*PFN_glDrawArrays)(GLenum, GLint, GLsizei);
 typedef void (*PFN_glActiveTexture)(GLenum);
 typedef void (*PFN_glBindTexture)(GLenum, GLuint);
@@ -212,8 +210,7 @@ struct Grapple_PostFX
 
 /* --- shader plumbing ----------------------------------------------------- */
 
-static GLuint CompileShader(struct Grapple_PostFX *fx, GLenum type, const char *source,
-                            bool es)
+static GLuint CompileShader(struct Grapple_PostFX *fx, GLenum type, const char *source, bool es)
 {
     /* The sources carry no #version, because the same text has to serve
        desktop GL and GLES. Prepending it here is the whole trick. */
@@ -298,15 +295,15 @@ static bool RendererIsOpenGL(SDL_Renderer *renderer, bool *is_es)
     return false;
 }
 
-#define LOAD(field, name)                                                                        \
-    do                                                                                           \
-    {                                                                                            \
-        fx->field = (PFN_gl##field)SDL_GL_GetProcAddress(name);                                  \
-        if (fx->field == NULL)                                                                   \
-        {                                                                                        \
-            SDL_SetError("post-processing needs %s", name);                                      \
-            return false;                                                                        \
-        }                                                                                        \
+#define LOAD(field, name)                                                                          \
+    do                                                                                             \
+    {                                                                                              \
+        fx->field = (PFN_gl##field)SDL_GL_GetProcAddress(name);                                    \
+        if (fx->field == NULL)                                                                     \
+        {                                                                                          \
+            SDL_SetError("post-processing needs %s", name);                                        \
+            return false;                                                                          \
+        }                                                                                          \
     } while (0)
 
 static bool LoadEntryPoints(struct Grapple_PostFX *fx)
@@ -632,8 +629,9 @@ static void ColorBlindWeights(Grapple_ColorBlindMode mode, float *r, float *g, f
 
 static bool AnyEffectEnabled(const Grapple_GraphicsSettings *g)
 {
-    return g->bloom > 0.0f || g->crt > 0.0f || g->crt_curvature > 0.0f || g->pixelation > 1 ||
-           g->chromatic_aberration > 0.0f || g->antialias != GRAPPLE_AA_OFF ||
+    return (!g->effects_disabled &&
+            (g->bloom > 0.0f || g->crt > 0.0f || g->crt_curvature > 0.0f || g->pixelation > 1 ||
+             g->chromatic_aberration > 0.0f || g->antialias != GRAPPLE_AA_OFF)) ||
            g->brightness != 1.0f || g->contrast != 1.0f || g->saturation != 1.0f ||
            g->color_blind != GRAPPLE_COLORBLIND_NONE;
 }
@@ -752,7 +750,15 @@ bool Grapple_EnginePostFXPresent(Grapple_Engine *engine)
     const float scene_w = (float)output_w;
     const float scene_h = (float)output_h;
 
-    const Grapple_GraphicsSettings *g = &engine->graphics;
+    Grapple_GraphicsSettings effective = engine->graphics;
+    if (effective.effects_disabled)
+    {
+        effective.bloom = effective.crt = effective.crt_curvature = 0.0f;
+        effective.chromatic_aberration = 0.0f;
+        effective.pixelation = 1;
+        effective.antialias = GRAPPLE_AA_OFF;
+    }
+    const Grapple_GraphicsSettings *g = &effective;
 
     GLuint bloom_texture = 0;
     if (g->bloom > 0.0f && EnsureBloomTargets(fx, output_w, output_h))

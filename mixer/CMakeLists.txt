@@ -58,6 +58,7 @@ add_library(Grapple_Mixer STATIC
   src/timidity/timidity.c
   # Original Grapple code (not vendored): 8-bit synthesis layer.
   src/grapple_chiptune.c
+  src/grapple_audio_bus.c
   src/chip_midi.c
   src/chip_song.c
   src/chip_section.c

@@ -14,10 +14,9 @@
 #include <grapple/crypto.h>
 #include <grapple/tiled.h>
 #include <grapple/vfs.h>
-#include <physfs.h>
-
 #include <lauxlib.h>
 #include <lualib.h>
+#include <physfs.h>
 
 #define APP_MT "Grapple.App"
 #define TEX_MT "Grapple.Texture"
@@ -272,7 +271,8 @@ static int LAudioPlay(lua_State *L)
 {
     BindAudio *audio = (BindAudio *)CheckHandle(L, 1, AUDIO_MT);
     BindSound *sound = (BindSound *)CheckHandle(L, 2, SOUND_MT);
-    BindTrack *track = BindAudio_Play(audio, sound, (int)luaL_optinteger(L, 3, 0));
+    BindTrack *track =
+        BindAudio_PlayBus(audio, sound, (int)luaL_optinteger(L, 3, 0), luaL_optstring(L, 4, "sfx"));
     if (track == NULL)
     {
         return Fail(L);
@@ -449,7 +449,7 @@ static int LMapLayers(lua_State *L)
 static int LMapLayerName(lua_State *L)
 {
     const char *name = Grapple_TiledLayerName((Grapple_TiledMap *)CheckHandle(L, 1, MAP_MT),
-                                                (int)luaL_checkinteger(L, 2));
+                                              (int)luaL_checkinteger(L, 2));
     if (name == NULL)
     {
         lua_pushnil(L);
@@ -463,10 +463,10 @@ static int LMapLayerName(lua_State *L)
 
 static int LMapTile(lua_State *L)
 {
-    lua_pushinteger(L, Grapple_TiledTileAt((Grapple_TiledMap *)CheckHandle(L, 1, MAP_MT),
-                                             (int)luaL_checkinteger(L, 2),
-                                             (int)luaL_checkinteger(L, 3),
-                                             (int)luaL_checkinteger(L, 4)));
+    lua_pushinteger(L,
+                    Grapple_TiledTileAt((Grapple_TiledMap *)CheckHandle(L, 1, MAP_MT),
+                                        (int)luaL_checkinteger(L, 2), (int)luaL_checkinteger(L, 3),
+                                        (int)luaL_checkinteger(L, 4)));
     return 1;
 }
 
@@ -523,7 +523,7 @@ static int LMountEncrypted(lua_State *L)
         PHYSFS_init(NULL);
     }
     if (!Grapple_MountEncryptedArchiveFile(luaL_checkstring(L, 1), luaL_checkstring(L, 2),
-                                             luaL_optstring(L, 3, NULL)))
+                                           luaL_optstring(L, 3, NULL)))
     {
         return Fail(L);
     }
@@ -607,7 +607,7 @@ static int LEncrypt(lua_State *L)
     const char *data = luaL_checklstring(L, 1, &len);
     int outSize = 0;
     unsigned char *out = Grapple_EncryptData((const unsigned char *)data, (int)len,
-                                                luaL_checkstring(L, 2), &outSize);
+                                             luaL_checkstring(L, 2), &outSize);
     return PushByteResult(L, out, outSize);
 }
 
@@ -617,7 +617,7 @@ static int LDecrypt(lua_State *L)
     const char *data = luaL_checklstring(L, 1, &len);
     int outSize = 0;
     unsigned char *out = Grapple_DecryptData((const unsigned char *)data, (int)len,
-                                                luaL_checkstring(L, 2), &outSize);
+                                             luaL_checkstring(L, 2), &outSize);
     return PushByteResult(L, out, outSize);
 }
 
@@ -655,7 +655,6 @@ static void MakeMeta(lua_State *L, const char *name, const luaL_Reg *methods, lu
     lua_setfield(L, -2, "__index");
     lua_pop(L, 1);
 }
-
 
 /* SDL.LoadFile — bytes from a real filesystem path.
  *
@@ -701,27 +700,28 @@ extern int Grapple_OpenGeneratedLuaBindings(lua_State *L);
 
 bool Grapple_OpenLuaBindings(lua_State *L)
 {
-    static const luaL_Reg app_methods[] = {
-        {"clear", LAppClear},   {"present", LAppPresent}, {"poll", LAppPoll},
-        {"rect", LAppRect},     {"circle", LAppCircle},   {"line", LAppLine},
-        {"text", LAppText},     {"key_down", LAppKeyDown}, {"load_texture", LAppLoadTexture},
-        {"draw", LAppDraw},     {NULL, NULL}};
+    static const luaL_Reg app_methods[] = {{"clear", LAppClear},
+                                           {"present", LAppPresent},
+                                           {"poll", LAppPoll},
+                                           {"rect", LAppRect},
+                                           {"circle", LAppCircle},
+                                           {"line", LAppLine},
+                                           {"text", LAppText},
+                                           {"key_down", LAppKeyDown},
+                                           {"load_texture", LAppLoadTexture},
+                                           {"draw", LAppDraw},
+                                           {NULL, NULL}};
     static const luaL_Reg tex_methods[] = {{"size", LTexSize}, {NULL, NULL}};
     static const luaL_Reg audio_methods[] = {
         {"load", LAudioLoad}, {"play", LAudioPlay}, {NULL, NULL}};
     static const luaL_Reg sound_methods[] = {{NULL, NULL}};
     static const luaL_Reg track_methods[] = {
         {"stop", LTrackStop}, {"gain", LTrackGain}, {NULL, NULL}};
-    static const luaL_Reg world_methods[] = {{"step", LWorldStep},
-                                             {"box", LWorldBox},
-                                             {"circle", LWorldCircle},
-                                             {NULL, NULL}};
-    static const luaL_Reg map_methods[] = {{"size", LMapSize},
-                                           {"layers", LMapLayers},
-                                           {"layer_name", LMapLayerName},
-                                           {"tile", LMapTile},
-                                           {"objects", LMapObjects},
-                                           {NULL, NULL}};
+    static const luaL_Reg world_methods[] = {
+        {"step", LWorldStep}, {"box", LWorldBox}, {"circle", LWorldCircle}, {NULL, NULL}};
+    static const luaL_Reg map_methods[] = {
+        {"size", LMapSize}, {"layers", LMapLayers},   {"layer_name", LMapLayerName},
+        {"tile", LMapTile}, {"objects", LMapObjects}, {NULL, NULL}};
     static const luaL_Reg body_methods[] = {{"position", LBodyPosition},
                                             {"angle", LBodyAngle},
                                             {"velocity", LBodyVelocity},

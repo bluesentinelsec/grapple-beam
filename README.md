@@ -139,3 +139,12 @@ may include breaking API changes; release notes will always say so.
 zlib for all original code. Vendored components keep their own permissive
 licenses (zlib, MIT, public domain) — see [`deps/`](deps/) for the
 complete inventory.
+
+## Game runner settings
+
+Launch projects with `grapple-beam [options] ./my-game`. Use `--window-mode`
+with `windowed`, `fullscreen-exclusive`, or `fullscreen-borderless`; booleans
+such as `--vsync` take `on` or `off`. `--help-all` lists the typed settings.
+
+[Runner settings](docs/cli-implementation.md) covers project manifests, Lua/Ruby
+and TOML configuration, player preferences, recovery, graphics, and audio buses.

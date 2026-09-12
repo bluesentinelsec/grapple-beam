@@ -17,17 +17,15 @@
  * A table has no order to get wrong, and an unrecognised key can say so by
  * name — which is most of the value here.
  */
+#include "gen_support_lua.h"
+
+#include <SDL3/SDL.h>
 #include <grapple/bindings.h>
 #include <grapple/engine.h>
 #include <grapple/engine_input.h>
 #include <grapple/engine_script.h>
-
-#include "gen_support_lua.h"
-
 #include <lauxlib.h>
 #include <lua.h>
-
-#include <SDL3/SDL.h>
 
 #define ENGINE_MT "grapple.engine"
 
@@ -82,9 +80,9 @@ typedef struct EngineBox
    the config and to reject anything that is not on it: a table that silently
    ignores what it does not recognise is worse than the setters it replaces. */
 static const char *const kEngineKeys[] = {
-    "title",     "window",     "design",   "presentation", "resizable",
-    "high_dpi",  "fullscreen", "vsync",    "max_fps",      "tick_rate",
-    "auto_mount", "headless",  "media",    "font_size",    "backend",
+    "title",      "window",     "design", "presentation", "resizable",
+    "high_dpi",   "fullscreen", "vsync",  "max_fps",      "tick_rate",
+    "auto_mount", "headless",   "media",  "font_size",    "backend",
 };
 
 static int Reject(lua_State *L, const char *key)
@@ -250,6 +248,7 @@ static int LEngineNew(lua_State *L)
 
     Grapple_EngineConfig config = {0};
     config.title = OptString(L, 1, "title", NULL);
+    config.renderer_backend = OptString(L, 1, "backend", NULL);
 
     int window_w = 0;
     int window_h = 0;
@@ -266,8 +265,9 @@ static int LEngineNew(lua_State *L)
     const char *presentation = OptString(L, 1, "presentation", NULL);
     if (presentation != NULL && !ParsePresentation(presentation, &config.presentation))
     {
-        return luaL_error(L, "unknown presentation '%s' (letterbox, expand, overscan, "
-                             "integer, stretch, native)",
+        return luaL_error(L,
+                          "unknown presentation '%s' (letterbox, expand, overscan, "
+                          "integer, stretch, native)",
                           presentation);
     }
 
@@ -317,14 +317,38 @@ static int SetHook(lua_State *L, Grapple_ScriptHook hook)
     return 1;
 }
 
-static int LOnLoad(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_LOAD); }
-static int LOnFixedUpdate(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_FIXED_UPDATE); }
-static int LOnUpdate(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_UPDATE); }
-static int LOnRender(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_RENDER); }
-static int LOnPostRender(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_POST_RENDER); }
-static int LOnEvent(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_EVENT); }
-static int LOnResize(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_RESIZE); }
-static int LOnUnload(lua_State *L) { return SetHook(L, GRAPPLE_HOOK_UNLOAD); }
+static int LOnLoad(lua_State *L)
+{
+    return SetHook(L, GRAPPLE_HOOK_LOAD);
+}
+static int LOnFixedUpdate(lua_State *L)
+{
+    return SetHook(L, GRAPPLE_HOOK_FIXED_UPDATE);
+}
+static int LOnUpdate(lua_State *L)
+{
+    return SetHook(L, GRAPPLE_HOOK_UPDATE);
+}
+static int LOnRender(lua_State *L)
+{
+    return SetHook(L, GRAPPLE_HOOK_RENDER);
+}
+static int LOnPostRender(lua_State *L)
+{
+    return SetHook(L, GRAPPLE_HOOK_POST_RENDER);
+}
+static int LOnEvent(lua_State *L)
+{
+    return SetHook(L, GRAPPLE_HOOK_EVENT);
+}
+static int LOnResize(lua_State *L)
+{
+    return SetHook(L, GRAPPLE_HOOK_RESIZE);
+}
+static int LOnUnload(lua_State *L)
+{
+    return SetHook(L, GRAPPLE_HOOK_UNLOAD);
+}
 
 static int LRun(lua_State *L)
 {

@@ -5,6 +5,7 @@
 #define GRAPPLE_CPP_MIXER_H_
 
 #include <SDL3_mixer/SDL_mixer.h>
+#include <grapple/audio_bus.h>
 
 #include <string>
 #include <utility>
@@ -24,6 +25,11 @@ class Mixer {
     if (!EnsureInit()) return Status::FromSdl();
     MIX_Mixer* raw = MIX_CreateMixer(&spec);
     if (raw == nullptr) return Status::FromSdl();
+    if (!Grapple_AttachAudioBuses(raw)) {
+      const auto error = Status::FromSdl();
+      MIX_DestroyMixer(raw);
+      return error;
+    }
     return Mixer(raw);
   }
   static Result<Mixer> CreateDevice() {
@@ -39,6 +45,11 @@ class Mixer {
 #endif
     MIX_Mixer* raw = MIX_CreateMixerDevice(device, nullptr);
     if (raw == nullptr) return Status::FromSdl();
+    if (!Grapple_AttachAudioBuses(raw)) {
+      const auto error = Status::FromSdl();
+      MIX_DestroyMixer(raw);
+      return error;
+    }
     return Mixer(raw);
   }
 
@@ -56,7 +67,10 @@ class Mixer {
 
   // Defined below Audio/Track.
   Result<Audio> Load(const std::string& path, bool predecode = true);
-  Result<Track> Play(const Audio& audio, int loops = 0);
+  /** @brief Play audio through a category beneath master volume.
+   * @param audio Borrowed audio; retain until playback ends. @param loops Repeat count.
+   * @param bus Engine audio category; defaults to SFX. @return Owned track or error. */
+  Result<Track> Play(const Audio& audio, int loops = 0, Grapple_AudioBus bus = GRAPPLE_AUDIO_SFX);
 
   // Pulls mixed samples (headless mixers). Returns bytes written, 0 at end
   // of all playback, or an error.
@@ -148,10 +162,11 @@ inline Result<Audio> Mixer::Load(const std::string& path, bool predecode) {
   return Audio(raw);
 }
 
-inline Result<Track> Mixer::Play(const Audio& audio, int loops) {
+inline Result<Track> Mixer::Play(const Audio& audio, int loops, Grapple_AudioBus bus) {
   MIX_Track* raw = MIX_CreateTrack(mixer_);
   if (raw == nullptr) return Status::FromSdl();
   Track track(raw);
+  if (!Grapple_RouteAudioTrack(raw, bus)) return Status::FromSdl();
   if (!MIX_SetTrackAudio(raw, audio.get())) return Status::FromSdl();
   SDL_PropertiesID opts = 0;
   if (loops != 0) {

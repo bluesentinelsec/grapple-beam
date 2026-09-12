@@ -76,14 +76,14 @@ bool BindApp_KeyDown(const char *name);
 
 BindTexture *BindApp_LoadTexture(BindApp *app, const char *path);
 void BindTexture_Destroy(BindTexture *tex);
-bool BindApp_Draw(BindApp *app, BindTexture *tex, float x, float y, float w, float h,
-                  double angle);
+bool BindApp_Draw(BindApp *app, BindTexture *tex, float x, float y, float w, float h, double angle);
 
 BindAudio *BindAudio_Open(void);
 void BindAudio_Destroy(BindAudio *audio);
 BindSound *BindAudio_Load(BindAudio *audio, const char *path);
 void BindSound_Destroy(BindSound *sound);
 BindTrack *BindAudio_Play(BindAudio *audio, BindSound *sound, int loops);
+BindTrack *BindAudio_PlayBus(BindAudio *audio, BindSound *sound, int loops, const char *bus);
 void BindTrack_Destroy(BindTrack *track);
 bool BindTrack_Stop(BindTrack *track);
 bool BindTrack_SetGain(BindTrack *track, float gain);

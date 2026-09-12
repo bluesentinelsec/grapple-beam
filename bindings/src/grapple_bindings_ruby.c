@@ -13,14 +13,13 @@
 #include <grapple/crypto.h>
 #include <grapple/tiled.h>
 #include <grapple/vfs.h>
-#include <physfs.h>
-
 #include <mruby/array.h>
 #include <mruby/class.h>
 #include <mruby/data.h>
 #include <mruby/hash.h>
 #include <mruby/string.h>
 #include <mruby/variable.h>
+#include <physfs.h>
 
 #define DEF_TYPE(name, freer)                                                                      \
     static void name##_free(mrb_state *mrb, void *p)                                               \
@@ -78,8 +77,8 @@ static struct RClass *ClassFor(mrb_state *mrb, const char *name)
     return mrb_class_get_under(mrb, module, name);
 }
 
-static mrb_value WrapChild(mrb_state *mrb, const char *class_name,
-                           const struct mrb_data_type *type, void *ptr, mrb_value parent)
+static mrb_value WrapChild(mrb_state *mrb, const char *class_name, const struct mrb_data_type *type,
+                           void *ptr, mrb_value parent)
 {
     struct RClass *cls = ClassFor(mrb, class_name);
     mrb_value obj = mrb_obj_value(mrb_data_object_alloc(mrb, cls, ptr, type));
@@ -181,8 +180,8 @@ static mrb_value MAppRect(mrb_state *mrb, mrb_value self)
     mrb_int r, g, b;
     mrb_int a = 255;
     mrb_get_args(mrb, "ffffiii|i", &x, &y, &w, &h, &r, &g, &b, &a);
-    if (!BindApp_Rect((BindApp *)Unwrap(mrb, self, &GrappleApp_type), (float)x, (float)y,
-                      (float)w, (float)h, (Uint8)r, (Uint8)g, (Uint8)b, (Uint8)a))
+    if (!BindApp_Rect((BindApp *)Unwrap(mrb, self, &GrappleApp_type), (float)x, (float)y, (float)w,
+                      (float)h, (Uint8)r, (Uint8)g, (Uint8)b, (Uint8)a))
     {
         RaiseSdl(mrb);
     }
@@ -223,8 +222,8 @@ static mrb_value MAppText(mrb_state *mrb, mrb_value self)
     const char *text = NULL;
     mrb_int r = 255, g = 255, b = 255;
     mrb_get_args(mrb, "ffz|iii", &x, &y, &text, &r, &g, &b);
-    BindApp_Text((BindApp *)Unwrap(mrb, self, &GrappleApp_type), (float)x, (float)y, text,
-                 (Uint8)r, (Uint8)g, (Uint8)b);
+    BindApp_Text((BindApp *)Unwrap(mrb, self, &GrappleApp_type), (float)x, (float)y, text, (Uint8)r,
+                 (Uint8)g, (Uint8)b);
     return mrb_nil_value();
 }
 
@@ -240,8 +239,7 @@ static mrb_value MAppLoadTexture(mrb_state *mrb, mrb_value self)
 {
     const char *path = NULL;
     mrb_get_args(mrb, "z", &path);
-    BindTexture *tex =
-        BindApp_LoadTexture((BindApp *)Unwrap(mrb, self, &GrappleApp_type), path);
+    BindTexture *tex = BindApp_LoadTexture((BindApp *)Unwrap(mrb, self, &GrappleApp_type), path);
     if (tex == NULL)
     {
         RaiseSdl(mrb);
@@ -299,10 +297,11 @@ static mrb_value MAudioPlay(mrb_state *mrb, mrb_value self)
 {
     mrb_value sound_obj;
     mrb_int loops = 0;
-    mrb_get_args(mrb, "o|i", &sound_obj, &loops);
-    BindTrack *track = BindAudio_Play((BindAudio *)Unwrap(mrb, self, &GrappleAudio_type),
-                                      (BindSound *)Unwrap(mrb, sound_obj, &GrappleSound_type),
-                                      (int)loops);
+    const char *bus = "sfx";
+    mrb_get_args(mrb, "o|iz", &sound_obj, &loops, &bus);
+    BindTrack *track =
+        BindAudio_PlayBus((BindAudio *)Unwrap(mrb, self, &GrappleAudio_type),
+                          (BindSound *)Unwrap(mrb, sound_obj, &GrappleSound_type), (int)loops, bus);
     if (track == NULL)
     {
         RaiseSdl(mrb);
@@ -355,8 +354,8 @@ static mrb_value MWorldBox(mrb_state *mrb, mrb_value self)
     mrb_float x, y, hw, hh;
     mrb_bool dynamic = FALSE;
     mrb_get_args(mrb, "ffff|b", &x, &y, &hw, &hh, &dynamic);
-    BindBody *body = BindWorld_AddBox((BindWorld *)Unwrap(mrb, self, &GrappleWorld_type),
-                                      (float)x, (float)y, (float)hw, (float)hh, dynamic);
+    BindBody *body = BindWorld_AddBox((BindWorld *)Unwrap(mrb, self, &GrappleWorld_type), (float)x,
+                                      (float)y, (float)hw, (float)hh, dynamic);
     if (body == NULL)
     {
         RaiseSdl(mrb);
@@ -393,8 +392,7 @@ static mrb_value MBodyPosition(mrb_state *mrb, mrb_value self)
 
 static mrb_value MBodyAngle(mrb_state *mrb, mrb_value self)
 {
-    return mrb_float_value(mrb,
-                           BindBody_Angle((BindBody *)Unwrap(mrb, self, &GrappleBody_type)));
+    return mrb_float_value(mrb, BindBody_Angle((BindBody *)Unwrap(mrb, self, &GrappleBody_type)));
 }
 
 static mrb_value MBodyVelocity(mrb_state *mrb, mrb_value self)
@@ -450,16 +448,15 @@ static mrb_value MMapSize(mrb_state *mrb, mrb_value self)
 static mrb_value MMapLayers(mrb_state *mrb, mrb_value self)
 {
     return mrb_int_value(
-        mrb, Grapple_TiledLayerCount((Grapple_TiledMap *)Unwrap(mrb, self,
-                                                                    &GrappleMap_type)));
+        mrb, Grapple_TiledLayerCount((Grapple_TiledMap *)Unwrap(mrb, self, &GrappleMap_type)));
 }
 
 static mrb_value MMapLayerName(mrb_state *mrb, mrb_value self)
 {
     mrb_int idx;
     mrb_get_args(mrb, "i", &idx);
-    const char *name = Grapple_TiledLayerName(
-        (Grapple_TiledMap *)Unwrap(mrb, self, &GrappleMap_type), (int)idx);
+    const char *name =
+        Grapple_TiledLayerName((Grapple_TiledMap *)Unwrap(mrb, self, &GrappleMap_type), (int)idx);
     return (name != NULL) ? mrb_str_new_cstr(mrb, name) : mrb_nil_value();
 }
 
@@ -467,9 +464,9 @@ static mrb_value MMapTile(mrb_state *mrb, mrb_value self)
 {
     mrb_int layer, x, y;
     mrb_get_args(mrb, "iii", &layer, &x, &y);
-    return mrb_int_value(mrb, Grapple_TiledTileAt((Grapple_TiledMap *)Unwrap(
-                                                        mrb, self, &GrappleMap_type),
-                                                    (int)layer, (int)x, (int)y));
+    return mrb_int_value(
+        mrb, Grapple_TiledTileAt((Grapple_TiledMap *)Unwrap(mrb, self, &GrappleMap_type),
+                                 (int)layer, (int)x, (int)y));
 }
 
 static mrb_value MMapObjects(mrb_state *mrb, mrb_value self)
@@ -605,7 +602,7 @@ static mrb_value MCompress(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "S", &data);
     int outSize = 0;
     unsigned char *out = Grapple_CompressData((const unsigned char *)RSTRING_PTR(data),
-                                             (int)RSTRING_LEN(data), &outSize);
+                                              (int)RSTRING_LEN(data), &outSize);
     return ByteResult(mrb, out, outSize);
 }
 
@@ -616,7 +613,7 @@ static mrb_value MDecompress(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "S", &data);
     int outSize = 0;
     unsigned char *out = Grapple_DecompressData((const unsigned char *)RSTRING_PTR(data),
-                                               (int)RSTRING_LEN(data), &outSize);
+                                                (int)RSTRING_LEN(data), &outSize);
     return ByteResult(mrb, out, outSize);
 }
 
@@ -628,7 +625,7 @@ static mrb_value MEncrypt(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "Sz", &data, &password);
     int outSize = 0;
     unsigned char *out = Grapple_EncryptData((const unsigned char *)RSTRING_PTR(data),
-                                            (int)RSTRING_LEN(data), password, &outSize);
+                                             (int)RSTRING_LEN(data), password, &outSize);
     return ByteResult(mrb, out, outSize);
 }
 
@@ -640,7 +637,7 @@ static mrb_value MDecrypt(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "Sz", &data, &password);
     int outSize = 0;
     unsigned char *out = Grapple_DecryptData((const unsigned char *)RSTRING_PTR(data),
-                                            (int)RSTRING_LEN(data), password, &outSize);
+                                             (int)RSTRING_LEN(data), password, &outSize);
     return ByteResult(mrb, out, outSize);
 }
 
@@ -651,7 +648,7 @@ static mrb_value MB64Encode(mrb_state *mrb, mrb_value self)
     mrb_get_args(mrb, "S", &data);
     int outSize = 0;
     char *out = Grapple_EncodeDataBase64((const unsigned char *)RSTRING_PTR(data),
-                                           (int)RSTRING_LEN(data), &outSize);
+                                         (int)RSTRING_LEN(data), &outSize);
     if (out == NULL)
     {
         RaiseSdl(mrb);
@@ -672,7 +669,6 @@ static mrb_value MB64Decode(mrb_state *mrb, mrb_value self)
 }
 
 /* ------------------------------------------------------------ open ------ */
-
 
 /* SDL.LoadFile — bytes from a real filesystem path.
  *
@@ -730,7 +726,7 @@ bool Grapple_OpenRubyBindings(mrb_state *mrb)
     struct RClass *audio = mrb_define_class_under(mrb, module, "Audio", mrb->object_class);
     MRB_SET_INSTANCE_TT(audio, MRB_TT_CDATA);
     mrb_define_method(mrb, audio, "load", MAudioLoad, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, audio, "play", MAudioPlay, MRB_ARGS_ARG(1, 1));
+    mrb_define_method(mrb, audio, "play", MAudioPlay, MRB_ARGS_ARG(1, 2));
 
     struct RClass *sound = mrb_define_class_under(mrb, module, "Sound", mrb->object_class);
     MRB_SET_INSTANCE_TT(sound, MRB_TT_CDATA);
@@ -767,8 +763,7 @@ bool Grapple_OpenRubyBindings(mrb_state *mrb)
     mrb_define_module_function(mrb, module, "open_audio", MOpenAudio, MRB_ARGS_NONE());
     mrb_define_module_function(mrb, module, "world", MWorldNew, MRB_ARGS_OPT(2));
     mrb_define_module_function(mrb, module, "mount", MMount, MRB_ARGS_ARG(1, 1));
-    mrb_define_module_function(mrb, module, "mount_encrypted", MMountEncrypted,
-                               MRB_ARGS_ARG(2, 1));
+    mrb_define_module_function(mrb, module, "mount_encrypted", MMountEncrypted, MRB_ARGS_ARG(2, 1));
     mrb_define_module_function(mrb, module, "read_file", MReadFile, MRB_ARGS_REQ(1));
     mrb_define_module_function(mrb, module, "ticks", MTicks, MRB_ARGS_NONE());
     mrb_define_module_function(mrb, module, "delay", MDelay, MRB_ARGS_REQ(1));
