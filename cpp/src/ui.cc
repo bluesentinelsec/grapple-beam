@@ -259,6 +259,30 @@ Result<Widget> Widget::AddRadio(const ChoiceOptions& options) {
   return Wrap(Grapple_UiRadio(widget_, &definition));
 }
 
+Result<Widget> Widget::AddList(const ChoiceOptions& options) {
+  if (!valid() || state_ == nullptr) return Status::Error("cannot add to an empty UI widget");
+  detail::WidgetCallback* callback = state_->Keep(options.on_change);
+  std::vector<const char*> labels;
+  labels.reserve(options.options.size() + 1);
+  for (const std::string& label : options.options) labels.push_back(label.c_str());
+  labels.push_back(nullptr);
+
+  Grapple_UiSelectDef definition{};
+  definition.options = labels.data();
+  definition.selected = options.selected;
+  definition.width = ToC(options.width);
+  definition.height = ToC(options.height);
+  definition.align = ToC(options.align);
+  definition.on_change = callback == nullptr ? nullptr : &Widget::RunCallback;
+  definition.user = callback;
+  return Wrap(Grapple_UiList(widget_, &definition));
+}
+
+Status Widget::SetPanelColors(SDL_Color background, SDL_Color text) {
+  if (!Grapple_UiSetPanelColors(widget_, background, text)) return Status::FromSdl();
+  return Status::Ok();
+}
+
 Result<Widget> Widget::AddProgress(const ProgressOptions& options) {
   if (!valid() || state_ == nullptr) return Status::Error("cannot add to an empty UI widget");
   detail::WidgetCallback* callback = state_->Keep(options.on_change);

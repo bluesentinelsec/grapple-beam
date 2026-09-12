@@ -1288,6 +1288,184 @@ TEST_F(GuiHarness, UiOverlayPlacesChildrenOverTheSameArea)
     Grapple_DestroyUi(ui);
 }
 
+TEST_F(GuiHarness, UiEntryNotifiesOnlyWhenUserEditsText)
+{
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    ASSERT_NE(ui, nullptr);
+    Grapple_UiPanelDef panel_def{};
+    panel_def.fill = true;
+    Grapple_UiWidget *panel = Grapple_UiPanel(ui, &panel_def);
+    std::vector<std::string> changes;
+    Grapple_UiEntryDef entry_def{};
+    entry_def.text = "4";
+    entry_def.capacity = 8;
+    entry_def.on_change = [](Grapple_UiWidget *entry, void *user) {
+        static_cast<std::vector<std::string> *>(user)->emplace_back(Grapple_UiText(entry));
+    };
+    entry_def.user = &changes;
+    Grapple_UiWidget *entry = Grapple_UiEntry(panel, &entry_def);
+    ASSERT_NE(entry, nullptr);
+
+    auto draw = [&]() {
+        Grapple_GuiInputEnd(gui_);
+        Grapple_UiDraw(ui);
+        BeginFrame();
+        Grapple_GuiInputBegin(gui_);
+    };
+    auto key = [&](SDL_Keycode code, SDL_Keymod mod = SDL_KMOD_NONE) {
+        SDL_Event event{};
+        event.type = SDL_EVENT_KEY_DOWN;
+        event.key.key = code;
+        event.key.mod = mod;
+        Grapple_GuiProcessEvent(gui_, &event);
+        draw();
+        event.type = SDL_EVENT_KEY_UP;
+        Grapple_GuiProcessEvent(gui_, &event);
+        draw();
+    };
+    auto type = [&](const char *text) {
+        SDL_Event event{};
+        event.type = SDL_EVENT_TEXT_INPUT;
+        event.text.text = text;
+        Grapple_GuiProcessEvent(gui_, &event);
+        draw();
+    };
+
+    BeginFrame();
+    Grapple_GuiInputBegin(gui_);
+    draw();
+    float x = 0, y = 0, width = 0, height = 0;
+    ASSERT_TRUE(Grapple_UiBounds(entry, &x, &y, &width, &height));
+    FeedMouseMove(x + width / 2, y + height / 2);
+    FeedButton(x + width / 2, y + height / 2, true);
+    draw();
+    FeedButton(x + width / 2, y + height / 2, false);
+    draw();
+    EXPECT_TRUE(changes.empty()) << "Focus and idle frames do not change text";
+
+    key(SDLK_END);
+    type("2");
+    EXPECT_EQ(changes, (std::vector<std::string>{"42"}));
+    key(SDLK_BACKSPACE);
+    EXPECT_EQ(changes, (std::vector<std::string>{"42", "4"}));
+    key(SDLK_A, SDL_KMOD_CTRL);
+    type("9");
+    EXPECT_EQ(changes, (std::vector<std::string>{"42", "4", "9"}))
+        << "Replacing a selection with the same byte count is still a change";
+    key(SDLK_RETURN);
+    draw();
+    EXPECT_EQ(changes.size(), 3u);
+
+    Grapple_UiSetText(entry, "7");
+    draw();
+    EXPECT_STREQ(Grapple_UiText(entry), "7");
+    EXPECT_EQ(changes.size(), 3u) << "Programmatic setters do not emit user callbacks";
+    Grapple_GuiInputEnd(gui_);
+    Grapple_DestroyUi(ui);
+}
+
+TEST_F(GuiHarness, UiChoiceGroupsOccupyOneSlotAndKeepSelectionsIndependent)
+{
+    for (bool list : {false, true})
+    {
+        Grapple_Ui *ui = Grapple_CreateUi(gui_);
+        Grapple_UiPanelDef panel_def{};
+        panel_def.fill = true;
+        panel_def.title = list ? "lists" : "radios";
+        auto *panel = Grapple_UiPanel(ui, &panel_def);
+        Grapple_UiStripDef row_def{};
+        row_def.height = GRAPPLE_UI_PX(120);
+        auto *row = Grapple_UiRow(panel, &row_def);
+        const char *options[] = {"Red", "Blue", "Yellow", nullptr};
+        int changes = 0;
+        Grapple_UiSelectDef choice_def{};
+        choice_def.options = options;
+        choice_def.on_change = [](Grapple_UiWidget *, void *user) { ++*static_cast<int *>(user); };
+        choice_def.user = &changes;
+        auto create = list ? Grapple_UiList : Grapple_UiRadio;
+        auto *first = create(row, &choice_def);
+        auto *second = create(row, &choice_def);
+        Grapple_UiLabelDef label_def{};
+        label_def.text = "After the choices";
+        auto *after = Grapple_UiLabel(panel, &label_def);
+        auto draw = [&]() {
+            Grapple_GuiInputEnd(gui_);
+            Grapple_UiDraw(ui);
+            BeginFrame();
+            Grapple_GuiInputBegin(gui_);
+        };
+        BeginFrame();
+        Grapple_GuiInputBegin(gui_);
+        draw();
+        draw();
+        float x1 = 0, y1 = 0, w1 = 0, h1 = 0, x2 = 0, y2 = 0, after_y = 0;
+        ASSERT_TRUE(Grapple_UiBounds(first, &x1, &y1, &w1, &h1));
+        ASSERT_TRUE(Grapple_UiBounds(second, &x2, &y2, nullptr, nullptr));
+        ASSERT_TRUE(Grapple_UiBounds(after, nullptr, &after_y, nullptr, nullptr));
+        EXPECT_GT(x2, x1 + w1 - 1);
+        EXPECT_FLOAT_EQ(y1, y2);
+        EXPECT_GE(after_y, y1 + h1);
+        const auto &style = Grapple_GuiContext(gui_)->style.window;
+        const float row_height = Grapple_GuiFontHeight(gui_) * 1.9f;
+        const float click_x = x2 + 30;
+        const float click_y =
+            y2 + style.group_padding.y + 2 * (row_height + style.spacing.y) + row_height / 2;
+        FeedMouseMove(click_x, click_y);
+        FeedButton(click_x, click_y, true);
+        draw();
+        FeedButton(click_x, click_y, false);
+        draw();
+        EXPECT_EQ(Grapple_UiSelected(first), 0);
+        EXPECT_EQ(Grapple_UiSelected(second), 2);
+        EXPECT_STREQ(Grapple_UiText(second), "Yellow");
+        EXPECT_EQ(changes, 1);
+        draw();
+        EXPECT_EQ(changes, 1);
+        Grapple_GuiInputEnd(gui_);
+        Grapple_DestroyUi(ui);
+    }
+}
+
+TEST_F(GuiHarness, UiPanelColorsRenderAndStayLocalToThePanel)
+{
+    Grapple_Ui *ui = Grapple_CreateUi(gui_);
+    Grapple_UiPanelDef definition{};
+    definition.title = "first";
+    definition.width = 180;
+    definition.height = 360;
+    auto *first = Grapple_UiPanel(ui, &definition);
+    definition.title = "second";
+    definition.x = 200;
+    auto *second = Grapple_UiPanel(ui, &definition);
+    ASSERT_NE(second, nullptr);
+    Grapple_UiLabelDef label_def{};
+    auto *label = Grapple_UiLabel(first, &label_def);
+    const SDL_Color red{255, 0, 0, 255}, white{255, 255, 255, 255};
+    EXPECT_FALSE(Grapple_UiSetPanelColors(label, red, white));
+    EXPECT_FALSE(Grapple_UiSetPanelColors(nullptr, red, white));
+    ASSERT_TRUE(Grapple_UiSetPanelColors(first, red, white));
+    const auto original = Grapple_GuiContext(gui_)->style.text.color;
+    for (const SDL_Color color : {red, SDL_Color{0, 255, 0, 255}})
+    {
+        ASSERT_TRUE(Grapple_UiSetPanelColors(first, color, white));
+        BeginFrame();
+        Grapple_GuiInputBegin(gui_);
+        Grapple_GuiInputEnd(gui_);
+        Grapple_UiDraw(ui);
+        SDL_FlushRenderer(renderer_);
+        Uint8 r = 0, g = 0, b = 0, a = 0;
+        ASSERT_TRUE(SDL_ReadSurfacePixel(surface_, 80, 300, &r, &g, &b, &a));
+        EXPECT_EQ(r, color.r);
+        EXPECT_EQ(g, color.g);
+        EXPECT_EQ(b, color.b);
+        ASSERT_TRUE(SDL_ReadSurfacePixel(surface_, 280, 300, &r, &g, &b, &a));
+        EXPECT_EQ(r, g);
+        EXPECT_EQ(g, b);
+        EXPECT_EQ(Grapple_GuiContext(gui_)->style.text.color.r, original.r);
+    }
+    Grapple_DestroyUi(ui);
+}
+
 TEST_F(GuiHarness, UiWidgetStateOutlivesTheFrame)
 {
     Grapple_Ui *ui = Grapple_CreateUi(gui_);

@@ -106,6 +106,37 @@ TEST(CppWidgets, OwnsChoiceStateAndSupportsRawNuklearDrawing)
     EXPECT_EQ(raw_draws, 1);
 }
 
+TEST(CppWidgets, ListAndPanelColorsUseTheRetainedBindings)
+{
+    auto sdl = grapple::SdlInit::Create(0);
+    ASSERT_TRUE(sdl.ok());
+    auto surface = grapple::Surface::Create(320, 240);
+    ASSERT_TRUE(surface.ok());
+    auto renderer = grapple::Renderer::CreateSoftware(*surface);
+    ASSERT_TRUE(renderer.ok());
+    auto ui = grapple::Ui::Open(renderer->get());
+    ASSERT_TRUE(ui.ok());
+    auto panel = ui->AddPanel({});
+    ASSERT_TRUE(panel.ok());
+    EXPECT_TRUE(panel->SetPanelColors({255, 255, 0, 255}, {0, 0, 0, 255}).ok());
+    grapple::ChoiceOptions options;
+    options.options = {"Inches", "Feet", "Yards"};
+    options.selected = 1;
+    std::string selected;
+    options.on_change = [&](grapple::Widget widget) { selected = widget.text(); };
+    auto list = panel->AddList(options);
+    ASSERT_TRUE(list.ok());
+    EXPECT_EQ(list->text(), "Feet");
+    list->SetSelected(2);
+    list->Invoke();
+    EXPECT_EQ(selected, "Yards");
+    EXPECT_FALSE(list->SetPanelColors({0, 0, 0, 255}, {255, 255, 255, 255}).ok());
+    ui->Draw();
+    auto bounds = list->Bounds();
+    ASSERT_TRUE(bounds.ok());
+    EXPECT_GT(bounds->height, 40);
+}
+
 TEST(CppWidgets, AttachesToTheEngineAndSurvivesAMove)
 {
     grapple::Result<grapple::SdlInit> sdl = grapple::SdlInit::Create(0);
