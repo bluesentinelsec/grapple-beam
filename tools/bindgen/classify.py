@@ -208,6 +208,15 @@ class TypeTable:
 # explicit reason instead of silently dropping them.
 
 SCRIPT_EXCLUDE_PREFIXES: dict[str, str] = {
+    # Raw buffers and externally borrowed streams stay on the native surface.
+    "Grapple_LoadChipSongMemory": "sized input buffer requires C/C++",
+    "Grapple_SaveChipSongWav_IO": "output stream ownership requires C/C++",
+    "Grapple_LoadChipSong_IO": "input stream ownership requires C/C++",
+    "Grapple_LoadChipSong_IOEx": "input stream ownership requires C/C++",
+    "Grapple_GetChipPlayerStream": "borrowed stream requires C/C++; use PlayChipPlayer in scripts",
+    "Grapple_GetChipSongInfo": "borrowed metadata; use ReadChipSongInfo in scripts",
+    "Grapple_GetChipTrackInfo": "borrowed metadata requires C/C++",
+    "Grapple_RenderChipPlayer": "sized PCM output buffer requires C/C++",
     # libc-clone layer: scripts have their own strings/memory/math
     "SDL_malloc": "stdlib clone", "SDL_calloc": "stdlib clone",
     "SDL_realloc": "stdlib clone", "SDL_free": "stdlib clone",

@@ -4,6 +4,7 @@ target_link_libraries(grapple_web_test
   PRIVATE
     ${PROJECT_NAME}_lib
     Grapple::Image
+    Grapple::Mixer
     GTest::gtest_main
 )
 set_target_properties(grapple_web_test PROPERTIES SUFFIX ".html")
@@ -17,4 +18,4 @@ target_link_options(grapple_web_test
     "SHELL:--embed-file ${CMAKE_SOURCE_DIR}/tests/image/assets/sample.png@/assets/sample.png"
     "SHELL:--embed-file ${CMAKE_SOURCE_DIR}/tests/image/assets/rgbrgb.gif@/assets/rgbrgb.gif"
 )
-cppboot_set_project_warnings(grapple_web_test)
+grapple_set_project_warnings(grapple_web_test)

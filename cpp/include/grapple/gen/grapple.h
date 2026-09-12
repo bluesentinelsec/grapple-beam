@@ -45,6 +45,307 @@
 namespace grapple {
 namespace ext {
 
+// RAII owner for Grapple_ChipComposer (destroyed with Grapple_DestroyChipComposer).
+class ChipComposer {
+ public:
+  static Result<ChipComposer> CreateChipComposer(int tracks, int ticks_per_quarter) {
+    Grapple_ChipComposer* created_ = ::Grapple_CreateChipComposer(tracks, ticks_per_quarter);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipComposer(created_);
+  }
+
+  ChipComposer() = default;
+  ~ChipComposer() { reset(); }
+  ChipComposer(ChipComposer&& other) noexcept
+      : value_(other.value_), engaged_(other.engaged_) {
+    other.value_ = nullptr;
+    other.engaged_ = false;
+  }
+  ChipComposer& operator=(ChipComposer&& other) noexcept {
+    if (this != &other) {
+      reset();
+      value_ = other.value_;
+      engaged_ = other.engaged_;
+      other.value_ = nullptr;
+      other.engaged_ = false;
+    }
+    return *this;
+  }
+  ChipComposer(const ChipComposer&) = delete;
+  ChipComposer& operator=(const ChipComposer&) = delete;
+
+  Grapple_ChipComposer* get() const { return value_; }
+  Grapple_ChipComposer* release() {
+    Grapple_ChipComposer* out = value_;
+    value_ = nullptr;
+    engaged_ = false;
+    return out;
+  }
+  void reset() {
+    if (value_ != nullptr) ::Grapple_DestroyChipComposer(value_);
+    value_ = nullptr;
+    engaged_ = false;
+  }
+
+  Status AddChipSection(const char *name, Uint64 start_tick, Uint64 end_tick) {
+    return ::Grapple_AddChipSection(value_, name, start_tick, end_tick) ? Status() : Status::FromSdl();
+  }
+  Status SetChipPart(int track, const char *name, Grapple_ChipPreset preset, float gain) {
+    return ::Grapple_SetChipPart(value_, track, name, preset, gain) ? Status() : Status::FromSdl();
+  }
+  Status AddChipNote(const Grapple_ChipNote *note) {
+    return ::Grapple_AddChipNote(value_, note) ? Status() : Status::FromSdl();
+  }
+  Status AddChipNoteEx(const Grapple_ChipNote *note, const Grapple_ChipExpression *expression) {
+    return ::Grapple_AddChipNoteEx(value_, note, expression) ? Status() : Status::FromSdl();
+  }
+  Status AddChipControl(int track, Uint64 tick, int controller, int value) {
+    return ::Grapple_AddChipControl(value_, track, tick, controller, value) ? Status() : Status::FromSdl();
+  }
+  Status AddChipTempo(Uint64 tick, double bpm) {
+    return ::Grapple_AddChipTempo(value_, tick, bpm) ? Status() : Status::FromSdl();
+  }
+ private:
+  explicit ChipComposer(Grapple_ChipComposer* value) : value_(value), engaged_(true) {}
+  Grapple_ChipComposer* value_{};
+  bool engaged_ = false;
+};
+
+// RAII owner for Grapple_ChipSong (destroyed with Grapple_DestroyChipSong).
+class ChipSong {
+ public:
+  static Result<ChipSong> LoadChipSongEx(const char *path, const Grapple_ChipImportOptions *options, Grapple_ChipDiagnostic *error) {
+    Grapple_ChipSong* created_ = ::Grapple_LoadChipSongEx(path, options, error);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipSong(created_);
+  }
+  static Result<ChipSong> LoadChipSong_IOEx(SDL_IOStream *io, bool closeio, const Grapple_ChipImportOptions *options, Grapple_ChipDiagnostic *error) {
+    Grapple_ChipSong* created_ = ::Grapple_LoadChipSong_IOEx(io, closeio, options, error);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipSong(created_);
+  }
+  static Result<ChipSong> LoadChipSong_IO(SDL_IOStream *io, bool closeio) {
+    Grapple_ChipSong* created_ = ::Grapple_LoadChipSong_IO(io, closeio);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipSong(created_);
+  }
+  static Result<ChipSong> LoadChipSong(const char *path) {
+    Grapple_ChipSong* created_ = ::Grapple_LoadChipSong(path);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipSong(created_);
+  }
+  static Result<ChipSong> LoadChipSongMemory(const void *data, size_t size, const Grapple_ChipImportOptions *options, Grapple_ChipDiagnostic *error) {
+    Grapple_ChipSong* created_ = ::Grapple_LoadChipSongMemory(data, size, options, error);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipSong(created_);
+  }
+  static Result<ChipSong> BuildChipSong(const Grapple_ChipComposer *composer, Uint64 end_tick) {
+    Grapple_ChipSong* created_ = ::Grapple_BuildChipSong(composer, end_tick);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipSong(created_);
+  }
+
+  ChipSong() = default;
+  ~ChipSong() { reset(); }
+  ChipSong(ChipSong&& other) noexcept
+      : value_(other.value_), engaged_(other.engaged_) {
+    other.value_ = nullptr;
+    other.engaged_ = false;
+  }
+  ChipSong& operator=(ChipSong&& other) noexcept {
+    if (this != &other) {
+      reset();
+      value_ = other.value_;
+      engaged_ = other.engaged_;
+      other.value_ = nullptr;
+      other.engaged_ = false;
+    }
+    return *this;
+  }
+  ChipSong(const ChipSong&) = delete;
+  ChipSong& operator=(const ChipSong&) = delete;
+
+  Grapple_ChipSong* get() const { return value_; }
+  Grapple_ChipSong* release() {
+    Grapple_ChipSong* out = value_;
+    value_ = nullptr;
+    engaged_ = false;
+    return out;
+  }
+  void reset() {
+    if (value_ != nullptr) ::Grapple_DestroyChipSong(value_);
+    value_ = nullptr;
+    engaged_ = false;
+  }
+
+  int GetChipDiagnosticCount() {
+    return ::Grapple_GetChipDiagnosticCount(value_);
+  }
+  Status ReadChipDiagnostic(int index, Grapple_ChipDiagnostic *diagnostic) {
+    return ::Grapple_ReadChipDiagnostic(value_, index, diagnostic) ? Status() : Status::FromSdl();
+  }
+  const char* GetChipDiagnosticMessage(int index) {
+    return ::Grapple_GetChipDiagnosticMessage(value_, index);
+  }
+  int GetChipSectionCount() {
+    return ::Grapple_GetChipSectionCount(value_);
+  }
+  Status ReadChipSection(int index, Grapple_ChipSection *section) {
+    return ::Grapple_ReadChipSection(value_, index, section) ? Status() : Status::FromSdl();
+  }
+  Status SaveChipSongWav(const char *path, int sample_rate, int voices) {
+    return ::Grapple_SaveChipSongWav(value_, path, sample_rate, voices) ? Status() : Status::FromSdl();
+  }
+  Status SaveChipSongWav_IO(SDL_IOStream *io, bool closeio, int sample_rate, int voices) {
+    return ::Grapple_SaveChipSongWav_IO(value_, io, closeio, sample_rate, voices) ? Status() : Status::FromSdl();
+  }
+  const Grapple_ChipSongInfo* GetChipSongInfo() {
+    return ::Grapple_GetChipSongInfo(value_);
+  }
+  const Grapple_ChipTrackInfo* GetChipTrackInfo(int track) {
+    return ::Grapple_GetChipTrackInfo(value_, track);
+  }
+  Status ReadChipSongInfo(Grapple_ChipSongInfo *info) {
+    return ::Grapple_ReadChipSongInfo(value_, info) ? Status() : Status::FromSdl();
+  }
+ private:
+  explicit ChipSong(Grapple_ChipSong* value) : value_(value), engaged_(true) {}
+  Grapple_ChipSong* value_{};
+  bool engaged_ = false;
+};
+
+// RAII owner for Grapple_ChipPlayer (destroyed with Grapple_DestroyChipPlayer).
+class ChipPlayer {
+ public:
+  static Result<ChipPlayer> PlayChipFile(const char *path, bool loop) {
+    Grapple_ChipPlayer* created_ = ::Grapple_PlayChipFile(path, loop);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipPlayer(created_);
+  }
+  static Result<ChipPlayer> PlayChipSong(const Grapple_ChipSong *song, bool loop) {
+    Grapple_ChipPlayer* created_ = ::Grapple_PlayChipSong(song, loop);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipPlayer(created_);
+  }
+  static Result<ChipPlayer> CreateChipPlayer(const Grapple_ChipSong *song, int sample_rate, int voices, bool loop) {
+    Grapple_ChipPlayer* created_ = ::Grapple_CreateChipPlayer(song, sample_rate, voices, loop);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipPlayer(created_);
+  }
+
+  ChipPlayer() = default;
+  ~ChipPlayer() { reset(); }
+  ChipPlayer(ChipPlayer&& other) noexcept
+      : value_(other.value_), engaged_(other.engaged_) {
+    other.value_ = nullptr;
+    other.engaged_ = false;
+  }
+  ChipPlayer& operator=(ChipPlayer&& other) noexcept {
+    if (this != &other) {
+      reset();
+      value_ = other.value_;
+      engaged_ = other.engaged_;
+      other.value_ = nullptr;
+      other.engaged_ = false;
+    }
+    return *this;
+  }
+  ChipPlayer(const ChipPlayer&) = delete;
+  ChipPlayer& operator=(const ChipPlayer&) = delete;
+
+  Grapple_ChipPlayer* get() const { return value_; }
+  Grapple_ChipPlayer* release() {
+    Grapple_ChipPlayer* out = value_;
+    value_ = nullptr;
+    engaged_ = false;
+    return out;
+  }
+  void reset() {
+    if (value_ != nullptr) ::Grapple_DestroyChipPlayer(value_);
+    value_ = nullptr;
+    engaged_ = false;
+  }
+
+  SDL_AudioStream* GetChipPlayerStream() {
+    return ::Grapple_GetChipPlayerStream(value_);
+  }
+  Status SetChipTrackPreset(int track, Grapple_ChipPreset preset, float gain) {
+    return ::Grapple_SetChipTrackPreset(value_, track, preset, gain) ? Status() : Status::FromSdl();
+  }
+  int RenderChipPlayer(float *stereo, int frames) {
+    return ::Grapple_RenderChipPlayer(value_, stereo, frames);
+  }
+  void ResetChipPlayer() { ::Grapple_ResetChipPlayer(value_); }
+  int GetChipPlayerPeakVoices() {
+    return ::Grapple_GetChipPlayerPeakVoices(value_);
+  }
+  Status ReadChipPlayerPosition(Grapple_ChipPosition *position) {
+    return ::Grapple_ReadChipPlayerPosition(value_, position) ? Status() : Status::FromSdl();
+  }
+  Status SeekChipPlayer(Uint64 tick) {
+    return ::Grapple_SeekChipPlayer(value_, tick) ? Status() : Status::FromSdl();
+  }
+  Status SetChipPlayerLoop(Uint64 start_tick, Uint64 end_tick, bool enabled) {
+    return ::Grapple_SetChipPlayerLoop(value_, start_tick, end_tick, enabled) ? Status() : Status::FromSdl();
+  }
+  Status SetChipPlayerTempo(double scale) {
+    return ::Grapple_SetChipPlayerTempo(value_, scale) ? Status() : Status::FromSdl();
+  }
+  Status SetChipPlayerGain(float gain) {
+    return ::Grapple_SetChipPlayerGain(value_, gain) ? Status() : Status::FromSdl();
+  }
+  Status SetChipTrackMix(int track, const Grapple_ChipTrackMix *mix) {
+    return ::Grapple_SetChipTrackMix(value_, track, mix) ? Status() : Status::FromSdl();
+  }
+  Status ReadChipTrackMix(int track, Grapple_ChipTrackMix *mix) {
+    return ::Grapple_ReadChipTrackMix(value_, track, mix) ? Status() : Status::FromSdl();
+  }
+  Status SetChipTrackEffects(int track, const Grapple_ChipEffects *effects) {
+    return ::Grapple_SetChipTrackEffects(value_, track, effects) ? Status() : Status::FromSdl();
+  }
+  Status ReadChipTrackEffects(int track, Grapple_ChipPreset preset, Grapple_ChipEffects *effects) {
+    return ::Grapple_ReadChipTrackEffects(value_, track, preset, effects) ? Status() : Status::FromSdl();
+  }
+  Status ReadChipTrackMapping(int track, int channel, Grapple_ChipMapping *mapping) {
+    return ::Grapple_ReadChipTrackMapping(value_, track, channel, mapping) ? Status() : Status::FromSdl();
+  }
+  Status SetChipPresetEffects(Grapple_ChipPreset preset, const Grapple_ChipEffects *effects) {
+    return ::Grapple_SetChipPresetEffects(value_, preset, effects) ? Status() : Status::FromSdl();
+  }
+  Status PlayChipPlayer() {
+    return ::Grapple_PlayChipPlayer(value_) ? Status() : Status::FromSdl();
+  }
+  void PauseChipPlayer() { ::Grapple_PauseChipPlayer(value_); }
+  void StopChipPlayer() { ::Grapple_StopChipPlayer(value_); }
+  bool ChipPlayerPlaying() {
+    return ::Grapple_ChipPlayerPlaying(value_);
+  }
+ private:
+  explicit ChipPlayer(Grapple_ChipPlayer* value) : value_(value), engaged_(true) {}
+  Grapple_ChipPlayer* value_{};
+  bool engaged_ = false;
+};
+
 // RAII owner for Grapple_TiledMap (destroyed with Grapple_FreeTiledMap).
 class TiledMapHandle {
  public:
@@ -692,6 +993,12 @@ inline Status GamepadRumbleTriggers(Grapple_Engine *engine, int player, float le
 inline Status GamepadSetLED(Grapple_Engine *engine, int player, Uint8 red, Uint8 green, Uint8 blue) {
   return ::Grapple_GamepadSetLED(engine, player, red, green, blue) ? Status() : Status::FromSdl();
 }
+inline Status GetChipImportDefaults(Grapple_ChipImportOptions *options) {
+  return ::Grapple_GetChipImportDefaults(options) ? Status() : Status::FromSdl();
+}
+inline Status GetChipPresetEffects(Grapple_ChipPreset preset, Grapple_ChipEffects *effects) {
+  return ::Grapple_GetChipPresetEffects(preset, effects) ? Status() : Status::FromSdl();
+}
 inline Status GraphicsEqual(const Grapple_GraphicsSettings *a, const Grapple_GraphicsSettings *b) {
   return ::Grapple_GraphicsEqual(a, b) ? Status() : Status::FromSdl();
 }
@@ -1142,6 +1449,7 @@ inline constexpr auto& GamepadGyro = ::Grapple_GamepadGyro;
 inline constexpr auto& GamepadName = ::Grapple_GamepadName;
 inline constexpr auto& GamepadStick = ::Grapple_GamepadStick;
 inline constexpr auto& GamepadStopRumble = ::Grapple_GamepadStopRumble;
+inline constexpr auto& GetChipExpressionDefaults = ::Grapple_GetChipExpressionDefaults;
 inline constexpr auto& GetFinger = ::Grapple_GetFinger;
 inline constexpr auto& GraphicsArgsConfigPath = ::Grapple_GraphicsArgsConfigPath;
 inline constexpr auto& GraphicsClamp = ::Grapple_GraphicsClamp;

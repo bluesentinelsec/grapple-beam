@@ -22,7 +22,7 @@ import sys
 FORBIDDEN = [
     "libpng", "libjpeg", "libturbojpeg", "libjxl", "libtiff", "libwebp",
     "libavif", "libdav1d", "libaom", "libheif",
-    "libfreetype", "libharfbuzz",
+    "libfreetype", "libharfbuzz", "libexpat", "libxml2",
     "libvorbis", "libogg", "libflac", "libmpg123", "libmad", "libopus",
 ]
 

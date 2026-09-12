@@ -3,17 +3,16 @@
  * @brief End-to-end Android tests consuming the grapple-beam Prefab package.
  */
 
-#include <grapple/version.hpp>
+#include "../common/chiptune_smoke.h"
 
+#include <SDL3/SDL.h>
+#include <android/log.h>
+#include <grapple/bindings.h>
 #include <grapple/engine.h>
 #include <grapple/engine_actor.h>
 #include <grapple/engine_config.h>
-#include <grapple/bindings.h>
 #include <grapple/lua.h>
-
-#include <SDL3/SDL.h>
-
-#include <android/log.h>
+#include <grapple/version.hpp>
 #include <jni.h>
 #include <string>
 #include <string_view>
@@ -51,6 +50,7 @@ class TestRun
 int RunTests()
 {
     TestRun run;
+    run.Check(ChipMusicXmlSmoke(), "MusicXML triplets import and render finite nonzero PCM");
     const std::string_view version = grapple::Version();
     run.Check(!version.empty(), "Prefab package exports the generated version API");
     const std::string major_prefix = std::to_string(grapple::kVersionMajor) + ".";

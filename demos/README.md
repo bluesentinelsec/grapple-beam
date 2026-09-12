@@ -7,6 +7,11 @@ what a whole game looks like when the loop belongs to the engine.
 Every demo is built on the opinionated loop — `Grapple_RunGame` and its hooks.
 None of them contains a `while (running)`.
 
+## Chiptune playback
+
+The [C chiptune demo](chiptune/README.md) loads and plays MIDI, MusicXML and MXL
+through the library and engine loop. It also demonstrates offline WAV export.
+
 ## Pong
 
 The same game four times, once per supported language. They are deliberately
@@ -17,8 +22,8 @@ order. Read one, and you can read the other three.
 | --- | --- | --- |
 | [`pong/pong.c`](pong/pong.c) | C | compiled to `pong-c` |
 | [`pong/pong.cpp`](pong/pong.cpp) | C++ | compiled to `pong-cpp` |
-| [`pong/pong.lua`](pong/pong.lua) | Lua | `grapple pong.lua` |
-| [`pong/pong.rb`](pong/pong.rb) | Ruby | `grapple pong.rb` |
+| [`pong/pong.lua`](pong/pong.lua) | Lua | `grapple-beam pong.lua` |
+| [`pong/pong.rb`](pong/pong.rb) | Ruby | `grapple-beam pong.rb` |
 
 Controls: **W**/**S** for the left paddle, **↑**/**↓** for the right. A gamepad
 moves the right paddle if one is plugged in. First to 11 wins, then the match
@@ -36,8 +41,8 @@ cmake --build build/debug --target pong_c pong_cpp
 The script versions need no build at all. The runner plays them:
 
 ```sh
-./build/debug/bin/grapple demos/pong/pong.lua
-./build/debug/bin/grapple demos/pong/pong.rb
+./build/debug/bin/grapple-beam demos/pong/pong.lua
+./build/debug/bin/grapple-beam demos/pong/pong.rb
 ```
 
 Set `GRAPPLE_BEAM_BUILD_DEMOS=OFF` to leave the compiled demos out of a build.

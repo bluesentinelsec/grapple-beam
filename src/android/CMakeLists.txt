@@ -32,4 +32,4 @@ set_target_properties(grapple PROPERTIES
   OUTPUT_NAME grapple
 )
 
-cppboot_set_project_warnings(grapple)
+grapple_set_project_warnings(grapple)

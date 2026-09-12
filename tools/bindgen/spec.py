@@ -373,6 +373,12 @@ RESOURCES: dict[str, list[ResourceSpec]] = {
                       "cJSON_CreateArray"]),
     ],
     "grapple": [
+        ResourceSpec("Grapple_ChipComposer", "ChipComposer", "Grapple_DestroyChipComposer",
+                     ["Grapple_CreateChipComposer"]),
+        ResourceSpec("Grapple_ChipSong", "ChipSong", "Grapple_DestroyChipSong",
+                     ["Grapple_LoadChipSong", "Grapple_LoadChipSong_IO", "Grapple_LoadChipSongEx", "Grapple_LoadChipSong_IOEx", "Grapple_LoadChipSongMemory", "Grapple_BuildChipSong"]),
+        ResourceSpec("Grapple_ChipPlayer", "ChipPlayer", "Grapple_DestroyChipPlayer",
+                     ["Grapple_CreateChipPlayer", "Grapple_PlayChipFile", "Grapple_PlayChipSong"]),
         ResourceSpec("Grapple_TiledMap", "TiledMapHandle", "Grapple_FreeTiledMap",
                      ["Grapple_LoadTiledMap"]),
         ResourceSpec("Grapple_Gui", "GuiHandle", "Grapple_DestroyGui",

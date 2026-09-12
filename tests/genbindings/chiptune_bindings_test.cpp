@@ -1,0 +1,243 @@
+/** @file chiptune_bindings_test.cpp @brief Composition and player ownership across language
+ * boundaries. */
+#include <SDL3/SDL.h>
+#include <grapple/bindings.h>
+#include <grapple/chiptune.h>
+#include <grapple/gen/grapple.h>
+#include <grapple/lua.h>
+#include <grapple/ruby.h>
+#include <gtest/gtest.h>
+#include <memory>
+#include <mruby/compile.h>
+#include <mruby/string.h>
+#include <mruby/variable.h>
+#include <vector>
+
+namespace
+{
+class ChipBindings : public ::testing::Test
+{
+  protected:
+    static void SetUpTestSuite()
+    {
+        ASSERT_TRUE(SDL_SetHint(SDL_HINT_AUDIO_DRIVER, "dummy"));
+        ASSERT_TRUE(SDL_Init(SDL_INIT_AUDIO));
+        ASSERT_TRUE(MIX_Init());
+    }
+    static void TearDownTestSuite()
+    {
+        MIX_Quit();
+        SDL_Quit();
+        SDL_ResetHint(SDL_HINT_AUDIO_DRIVER);
+    }
+};
+
+TEST_F(ChipBindings, CppComposesDeclarativeNotesWithRaii)
+{
+    Grapple_ChipDiagnostic error;
+    auto imported = grapple::ext::ChipSong::LoadChipSongEx(CHIP_XML_FIXTURE, nullptr, &error);
+    ASSERT_TRUE(imported.ok());
+    EXPECT_EQ(imported->GetChipDiagnosticCount(), 3);
+    auto composer = grapple::ext::ChipComposer::CreateChipComposer(1, 480);
+    ASSERT_TRUE(composer.ok());
+    ASSERT_TRUE(composer->SetChipPart(0, "harmony", GRAPPLE_CHIP_PRESET_HARMONY, 1).ok());
+    const Grapple_ChipNote notes[] = {
+        {0, 48, 80, 0, 1920}, {0, 52, 80, 0, 1920}, {0, 55, 80, 0, 1920}};
+    Grapple_ChipExpression expression;
+    grapple::ext::GetChipExpressionDefaults(&expression);
+    expression.vibrato_depth = 0.1f;
+    for (const auto &note : notes)
+        ASSERT_TRUE(composer->AddChipNoteEx(&note, &expression).ok());
+    ASSERT_TRUE(composer->AddChipControl(0, 0, 7, 100).ok());
+    ASSERT_TRUE(composer->AddChipSection("Loop", 0, 1920).ok());
+    auto song = grapple::ext::ChipSong::BuildChipSong(composer->get(), 1920);
+    ASSERT_TRUE(song.ok());
+    auto player = grapple::ext::ChipPlayer::CreateChipPlayer(song->get(), 8000, 64, false);
+    ASSERT_TRUE(player.ok());
+    Grapple_ChipPosition position{};
+    ASSERT_TRUE(player->SetChipPlayerLoop(0, 1920, true).ok());
+    ASSERT_TRUE(player->SetChipPlayerTempo(1).ok());
+    ASSERT_TRUE(player->SeekChipPlayer(480).ok());
+    ASSERT_TRUE(player->ReadChipPlayerPosition(&position).ok());
+    EXPECT_EQ(position.tick, 480u);
+    ASSERT_TRUE(player->SetChipPlayerGain(0.8f).ok());
+    const Grapple_ChipTrackMix mix{1, 0, false, false};
+    ASSERT_TRUE(player->SetChipTrackMix(0, &mix).ok());
+    player->ResetChipPlayer();
+    composer->reset();
+    song->reset();
+    std::vector<float> pcm(16000);
+    EXPECT_EQ(player->RenderChipPlayer(pcm.data(), 8000), 8000);
+    EXPECT_EQ(player->GetChipPlayerPeakVoices(), 3);
+}
+
+TEST_F(ChipBindings, CppFileHelperReturnsOwnedManagedPlayer)
+{
+    auto player = grapple::ext::ChipPlayer::PlayChipFile(CHIP_XML_FIXTURE, true);
+    ASSERT_TRUE(player.ok()) << SDL_GetError();
+    EXPECT_TRUE(player->ChipPlayerPlaying());
+    player->PauseChipPlayer();
+    EXPECT_FALSE(player->ChipPlayerPlaying());
+    ASSERT_TRUE(player->PlayChipPlayer().ok());
+    player->StopChipPlayer();
+    EXPECT_FALSE(player->ChipPlayerPlaying());
+}
+
+TEST_F(ChipBindings, LuaOwnsComposerSongAndManagedPlayback)
+{
+    std::unique_ptr<lua_State, decltype(&lua_close)> state(Grapple_CreateLuaState(), lua_close);
+    ASSERT_TRUE(state);
+    ASSERT_TRUE(Grapple_OpenLuaBindings(state.get()));
+    lua_pushstring(state.get(), CHIP_XML_FIXTURE);
+    lua_setglobal(state.get(), "chip_xml_fixture");
+    const char *script = R"lua(
+local G = GrappleC
+local ok, policy = G.GetChipImportDefaults()
+assert(ok and policy.strict)
+local imported, diagnostic = G.LoadChipSongEx(chip_xml_fixture, policy)
+assert(imported and diagnostic.code == G.GRAPPLE_CHIP_DIAGNOSTIC_NONE)
+assert(G.GetChipDiagnosticCount(imported) == 3)
+local ok, diagnostic = G.ReadChipDiagnostic(imported, 0)
+assert(ok and diagnostic.code == G.GRAPPLE_CHIP_DIAGNOSTIC_STAFF_MIRROR)
+assert(G.GetChipDiagnosticMessage(imported, 0):find('TAB'))
+G.DestroyChipSong(imported)
+local composer = assert(G.CreateChipComposer(1, 480))
+assert(G.SetChipPart(composer, 0, 'harmony', G.GRAPPLE_CHIP_PRESET_HARMONY, 1))
+local notes = {
+    {track=0, note=48, velocity=80, start_tick=0, duration_ticks=1920},
+    {track=0, note=52, velocity=80, start_tick=0, duration_ticks=1920},
+    {track=0, note=55, velocity=80, start_tick=0, duration_ticks=1920},
+}
+local expression = G.GetChipExpressionDefaults()
+assert(expression.gain == 1)
+expression.vibrato_depth = 0.1
+for _, note in ipairs(notes) do assert(G.AddChipNoteEx(composer, note, expression)) end
+assert(G.AddChipControl(composer, 0, 0, 7, 100))
+assert(G.AddChipSection(composer, 'Loop', 0, 1920))
+local song = assert(G.BuildChipSong(composer, 1920))
+assert(G.GetChipSectionCount(song) == 1)
+local ok, section = G.ReadChipSection(song, 0)
+assert(ok and section.name == 'Loop' and section.end_tick == 1920)
+local ok, info = G.ReadChipSongInfo(song)
+assert(ok and info.duration_seconds == 2)
+local player = assert(G.PlayChipSong(song, true))
+G.PauseChipPlayer(player)
+assert(G.SetChipPlayerLoop(player, 480, 1920, true))
+assert(G.SetChipPlayerTempo(player, 1.5))
+assert(G.SeekChipPlayer(player, 960))
+local ok, position = G.ReadChipPlayerPosition(player)
+assert(ok and position.tick == 960)
+assert(G.SetChipPlayerGain(player, 0.8))
+assert(G.SetChipTrackMix(player, 0, {gain=1, pan=-0.2, muted=false, solo=true}))
+local ok, mix = G.ReadChipTrackMix(player, 0)
+assert(ok and mix.solo)
+local ok, mapping = G.ReadChipTrackMapping(player, 0, 0)
+assert(ok and mapping.preset == G.GRAPPLE_CHIP_PRESET_HARMONY)
+local ok, wet = G.GetChipPresetEffects(G.GRAPPLE_CHIP_PRESET_HARMONY)
+assert(ok and G.SetChipTrackEffects(player, 0, wet))
+assert(G.SetChipTrackEffects(player, 0, nil))
+local file_player = assert(G.PlayChipFile(chip_xml_fixture, false))
+G.DestroyChipPlayer(file_player)
+G.DestroyChipComposer(composer)
+G.DestroyChipSong(song)
+composer, song = nil, nil
+collectgarbage('collect')
+local ok, effects = G.GetChipPresetEffects(G.GRAPPLE_CHIP_PRESET_HARMONY)
+assert(ok and effects.pulse_beats == 0.5)
+effects.pulse_beats = 1
+assert(G.SetChipPresetEffects(player, G.GRAPPLE_CHIP_PRESET_HARMONY, effects))
+assert(G.PlayChipPlayer(player))
+assert(G.ChipPlayerPlaying(player))
+G.PauseChipPlayer(player)
+assert(not G.ChipPlayerPlaying(player))
+assert(G.PlayChipPlayer(player))
+G.StopChipPlayer(player)
+assert(not G.ChipPlayerPlaying(player))
+assert(G.PlayChipPlayer(player))
+player = nil
+collectgarbage('collect')
+assert(G.RenderChipPlayer == nil and G.GetChipPlayerStream == nil)
+)lua";
+    ASSERT_EQ(luaL_dostring(state.get(), script), LUA_OK) << lua_tostring(state.get(), -1);
+}
+
+TEST_F(ChipBindings, RubyOwnsComposerSongAndManagedPlayback)
+{
+    std::unique_ptr<mrb_state, decltype(&mrb_close)> state(Grapple_CreateRubyState(), mrb_close);
+    ASSERT_TRUE(state);
+    ASSERT_TRUE(Grapple_OpenRubyBindings(state.get()));
+    mrb_gv_set(state.get(), mrb_intern_lit(state.get(), "$chip_xml_fixture"),
+               mrb_str_new_cstr(state.get(), CHIP_XML_FIXTURE));
+    const char *script = R"ruby(
+g = GrappleC
+ok, policy = g.GetChipImportDefaults()
+raise 'policy' unless ok && policy[:strict]
+imported, diagnostic = g.LoadChipSongEx($chip_xml_fixture, policy)
+raise 'import' unless imported && diagnostic[:code] == g::GRAPPLE_CHIP_DIAGNOSTIC_NONE
+raise 'diagnostics' unless g.GetChipDiagnosticCount(imported) == 3
+ok, diagnostic = g.ReadChipDiagnostic(imported, 0)
+raise 'diagnostic code' unless ok && diagnostic[:code] == g::GRAPPLE_CHIP_DIAGNOSTIC_STAFF_MIRROR
+raise 'message' unless g.GetChipDiagnosticMessage(imported, 0).include?('TAB')
+g.DestroyChipSong(imported)
+composer = g.CreateChipComposer(1, 480)
+raise 'composer' unless composer
+raise 'part' unless g.SetChipPart(composer, 0, 'harmony', g::GRAPPLE_CHIP_PRESET_HARMONY, 1)
+notes = [48, 52, 55].map { |pitch| {track: 0, note: pitch, velocity: 80, start_tick: 0, duration_ticks: 1920} }
+expression = g.GetChipExpressionDefaults()
+raise 'expression' unless expression[:gain] == 1
+expression[:vibrato_depth] = 0.1
+notes.each { |note| raise 'note' unless g.AddChipNoteEx(composer, note, expression) }
+raise 'control' unless g.AddChipControl(composer, 0, 0, 7, 100)
+raise 'section' unless g.AddChipSection(composer, 'Loop', 0, 1920)
+song = g.BuildChipSong(composer, 1920)
+raise 'section count' unless g.GetChipSectionCount(song) == 1
+ok, section = g.ReadChipSection(song, 0)
+raise 'section data' unless ok && section[:name] == 'Loop' && section[:end_tick] == 1920
+ok, info = g.ReadChipSongInfo(song)
+raise 'duration' unless ok && info[:duration_seconds] == 2
+player = g.PlayChipSong(song, true)
+g.PauseChipPlayer(player)
+raise 'loop' unless g.SetChipPlayerLoop(player, 480, 1920, true)
+raise 'tempo' unless g.SetChipPlayerTempo(player, 1.5)
+raise 'seek' unless g.SeekChipPlayer(player, 960)
+ok, position = g.ReadChipPlayerPosition(player)
+raise 'position' unless ok && position[:tick] == 960
+raise 'gain' unless g.SetChipPlayerGain(player, 0.8)
+raise 'mix' unless g.SetChipTrackMix(player, 0, {gain: 1, pan: -0.2, muted: false, solo: true})
+ok, mix = g.ReadChipTrackMix(player, 0)
+raise 'read mix' unless ok && mix[:solo]
+ok, mapping = g.ReadChipTrackMapping(player, 0, 0)
+raise 'mapping' unless ok && mapping[:preset] == g::GRAPPLE_CHIP_PRESET_HARMONY
+ok, wet = g.GetChipPresetEffects(g::GRAPPLE_CHIP_PRESET_HARMONY)
+raise 'private effects' unless ok && g.SetChipTrackEffects(player, 0, wet)
+raise 'restore effects' unless g.SetChipTrackEffects(player, 0, nil)
+file_player = g.PlayChipFile($chip_xml_fixture, false)
+raise 'file helper' unless file_player
+g.DestroyChipPlayer(file_player)
+g.DestroyChipComposer(composer)
+g.DestroyChipSong(song)
+composer = song = nil
+GC.start
+ok, effects = g.GetChipPresetEffects(g::GRAPPLE_CHIP_PRESET_HARMONY)
+raise 'defaults' unless ok && effects[:pulse_beats] == 0.5
+effects[:pulse_beats] = 1
+raise 'effects' unless g.SetChipPresetEffects(player, g::GRAPPLE_CHIP_PRESET_HARMONY, effects)
+raise 'play' unless g.PlayChipPlayer(player)
+raise 'playing' unless g.ChipPlayerPlaying(player)
+g.PauseChipPlayer(player)
+raise 'pause' if g.ChipPlayerPlaying(player)
+raise 'resume' unless g.PlayChipPlayer(player)
+g.StopChipPlayer(player)
+raise 'stop' if g.ChipPlayerPlaying(player)
+raise 'restart' unless g.PlayChipPlayer(player)
+player = nil
+GC.start
+)ruby";
+    mrb_load_string(state.get(), script);
+    if (state->exc)
+    {
+        const mrb_value message = mrb_inspect(state.get(), mrb_obj_value(state->exc));
+        FAIL() << RSTRING_CSTR(state.get(), message);
+    }
+}
+} // namespace

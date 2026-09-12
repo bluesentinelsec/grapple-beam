@@ -7,7 +7,7 @@ target_link_libraries(grapple_http_test
     SDL3::SDL3
     GTest::gtest_main
 )
-cppboot_set_project_warnings(grapple_http_test)
+grapple_set_project_warnings(grapple_http_test)
 gtest_discover_tests(grapple_http_test DISCOVERY_TIMEOUT 60 PROPERTIES TIMEOUT 120)
 
 # Link audit: mog transports are OS-native or dlopen'd; nothing shared links.

@@ -71,3 +71,6 @@ local.properties
 .cxx/
 .cache/
 site/
+
+# Local make-wrapper convenience link to the engine runner
+/grapple-beam

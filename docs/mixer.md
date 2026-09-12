@@ -79,3 +79,21 @@ example above.
 
 Provenance and the full delete list:
 [`deps/SDL3_mixer.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/SDL3_mixer.md).
+
+## Notation and code-authored game music
+
+`Grapple_LoadChipSong` accepts MIDI, MusicXML and compressed MXL. Immutable songs
+share a polyphonic C64-inspired player with declarative composition APIs. Named
+parts select lead, pulsing harmony, bass and percussion presets; modern delay,
+chorus and reverb defaults work without soundfonts or external synths.
+
+Initialize SDL audio and `MIX_Init`, then `Grapple_PlayChipFile("level.musicxml", true)`
+returns an owned managed player. Keep it alive during the game and destroy it
+before audio shutdown. `PlayChipSong` plays an already imported/code-built song;
+`CreateChipPlayer`/`RenderChipPlayer` provide explicit configuration and raw PCM.
+The same operations are available through C++, Lua and Ruby.
+
+See the [MusicXML contract](chiptune-musicxml.md),
+[authoring guide and support matrix](chiptune-support.md),
+[builds and measurements](chiptune-validation.md), and
+[runnable examples](../demos/chiptune/README.md).

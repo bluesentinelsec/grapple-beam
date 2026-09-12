@@ -7,6 +7,7 @@
 #import <os/log.h>
 
 #include <grapple/version.hpp>
+#include "../common/chiptune_smoke.h"
 
 #include <grapple/engine.h>
 #include <grapple/engine_actor.h>
@@ -55,6 +56,7 @@ class TestRun
 int RunTests()
 {
     TestRun run;
+    run.Check(ChipMusicXmlSmoke(), "MusicXML triplets import and render finite nonzero PCM");
     const std::string_view version = grapple::Version();
     run.Check(version == GRAPPLE_BEAM_EXPECTED_VERSION,
               "XCFramework exports the VERSION-derived API");

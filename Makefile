@@ -6,7 +6,7 @@
 
 PROJECT_NAME := grapple-beam
 PROJECT_MACRO := GRAPPLE_BEAM
-TARGET_NAME  := grapple
+TARGET_NAME  := grapple-beam
 BUILD_DEBUG  := build/debug
 BUILD_RELEASE := build/release
 BUILD_SANITIZER := build/sanitizer

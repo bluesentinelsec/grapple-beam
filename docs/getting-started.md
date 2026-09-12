@@ -18,13 +18,15 @@ the library built with your own flags and toolchain. Link the individual
 modules; this is the section below.
 
 **From a release, with `find_package`** — you want to download something
-and link it. A desktop release ships three things:
+and link it. A desktop release has two primary outputs: the `grapple-beam` runner and the
+embeddable engine library. The SDK provides static and dynamic library builds,
+with C and C++ API variants, plus development support files:
 
 | | |
 |---|---|
 | `lib/libgrapple_sdk.a` | the C API: every module, SDL3, and the vendored libraries |
 | `lib/libgrapple_sdk_cxx.a` | all of that **plus** the C++ wrapper |
-| `bin/grapple` | the runner: plays a Lua or Ruby game with no toolchain installed |
+| `bin/grapple-beam` | the runner: plays a Lua or Ruby game with no toolchain installed |
 | `lib/libgrapple.{so,dylib,dll}` | the C API as a shared library |
 | `lib/libgrapple_cxx.{so,dylib,dll}` | the C++ API as a shared library |
 | `share/doc/…` | this documentation, offline, plus the generated API references |
@@ -176,17 +178,17 @@ Point it at a script and it runs it. The language comes from the
 extension, so there is nothing to remember:
 
 ```bash
-./build/debug/bin/grapple game.lua
-./build/debug/bin/grapple game.rb
+./build/debug/bin/grapple-beam game.lua
+./build/debug/bin/grapple-beam game.rb
 ```
 
 With no script, it is an interactive REPL, and `-l` says which language
 when there is no file to infer it from:
 
 ```bash
-./build/debug/bin/grapple -l lua
+./build/debug/bin/grapple-beam -l lua
 > SDL.GetPlatform()
-./build/debug/bin/grapple -l ruby
+./build/debug/bin/grapple-beam -l ruby
 > SDL.GetPlatform
 ```
 

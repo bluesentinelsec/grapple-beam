@@ -17,7 +17,7 @@ target_link_libraries(grapple_engine_test
     Grapple::Image
     GTest::gtest_main
 )
-cppboot_set_project_warnings(grapple_engine_test)
+grapple_set_project_warnings(grapple_engine_test)
 gtest_discover_tests(grapple_engine_test DISCOVERY_TIMEOUT 60)
 
 find_package(Python3 COMPONENTS Interpreter)

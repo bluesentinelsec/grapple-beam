@@ -268,8 +268,8 @@ jobs:
                            -o -name "grapple.dll" \) -print -quit 2>/dev/null)"
           python3 tests/ctypes/test_shared_library.py "${shared_c}"
 
-          runner="${prefix}/bin/grapple"
-          [ -f "${runner}" ] || runner="${prefix}/bin/grapple.exe"
+          runner="${prefix}/bin/grapple-beam"
+          [ -f "${runner}" ] || runner="${prefix}/bin/grapple-beam.exe"
           if [ ! -f "${runner}" ]; then
             echo "Missing the runner from the SDK" >&2
             exit 1
@@ -335,10 +335,10 @@ jobs:
           mkdir -p "${out}/editor"
 
           sdk="${{ steps.pkg.outputs.prefix }}"
-          if [ -f "${sdk}/bin/grapple.exe" ]; then
-            cp "${sdk}/bin/grapple.exe" "${out}/"
+          if [ -f "${sdk}/bin/grapple-beam.exe" ]; then
+            cp "${sdk}/bin/grapple-beam.exe" "${out}/"
           else
-            cp "${sdk}/bin/grapple" "${out}/"
+            cp "${sdk}/bin/grapple-beam" "${out}/"
           fi
           cp "${sdk}/share/${APP_NAME}/editor/grapple.lua" "${out}/editor/"
           cp "${sdk}/share/${APP_NAME}/editor/grapple.rbs" "${out}/editor/"
@@ -358,9 +358,9 @@ jobs:
           Plays a game written in Lua or Ruby. Nothing needs to be installed:
           the interpreters, the engine and SDL3 are inside the executable.
 
-              ./grapple game.lua
-              ./grapple game.rb
-              ./grapple -l lua          # an interactive shell
+              ./grapple-beam game.lua
+              ./grapple-beam game.rb
+              ./grapple-beam -l lua          # an interactive shell
 
           The language comes from the file's extension; `-l` says which when
           there is no file to infer it from.

@@ -6,7 +6,7 @@ target_link_libraries(grapple_extras_test
     Grapple::Extras
     GTest::gtest_main
 )
-cppboot_set_project_warnings(grapple_extras_test)
+grapple_set_project_warnings(grapple_extras_test)
 gtest_discover_tests(grapple_extras_test DISCOVERY_TIMEOUT 60)
 
 # Link audit: static Grapple::Extras + static SDL3 must depend only on

@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import ctypes
+import math
 import sys
 from pathlib import Path
 
@@ -68,6 +69,38 @@ def declare(lib: ctypes.CDLL) -> None:
     lib.SDL_GetPlatform.argtypes = []
     lib.SDL_GetError.restype = ctypes.c_char_p
     lib.SDL_GetError.argtypes = []
+
+
+def run_chiptune(lib: ctypes.CDLL) -> None:
+    lib.Grapple_LoadChipSongMemory.restype = ctypes.c_void_p
+    lib.Grapple_LoadChipSongMemory.argtypes = [ctypes.c_void_p, ctypes.c_size_t, ctypes.c_void_p, ctypes.c_void_p]
+    lib.Grapple_CreateChipPlayer.restype = ctypes.c_void_p
+    lib.Grapple_CreateChipPlayer.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_int, ctypes.c_bool]
+    lib.Grapple_RenderChipPlayer.restype = ctypes.c_int
+    lib.Grapple_RenderChipPlayer.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_float), ctypes.c_int]
+    for kind in ("Song", "Player"):
+        destroy = getattr(lib, "Grapple_DestroyChip" + kind)
+        destroy.restype = None
+        destroy.argtypes = [ctypes.c_void_p]
+    assets = Path(__file__).resolve().parents[1] / "mixer" / "assets"
+    for filename in ("c64-composition-named.mid", "c64-composition-named.xml", "c64-composition.mxl"):
+        data = (assets / filename).read_bytes()
+        buffer = ctypes.create_string_buffer(data)
+        song = lib.Grapple_LoadChipSongMemory(buffer, len(data), None, None)
+        player = None
+        try:
+            if not song:
+                raise SystemExit(f"shared chiptune import: {lib.SDL_GetError()!r}")
+            player = lib.Grapple_CreateChipPlayer(song, 8000, 64, False)
+            pcm = (ctypes.c_float * 1024)()
+            if not player or lib.Grapple_RenderChipPlayer(player, pcm, 512) != 512:
+                raise SystemExit(f"shared chiptune render: {lib.SDL_GetError()!r}")
+            if not all(math.isfinite(sample) for sample in pcm) or not any(pcm):
+                raise SystemExit("shared chiptune output must be finite and nonzero")
+        finally:
+            lib.Grapple_DestroyChipPlayer(player)
+            lib.Grapple_DestroyChipSong(song)
+    print("  MIDI, MusicXML and compressed MXL import/render through the shared API")
 
 
 def run_engine(lib: ctypes.CDLL) -> None:
@@ -145,6 +178,7 @@ def main() -> int:
     print(f"  SDL reports platform: {platform}")
 
     run_engine(lib)
+    run_chiptune(lib)
     check_hidden(lib)
 
     if args.cxx:

@@ -6,7 +6,7 @@ target_link_libraries(grapple_physics_test
     Grapple::Physics
     GTest::gtest_main
 )
-cppboot_set_project_warnings(grapple_physics_test)
+grapple_set_project_warnings(grapple_physics_test)
 gtest_discover_tests(grapple_physics_test DISCOVERY_TIMEOUT 60)
 
 # Link audit: static Box2D + glue must depend only on OS-built-in libs.

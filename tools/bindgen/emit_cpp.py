@@ -202,6 +202,7 @@ class _ClassBuilder:
             ri.kind == TK.BOOL
             and ri.pointers == 0
             and self.lib.error_fn == "SDL_GetError()"
+            and fn.name != "Grapple_ChipPlayerPlaying"
         ):
             w(f"  Status {fname}({arglist}) {{")
             w(f"    return ::{fn.name}({', '.join(names)}) ? Status() : Status::FromSdl();")

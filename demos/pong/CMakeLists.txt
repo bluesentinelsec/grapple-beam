@@ -36,10 +36,10 @@ if(GRAPPLE_BEAM_BUILD_TESTS)
 
   # The script versions need no build — the runner plays them, which is the
   # arrangement worth testing as much as the games themselves.
-  if(TARGET grapple)
+  if(TARGET grapple-beam_app)
     foreach(language lua rb)
       add_test(NAME demo_pong_${language}
-        COMMAND ${CMAKE_COMMAND} -DDEMO=$<TARGET_FILE:grapple>
+        COMMAND ${CMAKE_COMMAND} -DDEMO=$<TARGET_FILE:grapple-beam_app>
                 -DSCRIPT=${CMAKE_CURRENT_SOURCE_DIR}/pong.${language} -DSECONDS=10
                 -P ${CMAKE_SOURCE_DIR}/scripts/run_demo_smoke.cmake)
     endforeach()
@@ -54,6 +54,6 @@ set_tests_properties(demo_pong_c PROPERTIES RUN_SERIAL TRUE)
 if(TARGET pong_cpp)
   set_tests_properties(demo_pong_cpp PROPERTIES RUN_SERIAL TRUE)
 endif()
-if(TARGET grapple)
+if(TARGET grapple-beam_app)
   set_tests_properties(demo_pong_lua demo_pong_rb PROPERTIES RUN_SERIAL TRUE)
 endif()

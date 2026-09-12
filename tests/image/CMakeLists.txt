@@ -9,7 +9,7 @@ target_link_libraries(grapple_image_test
 target_compile_definitions(grapple_image_test PRIVATE
   IMAGE_TEST_ASSETS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets"
 )
-cppboot_set_project_warnings(grapple_image_test)
+grapple_set_project_warnings(grapple_image_test)
 gtest_discover_tests(grapple_image_test DISCOVERY_TIMEOUT 60)
 
 # Link audit: the test binary (static Grapple::Image + static SDL3) must

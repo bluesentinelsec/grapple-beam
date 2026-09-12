@@ -7,6 +7,7 @@
  */
 #include <SDL3/SDL.h>
 #include <cstdio>
+#include <grapple/gen/grapple.h>
 #include <grapple/grapple.h>
 
 int main()
@@ -65,6 +66,19 @@ int main()
                      static_cast<unsigned long long>(engine->frame_count()));
         return 1;
     }
+
+    const char score[] =
+        "<score-partwise><part-list><score-part id='P'/></part-list>"
+        "<part id='P'><measure><note><pitch><step>C</step><octave>4</octave></pitch>"
+        "<duration>4</duration></note></measure></part></score-partwise>";
+    auto song =
+        grapple::ext::ChipSong::LoadChipSongMemory(score, sizeof(score) - 1, nullptr, nullptr);
+    if (!song.ok())
+        return 1;
+    auto player = grapple::ext::ChipPlayer::CreateChipPlayer(song->get(), 8000, 8, false);
+    float pcm[128];
+    if (!player.ok() || player->RenderChipPlayer(pcm, 64) != 64)
+        return 1;
 
     std::printf("C++ SDK consumer ok: %llu frames, SDL %d.%d.%d\n",
                 static_cast<unsigned long long>(engine->frame_count()), SDL_MAJOR_VERSION,

@@ -98,7 +98,7 @@ if(EMSCRIPTEN)
   set(GRAPPLE_BEAM_DEFAULT_BUILD_APP OFF)
   set(GRAPPLE_BEAM_DEFAULT_BUILD_BENCHMARKS OFF)
 endif()
-option(GRAPPLE_BEAM_BUILD_APP "Build the demo application executable" ${GRAPPLE_BEAM_DEFAULT_BUILD_APP})
+option(GRAPPLE_BEAM_BUILD_APP "Build the grapple-beam engine runner executable" ${GRAPPLE_BEAM_DEFAULT_BUILD_APP})
 option(GRAPPLE_BEAM_BUILD_TESTS "Build unit tests" ${GRAPPLE_BEAM_DEFAULT_BUILD_TESTS})
 option(GRAPPLE_BEAM_BUILD_BENCHMARKS "Build benchmarks" ${GRAPPLE_BEAM_DEFAULT_BUILD_BENCHMARKS})
 # Shared libraries, on the platforms where a shared library is what people
@@ -251,7 +251,7 @@ target_include_directories(${PROJECT_NAME}_lib
     $<INSTALL_INTERFACE:include>
 )
 
-cppboot_set_project_warnings(${PROJECT_NAME}_lib)
+grapple_set_project_warnings(${PROJECT_NAME}_lib)
 
 # Preferred third-party deps are linked on the *app* (and optionally tests), not
 # the library. Static libraries propagate private deps into install(EXPORT);
@@ -378,22 +378,17 @@ if(GRAPPLE_BUILD_LUA AND GRAPPLE_BUILD_RUBY)
     endif()
   endforeach()
   add_subdirectory(bindings)
-  # The script runner. On by default when this is the project being built —
-  # a static library and a way to run a game are both part of "the default
-  # build" — and off when we are a subdirectory of someone else's game,
-  # which does not want our executable in its bin/.
-  #
-  # Off on iOS and Android regardless: there is no command line to run it
-  # from, and CMake treats every executable there as an app bundle, so even
-  # installing it wants a BUNDLE DESTINATION for a binary nobody can launch.
-  set(_runner_default ${GRAPPLE_BEAM_IS_TOP_LEVEL})
-  if(IOS OR ANDROID)
-    set(_runner_default OFF)
+endif()
+
+# BUILD_APP is the single runner switch. Honor the former switch for existing presets.
+if(DEFINED GRAPPLE_BUILD_RUNNER AND NOT GRAPPLE_BUILD_RUNNER)
+  set(GRAPPLE_BEAM_BUILD_APP OFF)
+endif()
+if(GRAPPLE_BEAM_BUILD_APP)
+  if(NOT TARGET Grapple_Bindings)
+    message(FATAL_ERROR "The grapple-beam runner requires LUA and RUBY bindings; set GRAPPLE_BEAM_BUILD_APP=OFF for a library-only build")
   endif()
-  option(GRAPPLE_BUILD_RUNNER "Build the Lua/Ruby script runner" ${_runner_default})
-  if(GRAPPLE_BUILD_RUNNER)
-    add_subdirectory(tools/repl)  # builds `grapple`
-  endif()
+  add_subdirectory(src/runner)
 endif()
 
 # The libraries we ship — two static, two shared — assembled from every

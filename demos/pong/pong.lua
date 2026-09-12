@@ -3,7 +3,7 @@
 -- Original grapple-beam code (zlib). Run it with the runner, which carries
 -- the engine and the interpreter inside itself:
 --
---     grapple demos/pong/pong.lua
+--     grapple-beam demos/pong/pong.lua
 --
 -- Nothing is compiled and nothing is installed. This is the same game as
 -- pong.c, written the same way, so the two can be read together.

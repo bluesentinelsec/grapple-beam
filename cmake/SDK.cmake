@@ -81,6 +81,7 @@ message(STATUS "SDK: ${CMAKE_PROJECT_NAME} components folded in: ${GRAPPLE_SDK_C
 # and has no objects to give. Getting that wrong is silent — the collector
 # skips what it cannot use — so the check below fails the build instead.
 set(GRAPPLE_SDK_VENDORED
+  expat
   SDL3-static
   freetype
   mbedtls mbedx509 mbedcrypto everest p256m
@@ -104,7 +105,7 @@ foreach(candidate IN LISTS GRAPPLE_SDK_VENDORED)
 endforeach()
 message(STATUS "SDK: vendored libraries folded in: ${_folded}")
 
-foreach(required IN ITEMS SDL3-static mog_lib freetype)
+foreach(required IN ITEMS SDL3-static mog_lib freetype expat)
   if(TARGET ${required})
     list(FIND _sdk_vendored_objects "$<TARGET_OBJECTS:${required}>" _found)
     if(_found EQUAL -1)
@@ -465,6 +466,12 @@ endif()
 # script author can read the signature a *script* sees rather than the C one,
 # and COVERAGE.md records what is bound and what was skipped and why.
 set(_doc_dest ${CMAKE_INSTALL_DATADIR}/doc/${PROJECT_NAME})
+if(TARGET expat)
+  install(FILES "${CMAKE_CURRENT_LIST_DIR}/../mixer/src/expat/COPYING"
+          DESTINATION ${_doc_dest}/licenses RENAME expat.txt)
+  install(FILES "${CMAKE_CURRENT_LIST_DIR}/../deps/expat.md"
+          DESTINATION ${_doc_dest}/deps)
+endif()
 file(GLOB _doc_pages "${CMAKE_CURRENT_LIST_DIR}/../docs/*.md")
 if(_doc_pages)
   install(FILES ${_doc_pages} DESTINATION ${_doc_dest})

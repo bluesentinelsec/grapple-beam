@@ -7,4 +7,4 @@ target_link_libraries(grapple_version_bench
     benchmark::benchmark
     benchmark::benchmark_main
 )
-cppboot_set_project_warnings(grapple_version_bench)
+grapple_set_project_warnings(grapple_version_bench)

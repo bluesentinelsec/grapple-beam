@@ -9,7 +9,7 @@ target_link_libraries(grapple_vfs_test
 target_compile_definitions(grapple_vfs_test PRIVATE
   VFS_TEST_ASSETS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets"
 )
-cppboot_set_project_warnings(grapple_vfs_test)
+grapple_set_project_warnings(grapple_vfs_test)
 gtest_discover_tests(grapple_vfs_test DISCOVERY_TIMEOUT 60)
 
 # Link audit: static PhysFS + glue must depend only on OS-built-in libs.

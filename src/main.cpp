@@ -1,29 +1,15 @@
-/**
- * @file main.cpp
- * @brief Program entrypoint (always src/main.cpp in cppboot projects).
- *
- * Keep this file thin: parse args / wire dependencies, then call library code.
- */
-
+/** @file main.cpp @brief Desktop engine runner entrypoint. */
 #include "grapple/version.hpp"
+#include "runner/runner.h"
 
-#include <CLI/CLI.hpp>
-#include <iostream>
 #include <string>
 
-/**
- * @brief Program entry.
- * @param argc Argument count.
- * @param argv Argument vector.
- * @return Exit status.
- */
+/** @brief Run the engine CLI.
+ * @param argc Number of process arguments.
+ * @param argv Process argument vector.
+ * @return Runner exit status. */
 int main(int argc, char **argv)
 {
-    CLI::App app{"grapple-beam — cppboot project"};
-    app.set_version_flag("-V,--version", std::string{grapple::Version()});
-    CLI11_PARSE(app, argc, argv);
-
-    std::cout << "grapple-beam " << grapple::Version()
-              << " — add components under src/ (see README.md / AGENTS.md)\n";
-    return 0;
+    const std::string version{grapple::Version()};
+    return GrappleRunner_Run(argc, argv, version.c_str());
 }

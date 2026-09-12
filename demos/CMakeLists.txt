@@ -9,3 +9,7 @@
 # the arrangement the engine exists to provide and therefore the one worth
 # demonstrating.
 add_subdirectory(pong)
+
+if(GRAPPLE_BUILD_MIXER AND NOT EMSCRIPTEN)
+  add_subdirectory(chiptune)
+endif()

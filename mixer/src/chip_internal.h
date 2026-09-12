@@ -1,0 +1,90 @@
+/* Original Grapple code (zlib). Shared song representation, independent of the synth. */
+#ifndef GRAPPLE_CHIP_INTERNAL_H
+#define GRAPPLE_CHIP_INTERNAL_H
+
+#include <grapple/chiptune.h>
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+#define CHIP_SONG_MAX_TRACKS 256
+#define CHIP_SONG_MAX_EVENTS 1000000
+#define CHIP_SONG_MAX_SECONDS 86400
+
+    typedef struct ChipEvent
+    {
+        Uint64 tick;
+        Uint64 time; /* Exact elapsed microseconds multiplied by song PPQN. */
+        Uint32 order;
+        Uint32 tempo;
+        Uint16 track;
+        Uint8 status;
+        Uint8 a;
+        Uint8 b;
+        Uint64 duration;     /* Nominal note duration in ticks, for per-note curves. */
+        float value, target; /* Note gain automation (private status 0xf1). */
+        Uint32 expression;   /* One-based expression index; zero is neutral. */
+        bool instrument_data, unpitched;
+        Uint8 program;
+        float instrument_gain, instrument_pan;
+        Uint32 note_id; /* Zero preserves MIDI's oldest matching note-off semantics. */
+    } ChipEvent;
+
+    typedef struct ChipMeasurePosition
+    {
+        Uint64 start, end;
+        int source;
+    } ChipMeasurePosition;
+
+    struct Grapple_ChipSong
+    {
+        SDL_AtomicInt references;
+        Grapple_ChipSongInfo info;
+        Grapple_ChipPreset *presets;
+        float *gains;
+        Grapple_ChipTrackInfo *tracks;
+        ChipEvent *events;
+        size_t count;
+        size_t capacity;
+        Uint64 end_time;
+        bool independent_parts;
+        Grapple_ChipExpression *expressions;
+        size_t expression_count, expression_capacity;
+        Grapple_ChipDiagnostic *diagnostics;
+        char **diagnostic_messages;
+        int diagnostic_count;
+        ChipMeasurePosition *measures;
+        int measure_count;
+        Grapple_ChipSection *sections;
+        int section_count;
+    };
+
+    struct Grapple_ChipComposer
+    {
+        Grapple_ChipSong *song;
+    };
+    bool Chip_AppendSection(Grapple_ChipSong *song, Grapple_ChipSection section);
+    bool Chip_ResolveSections(Grapple_ChipSong *song);
+    bool Chip_AppendExpression(Grapple_ChipSong *song, const Grapple_ChipExpression *expression,
+                               Uint32 *index);
+    bool Chip_ValidExpression(const Grapple_ChipExpression *expression);
+    float Chip_ExpressionPitch(const Grapple_ChipExpression *expression, double elapsed,
+                               double duration);
+    Grapple_ChipSong *Chip_NewSong(int tracks, int ppqn);
+    bool Chip_AppendEvent(Grapple_ChipSong *song, ChipEvent event);
+    bool Chip_ResolveTiming(Grapple_ChipSong *song);
+    void Chip_RetainSong(const Grapple_ChipSong *song);
+    Grapple_ChipSong *Chip_ParseMusicXml(const void *data, size_t size,
+                                         const Grapple_ChipImportOptions *options,
+                                         Grapple_ChipDiagnostic *error);
+    bool Chip_AddDiagnostic(Grapple_ChipSong *song, Grapple_ChipDiagnostic diagnostic,
+                            const char *message);
+    Uint64 Chip_TimeToFrame(const Grapple_ChipSong *song, Uint64 time, int sample_rate);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

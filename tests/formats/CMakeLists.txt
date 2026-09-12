@@ -6,7 +6,7 @@ target_link_libraries(grapple_formats_test
     Grapple::Formats
     GTest::gtest_main
 )
-cppboot_set_project_warnings(grapple_formats_test)
+grapple_set_project_warnings(grapple_formats_test)
 gtest_discover_tests(grapple_formats_test DISCOVERY_TIMEOUT 60)
 
 # Link audit: parsers must not pull in shared libs (no libyaml.so, ever).
