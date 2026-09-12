@@ -122,6 +122,28 @@ class ChipPlayer : public ::testing::Test
     }
 };
 
+TEST_F(ChipPlayer, MidiMarkersExposeSectionBounds)
+{
+    Bytes track;
+    Event(track, 0, {0xff, 6, 5, 'I', 'n', 't', 'r', 'o'});
+    Event(track, 0, {0x90, 60, 100});
+    Event(track, 480, {0xff, 6, 4, 'L', 'o', 'o', 'p'});
+    Event(track, 480, {0x80, 60, 0});
+    Event(track, 0, {0xff, 0x2f, 0});
+    const auto song = Load(Midi({track}, 480, 0));
+    ASSERT_TRUE(song) << SDL_GetError();
+    ASSERT_EQ(Grapple_GetChipSectionCount(song.get()), 2);
+    Grapple_ChipSection section{};
+    ASSERT_TRUE(Grapple_ReadChipSection(song.get(), 0, &section));
+    EXPECT_STREQ(section.name, "Intro");
+    EXPECT_EQ(section.start_tick, 0u);
+    EXPECT_EQ(section.end_tick, 480u);
+    ASSERT_TRUE(Grapple_ReadChipSection(song.get(), 1, &section));
+    EXPECT_STREQ(section.name, "Loop");
+    EXPECT_EQ(section.end_tick, 960u);
+    EXPECT_EQ(section.source_measure, -1);
+}
+
 TEST_F(ChipPlayer, ExampleRetainsEveryInstrumentAndChordNote)
 {
     const auto song = Example();

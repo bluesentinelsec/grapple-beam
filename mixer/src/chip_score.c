@@ -415,6 +415,19 @@ bool Chip_CompileScore(ScoreReader *r)
     if (!Chip_ApplySwing(r) || !Chip_ApplyScoreTiming(r) || !Chip_ExpandOrnaments(r) ||
         !Chip_ApplyDirections(r))
         return false;
+    for (size_t i = 0; i < r->control_count; ++i)
+    {
+        const ScoreControl *control = &r->controls[i];
+        if (control->kind != SCORE_SECTION)
+            continue;
+        Grapple_ChipSection section = {0};
+        SDL_strlcpy(section.name, control->voice, sizeof(section.name));
+        section.start_tick = (Uint64)control->start;
+        section.source_measure = r->song->measures[control->measure].source;
+        section.measure_visit = control->measure;
+        if (!Chip_AppendSection(r->song, section))
+            return false;
+    }
     for (size_t i = 0; i < r->note_count; ++i)
     {
         const ScoreNote *n = &r->notes[i];
@@ -450,5 +463,5 @@ bool Chip_CompileScore(ScoreReader *r)
         ++r->song->tracks[n->part].note_count;
         r->song->tracks[n->part].channels |= (Uint16)(1u << n->channel);
     }
-    return Chip_ResolveTiming(r->song);
+    return Chip_ResolveTiming(r->song) && Chip_ResolveSections(r->song);
 }

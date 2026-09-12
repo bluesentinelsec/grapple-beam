@@ -2476,6 +2476,7 @@ module GrappleC
   def self.AddChipControl: (untyped composer, Integer track, Integer tick, Integer controller, Integer value) -> bool
   def self.AddChipNote: (untyped composer, Hash[Symbol, untyped] note) -> bool
   def self.AddChipNoteEx: (untyped composer, Hash[Symbol, untyped] note, Hash[Symbol, untyped] expression) -> bool
+  def self.AddChipSection: (untyped composer, String? name, Integer start_tick, Integer end_tick) -> bool
   def self.AddChipTempo: (untyped composer, Integer tick, Float bpm) -> bool
   def self.AddDarkZone: (untyped scene, Hash[Symbol, untyped] rect, Hash[Symbol, untyped] ambient) -> bool
   def self.AddLight: (untyped scene, Hash[Symbol, untyped] light) -> bool
@@ -2764,6 +2765,7 @@ module GrappleC
   def self.GetChipImportDefaults: () -> [bool, Hash[Symbol, untyped]]
   def self.GetChipPlayerPeakVoices: (untyped player) -> Integer
   def self.GetChipPresetEffects: (Integer preset) -> [bool, Hash[Symbol, untyped]]
+  def self.GetChipSectionCount: (untyped song) -> Integer
   def self.GraphicsClamp: () -> Hash[Symbol, untyped]
   def self.GraphicsConfigError: () -> String?
   def self.GraphicsConfigPath: () -> String?
@@ -2910,6 +2912,7 @@ module GrappleC
   def self.QuitDebugText: () -> void
   def self.ReadChipDiagnostic: (untyped song, Integer index) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipPlayerPosition: (untyped player) -> [bool, Hash[Symbol, untyped]]
+  def self.ReadChipSection: (untyped song, Integer index) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipSongInfo: (untyped song) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipTrackEffects: (untyped player, Integer track, Integer preset) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipTrackMapping: (untyped player, Integer track, Integer channel) -> [bool, Hash[Symbol, untyped]]

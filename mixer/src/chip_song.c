@@ -82,11 +82,6 @@ Uint64 Chip_TimeToFrame(const Grapple_ChipSong *song, Uint64 time, int sample_ra
     return (time / divisor) * (Uint64)sample_rate + quotient + (remainder >= (divisor + 1) / 2);
 }
 
-struct Grapple_ChipComposer
-{
-    Grapple_ChipSong *song;
-};
-
 Grapple_ChipSong *Chip_NewSong(int tracks, int ppqn)
 {
     Grapple_ChipSong *song = SDL_calloc(1, sizeof(*song));
@@ -130,6 +125,7 @@ void Grapple_DestroyChipSong(Grapple_ChipSong *song)
         SDL_free(song->diagnostics);
         SDL_free(song->diagnostic_messages);
         SDL_free(song->measures);
+        SDL_free(song->sections);
         SDL_free(song);
     }
 }
@@ -359,7 +355,10 @@ Grapple_ChipSong *Grapple_BuildChipSong(const Grapple_ChipComposer *composer, Ui
     for (size_t i = 0; i < source->count; ++i)
         if (!Chip_AppendEvent(song, source->events[i]))
             goto fail;
-    if (!Chip_ResolveTiming(song))
+    for (int i = 0; i < source->section_count; ++i)
+        if (!Chip_AppendSection(song, source->sections[i]))
+            goto fail;
+    if (!Chip_ResolveTiming(song) || !Chip_ResolveSections(song))
         goto fail;
     return song;
 fail:

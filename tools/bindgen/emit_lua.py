@@ -170,7 +170,13 @@ class _LibEmitter:
     def _emit_field_push(self, sname: str, f) -> None:
         kind = self._field_kind(f.type)
         base = self.tt.resolve_base(f.type.base)
-        if f.array_len is not None:
+        if f.array_len is not None and base == "char":
+            self.w("    {")
+            self.w(f"        size_t length = 0;")
+            self.w(f"        while (length < sizeof(in->{f.name}) && in->{f.name}[length]) ++length;")
+            self.w(f"        lua_pushlstring(L, in->{f.name}, length);")
+            self.w("    }")
+        elif f.array_len is not None:
             self.w(f"    lua_createtable(L, (int)({f.array_len}), 0);")
             self.w(f"    for (int gi = 0; gi < (int)({f.array_len}); ++gi) {{")
             if kind == "pod":

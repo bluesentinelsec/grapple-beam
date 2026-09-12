@@ -231,4 +231,22 @@ TEST(ChipTransport, SeekReconstructsTempoAndControllersBeforeAnActiveNote)
     EXPECT_NEAR(position.beat, 2.1, 1e-8);
 }
 
+TEST(ChipTransport, CodeSectionsAreSortedAndCopiedIntoIndependentSongs)
+{
+    auto *composer = Grapple_CreateChipComposer(1, 480);
+    ASSERT_NE(composer, nullptr);
+    ASSERT_TRUE(Grapple_AddChipSection(composer, "Loop", 480, 1920));
+    ASSERT_TRUE(Grapple_AddChipSection(composer, "Intro", 0, 480));
+    const Song song(Grapple_BuildChipSong(composer, 0), Grapple_DestroyChipSong);
+    Grapple_DestroyChipComposer(composer);
+    ASSERT_TRUE(song);
+    ASSERT_EQ(Grapple_GetChipSectionCount(song.get()), 2);
+    Grapple_ChipSection section{};
+    ASSERT_TRUE(Grapple_ReadChipSection(song.get(), 0, &section));
+    EXPECT_STREQ(section.name, "Intro");
+    EXPECT_EQ(section.end_tick, 480u);
+    EXPECT_EQ(section.source_measure, -1);
+    EXPECT_EQ(Grapple_GetChipSongInfo(song.get())->duration_ticks, 1920u);
+}
+
 } // namespace

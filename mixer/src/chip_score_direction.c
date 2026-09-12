@@ -104,7 +104,14 @@ bool Chip_ReadDirections(ScoreReader *r, const ChipXmlNode *node, const ChipXmlN
         {
             ScoreControl c = base;
             c.node = mark;
-            if (Named(mark, "dynamics") && mark->children && !*dynamics)
+            if (Named(mark, "rehearsal"))
+            {
+                c.kind = SCORE_SECTION;
+                c.voice = mark->text ? mark->text : "";
+                if (*c.voice && !Append(r, c))
+                    return false;
+            }
+            else if (Named(mark, "dynamics") && mark->children && !*dynamics)
             {
                 c.kind = SCORE_DYNAMIC;
                 const char *name = mark->children->name;
@@ -360,7 +367,7 @@ bool Chip_RestoreDirections(ScoreReader *r, const ScoreControl *controls, size_t
     const Sint64 at = positions[source];
     for (size_t i = 0; i < count; ++i)
     {
-        if (controls[i].kind == SCORE_CONTROL)
+        if (controls[i].kind == SCORE_CONTROL || controls[i].kind == SCORE_SECTION)
             continue;
         bool seen = false;
         for (size_t prior = 0; prior < i; ++prior)
@@ -384,7 +391,7 @@ bool Chip_RestoreDirections(ScoreReader *r, const ScoreControl *controls, size_t
     /* Replay scoped source controls in order; later instructions replace earlier state. */
     for (size_t i = 0; i < count; ++i)
     {
-        if (controls[i].kind == SCORE_CONTROL)
+        if (controls[i].kind == SCORE_CONTROL || controls[i].kind == SCORE_SECTION)
             continue;
         ScoreControl c = controls[i];
         const Sint64 tick = positions[c.measure] + c.start;

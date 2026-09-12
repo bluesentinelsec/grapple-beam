@@ -2502,6 +2502,7 @@ returns as an array.
 | `GrappleC.AddChipControl(composer: Grapple_ChipComposer, track: integer, tick: integer, controller: integer, value: integer)` | boolean |
 | `GrappleC.AddChipNote(composer: Grapple_ChipComposer, note: Grapple_ChipNote table)` | boolean |
 | `GrappleC.AddChipNoteEx(composer: Grapple_ChipComposer, note: Grapple_ChipNote table, expression: Grapple_ChipExpression table)` | boolean |
+| `GrappleC.AddChipSection(composer: Grapple_ChipComposer, name: string|nil, start_tick: integer, end_tick: integer)` | boolean |
 | `GrappleC.AddChipTempo(composer: Grapple_ChipComposer, tick: integer, bpm: number)` | boolean |
 | `GrappleC.AddDarkZone(scene: Grapple_LightScene, rect: SDL_FRect table, ambient: SDL_FColor table)` | boolean |
 | `GrappleC.AddLight(scene: Grapple_LightScene, light: Grapple_Light table)` | boolean |
@@ -2790,6 +2791,7 @@ returns as an array.
 | `GrappleC.GetChipImportDefaults()` | boolean, options: Grapple_ChipImportOptions table |
 | `GrappleC.GetChipPlayerPeakVoices(player: Grapple_ChipPlayer)` | integer |
 | `GrappleC.GetChipPresetEffects(preset: integer)` | boolean, effects: Grapple_ChipEffects table |
+| `GrappleC.GetChipSectionCount(song: Grapple_ChipSong)` | integer |
 | `GrappleC.GraphicsClamp()` | settings: Grapple_GraphicsSettings table |
 | `GrappleC.GraphicsConfigError()` | string|nil |
 | `GrappleC.GraphicsConfigPath()` | string|nil |
@@ -2936,6 +2938,7 @@ returns as an array.
 | `GrappleC.QuitDebugText()` | nil |
 | `GrappleC.ReadChipDiagnostic(song: Grapple_ChipSong, index: integer)` | boolean, diagnostic: Grapple_ChipDiagnostic table |
 | `GrappleC.ReadChipPlayerPosition(player: Grapple_ChipPlayer)` | boolean, position: Grapple_ChipPosition table |
+| `GrappleC.ReadChipSection(song: Grapple_ChipSong, index: integer)` | boolean, section: Grapple_ChipSection table |
 | `GrappleC.ReadChipSongInfo(song: Grapple_ChipSong)` | boolean, info: Grapple_ChipSongInfo table |
 | `GrappleC.ReadChipTrackEffects(player: Grapple_ChipPlayer, track: integer, preset: integer)` | boolean, effects: Grapple_ChipEffects table |
 | `GrappleC.ReadChipTrackMapping(player: Grapple_ChipPlayer, track: integer, channel: integer)` | boolean, mapping: Grapple_ChipMapping table |

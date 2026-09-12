@@ -89,6 +89,15 @@ static bool ReadTrack(Grapple_ChipSong *song, ChipReader *r, int track)
                 SDL_memcpy(info->name, p, length);
                 info->name[length] = '\0';
             }
+            else if (meta == 6 && size)
+            {
+                Grapple_ChipSection section = {0};
+                SDL_memcpy(section.name, p, SDL_min((size_t)size, sizeof(section.name) - 1));
+                section.start_tick = tick;
+                section.source_measure = section.measure_visit = -1;
+                if (*section.name && !Chip_AppendSection(song, section))
+                    return false;
+            }
             else if (meta == 81)
             {
                 if (size != 3 || BigEndian(p, 3) == 0)
@@ -176,7 +185,7 @@ static Grapple_ChipSong *ParseMidi(const Uint8 *data, size_t size)
         if (!ReadTrack(song, &chunk, track++))
             goto fail;
     }
-    if (!Chip_ResolveTiming(song))
+    if (!Chip_ResolveTiming(song) || !Chip_ResolveSections(song))
         goto fail;
     return song;
 fail:

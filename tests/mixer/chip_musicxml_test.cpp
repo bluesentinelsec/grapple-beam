@@ -1091,3 +1091,29 @@ TEST(ChipMusicXml, TiesCanApplyOnlyOnSelectedRepeatPasses)
     EXPECT_EQ(notes[1].tick, 2 * q);
     EXPECT_EQ(notes[2].tick, 3 * q);
 }
+
+TEST(ChipMusicXml, RehearsalSectionsRetainSourceAndExpandedLoopBounds)
+{
+    const auto song = LoadXml(
+        Score("<measure><direction><direction-type><rehearsal>Intro</rehearsal></direction-type>"
+              "</direction>" +
+              Note("1") +
+              "</measure><measure><direction><direction-type>"
+              "<rehearsal>Loop</rehearsal></direction-type></direction>" +
+              Note("1") + "<barline><repeat direction='backward'/></barline></measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    ASSERT_EQ(Grapple_GetChipSectionCount(song.get()), 4);
+    const auto q = static_cast<Uint64>(song->info.ticks_per_quarter);
+    Grapple_ChipSection section{};
+    ASSERT_TRUE(Grapple_ReadChipSection(song.get(), 2, &section));
+    EXPECT_STREQ(section.name, "Intro");
+    EXPECT_EQ(section.start_tick, 2 * q);
+    EXPECT_EQ(section.end_tick, 3 * q);
+    EXPECT_EQ(section.source_measure, 0);
+    EXPECT_EQ(section.measure_visit, 2);
+    const Player player(Grapple_CreateChipPlayer(song.get(), 8000, 16, false),
+                        Grapple_DestroyChipPlayer);
+    ASSERT_TRUE(player);
+    EXPECT_TRUE(
+        Grapple_SetChipPlayerLoop(player.get(), section.start_tick, section.end_tick, true));
+}

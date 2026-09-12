@@ -14321,6 +14321,14 @@ function GrappleC.AddChipNote(composer, note) end
 ---@return boolean
 function GrappleC.AddChipNoteEx(composer, note, expression) end
 
+---Calls `Grapple_AddChipSection`.
+---@param composer userdata
+---@param name string?
+---@param start_tick integer
+---@param end_tick integer
+---@return boolean
+function GrappleC.AddChipSection(composer, name, start_tick, end_tick) end
+
 ---Calls `Grapple_AddChipTempo`.
 ---@param composer userdata
 ---@param tick integer
@@ -15895,6 +15903,11 @@ function GrappleC.GetChipPlayerPeakVoices(player) end
 ---@return boolean, table
 function GrappleC.GetChipPresetEffects(preset) end
 
+---Calls `Grapple_GetChipSectionCount`.
+---@param song userdata
+---@return integer
+function GrappleC.GetChipSectionCount(song) end
+
 ---Calls `Grapple_GraphicsClamp`.
 ---@return table
 function GrappleC.GraphicsClamp() end
@@ -16704,6 +16717,12 @@ function GrappleC.ReadChipDiagnostic(song, index) end
 ---@param player userdata
 ---@return boolean, table
 function GrappleC.ReadChipPlayerPosition(player) end
+
+---Calls `Grapple_ReadChipSection`.
+---@param song userdata
+---@param index integer
+---@return boolean, table
+function GrappleC.ReadChipSection(song, index) end
 
 ---Calls `Grapple_ReadChipSongInfo`.
 ---@param song userdata

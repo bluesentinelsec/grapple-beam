@@ -166,6 +166,13 @@ class _RubyEmitter:
     def _emit_field_push(self, f) -> None:
         kind = self._field_kind(f.type)
         base = self.tt.resolve_base(f.type.base)
+        if f.array_len is not None and base == "char":
+            self.w("    {")
+            self.w("        size_t length = 0;")
+            self.w(f"        while (length < sizeof(in->{f.name}) && in->{f.name}[length]) ++length;")
+            self.w(f'        GrappleGen_RubyHashSet(mrb, h, "{f.name}", mrb_str_new(mrb, in->{f.name}, (mrb_int)length));')
+            self.w("    }")
+            return
         if f.array_len is not None:
             self.w(f"    {{")
             self.w(f"        mrb_value arr = mrb_ary_new_capa(mrb, (mrb_int)({f.array_len}));")

@@ -89,6 +89,9 @@ class ChipComposer {
     engaged_ = false;
   }
 
+  Status AddChipSection(const char *name, Uint64 start_tick, Uint64 end_tick) {
+    return ::Grapple_AddChipSection(value_, name, start_tick, end_tick) ? Status() : Status::FromSdl();
+  }
   Status SetChipPart(int track, const char *name, Grapple_ChipPreset preset, float gain) {
     return ::Grapple_SetChipPart(value_, track, name, preset, gain) ? Status() : Status::FromSdl();
   }
@@ -197,6 +200,12 @@ class ChipSong {
   }
   const char* GetChipDiagnosticMessage(int index) {
     return ::Grapple_GetChipDiagnosticMessage(value_, index);
+  }
+  int GetChipSectionCount() {
+    return ::Grapple_GetChipSectionCount(value_);
+  }
+  Status ReadChipSection(int index, Grapple_ChipSection *section) {
+    return ::Grapple_ReadChipSection(value_, index, section) ? Status() : Status::FromSdl();
   }
   Status SaveChipSongWav(const char *path, int sample_rate, int voices) {
     return ::Grapple_SaveChipSongWav(value_, path, sample_rate, voices) ? Status() : Status::FromSdl();

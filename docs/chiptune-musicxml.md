@@ -299,3 +299,16 @@ use the corresponding configurable trill/turn approximation.
 Tie `time-only` attributes select the actual enclosing repeat pass, including
 nested repeats and endings. They are evaluated during order expansion before tie
 chains are joined, so a tie on the first pass need not suppress a second-pass attack.
+
+## Named sections
+
+MusicXML rehearsal marks and MIDI marker meta-events become named sections.
+`GetChipSectionCount` / `ReadChipSection` return copied names and expanded tick
+bounds. Marks repeated by score navigation appear once per visit and retain
+source-measure/visit indexes; duplicate marks from multiple parts merge. The next
+mark at a distinct time ends an imported section, or the song end does. A marker
+at the end is metadata with zero length and cannot define a transport loop.
+Code composers use `AddChipSection(name, start_tick, end_tick)` for explicit bounds.
+Sections sort by start and name, with a limit of 4,096 and names of 127 UTF-8 bytes.
+Pass a section's bounds to `SetChipPlayerLoop`, or its start to `SeekChipPlayer`.
+Lua/Ruby return names and diagnostic text fields as strings.

@@ -256,16 +256,16 @@ static void GenPush_Grapple_ChipDiagnostic(lua_State *L, const Grapple_ChipDiagn
     lua_setfield(L, -2, "staff");
     lua_pushinteger(L, (lua_Integer)in->line);
     lua_setfield(L, -2, "line");
-    lua_createtable(L, (int)(64), 0);
-    for (int gi = 0; gi < (int)(64); ++gi) {
-        lua_pushinteger(L, (lua_Integer)in->voice[gi]);
-        lua_rawseti(L, -2, gi + 1);
+    {
+        size_t length = 0;
+        while (length < sizeof(in->voice) && in->voice[length]) ++length;
+        lua_pushlstring(L, in->voice, length);
     }
     lua_setfield(L, -2, "voice");
-    lua_createtable(L, (int)(64), 0);
-    for (int gi = 0; gi < (int)(64); ++gi) {
-        lua_pushinteger(L, (lua_Integer)in->element[gi]);
-        lua_rawseti(L, -2, gi + 1);
+    {
+        size_t length = 0;
+        while (length < sizeof(in->element) && in->element[length]) ++length;
+        lua_pushlstring(L, in->element, length);
     }
     lua_setfield(L, -2, "element");
 }
@@ -452,6 +452,25 @@ static void GenPush_Grapple_ChipPosition(lua_State *L, const Grapple_ChipPositio
     lua_setfield(L, -2, "measure_beat");
     lua_pushinteger(L, (lua_Integer)in->loop_count);
     lua_setfield(L, -2, "loop_count");
+}
+
+static void GenPush_Grapple_ChipSection(lua_State *L, const Grapple_ChipSection *in)
+{
+    lua_createtable(L, 0, 5);
+    {
+        size_t length = 0;
+        while (length < sizeof(in->name) && in->name[length]) ++length;
+        lua_pushlstring(L, in->name, length);
+    }
+    lua_setfield(L, -2, "name");
+    lua_pushinteger(L, (lua_Integer)in->start_tick);
+    lua_setfield(L, -2, "start_tick");
+    lua_pushinteger(L, (lua_Integer)in->end_tick);
+    lua_setfield(L, -2, "end_tick");
+    lua_pushinteger(L, (lua_Integer)in->source_measure);
+    lua_setfield(L, -2, "source_measure");
+    lua_pushinteger(L, (lua_Integer)in->measure_visit);
+    lua_setfield(L, -2, "measure_visit");
 }
 
 static void GenPush_Grapple_ChipSongInfo(lua_State *L, const Grapple_ChipSongInfo *in)
@@ -727,10 +746,10 @@ static void GenPush_Grapple_SaveInfo(lua_State *L, const Grapple_SaveInfo *in)
     lua_setfield(L, -2, "size");
     lua_pushinteger(L, (lua_Integer)in->modified);
     lua_setfield(L, -2, "modified");
-    lua_createtable(L, (int)(128), 0);
-    for (int gi = 0; gi < (int)(128); ++gi) {
-        lua_pushinteger(L, (lua_Integer)in->label[gi]);
-        lua_rawseti(L, -2, gi + 1);
+    {
+        size_t length = 0;
+        while (length < sizeof(in->label) && in->label[length]) ++length;
+        lua_pushlstring(L, in->label, length);
     }
     lua_setfield(L, -2, "label");
 }
@@ -1717,6 +1736,18 @@ static int GenL_Grapple_AddChipNoteEx(lua_State *L)
         a2 = &tmp2;
     }
     bool rv = Grapple_AddChipNoteEx(a0, a1, a2);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
+static int GenL_Grapple_AddChipSection(lua_State *L)
+{
+    (void)L;
+    Grapple_ChipComposer *a0 = (Grapple_ChipComposer *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_ChipComposer");
+    const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
+    Uint64 a2 = (Uint64)luaL_checkinteger(L, 3);
+    Uint64 a3 = (Uint64)luaL_checkinteger(L, 4);
+    bool rv = Grapple_AddChipSection(a0, a1, a2, a3);
     lua_pushboolean(L, (int)rv);
     return 1;
 }
@@ -4599,6 +4630,15 @@ static int GenL_Grapple_GetChipPresetEffects(lua_State *L)
     return 2;
 }
 
+static int GenL_Grapple_GetChipSectionCount(lua_State *L)
+{
+    (void)L;
+    const Grapple_ChipSong *a0 = (const Grapple_ChipSong *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_ChipSong");
+    int rv = Grapple_GetChipSectionCount(a0);
+    lua_pushinteger(L, (lua_Integer)rv);
+    return 1;
+}
+
 static int GenL_Grapple_GraphicsClamp(lua_State *L)
 {
     (void)L;
@@ -6082,6 +6122,19 @@ static int GenL_Grapple_ReadChipPlayerPosition(lua_State *L)
     return 2;
 }
 
+static int GenL_Grapple_ReadChipSection(lua_State *L)
+{
+    (void)L;
+    const Grapple_ChipSong *a0 = (const Grapple_ChipSong *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_ChipSong");
+    int a1 = (int)luaL_checkinteger(L, 2);
+    Grapple_ChipSection out2;
+    memset(&out2, 0, sizeof(out2));
+    bool rv = Grapple_ReadChipSection(a0, a1, &out2);
+    lua_pushboolean(L, (int)rv);
+    GenPush_Grapple_ChipSection(L, &out2);
+    return 2;
+}
+
 static int GenL_Grapple_ReadChipSongInfo(lua_State *L)
 {
     (void)L;
@@ -7510,7 +7563,7 @@ static int GenL_Grapple_WheelJointDefSetSpring(lua_State *L)
 int GrappleGen_OpenLua_grapple(lua_State *L);
 int GrappleGen_OpenLua_grapple(lua_State *L)
 {
-    lua_createtable(L, 0, 660);
+    lua_createtable(L, 0, 663);
     lua_pushcfunction(L, GenL_Grapple_ActionBind);
     lua_setfield(L, -2, "ActionBind");
     lua_pushcfunction(L, GenL_Grapple_ActionBindAxis);
@@ -7685,6 +7738,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "AddChipNote");
     lua_pushcfunction(L, GenL_Grapple_AddChipNoteEx);
     lua_setfield(L, -2, "AddChipNoteEx");
+    lua_pushcfunction(L, GenL_Grapple_AddChipSection);
+    lua_setfield(L, -2, "AddChipSection");
     lua_pushcfunction(L, GenL_Grapple_AddChipTempo);
     lua_setfield(L, -2, "AddChipTempo");
     lua_pushcfunction(L, GenL_Grapple_AddDarkZone);
@@ -8261,6 +8316,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GetChipPlayerPeakVoices");
     lua_pushcfunction(L, GenL_Grapple_GetChipPresetEffects);
     lua_setfield(L, -2, "GetChipPresetEffects");
+    lua_pushcfunction(L, GenL_Grapple_GetChipSectionCount);
+    lua_setfield(L, -2, "GetChipSectionCount");
     lua_pushcfunction(L, GenL_Grapple_GraphicsClamp);
     lua_setfield(L, -2, "GraphicsClamp");
     lua_pushcfunction(L, GenL_Grapple_GraphicsConfigError);
@@ -8553,6 +8610,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "ReadChipDiagnostic");
     lua_pushcfunction(L, GenL_Grapple_ReadChipPlayerPosition);
     lua_setfield(L, -2, "ReadChipPlayerPosition");
+    lua_pushcfunction(L, GenL_Grapple_ReadChipSection);
+    lua_setfield(L, -2, "ReadChipSection");
     lua_pushcfunction(L, GenL_Grapple_ReadChipSongInfo);
     lua_setfield(L, -2, "ReadChipSongInfo");
     lua_pushcfunction(L, GenL_Grapple_ReadChipTrackEffects);

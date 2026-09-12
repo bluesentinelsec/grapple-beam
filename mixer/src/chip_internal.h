@@ -57,8 +57,16 @@ extern "C"
         int diagnostic_count;
         ChipMeasurePosition *measures;
         int measure_count;
+        Grapple_ChipSection *sections;
+        int section_count;
     };
 
+    struct Grapple_ChipComposer
+    {
+        Grapple_ChipSong *song;
+    };
+    bool Chip_AppendSection(Grapple_ChipSong *song, Grapple_ChipSection section);
+    bool Chip_ResolveSections(Grapple_ChipSong *song);
     bool Chip_AppendExpression(Grapple_ChipSong *song, const Grapple_ChipExpression *expression,
                                Uint32 *index);
     bool Chip_ValidExpression(const Grapple_ChipExpression *expression);

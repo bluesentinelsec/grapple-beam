@@ -241,6 +241,22 @@ extern "C"
     /** @brief Stateful polyphonic renderer with an owned SDL audio stream. */
     typedef struct Grapple_ChipPlayer Grapple_ChipPlayer;
 
+    /** @brief A named passage in the expanded performance, suitable for seek/loop controls. */
+    typedef struct Grapple_ChipSection
+    {
+        char name[128];     /**< Copied rehearsal/marker text, truncated and NUL-terminated. */
+        Uint64 start_tick;  /**< Inclusive expanded start tick. */
+        Uint64 end_tick;    /**< Exclusive end; may equal start for an end-of-song marker. */
+        int source_measure; /**< Zero-based MusicXML source measure, or -1. */
+        int measure_visit;  /**< Zero-based expanded measure visit, or -1. */
+    } Grapple_ChipSection;
+    /** @brief Count named passages. @param song Immutable song. @return Count, or 0 for NULL. */
+    extern int Grapple_GetChipSectionCount(const Grapple_ChipSong *song);
+    /** @brief Copy a named passage. @param song Immutable song. @param index Zero-based section.
+     * @param section Caller-owned output. @return True, or false for invalid input. */
+    extern bool Grapple_ReadChipSection(const Grapple_ChipSong *song, int index,
+                                        Grapple_ChipSection *section);
+
     /** @brief MIDI timing and track information, including conductor tracks. */
     typedef struct Grapple_ChipSongInfo
     {
@@ -462,6 +478,17 @@ extern "C"
 
     /** @brief Mutable composition builder, independent of a file format. */
     typedef struct Grapple_ChipComposer Grapple_ChipComposer;
+
+    /**
+     * @brief Add a named code-authored passage, copied into built songs.
+     * @param composer Mutable composer. @param name Nonempty label, at most 127 bytes.
+     * @param start_tick Inclusive start. @param end_tick Exclusive end, greater than start.
+     * @return True, or false for invalid input/resource failure.
+     * @details At most 4096 sections. Labels may repeat at different positions. Section ends
+     * extend the musical duration when needed; building the song sorts sections by start/name.
+     */
+    extern bool Grapple_AddChipSection(Grapple_ChipComposer *composer, const char *name,
+                                       Uint64 start_tick, Uint64 end_tick);
 
     /**
      * @brief Create a composer with a fixed number of parts and tick resolution.

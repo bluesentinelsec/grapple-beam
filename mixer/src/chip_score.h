@@ -56,7 +56,8 @@ typedef enum ScoreDirectionKind
     SCORE_PEDAL,
     SCORE_SWING,
     SCORE_TEMPO_RAMP,
-    SCORE_METRIC
+    SCORE_METRIC,
+    SCORE_SECTION
 } ScoreDirectionKind;
 typedef struct ScoreControl
 {
