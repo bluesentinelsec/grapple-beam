@@ -289,6 +289,7 @@ Grapple_ActorType	include/grapple/engine_actor.h	/^.*Grapple_ActorType *(/;"	f
 Grapple_ActorVelocity	include/grapple/engine_physics.h	/^.*Grapple_ActorVelocity *(/;"	f
 Grapple_ActorWakeBody	include/grapple/engine_physics.h	/^.*Grapple_ActorWakeBody *(/;"	f
 Grapple_ActorWorld	include/grapple/engine_actor.h	/^.*Grapple_ActorWorld *(/;"	f
+Grapple_AddChipControl	include/grapple/chiptune.h	/^.*Grapple_AddChipControl *(/;"	f
 Grapple_AddChipNote	include/grapple/chiptune.h	/^.*Grapple_AddChipNote *(/;"	f
 Grapple_AddChipNoteEx	include/grapple/chiptune.h	/^.*Grapple_AddChipNoteEx *(/;"	f
 Grapple_AddChipTempo	include/grapple/chiptune.h	/^.*Grapple_AddChipTempo *(/;"	f

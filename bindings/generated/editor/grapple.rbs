@@ -2473,6 +2473,7 @@ module GrappleC
   def self.ActorVelocity: (untyped actor, Float x, Float y) -> [Float, Float]
   def self.ActorWakeBody: (untyped actor) -> void
   def self.ActorWorld: (untyped actor) -> Hash[Symbol, untyped]
+  def self.AddChipControl: (untyped composer, Integer track, Integer tick, Integer controller, Integer value) -> bool
   def self.AddChipNote: (untyped composer, Hash[Symbol, untyped] note) -> bool
   def self.AddChipNoteEx: (untyped composer, Hash[Symbol, untyped] note, Hash[Symbol, untyped] expression) -> bool
   def self.AddChipTempo: (untyped composer, Integer tick, Float bpm) -> bool

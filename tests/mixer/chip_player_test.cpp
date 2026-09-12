@@ -882,3 +882,32 @@ TEST_F(ChipPlayer, NoteExpressionChangesFrequencyWithoutSharedChannelBend)
     EXPECT_NEAR(bent.phase, plain.phase * 2, 0.0000001);
     EXPECT_FLOAT_EQ(Chip_ExpressionPitch(&plain.expression, 1, 1), 0);
 }
+
+TEST_F(ChipPlayer, ComposerSostenutoCapturesHeldNotesAndReleasesOnPedalUp)
+{
+    using Composer = std::unique_ptr<Grapple_ChipComposer, decltype(&Grapple_DestroyChipComposer)>;
+    Composer composer(Grapple_CreateChipComposer(1, 480), Grapple_DestroyChipComposer);
+    ASSERT_TRUE(composer);
+    ASSERT_TRUE(Grapple_SetChipPart(composer.get(), 0, "lead", GRAPPLE_CHIP_PRESET_LEAD, 1));
+    const Grapple_ChipNote held = {0, 60, 100, 0, 192};
+    const Grapple_ChipNote later = {0, 67, 100, 384, 96};
+    ASSERT_TRUE(Grapple_AddChipNote(composer.get(), &held));
+    ASSERT_TRUE(Grapple_AddChipNote(composer.get(), &later));
+    ASSERT_TRUE(Grapple_AddChipControl(composer.get(), 0, 96, 66, 127));
+    ASSERT_TRUE(Grapple_AddChipControl(composer.get(), 0, 672, 66, 0));
+    EXPECT_FALSE(Grapple_AddChipControl(composer.get(), 0, 0, 2, 127));
+    Song song(Grapple_BuildChipSong(composer.get(), 960), Grapple_DestroyChipSong);
+    ASSERT_TRUE(song);
+    auto player = MakePlayer(song.get(), 16, false, 8000);
+    ASSERT_TRUE(player);
+    std::vector<float> pcm(16000);
+    ASSERT_EQ(Grapple_RenderChipPlayer(player.get(), pcm.data(), 8000), 8000);
+    double held_energy = 0, released_energy = 0;
+    for (size_t i = 9600; i < 10400; ++i)
+        held_energy += pcm[i] * pcm[i];
+    for (size_t i = 14400; i < 15200; ++i)
+        released_energy += pcm[i] * pcm[i];
+    EXPECT_GT(held_energy, 0.01);
+    EXPECT_LT(released_energy, 0.0000001);
+    EXPECT_GE(Grapple_GetChipPlayerPeakVoices(player.get()), 2);
+}

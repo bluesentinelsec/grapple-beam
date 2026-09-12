@@ -12,6 +12,8 @@ typedef struct ChipChannel
     int rpn_msb;
     int rpn_lsb;
     bool sustain;
+    bool sostenuto;
+    float soft;
     float pitch;
     float volume;
     float expression;
@@ -69,6 +71,8 @@ static void ResetControllers(ChipChannel *channel)
     channel->rpn_msb = 127;
     channel->rpn_lsb = 127;
     channel->sustain = false;
+    channel->sostenuto = false;
+    channel->soft = 0;
     channel->pitch = 1.0f;
     channel->expression = 1.0f;
     channel->modulation = 0.0f;
@@ -243,7 +247,7 @@ static void StopNote(Grapple_ChipPlayer *p, const ChipEvent *event)
     if (oldest)
     {
         oldest->held = false;
-        if (!oldest->drum && !p->channels[oldest->channel].sustain)
+        if (!oldest->drum && !p->channels[oldest->channel].sustain && !oldest->sostenuto)
             Chip_VoiceRelease(oldest, p->sample_rate);
     }
 }
@@ -253,7 +257,8 @@ static void ReleaseSustain(Grapple_ChipPlayer *p, int channel)
     for (int i = 0; i < p->voice_count; ++i)
     {
         ChipSynthVoice *v = &p->voices[i];
-        if (v->active && !v->held && !v->drum && v->channel == channel)
+        if (v->active && !v->held && !v->drum && v->channel == channel &&
+            !p->channels[channel].sustain && !v->sostenuto)
             Chip_VoiceRelease(v, p->sample_rate);
     }
 }
@@ -283,6 +288,23 @@ static void ControlChange(Grapple_ChipPlayer *p, int channel_index, int control,
         if (!channel->sustain)
             ReleaseSustain(p, channel_index);
         break;
+    case 66: {
+        const bool engaged = value >= 64;
+        if (engaged != channel->sostenuto)
+            for (int i = 0; i < p->voice_count; ++i)
+            {
+                ChipSynthVoice *v = &p->voices[i];
+                if (v->active && v->channel == channel_index)
+                    v->sostenuto = engaged && v->held;
+            }
+        channel->sostenuto = engaged;
+        if (!engaged)
+            ReleaseSustain(p, channel_index);
+        break;
+    }
+    case 67:
+        channel->soft = (float)value / 127;
+        break;
     case 100:
         channel->rpn_lsb = value;
         break;
@@ -306,6 +328,9 @@ static void ControlChange(Grapple_ChipPlayer *p, int channel_index, int control,
         break;
     case 121:
         ResetControllers(channel);
+        for (int i = 0; i < p->voice_count; ++i)
+            if (p->voices[i].channel == channel_index)
+                p->voices[i].sostenuto = false;
         ReleaseSustain(p, channel_index);
         break;
     case 120:
@@ -318,7 +343,7 @@ static void ControlChange(Grapple_ChipPlayer *p, int channel_index, int control,
                 v->held = false;
                 if (control == 120)
                     v->active = false;
-                else if (!channel->sustain)
+                else if (!channel->sustain && !v->sostenuto)
                     Chip_VoiceRelease(v, p->sample_rate);
             }
         }
@@ -333,6 +358,21 @@ static void DispatchEvent(Grapple_ChipPlayer *p, const ChipEvent *event)
     if (event->tempo)
     {
         p->tempo = event->tempo;
+        return;
+    }
+    if (event->status == 0xf1)
+    {
+        for (int i = 0; i < p->voice_count; ++i)
+        {
+            ChipSynthVoice *v = &p->voices[i];
+            if (v->active && v->track == event->track && v->note_id == event->note_id)
+            {
+                v->gain_start = event->value;
+                v->gain_target = event->target;
+                v->gain_beat = p->beat;
+                v->gain_duration = (double)event->duration / p->song->info.ticks_per_quarter;
+            }
+        }
         return;
     }
     const int channel = EventChannel(p, event);
@@ -410,6 +450,12 @@ int Grapple_RenderChipPlayer(Grapple_ChipPlayer *p, float *stereo, int frames)
             const Grapple_ChipEffects *effects = &p->effects[v->preset].settings;
             const float shape = pulse[v->preset] * pulse[v->preset];
             const float gain = 1.0f - effects->pulse_depth * (1.0f - shape);
+            const float envelope_gain =
+                v->gain_start +
+                (v->gain_target - v->gain_start) *
+                    (float)(v->gain_duration > 0
+                                ? SDL_clamp((p->beat - v->gain_beat) / v->gain_duration, 0, 1)
+                                : 1);
             const float sample =
                 Chip_VoiceSampleMotion(
                     v,
@@ -418,7 +464,8 @@ int Grapple_RenderChipPlayer(Grapple_ChipPlayer *p, float *stereo, int frames)
                                                          v->duration_beats) /
                                         12),
                     channel->modulation, p->sample_rate, effects->motion, pulse[v->preset]) *
-                gain * p->parts[v->track].gain * channel->volume * channel->expression;
+                gain * envelope_gain * p->parts[v->track].gain * channel->volume *
+                channel->expression;
             buses[v->preset][0] += sample * channel->pan_left;
             buses[v->preset][1] += sample * channel->pan_right;
         }

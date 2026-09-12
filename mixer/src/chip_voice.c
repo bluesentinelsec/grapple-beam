@@ -46,6 +46,7 @@ void Chip_VoiceStart(ChipSynthVoice *v, Grapple_ChipPreset preset, int note, int
 {
     SDL_zero(*v);
     Grapple_GetChipExpressionDefaults(&v->expression);
+    v->gain_start = v->gain_target = 1;
     v->active = true;
     v->held = true;
     v->preset = preset;

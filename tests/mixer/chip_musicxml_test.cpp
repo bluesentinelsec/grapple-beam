@@ -631,3 +631,125 @@ TEST(ChipMusicXml, RolledChordsRespectDirectionAndCaesurasLeaveSilence)
     EXPECT_EQ(paused[1].tick * 4, 5u * static_cast<Uint64>(pause->info.ticks_per_quarter));
     EXPECT_DOUBLE_EQ(pause->info.duration_seconds, 1.125);
 }
+
+TEST(ChipMusicXml, HairpinsCreateContinuousNoteGainAndRespectStaffScope)
+{
+    const auto song = LoadXml(
+        Score("<measure><direction><direction-type><dynamics><p/></dynamics></direction-type>"
+              "</direction><direction><direction-type><wedge type='crescendo'/></direction-type>"
+              "<staff>1</staff></direction>" +
+              Note("2", "<staff>1</staff>") + "<backup><duration>2</duration></backup>" +
+              Note("2", "<staff>2</staff>") +
+              "<direction><direction-type><wedge type='stop'/><dynamics><f/></dynamics>"
+              "</direction-type><staff>1</staff></direction></measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 2u);
+    EXPECT_EQ(notes[0].b, 48);
+    EXPECT_EQ(notes[1].b, 48);
+    bool ramp = false, other = false;
+    for (size_t i = 0; i < song->count; ++i)
+    {
+        const auto &event = song->events[i];
+        if (event.status != 0xf1)
+            continue;
+        if (event.note_id == notes[0].note_id)
+        {
+            EXPECT_FLOAT_EQ(event.value, 1);
+            EXPECT_FLOAT_EQ(event.target, 2);
+            ramp = true;
+        }
+        else
+        {
+            EXPECT_FLOAT_EQ(event.value, 1);
+            EXPECT_FLOAT_EQ(event.target, 1);
+            other = true;
+        }
+    }
+    EXPECT_TRUE(ramp && other);
+    const Player player(Grapple_CreateChipPlayer(song.get(), 8000, 16, false),
+                        Grapple_DestroyChipPlayer);
+    ASSERT_TRUE(player) << SDL_GetError();
+    std::vector<float> pcm(16000);
+    ASSERT_EQ(Grapple_RenderChipPlayer(player.get(), pcm.data(), 8000), 8000);
+    double energy = 0;
+    for (float sample : pcm)
+    {
+        ASSERT_TRUE(std::isfinite(sample));
+        energy += sample * sample;
+    }
+    EXPECT_GT(energy, 0.1);
+}
+
+TEST(ChipMusicXml, PedalsCaptureAndReleaseOnlyTheIntendedStaff)
+{
+    const auto song = LoadXml(
+        Score("<measure><direction><sound damper-pedal='yes'/><staff>1</staff></direction>" +
+              Note("1", "<staff>1</staff>") + "<backup><duration>1</duration></backup>" +
+              Note("1", "<staff>2</staff>") +
+              "<forward><duration>1</duration></forward>"
+              "<direction><sound damper-pedal='no'/><staff>1</staff></direction></measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 2u);
+    EXPECT_EQ(notes[0].duration, 2 * notes[1].duration);
+    const auto sostenuto = LoadXml(
+        Score("<measure>" + Note("2", "<voice>a</voice>") +
+              "<backup><duration>1</duration></backup>"
+              "<sound sostenuto-pedal='yes'/>" +
+              Note("1", "<voice>b</voice>") +
+              "<forward><duration>1</duration></forward><sound sostenuto-pedal='no'/></measure>"));
+    ASSERT_TRUE(sostenuto) << SDL_GetError();
+    const auto captured = Onsets(sostenuto.get());
+    ASSERT_EQ(captured.size(), 2u);
+    EXPECT_EQ(captured[0].duration, 3 * captured[1].duration);
+}
+
+TEST(ChipMusicXml, SwingIsExactAndDoesNotReswingTupletsOrMissingTypes)
+{
+    const auto song = LoadXml(Score(
+        "<measure><attributes><divisions>6</divisions></attributes><sound><swing><first>2</first>"
+        "<second>1</second><swing-type>eighth</swing-type></swing></sound>" +
+        Note("3", "<type>eighth</type>") + Note("3", "<type>eighth</type>") +
+        Note("2", "<type>eighth</type><time-modification><actual-notes>3</actual-notes>"
+                  "<normal-notes>2</normal-notes></time-modification>") +
+        Note("4") + "</measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 4u);
+    const auto q = static_cast<Uint64>(song->info.ticks_per_quarter);
+    EXPECT_EQ(notes[0].duration * 3, q * 2);
+    EXPECT_EQ(notes[1].tick * 3, q * 2);
+    EXPECT_EQ(notes[1].duration * 3, q);
+    EXPECT_EQ(notes[2].tick, q);
+    EXPECT_EQ(notes[2].duration * 3, q);
+    EXPECT_EQ(notes[3].tick * 3, q * 4);
+    EXPECT_DOUBLE_EQ(song->info.duration_seconds, 1);
+}
+
+TEST(ChipMusicXml, RepeatsRestoreScopedDynamicsAndTempoRampsSlowPlayback)
+{
+    const auto repeat = LoadXml(Score(
+        "<measure><barline location='left'><repeat direction='forward'/></barline>" + Note("1") +
+        "</measure><measure><direction><direction-type><dynamics><p/></dynamics></direction-type>"
+        "</direction>" +
+        Note("1") + "<barline><repeat direction='backward'/></barline></measure>"));
+    ASSERT_TRUE(repeat) << SDL_GetError();
+    const auto notes = Onsets(repeat.get());
+    ASSERT_EQ(notes.size(), 4u);
+    EXPECT_EQ(notes[0].b, 80);
+    EXPECT_EQ(notes[1].b, 48);
+    EXPECT_EQ(notes[2].b, 80);
+    EXPECT_EQ(notes[3].b, 48);
+    const auto ramp =
+        LoadXml(Score("<measure><sound tempo='120'/><direction><direction-type><words>rit.</words>"
+                      "</direction-type></direction>" +
+                      Note("4") + "<sound tempo='60'/></measure>"));
+    ASSERT_TRUE(ramp) << SDL_GetError();
+    EXPECT_GT(ramp->info.duration_seconds, 2.7);
+    EXPECT_LT(ramp->info.duration_seconds, 2.8);
+    size_t tempos = 0;
+    for (size_t i = 0; i < ramp->count; ++i)
+        tempos += ramp->events[i].tempo != 0;
+    EXPECT_GT(tempos, 100u);
+}

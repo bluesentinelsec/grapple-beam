@@ -13,6 +13,7 @@ extern "C"
     {
         bool active;
         bool held;
+        bool sostenuto;
         bool released;
         int track;
         int channel;
@@ -21,6 +22,8 @@ extern "C"
         Uint32 note_id;
         Grapple_ChipExpression expression;
         double start_beat, duration_beats;
+        float gain_start, gain_target;
+        double gain_beat, gain_duration;
         Uint32 noise;
         Grapple_ChipPreset preset;
         int drum;

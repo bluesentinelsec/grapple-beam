@@ -28,11 +28,26 @@ typedef struct ScoreNote
     Sint64 make_time;
     double upper_pitch, lower_pitch;
 } ScoreNote;
+typedef enum ScoreDirectionKind
+{
+    SCORE_CONTROL,
+    SCORE_DYNAMIC,
+    SCORE_WEDGE,
+    SCORE_PEDAL,
+    SCORE_SWING,
+    SCORE_TEMPO_RAMP
+} ScoreDirectionKind;
 typedef struct ScoreControl
 {
     int measure;
     Sint64 start;
     ChipEvent event;
+    ScoreDirectionKind kind;
+    int staff, number;
+    const char *voice;
+    const ChipXmlNode *node;
+    Sint64 duration;
+    double value, target;
 } ScoreControl;
 typedef struct ScoreReader
 {
@@ -72,5 +87,13 @@ bool Chip_ReadNoteExpression(ScoreReader *r, ScoreNote *note);
 bool Chip_ResolveNoteExpression(ScoreReader *r);
 bool Chip_ApplyScoreTiming(ScoreReader *r);
 bool Chip_ExpandOrnaments(ScoreReader *r);
+bool Chip_ReadDirections(ScoreReader *r, const ChipXmlNode *node, const ChipXmlNode *sound,
+                         Sint64 cursor);
+bool Chip_PrepareDirections(ScoreReader *r);
+bool Chip_RestoreDirections(ScoreReader *r, const ScoreControl *controls, size_t count,
+                            const Sint64 *positions, int source);
+bool Chip_ApplySwing(ScoreReader *r);
+bool Chip_ApplyDirections(ScoreReader *r);
+int Chip_ScoreDynamic(const char *name);
 bool Chip_CompileScore(ScoreReader *r);
 #endif

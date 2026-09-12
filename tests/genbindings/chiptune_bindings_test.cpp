@@ -48,6 +48,7 @@ TEST_F(ChipBindings, CppComposesDeclarativeNotesWithRaii)
     expression.vibrato_depth = 0.1f;
     for (const auto &note : notes)
         ASSERT_TRUE(composer->AddChipNoteEx(&note, &expression).ok());
+    ASSERT_TRUE(composer->AddChipControl(0, 0, 7, 100).ok());
     auto song = grapple::ext::ChipSong::BuildChipSong(composer->get(), 1920);
     ASSERT_TRUE(song.ok());
     auto player = grapple::ext::ChipPlayer::CreateChipPlayer(song->get(), 8000, 64, false);
@@ -88,6 +89,7 @@ local expression = G.GetChipExpressionDefaults()
 assert(expression.gain == 1)
 expression.vibrato_depth = 0.1
 for _, note in ipairs(notes) do assert(G.AddChipNoteEx(composer, note, expression)) end
+assert(G.AddChipControl(composer, 0, 0, 7, 100))
 local song = assert(G.BuildChipSong(composer, 1920))
 local ok, info = G.ReadChipSongInfo(song)
 assert(ok and info.duration_seconds == 2)
@@ -141,6 +143,7 @@ expression = g.GetChipExpressionDefaults()
 raise 'expression' unless expression[:gain] == 1
 expression[:vibrato_depth] = 0.1
 notes.each { |note| raise 'note' unless g.AddChipNoteEx(composer, note, expression) }
+raise 'control' unless g.AddChipControl(composer, 0, 0, 7, 100)
 song = g.BuildChipSong(composer, 1920)
 ok, info = g.ReadChipSongInfo(song)
 raise 'duration' unless ok && info[:duration_seconds] == 2

@@ -98,6 +98,9 @@ class ChipComposer {
   Status AddChipNoteEx(const Grapple_ChipNote *note, const Grapple_ChipExpression *expression) {
     return ::Grapple_AddChipNoteEx(value_, note, expression) ? Status() : Status::FromSdl();
   }
+  Status AddChipControl(int track, Uint64 tick, int controller, int value) {
+    return ::Grapple_AddChipControl(value_, track, tick, controller, value) ? Status() : Status::FromSdl();
+  }
   Status AddChipTempo(Uint64 tick, double bpm) {
     return ::Grapple_AddChipTempo(value_, tick, bpm) ? Status() : Status::FromSdl();
   }

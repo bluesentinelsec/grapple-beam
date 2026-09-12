@@ -14299,6 +14299,15 @@ function GrappleC.ActorWakeBody(actor) end
 ---@return table
 function GrappleC.ActorWorld(actor) end
 
+---Calls `Grapple_AddChipControl`.
+---@param composer userdata
+---@param track integer
+---@param tick integer
+---@param controller integer
+---@param value integer
+---@return boolean
+function GrappleC.AddChipControl(composer, track, tick, controller, value) end
+
 ---Calls `Grapple_AddChipNote`.
 ---@param composer userdata
 ---@param note table

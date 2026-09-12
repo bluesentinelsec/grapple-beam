@@ -36,8 +36,7 @@ Scores that exceed exact arithmetic/resource limits fail explicitly.
 
 ## Pending implementation
 
-Hairpins/pedals/swing, remaining guitar techniques,
-advanced transport and the final support matrix remain tracked on the issue.
+Remaining exporter-specific techniques, advanced transport and the final support matrix remain tracked on the issue.
 Remaining expressive constructs are not yet guaranteed to affect playback;
 this importer is under development.
 
@@ -155,3 +154,37 @@ silence (default 0.25 quarter beat); breath marks shorten the marked note
 These hold policies add performed beat time; the synth's BPM-synchronized pulse
 continues through the hold. They are deliberate performance interpretations,
 not a claim that a fermata specifies a universal duration.
+
+## Dynamics, pedals, swing and tempo curves
+
+Dynamics are resolved at musical positions, including offsets, rather than in
+XML document order. Unqualified directions apply to the part; explicit staff
+and voice qualifiers narrow their scope. Hairpins match by scope and number,
+interpolate linearly to an explicit endpoint dynamic, or change by 32 velocity
+units when none is given. Niente starts/ends at silence. The player interpolates
+note-specific gain over beats without retriggering held notes. New explicit
+dynamic instructions interrupt an earlier curve. Explicit note dynamics take
+precedence. SF/ SFZ/ RFZ attacks briefly emphasize the note; FP/SFP decay to piano.
+
+Damper and sostenuto extend only the applicable notes until release. Sostenuto
+captures notes already held at pedal-down; later attacks are not captured.
+Pedal changes release the prior held set. Soft pedal gives a quieter/darker
+attack. Explicit sound pedal attributes take precedence over duplicated symbols.
+A pedal left down releases at the musical end. MIDI retains channel semantics;
+code composition can use `Grapple_AddChipControl` for modulation, volume, pan,
+expression, damper/sostenuto/soft pedals and standard reset/note-off controls.
+The C++, Lua and Ruby bindings expose these controls too.
+
+Explicit swing ratios and eighth/16th subdivisions are honored. Only notes with
+the matching type and nominal unswung duration qualify; grace notes and explicit
+tuplets retain their timing. `straight` disables swing. The exact default 2:1
+ratio is also available through a `Swing`/`Shuffle` direction; the ratio is
+configurable. Pulse and delay remain on the shared quarter-beat tempo clock.
+
+Recognized tempo-ramp words are `rit.`, `ritardando`, `rall.`, `rallentando`,
+`accel.` and `accelerando`. They interpolate BPM to the next explicit tempo.
+Without an endpoint, the policy changes tempo by 25% over up to four quarter
+beats. Ramps compile at 32 steps per quarter, capped at 4,096 steps, and use the
+same exact tempo integration as MIDI. This is a documented interpretation of
+specific musical words, not arbitrary natural-language processing. Scoped
+controllers/dynamics and active curves are restored when revisiting a passage.

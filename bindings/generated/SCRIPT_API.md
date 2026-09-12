@@ -2499,6 +2499,7 @@ returns as an array.
 | `GrappleC.ActorVelocity(actor: Grapple_Actor, x: number, y: number)` | x: number, y: number |
 | `GrappleC.ActorWakeBody(actor: Grapple_Actor)` | nil |
 | `GrappleC.ActorWorld(actor: Grapple_Actor)` | Grapple_ActorTransform table |
+| `GrappleC.AddChipControl(composer: Grapple_ChipComposer, track: integer, tick: integer, controller: integer, value: integer)` | boolean |
 | `GrappleC.AddChipNote(composer: Grapple_ChipComposer, note: Grapple_ChipNote table)` | boolean |
 | `GrappleC.AddChipNoteEx(composer: Grapple_ChipComposer, note: Grapple_ChipNote table, expression: Grapple_ChipExpression table)` | boolean |
 | `GrappleC.AddChipTempo(composer: Grapple_ChipComposer, tick: integer, bpm: number)` | boolean |

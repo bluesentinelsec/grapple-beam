@@ -1846,6 +1846,23 @@ static mrb_value GenR_Grapple_ActorWorld(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_Grapple_AddChipControl(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_ChipComposer *a0 = (Grapple_ChipComposer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_ChipComposer");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Uint64 a2 = (Uint64)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    int a4 = (int)GrappleGen_RubyToInt(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
+    bool rv = Grapple_AddChipControl(a0, a1, a2, a3, a4);
+    return mrb_bool_value((mrb_bool)(rv != 0));
+    }
+}
+
 static mrb_value GenR_Grapple_AddChipNote(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -10112,6 +10129,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "ActorVelocity", GenR_Grapple_ActorVelocity, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ActorWakeBody", GenR_Grapple_ActorWakeBody, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ActorWorld", GenR_Grapple_ActorWorld, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "AddChipControl", GenR_Grapple_AddChipControl, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "AddChipNote", GenR_Grapple_AddChipNote, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "AddChipNoteEx", GenR_Grapple_AddChipNoteEx, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "AddChipTempo", GenR_Grapple_AddChipTempo, MRB_ARGS_ANY());

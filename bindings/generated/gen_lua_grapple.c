@@ -1602,6 +1602,19 @@ static int GenL_Grapple_ActorWorld(lua_State *L)
     return 1;
 }
 
+static int GenL_Grapple_AddChipControl(lua_State *L)
+{
+    (void)L;
+    Grapple_ChipComposer *a0 = (Grapple_ChipComposer *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_ChipComposer");
+    int a1 = (int)luaL_checkinteger(L, 2);
+    Uint64 a2 = (Uint64)luaL_checkinteger(L, 3);
+    int a3 = (int)luaL_checkinteger(L, 4);
+    int a4 = (int)luaL_checkinteger(L, 5);
+    bool rv = Grapple_AddChipControl(a0, a1, a2, a3, a4);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
 static int GenL_Grapple_AddChipNote(lua_State *L)
 {
     (void)L;
@@ -7268,7 +7281,7 @@ static int GenL_Grapple_WheelJointDefSetSpring(lua_State *L)
 int GrappleGen_OpenLua_grapple(lua_State *L);
 int GrappleGen_OpenLua_grapple(lua_State *L)
 {
-    lua_createtable(L, 0, 646);
+    lua_createtable(L, 0, 647);
     lua_pushcfunction(L, GenL_Grapple_ActionBind);
     lua_setfield(L, -2, "ActionBind");
     lua_pushcfunction(L, GenL_Grapple_ActionBindAxis);
@@ -7437,6 +7450,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "ActorWakeBody");
     lua_pushcfunction(L, GenL_Grapple_ActorWorld);
     lua_setfield(L, -2, "ActorWorld");
+    lua_pushcfunction(L, GenL_Grapple_AddChipControl);
+    lua_setfield(L, -2, "AddChipControl");
     lua_pushcfunction(L, GenL_Grapple_AddChipNote);
     lua_setfield(L, -2, "AddChipNote");
     lua_pushcfunction(L, GenL_Grapple_AddChipNoteEx);

@@ -190,7 +190,7 @@ static bool RestoreControls(ScoreReader *r, const ScoreControl *controls, size_t
     r->part = saved;
     SDL_free(state);
     SDL_free(used);
-    return ok;
+    return ok && Chip_RestoreDirections(r, controls, count, positions, source);
 }
 
 static bool ExpandOrder(ScoreReader *r)
@@ -272,7 +272,9 @@ static bool ExpandOrder(ScoreReader *r)
                                 sizeof(*r->controls)))
                 goto done;
             r->controls[r->control_count] = controls[i];
-            r->controls[r->control_count++].measure = visit;
+            r->controls[r->control_count].measure = visit;
+            r->controls[r->control_count].event.order = (Uint32)r->control_count;
+            ++r->control_count;
         }
     }
     SDL_free(r->lengths);
@@ -306,6 +308,8 @@ static int SDLCALL CompareControls(const void *left, const void *right)
 
 bool Chip_CompileScore(ScoreReader *r)
 {
+    if (!Chip_PrepareDirections(r))
+        return false;
     if (r->control_count)
         SDL_qsort(r->controls, r->control_count, sizeof(*r->controls), CompareControls);
     const ScoreControl *previous_tempo = NULL;
@@ -337,7 +341,10 @@ bool Chip_CompileScore(ScoreReader *r)
     for (size_t i = 0; i < r->control_count; ++i)
     {
         ScoreControl *c = &r->controls[i];
-        c->event.tick = (Uint64)(r->lengths[c->measure] + c->start);
+        c->start += r->lengths[c->measure];
+        c->event.tick = (Uint64)c->start;
+        if (c->kind != SCORE_CONTROL)
+            continue;
         if (c->event.tick > r->song->info.duration_ticks)
             return Chip_ScoreError(r, NULL, "direction past score end");
         if (!Chip_AppendEvent(r->song, c->event))
@@ -382,7 +389,8 @@ bool Chip_CompileScore(ScoreReader *r)
     }
     if (ties)
         return Chip_ScoreError(r, NULL, "unterminated tie");
-    if (!Chip_ApplyScoreTiming(r) || !Chip_ExpandOrnaments(r))
+    if (!Chip_ApplySwing(r) || !Chip_ApplyScoreTiming(r) || !Chip_ExpandOrnaments(r) ||
+        !Chip_ApplyDirections(r))
         return false;
     for (size_t i = 0; i < r->note_count; ++i)
     {

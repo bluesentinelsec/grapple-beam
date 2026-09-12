@@ -440,6 +440,16 @@ extern "C"
      * @return True on success; false with SDL_GetError(), without changing the composition. */
     extern bool Grapple_AddChipNoteEx(Grapple_ChipComposer *composer, const Grapple_ChipNote *note,
                                       const Grapple_ChipExpression *expression);
+    /** @brief Add a part-scoped MIDI controller to a code-authored song.
+     * @param composer Composer to edit.
+     * @param track Zero-based part index; other parts keep independent controllers.
+     * @param tick Absolute position in composer ticks.
+     * @param controller CC number: 1 modulation, 7 volume, 10 pan, 11 expression,
+     * 64 damper, 66 sostenuto, 67 soft pedal, 120 all sound off, 121 reset, 123 all notes off.
+     * @param value Controller value, 0..127; pedal threshold is 64.
+     * @return True on success, false with SDL_GetError(); rejection leaves the song unchanged. */
+    extern bool Grapple_AddChipControl(Grapple_ChipComposer *composer, int track, Uint64 tick,
+                                       int controller, int value);
     /**
      * @brief Add a tempo change at an absolute tick position.
      * @param composer Composer to edit.

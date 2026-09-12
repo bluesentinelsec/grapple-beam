@@ -26,6 +26,8 @@ static int SDLCALL CompareEvents(const void *a, const void *b)
     const ChipEvent *right = b;
     if (left->tick != right->tick)
         return left->tick < right->tick ? -1 : 1;
+    if ((left->status == 0xf1) != (right->status == 0xf1))
+        return left->status == 0xf1 ? 1 : -1;
     return (left->order > right->order) - (left->order < right->order);
 }
 
@@ -280,6 +282,40 @@ bool Grapple_AddChipNoteEx(Grapple_ChipComposer *composer, const Grapple_ChipNot
     ++song->tracks[note->track].note_count;
     song->tracks[note->track].channels = 1;
     song->info.duration_ticks = SDL_max(song->info.duration_ticks, event.tick);
+    return true;
+}
+
+bool Grapple_AddChipControl(Grapple_ChipComposer *composer, int track, Uint64 tick, int controller,
+                            int value)
+{
+    if (!composer || track < 0 || track >= composer->song->info.track_count ||
+        !ValidTick(composer->song, tick) || value < 0 || value > 127)
+        return SDL_SetError("chiptune composer: invalid controller arguments");
+    switch (controller)
+    {
+    case 1:
+    case 7:
+    case 10:
+    case 11:
+    case 64:
+    case 66:
+    case 67:
+    case 120:
+    case 121:
+    case 123:
+        break;
+    default:
+        return SDL_SetError("chiptune composer: unsupported controller");
+    }
+    ChipEvent event = {0};
+    event.tick = tick;
+    event.track = (Uint16)track;
+    event.status = 0xb0;
+    event.a = (Uint8)controller;
+    event.b = (Uint8)value;
+    if (!Chip_AppendEvent(composer->song, event))
+        return false;
+    composer->song->info.duration_ticks = SDL_max(composer->song->info.duration_ticks, tick);
     return true;
 }
 

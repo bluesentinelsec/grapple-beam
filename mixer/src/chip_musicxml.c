@@ -44,7 +44,7 @@ static bool Unsupported(ScoreReader *r, const ChipXmlNode *node)
 
 static bool CheckPerformance(ScoreReader *r, const ChipXmlNode *node)
 {
-    static const char *const unsupported[] = {"wedge", "pedal", "swing", "other-notation"};
+    static const char *const unsupported[] = {"other-notation"};
     for (; node; node = node->next)
     {
         for (size_t i = 0; i < SDL_arraysize(unsupported); ++i)
@@ -288,6 +288,7 @@ static bool Resolution(ScoreReader *r, const ChipXmlNode *node, Sint64 *division
             *fractions *= n.denominator / Gcd(n.denominator, *fractions);
         }
         if (Named(node, "grace") || Named(node, "ornaments") || Named(node, "arpeggiate") ||
+            Named(node, "swing") || Named(node, "wedge") || Named(node, "words") ||
             Named(node, "fermata") || Named(node, "caesura") || Named(node, "staccato") ||
             Named(node, "staccatissimo") || Named(node, "detached-legato") ||
             Named(node, "stopped") || Named(node, "notehead") || Named(node, "other-technical"))
@@ -295,6 +296,21 @@ static bool Resolution(ScoreReader *r, const ChipXmlNode *node, Sint64 *division
             const Sint64 factor = 1000 / Gcd(1000, *fractions);
             if (factor > SCORE_MAX_RESOLUTION / *fractions)
                 return Chip_ScoreError(r, node, "articulation timing resolution exceeds limit");
+            *fractions *= factor;
+        }
+        if (Named(node, "swing") || Named(node, "words"))
+        {
+            const int first =
+                Named(node, "swing")
+                    ? Chip_ScoreInteger(r, node, Chip_XmlText(node, "first"), 2, 1, 1000)
+                    : 2;
+            const int second =
+                Named(node, "swing")
+                    ? Chip_ScoreInteger(r, node, Chip_XmlText(node, "second"), 1, 1, 1000)
+                    : 1;
+            const Sint64 factor = (first + second) / Gcd(first + second, *fractions);
+            if (factor > SCORE_MAX_RESOLUTION / *fractions)
+                return Chip_ScoreError(r, node, "swing precision exceeds resolution limit");
             *fractions *= factor;
         }
         if (Named(node, "divisions") || Named(node, "duration") || Named(node, "offset") ||
@@ -512,7 +528,7 @@ static bool InitInstruments(ScoreReader *r)
     return !r->failed;
 }
 
-static int Dynamic(const char *name)
+int Chip_ScoreDynamic(const char *name)
 {
     static const char *const names[] = {"pppp", "ppp", "pp", "p",   "mp",
                                         "mf",   "f",   "ff", "fff", "ffff"};
@@ -520,6 +536,12 @@ static int Dynamic(const char *name)
     for (size_t i = 0; i < SDL_arraysize(names); ++i)
         if (SDL_strcmp(names[i], name) == 0)
             return velocities[i];
+    if (SDL_strcmp(name, "ppppp") == 0)
+        return 10;
+    if (SDL_strcmp(name, "pppppp") == 0)
+        return 6;
+    if (SDL_strcmp(name, "fffff") == 0 || SDL_strcmp(name, "ffffff") == 0)
+        return 127;
     return 80;
 }
 
@@ -533,7 +555,6 @@ static bool Direction(ScoreReader *r, const ChipXmlNode *node, Sint64 cursor)
         cursor += Chip_ScoreTicks(r, offset, offset->text ? offset->text : "");
     if (cursor < 0)
         return Chip_ScoreError(r, node, "direction before measure start");
-    const int staff = Staff(r, node, Chip_XmlText(node, "staff"));
     if (!NavigationSound(r, sound))
         return false;
     const char *tempo = Chip_XmlAttribute(sound, "tempo");
@@ -543,17 +564,10 @@ static bool Direction(ScoreReader *r, const ChipXmlNode *node, Sint64 cursor)
         if (!Chip_ScoreControl(r, cursor, 0, 0, 0, (Uint32)SDL_round(60000000 / bpm)))
             return false;
     }
-    const char *dynamics = Chip_XmlAttribute(sound, "dynamics");
-    if (*dynamics)
-        r->velocity[staff] =
-            SDL_min(127, (int)SDL_round(Chip_ScoreDecimal(r, sound, dynamics, 100, 0, 1000) * 0.9));
     for (const ChipXmlNode *c = node->children; c; c = c->next)
     {
         if (!Named(c, "direction-type"))
             continue;
-        const ChipXmlNode *dynamic = Chip_XmlChild(c, "dynamics");
-        if (dynamic && dynamic->children && !*dynamics)
-            r->velocity[staff] = Dynamic(dynamic->children->name);
         ChipScoreMeasure *navigation = &r->navigation[r->measure];
         if (Chip_XmlChild(c, "segno") && !navigation->segno)
             navigation->segno = "default";
@@ -603,7 +617,7 @@ static bool Direction(ScoreReader *r, const ChipXmlNode *node, Sint64 cursor)
                 return false;
         }
     }
-    return !r->failed;
+    return !r->failed && Chip_ReadDirections(r, node, sound, cursor);
 }
 
 static bool Note(ScoreReader *r, const ChipXmlNode *node, Sint64 *cursor, Sint64 *previous,

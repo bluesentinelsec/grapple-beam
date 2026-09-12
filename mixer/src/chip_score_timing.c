@@ -348,6 +348,13 @@ bool Chip_ApplyScoreTiming(ScoreReader *r)
                 n->attack = 0;
             }
         }
+        for (size_t i = 0; ok && i < r->control_count; ++i)
+        {
+            ScoreControl *c = &r->controls[i];
+            const Sint64 start = Map(pauses, count, c->start, true);
+            c->duration = Map(pauses, count, c->start + c->duration, true) - start;
+            c->start = start;
+        }
         for (size_t i = 0; ok && i < r->song->count; ++i)
             r->song->events[i].tick =
                 (Uint64)Map(pauses, count, (Sint64)r->song->events[i].tick, true);
