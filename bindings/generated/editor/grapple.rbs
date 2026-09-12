@@ -2756,6 +2756,9 @@ module GrappleC
   def self.GamepadSetLED: (untyped engine, Integer player, Integer red, Integer green, Integer blue) -> bool
   def self.GamepadStick: (untyped engine, Integer player, Integer side, Float x, Float y) -> [Float, Float]
   def self.GamepadStopRumble: (untyped engine, Integer player) -> void
+  def self.GetChipDiagnosticCount: (untyped song) -> Integer
+  def self.GetChipDiagnosticMessage: (untyped song, Integer index) -> String?
+  def self.GetChipImportDefaults: () -> [bool, Hash[Symbol, untyped]]
   def self.GetChipPlayerPeakVoices: (untyped player) -> Integer
   def self.GetChipPresetEffects: (Integer preset) -> [bool, Hash[Symbol, untyped]]
   def self.GraphicsClamp: () -> Hash[Symbol, untyped]
@@ -2856,6 +2859,7 @@ module GrappleC
   def self.LightSunlight: (untyped engine) -> Float
   def self.LightUsesShaders: (untyped scene) -> bool
   def self.LoadChipSong: (String? path) -> untyped
+  def self.LoadChipSongEx: (String? path, Hash[Symbol, untyped] options) -> [untyped, Hash[Symbol, untyped]]
   def self.LoadTextFile: (String? path) -> Integer
   def self.LoadTexture: (untyped engine, String? path) -> Integer
   def self.LoadTextureAsync: (untyped engine, String? path) -> Integer
@@ -2899,6 +2903,7 @@ module GrappleC
   def self.PrismaticJointDefSetLimit: (untyped def_, bool enabled, Float lower, Float upper) -> void
   def self.PrismaticJointDefSetMotor: (untyped def_, bool enabled, Float speed, Float max_force) -> void
   def self.QuitDebugText: () -> void
+  def self.ReadChipDiagnostic: (untyped song, Integer index) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipSongInfo: (untyped song) -> [bool, Hash[Symbol, untyped]]
   def self.RegexEscape: (String? text) -> Integer
   def self.RegexFlags: (untyped regex) -> String?

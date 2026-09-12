@@ -240,7 +240,9 @@ notation durations, ties, and other score structure. Its interpreter should
 produce the same internal event timeline, keeping synthesis separate from
 notation. Repeats, tempo directions, grace notes and swing need an explicit
 interpretation policy; XML alone does not guarantee matching performances.
-No MusicXML parser is included in this change.
+MusicXML partwise/timewise and MXL import are now available through the same loader.
+See [MusicXML playback](../docs/chiptune-musicxml.md) for the current support
+matrix, exact timing, staff selection, diagnostics and remaining implementation work.
 
 References: [Guitar Pro MIDI export](https://www.guitar-pro.com/docs/gp8/import-export/export/export-midi),
 [MuseScore export settings](https://handbook.musescore.org/file-management/file-export),

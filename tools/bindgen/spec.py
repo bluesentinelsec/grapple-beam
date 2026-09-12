@@ -376,7 +376,7 @@ RESOURCES: dict[str, list[ResourceSpec]] = {
         ResourceSpec("Grapple_ChipComposer", "ChipComposer", "Grapple_DestroyChipComposer",
                      ["Grapple_CreateChipComposer"]),
         ResourceSpec("Grapple_ChipSong", "ChipSong", "Grapple_DestroyChipSong",
-                     ["Grapple_LoadChipSong", "Grapple_LoadChipSong_IO", "Grapple_BuildChipSong"]),
+                     ["Grapple_LoadChipSong", "Grapple_LoadChipSong_IO", "Grapple_LoadChipSongEx", "Grapple_LoadChipSong_IOEx", "Grapple_BuildChipSong"]),
         ResourceSpec("Grapple_ChipPlayer", "ChipPlayer", "Grapple_DestroyChipPlayer",
                      ["Grapple_CreateChipPlayer"]),
         ResourceSpec("Grapple_TiledMap", "TiledMapHandle", "Grapple_FreeTiledMap",

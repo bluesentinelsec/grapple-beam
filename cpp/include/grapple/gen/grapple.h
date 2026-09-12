@@ -107,6 +107,20 @@ class ChipComposer {
 // RAII owner for Grapple_ChipSong (destroyed with Grapple_DestroyChipSong).
 class ChipSong {
  public:
+  static Result<ChipSong> LoadChipSongEx(const char *path, const Grapple_ChipImportOptions *options, Grapple_ChipDiagnostic *error) {
+    Grapple_ChipSong* created_ = ::Grapple_LoadChipSongEx(path, options, error);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipSong(created_);
+  }
+  static Result<ChipSong> LoadChipSong_IOEx(SDL_IOStream *io, bool closeio, const Grapple_ChipImportOptions *options, Grapple_ChipDiagnostic *error) {
+    Grapple_ChipSong* created_ = ::Grapple_LoadChipSong_IOEx(io, closeio, options, error);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipSong(created_);
+  }
   static Result<ChipSong> LoadChipSong_IO(SDL_IOStream *io, bool closeio) {
     Grapple_ChipSong* created_ = ::Grapple_LoadChipSong_IO(io, closeio);
     if (created_ == nullptr) {
@@ -162,6 +176,15 @@ class ChipSong {
     engaged_ = false;
   }
 
+  int GetChipDiagnosticCount() {
+    return ::Grapple_GetChipDiagnosticCount(value_);
+  }
+  Status ReadChipDiagnostic(int index, Grapple_ChipDiagnostic *diagnostic) {
+    return ::Grapple_ReadChipDiagnostic(value_, index, diagnostic) ? Status() : Status::FromSdl();
+  }
+  const char* GetChipDiagnosticMessage(int index) {
+    return ::Grapple_GetChipDiagnosticMessage(value_, index);
+  }
   const Grapple_ChipSongInfo* GetChipSongInfo() {
     return ::Grapple_GetChipSongInfo(value_);
   }
@@ -897,6 +920,9 @@ inline Status GamepadRumbleTriggers(Grapple_Engine *engine, int player, float le
 }
 inline Status GamepadSetLED(Grapple_Engine *engine, int player, Uint8 red, Uint8 green, Uint8 blue) {
   return ::Grapple_GamepadSetLED(engine, player, red, green, blue) ? Status() : Status::FromSdl();
+}
+inline Status GetChipImportDefaults(Grapple_ChipImportOptions *options) {
+  return ::Grapple_GetChipImportDefaults(options) ? Status() : Status::FromSdl();
 }
 inline Status GetChipPresetEffects(Grapple_ChipPreset preset, Grapple_ChipEffects *effects) {
   return ::Grapple_GetChipPresetEffects(preset, effects) ? Status() : Status::FromSdl();

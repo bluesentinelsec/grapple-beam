@@ -25,8 +25,8 @@ types). The full C API additionally stays reachable from C/C++.
 | libyaml | 48 | 0 | 0 | 48 | 2 | 46 |
 | mog HTTP/S | 69 | 54 | 0 | 12 | 67 | 2 |
 | cJSON | 78 | 57 | 0 | 20 | 70 | 8 |
-| Grapple modules | 682 | 120 | 117 | 437 | 639 | 43 |
-| **Total** | 3574 | 1138 | 341 | 2044 | 2965 | 609 |
+| Grapple modules | 688 | 125 | 118 | 437 | 644 | 44 |
+| **Total** | 3580 | 1143 | 342 | 2044 | 2970 | 610 |
 
 ## Script-surface skip reasons
 
@@ -37,7 +37,7 @@ types). The full C API additionally stays reachable from C/C++.
 - 47: threading
 - 9: callback parameter
 - 3: owned string, no free fn
-- 1: input stream ownership requires C/C++
+- 2: input stream ownership requires C/C++
 - 1: borrowed metadata; use ReadChipSongInfo in scripts
 - 1: borrowed metadata requires C/C++
 - 1: borrowed stream requires C/C++; use PlayChipPlayer in scripts
@@ -677,7 +677,7 @@ types). The full C API additionally stays reachable from C/C++.
 
 </details>
 
-<details><summary>Grapple modules (43)</summary>
+<details><summary>Grapple modules (44)</summary>
 
 - `Grapple_ActorEach` — param visit: <funcptr>*
 - `Grapple_ActorLight` — returns struct pointer
@@ -711,6 +711,7 @@ types). The full C API additionally stays reachable from C/C++.
 - `Grapple_GuiGridBegin` — param weights: const float*
 - `Grapple_LightDefCreate` — returns struct pointer
 - `Grapple_LoadChipSong_IO` — input stream ownership requires C/C++
+- `Grapple_LoadChipSong_IOEx` — input stream ownership requires C/C++
 - `Grapple_LoadVFSFile` — return type unsigned char*
 - `Grapple_PhysicsSetCollisionCallback` — param callback: Grapple_CollisionCallback
 - `Grapple_RenderChipPlayer` — sized PCM output buffer requires C/C++

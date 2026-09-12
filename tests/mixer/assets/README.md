@@ -42,3 +42,8 @@ The author supplied these compositions and authorized committing the MIDI and
 MusicXML exports for repository demos and test data on 2026-09-11. They are
 source fixtures, not generated audio or third-party recordings. Do not regenerate
 or reformat these exports when changing the synthesized corpus.
+
+`c64-composition.mxl` and `c64-composition-stored.mxl` package the unmodified XML
+as deflated and stored MusicXML containers. Regenerate them with
+`python3 scripts/gen_musicxml_fixtures.py`. Both use fixed timestamps and a
+container manifest pointing at `scores/demo.musicxml`; neither is a new score.

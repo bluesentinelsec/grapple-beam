@@ -1,4 +1,5 @@
 /* Original Grapple code (zlib). Bounded Standard MIDI File reader. */
+#include "chip_archive.h"
 #include "chip_internal.h"
 
 #define CHIP_MIDI_MAX_BYTES (64u * 1024u * 1024u)
@@ -183,17 +184,53 @@ fail:
     return NULL;
 }
 
-Grapple_ChipSong *Grapple_LoadChipSong_IO(SDL_IOStream *io, bool closeio)
+Grapple_ChipSong *Grapple_LoadChipSong_IOEx(SDL_IOStream *io, bool closeio,
+                                            const Grapple_ChipImportOptions *options,
+                                            Grapple_ChipDiagnostic *error)
 {
+    if (error)
+        *error = (Grapple_ChipDiagnostic){
+            GRAPPLE_CHIP_DIAGNOSTIC_NONE, GRAPPLE_CHIP_DIAGNOSTIC_ERROR, -1, -1, 0, 0};
     if (!io)
     {
-        SDL_SetError("chiptune MIDI: NULL input stream");
+        SDL_SetError("chiptune: NULL input stream");
+        if (error)
+            error->code = GRAPPLE_CHIP_DIAGNOSTIC_INPUT;
         return NULL;
     }
     size_t size = 0;
     size_t capacity = 16384;
     Uint8 *data = SDL_malloc(capacity);
     Grapple_ChipSong *song = NULL;
+    Grapple_ChipImportOptions policy;
+    Grapple_GetChipImportDefaults(&policy);
+    if (options)
+        policy = *options;
+    if (policy.staff < -1 || policy.staff > 32 ||
+        (SDL_isnan(policy.grace_beats) || SDL_isinf(policy.grace_beats)) ||
+        policy.grace_beats < 0 || policy.grace_beats > 4 ||
+        (SDL_isnan(policy.ornament_beats) || SDL_isinf(policy.ornament_beats)) ||
+        policy.ornament_beats < 0 || policy.ornament_beats > 4 ||
+        (SDL_isnan(policy.arpeggio_beats) || SDL_isinf(policy.arpeggio_beats)) ||
+        policy.arpeggio_beats < 0 || policy.arpeggio_beats > 4 ||
+        (SDL_isnan(policy.fermata_factor) || SDL_isinf(policy.fermata_factor)) ||
+        policy.fermata_factor < 0 || policy.fermata_factor > 8 ||
+        (SDL_isnan(policy.swing_ratio) || SDL_isinf(policy.swing_ratio)) ||
+        policy.swing_ratio < 0 || policy.swing_ratio > 8)
+    {
+        SDL_SetError("chiptune: invalid import options");
+        goto done;
+    }
+    if (policy.grace_beats == 0)
+        policy.grace_beats = 0.125;
+    if (policy.ornament_beats == 0)
+        policy.ornament_beats = 0.125;
+    if (policy.arpeggio_beats == 0)
+        policy.arpeggio_beats = 0.125;
+    if (policy.fermata_factor == 0)
+        policy.fermata_factor = 1.5;
+    if (policy.swing_ratio == 0)
+        policy.swing_ratio = 2;
     if (!data)
         goto done;
     for (;;)
@@ -224,9 +261,21 @@ Grapple_ChipSong *Grapple_LoadChipSong_IO(SDL_IOStream *io, bool closeio)
             data = larger;
         }
     }
-    song = size >= 4 && SDL_memcmp(data, "MThd", 4) == 0 ? ParseMidi(data, size)
-                                                         : Chip_ParseMusicXml(data, size);
+    if (size >= 4 && SDL_memcmp(data, "MThd", 4) == 0)
+        song = ParseMidi(data, size);
+    else if (size >= 4 && SDL_memcmp(data, "PK\003\004", 4) == 0)
+    {
+        size_t xml_size = 0;
+        void *xml = Chip_ReadMxl(data, size, &xml_size);
+        if (xml)
+            song = Chip_ParseMusicXml(xml, xml_size, &policy, error);
+        SDL_free(xml);
+    }
+    else
+        song = Chip_ParseMusicXml(data, size, &policy, error);
 done:
+    if (!song && error && error->code == GRAPPLE_CHIP_DIAGNOSTIC_NONE)
+        error->code = GRAPPLE_CHIP_DIAGNOSTIC_INPUT;
     SDL_free(data);
     if (closeio)
         SDL_CloseIO(io);
@@ -235,8 +284,26 @@ done:
 
 Grapple_ChipSong *Grapple_LoadChipSong(const char *path)
 {
+    return Grapple_LoadChipSongEx(path, NULL, NULL);
+}
+
+Grapple_ChipSong *Grapple_LoadChipSong_IO(SDL_IOStream *io, bool closeio)
+{
+    return Grapple_LoadChipSong_IOEx(io, closeio, NULL, NULL);
+}
+
+Grapple_ChipSong *Grapple_LoadChipSongEx(const char *path, const Grapple_ChipImportOptions *options,
+                                         Grapple_ChipDiagnostic *error)
+{
     SDL_IOStream *io = SDL_IOFromFile(path, "rb");
-    return io ? Grapple_LoadChipSong_IO(io, true) : NULL;
+    if (!io)
+    {
+        if (error)
+            *error = (Grapple_ChipDiagnostic){
+                GRAPPLE_CHIP_DIAGNOSTIC_INPUT, GRAPPLE_CHIP_DIAGNOSTIC_ERROR, -1, -1, 0, 0};
+        return NULL;
+    }
+    return Grapple_LoadChipSong_IOEx(io, true, options, error);
 }
 
 const Grapple_ChipSongInfo *Grapple_GetChipSongInfo(const Grapple_ChipSong *song)

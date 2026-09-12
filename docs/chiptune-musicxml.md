@@ -4,8 +4,8 @@ Implementation is tracked in issue #68 and draft PR #69. This document records
 the actual supported behavior as work progresses; it is not a claim that every
 MusicXML element already has a performance interpretation.
 
-`Grapple_LoadChipSong()` and its SDL_IOStream variant detect MIDI or uncompressed
-MusicXML by content. The resulting immutable song uses the same player and
+`Grapple_LoadChipSong()` and its SDL_IOStream variant detect MIDI, uncompressed
+MusicXML, or compressed MXL by content. The resulting immutable song uses the same player and
 instrument-name contract as MIDI and declarative composition. All XML parsing
 and score compilation happen at load time, outside the audio callback.
 
@@ -36,7 +36,7 @@ Scores that exceed exact arithmetic/resource limits fail explicitly.
 
 ## Pending implementation
 
-Compressed MXL, structured import diagnostics/options, score navigation/repeats,
+Score navigation/repeats,
 expressive articulations/ornaments and guitar techniques, microtonal pitch,
 advanced transport and the final support matrix remain tracked on the issue.
 Grace notes and repeats currently fail explicitly. Other expressive constructs
@@ -47,3 +47,33 @@ The XML tree is limited to 300,000 nodes, depth 128, 64 attributes per element,
 1 MiB of text per element and 64 MiB of retained tree allocations. Entity
 declarations/external entities are rejected; DOCTYPE declarations do not fetch
 DTDs. No filesystem extraction or network activity is needed for XML import.
+
+## MXL containers
+
+The importer reads `META-INF/container.xml` and extracts its referenced score
+from memory. Stored and raw-deflated ZIP entries are supported, with CRC and
+central/local-header checks. Paths must be relative and unique. Encrypted,
+ZIP64, split archives and multiple score roots are rejected explicitly. Limits
+are 4,096 entries, 64 MiB per input/entry and 256 MiB declared total expansion.
+No files are extracted or mounted. The inflater is the existing vendored
+PhysFS/miniz code, compiled without linking the VFS or HTTP components.
+
+## Import policy and diagnostics
+
+`Grapple_GetChipImportDefaults` initializes a policy. Pass it to
+`Grapple_LoadChipSongEx` or `_IOEx` along with an optional error output.
+Strict mode is the default: recognized unsupported playback instructions
+fail with a diagnostic category, part/measure and XML line. Permissive mode
+retains warnings for unsupported instructions that can safely be skipped;
+malformed timing and unsupported structural transformations still fail.
+
+Inspect retained messages with `Grapple_GetChipDiagnosticCount`,
+`Grapple_ReadChipDiagnostic` and `Grapple_GetChipDiagnosticMessage`. These APIs
+also work through C++, Lua and Ruby. Informational diagnostics identify each
+omitted TAB mirror. Diagnostic records/messages live with the immutable song.
+A maximum of 1,024 diagnostics bounds retained memory.
+
+The staff policy is 0 for automatic mirror detection, -1 to retain every
+staff, or 1..32 to select a staff in multi-staff parts. Single-staff parts
+such as percussion remain present. Expressive timing fields are defined for
+the upcoming interpretation slice; they do not yet enable pending techniques.

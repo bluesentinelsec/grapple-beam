@@ -40,3 +40,10 @@ and optionally emits a C header for embedding.
 
 None. PhysFS passed the malformed-archive fuzzing under ASan+UBSan without
 findings.
+
+The MusicXML importer reuses `physfs_miniz.h` directly for raw DEFLATE decoding.
+`mixer/src/chip_inflate.c` supplies the header's five integer aliases from SDL
+types and calls the existing static inflater with unaligned accesses disabled.
+There is no copy, upstream modification, VFS linkage, archive mounting, or HTTP
+dependency. MXL container validation is original code in `chip_archive.c`.
+The inflater retains its public-domain/unlicense notice in the source header.

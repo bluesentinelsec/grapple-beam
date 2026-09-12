@@ -122,8 +122,67 @@ void Grapple_DestroyChipSong(Grapple_ChipSong *song)
         SDL_free(song->presets);
         SDL_free(song->gains);
         SDL_free(song->events);
+        for (int i = 0; i < song->diagnostic_count; ++i)
+            SDL_free(song->diagnostic_messages[i]);
+        SDL_free(song->diagnostics);
+        SDL_free(song->diagnostic_messages);
         SDL_free(song);
     }
+}
+
+bool Grapple_GetChipImportDefaults(Grapple_ChipImportOptions *options)
+{
+    if (!options)
+        return SDL_SetError("chiptune: NULL import options output");
+    *options = (Grapple_ChipImportOptions){true, 0, 0.125, 0.125, 0.125, 1.5, 2};
+    return true;
+}
+
+bool Chip_AddDiagnostic(Grapple_ChipSong *song, Grapple_ChipDiagnostic diagnostic,
+                        const char *message)
+{
+    if (song->diagnostic_count == 1024)
+        return SDL_SetError("MusicXML: diagnostic limit exceeded");
+    const size_t count = (size_t)song->diagnostic_count + 1;
+    Grapple_ChipDiagnostic *diagnostics =
+        SDL_realloc(song->diagnostics, count * sizeof(*diagnostics));
+    if (!diagnostics)
+        return false;
+    song->diagnostics = diagnostics;
+    char **messages = SDL_realloc(song->diagnostic_messages, count * sizeof(*messages));
+    if (!messages)
+        return false;
+    song->diagnostic_messages = messages;
+    messages[count - 1] = SDL_strdup(message);
+    if (!messages[count - 1])
+        return false;
+    diagnostics[count - 1] = diagnostic;
+    ++song->diagnostic_count;
+    return true;
+}
+
+int Grapple_GetChipDiagnosticCount(const Grapple_ChipSong *song)
+{
+    return song ? song->diagnostic_count : 0;
+}
+
+bool Grapple_ReadChipDiagnostic(const Grapple_ChipSong *song, int index,
+                                Grapple_ChipDiagnostic *diagnostic)
+{
+    if (!song || !diagnostic || index < 0 || index >= song->diagnostic_count)
+        return SDL_SetError("chiptune: invalid diagnostic index/output");
+    *diagnostic = song->diagnostics[index];
+    return true;
+}
+
+const char *Grapple_GetChipDiagnosticMessage(const Grapple_ChipSong *song, int index)
+{
+    if (!song || index < 0 || index >= song->diagnostic_count)
+    {
+        SDL_SetError("chiptune: invalid diagnostic index");
+        return NULL;
+    }
+    return song->diagnostic_messages[index];
 }
 
 Grapple_ChipComposer *Grapple_CreateChipComposer(int tracks, int ticks_per_quarter)

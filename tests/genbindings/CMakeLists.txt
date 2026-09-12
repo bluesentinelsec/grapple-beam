@@ -11,6 +11,8 @@ target_link_libraries(grapple_genbindings_test
     GTest::gtest_main
 )
 cppboot_set_project_warnings(grapple_genbindings_test)
+target_compile_definitions(grapple_genbindings_test PRIVATE
+  CHIP_XML_FIXTURE="${CMAKE_SOURCE_DIR}/tests/mixer/assets/c64-composition-named.xml")
 gtest_discover_tests(grapple_genbindings_test DISCOVERY_TIMEOUT 60)
 
 find_package(Python3 COMPONENTS Interpreter)

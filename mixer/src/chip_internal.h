@@ -38,13 +38,20 @@ extern "C"
         size_t capacity;
         Uint64 end_time;
         bool independent_parts;
+        Grapple_ChipDiagnostic *diagnostics;
+        char **diagnostic_messages;
+        int diagnostic_count;
     };
 
     Grapple_ChipSong *Chip_NewSong(int tracks, int ppqn);
     bool Chip_AppendEvent(Grapple_ChipSong *song, ChipEvent event);
     bool Chip_ResolveTiming(Grapple_ChipSong *song);
     void Chip_RetainSong(const Grapple_ChipSong *song);
-    Grapple_ChipSong *Chip_ParseMusicXml(const void *data, size_t size);
+    Grapple_ChipSong *Chip_ParseMusicXml(const void *data, size_t size,
+                                         const Grapple_ChipImportOptions *options,
+                                         Grapple_ChipDiagnostic *error);
+    bool Chip_AddDiagnostic(Grapple_ChipSong *song, Grapple_ChipDiagnostic diagnostic,
+                            const char *message);
     Uint64 Chip_TimeToFrame(const Grapple_ChipSong *song, Uint64 time, int sample_rate);
 
 #ifdef __cplusplus

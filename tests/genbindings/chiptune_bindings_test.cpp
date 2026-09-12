@@ -10,6 +10,7 @@
 #include <memory>
 #include <mruby/compile.h>
 #include <mruby/string.h>
+#include <mruby/variable.h>
 #include <vector>
 
 namespace
@@ -33,6 +34,10 @@ class ChipBindings : public ::testing::Test
 
 TEST_F(ChipBindings, CppComposesDeclarativeNotesWithRaii)
 {
+    Grapple_ChipDiagnostic error;
+    auto imported = grapple::ext::ChipSong::LoadChipSongEx(CHIP_XML_FIXTURE, nullptr, &error);
+    ASSERT_TRUE(imported.ok());
+    EXPECT_EQ(imported->GetChipDiagnosticCount(), 3);
     auto composer = grapple::ext::ChipComposer::CreateChipComposer(1, 480);
     ASSERT_TRUE(composer.ok());
     ASSERT_TRUE(composer->SetChipPart(0, "harmony", GRAPPLE_CHIP_PRESET_HARMONY, 1).ok());
@@ -56,8 +61,19 @@ TEST_F(ChipBindings, LuaOwnsComposerSongAndManagedPlayback)
     std::unique_ptr<lua_State, decltype(&lua_close)> state(Grapple_CreateLuaState(), lua_close);
     ASSERT_TRUE(state);
     ASSERT_TRUE(Grapple_OpenLuaBindings(state.get()));
+    lua_pushstring(state.get(), CHIP_XML_FIXTURE);
+    lua_setglobal(state.get(), "chip_xml_fixture");
     const char *script = R"lua(
 local G = GrappleC
+local ok, policy = G.GetChipImportDefaults()
+assert(ok and policy.strict)
+local imported, diagnostic = G.LoadChipSongEx(chip_xml_fixture, policy)
+assert(imported and diagnostic.code == G.GRAPPLE_CHIP_DIAGNOSTIC_NONE)
+assert(G.GetChipDiagnosticCount(imported) == 3)
+local ok, diagnostic = G.ReadChipDiagnostic(imported, 0)
+assert(ok and diagnostic.code == G.GRAPPLE_CHIP_DIAGNOSTIC_STAFF_MIRROR)
+assert(G.GetChipDiagnosticMessage(imported, 0):find('TAB'))
+G.DestroyChipSong(imported)
 local composer = assert(G.CreateChipComposer(1, 480))
 assert(G.SetChipPart(composer, 0, 'harmony', G.GRAPPLE_CHIP_PRESET_HARMONY, 1))
 local notes = {
@@ -98,8 +114,19 @@ TEST_F(ChipBindings, RubyOwnsComposerSongAndManagedPlayback)
     std::unique_ptr<mrb_state, decltype(&mrb_close)> state(Grapple_CreateRubyState(), mrb_close);
     ASSERT_TRUE(state);
     ASSERT_TRUE(Grapple_OpenRubyBindings(state.get()));
+    mrb_gv_set(state.get(), mrb_intern_lit(state.get(), "$chip_xml_fixture"),
+               mrb_str_new_cstr(state.get(), CHIP_XML_FIXTURE));
     const char *script = R"ruby(
 g = GrappleC
+ok, policy = g.GetChipImportDefaults()
+raise 'policy' unless ok && policy[:strict]
+imported, diagnostic = g.LoadChipSongEx($chip_xml_fixture, policy)
+raise 'import' unless imported && diagnostic[:code] == g::GRAPPLE_CHIP_DIAGNOSTIC_NONE
+raise 'diagnostics' unless g.GetChipDiagnosticCount(imported) == 3
+ok, diagnostic = g.ReadChipDiagnostic(imported, 0)
+raise 'diagnostic code' unless ok && diagnostic[:code] == g::GRAPPLE_CHIP_DIAGNOSTIC_STAFF_MIRROR
+raise 'message' unless g.GetChipDiagnosticMessage(imported, 0).include?('TAB')
+g.DestroyChipSong(imported)
 composer = g.CreateChipComposer(1, 480)
 raise 'composer' unless composer
 raise 'part' unless g.SetChipPart(composer, 0, 'harmony', g::GRAPPLE_CHIP_PRESET_HARMONY, 1)

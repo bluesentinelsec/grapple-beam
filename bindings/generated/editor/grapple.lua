@@ -15850,6 +15850,21 @@ function GrappleC.GamepadStick(engine, player, side, x, y) end
 ---@param player integer
 function GrappleC.GamepadStopRumble(engine, player) end
 
+---Calls `Grapple_GetChipDiagnosticCount`.
+---@param song userdata
+---@return integer
+function GrappleC.GetChipDiagnosticCount(song) end
+
+---Calls `Grapple_GetChipDiagnosticMessage`.
+---@param song userdata
+---@param index integer
+---@return string?
+function GrappleC.GetChipDiagnosticMessage(song, index) end
+
+---Calls `Grapple_GetChipImportDefaults`.
+---@return boolean, table
+function GrappleC.GetChipImportDefaults() end
+
 ---Calls `Grapple_GetChipPlayerPeakVoices`.
 ---@param player userdata
 ---@return integer
@@ -16395,6 +16410,12 @@ function GrappleC.LightUsesShaders(scene) end
 ---@return userdata?
 function GrappleC.LoadChipSong(path) end
 
+---Calls `Grapple_LoadChipSongEx`.
+---@param path string?
+---@param options table
+---@return userdata?, table
+function GrappleC.LoadChipSongEx(path, options) end
+
 ---Calls `Grapple_LoadTextFile`.
 ---@param path string?
 ---@return integer
@@ -16640,6 +16661,12 @@ function GrappleC.PrismaticJointDefSetMotor(def_, enabled, speed, max_force) end
 
 ---Calls `Grapple_QuitDebugText`.
 function GrappleC.QuitDebugText() end
+
+---Calls `Grapple_ReadChipDiagnostic`.
+---@param song userdata
+---@param index integer
+---@return boolean, table
+function GrappleC.ReadChipDiagnostic(song, index) end
 
 ---Calls `Grapple_ReadChipSongInfo`.
 ---@param song userdata

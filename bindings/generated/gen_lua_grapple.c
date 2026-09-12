@@ -241,6 +241,23 @@ static void GenPush_Grapple_Camera(lua_State *L, const Grapple_Camera *in)
     lua_setfield(L, -2, "visible");
 }
 
+static void GenPush_Grapple_ChipDiagnostic(lua_State *L, const Grapple_ChipDiagnostic *in)
+{
+    lua_createtable(L, 0, 6);
+    lua_pushinteger(L, (lua_Integer)in->code);
+    lua_setfield(L, -2, "code");
+    lua_pushinteger(L, (lua_Integer)in->severity);
+    lua_setfield(L, -2, "severity");
+    lua_pushinteger(L, (lua_Integer)in->part);
+    lua_setfield(L, -2, "part");
+    lua_pushinteger(L, (lua_Integer)in->measure);
+    lua_setfield(L, -2, "measure");
+    lua_pushinteger(L, (lua_Integer)in->staff);
+    lua_setfield(L, -2, "staff");
+    lua_pushinteger(L, (lua_Integer)in->line);
+    lua_setfield(L, -2, "line");
+}
+
 static void GenRead_Grapple_ChipEffects(lua_State *L, int idx, Grapple_ChipEffects *out)
 {
     memset(out, 0, sizeof(*out));
@@ -274,6 +291,38 @@ static void GenPush_Grapple_ChipEffects(lua_State *L, const Grapple_ChipEffects 
     lua_setfield(L, -2, "pulse_beats");
     lua_pushnumber(L, (lua_Number)in->pulse_depth);
     lua_setfield(L, -2, "pulse_depth");
+}
+
+static void GenRead_Grapple_ChipImportOptions(lua_State *L, int idx, Grapple_ChipImportOptions *out)
+{
+    memset(out, 0, sizeof(*out));
+    if (!lua_istable(L, idx)) { return; }
+    out->strict = (bool)GrappleGen_LuaFieldBool(L, idx, "strict");
+    out->staff = (int)GrappleGen_LuaFieldInt(L, idx, "staff");
+    out->grace_beats = (double)GrappleGen_LuaFieldNum(L, idx, "grace_beats");
+    out->ornament_beats = (double)GrappleGen_LuaFieldNum(L, idx, "ornament_beats");
+    out->arpeggio_beats = (double)GrappleGen_LuaFieldNum(L, idx, "arpeggio_beats");
+    out->fermata_factor = (double)GrappleGen_LuaFieldNum(L, idx, "fermata_factor");
+    out->swing_ratio = (double)GrappleGen_LuaFieldNum(L, idx, "swing_ratio");
+}
+
+static void GenPush_Grapple_ChipImportOptions(lua_State *L, const Grapple_ChipImportOptions *in)
+{
+    lua_createtable(L, 0, 7);
+    lua_pushboolean(L, (int)in->strict);
+    lua_setfield(L, -2, "strict");
+    lua_pushinteger(L, (lua_Integer)in->staff);
+    lua_setfield(L, -2, "staff");
+    lua_pushnumber(L, (lua_Number)in->grace_beats);
+    lua_setfield(L, -2, "grace_beats");
+    lua_pushnumber(L, (lua_Number)in->ornament_beats);
+    lua_setfield(L, -2, "ornament_beats");
+    lua_pushnumber(L, (lua_Number)in->arpeggio_beats);
+    lua_setfield(L, -2, "arpeggio_beats");
+    lua_pushnumber(L, (lua_Number)in->fermata_factor);
+    lua_setfield(L, -2, "fermata_factor");
+    lua_pushnumber(L, (lua_Number)in->swing_ratio);
+    lua_setfield(L, -2, "swing_ratio");
 }
 
 static void GenRead_Grapple_ChipNote(lua_State *L, int idx, Grapple_ChipNote *out)
@@ -4314,6 +4363,36 @@ static int GenL_Grapple_GamepadStopRumble(lua_State *L)
     return 0;
 }
 
+static int GenL_Grapple_GetChipDiagnosticCount(lua_State *L)
+{
+    (void)L;
+    const Grapple_ChipSong *a0 = (const Grapple_ChipSong *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_ChipSong");
+    int rv = Grapple_GetChipDiagnosticCount(a0);
+    lua_pushinteger(L, (lua_Integer)rv);
+    return 1;
+}
+
+static int GenL_Grapple_GetChipDiagnosticMessage(lua_State *L)
+{
+    (void)L;
+    const Grapple_ChipSong *a0 = (const Grapple_ChipSong *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_ChipSong");
+    int a1 = (int)luaL_checkinteger(L, 2);
+    const char * rv = Grapple_GetChipDiagnosticMessage(a0, a1);
+    if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
+    return 1;
+}
+
+static int GenL_Grapple_GetChipImportDefaults(lua_State *L)
+{
+    (void)L;
+    Grapple_ChipImportOptions out0;
+    memset(&out0, 0, sizeof(out0));
+    bool rv = Grapple_GetChipImportDefaults(&out0);
+    lua_pushboolean(L, (int)rv);
+    GenPush_Grapple_ChipImportOptions(L, &out0);
+    return 2;
+}
+
 static int GenL_Grapple_GetChipPlayerPeakVoices(lua_State *L)
 {
     (void)L;
@@ -5323,6 +5402,24 @@ static int GenL_Grapple_LoadChipSong(lua_State *L)
     return 1;
 }
 
+static int GenL_Grapple_LoadChipSongEx(lua_State *L)
+{
+    (void)L;
+    const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
+    Grapple_ChipImportOptions tmp1;
+    const Grapple_ChipImportOptions *a1 = NULL;
+    if (!lua_isnoneornil(L, 2)) {
+        GenRead_Grapple_ChipImportOptions(L, 2, &tmp1);
+        a1 = &tmp1;
+    }
+    Grapple_ChipDiagnostic out2;
+    memset(&out2, 0, sizeof(out2));
+    Grapple_ChipSong * rv = Grapple_LoadChipSongEx(a0, a1, &out2);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "Grapple_ChipSong", GenDtor_Grapple_DestroyChipSong);
+    GenPush_Grapple_ChipDiagnostic(L, &out2);
+    return 2;
+}
+
 static int GenL_Grapple_LoadTextFile(lua_State *L)
 {
     (void)L;
@@ -5753,6 +5850,19 @@ static int GenL_Grapple_QuitDebugText(lua_State *L)
     (void)L;
     Grapple_QuitDebugText();
     return 0;
+}
+
+static int GenL_Grapple_ReadChipDiagnostic(lua_State *L)
+{
+    (void)L;
+    const Grapple_ChipSong *a0 = (const Grapple_ChipSong *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_ChipSong");
+    int a1 = (int)luaL_checkinteger(L, 2);
+    Grapple_ChipDiagnostic out2;
+    memset(&out2, 0, sizeof(out2));
+    bool rv = Grapple_ReadChipDiagnostic(a0, a1, &out2);
+    lua_pushboolean(L, (int)rv);
+    GenPush_Grapple_ChipDiagnostic(L, &out2);
+    return 2;
 }
 
 static int GenL_Grapple_ReadChipSongInfo(lua_State *L)
@@ -7056,7 +7166,7 @@ static int GenL_Grapple_WheelJointDefSetSpring(lua_State *L)
 int GrappleGen_OpenLua_grapple(lua_State *L);
 int GrappleGen_OpenLua_grapple(lua_State *L)
 {
-    lua_createtable(L, 0, 639);
+    lua_createtable(L, 0, 644);
     lua_pushcfunction(L, GenL_Grapple_ActionBind);
     lua_setfield(L, -2, "ActionBind");
     lua_pushcfunction(L, GenL_Grapple_ActionBindAxis);
@@ -7791,6 +7901,12 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GamepadStick");
     lua_pushcfunction(L, GenL_Grapple_GamepadStopRumble);
     lua_setfield(L, -2, "GamepadStopRumble");
+    lua_pushcfunction(L, GenL_Grapple_GetChipDiagnosticCount);
+    lua_setfield(L, -2, "GetChipDiagnosticCount");
+    lua_pushcfunction(L, GenL_Grapple_GetChipDiagnosticMessage);
+    lua_setfield(L, -2, "GetChipDiagnosticMessage");
+    lua_pushcfunction(L, GenL_Grapple_GetChipImportDefaults);
+    lua_setfield(L, -2, "GetChipImportDefaults");
     lua_pushcfunction(L, GenL_Grapple_GetChipPlayerPeakVoices);
     lua_setfield(L, -2, "GetChipPlayerPeakVoices");
     lua_pushcfunction(L, GenL_Grapple_GetChipPresetEffects);
@@ -7991,6 +8107,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "LightUsesShaders");
     lua_pushcfunction(L, GenL_Grapple_LoadChipSong);
     lua_setfield(L, -2, "LoadChipSong");
+    lua_pushcfunction(L, GenL_Grapple_LoadChipSongEx);
+    lua_setfield(L, -2, "LoadChipSongEx");
     lua_pushcfunction(L, GenL_Grapple_LoadTextFile);
     lua_setfield(L, -2, "LoadTextFile");
     lua_pushcfunction(L, GenL_Grapple_LoadTexture);
@@ -8077,6 +8195,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "PrismaticJointDefSetMotor");
     lua_pushcfunction(L, GenL_Grapple_QuitDebugText);
     lua_setfield(L, -2, "QuitDebugText");
+    lua_pushcfunction(L, GenL_Grapple_ReadChipDiagnostic);
+    lua_setfield(L, -2, "ReadChipDiagnostic");
     lua_pushcfunction(L, GenL_Grapple_ReadChipSongInfo);
     lua_setfield(L, -2, "ReadChipSongInfo");
     lua_pushcfunction(L, GenL_Grapple_RegexEscape);
@@ -8367,6 +8487,24 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GRAPPLE_BODY_KINEMATIC");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_BODY_DYNAMIC);
     lua_setfield(L, -2, "GRAPPLE_BODY_DYNAMIC");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_DIAGNOSTIC_NONE);
+    lua_setfield(L, -2, "GRAPPLE_CHIP_DIAGNOSTIC_NONE");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_DIAGNOSTIC_INPUT);
+    lua_setfield(L, -2, "GRAPPLE_CHIP_DIAGNOSTIC_INPUT");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_DIAGNOSTIC_SCORE);
+    lua_setfield(L, -2, "GRAPPLE_CHIP_DIAGNOSTIC_SCORE");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_DIAGNOSTIC_UNSUPPORTED);
+    lua_setfield(L, -2, "GRAPPLE_CHIP_DIAGNOSTIC_UNSUPPORTED");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_DIAGNOSTIC_APPROXIMATION);
+    lua_setfield(L, -2, "GRAPPLE_CHIP_DIAGNOSTIC_APPROXIMATION");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_DIAGNOSTIC_STAFF_MIRROR);
+    lua_setfield(L, -2, "GRAPPLE_CHIP_DIAGNOSTIC_STAFF_MIRROR");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_DIAGNOSTIC_INFO);
+    lua_setfield(L, -2, "GRAPPLE_CHIP_DIAGNOSTIC_INFO");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_DIAGNOSTIC_WARNING);
+    lua_setfield(L, -2, "GRAPPLE_CHIP_DIAGNOSTIC_WARNING");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_DIAGNOSTIC_ERROR);
+    lua_setfield(L, -2, "GRAPPLE_CHIP_DIAGNOSTIC_ERROR");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_PRESET_AUTO);
     lua_setfield(L, -2, "GRAPPLE_CHIP_PRESET_AUTO");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_CHIP_PRESET_LEAD);

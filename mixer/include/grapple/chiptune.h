@@ -142,6 +142,91 @@ extern "C"
 
     /** @brief Immutable composition. Players retain it independently. */
     typedef struct Grapple_ChipSong Grapple_ChipSong;
+    /** @brief Severity of a score import diagnostic. */
+    typedef enum Grapple_ChipDiagnosticSeverity
+    {
+        GRAPPLE_CHIP_DIAGNOSTIC_INFO,
+        GRAPPLE_CHIP_DIAGNOSTIC_WARNING,
+        GRAPPLE_CHIP_DIAGNOSTIC_ERROR
+    } Grapple_ChipDiagnosticSeverity;
+    /** @brief Stable machine-readable categories for import diagnostics. */
+    typedef enum Grapple_ChipDiagnosticCode
+    {
+        GRAPPLE_CHIP_DIAGNOSTIC_NONE,
+        GRAPPLE_CHIP_DIAGNOSTIC_INPUT,
+        GRAPPLE_CHIP_DIAGNOSTIC_SCORE,
+        GRAPPLE_CHIP_DIAGNOSTIC_UNSUPPORTED,
+        GRAPPLE_CHIP_DIAGNOSTIC_APPROXIMATION,
+        GRAPPLE_CHIP_DIAGNOSTIC_STAFF_MIRROR
+    } Grapple_ChipDiagnosticCode;
+    /** @brief Source location and category; message text is retrieved separately. */
+    typedef struct Grapple_ChipDiagnostic
+    {
+        Grapple_ChipDiagnosticCode code;         /**< NONE means no failure in an error output. */
+        Grapple_ChipDiagnosticSeverity severity; /**< Informational, warning or error. */
+        int part;                                /**< Zero-based part, or -1 if unavailable. */
+        int measure; /**< Zero-based source measure, or -1 if unavailable. */
+        int staff;   /**< One-based staff, or 0 if unavailable. */
+        Uint32 line; /**< One-based XML line, or 0 if unavailable. */
+    } Grapple_ChipDiagnostic;
+    /** @brief Score interpretation policy; obtain defaults before overriding fields. */
+    typedef struct Grapple_ChipImportOptions
+    {
+        bool strict; /**< Reject unsupported playback semantics instead of reporting warnings. */
+        int staff; /**< 0: detect TAB mirrors; -1: retain all; 1..32: select a staff in multi-staff
+                      parts. */
+        double grace_beats; /**< Default grace-note duration in quarter beats; 0 selects 0.125. */
+        double ornament_beats; /**< Default ornament subdivision; 0 selects 0.125 quarter beats. */
+        double arpeggio_beats; /**< Total rolled-chord spread; 0 selects 0.125 quarter beats. */
+        double fermata_factor; /**< Default fermata duration multiplier; 0 selects 1.5. */
+        double swing_ratio;    /**< Long/short ratio for explicitly requested swing; 0 selects 2. */
+    } Grapple_ChipImportOptions;
+    /**
+     * @brief Copy the default score import policy (strict, automatic staff selection).
+     * @param options Output value owned by the caller.
+     * @return True, or false for NULL output.
+     */
+    extern bool Grapple_GetChipImportDefaults(Grapple_ChipImportOptions *options);
+    /**
+     * @brief Load a notation file with explicit interpretation policy.
+     * @param path MIDI/MusicXML/MXL file to read.
+     * @param options Copied during loading; NULL uses defaults.
+     * @param error Optional error location/category; message is in SDL_GetError().
+     * @return Owned song, or NULL on failure. Successful imports retain warnings.
+     */
+    extern Grapple_ChipSong *Grapple_LoadChipSongEx(const char *path,
+                                                    const Grapple_ChipImportOptions *options,
+                                                    Grapple_ChipDiagnostic *error);
+    /**
+     * @brief Read a notation stream using an explicit interpretation policy.
+     * @param io Stream positioned at the document start; may be nonseekable.
+     * @param closeio Close the stream on success and failure when true.
+     * @param options Copied during loading; NULL uses defaults.
+     * @param error Optional error location/category; message is in SDL_GetError().
+     * @return Owned song, or NULL on failure.
+     */
+    extern Grapple_ChipSong *Grapple_LoadChipSong_IOEx(SDL_IOStream *io, bool closeio,
+                                                       const Grapple_ChipImportOptions *options,
+                                                       Grapple_ChipDiagnostic *error);
+    /** @brief Count retained import diagnostics. @param song Song to inspect. @return Count, or 0
+     * for NULL. */
+    extern int Grapple_GetChipDiagnosticCount(const Grapple_ChipSong *song);
+    /**
+     * @brief Copy one retained import diagnostic.
+     * @param song Song to inspect.
+     * @param index Zero-based diagnostic index.
+     * @param diagnostic Caller-owned output.
+     * @return True, or false for invalid arguments.
+     */
+    extern bool Grapple_ReadChipDiagnostic(const Grapple_ChipSong *song, int index,
+                                           Grapple_ChipDiagnostic *diagnostic);
+    /**
+     * @brief Read diagnostic message text.
+     * @param song Song to inspect.
+     * @param index Zero-based diagnostic index.
+     * @return Borrowed text valid while song lives; NULL for an invalid index. Scripts copy it.
+     */
+    extern const char *Grapple_GetChipDiagnosticMessage(const Grapple_ChipSong *song, int index);
     /** @brief Stateful polyphonic renderer with an owned SDL audio stream. */
     typedef struct Grapple_ChipPlayer Grapple_ChipPlayer;
 
@@ -164,7 +249,7 @@ extern "C"
     } Grapple_ChipTrackInfo;
 
     /**
-     * @brief Load MIDI type 0/1 or uncompressed MusicXML without rendering audio.
+     * @brief Load MIDI type 0/1, MusicXML or compressed MXL without rendering audio.
      * @param io Input stream positioned at the document start; may be nonseekable.
      * @param closeio Whether to close io on success or failure.
      * @return Owned song, or NULL with SDL_GetError().

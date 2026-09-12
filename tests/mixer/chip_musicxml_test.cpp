@@ -196,3 +196,97 @@ TEST(ChipMusicXml, MoreThanSixteenPartsHaveIndependentInstrumentPrograms)
     EXPECT_EQ(a, b);
     EXPECT_EQ(Grapple_GetChipPlayerPeakVoices(actual.get()), 20);
 }
+
+TEST(ChipMusicXml, CompressedAndStoredMxlResolveContainerScoreAndMatchXml)
+{
+    const Song expected(Grapple_LoadChipSong(MIXER_TEST_ASSETS_DIR "/c64-composition-named.xml"),
+                        Grapple_DestroyChipSong);
+    ASSERT_TRUE(expected);
+    for (const char *name : {"/c64-composition.mxl", "/c64-composition-stored.mxl"})
+    {
+        const Song actual(Grapple_LoadChipSong((std::string(MIXER_TEST_ASSETS_DIR) + name).c_str()),
+                          Grapple_DestroyChipSong);
+        ASSERT_TRUE(actual) << SDL_GetError();
+        EXPECT_EQ(actual->info.duration_ticks, expected->info.duration_ticks);
+        const auto a = Onsets(actual.get()), b = Onsets(expected.get());
+        ASSERT_EQ(a.size(), b.size());
+        for (size_t i = 0; i < a.size(); ++i)
+        {
+            EXPECT_EQ(a[i].tick, b[i].tick);
+            EXPECT_EQ(a[i].track, b[i].track);
+            EXPECT_EQ(a[i].a, b[i].a);
+        }
+    }
+}
+
+TEST(ChipMusicXml, CorruptMxlFailsWithoutFilesystemExtraction)
+{
+    size_t size = 0;
+    void *input = SDL_LoadFile(MIXER_TEST_ASSETS_DIR "/c64-composition.mxl", &size);
+    ASSERT_NE(input, nullptr);
+    const std::string bytes(static_cast<const char *>(input), size);
+    SDL_free(input);
+    EXPECT_FALSE(LoadXml(bytes.substr(0, size - 12)));
+    auto changed = bytes;
+    changed[14] ^= 0x20; // local-header CRC no longer agrees with the directory
+    EXPECT_FALSE(LoadXml(changed));
+    changed = bytes;
+    changed[6] = 1; // encryption conflicts with central-directory flags
+    EXPECT_FALSE(LoadXml(changed));
+    changed = bytes;
+    const auto path = changed.find("scores/demo.musicxml");
+    ASSERT_NE(path, std::string::npos);
+    changed.replace(path, 6, "../bad");
+    EXPECT_FALSE(LoadXml(changed));
+}
+
+TEST(ChipMusicXml, StrictAndPermissiveModesExposeStructuredDiagnostics)
+{
+    const auto xml = Score("<measure>" +
+                           Note("1", "<notations><other-notation type='single'>"
+                                     "unknown technique</other-notation></notations>") +
+                           "</measure>");
+    Grapple_ChipImportOptions options;
+    ASSERT_TRUE(Grapple_GetChipImportDefaults(&options));
+    Grapple_ChipDiagnostic error;
+    Song strict(Grapple_LoadChipSong_IOEx(SDL_IOFromConstMem(xml.data(), xml.size()), true,
+                                          &options, &error),
+                Grapple_DestroyChipSong);
+    EXPECT_FALSE(strict);
+    EXPECT_EQ(error.code, GRAPPLE_CHIP_DIAGNOSTIC_UNSUPPORTED);
+    EXPECT_EQ(error.part, 0);
+    EXPECT_EQ(error.measure, 0);
+    EXPECT_GT(error.line, 0u);
+    options.strict = false;
+    Song permissive(Grapple_LoadChipSong_IOEx(SDL_IOFromConstMem(xml.data(), xml.size()), true,
+                                              &options, &error),
+                    Grapple_DestroyChipSong);
+    ASSERT_TRUE(permissive) << SDL_GetError();
+    EXPECT_EQ(error.code, GRAPPLE_CHIP_DIAGNOSTIC_NONE);
+    ASSERT_EQ(Grapple_GetChipDiagnosticCount(permissive.get()), 1);
+    Grapple_ChipDiagnostic warning;
+    ASSERT_TRUE(Grapple_ReadChipDiagnostic(permissive.get(), 0, &warning));
+    EXPECT_EQ(warning.severity, GRAPPLE_CHIP_DIAGNOSTIC_WARNING);
+    EXPECT_EQ(warning.code, GRAPPLE_CHIP_DIAGNOSTIC_UNSUPPORTED);
+    EXPECT_NE(
+        std::string(Grapple_GetChipDiagnosticMessage(permissive.get(), 0)).find("other-notation"),
+        std::string::npos);
+    EXPECT_FALSE(Grapple_ReadChipDiagnostic(permissive.get(), 1, &warning));
+}
+
+TEST(ChipMusicXml, StaffSelectionCanKeepMirrorsOrChooseNotationOrTab)
+{
+    Grapple_ChipImportOptions options;
+    ASSERT_TRUE(Grapple_GetChipImportDefaults(&options));
+    for (int staff : {-1, 0, 1, 2})
+    {
+        options.staff = staff;
+        Grapple_ChipDiagnostic error;
+        const Song song(Grapple_LoadChipSongEx(MIXER_TEST_ASSETS_DIR "/c64-composition-named.xml",
+                                               &options, &error),
+                        Grapple_DestroyChipSong);
+        ASSERT_TRUE(song) << SDL_GetError();
+        EXPECT_EQ(Onsets(song.get()).size(), staff == -1 ? 142u : 87u);
+        EXPECT_EQ(Grapple_GetChipDiagnosticCount(song.get()), staff == 0 ? 3 : 0);
+    }
+}

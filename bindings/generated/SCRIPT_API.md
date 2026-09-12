@@ -2782,6 +2782,9 @@ returns as an array.
 | `GrappleC.GamepadSetLED(engine: Grapple_Engine, player: integer, red: integer, green: integer, blue: integer)` | boolean |
 | `GrappleC.GamepadStick(engine: Grapple_Engine, player: integer, side: integer, x: number, y: number)` | x: number, y: number |
 | `GrappleC.GamepadStopRumble(engine: Grapple_Engine, player: integer)` | nil |
+| `GrappleC.GetChipDiagnosticCount(song: Grapple_ChipSong)` | integer |
+| `GrappleC.GetChipDiagnosticMessage(song: Grapple_ChipSong, index: integer)` | string|nil |
+| `GrappleC.GetChipImportDefaults()` | boolean, options: Grapple_ChipImportOptions table |
 | `GrappleC.GetChipPlayerPeakVoices(player: Grapple_ChipPlayer)` | integer |
 | `GrappleC.GetChipPresetEffects(preset: integer)` | boolean, effects: Grapple_ChipEffects table |
 | `GrappleC.GraphicsClamp()` | settings: Grapple_GraphicsSettings table |
@@ -2882,6 +2885,7 @@ returns as an array.
 | `GrappleC.LightSunlight(engine: Grapple_Engine)` | number |
 | `GrappleC.LightUsesShaders(scene: Grapple_LightScene)` | boolean |
 | `GrappleC.LoadChipSong(path: string|nil)` | Grapple_ChipSong|nil |
+| `GrappleC.LoadChipSongEx(path: string|nil, options: Grapple_ChipImportOptions table)` | Grapple_ChipSong|nil, error: Grapple_ChipDiagnostic table |
 | `GrappleC.LoadTextFile(path: string|nil)` | string|nil |
 | `GrappleC.LoadTexture(engine: Grapple_Engine, path: string|nil)` | integer |
 | `GrappleC.LoadTextureAsync(engine: Grapple_Engine, path: string|nil)` | integer |
@@ -2925,6 +2929,7 @@ returns as an array.
 | `GrappleC.PrismaticJointDefSetLimit(def: b2PrismaticJointDef, enabled: boolean, lower: number, upper: number)` | nil |
 | `GrappleC.PrismaticJointDefSetMotor(def: b2PrismaticJointDef, enabled: boolean, speed: number, max_force: number)` | nil |
 | `GrappleC.QuitDebugText()` | nil |
+| `GrappleC.ReadChipDiagnostic(song: Grapple_ChipSong, index: integer)` | boolean, diagnostic: Grapple_ChipDiagnostic table |
 | `GrappleC.ReadChipSongInfo(song: Grapple_ChipSong)` | boolean, info: Grapple_ChipSongInfo table |
 | `GrappleC.RegexEscape(text: string|nil)` | string|nil |
 | `GrappleC.RegexFlags(regex: Grapple_Regex)` | string|nil |

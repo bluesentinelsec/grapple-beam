@@ -31,6 +31,8 @@ typedef struct ScoreReader
     const ChipXmlNode *definition;
     int part, measure;
     bool failed;
+    const Grapple_ChipImportOptions *options;
+    Grapple_ChipDiagnostic *error;
     ScoreNumber divisions;
     Sint64 meter;
     int transpose[SCORE_MAX_STAVES];
@@ -52,8 +54,72 @@ static bool Named(const ChipXmlNode *node, const char *name)
 static bool Error(ScoreReader *r, const ChipXmlNode *node, const char *message)
 {
     r->failed = true;
+    if (r->error && r->error->code == GRAPPLE_CHIP_DIAGNOSTIC_NONE)
+        *r->error = (Grapple_ChipDiagnostic){
+            GRAPPLE_CHIP_DIAGNOSTIC_SCORE,  GRAPPLE_CHIP_DIAGNOSTIC_ERROR, r->part, r->measure, 0,
+            (Uint32)(node ? node->line : 0)};
     return SDL_SetError("MusicXML: part %d measure %d line %lu: %s", r->part + 1, r->measure + 1,
                         node ? node->line : 0, message);
+}
+
+static bool Unsupported(ScoreReader *r, const ChipXmlNode *node)
+{
+    char message[256];
+    SDL_snprintf(message, sizeof(message), "Playback of <%s> is not implemented", node->name);
+    const Grapple_ChipDiagnostic diagnostic = {GRAPPLE_CHIP_DIAGNOSTIC_UNSUPPORTED,
+                                               r->options->strict ? GRAPPLE_CHIP_DIAGNOSTIC_ERROR
+                                                                  : GRAPPLE_CHIP_DIAGNOSTIC_WARNING,
+                                               r->part,
+                                               r->measure,
+                                               0,
+                                               (Uint32)node->line};
+    if (r->options->strict)
+    {
+        if (r->error)
+            *r->error = diagnostic;
+        return Error(r, node, message);
+    }
+    return Chip_AddDiagnostic(r->song, diagnostic, message);
+}
+
+static bool CheckPerformance(ScoreReader *r, const ChipXmlNode *node)
+{
+    static const char *const unsupported[] = {"wedge",
+                                              "pedal",
+                                              "slur",
+                                              "arpeggiate",
+                                              "glissando",
+                                              "slide",
+                                              "fermata",
+                                              "bend",
+                                              "hammer-on",
+                                              "pull-off",
+                                              "harmonic",
+                                              "trill-mark",
+                                              "mordent",
+                                              "inverted-mordent",
+                                              "turn",
+                                              "inverted-turn",
+                                              "tremolo",
+                                              "staccato",
+                                              "staccatissimo",
+                                              "tenuto",
+                                              "accent",
+                                              "strong-accent",
+                                              "detached-legato",
+                                              "breath-mark",
+                                              "caesura",
+                                              "swing",
+                                              "other-notation"};
+    for (; node; node = node->next)
+    {
+        for (size_t i = 0; i < SDL_arraysize(unsupported); ++i)
+            if (Named(node, unsupported[i]) && !Unsupported(r, node))
+                return false;
+        if (!CheckPerformance(r, node->children))
+            return false;
+    }
+    return true;
 }
 
 static Sint64 Gcd(Sint64 a, Sint64 b)
@@ -469,6 +535,8 @@ static bool Note(ScoreReader *r, const ChipXmlNode *node, Sint64 *cursor, Sint64
 
 static bool Measure(ScoreReader *r, const ChipXmlNode *node)
 {
+    if (node && !CheckPerformance(r, node->children))
+        return false;
     Sint64 cursor = 0, previous = 0, extent = 0;
     for (const ChipXmlNode *c = node ? node->children : NULL; c; c = c->next)
     {
@@ -526,6 +594,8 @@ static int SDLCALL CompareNotes(const void *left, const void *right)
 
 static bool RemoveMirrors(ScoreReader *r)
 {
+    if (r->options->staff == -1)
+        return true;
     ScoreNote **a = SDL_malloc(SDL_max(r->note_count, 1) * sizeof(*a));
     ScoreNote **b = SDL_malloc(SDL_max(r->note_count, 1) * sizeof(*b));
     if (!a || !b)
@@ -540,6 +610,25 @@ static bool RemoveMirrors(ScoreReader *r)
         size_t end = begin;
         while (end < r->note_count && r->notes[end].part == part)
             ++end;
+        if (r->options->staff > 0)
+        {
+            Uint32 staves = 0;
+            for (size_t i = begin; i < end; ++i)
+                staves |= 1u << r->notes[i].staff;
+            if (staves && (staves & (staves - 1)))
+            {
+                if (!(staves & (1u << (r->options->staff - 1))))
+                {
+                    SDL_free(a);
+                    SDL_free(b);
+                    return Error(r, NULL, "selected staff is absent from multi-staff part");
+                }
+                for (size_t i = begin; i < end; ++i)
+                    r->notes[i].skipped = r->notes[i].staff != r->options->staff - 1;
+            }
+            begin = end;
+            continue;
+        }
         for (int staff = 0; staff < SCORE_MAX_STAVES; ++staff)
         {
             size_t na = 0;
@@ -569,6 +658,19 @@ static bool RemoveMirrors(ScoreReader *r)
                 {
                     for (size_t i = 0; i < na; ++i)
                         a[i]->skipped = true;
+                    const Grapple_ChipDiagnostic diagnostic = {GRAPPLE_CHIP_DIAGNOSTIC_STAFF_MIRROR,
+                                                               GRAPPLE_CHIP_DIAGNOSTIC_INFO,
+                                                               part,
+                                                               -1,
+                                                               staff + 1,
+                                                               0};
+                    if (!Chip_AddDiagnostic(r->song, diagnostic,
+                                            "Omitted TAB staff matching a standard-notation staff"))
+                    {
+                        SDL_free(a);
+                        SDL_free(b);
+                        return false;
+                    }
                     break;
                 }
             }
@@ -665,13 +767,17 @@ static bool Compile(ScoreReader *r)
     return Chip_ResolveTiming(r->song);
 }
 
-Grapple_ChipSong *Chip_ParseMusicXml(const void *data, size_t size)
+Grapple_ChipSong *Chip_ParseMusicXml(const void *data, size_t size,
+                                     const Grapple_ChipImportOptions *options,
+                                     Grapple_ChipDiagnostic *error)
 {
     ChipXmlNode *root = Chip_XmlParse(data, size);
     if (!root)
         return NULL;
     ScoreReader r = {0};
     r.root = root;
+    r.options = options;
+    r.error = error;
     if (!Named(root, "score-partwise") && !Named(root, "score-timewise"))
     {
         Error(&r, root, "expected score-partwise or score-timewise");
