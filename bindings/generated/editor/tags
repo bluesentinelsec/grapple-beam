@@ -751,6 +751,7 @@ Grapple_LightSunlight	include/grapple/engine_light.h	/^.*Grapple_LightSunlight *
 Grapple_LightUsesShaders	include/grapple/light.h	/^.*Grapple_LightUsesShaders *(/;"	f
 Grapple_LoadChipSong	include/grapple/chiptune.h	/^.*Grapple_LoadChipSong *(/;"	f
 Grapple_LoadChipSongEx	include/grapple/chiptune.h	/^.*Grapple_LoadChipSongEx *(/;"	f
+Grapple_LoadChipSongMemory	include/grapple/chiptune.h	/^.*Grapple_LoadChipSongMemory *(/;"	f
 Grapple_LoadChipSong_IO	include/grapple/chiptune.h	/^.*Grapple_LoadChipSong_IO *(/;"	f
 Grapple_LoadChipSong_IOEx	include/grapple/chiptune.h	/^.*Grapple_LoadChipSong_IOEx *(/;"	f
 Grapple_LoadTextFile	include/grapple/textfile.h	/^.*Grapple_LoadTextFile *(/;"	f
@@ -792,7 +793,9 @@ Grapple_PhysicsSetGravity	include/grapple/engine_physics.h	/^.*Grapple_PhysicsSe
 Grapple_PhysicsSetPaused	include/grapple/engine_physics.h	/^.*Grapple_PhysicsSetPaused *(/;"	f
 Grapple_PhysicsSetPixelsPerMetre	include/grapple/engine_physics.h	/^.*Grapple_PhysicsSetPixelsPerMetre *(/;"	f
 Grapple_PhysicsSetSubSteps	include/grapple/engine_physics.h	/^.*Grapple_PhysicsSetSubSteps *(/;"	f
+Grapple_PlayChipFile	include/grapple/chiptune.h	/^.*Grapple_PlayChipFile *(/;"	f
 Grapple_PlayChipPlayer	include/grapple/chiptune.h	/^.*Grapple_PlayChipPlayer *(/;"	f
+Grapple_PlayChipSong	include/grapple/chiptune.h	/^.*Grapple_PlayChipSong *(/;"	f
 Grapple_PrismaticJointDefCreate	include/grapple/physics_build.h	/^.*Grapple_PrismaticJointDefCreate *(/;"	f
 Grapple_PrismaticJointDefDestroy	include/grapple/physics_build.h	/^.*Grapple_PrismaticJointDefDestroy *(/;"	f
 Grapple_PrismaticJointDefSetAnchors	include/grapple/physics_build.h	/^.*Grapple_PrismaticJointDefSetAnchors *(/;"	f
@@ -836,6 +839,8 @@ Grapple_RevoluteJointDefSetSpring	include/grapple/physics_build.h	/^.*Grapple_Re
 Grapple_RunGame	include/grapple/engine.h	/^.*Grapple_RunGame *(/;"	f
 Grapple_SHA256	include/grapple/crypto.h	/^.*Grapple_SHA256 *(/;"	f
 Grapple_SampleLight	include/grapple/light.h	/^.*Grapple_SampleLight *(/;"	f
+Grapple_SaveChipSongWav	include/grapple/chiptune.h	/^.*Grapple_SaveChipSongWav *(/;"	f
+Grapple_SaveChipSongWav_IO	include/grapple/chiptune.h	/^.*Grapple_SaveChipSongWav_IO *(/;"	f
 Grapple_SaveDelete	include/grapple/engine_save.h	/^.*Grapple_SaveDelete *(/;"	f
 Grapple_SaveExists	include/grapple/engine_save.h	/^.*Grapple_SaveExists *(/;"	f
 Grapple_SaveInfo	include/grapple/chiptune.h	/^.*Grapple_SaveInfo/;"	s

@@ -2923,7 +2923,9 @@ returns as an array.
 | `GrappleC.PhysicsSetPaused(engine: Grapple_Engine, paused: boolean)` | nil |
 | `GrappleC.PhysicsSetPixelsPerMetre(engine: Grapple_Engine, pixels: number)` | nil |
 | `GrappleC.PhysicsSetSubSteps(engine: Grapple_Engine, sub_steps: integer)` | nil |
+| `GrappleC.PlayChipFile(path: string|nil, loop: boolean)` | Grapple_ChipPlayer|nil |
 | `GrappleC.PlayChipPlayer(player: Grapple_ChipPlayer)` | boolean |
+| `GrappleC.PlayChipSong(song: Grapple_ChipSong, loop: boolean)` | Grapple_ChipPlayer|nil |
 | `GrappleC.PrismaticJointDefCreate()` | b2PrismaticJointDef|nil |
 | `GrappleC.PrismaticJointDefDestroy(def: b2PrismaticJointDef)` | nil |
 | `GrappleC.PrismaticJointDefSetAnchors(def: b2PrismaticJointDef, ax: number, ay: number, bx: number, by: number)` | nil |
@@ -2963,6 +2965,7 @@ returns as an array.
 | `GrappleC.RevoluteJointDefSetSpring(def: b2RevoluteJointDef, enabled: boolean, hertz: number, damping: number)` | nil |
 | `GrappleC.SHA256(data: string|nil, digest: integer)` | boolean, digest: integer |
 | `GrappleC.SampleLight(scene: Grapple_LightScene, x: number, y: number)` | number |
+| `GrappleC.SaveChipSongWav(song: Grapple_ChipSong, path: string|nil, sample_rate: integer, voices: integer)` | boolean |
 | `GrappleC.SaveDelete(engine: Grapple_Engine, slot: integer)` | boolean |
 | `GrappleC.SaveExists(engine: Grapple_Engine, slot: integer)` | boolean |
 | `GrappleC.SaveInfoOf(engine: Grapple_Engine, slot: integer)` | Grapple_SaveInfo table |

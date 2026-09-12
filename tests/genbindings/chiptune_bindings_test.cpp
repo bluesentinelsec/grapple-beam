@@ -60,6 +60,18 @@ TEST_F(ChipBindings, CppComposesDeclarativeNotesWithRaii)
     EXPECT_EQ(player->GetChipPlayerPeakVoices(), 3);
 }
 
+TEST_F(ChipBindings, CppFileHelperReturnsOwnedManagedPlayer)
+{
+    auto player = grapple::ext::ChipPlayer::PlayChipFile(CHIP_XML_FIXTURE, true);
+    ASSERT_TRUE(player.ok()) << SDL_GetError();
+    EXPECT_TRUE(player->ChipPlayerPlaying());
+    player->PauseChipPlayer();
+    EXPECT_FALSE(player->ChipPlayerPlaying());
+    ASSERT_TRUE(player->PlayChipPlayer().ok());
+    player->StopChipPlayer();
+    EXPECT_FALSE(player->ChipPlayerPlaying());
+}
+
 TEST_F(ChipBindings, LuaOwnsComposerSongAndManagedPlayback)
 {
     std::unique_ptr<lua_State, decltype(&lua_close)> state(Grapple_CreateLuaState(), lua_close);
@@ -93,7 +105,9 @@ assert(G.AddChipControl(composer, 0, 0, 7, 100))
 local song = assert(G.BuildChipSong(composer, 1920))
 local ok, info = G.ReadChipSongInfo(song)
 assert(ok and info.duration_seconds == 2)
-local player = assert(G.CreateChipPlayer(song, 8000, 64, true))
+local player = assert(G.PlayChipSong(song, true))
+local file_player = assert(G.PlayChipFile(chip_xml_fixture, false))
+G.DestroyChipPlayer(file_player)
 G.DestroyChipComposer(composer)
 G.DestroyChipSong(song)
 composer, song = nil, nil
@@ -147,7 +161,10 @@ raise 'control' unless g.AddChipControl(composer, 0, 0, 7, 100)
 song = g.BuildChipSong(composer, 1920)
 ok, info = g.ReadChipSongInfo(song)
 raise 'duration' unless ok && info[:duration_seconds] == 2
-player = g.CreateChipPlayer(song, 8000, 64, true)
+player = g.PlayChipSong(song, true)
+file_player = g.PlayChipFile($chip_xml_fixture, false)
+raise 'file helper' unless file_player
+g.DestroyChipPlayer(file_player)
 g.DestroyChipComposer(composer)
 g.DestroyChipSong(song)
 composer = song = nil

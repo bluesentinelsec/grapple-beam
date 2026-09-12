@@ -5879,12 +5879,32 @@ static int GenL_Grapple_PhysicsSetSubSteps(lua_State *L)
     return 0;
 }
 
+static int GenL_Grapple_PlayChipFile(lua_State *L)
+{
+    (void)L;
+    const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
+    bool a1 = (bool)lua_toboolean(L, 2);
+    Grapple_ChipPlayer * rv = Grapple_PlayChipFile(a0, a1);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "Grapple_ChipPlayer", GenDtor_Grapple_DestroyChipPlayer);
+    return 1;
+}
+
 static int GenL_Grapple_PlayChipPlayer(lua_State *L)
 {
     (void)L;
     Grapple_ChipPlayer *a0 = (Grapple_ChipPlayer *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_ChipPlayer");
     bool rv = Grapple_PlayChipPlayer(a0);
     lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
+static int GenL_Grapple_PlayChipSong(lua_State *L)
+{
+    (void)L;
+    const Grapple_ChipSong *a0 = (const Grapple_ChipSong *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_ChipSong");
+    bool a1 = (bool)lua_toboolean(L, 2);
+    Grapple_ChipPlayer * rv = Grapple_PlayChipSong(a0, a1);
+    GrappleGen_LuaPushOwned(L, (void *)rv, "Grapple_ChipPlayer", GenDtor_Grapple_DestroyChipPlayer);
     return 1;
 }
 
@@ -6287,6 +6307,18 @@ static int GenL_Grapple_SampleLight(lua_State *L)
     float a2 = (float)luaL_checknumber(L, 3);
     float rv = Grapple_SampleLight(a0, a1, a2);
     lua_pushnumber(L, (lua_Number)rv);
+    return 1;
+}
+
+static int GenL_Grapple_SaveChipSongWav(lua_State *L)
+{
+    (void)L;
+    const Grapple_ChipSong *a0 = (const Grapple_ChipSong *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_ChipSong");
+    const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
+    int a2 = (int)luaL_checkinteger(L, 3);
+    int a3 = (int)luaL_checkinteger(L, 4);
+    bool rv = Grapple_SaveChipSongWav(a0, a1, a2, a3);
+    lua_pushboolean(L, (int)rv);
     return 1;
 }
 
@@ -7281,7 +7313,7 @@ static int GenL_Grapple_WheelJointDefSetSpring(lua_State *L)
 int GrappleGen_OpenLua_grapple(lua_State *L);
 int GrappleGen_OpenLua_grapple(lua_State *L)
 {
-    lua_createtable(L, 0, 647);
+    lua_createtable(L, 0, 650);
     lua_pushcfunction(L, GenL_Grapple_ActionBind);
     lua_setfield(L, -2, "ActionBind");
     lua_pushcfunction(L, GenL_Grapple_ActionBindAxis);
@@ -8298,8 +8330,12 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "PhysicsSetPixelsPerMetre");
     lua_pushcfunction(L, GenL_Grapple_PhysicsSetSubSteps);
     lua_setfield(L, -2, "PhysicsSetSubSteps");
+    lua_pushcfunction(L, GenL_Grapple_PlayChipFile);
+    lua_setfield(L, -2, "PlayChipFile");
     lua_pushcfunction(L, GenL_Grapple_PlayChipPlayer);
     lua_setfield(L, -2, "PlayChipPlayer");
+    lua_pushcfunction(L, GenL_Grapple_PlayChipSong);
+    lua_setfield(L, -2, "PlayChipSong");
     lua_pushcfunction(L, GenL_Grapple_PrismaticJointDefCreate);
     lua_setfield(L, -2, "PrismaticJointDefCreate");
     lua_pushcfunction(L, GenL_Grapple_PrismaticJointDefDestroy);
@@ -8378,6 +8414,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "SHA256");
     lua_pushcfunction(L, GenL_Grapple_SampleLight);
     lua_setfield(L, -2, "SampleLight");
+    lua_pushcfunction(L, GenL_Grapple_SaveChipSongWav);
+    lua_setfield(L, -2, "SaveChipSongWav");
     lua_pushcfunction(L, GenL_Grapple_SaveDelete);
     lua_setfield(L, -2, "SaveDelete");
     lua_pushcfunction(L, GenL_Grapple_SaveExists);

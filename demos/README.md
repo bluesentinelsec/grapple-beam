@@ -17,8 +17,8 @@ order. Read one, and you can read the other three.
 | --- | --- | --- |
 | [`pong/pong.c`](pong/pong.c) | C | compiled to `pong-c` |
 | [`pong/pong.cpp`](pong/pong.cpp) | C++ | compiled to `pong-cpp` |
-| [`pong/pong.lua`](pong/pong.lua) | Lua | `grapple pong.lua` |
-| [`pong/pong.rb`](pong/pong.rb) | Ruby | `grapple pong.rb` |
+| [`pong/pong.lua`](pong/pong.lua) | Lua | `grapple-beam pong.lua` |
+| [`pong/pong.rb`](pong/pong.rb) | Ruby | `grapple-beam pong.rb` |
 
 Controls: **W**/**S** for the left paddle, **↑**/**↓** for the right. A gamepad
 moves the right paddle if one is plugged in. First to 11 wins, then the match
@@ -36,8 +36,8 @@ cmake --build build/debug --target pong_c pong_cpp
 The script versions need no build at all. The runner plays them:
 
 ```sh
-./build/debug/bin/grapple demos/pong/pong.lua
-./build/debug/bin/grapple demos/pong/pong.rb
+./build/debug/bin/grapple-beam demos/pong/pong.lua
+./build/debug/bin/grapple-beam demos/pong/pong.rb
 ```
 
 Set `GRAPPLE_BEAM_BUILD_DEMOS=OFF` to leave the compiled demos out of a build.

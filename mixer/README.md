@@ -128,43 +128,29 @@ fallback above. Name matches apply to all channels in a file track and remain
 stable across MIDI program changes. Without a name match, `AUTO` continues to
 follow program changes. Metadata-only tracks produce no voices.
 
-The player resolves names independently of the file parser, so the same rule
-also serves compositions authored in C, C++, Lua, and Ruby. MusicXML import is
-not implemented yet; its part names will use this same contract.
-
-For the named demo export, no track-index override is needed:
-
-```sh
-build/debug/bin/grapple-beam \
-  --chip-midi tests/mixer/assets/c64-composition-named.mid \
-  --chip-wav build/chiptune-preview/c64-named.wav
-```
+The same rule serves MIDI, MusicXML/MXL and compositions authored in C,
+C++, Lua and Ruby. Format detection uses file contents.
 
 ### Audition the example
 
-From the repository root, after `make`:
+The standalone [chiptune demo](../demos/chiptune/README.md) loads and plays the
+supplied MIDI and MusicXML through the library. `grapple-beam` runs games and
+scripts; music loading belongs in game code.
 
-```sh
-# Play the supplied composition through the existing mixer/audio device.
-build/debug/bin/grapple-beam \
-  --chip-midi tests/mixer/assets/c64-composition.mid --chip-ring-track 2
+After initializing SDL audio and `MIX_Init()`, the shortest playback path is:
 
-# Render a shareable 48 kHz stereo, 16-bit WAV.
-build/debug/bin/grapple-beam \
-  --chip-midi tests/mixer/assets/c64-composition.mid --chip-ring-track 2 \
-  --chip-wav build/c64-composition.wav
-
-# Isolate the harmony; indices include metadata-only conductor track 0.
-build/debug/bin/grapple-beam \
-  --chip-midi tests/mixer/assets/c64-composition.mid --chip-ring-track 2 \
-  --chip-solo-track 2 --chip-wav build/c64-harmony-ring.wav
+```c
+Grapple_ChipPlayer *music = Grapple_PlayChipFile("music.musicxml", true);
+if (!music) { return false; /* SDL_GetError() describes the failure. */ }
+/* Keep music alive while the game runs, then destroy it before MIX_Quit(). */
+Grapple_DestroyChipPlayer(music);
 ```
 
-Use `--chip-voices N` to change polyphony, or `--chip-loop` for repeated live
-playback until interrupted. A WAV render cannot loop indefinitely. The command
-prints original track names, note counts, timing, and peak voice usage.
-The example's Steel Guitar harmony is track 2. Its four instrument parts
-contain 87 notes, including all 15 chord notes, and last 10 seconds plus tails.
+Use `Grapple_LoadChipSong` followed by `Grapple_PlayChipSong` to inspect/reuse a
+song. `Grapple_LoadChipSongMemory` copies parsed content from a caller-owned
+buffer. `Grapple_SaveChipSongWav(song, path, 48000, 64)` renders a finite stereo
+16-bit WAV including effect tails without opening an audio device. Rendering
+is blocking and belongs on a loading/tool thread; it does not modify a player.
 
 ### Use from a game
 
@@ -376,16 +362,6 @@ wet tails are cleared when effect settings change; normal playback drains tails
 reset clears them. Stereo buffers use roughly 8 MiB per 48 kHz player, scaling with
 sample rate; this cost is independent of song length and track count.
 
-Audition the supplied MIDI with the new defaults:
-
-```sh
-build/debug/bin/grapple-beam --chip-midi tests/mixer/assets/c64-composition.mid \
-  --chip-ring-track 2 --chip-pulse-beats 0.5 --chip-wav build/c64-modern.wav
-```
-
-Use `--chip-pulse-depth 0.7` to change pulse strength, `--chip-solo-track 2` to
-isolate the harmony, and `--chip-dry` for the original dry synthesis comparison.
-
 ### Presets work without effect setup
 
 Use `GRAPPLE_CHIP_PRESET_HARMONY` for the harmony part. It names the recommended
@@ -398,7 +374,6 @@ pulse-enabling call is needed. A single MIDI mapping is enough:
 Grapple_SetChipTrackPreset(player, harmony_track, GRAPPLE_CHIP_PRESET_HARMONY, 1.0f);
 ```
 
-The demo accepts `--chip-harmony-track 2` (`--chip-ring-track 2` remains an alias).
 MIDI program numbers describe timbres: a file's "Steel Guitar" could be harmony
 or lead. Naming it "Harmony Steel Guitar" enables the harmony preset automatically;
 an explicit preset remains available to override the name. Composed songs store

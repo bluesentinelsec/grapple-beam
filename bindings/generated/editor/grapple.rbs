@@ -2897,7 +2897,9 @@ module GrappleC
   def self.PhysicsSetPaused: (untyped engine, bool paused) -> void
   def self.PhysicsSetPixelsPerMetre: (untyped engine, Float pixels) -> void
   def self.PhysicsSetSubSteps: (untyped engine, Integer sub_steps) -> void
+  def self.PlayChipFile: (String? path, bool loop) -> untyped
   def self.PlayChipPlayer: (untyped player) -> bool
+  def self.PlayChipSong: (untyped song, bool loop) -> untyped
   def self.PrismaticJointDefCreate: () -> untyped
   def self.PrismaticJointDefDestroy: (untyped def_) -> void
   def self.PrismaticJointDefSetAnchors: (untyped def_, Float ax, Float ay, Float bx, Float by) -> void
@@ -2937,6 +2939,7 @@ module GrappleC
   def self.RevoluteJointDefSetSpring: (untyped def_, bool enabled, Float hertz, Float damping) -> void
   def self.SHA256: (String data, Integer digest) -> [bool, Integer]
   def self.SampleLight: (untyped scene, Float x, Float y) -> Float
+  def self.SaveChipSongWav: (untyped song, String? path, Integer sample_rate, Integer voices) -> bool
   def self.SaveDelete: (untyped engine, Integer slot) -> bool
   def self.SaveExists: (untyped engine, Integer slot) -> bool
   def self.SaveInfoOf: (untyped engine, Integer slot) -> Hash[Symbol, untyped]

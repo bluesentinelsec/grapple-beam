@@ -1,33 +1,7 @@
 # Library implementation components.
 # Each logical subdirectory owns a CMakeLists.txt that lists sources explicitly.
 add_subdirectory(version)
-if(GRAPPLE_BUILD_MIXER AND GRAPPLE_BEAM_BUILD_APP)
-  add_subdirectory(chiptune_preview)
-endif()
-# Example for new code:
-#   add_subdirectory(parser)
-
-# Painfully obvious program entrypoint: src/main.cpp
-# Skipped when this project is consumed via add_subdirectory / FetchContent
-# unless GRAPPLE_BEAM_BUILD_APP=ON.
-if(GRAPPLE_BEAM_BUILD_APP)
-  add_executable(${PROJECT_NAME}_app main.cpp)
-  set_target_properties(${PROJECT_NAME}_app PROPERTIES OUTPUT_NAME grapple-beam)
-  target_link_libraries(${PROJECT_NAME}_app PRIVATE ${PROJECT_NAME}_lib)
-  if(GRAPPLE_BEAM_WITH_CLI11)
-    target_link_libraries(${PROJECT_NAME}_app PRIVATE CLI11::CLI11)
-  endif()
-  if(GRAPPLE_BEAM_WITH_JSON)
-    target_link_libraries(${PROJECT_NAME}_app PRIVATE nlohmann_json::nlohmann_json)
-  endif()
-  if(GRAPPLE_BEAM_WITH_SPDLOG)
-    target_link_libraries(${PROJECT_NAME}_app PRIVATE spdlog::spdlog)
-  endif()
-  if(GRAPPLE_BUILD_MIXER)
-    target_compile_definitions(${PROJECT_NAME}_app PRIVATE GRAPPLE_APP_CHIPTUNE)
-  endif()
-  cppboot_set_project_warnings(${PROJECT_NAME}_app)
-endif()
+# The desktop engine runner is onboarded after its script/binding dependencies.
 
 # Android Prefab shared library (built by the android/ Gradle project).
 if(ANDROID)

@@ -1,44 +1,43 @@
 /*
- * repl — interactive shell / script runner for the Grapple interpreters.
+ * Engine runner and interactive shell for the Grapple interpreters.
  *
  * Original Grapple code (zlib).
  *
- *   repl -l lua                      interactive Lua shell
- *   repl -l ruby                     interactive Ruby shell
- *   repl -l lua  -e 'print(1+2)'     evaluate a one-liner
- *   repl -l ruby script.rb a b      run a script (args in ARGV / arg)
+ *   grapple-beam -l lua                      interactive Lua shell
+ *   grapple-beam -l ruby                     interactive Ruby shell
+ *   grapple-beam -l lua  -e 'print(1+2)'     evaluate a one-liner
+ *   grapple-beam -l ruby script.rb a b      run a script (args in ARGV / arg)
  *
  * Both states come up with the game bindings (Grapple module) and
  * VFS-aware require already installed; "." is on the Ruby $LOAD_PATH.
  */
+#include "runner.h"
+
 #include <grapple/bindings.h>
 #include <grapple/lua.h>
 #include <grapple/ruby.h>
-
 #include <lauxlib.h>
 #include <lualib.h>
 #include <mruby/array.h>
 #include <mruby/compile.h>
 #include <mruby/string.h>
 #include <mruby/variable.h>
-
 #include <stdio.h>
 #include <string.h>
 
 static int Usage(void)
 {
-    fprintf(stderr,
-            "usage: grapple [runner options] [engine options] [script] [-- args...]\n"
-            "\n"
-            "Runner:\n"
-            "  -l <lua|ruby>   language; inferred from a .lua or .rb script\n"
-            "  -e <code>       run a string instead of a file\n"
-            "  -h, --help      this text\n"
-            "  -V, --version   version\n"
-            "\n"
-            "Engine options (--fullscreen, --window-size WxH, --max-fps, --with-safe-mode\n"
-            "and others) are passed through to the engine the script creates.\n"
-            "Arguments after -- reach the script as `arg` (Lua) or ARGV (Ruby).\n");
+    fprintf(stderr, "usage: grapple-beam [runner options] [engine options] [script] [-- args...]\n"
+                    "\n"
+                    "Runner:\n"
+                    "  -l <lua|ruby>   language; inferred from a .lua or .rb script\n"
+                    "  -e <code>       run a string instead of a file\n"
+                    "  -h, --help      this text\n"
+                    "  -V, --version   version\n"
+                    "\n"
+                    "Engine options (--fullscreen, --window-size WxH, --max-fps, --with-safe-mode\n"
+                    "and others) are passed through to the engine the script creates.\n"
+                    "Arguments after -- reach the script as `arg` (Lua) or ARGV (Ruby).\n");
     return 2;
 }
 
@@ -57,6 +56,8 @@ static int RunLua(const char *code, const char *script, int argc, char **argv)
     if (L == NULL || !Grapple_OpenLuaBindings(L))
     {
         fprintf(stderr, "error: %s\n", SDL_GetError());
+        if (L != NULL)
+            lua_close(L);
         return 1;
     }
     /* arg = {script args}, like the standalone lua interpreter */
@@ -138,6 +139,8 @@ static int RunRuby(const char *code, const char *script, int argc, char **argv)
     if (mrb == NULL || !Grapple_OpenRubyBindings(mrb))
     {
         fprintf(stderr, "error: %s\n", SDL_GetError());
+        if (mrb != NULL)
+            mrb_close(mrb);
         return 1;
     }
     Grapple_RubyAddLoadPath(mrb, ".");
@@ -156,9 +159,7 @@ static int RunRuby(const char *code, const char *script, int argc, char **argv)
     }
     else if (script != NULL)
     {
-        char req[1024];
-        snprintf(req, sizeof(req), "load '%s'", script);
-        mrb_load_string(mrb, req);
+        mrb_funcall(mrb, mrb_top_self(mrb), "load", 1, mrb_str_new_cstr(mrb, script));
         rc = RubyReportError(mrb);
         if (rc == 0)
         {
@@ -193,23 +194,14 @@ static int RunRuby(const char *code, const char *script, int argc, char **argv)
     return rc;
 }
 
-int main(int argc, char **argv)
+int GrappleRunner_Run(int argc, char **argv, const char *version)
 {
     const char *language = NULL;
     const char *code = NULL;
     const char *script = NULL;
     int script_args_at = argc;
 
-    /* Three kinds of argument, and they were previously all one kind.
-     *
-     *   grapple --fullscreen game.lua -- --level 3
-     *           ^engine        ^script    ^the game's own
-     *
-     * Anything starting with '-' that this runner does not claim belongs to
-     * the engine — it parses --fullscreen, --window-size and thirty-odd
-     * others, and used to never see them because the first such argument was
-     * taken to be the script path. Everything after the script (or after a
-     * bare --) belongs to the game, and reaches it as `arg` / ARGV. */
+    /* Engine options precede the script; subsequent arguments belong to the game. */
     char *engine_args[64];
     int engine_argc = 0;
     engine_args[engine_argc++] = argv[0];
@@ -229,6 +221,11 @@ int main(int argc, char **argv)
         {
             code = argv[++i];
         }
+        else if (strcmp(argv[i], "-l") == 0 || strcmp(argv[i], "-e") == 0)
+        {
+            fprintf(stderr, "error: %s requires a value\n", argv[i]);
+            return 2;
+        }
         else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0)
         {
             Usage();
@@ -236,7 +233,7 @@ int main(int argc, char **argv)
         }
         else if (strcmp(argv[i], "-V") == 0 || strcmp(argv[i], "--version") == 0)
         {
-            printf("grapple %s\n", GRAPPLE_BEAM_VERSION);
+            printf("grapple-beam %s\n", version);
             return 0;
         }
         else if (argv[i][0] == '-' && argv[i][1] != '\0')
@@ -246,10 +243,29 @@ int main(int argc, char **argv)
             if (engine_argc < (int)(sizeof(engine_args) / sizeof(engine_args[0])) - 2)
             {
                 engine_args[engine_argc++] = argv[i];
-                if (i + 1 < argc && argv[i + 1][0] != '-')
+                const bool flag =
+                    strcmp(argv[i], "--fullscreen") == 0 || strcmp(argv[i], "--windowed") == 0 ||
+                    strcmp(argv[i], "--vsync") == 0 || strcmp(argv[i], "--no-vsync") == 0 ||
+                    strcmp(argv[i], "--with-safe-mode") == 0 ||
+                    strcmp(argv[i], "--with-default-settings") == 0 || strchr(argv[i], '=') != NULL;
+                const char *next = i + 1 < argc ? argv[i + 1] : "";
+                const bool optional_value =
+                    (strcmp(argv[i], "--fullscreen") == 0 &&
+                     (strcmp(next, "exclusive") == 0 || strcmp(next, "borderless") == 0 ||
+                      strcmp(next, "desktop") == 0 || strcmp(next, "windowed") == 0)) ||
+                    (strcmp(argv[i], "--vsync") == 0 &&
+                     (strcmp(next, "on") == 0 || strcmp(next, "off") == 0 ||
+                      strcmp(next, "true") == 0 || strcmp(next, "false") == 0 ||
+                      strcmp(next, "1") == 0 || strcmp(next, "0") == 0));
+                if ((!flag || optional_value) && i + 1 < argc && argv[i + 1][0] != '-')
                 {
                     engine_args[engine_argc++] = argv[++i];
                 }
+            }
+            else
+            {
+                fprintf(stderr, "error: too many engine arguments\n");
+                return 2;
             }
         }
         else
@@ -267,13 +283,7 @@ int main(int argc, char **argv)
         }
     }
 
-    /* Handed to the engine a script builds, so the flags above actually do
-       something. Without this they parse and are discarded. */
     Grapple_SetScriptProcessArgs(engine_argc, engine_args);
-    /* `repl game.lua` should run the game. Requiring -l for a file whose
-       extension already says which language it is makes the common case
-       type more to say less; an explicit -l still wins, for a script with
-       an unusual name or none at all. */
     if (language == NULL && script != NULL)
     {
         const char *dot = strrchr(script, '.');

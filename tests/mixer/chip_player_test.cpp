@@ -911,3 +911,29 @@ TEST_F(ChipPlayer, ComposerSostenutoCapturesHeldNotesAndReleasesOnPedalUp)
     EXPECT_LT(released_energy, 0.0000001);
     EXPECT_GE(Grapple_GetChipPlayerPeakVoices(player.get()), 2);
 }
+
+TEST_F(ChipPlayer, OfflineWaveHelperProducesDecodableStereoAndPreservesSong)
+{
+    using Composer = std::unique_ptr<Grapple_ChipComposer, decltype(&Grapple_DestroyChipComposer)>;
+    Composer composer(Grapple_CreateChipComposer(1, 480), Grapple_DestroyChipComposer);
+    const Grapple_ChipNote note = {0, 60, 90, 0, 120};
+    ASSERT_TRUE(Grapple_AddChipNote(composer.get(), &note));
+    Song song(Grapple_BuildChipSong(composer.get(), 120), Grapple_DestroyChipSong);
+    ASSERT_TRUE(song);
+    SDL_IOStream *io = SDL_IOFromDynamicMem();
+    ASSERT_NE(io, nullptr);
+    ASSERT_TRUE(Grapple_SaveChipSongWav_IO(song.get(), io, false, 8000, 16)) << SDL_GetError();
+    EXPECT_GT(SDL_GetIOSize(io), 44);
+    ASSERT_EQ(SDL_SeekIO(io, 0, SDL_IO_SEEK_SET), 0);
+    SDL_AudioSpec spec;
+    Uint8 *data = nullptr;
+    Uint32 size = 0;
+    ASSERT_TRUE(SDL_LoadWAV_IO(io, true, &spec, &data, &size)) << SDL_GetError();
+    EXPECT_EQ(spec.freq, 8000);
+    EXPECT_EQ(spec.channels, 2);
+    EXPECT_EQ(spec.format, SDL_AUDIO_S16LE);
+    EXPECT_GT(size, 4000u);
+    SDL_free(data);
+    EXPECT_EQ(song->info.duration_ticks, 120u);
+    EXPECT_EQ(song->tracks[0].note_count, 1u);
+}

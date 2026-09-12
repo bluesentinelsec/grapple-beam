@@ -25,8 +25,8 @@ types). The full C API additionally stays reachable from C/C++.
 | libyaml | 48 | 0 | 0 | 48 | 2 | 46 |
 | mog HTTP/S | 69 | 54 | 0 | 12 | 67 | 2 |
 | cJSON | 78 | 57 | 0 | 20 | 70 | 8 |
-| Grapple modules | 691 | 127 | 118 | 438 | 647 | 44 |
-| **Total** | 3583 | 1145 | 342 | 2045 | 2973 | 610 |
+| Grapple modules | 696 | 132 | 118 | 438 | 650 | 46 |
+| **Total** | 3588 | 1150 | 342 | 2045 | 2976 | 612 |
 
 ## Script-surface skip reasons
 
@@ -38,6 +38,8 @@ types). The full C API additionally stays reachable from C/C++.
 - 9: callback parameter
 - 3: owned string, no free fn
 - 2: input stream ownership requires C/C++
+- 1: sized input buffer requires C/C++
+- 1: output stream ownership requires C/C++
 - 1: borrowed metadata; use ReadChipSongInfo in scripts
 - 1: borrowed metadata requires C/C++
 - 1: borrowed stream requires C/C++; use PlayChipPlayer in scripts
@@ -677,7 +679,7 @@ types). The full C API additionally stays reachable from C/C++.
 
 </details>
 
-<details><summary>Grapple modules (44)</summary>
+<details><summary>Grapple modules (46)</summary>
 
 - `Grapple_ActorEach` — param visit: <funcptr>*
 - `Grapple_ActorLight` — returns struct pointer
@@ -710,12 +712,14 @@ types). The full C API additionally stays reachable from C/C++.
 - `Grapple_GuiEventSink` — return type Grapple_EventSink
 - `Grapple_GuiGridBegin` — param weights: const float*
 - `Grapple_LightDefCreate` — returns struct pointer
+- `Grapple_LoadChipSongMemory` — sized input buffer requires C/C++
 - `Grapple_LoadChipSong_IO` — input stream ownership requires C/C++
 - `Grapple_LoadChipSong_IOEx` — input stream ownership requires C/C++
 - `Grapple_LoadVFSFile` — return type unsigned char*
 - `Grapple_PhysicsSetCollisionCallback` — param callback: Grapple_CollisionCallback
 - `Grapple_RenderChipPlayer` — sized PCM output buffer requires C/C++
 - `Grapple_RunGame` — param user: void*
+- `Grapple_SaveChipSongWav_IO` — output stream ownership requires C/C++
 - `Grapple_SaveRead` — return type void*
 - `Grapple_SceneState` — return type void*
 - `Grapple_ScriptBind` — param language_state: void*

@@ -16632,10 +16632,22 @@ function GrappleC.PhysicsSetPixelsPerMetre(engine, pixels) end
 ---@param sub_steps integer
 function GrappleC.PhysicsSetSubSteps(engine, sub_steps) end
 
+---Calls `Grapple_PlayChipFile`.
+---@param path string?
+---@param loop boolean
+---@return userdata?
+function GrappleC.PlayChipFile(path, loop) end
+
 ---Calls `Grapple_PlayChipPlayer`.
 ---@param player userdata
 ---@return boolean
 function GrappleC.PlayChipPlayer(player) end
+
+---Calls `Grapple_PlayChipSong`.
+---@param song userdata
+---@param loop boolean
+---@return userdata?
+function GrappleC.PlayChipSong(song, loop) end
 
 ---Calls `Grapple_PrismaticJointDefCreate`.
 ---@return userdata?
@@ -16864,6 +16876,14 @@ function GrappleC.SHA256(data, digest) end
 ---@param y number
 ---@return number
 function GrappleC.SampleLight(scene, x, y) end
+
+---Calls `Grapple_SaveChipSongWav`.
+---@param song userdata
+---@param path string?
+---@param sample_rate integer
+---@param voices integer
+---@return boolean
+function GrappleC.SaveChipSongWav(song, path, sample_rate, voices) end
 
 ---Calls `Grapple_SaveDelete`.
 ---@param engine userdata

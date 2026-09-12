@@ -159,10 +159,10 @@ accepts are `title`, `window`, `design`, `presentation`, `resizable`,
 
 ### The engine's own flags reach your game
 
-`grapple` divides its command line three ways:
+`grapple-beam` divides its command line three ways:
 
 ```sh
-grapple --fullscreen game.lua -- --level 3
+grapple-beam --fullscreen game.lua -- --level 3
 #       ^engine        ^script    ^your game's own
 ```
 
@@ -492,10 +492,10 @@ For clangd, no extra file is needed: point it at your own project's
 
 ## The REPL
 
-`tools/repl` builds an interactive shell for both languages with all
+`src/runner` builds an interactive shell for both languages with all
 bindings loaded:
 
 ```bash
-./build/debug/bin/grapple -l lua
-./build/debug/bin/grapple -l ruby
+./build/debug/bin/grapple-beam -l lua
+./build/debug/bin/grapple-beam -l ruby
 ```

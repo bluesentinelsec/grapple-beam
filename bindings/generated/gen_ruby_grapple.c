@@ -8024,6 +8024,20 @@ static mrb_value GenR_Grapple_PhysicsSetSubSteps(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_Grapple_PlayChipFile(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    const char *a0 = GrappleGen_RubyToStr(mrb, (argc > 0 ? argv[0] : mrb_nil_value()));
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    Grapple_ChipPlayer * rv = Grapple_PlayChipFile(a0, a1);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "Grapple_ChipPlayer", GenDtor_Grapple_DestroyChipPlayer);
+    }
+}
+
 static mrb_value GenR_Grapple_PlayChipPlayer(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -8034,6 +8048,20 @@ static mrb_value GenR_Grapple_PlayChipPlayer(mrb_state *mrb, mrb_value self)
     Grapple_ChipPlayer *a0 = (Grapple_ChipPlayer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_ChipPlayer");
     bool rv = Grapple_PlayChipPlayer(a0);
     return mrb_bool_value((mrb_bool)(rv != 0));
+    }
+}
+
+static mrb_value GenR_Grapple_PlayChipSong(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    const Grapple_ChipSong *a0 = (const Grapple_ChipSong *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_ChipSong");
+    bool a1 = (bool)GrappleGen_RubyToBool((argc > 1 ? argv[1] : mrb_nil_value()));
+    Grapple_ChipPlayer * rv = Grapple_PlayChipSong(a0, a1);
+    return GrappleGen_RubyPushOwned(mrb, (void *)rv, "Grapple_ChipPlayer", GenDtor_Grapple_DestroyChipPlayer);
     }
 }
 
@@ -8614,6 +8642,22 @@ static mrb_value GenR_Grapple_SampleLight(mrb_state *mrb, mrb_value self)
     float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
     float rv = Grapple_SampleLight(a0, a1, a2);
     return mrb_float_value(mrb, (mrb_float)rv);
+    }
+}
+
+static mrb_value GenR_Grapple_SaveChipSongWav(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    const Grapple_ChipSong *a0 = (const Grapple_ChipSong *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_ChipSong");
+    const char *a1 = GrappleGen_RubyToStr(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    int a3 = (int)GrappleGen_RubyToInt(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
+    bool rv = Grapple_SaveChipSongWav(a0, a1, a2, a3);
+    return mrb_bool_value((mrb_bool)(rv != 0));
     }
 }
 
@@ -10553,7 +10597,9 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "PhysicsSetPaused", GenR_Grapple_PhysicsSetPaused, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PhysicsSetPixelsPerMetre", GenR_Grapple_PhysicsSetPixelsPerMetre, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PhysicsSetSubSteps", GenR_Grapple_PhysicsSetSubSteps, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "PlayChipFile", GenR_Grapple_PlayChipFile, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PlayChipPlayer", GenR_Grapple_PlayChipPlayer, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "PlayChipSong", GenR_Grapple_PlayChipSong, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PrismaticJointDefCreate", GenR_Grapple_PrismaticJointDefCreate, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PrismaticJointDefDestroy", GenR_Grapple_PrismaticJointDefDestroy, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PrismaticJointDefSetAnchors", GenR_Grapple_PrismaticJointDefSetAnchors, MRB_ARGS_ANY());
@@ -10593,6 +10639,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "RevoluteJointDefSetSpring", GenR_Grapple_RevoluteJointDefSetSpring, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "SHA256", GenR_Grapple_SHA256, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "SampleLight", GenR_Grapple_SampleLight, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "SaveChipSongWav", GenR_Grapple_SaveChipSongWav, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "SaveDelete", GenR_Grapple_SaveDelete, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "SaveExists", GenR_Grapple_SaveExists, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "SaveInfoOf", GenR_Grapple_SaveInfoOf, MRB_ARGS_ANY());

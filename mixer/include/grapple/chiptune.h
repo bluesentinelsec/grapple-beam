@@ -276,6 +276,57 @@ extern "C"
      */
     extern Grapple_ChipSong *Grapple_LoadChipSong(const char *path);
 
+    /** @brief Load a score from caller-owned memory.
+     * @param data MIDI, MusicXML or MXL bytes; read only during this call.
+     * @param size Buffer length, at most 64 MiB.
+     * @param options Import policy, or NULL for defaults.
+     * @param error Optional diagnostic output.
+     * @return Owned song independent of the input buffer, or NULL with SDL_GetError(). */
+    extern Grapple_ChipSong *Grapple_LoadChipSongMemory(const void *data, size_t size,
+                                                        const Grapple_ChipImportOptions *options,
+                                                        Grapple_ChipDiagnostic *error);
+
+    /** @brief Load MIDI/MusicXML/MXL and start managed playback with the preset defaults.
+     * @param path Score filename.
+     * @param loop Repeat the complete performance when true.
+     * @return Owned playing player, or NULL with SDL_GetError(). Destroy it to stop and release
+     * audio.
+     * @pre SDL audio and MIX_Init are initialized by the application/engine.
+     * @details Uses 48 kHz and 64 voices. For custom import/player settings, use the explicit
+     * load, create and play functions. Parsing and device setup run on the calling thread. */
+    extern Grapple_ChipPlayer *Grapple_PlayChipFile(const char *path, bool loop);
+
+    /** @brief Start a loaded or code-authored song with the preset defaults.
+     * @param song Immutable song; retained by the returned player.
+     * @param loop Repeat the complete performance when true.
+     * @return Owned playing player, or NULL with SDL_GetError(). Caller may release song
+     * immediately.
+     * @pre SDL audio and MIX_Init are initialized. Uses 48 kHz and 64 voices. */
+    extern Grapple_ChipPlayer *Grapple_PlayChipSong(const Grapple_ChipSong *song, bool loop);
+
+    /** @brief Render a song to a stereo 16-bit PCM WAV, including release/effect tails.
+     * @param song Immutable song to render once.
+     * @param path Output filename; an existing file is replaced.
+     * @param sample_rate Sample rate, 8000..192000 Hz.
+     * @param voices Polyphony, 1..1024.
+     * @return True on success, false with SDL_GetError(); a partial file may remain on failure.
+     * @details Blocking offline operation with bounded working buffers. Does not open an audio
+     * device or change existing players. RIFF output is limited to 4 GiB minus its header. */
+    extern bool Grapple_SaveChipSongWav(const Grapple_ChipSong *song, const char *path,
+                                        int sample_rate, int voices);
+
+    /** @brief Render WAV to a seekable output stream without requiring a filesystem.
+     * @param song Immutable song to render once.
+     * @param io Output stream positioned at zero; writes from its current position and seeks to
+     * zero.
+     * @param closeio Close the stream on success or failure when true.
+     * @param sample_rate Sample rate, 8000..192000 Hz.
+     * @param voices Polyphony, 1..1024.
+     * @return True on success, false with SDL_GetError(); partial output may remain.
+     * @details Same blocking render and RIFF size policy as Grapple_SaveChipSongWav. */
+    extern bool Grapple_SaveChipSongWav_IO(const Grapple_ChipSong *song, SDL_IOStream *io,
+                                           bool closeio, int sample_rate, int voices);
+
     /**
      * @brief Release a song; NULL is allowed.
      * @param song Song reference to release; existing players retain their own references.

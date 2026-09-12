@@ -1,0 +1,11 @@
+# Interpreter hosting stays in a library; src/main.cpp is the sole desktop entrypoint.
+enable_language(C)
+add_library(Grapple_Runner STATIC runner.c)
+target_link_libraries(Grapple_Runner PRIVATE Grapple::Lua Grapple::Ruby Grapple::Bindings)
+cppboot_set_project_warnings(Grapple_Runner)
+add_executable(${PROJECT_NAME}_app ${PROJECT_SOURCE_DIR}/src/main.cpp)
+set_target_properties(${PROJECT_NAME}_app PROPERTIES OUTPUT_NAME grapple-beam)
+target_link_libraries(${PROJECT_NAME}_app PRIVATE ${PROJECT_NAME}_lib Grapple_Runner)
+cppboot_set_project_warnings(${PROJECT_NAME}_app)
+include(GNUInstallDirs)
+install(TARGETS ${PROJECT_NAME}_app RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

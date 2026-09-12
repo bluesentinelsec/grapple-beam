@@ -753,3 +753,17 @@ TEST(ChipMusicXml, RepeatsRestoreScopedDynamicsAndTempoRampsSlowPlayback)
         tempos += ramp->events[i].tempo != 0;
     EXPECT_GT(tempos, 100u);
 }
+
+TEST(ChipMusicXml, MemoryHelperOwnsItsParsedResultAndReportsInvalidInput)
+{
+    auto bytes = Score("<measure>" + Note("1") + "</measure>");
+    Grapple_ChipDiagnostic error;
+    const Song song(Grapple_LoadChipSongMemory(bytes.data(), bytes.size(), nullptr, &error),
+                    Grapple_DestroyChipSong);
+    ASSERT_TRUE(song) << SDL_GetError();
+    bytes.assign(bytes.size(), 'x');
+    EXPECT_EQ(Onsets(song.get()).size(), 1u);
+    EXPECT_DOUBLE_EQ(song->info.duration_seconds, 0.5);
+    EXPECT_EQ(Grapple_LoadChipSongMemory(nullptr, 0, nullptr, &error), nullptr);
+    EXPECT_EQ(error.code, GRAPPLE_CHIP_DIAGNOSTIC_INPUT);
+}

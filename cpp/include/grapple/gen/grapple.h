@@ -141,6 +141,13 @@ class ChipSong {
     }
     return ChipSong(created_);
   }
+  static Result<ChipSong> LoadChipSongMemory(const void *data, size_t size, const Grapple_ChipImportOptions *options, Grapple_ChipDiagnostic *error) {
+    Grapple_ChipSong* created_ = ::Grapple_LoadChipSongMemory(data, size, options, error);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipSong(created_);
+  }
   static Result<ChipSong> BuildChipSong(const Grapple_ChipComposer *composer, Uint64 end_tick) {
     Grapple_ChipSong* created_ = ::Grapple_BuildChipSong(composer, end_tick);
     if (created_ == nullptr) {
@@ -191,6 +198,12 @@ class ChipSong {
   const char* GetChipDiagnosticMessage(int index) {
     return ::Grapple_GetChipDiagnosticMessage(value_, index);
   }
+  Status SaveChipSongWav(const char *path, int sample_rate, int voices) {
+    return ::Grapple_SaveChipSongWav(value_, path, sample_rate, voices) ? Status() : Status::FromSdl();
+  }
+  Status SaveChipSongWav_IO(SDL_IOStream *io, bool closeio, int sample_rate, int voices) {
+    return ::Grapple_SaveChipSongWav_IO(value_, io, closeio, sample_rate, voices) ? Status() : Status::FromSdl();
+  }
   const Grapple_ChipSongInfo* GetChipSongInfo() {
     return ::Grapple_GetChipSongInfo(value_);
   }
@@ -209,6 +222,20 @@ class ChipSong {
 // RAII owner for Grapple_ChipPlayer (destroyed with Grapple_DestroyChipPlayer).
 class ChipPlayer {
  public:
+  static Result<ChipPlayer> PlayChipFile(const char *path, bool loop) {
+    Grapple_ChipPlayer* created_ = ::Grapple_PlayChipFile(path, loop);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipPlayer(created_);
+  }
+  static Result<ChipPlayer> PlayChipSong(const Grapple_ChipSong *song, bool loop) {
+    Grapple_ChipPlayer* created_ = ::Grapple_PlayChipSong(song, loop);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipPlayer(created_);
+  }
   static Result<ChipPlayer> CreateChipPlayer(const Grapple_ChipSong *song, int sample_rate, int voices, bool loop) {
     Grapple_ChipPlayer* created_ = ::Grapple_CreateChipPlayer(song, sample_rate, voices, loop);
     if (created_ == nullptr) {
@@ -271,8 +298,8 @@ class ChipPlayer {
   }
   void PauseChipPlayer() { ::Grapple_PauseChipPlayer(value_); }
   void StopChipPlayer() { ::Grapple_StopChipPlayer(value_); }
-  Status ChipPlayerPlaying() {
-    return ::Grapple_ChipPlayerPlaying(value_) ? Status() : Status::FromSdl();
+  bool ChipPlayerPlaying() {
+    return ::Grapple_ChipPlayerPlaying(value_);
   }
  private:
   explicit ChipPlayer(Grapple_ChipPlayer* value) : value_(value), engaged_(true) {}
