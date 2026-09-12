@@ -24,6 +24,9 @@ typedef struct ScoreNote
     Grapple_ChipExpression expression;
     double gate;
     Sint64 attack, release;
+    bool grace, rest;
+    Sint64 make_time;
+    double upper_pitch, lower_pitch;
 } ScoreNote;
 typedef struct ScoreControl
 {
@@ -43,6 +46,7 @@ typedef struct ScoreReader
     ScoreNumber divisions;
     Sint64 meter;
     int transpose[SCORE_MAX_STAVES];
+    int key[SCORE_MAX_STAVES][7];
     bool tab[SCORE_MAX_STAVES];
     int velocity[SCORE_MAX_STAVES];
     ScoreNote *notes;
@@ -63,7 +67,10 @@ int Chip_ScoreInteger(ScoreReader *r, const ChipXmlNode *node, const char *text,
 double Chip_ScoreDecimal(ScoreReader *r, const ChipXmlNode *node, const char *text, double fallback,
                          double low, double high);
 Sint64 Chip_ScoreTicks(ScoreReader *r, const ChipXmlNode *node, const char *text);
+bool Chip_ScoreApproximation(ScoreReader *r, const ScoreNote *note, const char *message);
 bool Chip_ReadNoteExpression(ScoreReader *r, ScoreNote *note);
 bool Chip_ResolveNoteExpression(ScoreReader *r);
+bool Chip_ApplyScoreTiming(ScoreReader *r);
+bool Chip_ExpandOrnaments(ScoreReader *r);
 bool Chip_CompileScore(ScoreReader *r);
 #endif

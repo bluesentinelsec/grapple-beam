@@ -5266,6 +5266,7 @@ bounds	include/grapple/chiptune.h	/^.*bounds/;"	m
 bounds	include/nuklear.h	/^.*bounds/;"	m
 boxColor	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*boxColor *(/;"	f
 boxRGBA	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*boxRGBA *(/;"	f
+breath_gate	include/grapple/chiptune.h	/^.*breath_gate/;"	m
 brightness	include/grapple/chiptune.h	/^.*brightness/;"	m
 buf	include/SDL3_net/SDL_net.h	/^.*buf/;"	m
 buf	include/nuklear.h	/^.*buf/;"	m
@@ -5374,6 +5375,7 @@ cJSON_SetValuestring	include/cJSON.h	/^.*cJSON_SetValuestring *(/;"	f
 cJSON_Version	include/cJSON.h	/^.*cJSON_Version *(/;"	f
 cJSON_free	include/cJSON.h	/^.*cJSON_free *(/;"	f
 cJSON_malloc	include/cJSON.h	/^.*cJSON_malloc *(/;"	f
+caesura_beats	include/grapple/chiptune.h	/^.*caesura_beats/;"	m
 callback	include/nuklear.h	/^.*callback/;"	m
 callback_data	include/nuklear.h	/^.*callback_data/;"	m
 calls	include/nuklear.h	/^.*calls/;"	m

@@ -214,7 +214,7 @@ Grapple_ChipSong *Grapple_LoadChipSong_IOEx(SDL_IOStream *io, bool closeio,
         (SDL_isnan(policy.arpeggio_beats) || SDL_isinf(policy.arpeggio_beats)) ||
         policy.arpeggio_beats < 0 || policy.arpeggio_beats > 4 ||
         (SDL_isnan(policy.fermata_factor) || SDL_isinf(policy.fermata_factor)) ||
-        policy.fermata_factor < 0 || policy.fermata_factor > 8 ||
+        (policy.fermata_factor != 0 && policy.fermata_factor < 1) || policy.fermata_factor > 8 ||
         (SDL_isnan(policy.swing_ratio) || SDL_isinf(policy.swing_ratio)) ||
         policy.swing_ratio < 0 || policy.swing_ratio > 8)
     {
@@ -223,7 +223,9 @@ Grapple_ChipSong *Grapple_LoadChipSong_IOEx(SDL_IOStream *io, bool closeio,
     }
     if (!(policy.staccato_gate >= 0 && policy.staccato_gate <= 1) ||
         !(policy.staccatissimo_gate >= 0 && policy.staccatissimo_gate <= 1) ||
-        !(policy.portato_gate >= 0 && policy.portato_gate <= 1))
+        !(policy.portato_gate >= 0 && policy.portato_gate <= 1) ||
+        !(policy.breath_gate >= 0 && policy.breath_gate <= 1) ||
+        !(policy.caesura_beats >= 0 && policy.caesura_beats <= 8))
     {
         SDL_SetError("chiptune: invalid articulation gate");
         goto done;
@@ -234,6 +236,10 @@ Grapple_ChipSong *Grapple_LoadChipSong_IOEx(SDL_IOStream *io, bool closeio,
         policy.staccatissimo_gate = 0.25;
     if (policy.portato_gate == 0)
         policy.portato_gate = 0.75;
+    if (policy.breath_gate == 0)
+        policy.breath_gate = 0.85;
+    if (policy.caesura_beats == 0)
+        policy.caesura_beats = 0.25;
     if (policy.grace_beats == 0)
         policy.grace_beats = 0.125;
     if (policy.ornament_beats == 0)

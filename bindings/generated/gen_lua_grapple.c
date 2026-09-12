@@ -358,6 +358,8 @@ static void GenRead_Grapple_ChipImportOptions(lua_State *L, int idx, Grapple_Chi
     out->staccato_gate = (double)GrappleGen_LuaFieldNum(L, idx, "staccato_gate");
     out->staccatissimo_gate = (double)GrappleGen_LuaFieldNum(L, idx, "staccatissimo_gate");
     out->portato_gate = (double)GrappleGen_LuaFieldNum(L, idx, "portato_gate");
+    out->breath_gate = (double)GrappleGen_LuaFieldNum(L, idx, "breath_gate");
+    out->caesura_beats = (double)GrappleGen_LuaFieldNum(L, idx, "caesura_beats");
     out->grace_beats = (double)GrappleGen_LuaFieldNum(L, idx, "grace_beats");
     out->ornament_beats = (double)GrappleGen_LuaFieldNum(L, idx, "ornament_beats");
     out->arpeggio_beats = (double)GrappleGen_LuaFieldNum(L, idx, "arpeggio_beats");
@@ -367,7 +369,7 @@ static void GenRead_Grapple_ChipImportOptions(lua_State *L, int idx, Grapple_Chi
 
 static void GenPush_Grapple_ChipImportOptions(lua_State *L, const Grapple_ChipImportOptions *in)
 {
-    lua_createtable(L, 0, 10);
+    lua_createtable(L, 0, 12);
     lua_pushboolean(L, (int)in->strict);
     lua_setfield(L, -2, "strict");
     lua_pushinteger(L, (lua_Integer)in->staff);
@@ -378,6 +380,10 @@ static void GenPush_Grapple_ChipImportOptions(lua_State *L, const Grapple_ChipIm
     lua_setfield(L, -2, "staccatissimo_gate");
     lua_pushnumber(L, (lua_Number)in->portato_gate);
     lua_setfield(L, -2, "portato_gate");
+    lua_pushnumber(L, (lua_Number)in->breath_gate);
+    lua_setfield(L, -2, "breath_gate");
+    lua_pushnumber(L, (lua_Number)in->caesura_beats);
+    lua_setfield(L, -2, "caesura_beats");
     lua_pushnumber(L, (lua_Number)in->grace_beats);
     lua_setfield(L, -2, "grace_beats");
     lua_pushnumber(L, (lua_Number)in->ornament_beats);

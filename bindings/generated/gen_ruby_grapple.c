@@ -288,6 +288,8 @@ static void GenRead_Grapple_ChipImportOptions(mrb_state *mrb, mrb_value h, Grapp
     out->staccato_gate = (double)GrappleGen_RubyFieldNum(mrb, h, "staccato_gate");
     out->staccatissimo_gate = (double)GrappleGen_RubyFieldNum(mrb, h, "staccatissimo_gate");
     out->portato_gate = (double)GrappleGen_RubyFieldNum(mrb, h, "portato_gate");
+    out->breath_gate = (double)GrappleGen_RubyFieldNum(mrb, h, "breath_gate");
+    out->caesura_beats = (double)GrappleGen_RubyFieldNum(mrb, h, "caesura_beats");
     out->grace_beats = (double)GrappleGen_RubyFieldNum(mrb, h, "grace_beats");
     out->ornament_beats = (double)GrappleGen_RubyFieldNum(mrb, h, "ornament_beats");
     out->arpeggio_beats = (double)GrappleGen_RubyFieldNum(mrb, h, "arpeggio_beats");
@@ -303,6 +305,8 @@ static mrb_value GenPush_Grapple_ChipImportOptions(mrb_state *mrb, const Grapple
     GrappleGen_RubyHashSet(mrb, h, "staccato_gate", mrb_float_value(mrb, (mrb_float)in->staccato_gate));
     GrappleGen_RubyHashSet(mrb, h, "staccatissimo_gate", mrb_float_value(mrb, (mrb_float)in->staccatissimo_gate));
     GrappleGen_RubyHashSet(mrb, h, "portato_gate", mrb_float_value(mrb, (mrb_float)in->portato_gate));
+    GrappleGen_RubyHashSet(mrb, h, "breath_gate", mrb_float_value(mrb, (mrb_float)in->breath_gate));
+    GrappleGen_RubyHashSet(mrb, h, "caesura_beats", mrb_float_value(mrb, (mrb_float)in->caesura_beats));
     GrappleGen_RubyHashSet(mrb, h, "grace_beats", mrb_float_value(mrb, (mrb_float)in->grace_beats));
     GrappleGen_RubyHashSet(mrb, h, "ornament_beats", mrb_float_value(mrb, (mrb_float)in->ornament_beats));
     GrappleGen_RubyHashSet(mrb, h, "arpeggio_beats", mrb_float_value(mrb, (mrb_float)in->arpeggio_beats));

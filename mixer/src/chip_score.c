@@ -11,6 +11,8 @@ static int SDLCALL CompareNotes(const void *left, const void *right)
     COMPARE(measure);
     COMPARE(start);
     COMPARE(duration);
+    COMPARE(grace);
+    COMPARE(rest);
     COMPARE(pitch);
     COMPARE(velocity);
     COMPARE(expression.tuning);
@@ -380,10 +382,12 @@ bool Chip_CompileScore(ScoreReader *r)
     }
     if (ties)
         return Chip_ScoreError(r, NULL, "unterminated tie");
+    if (!Chip_ApplyScoreTiming(r) || !Chip_ExpandOrnaments(r))
+        return false;
     for (size_t i = 0; i < r->note_count; ++i)
     {
         const ScoreNote *n = &r->notes[i];
-        if (n->skipped || n->velocity == 0)
+        if (n->skipped || n->rest || n->velocity == 0)
             continue;
         ChipEvent event = {0};
         event.track = (Uint16)n->part;

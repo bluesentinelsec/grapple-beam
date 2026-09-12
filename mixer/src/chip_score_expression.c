@@ -1,6 +1,22 @@
 /* Original Grapple code (zlib). Notation-to-synth expression policies. */
 #include "chip_score.h"
 
+bool Chip_ScoreApproximation(ScoreReader *r, const ScoreNote *note, const char *message)
+{
+    for (int i = 0; i < r->song->diagnostic_count; ++i)
+        if (r->song->diagnostics[i].code == GRAPPLE_CHIP_DIAGNOSTIC_APPROXIMATION &&
+            r->song->diagnostics[i].part == note->part &&
+            SDL_strcmp(r->song->diagnostic_messages[i], message) == 0)
+            return true;
+    Grapple_ChipDiagnostic diagnostic = {GRAPPLE_CHIP_DIAGNOSTIC_APPROXIMATION,
+                                         GRAPPLE_CHIP_DIAGNOSTIC_INFO,
+                                         note->part,
+                                         note->source_measure,
+                                         note->staff + 1,
+                                         (Uint32)note->node->line};
+    return Chip_AddDiagnostic(r->song, diagnostic, message);
+}
+
 static bool Named(const ChipXmlNode *node, const char *name)
 {
     return node && SDL_strcmp(node->name, name) == 0;

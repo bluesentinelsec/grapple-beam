@@ -136,7 +136,8 @@ bool Grapple_GetChipImportDefaults(Grapple_ChipImportOptions *options)
 {
     if (!options)
         return SDL_SetError("chiptune: NULL import options output");
-    *options = (Grapple_ChipImportOptions){true, 0, 0.5, 0.25, 0.75, 0.125, 0.125, 0.125, 1.5, 2};
+    *options = (Grapple_ChipImportOptions){true, 0,     0.5,   0.25,  0.75, 0.85,
+                                           0.25, 0.125, 0.125, 0.125, 1.5,  2};
     return true;
 }
 

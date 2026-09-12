@@ -44,11 +44,7 @@ static bool Unsupported(ScoreReader *r, const ChipXmlNode *node)
 
 static bool CheckPerformance(ScoreReader *r, const ChipXmlNode *node)
 {
-    static const char *const unsupported[] = {
-        "wedge",         "pedal",         "arpeggiate",       "fermata",
-        "trill-mark",    "mordent",       "inverted-mordent", "turn",
-        "inverted-turn", "tremolo",       "breath-mark",      "caesura",
-        "swing",         "other-notation"};
+    static const char *const unsupported[] = {"wedge", "pedal", "swing", "other-notation"};
     for (; node; node = node->next)
     {
         for (size_t i = 0; i < SDL_arraysize(unsupported); ++i)
@@ -282,7 +278,8 @@ static bool Resolution(ScoreReader *r, const ChipXmlNode *node, Sint64 *division
         for (size_t a = 0; node->attributes && node->attributes[a]; a += 2)
         {
             if (SDL_strcmp(node->attributes[a], "attack") != 0 &&
-                SDL_strcmp(node->attributes[a], "release") != 0)
+                SDL_strcmp(node->attributes[a], "release") != 0 &&
+                SDL_strcmp(node->attributes[a], "make-time") != 0)
                 continue;
             ScoreNumber n;
             if (!Number(node->attributes[a + 1], &n) ||
@@ -290,9 +287,10 @@ static bool Resolution(ScoreReader *r, const ChipXmlNode *node, Sint64 *division
                 return Chip_ScoreError(r, node, "invalid or excessive note timing precision");
             *fractions *= n.denominator / Gcd(n.denominator, *fractions);
         }
-        if (Named(node, "staccato") || Named(node, "staccatissimo") ||
-            Named(node, "detached-legato") || Named(node, "stopped") || Named(node, "notehead") ||
-            Named(node, "other-technical"))
+        if (Named(node, "grace") || Named(node, "ornaments") || Named(node, "arpeggiate") ||
+            Named(node, "fermata") || Named(node, "caesura") || Named(node, "staccato") ||
+            Named(node, "staccatissimo") || Named(node, "detached-legato") ||
+            Named(node, "stopped") || Named(node, "notehead") || Named(node, "other-technical"))
         {
             const Sint64 factor = 1000 / Gcd(1000, *fractions);
             if (factor > SCORE_MAX_RESOLUTION / *fractions)
@@ -392,7 +390,22 @@ static bool Attributes(ScoreReader *r, const ChipXmlNode *node)
 {
     for (const ChipXmlNode *c = node->children; c; c = c->next)
     {
-        if (Named(c, "divisions"))
+        if (Named(c, "key"))
+        {
+            const int fifths = Chip_ScoreInteger(r, c, Chip_XmlText(c, "fifths"), 0, -7, 7);
+            static const int sharp[] = {3, 0, 4, 1, 5, 2, 6};
+            static const int flat[] = {6, 2, 5, 1, 4, 0, 3};
+            const char *number = Chip_XmlAttribute(c, "number");
+            const int first = *number ? Staff(r, c, number) : 0;
+            const int last = *number ? first + 1 : SCORE_MAX_STAVES;
+            for (int staff = first; staff < last; ++staff)
+            {
+                SDL_memset(r->key[staff], 0, sizeof(r->key[staff]));
+                for (int k = 0; k < SDL_abs(fifths); ++k)
+                    r->key[staff][fifths > 0 ? sharp[k] : flat[k]] = fifths > 0 ? 1 : -1;
+            }
+        }
+        else if (Named(c, "divisions"))
         {
             if (!Number(c->text ? c->text : "", &r->divisions) || r->divisions.numerator <= 0)
                 return Chip_ScoreError(r, c, "divisions must be positive");
@@ -596,10 +609,9 @@ static bool Direction(ScoreReader *r, const ChipXmlNode *node, Sint64 cursor)
 static bool Note(ScoreReader *r, const ChipXmlNode *node, Sint64 *cursor, Sint64 *previous,
                  Sint64 *extent)
 {
-    if (Chip_XmlChild(node, "grace"))
-        return Chip_ScoreError(r, node, "grace-note playback is not implemented yet");
-    const Sint64 duration = Chip_ScoreTicks(r, node, Chip_XmlText(node, "duration"));
-    if (r->failed || duration <= 0)
+    const ChipXmlNode *grace = Chip_XmlChild(node, "grace");
+    const Sint64 duration = grace ? 0 : Chip_ScoreTicks(r, node, Chip_XmlText(node, "duration"));
+    if (r->failed || (!grace && duration <= 0))
         return Chip_ScoreError(r, node, "note duration must be positive");
     const bool chord = Chip_XmlChild(node, "chord") != NULL;
     const Sint64 start = chord ? *previous : *cursor;
@@ -611,10 +623,18 @@ static bool Note(ScoreReader *r, const ChipXmlNode *node, Sint64 *cursor, Sint64
         *cursor += duration;
     }
     *extent = SDL_max(*extent, start + duration);
-    if (Chip_XmlChild(node, "rest") || Chip_XmlChild(node, "cue"))
+    if (Chip_XmlChild(node, "cue"))
         return true;
     ScoreNote note = {0};
     note.part = r->part;
+    note.grace = grace != NULL;
+    note.rest = Chip_XmlChild(node, "rest") != NULL;
+    if (grace && *Chip_XmlAttribute(grace, "make-time"))
+    {
+        note.make_time = Chip_ScoreTicks(r, grace, Chip_XmlAttribute(grace, "make-time"));
+        if (note.make_time <= 0)
+            return Chip_ScoreError(r, grace, "grace make-time must be positive");
+    }
     note.node = node;
     note.source_measure = r->measure;
     note.gate = 1;
@@ -654,12 +674,21 @@ static bool Note(ScoreReader *r, const ChipXmlNode *node, Sint64 *cursor, Sint64
         const int integral = (int)SDL_floor(alteration);
         note.pitch += integral;
         note.expression.tuning = (float)(alteration - integral);
+        static const char degrees[] = "CDEFGAB";
+        const char *degree = SDL_strchr(degrees, *step);
+        const int index = (int)(degree - degrees);
+        static const int natural[] = {0, 2, 4, 5, 7, 9, 11};
+        const int base = note.pitch - (int)(letter - letters) - integral;
+        note.upper_pitch = base + natural[(index + 1) % 7] + (index == 6 ? 12 : 0) +
+                           r->key[note.staff][(index + 1) % 7];
+        note.lower_pitch = base + natural[(index + 6) % 7] - (index == 0 ? 12 : 0) +
+                           r->key[note.staff][(index + 6) % 7];
     }
     else if (Chip_XmlChild(node, "unpitched") && Chip_XmlChild(instrument, "midi-unpitched"))
         note.pitch = Chip_ScoreInteger(r, instrument, Chip_XmlText(instrument, "midi-unpitched"), 1,
                                        1, 128) -
                      1;
-    else
+    else if (!note.rest)
         return Chip_ScoreError(r, node, "note needs pitch or mapped percussion instrument");
     if (note.pitch < 0 || note.pitch > 127)
         return Chip_ScoreError(r, node, "sounding pitch outside 0..127");
@@ -768,6 +797,7 @@ Grapple_ChipSong *Chip_ParseMusicXml(const void *data, size_t size,
             continue;
         r.definition = definition;
         r.divisions = (ScoreNumber){1, 1};
+        SDL_zero(r.key);
         r.meter = (Sint64)r.song->info.ticks_per_quarter * 4;
         SDL_zero(r.transpose);
         SDL_zero(r.tab);

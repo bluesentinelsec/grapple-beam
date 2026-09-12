@@ -36,10 +36,10 @@ Scores that exceed exact arithmetic/resource limits fail explicitly.
 
 ## Pending implementation
 
-Ornaments, time-changing expression, remaining guitar techniques,
+Hairpins/pedals/swing, remaining guitar techniques,
 advanced transport and the final support matrix remain tracked on the issue.
-Grace notes currently fail explicitly. Other expressive constructs
-are not yet guaranteed to affect playback; this importer is under development.
+Remaining expressive constructs are not yet guaranteed to affect playback;
+this importer is under development.
 
 Expat is vendored and built statically from pinned source; see `deps/expat.md`.
 The XML tree is limited to 300,000 nodes, depth 128, 64 attributes per element,
@@ -74,8 +74,7 @@ A maximum of 1,024 diagnostics bounds retained memory.
 
 The staff policy is 0 for automatic mirror detection, -1 to retain every
 staff, or 1..32 to select a staff in multi-staff parts. Single-staff parts
-such as percussion remain present. Expressive timing fields are defined for
-the upcoming interpretation slice; they do not yet enable pending techniques.
+such as percussion remain present. Timing interpretation fields configure the supported techniques described below.
 
 ## Score navigation
 
@@ -121,3 +120,38 @@ notes blend noise and shorten the gate; parenthesized noteheads reduce gain.
 Tap/snap-pizzicato/fingernail markings sharpen attack strength and brightness.
 These are deliberate C64-style timbral approximations, not acoustic instrument
 models. Additional exporter-specific technical text remains under development.
+
+## Grace notes, ornaments and ensemble timing
+
+Grace groups honor `steal-time-following`, `steal-time-previous` and `make-time`.
+Without an explicit timing attribute, each grace takes the configured 0.125
+quarter beat from the following note, capped to half its duration for a group.
+Grace chords share an onset. The donor must be adjacent in the same logical line;
+ambiguous/overconsuming explicit allocations fail. Added-time grace groups insert
+an ensemble-wide interval; simultaneous insertions use the longest requested span.
+
+Trills alternate the main and key-signature neighbor at the configured subdivision
+(default 0.125 quarter beat). Mordents play main/lower/main, inverted mordents
+main/upper/main; turns play upper/main/lower/main, with inverted and delayed forms.
+Explicit ornament accidentals replace the neighbor's key-signature alteration.
+Supported trill attributes include attack count, starting note, trill step,
+second/last attack percentages and acceleration. Common repeated and alternating
+note tremolos honor strokes and attached beams; the latter combines the two
+encoded half-length durations without reapplying `time-modification`.
+Ornaments expand into bounded ordinary notes during import, never in the audio
+callback. Informational diagnostics identify the selected interpretation policy.
+
+Arpeggiation rolls explicitly voiced, numbered chord groups upward or downward
+over the configured spread (default 0.125 quarter beat, capped at half the
+shortest note). An explicit note attack offset takes precedence. Chord symbols
+alone do not generate accompaniment.
+
+Fermatas hold the ensemble at the note end for the configured extra duration
+(default total length 1.5 times the note). Concurrent marks at the same position
+extend it once, using the longest request. Notes ending there sustain; following
+notes/controllers and source-measure positions shift together. Caesuras insert
+silence (default 0.25 quarter beat); breath marks shorten the marked note
+(default 85% gate) without changing the bar length. Both are configurable.
+These hold policies add performed beat time; the synth's BPM-synchronized pulse
+continues through the hold. They are deliberate performance interpretations,
+not a claim that a fermata specifies a universal duration.

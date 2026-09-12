@@ -494,3 +494,140 @@ TEST(ChipMusicXml, ExplicitAttackReleaseOffsetsPreserveFractionalDurations)
     EXPECT_EQ(onsets[0].tick * 8, static_cast<Uint64>(song->info.ticks_per_quarter));
     EXPECT_DOUBLE_EQ(song->info.duration_seconds, 0.625);
 }
+
+TEST(ChipMusicXml, GraceNotesStealSpecifiedTimeAndKeepTheBarLength)
+{
+    const std::string grace = "<note><grace steal-time-following='25'/><pitch><step>D</step>"
+                              "<octave>4</octave></pitch><voice>1</voice></note>";
+    const auto song =
+        LoadXml(Score("<measure>" + grace + Note("1", "<voice>1</voice>") + "</measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 2u);
+    EXPECT_EQ(notes[0].a, 62);
+    EXPECT_EQ(notes[1].a, 60);
+    EXPECT_EQ(notes[0].tick, 0u);
+    EXPECT_EQ(notes[1].tick * 4, static_cast<Uint64>(song->info.ticks_per_quarter));
+    EXPECT_EQ(notes[0].duration * 4, static_cast<Uint64>(song->info.ticks_per_quarter));
+    EXPECT_DOUBLE_EQ(song->info.duration_seconds, 0.5);
+
+    const auto previous = LoadXml(
+        Score("<measure>" + Note("1") +
+              "<note><grace steal-time-previous='20'/><pitch><step>D</step><octave>4</octave>"
+              "</pitch></note></measure>"));
+    ASSERT_TRUE(previous) << SDL_GetError();
+    const auto before = Onsets(previous.get());
+    ASSERT_EQ(before.size(), 2u);
+    EXPECT_EQ(before[1].tick * 5, 4u * static_cast<Uint64>(previous->info.ticks_per_quarter));
+    EXPECT_DOUBLE_EQ(previous->info.duration_seconds, 0.5);
+}
+
+TEST(ChipMusicXml, AddedGraceTimeAndFermatasShiftTheEnsembleOnce)
+{
+    const auto song = LoadXml(
+        "<score-partwise><part-list><score-part id='a'><part-name>lead</part-name></score-part>"
+        "<score-part id='b'><part-name>bass</part-name></score-part></part-list>"
+        "<part id='a'><measure><note><grace make-time='0.25'/><pitch><step>D</step>"
+        "<octave>4</octave></pitch></note>" +
+        Note("1") +
+        "</measure></part>"
+        "<part id='b'><measure>" +
+        Note("1") + "</measure></part></score-partwise>");
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto a = Onsets(song.get(), 0);
+    const auto b = Onsets(song.get(), 1);
+    ASSERT_EQ(a.size(), 2u);
+    ASSERT_EQ(b.size(), 1u);
+    EXPECT_EQ(a[0].tick, 0u);
+    EXPECT_EQ(a[1].tick, b[0].tick);
+    EXPECT_EQ(b[0].tick * 4, static_cast<Uint64>(song->info.ticks_per_quarter));
+    EXPECT_DOUBLE_EQ(song->info.duration_seconds, 0.625);
+
+    const auto held = LoadXml(Score("<measure>" + Note("1", "<notations><fermata/></notations>") +
+                                    Note("1", "<chord/><notations><fermata/></notations>") +
+                                    Note("1") + "</measure>"));
+    ASSERT_TRUE(held) << SDL_GetError();
+    const auto holds = Onsets(held.get());
+    ASSERT_EQ(holds.size(), 3u);
+    EXPECT_EQ(holds[0].duration * 2, 3u * static_cast<Uint64>(held->info.ticks_per_quarter));
+    EXPECT_EQ(holds[2].tick, holds[0].duration);
+    EXPECT_DOUBLE_EQ(held->info.duration_seconds, 1.25);
+}
+
+TEST(ChipMusicXml, TrillsMordentsTurnsAndTremolosExpandIntoExpectedPitches)
+{
+    const auto trill = LoadXml(
+        Score("<measure><attributes><key><fifths>1</fifths></key></attributes>"
+              "<note><pitch><step>E</step><octave>4</octave></pitch><duration>1</duration>"
+              "<notations><ornaments><trill-mark/></ornaments></notations></note></measure>"));
+    ASSERT_TRUE(trill) << SDL_GetError();
+    const auto notes = Onsets(trill.get());
+    ASSERT_EQ(notes.size(), 8u);
+    for (size_t i = 0; i < notes.size(); ++i)
+    {
+        EXPECT_EQ(notes[i].a, i % 2 ? 66 : 64);
+        EXPECT_EQ(notes[i].tick * 8, i * static_cast<Uint64>(trill->info.ticks_per_quarter));
+    }
+    const auto turn = LoadXml(Score(
+        "<measure>" +
+        Note("1",
+             "<notations><ornaments><turn/>"
+             "<accidental-mark placement='below'>flat</accidental-mark></ornaments></notations>") +
+        "</measure>"));
+    ASSERT_TRUE(turn) << SDL_GetError();
+    const auto turned = Onsets(turn.get());
+    ASSERT_EQ(turned.size(), 4u);
+    EXPECT_EQ(turned[0].a, 62);
+    EXPECT_EQ(turned[1].a, 60);
+    EXPECT_EQ(turned[2].a, 58);
+    EXPECT_EQ(turned[3].a, 60);
+    const auto mordent = LoadXml(Score("<measure>" +
+                                       Note("1", "<notations><ornaments><mordent/>"
+                                                 "</ornaments></notations>") +
+                                       "</measure>"));
+    ASSERT_TRUE(mordent) << SDL_GetError();
+    const auto mordented = Onsets(mordent.get());
+    ASSERT_EQ(mordented.size(), 3u);
+    EXPECT_EQ(mordented[0].a, 60);
+    EXPECT_EQ(mordented[1].a, 59);
+    EXPECT_EQ(mordented[2].a, 60);
+    const auto tremolo = LoadXml(
+        Score("<measure>" +
+              Note("1", "<notations><ornaments>"
+                        "<tremolo type='start'>3</tremolo></ornaments></notations>") +
+              "<note><pitch><step>E</step><octave>4</octave></pitch><duration>1</duration>"
+              "<notations><ornaments><tremolo type='stop'>3</tremolo></ornaments></notations>"
+              "</note></measure>"));
+    ASSERT_TRUE(tremolo) << SDL_GetError();
+    const auto alternated = Onsets(tremolo.get());
+    ASSERT_EQ(alternated.size(), 16u);
+    for (size_t i = 0; i < alternated.size(); ++i)
+        EXPECT_EQ(alternated[i].a, i % 2 ? 64 : 60);
+    EXPECT_DOUBLE_EQ(tremolo->info.duration_seconds, 1);
+}
+
+TEST(ChipMusicXml, RolledChordsRespectDirectionAndCaesurasLeaveSilence)
+{
+    const auto roll = LoadXml(
+        Score("<measure>" + Note("1", "<notations><arpeggiate direction='down'/></notations>") +
+              "<note><chord/><pitch><step>E</step><octave>4</octave></pitch><duration>1</duration>"
+              "<notations><arpeggiate direction='down'/></notations></note></measure>"));
+    ASSERT_TRUE(roll) << SDL_GetError();
+    const auto notes = Onsets(roll.get());
+    ASSERT_EQ(notes.size(), 2u);
+    EXPECT_EQ(notes[0].a, 64);
+    EXPECT_EQ(notes[0].tick, 0u);
+    EXPECT_EQ(notes[1].a, 60);
+    EXPECT_EQ(notes[1].tick * 8, static_cast<Uint64>(roll->info.ticks_per_quarter));
+    EXPECT_DOUBLE_EQ(roll->info.duration_seconds, 0.5);
+    const auto pause = LoadXml(Score("<measure>" +
+                                     Note("1", "<notations><articulations><caesura/>"
+                                               "</articulations></notations>") +
+                                     Note("1") + "</measure>"));
+    ASSERT_TRUE(pause) << SDL_GetError();
+    const auto paused = Onsets(pause.get());
+    ASSERT_EQ(paused.size(), 2u);
+    EXPECT_EQ(paused[0].duration, static_cast<Uint64>(pause->info.ticks_per_quarter));
+    EXPECT_EQ(paused[1].tick * 4, 5u * static_cast<Uint64>(pause->info.ticks_per_quarter));
+    EXPECT_DOUBLE_EQ(pause->info.duration_seconds, 1.125);
+}

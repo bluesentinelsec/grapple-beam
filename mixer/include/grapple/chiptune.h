@@ -178,6 +178,8 @@ extern "C"
         double staccato_gate;      /**< Fraction of notated length, 0 selects 0.5. */
         double staccatissimo_gate; /**< Fraction of notated length, 0 selects 0.25. */
         double portato_gate;       /**< Detached-legato fraction, 0 selects 0.75. */
+        double breath_gate;        /**< Breath-mark gate fraction, 0 selects 0.85. */
+        double caesura_beats;      /**< Ensemble pause in quarter beats, 0 selects 0.25. */
         double grace_beats; /**< Default grace-note duration in quarter beats; 0 selects 0.125. */
         double ornament_beats; /**< Default ornament subdivision; 0 selects 0.125 quarter beats. */
         double arpeggio_beats; /**< Total rolled-chord spread; 0 selects 0.125 quarter beats. */
