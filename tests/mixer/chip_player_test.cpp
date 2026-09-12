@@ -829,3 +829,56 @@ TEST_F(ChipPlayer, HarmonyDefaultsCanBeAppliedToAnotherInstrument)
 }
 
 } // namespace
+
+TEST_F(ChipPlayer, PerNotePitchCurvesAreCopiedValidatedAndBlockIndependent)
+{
+    using Composer = std::unique_ptr<Grapple_ChipComposer, decltype(&Grapple_DestroyChipComposer)>;
+    Composer composer(Grapple_CreateChipComposer(2, 480), Grapple_DestroyChipComposer);
+    ASSERT_TRUE(composer);
+    Grapple_ChipExpression expression;
+    Grapple_GetChipExpressionDefaults(&expression);
+    expression.bend_peak = 7;
+    expression.bend_end = 0;
+    expression.vibrato_depth = 0.2f;
+    const Grapple_ChipNote note = {0, 60, 90, 0, 480};
+    ASSERT_TRUE(Grapple_AddChipNoteEx(composer.get(), &note, &expression));
+    expression.tuning = std::numeric_limits<float>::quiet_NaN();
+    EXPECT_FALSE(Grapple_AddChipNoteEx(composer.get(), &note, &expression));
+    const Grapple_ChipNote plain = {1, 48, 80, 0, 480};
+    ASSERT_TRUE(Grapple_AddChipNote(composer.get(), &plain));
+    Song song(Grapple_BuildChipSong(composer.get(), 480), Grapple_DestroyChipSong);
+    ASSERT_TRUE(song);
+    composer.reset();
+    EXPECT_EQ(song->expression_count, 1u);
+    EXPECT_EQ(song->tracks[0].note_count, 1u);
+    auto a = MakePlayer(song.get(), 16, false, 8000);
+    auto b = MakePlayer(song.get(), 16, false, 8000);
+    ASSERT_TRUE(a);
+    ASSERT_TRUE(b);
+    std::vector<float> whole(8000), blocks(8000);
+    ASSERT_EQ(Grapple_RenderChipPlayer(a.get(), whole.data(), 4000), 4000);
+    int offset = 0;
+    while (offset < 4000)
+    {
+        const int frames = std::min(73, 4000 - offset);
+        ASSERT_EQ(Grapple_RenderChipPlayer(b.get(), blocks.data() + offset * 2, frames), frames);
+        offset += frames;
+    }
+    EXPECT_EQ(whole, blocks);
+    for (float sample : whole)
+        ASSERT_TRUE(std::isfinite(sample));
+}
+
+TEST_F(ChipPlayer, NoteExpressionChangesFrequencyWithoutSharedChannelBend)
+{
+    ChipSynthVoice plain, bent;
+    Chip_VoiceStart(&plain, GRAPPLE_CHIP_PRESET_LEAD, 60, 90, 48000);
+    Chip_VoiceStart(&bent, GRAPPLE_CHIP_PRESET_LEAD, 60, 90, 48000);
+    bent.expression.bend_peak = 12;
+    bent.expression.bend_end = 12;
+    const float pitch = std::pow(2.0f, Chip_ExpressionPitch(&bent.expression, 1, 1) / 12);
+    Chip_VoiceSample(&plain, 1, 0, 48000);
+    Chip_VoiceSample(&bent, pitch, 0, 48000);
+    EXPECT_NEAR(bent.phase, plain.phase * 2, 0.0000001);
+    EXPECT_FLOAT_EQ(Chip_ExpressionPitch(&plain.expression, 1, 1), 0);
+}

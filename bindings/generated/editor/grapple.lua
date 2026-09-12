@@ -14305,6 +14305,13 @@ function GrappleC.ActorWorld(actor) end
 ---@return boolean
 function GrappleC.AddChipNote(composer, note) end
 
+---Calls `Grapple_AddChipNoteEx`.
+---@param composer userdata
+---@param note table
+---@param expression table
+---@return boolean
+function GrappleC.AddChipNoteEx(composer, note, expression) end
+
 ---Calls `Grapple_AddChipTempo`.
 ---@param composer userdata
 ---@param tick integer
@@ -15860,6 +15867,10 @@ function GrappleC.GetChipDiagnosticCount(song) end
 ---@param index integer
 ---@return string?
 function GrappleC.GetChipDiagnosticMessage(song, index) end
+
+---Calls `Grapple_GetChipExpressionDefaults`.
+---@return table
+function GrappleC.GetChipExpressionDefaults() end
 
 ---Calls `Grapple_GetChipImportDefaults`.
 ---@return boolean, table

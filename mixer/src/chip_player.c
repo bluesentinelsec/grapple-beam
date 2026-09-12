@@ -191,7 +191,37 @@ static void StartNote(Grapple_ChipPlayer *p, const ChipEvent *event)
                 Chip_VoiceRelease(v, p->sample_rate);
         }
     }
+    const Grapple_ChipExpression *expression =
+        event->expression ? &p->song->expressions[event->expression - 1] : NULL;
+    bool legato = false;
+    if (expression && expression->legato && preset != GRAPPLE_CHIP_PRESET_DRUMS)
+        for (int i = 0; i < p->voice_count; ++i)
+        {
+            ChipSynthVoice *v = &p->voices[i];
+            if (v->active && v->track == event->track && v->preset == preset &&
+                v->expression.lane == expression->lane && v->start_beat < p->beat &&
+                (!legato || v->serial > selected->serial))
+            {
+                selected = v;
+                legato = true;
+            }
+        }
+    const ChipSynthVoice prior = *selected;
     Chip_VoiceStart(selected, preset, event->a, event->b, p->sample_rate);
+    if (legato)
+    {
+        selected->phase = prior.phase;
+        selected->mod_phase = prior.mod_phase;
+        selected->lfo_phase = prior.lfo_phase;
+        selected->envelope = prior.envelope;
+        selected->age = prior.age;
+        selected->low = prior.low;
+        selected->band = prior.band;
+    }
+    if (expression)
+        selected->expression = *expression;
+    selected->start_beat = p->beat;
+    selected->duration_beats = (double)event->duration / p->song->info.ticks_per_quarter;
     selected->track = event->track;
     selected->channel = EventChannel(p, event);
     selected->note_id = event->note_id;
@@ -381,8 +411,13 @@ int Grapple_RenderChipPlayer(Grapple_ChipPlayer *p, float *stereo, int frames)
             const float shape = pulse[v->preset] * pulse[v->preset];
             const float gain = 1.0f - effects->pulse_depth * (1.0f - shape);
             const float sample =
-                Chip_VoiceSampleMotion(v, channel->pitch, channel->modulation, p->sample_rate,
-                                       effects->motion, pulse[v->preset]) *
+                Chip_VoiceSampleMotion(
+                    v,
+                    channel->pitch *
+                        SDL_powf(2, Chip_ExpressionPitch(&v->expression, p->beat - v->start_beat,
+                                                         v->duration_beats) /
+                                        12),
+                    channel->modulation, p->sample_rate, effects->motion, pulse[v->preset]) *
                 gain * p->parts[v->track].gain * channel->volume * channel->expression;
             buses[v->preset][0] += sample * channel->pan_left;
             buses[v->preset][1] += sample * channel->pan_right;

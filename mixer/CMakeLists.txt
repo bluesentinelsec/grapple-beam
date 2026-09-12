@@ -66,6 +66,9 @@ add_library(Grapple_Mixer STATIC
   src/chip_xml.c
   src/chip_musicxml.c
   src/chip_score_order.c
+  src/chip_score.c
+  src/chip_expression.c
+  src/chip_score_expression.c
   src/chip_archive.c
   src/chip_inflate.c
 )
@@ -108,9 +111,9 @@ target_include_directories(Grapple_Mixer SYSTEM PRIVATE ${CMAKE_CURRENT_SOURCE_D
 
 # Original streaming synth code follows the project's strict C warning policy.
 if(MSVC)
-  set_source_files_properties(src/chip_midi.c src/chip_voice.c src/chip_player.c src/chip_song.c src/chip_effects.c src/chip_xml.c src/chip_musicxml.c src/chip_archive.c src/chip_inflate.c src/chip_score_order.c
+  set_source_files_properties(src/chip_midi.c src/chip_voice.c src/chip_player.c src/chip_song.c src/chip_effects.c src/chip_xml.c src/chip_musicxml.c src/chip_archive.c src/chip_inflate.c src/chip_score_order.c src/chip_score.c src/chip_expression.c src/chip_score_expression.c
     PROPERTIES COMPILE_OPTIONS "/W4;/WX")
 else()
-  set_source_files_properties(src/chip_midi.c src/chip_voice.c src/chip_player.c src/chip_song.c src/chip_effects.c src/chip_xml.c src/chip_musicxml.c src/chip_archive.c src/chip_inflate.c src/chip_score_order.c
+  set_source_files_properties(src/chip_midi.c src/chip_voice.c src/chip_player.c src/chip_song.c src/chip_effects.c src/chip_xml.c src/chip_musicxml.c src/chip_archive.c src/chip_inflate.c src/chip_score_order.c src/chip_score.c src/chip_expression.c src/chip_score_expression.c
     PROPERTIES COMPILE_OPTIONS "-Wall;-Wextra;-Wpedantic;-Werror;-Wconversion;-Wshadow")
 endif()

@@ -43,8 +43,11 @@ TEST_F(ChipBindings, CppComposesDeclarativeNotesWithRaii)
     ASSERT_TRUE(composer->SetChipPart(0, "harmony", GRAPPLE_CHIP_PRESET_HARMONY, 1).ok());
     const Grapple_ChipNote notes[] = {
         {0, 48, 80, 0, 1920}, {0, 52, 80, 0, 1920}, {0, 55, 80, 0, 1920}};
+    Grapple_ChipExpression expression;
+    grapple::ext::GetChipExpressionDefaults(&expression);
+    expression.vibrato_depth = 0.1f;
     for (const auto &note : notes)
-        ASSERT_TRUE(composer->AddChipNote(&note).ok());
+        ASSERT_TRUE(composer->AddChipNoteEx(&note, &expression).ok());
     auto song = grapple::ext::ChipSong::BuildChipSong(composer->get(), 1920);
     ASSERT_TRUE(song.ok());
     auto player = grapple::ext::ChipPlayer::CreateChipPlayer(song->get(), 8000, 64, false);
@@ -81,7 +84,10 @@ local notes = {
     {track=0, note=52, velocity=80, start_tick=0, duration_ticks=1920},
     {track=0, note=55, velocity=80, start_tick=0, duration_ticks=1920},
 }
-for _, note in ipairs(notes) do assert(G.AddChipNote(composer, note)) end
+local expression = G.GetChipExpressionDefaults()
+assert(expression.gain == 1)
+expression.vibrato_depth = 0.1
+for _, note in ipairs(notes) do assert(G.AddChipNoteEx(composer, note, expression)) end
 local song = assert(G.BuildChipSong(composer, 1920))
 local ok, info = G.ReadChipSongInfo(song)
 assert(ok and info.duration_seconds == 2)
@@ -131,7 +137,10 @@ composer = g.CreateChipComposer(1, 480)
 raise 'composer' unless composer
 raise 'part' unless g.SetChipPart(composer, 0, 'harmony', g::GRAPPLE_CHIP_PRESET_HARMONY, 1)
 notes = [48, 52, 55].map { |pitch| {track: 0, note: pitch, velocity: 80, start_tick: 0, duration_ticks: 1920} }
-notes.each { |note| raise 'note' unless g.AddChipNote(composer, note) }
+expression = g.GetChipExpressionDefaults()
+raise 'expression' unless expression[:gain] == 1
+expression[:vibrato_depth] = 0.1
+notes.each { |note| raise 'note' unless g.AddChipNoteEx(composer, note, expression) }
 song = g.BuildChipSong(composer, 1920)
 ok, info = g.ReadChipSongInfo(song)
 raise 'duration' unless ok && info[:duration_seconds] == 2

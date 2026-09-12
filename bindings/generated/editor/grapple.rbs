@@ -2474,6 +2474,7 @@ module GrappleC
   def self.ActorWakeBody: (untyped actor) -> void
   def self.ActorWorld: (untyped actor) -> Hash[Symbol, untyped]
   def self.AddChipNote: (untyped composer, Hash[Symbol, untyped] note) -> bool
+  def self.AddChipNoteEx: (untyped composer, Hash[Symbol, untyped] note, Hash[Symbol, untyped] expression) -> bool
   def self.AddChipTempo: (untyped composer, Integer tick, Float bpm) -> bool
   def self.AddDarkZone: (untyped scene, Hash[Symbol, untyped] rect, Hash[Symbol, untyped] ambient) -> bool
   def self.AddLight: (untyped scene, Hash[Symbol, untyped] light) -> bool
@@ -2758,6 +2759,7 @@ module GrappleC
   def self.GamepadStopRumble: (untyped engine, Integer player) -> void
   def self.GetChipDiagnosticCount: (untyped song) -> Integer
   def self.GetChipDiagnosticMessage: (untyped song, Integer index) -> String?
+  def self.GetChipExpressionDefaults: () -> Hash[Symbol, untyped]
   def self.GetChipImportDefaults: () -> [bool, Hash[Symbol, untyped]]
   def self.GetChipPlayerPeakVoices: (untyped player) -> Integer
   def self.GetChipPresetEffects: (Integer preset) -> [bool, Hash[Symbol, untyped]]

@@ -36,7 +36,7 @@ Scores that exceed exact arithmetic/resource limits fail explicitly.
 
 ## Pending implementation
 
-Expressive articulations/ornaments and guitar techniques, microtonal pitch,
+Ornaments, time-changing expression, remaining guitar techniques,
 advanced transport and the final support matrix remain tracked on the issue.
 Grace notes currently fail explicitly. Other expressive constructs
 are not yet guaranteed to affect playback; this importer is under development.
@@ -93,3 +93,31 @@ or apply an extra octave shift: the performed notes are already encoded in the
 file. Explicit `transpose` instructions still apply to written pitches. Cue
 notes do not generate audio. Explicit dynamics use the MusicXML forte reference
 of velocity 90, and sound offsets override containing direction offsets.
+
+## Per-note expression
+
+Fractional pitch alterations use equal-tempered semitone offsets at synthesis time,
+without detuning other notes. `Grapple_AddChipNoteEx` exposes the same per-note tuning,
+three-point bend curve, beat-based vibrato, gain, brightness, noise and legato lane
+controls to declarative compositions. Initialize with `Grapple_GetChipExpressionDefaults`.
+Curves and controls are copied into immutable songs and available in C++, Lua and Ruby.
+
+MusicXML bends support pre-bends and bend/release pairs; first/last-beat percentages
+bound the curve. Slides bend continuously over the latter half of the source note;
+glissandi use chromatic semitone steps. Endpoints match by part, staff, voice,
+instrument and span number. Slurs and hammer-ons/pull-offs reuse a voice envelope
+within the logical line; chord notes at the same onset remain independent.
+
+Staccato, staccatissimo and detached-legato default to 50%, 25% and 75% gates,
+configurable through the import policy. Tenuto retains the full written duration.
+Accents add 16 velocity units; marcato adds 26, unless explicit note dynamics already
+supply performed strength. Attack/release offsets use exact division units.
+Derived articulation gates round to the score resolution, refined to at least
+1/1000 quarter beat where needed; encoded durations are never quantized.
+
+Harmonic marks currently select a brighter, quieter tone using the encoded pitch;
+stopped/palm-muted notes use darker, shorter gates. Cross noteheads on pitched
+notes blend noise and shorten the gate; parenthesized noteheads reduce gain.
+Tap/snap-pizzicato/fingernail markings sharpen attack strength and brightness.
+These are deliberate C64-style timbral approximations, not acoustic instrument
+models. Additional exporter-specific technical text remains under development.

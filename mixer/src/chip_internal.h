@@ -23,7 +23,9 @@ extern "C"
         Uint8 status;
         Uint8 a;
         Uint8 b;
-        Uint32 note_id; /* Zero preserves MIDI's oldest matching note-off semantics. */
+        Uint64 duration;   /* Nominal note duration in ticks, for per-note curves. */
+        Uint32 expression; /* One-based expression index; zero is neutral. */
+        Uint32 note_id;    /* Zero preserves MIDI's oldest matching note-off semantics. */
     } ChipEvent;
 
     typedef struct ChipMeasurePosition
@@ -44,6 +46,8 @@ extern "C"
         size_t capacity;
         Uint64 end_time;
         bool independent_parts;
+        Grapple_ChipExpression *expressions;
+        size_t expression_count, expression_capacity;
         Grapple_ChipDiagnostic *diagnostics;
         char **diagnostic_messages;
         int diagnostic_count;
@@ -51,6 +55,11 @@ extern "C"
         int measure_count;
     };
 
+    bool Chip_AppendExpression(Grapple_ChipSong *song, const Grapple_ChipExpression *expression,
+                               Uint32 *index);
+    bool Chip_ValidExpression(const Grapple_ChipExpression *expression);
+    float Chip_ExpressionPitch(const Grapple_ChipExpression *expression, double elapsed,
+                               double duration);
     Grapple_ChipSong *Chip_NewSong(int tracks, int ppqn);
     bool Chip_AppendEvent(Grapple_ChipSong *song, ChipEvent event);
     bool Chip_ResolveTiming(Grapple_ChipSong *song);

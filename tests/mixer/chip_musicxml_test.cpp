@@ -429,3 +429,68 @@ TEST(ChipMusicXml, NumberedEndingsDetermineAdditionalRepeatPasses)
     for (int i = 0; i < 6; ++i)
         EXPECT_EQ(song->measures[i].source, order[i]);
 }
+
+TEST(ChipMusicXml, MicrotonalBendReleaseAndArticulationAreIndependent)
+{
+    const auto song = LoadXml(
+        Score("<measure><attributes><divisions>1</divisions></attributes>"
+              "<note><pitch><step>C</step><alter>0.5</alter><octave>4</octave></pitch><duration>1</"
+              "duration>"
+              "<notations><technical><bend><bend-alter>2</bend-alter></bend>"
+              "<bend><bend-alter>2</bend-alter><release/></bend></technical></notations></note>" +
+              Note("1", "<chord/><voice>other</voice><notations><articulations><staccato/><accent/>"
+                        "</articulations></notations>") +
+              "</measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 2u);
+    const auto &bend = song->expressions[notes[0].expression - 1];
+    const auto &plain = song->expressions[notes[1].expression - 1];
+    EXPECT_FLOAT_EQ(bend.tuning, 0.5f);
+    EXPECT_FLOAT_EQ(Chip_ExpressionPitch(&bend, 0, 1), 0.5f);
+    EXPECT_FLOAT_EQ(Chip_ExpressionPitch(&bend, 0.5, 1), 2.5f);
+    EXPECT_FLOAT_EQ(Chip_ExpressionPitch(&bend, 1, 1), 0.5f);
+    EXPECT_FLOAT_EQ(Chip_ExpressionPitch(&plain, 0.5, 1), 0);
+    EXPECT_GT(notes[1].b, notes[0].b);
+    for (size_t i = 0; i < song->count; ++i)
+        if ((song->events[i].status >> 4) == 8 && song->events[i].note_id == notes[1].note_id)
+            EXPECT_EQ(song->events[i].tick * 2, static_cast<Uint64>(song->info.ticks_per_quarter));
+}
+
+TEST(ChipMusicXml, SlidesAndSlursFollowLogicalVoices)
+{
+    const auto song = LoadXml(
+        Score("<measure>" +
+              Note("1", "<voice>a</voice><notations><slide type='start'/>"
+                        "<slur type='start'/></notations>") +
+              "<backup><duration>1</duration></backup>" + Note("2", "<voice>b</voice>") +
+              "<backup><duration>1</duration></backup>"
+              "<note><pitch><step>E</step><octave>4</octave></pitch><duration>1</"
+              "duration><voice>a</voice>"
+              "<notations><slide type='stop'/><slur type='stop'/></notations></note></measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 3u);
+    const auto &slide = song->expressions[notes[0].expression - 1];
+    const auto &other = song->expressions[notes[1].expression - 1];
+    const auto &target = song->expressions[notes[2].expression - 1];
+    EXPECT_FLOAT_EQ(slide.bend_end, 4);
+    EXPECT_NE(slide.lane, other.lane);
+    EXPECT_EQ(slide.lane, target.lane);
+    EXPECT_TRUE(target.legato);
+    EXPECT_FALSE(other.legato);
+    EXPECT_FALSE(LoadXml(Score(
+        "<measure>" + Note("1", "<notations><slide type='stop'/></notations>") + "</measure>")));
+}
+
+TEST(ChipMusicXml, ExplicitAttackReleaseOffsetsPreserveFractionalDurations)
+{
+    auto xml = Score("<measure>" + Note("1") + "</measure>");
+    xml.replace(xml.find("<note>"), 6, "<note attack='0.125' release='0.25'>");
+    const auto song = LoadXml(xml);
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto onsets = Onsets(song.get());
+    ASSERT_EQ(onsets.size(), 1u);
+    EXPECT_EQ(onsets[0].tick * 8, static_cast<Uint64>(song->info.ticks_per_quarter));
+    EXPECT_DOUBLE_EQ(song->info.duration_seconds, 0.625);
+}

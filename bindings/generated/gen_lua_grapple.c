@@ -293,12 +293,71 @@ static void GenPush_Grapple_ChipEffects(lua_State *L, const Grapple_ChipEffects 
     lua_setfield(L, -2, "pulse_depth");
 }
 
+static void GenRead_Grapple_ChipExpression(lua_State *L, int idx, Grapple_ChipExpression *out)
+{
+    memset(out, 0, sizeof(*out));
+    if (!lua_istable(L, idx)) { return; }
+    out->tuning = (float)GrappleGen_LuaFieldNum(L, idx, "tuning");
+    out->gain = (float)GrappleGen_LuaFieldNum(L, idx, "gain");
+    out->brightness = (float)GrappleGen_LuaFieldNum(L, idx, "brightness");
+    out->noise = (float)GrappleGen_LuaFieldNum(L, idx, "noise");
+    out->bend_start = (float)GrappleGen_LuaFieldNum(L, idx, "bend_start");
+    out->bend_peak = (float)GrappleGen_LuaFieldNum(L, idx, "bend_peak");
+    out->bend_end = (float)GrappleGen_LuaFieldNum(L, idx, "bend_end");
+    out->bend_first = (float)GrappleGen_LuaFieldNum(L, idx, "bend_first");
+    out->bend_middle = (float)GrappleGen_LuaFieldNum(L, idx, "bend_middle");
+    out->bend_last = (float)GrappleGen_LuaFieldNum(L, idx, "bend_last");
+    out->vibrato_depth = (float)GrappleGen_LuaFieldNum(L, idx, "vibrato_depth");
+    out->vibrato_beats = (float)GrappleGen_LuaFieldNum(L, idx, "vibrato_beats");
+    out->lane = (int)GrappleGen_LuaFieldInt(L, idx, "lane");
+    out->legato = (bool)GrappleGen_LuaFieldBool(L, idx, "legato");
+    out->stepped_pitch = (bool)GrappleGen_LuaFieldBool(L, idx, "stepped_pitch");
+}
+
+static void GenPush_Grapple_ChipExpression(lua_State *L, const Grapple_ChipExpression *in)
+{
+    lua_createtable(L, 0, 15);
+    lua_pushnumber(L, (lua_Number)in->tuning);
+    lua_setfield(L, -2, "tuning");
+    lua_pushnumber(L, (lua_Number)in->gain);
+    lua_setfield(L, -2, "gain");
+    lua_pushnumber(L, (lua_Number)in->brightness);
+    lua_setfield(L, -2, "brightness");
+    lua_pushnumber(L, (lua_Number)in->noise);
+    lua_setfield(L, -2, "noise");
+    lua_pushnumber(L, (lua_Number)in->bend_start);
+    lua_setfield(L, -2, "bend_start");
+    lua_pushnumber(L, (lua_Number)in->bend_peak);
+    lua_setfield(L, -2, "bend_peak");
+    lua_pushnumber(L, (lua_Number)in->bend_end);
+    lua_setfield(L, -2, "bend_end");
+    lua_pushnumber(L, (lua_Number)in->bend_first);
+    lua_setfield(L, -2, "bend_first");
+    lua_pushnumber(L, (lua_Number)in->bend_middle);
+    lua_setfield(L, -2, "bend_middle");
+    lua_pushnumber(L, (lua_Number)in->bend_last);
+    lua_setfield(L, -2, "bend_last");
+    lua_pushnumber(L, (lua_Number)in->vibrato_depth);
+    lua_setfield(L, -2, "vibrato_depth");
+    lua_pushnumber(L, (lua_Number)in->vibrato_beats);
+    lua_setfield(L, -2, "vibrato_beats");
+    lua_pushinteger(L, (lua_Integer)in->lane);
+    lua_setfield(L, -2, "lane");
+    lua_pushboolean(L, (int)in->legato);
+    lua_setfield(L, -2, "legato");
+    lua_pushboolean(L, (int)in->stepped_pitch);
+    lua_setfield(L, -2, "stepped_pitch");
+}
+
 static void GenRead_Grapple_ChipImportOptions(lua_State *L, int idx, Grapple_ChipImportOptions *out)
 {
     memset(out, 0, sizeof(*out));
     if (!lua_istable(L, idx)) { return; }
     out->strict = (bool)GrappleGen_LuaFieldBool(L, idx, "strict");
     out->staff = (int)GrappleGen_LuaFieldInt(L, idx, "staff");
+    out->staccato_gate = (double)GrappleGen_LuaFieldNum(L, idx, "staccato_gate");
+    out->staccatissimo_gate = (double)GrappleGen_LuaFieldNum(L, idx, "staccatissimo_gate");
+    out->portato_gate = (double)GrappleGen_LuaFieldNum(L, idx, "portato_gate");
     out->grace_beats = (double)GrappleGen_LuaFieldNum(L, idx, "grace_beats");
     out->ornament_beats = (double)GrappleGen_LuaFieldNum(L, idx, "ornament_beats");
     out->arpeggio_beats = (double)GrappleGen_LuaFieldNum(L, idx, "arpeggio_beats");
@@ -308,11 +367,17 @@ static void GenRead_Grapple_ChipImportOptions(lua_State *L, int idx, Grapple_Chi
 
 static void GenPush_Grapple_ChipImportOptions(lua_State *L, const Grapple_ChipImportOptions *in)
 {
-    lua_createtable(L, 0, 7);
+    lua_createtable(L, 0, 10);
     lua_pushboolean(L, (int)in->strict);
     lua_setfield(L, -2, "strict");
     lua_pushinteger(L, (lua_Integer)in->staff);
     lua_setfield(L, -2, "staff");
+    lua_pushnumber(L, (lua_Number)in->staccato_gate);
+    lua_setfield(L, -2, "staccato_gate");
+    lua_pushnumber(L, (lua_Number)in->staccatissimo_gate);
+    lua_setfield(L, -2, "staccatissimo_gate");
+    lua_pushnumber(L, (lua_Number)in->portato_gate);
+    lua_setfield(L, -2, "portato_gate");
     lua_pushnumber(L, (lua_Number)in->grace_beats);
     lua_setfield(L, -2, "grace_beats");
     lua_pushnumber(L, (lua_Number)in->ornament_beats);
@@ -1542,6 +1607,27 @@ static int GenL_Grapple_AddChipNote(lua_State *L)
         a1 = &tmp1;
     }
     bool rv = Grapple_AddChipNote(a0, a1);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
+static int GenL_Grapple_AddChipNoteEx(lua_State *L)
+{
+    (void)L;
+    Grapple_ChipComposer *a0 = (Grapple_ChipComposer *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_ChipComposer");
+    Grapple_ChipNote tmp1;
+    const Grapple_ChipNote *a1 = NULL;
+    if (!lua_isnoneornil(L, 2)) {
+        GenRead_Grapple_ChipNote(L, 2, &tmp1);
+        a1 = &tmp1;
+    }
+    Grapple_ChipExpression tmp2;
+    const Grapple_ChipExpression *a2 = NULL;
+    if (!lua_isnoneornil(L, 3)) {
+        GenRead_Grapple_ChipExpression(L, 3, &tmp2);
+        a2 = &tmp2;
+    }
+    bool rv = Grapple_AddChipNoteEx(a0, a1, a2);
     lua_pushboolean(L, (int)rv);
     return 1;
 }
@@ -4382,6 +4468,16 @@ static int GenL_Grapple_GetChipDiagnosticMessage(lua_State *L)
     return 1;
 }
 
+static int GenL_Grapple_GetChipExpressionDefaults(lua_State *L)
+{
+    (void)L;
+    Grapple_ChipExpression out0;
+    memset(&out0, 0, sizeof(out0));
+    Grapple_GetChipExpressionDefaults(&out0);
+    GenPush_Grapple_ChipExpression(L, &out0);
+    return 1;
+}
+
 static int GenL_Grapple_GetChipImportDefaults(lua_State *L)
 {
     (void)L;
@@ -7166,7 +7262,7 @@ static int GenL_Grapple_WheelJointDefSetSpring(lua_State *L)
 int GrappleGen_OpenLua_grapple(lua_State *L);
 int GrappleGen_OpenLua_grapple(lua_State *L)
 {
-    lua_createtable(L, 0, 644);
+    lua_createtable(L, 0, 646);
     lua_pushcfunction(L, GenL_Grapple_ActionBind);
     lua_setfield(L, -2, "ActionBind");
     lua_pushcfunction(L, GenL_Grapple_ActionBindAxis);
@@ -7337,6 +7433,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "ActorWorld");
     lua_pushcfunction(L, GenL_Grapple_AddChipNote);
     lua_setfield(L, -2, "AddChipNote");
+    lua_pushcfunction(L, GenL_Grapple_AddChipNoteEx);
+    lua_setfield(L, -2, "AddChipNoteEx");
     lua_pushcfunction(L, GenL_Grapple_AddChipTempo);
     lua_setfield(L, -2, "AddChipTempo");
     lua_pushcfunction(L, GenL_Grapple_AddDarkZone);
@@ -7905,6 +8003,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GetChipDiagnosticCount");
     lua_pushcfunction(L, GenL_Grapple_GetChipDiagnosticMessage);
     lua_setfield(L, -2, "GetChipDiagnosticMessage");
+    lua_pushcfunction(L, GenL_Grapple_GetChipExpressionDefaults);
+    lua_setfield(L, -2, "GetChipExpressionDefaults");
     lua_pushcfunction(L, GenL_Grapple_GetChipImportDefaults);
     lua_setfield(L, -2, "GetChipImportDefaults");
     lua_pushcfunction(L, GenL_Grapple_GetChipPlayerPeakVoices);

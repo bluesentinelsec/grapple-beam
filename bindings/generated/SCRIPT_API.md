@@ -2500,6 +2500,7 @@ returns as an array.
 | `GrappleC.ActorWakeBody(actor: Grapple_Actor)` | nil |
 | `GrappleC.ActorWorld(actor: Grapple_Actor)` | Grapple_ActorTransform table |
 | `GrappleC.AddChipNote(composer: Grapple_ChipComposer, note: Grapple_ChipNote table)` | boolean |
+| `GrappleC.AddChipNoteEx(composer: Grapple_ChipComposer, note: Grapple_ChipNote table, expression: Grapple_ChipExpression table)` | boolean |
 | `GrappleC.AddChipTempo(composer: Grapple_ChipComposer, tick: integer, bpm: number)` | boolean |
 | `GrappleC.AddDarkZone(scene: Grapple_LightScene, rect: SDL_FRect table, ambient: SDL_FColor table)` | boolean |
 | `GrappleC.AddLight(scene: Grapple_LightScene, light: Grapple_Light table)` | boolean |
@@ -2784,6 +2785,7 @@ returns as an array.
 | `GrappleC.GamepadStopRumble(engine: Grapple_Engine, player: integer)` | nil |
 | `GrappleC.GetChipDiagnosticCount(song: Grapple_ChipSong)` | integer |
 | `GrappleC.GetChipDiagnosticMessage(song: Grapple_ChipSong, index: integer)` | string|nil |
+| `GrappleC.GetChipExpressionDefaults()` | expression: Grapple_ChipExpression table |
 | `GrappleC.GetChipImportDefaults()` | boolean, options: Grapple_ChipImportOptions table |
 | `GrappleC.GetChipPlayerPeakVoices(player: Grapple_ChipPlayer)` | integer |
 | `GrappleC.GetChipPresetEffects(preset: integer)` | boolean, effects: Grapple_ChipEffects table |

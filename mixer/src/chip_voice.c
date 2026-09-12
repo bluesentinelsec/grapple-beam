@@ -45,6 +45,7 @@ void Chip_VoiceStart(ChipSynthVoice *v, Grapple_ChipPreset preset, int note, int
                      int sample_rate)
 {
     SDL_zero(*v);
+    Grapple_GetChipExpressionDefaults(&v->expression);
     v->active = true;
     v->held = true;
     v->preset = preset;
@@ -154,6 +155,7 @@ float Chip_VoiceSampleMotion(ChipSynthVoice *v, float bend, float modulation, in
     float filter =
         v->cutoff * (v->preset == GRAPPLE_CHIP_PRESET_BASS ? 0.40f + 0.60f * v->envelope : 1.0f);
     filter *= 1.0f - motion * 0.82f * (1.0f - pulse);
+    filter = SDL_min(filter * v->expression.brightness, 0.65f);
     float sample = 0.0f;
     for (int i = 0; i < CHIP_OVERSAMPLE; ++i)
     {
@@ -190,6 +192,13 @@ float Chip_VoiceSampleMotion(ChipSynthVoice *v, float bend, float modulation, in
         }
         else
             wave = Pulse(v->phase, step, duty);
+        if (v->expression.noise > 0 && !v->drum)
+        {
+            const Uint32 feedback = ((v->noise >> 22) ^ (v->noise >> 17)) & 1u;
+            v->noise = ((v->noise << 1) | feedback) & 0x7fffffu;
+            wave = wave * (1 - v->expression.noise) +
+                   ((v->noise & 1u) ? 1.0f : -1.0f) * v->expression.noise;
+        }
         const float high = wave - v->low - (1.25f - motion * 0.55f) * v->band;
         v->band += filter * high;
         v->low += filter * v->band;
@@ -203,7 +212,7 @@ float Chip_VoiceSampleMotion(ChipSynthVoice *v, float bend, float modulation, in
     v->lfo_phase += 5.2 / sample_rate;
     v->lfo_phase -= SDL_floor(v->lfo_phase);
     v->age += 1.0f / (float)sample_rate;
-    return sample * (1.0f / CHIP_OVERSAMPLE) * v->envelope * v->amplitude;
+    return sample * (1.0f / CHIP_OVERSAMPLE) * v->envelope * v->amplitude * v->expression.gain;
 }
 
 float Chip_VoiceSample(ChipSynthVoice *v, float bend, float modulation, int sample_rate)

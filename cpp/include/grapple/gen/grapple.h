@@ -95,6 +95,9 @@ class ChipComposer {
   Status AddChipNote(const Grapple_ChipNote *note) {
     return ::Grapple_AddChipNote(value_, note) ? Status() : Status::FromSdl();
   }
+  Status AddChipNoteEx(const Grapple_ChipNote *note, const Grapple_ChipExpression *expression) {
+    return ::Grapple_AddChipNoteEx(value_, note, expression) ? Status() : Status::FromSdl();
+  }
   Status AddChipTempo(Uint64 tick, double bpm) {
     return ::Grapple_AddChipTempo(value_, tick, bpm) ? Status() : Status::FromSdl();
   }
@@ -1377,6 +1380,7 @@ inline constexpr auto& GamepadGyro = ::Grapple_GamepadGyro;
 inline constexpr auto& GamepadName = ::Grapple_GamepadName;
 inline constexpr auto& GamepadStick = ::Grapple_GamepadStick;
 inline constexpr auto& GamepadStopRumble = ::Grapple_GamepadStopRumble;
+inline constexpr auto& GetChipExpressionDefaults = ::Grapple_GetChipExpressionDefaults;
 inline constexpr auto& GetFinger = ::Grapple_GetFinger;
 inline constexpr auto& GraphicsArgsConfigPath = ::Grapple_GraphicsArgsConfigPath;
 inline constexpr auto& GraphicsClamp = ::Grapple_GraphicsClamp;

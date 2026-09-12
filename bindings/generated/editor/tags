@@ -290,6 +290,7 @@ Grapple_ActorVelocity	include/grapple/engine_physics.h	/^.*Grapple_ActorVelocity
 Grapple_ActorWakeBody	include/grapple/engine_physics.h	/^.*Grapple_ActorWakeBody *(/;"	f
 Grapple_ActorWorld	include/grapple/engine_actor.h	/^.*Grapple_ActorWorld *(/;"	f
 Grapple_AddChipNote	include/grapple/chiptune.h	/^.*Grapple_AddChipNote *(/;"	f
+Grapple_AddChipNoteEx	include/grapple/chiptune.h	/^.*Grapple_AddChipNoteEx *(/;"	f
 Grapple_AddChipTempo	include/grapple/chiptune.h	/^.*Grapple_AddChipTempo *(/;"	f
 Grapple_AddDarkZone	include/grapple/light.h	/^.*Grapple_AddDarkZone *(/;"	f
 Grapple_AddLight	include/grapple/light.h	/^.*Grapple_AddLight *(/;"	f
@@ -358,6 +359,7 @@ Grapple_ChipDiagnostic	include/grapple/chiptune.h	/^.*Grapple_ChipDiagnostic/;"	
 Grapple_ChipDiagnosticCode	include/grapple/chiptune.h	/^.*Grapple_ChipDiagnosticCode/;"	g
 Grapple_ChipDiagnosticSeverity	include/grapple/chiptune.h	/^.*Grapple_ChipDiagnosticSeverity/;"	g
 Grapple_ChipEffects	include/grapple/chiptune.h	/^.*Grapple_ChipEffects/;"	s
+Grapple_ChipExpression	include/grapple/chiptune.h	/^.*Grapple_ChipExpression/;"	s
 Grapple_ChipImportOptions	include/grapple/chiptune.h	/^.*Grapple_ChipImportOptions/;"	s
 Grapple_ChipNote	include/grapple/chiptune.h	/^.*Grapple_ChipNote/;"	s
 Grapple_ChipPlayerPlaying	include/grapple/chiptune.h	/^.*Grapple_ChipPlayerPlaying *(/;"	f
@@ -621,6 +623,7 @@ Grapple_GamepadStick	include/grapple/engine_input.h	/^.*Grapple_GamepadStick *(/
 Grapple_GamepadStopRumble	include/grapple/engine_input.h	/^.*Grapple_GamepadStopRumble *(/;"	f
 Grapple_GetChipDiagnosticCount	include/grapple/chiptune.h	/^.*Grapple_GetChipDiagnosticCount *(/;"	f
 Grapple_GetChipDiagnosticMessage	include/grapple/chiptune.h	/^.*Grapple_GetChipDiagnosticMessage *(/;"	f
+Grapple_GetChipExpressionDefaults	include/grapple/chiptune.h	/^.*Grapple_GetChipExpressionDefaults *(/;"	f
 Grapple_GetChipImportDefaults	include/grapple/chiptune.h	/^.*Grapple_GetChipImportDefaults *(/;"	f
 Grapple_GetChipPlayerPeakVoices	include/grapple/chiptune.h	/^.*Grapple_GetChipPlayerPeakVoices *(/;"	f
 Grapple_GetChipPlayerStream	include/grapple/chiptune.h	/^.*Grapple_GetChipPlayerStream *(/;"	f
@@ -5238,6 +5241,12 @@ baseticks	include/SDL3_gfx/SDL3_framerate.h	/^.*baseticks/;"	m
 begin	include/nuklear.h	/^.*begin/;"	m
 beginCount	include/box2d/base.h	/^.*beginCount/;"	m
 beginEvents	include/box2d/base.h	/^.*beginEvents/;"	m
+bend_end	include/grapple/chiptune.h	/^.*bend_end/;"	m
+bend_first	include/grapple/chiptune.h	/^.*bend_first/;"	m
+bend_last	include/grapple/chiptune.h	/^.*bend_last/;"	m
+bend_middle	include/grapple/chiptune.h	/^.*bend_middle/;"	m
+bend_peak	include/grapple/chiptune.h	/^.*bend_peak/;"	m
+bend_start	include/grapple/chiptune.h	/^.*bend_start/;"	m
 bezierColor	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*bezierColor *(/;"	f
 bezierRGBA	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*bezierRGBA *(/;"	f
 binIndices	include/box2d/base.h	/^.*binIndices/;"	m
@@ -5711,6 +5720,7 @@ fullscreen	include/grapple/chiptune.h	/^.*fullscreen/;"	m
 function	include/SDL3/SDL_assert.h	/^.*function/;"	m
 g	include/SDL3/SDL_assert.h	/^.*g/;"	m
 g	include/nuklear.h	/^.*g/;"	m
+gain	include/grapple/chiptune.h	/^.*gain/;"	m
 gaxis	include/SDL3/SDL_assert.h	/^.*gaxis/;"	m
 gbutton	include/SDL3/SDL_assert.h	/^.*gbutton/;"	m
 gdevice	include/SDL3/SDL_assert.h	/^.*gdevice/;"	m
@@ -5848,6 +5858,7 @@ label_active	include/nuklear.h	/^.*label_active/;"	m
 label_hover	include/nuklear.h	/^.*label_hover/;"	m
 label_normal	include/nuklear.h	/^.*label_normal/;"	m
 label_padding	include/nuklear.h	/^.*label_padding/;"	m
+lane	include/grapple/chiptune.h	/^.*lane/;"	m
 language	include/SDL3/SDL_assert.h	/^.*language/;"	m
 large_magnitude	include/SDL3/SDL_assert.h	/^.*large_magnitude/;"	m
 last	include/nuklear.h	/^.*last/;"	m
@@ -5868,6 +5879,7 @@ left	include/nuklear.h	/^.*left/;"	m
 left_coeff	include/SDL3/SDL_assert.h	/^.*left_coeff/;"	m
 left_sat	include/SDL3/SDL_assert.h	/^.*left_sat/;"	m
 leftright	include/SDL3/SDL_assert.h	/^.*leftright/;"	m
+legato	include/grapple/chiptune.h	/^.*legato/;"	m
 len	include/nuklear.h	/^.*len/;"	m
 length	include/SDL3/SDL_assert.h	/^.*length/;"	m
 length	include/SDL3_ttf/SDL_textengine.h	/^.*length/;"	m
@@ -6745,6 +6757,7 @@ node_maximize_button	include/nuklear.h	/^.*node_maximize_button/;"	m
 node_minimize_button	include/nuklear.h	/^.*node_minimize_button/;"	m
 nodes	include/box2d/base.h	/^.*nodes/;"	m
 nodes	include/yaml.h	/^.*nodes/;"	s
+noise	include/grapple/chiptune.h	/^.*noise/;"	m
 normal	include/box2d/base.h	/^.*normal/;"	m
 normal	include/nuklear.h	/^.*normal/;"	m
 normalImpulse	include/box2d/base.h	/^.*normalImpulse/;"	m
@@ -6868,6 +6881,7 @@ popup_border	include/nuklear.h	/^.*popup_border/;"	m
 popup_border_color	include/nuklear.h	/^.*popup_border_color/;"	m
 popup_padding	include/nuklear.h	/^.*popup_padding/;"	m
 port	include/SDL3_net/SDL_net.h	/^.*port/;"	m
+portato_gate	include/grapple/chiptune.h	/^.*portato_gate/;"	m
 pos	include/nuklear.h	/^.*pos/;"	m
 position	include/SDL3/SDL_assert.h	/^.*position/;"	m
 position	include/box2d/base.h	/^.*position/;"	m
@@ -7077,6 +7091,8 @@ spread	include/grapple/chiptune.h	/^.*spread/;"	m
 src	include/SDL3_ttf/SDL_textengine.h	/^.*src/;"	m
 src_alpha_blendfactor	include/SDL3/SDL_assert.h	/^.*src_alpha_blendfactor/;"	m
 src_color_blendfactor	include/SDL3/SDL_assert.h	/^.*src_color_blendfactor/;"	m
+staccatissimo_gate	include/grapple/chiptune.h	/^.*staccatissimo_gate/;"	m
+staccato_gate	include/grapple/chiptune.h	/^.*staccato_gate/;"	m
 stackUsed	include/box2d/base.h	/^.*stackUsed/;"	m
 stacks	include/nuklear.h	/^.*stacks/;"	m
 staff	include/grapple/chiptune.h	/^.*staff/;"	m
@@ -7093,6 +7109,7 @@ status	include/SDL3/SDL_assert.h	/^.*status/;"	m
 stencil_load_op	include/SDL3/SDL_assert.h	/^.*stencil_load_op/;"	m
 stencil_store_op	include/SDL3/SDL_assert.h	/^.*stencil_store_op/;"	m
 step	include/box2d/base.h	/^.*step/;"	m
+stepped_pitch	include/grapple/chiptune.h	/^.*stepped_pitch/;"	m
 storeImpulses	include/box2d/base.h	/^.*storeImpulses/;"	m
 store_op	include/SDL3/SDL_assert.h	/^.*store_op/;"	m
 stream_start	include/yaml.h	/^.*stream_start/;"	s
@@ -7243,6 +7260,7 @@ trigonRGBA	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*trigonRGBA *(/;"	f
 ttf_blob	include/nuklear.h	/^.*ttf_blob/;"	m
 ttf_data_owned_by_atlas	include/nuklear.h	/^.*ttf_data_owned_by_atlas/;"	m
 ttf_size	include/nuklear.h	/^.*ttf_size/;"	m
+tuning	include/grapple/chiptune.h	/^.*tuning/;"	m
 type	include/SDL3/SDL_assert.h	/^.*type/;"	m
 type	include/box2d/base.h	/^.*type/;"	m
 type	include/cJSON.h	/^.*type/;"	m
@@ -7307,6 +7325,8 @@ vertex_shader	include/SDL3/SDL_assert.h	/^.*vertex_shader/;"	m
 vertex_size	include/nuklear.h	/^.*vertex_size/;"	m
 vertices	include/box2d/base.h	/^.*vertices/;"	m
 vertices	include/nuklear.h	/^.*vertices/;"	m
+vibrato_beats	include/grapple/chiptune.h	/^.*vibrato_beats/;"	m
+vibrato_depth	include/grapple/chiptune.h	/^.*vibrato_depth/;"	m
 vibrato_hz	include/grapple/chiptune.h	/^.*vibrato_hz/;"	m
 vibrato_semitones	include/grapple/chiptune.h	/^.*vibrato_semitones/;"	m
 viewport	include/grapple/chiptune.h	/^.*viewport/;"	m

@@ -19,6 +19,8 @@ extern "C"
         int note;
         Uint64 serial;
         Uint32 note_id;
+        Grapple_ChipExpression expression;
+        double start_beat, duration_beats;
         Uint32 noise;
         Grapple_ChipPreset preset;
         int drum;

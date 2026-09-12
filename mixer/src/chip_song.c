@@ -122,6 +122,7 @@ void Grapple_DestroyChipSong(Grapple_ChipSong *song)
         SDL_free(song->presets);
         SDL_free(song->gains);
         SDL_free(song->events);
+        SDL_free(song->expressions);
         for (int i = 0; i < song->diagnostic_count; ++i)
             SDL_free(song->diagnostic_messages[i]);
         SDL_free(song->diagnostics);
@@ -135,7 +136,7 @@ bool Grapple_GetChipImportDefaults(Grapple_ChipImportOptions *options)
 {
     if (!options)
         return SDL_SetError("chiptune: NULL import options output");
-    *options = (Grapple_ChipImportOptions){true, 0, 0.125, 0.125, 0.125, 1.5, 2};
+    *options = (Grapple_ChipImportOptions){true, 0, 0.5, 0.25, 0.75, 0.125, 0.125, 0.125, 1.5, 2};
     return true;
 }
 
@@ -237,6 +238,12 @@ static bool ValidTick(const Grapple_ChipSong *song, Uint64 tick)
 
 bool Grapple_AddChipNote(Grapple_ChipComposer *composer, const Grapple_ChipNote *note)
 {
+    return Grapple_AddChipNoteEx(composer, note, NULL);
+}
+
+bool Grapple_AddChipNoteEx(Grapple_ChipComposer *composer, const Grapple_ChipNote *note,
+                           const Grapple_ChipExpression *expression)
+{
     if (!composer || !note || note->track < 0 || note->track >= composer->song->info.track_count ||
         note->note < 0 || note->note > 127 || note->velocity < 1 || note->velocity > 127 ||
         note->duration_ticks == 0 || note->duration_ticks > SDL_MAX_UINT64 - note->start_tick ||
@@ -251,14 +258,22 @@ bool Grapple_AddChipNote(Grapple_ChipComposer *composer, const Grapple_ChipNote 
     event.status = 0x90;
     event.a = (Uint8)note->note;
     event.b = (Uint8)note->velocity;
-    if (!Chip_AppendEvent(song, event))
+    event.duration = note->duration_ticks;
+    event.note_id = (Uint32)song->count + 1;
+    if (!Chip_AppendExpression(song, expression, &event.expression))
         return false;
+    if (!Chip_AppendEvent(song, event))
+    {
+        song->expression_count -= event.expression != 0;
+        return false;
+    }
     event.tick += note->duration_ticks;
     event.status = 0x80;
     event.b = 0;
     if (!Chip_AppendEvent(song, event))
     {
         --song->count;
+        song->expression_count -= event.expression != 0;
         return false;
     }
     ++song->tracks[note->track].note_count;
@@ -298,6 +313,12 @@ Grapple_ChipSong *Grapple_BuildChipSong(const Grapple_ChipComposer *composer, Ui
     SDL_memcpy(song->presets, source->presets, tracks * sizeof(*song->presets));
     SDL_memcpy(song->gains, source->gains, tracks * sizeof(*song->gains));
     song->info.duration_ticks = end_tick ? end_tick : source->info.duration_ticks;
+    for (size_t i = 0; i < source->expression_count; ++i)
+    {
+        Uint32 index;
+        if (!Chip_AppendExpression(song, &source->expressions[i], &index))
+            goto fail;
+    }
     for (size_t i = 0; i < source->count; ++i)
         if (!Chip_AppendEvent(song, source->events[i]))
             goto fail;

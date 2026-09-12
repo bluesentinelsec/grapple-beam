@@ -175,6 +175,9 @@ extern "C"
         bool strict; /**< Reject unsupported playback semantics instead of reporting warnings. */
         int staff; /**< 0: detect TAB mirrors; -1: retain all; 1..32: select a staff in multi-staff
                       parts. */
+        double staccato_gate;      /**< Fraction of notated length, 0 selects 0.5. */
+        double staccatissimo_gate; /**< Fraction of notated length, 0 selects 0.25. */
+        double portato_gate;       /**< Detached-legato fraction, 0 selects 0.75. */
         double grace_beats; /**< Default grace-note duration in quarter beats; 0 selects 0.125. */
         double ornament_beats; /**< Default ornament subdivision; 0 selects 0.125 quarter beats. */
         double arpeggio_beats; /**< Total rolled-chord spread; 0 selects 0.125 quarter beats. */
@@ -373,6 +376,30 @@ extern "C"
         Uint64 duration_ticks; /**< Positive duration; chord notes may share an onset. */
     } Grapple_ChipNote;
 
+    /** @brief Per-note performance controls. Initialize with Grapple_GetChipExpressionDefaults. */
+    typedef struct Grapple_ChipExpression
+    {
+        float tuning;        /**< Constant pitch offset in semitones, -48..48. */
+        float gain;          /**< Additional linear amplitude, 0..2. Default 1. */
+        float brightness;    /**< Filter multiplier, 0.1..2. Default 1. */
+        float noise;         /**< Noise blend for muted/dead notes, 0..1. */
+        float bend_start;    /**< Initial pitch displacement in semitones, -48..48. */
+        float bend_peak;     /**< Middle pitch displacement in semitones, -48..48. */
+        float bend_end;      /**< Final pitch displacement in semitones, -48..48. */
+        float bend_first;    /**< Fraction of duration before first bend segment, 0..1. */
+        float bend_middle;   /**< Fraction of duration at peak, first..last. Default 0.5. */
+        float bend_last;     /**< Fraction of duration after final segment, middle..1. Default 1. */
+        float vibrato_depth; /**< Pitch vibrato depth in semitones, 0..12. */
+        float vibrato_beats; /**< Vibrato period in quarter-note beats, 0.01..16. Default 0.25. */
+        int lane;            /**< Logical monophonic line within a part, 0..65535. */
+        bool legato; /**< Reuse the preceding voice in the lane without restarting its envelope. */
+        bool stepped_pitch; /**< Quantize the bend to semitone steps for chromatic glissando. */
+    } Grapple_ChipExpression;
+
+    /** @brief Initialize neutral per-note expression.
+     * @param expression Output value; NULL is ignored. */
+    extern void Grapple_GetChipExpressionDefaults(Grapple_ChipExpression *expression);
+
     /** @brief Mutable composition builder, independent of a file format. */
     typedef struct Grapple_ChipComposer Grapple_ChipComposer;
 
@@ -404,6 +431,13 @@ extern "C"
      * @return True on success, false with SDL_GetError(). Rejection leaves the composer unchanged.
      */
     extern bool Grapple_AddChipNote(Grapple_ChipComposer *composer, const Grapple_ChipNote *note);
+    /** @brief Add a note with independent pitch, timbre and legato controls.
+     * @param composer Composer to edit.
+     * @param note Note description, copied during the call.
+     * @param expression Expression, copied; NULL selects neutral defaults.
+     * @return True on success; false with SDL_GetError(), without changing the composition. */
+    extern bool Grapple_AddChipNoteEx(Grapple_ChipComposer *composer, const Grapple_ChipNote *note,
+                                      const Grapple_ChipExpression *expression);
     /**
      * @brief Add a tempo change at an absolute tick position.
      * @param composer Composer to edit.

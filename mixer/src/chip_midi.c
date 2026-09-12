@@ -221,6 +221,19 @@ Grapple_ChipSong *Grapple_LoadChipSong_IOEx(SDL_IOStream *io, bool closeio,
         SDL_SetError("chiptune: invalid import options");
         goto done;
     }
+    if (!(policy.staccato_gate >= 0 && policy.staccato_gate <= 1) ||
+        !(policy.staccatissimo_gate >= 0 && policy.staccatissimo_gate <= 1) ||
+        !(policy.portato_gate >= 0 && policy.portato_gate <= 1))
+    {
+        SDL_SetError("chiptune: invalid articulation gate");
+        goto done;
+    }
+    if (policy.staccato_gate == 0)
+        policy.staccato_gate = 0.5;
+    if (policy.staccatissimo_gate == 0)
+        policy.staccatissimo_gate = 0.25;
+    if (policy.portato_gate == 0)
+        policy.portato_gate = 0.75;
     if (policy.grace_beats == 0)
         policy.grace_beats = 0.125;
     if (policy.ornament_beats == 0)
