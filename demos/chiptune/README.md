@@ -44,3 +44,28 @@ Build only this example with `cmake --build build/debug --target chiptune_demo`.
 Set `GRAPPLE_BEAM_BUILD_DEMOS=OFF` for a build without demo executables.
 CTest plays both supplied formats using dummy audio and a headless engine,
 and separately renders WAVs without an audio device.
+
+The same helper is demonstrated with C++ RAII in [`play.cpp`](play.cpp):
+
+```sh
+./build/debug/bin/chiptune-cpp tests/mixer/assets/c64-composition.mxl
+```
+
+[`play.lua`](play.lua) and [`play.rb`](play.rb) run inside the canonical engine
+runner. Their `code` argument selects the small declarative four-part composition
+in each script. Otherwise they use the file helper, which accepts any of the
+three supported formats:
+
+```sh
+./grapple-beam demos/chiptune/play.lua tests/mixer/assets/c64-composition-named.mid
+./grapple-beam demos/chiptune/play.rb tests/mixer/assets/c64-composition-named.xml
+./grapple-beam demos/chiptune/play.lua code
+./grapple-beam demos/chiptune/play.rb code
+```
+
+For declarative C/C++ composition, see the [mixer examples](../../mixer/README.md#compose-music-in-code-c-c-lua-ruby).
+All examples own their player through the game loop and destroy it before audio
+shutdown. The generated C++ wrappers use `grapple::ext::ChipSong`, `ChipComposer`
+and `ChipPlayer`; Lua/Ruby use `GrappleC`. Import options and diagnostic records are
+plain structs in C/C++, tables in Lua, and hashes in Ruby. Players retain songs,
+so releasing the caller's song handle does not interrupt playback.

@@ -6,19 +6,17 @@
  * is the case that fails with a wall of missing std:: symbols if the package
  * forgets to name the C++ runtime — and a C++ test would never notice.
  */
-#include <grapple/engine.h>
-#include <grapple/engine_actor.h>
-#include <grapple/engine_config.h>
-#include <grapple/bindings.h>
-#include <grapple/lua.h>
-#include <grapple/vfs.h>
-
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_ttf/SDL_ttf.h>
-
+#include <grapple/bindings.h>
+#include <grapple/chiptune.h>
+#include <grapple/engine.h>
+#include <grapple/engine_actor.h>
+#include <grapple/engine_config.h>
+#include <grapple/lua.h>
+#include <grapple/vfs.h>
 #include <mog/mog_c.h>
-
 #include <stdio.h>
 
 int main(void)
@@ -107,8 +105,24 @@ int main(void)
     }
     lua_close(lua);
 
-    printf("SDK consumer ok: %llu frames, %d actor, SDL %d.%d.%d\n",
-           (unsigned long long)frames, actors, SDL_MAJOR_VERSION, SDL_MINOR_VERSION,
-           SDL_MICRO_VERSION);
+    const char score[] =
+        "<score-partwise><part-list><score-part id='P'>"
+        "<part-name>harmony</part-name></score-part></part-list><part id='P'><measure>"
+        "<note><pitch><step>C</step><octave>4</octave></pitch><duration>4</duration>"
+        "</note></measure></part></score-partwise>";
+    Grapple_ChipSong *song = Grapple_LoadChipSongMemory(score, sizeof(score) - 1, NULL, NULL);
+    Grapple_ChipPlayer *player = Grapple_CreateChipPlayer(song, 8000, 8, false);
+    float pcm[128];
+    const bool rendered = player && Grapple_RenderChipPlayer(player, pcm, 64) == 64;
+    Grapple_DestroyChipPlayer(player);
+    Grapple_DestroyChipSong(song);
+    if (!rendered)
+    {
+        fprintf(stderr, "installed MusicXML parser/synth: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    printf("SDK consumer ok: %llu frames, %d actor, SDL %d.%d.%d\n", (unsigned long long)frames,
+           actors, SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_MICRO_VERSION);
     return 0;
 }

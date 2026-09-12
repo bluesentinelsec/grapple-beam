@@ -6,8 +6,10 @@
  * the process exit code is reported back through --emrun / -sEXIT_RUNTIME=1.
  */
 
-#include <grapple/version.hpp>
+#include "../common/chiptune_smoke.h"
+
 #include <emscripten.h>
+#include <grapple/version.hpp>
 #include <gtest/gtest.h>
 #include <string>
 
@@ -63,4 +65,9 @@ TEST(WebImage, DecodesEmbeddedGifAnimationInBrowser)
 TEST(WebImage, VersionIsWired)
 {
     EXPECT_GE(IMG_Version(), SDL_VERSIONNUM(3, 4, 4));
+}
+
+TEST(WebMusic, ImportsExactTripletsAndSynthesizesWithoutAnAudioDevice)
+{
+    EXPECT_TRUE(ChipMusicXmlSmoke()) << SDL_GetError();
 }

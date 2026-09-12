@@ -14,7 +14,7 @@ which record every vendored version, checksum, deletion, and local fix.
 
 | Target | Page | Provides |
 |--------|------|----------|
-| `Grapple::Mixer` | [Mixer](mixer.html) | audio mixing, music, sound effects, MIDI, chiptune synthesis |
+| `Grapple::Mixer` | [Mixer](mixer.html) | audio mixing, music, sound effects, MIDI/MusicXML/MXL and C64-inspired code/score synthesis |
 | `Grapple::Gfx` | [Gfx](gfx.html) | CPU drawing primitives, rotozoom, framerate manager, GPU-batched primitives |
 | `Grapple::Image` | [Image](image.html) | loading/saving 13 image formats, animations |
 | `Grapple::TTF` | [TTF](ttf.html) | TrueType/OpenType rendering, complex-script shaping (HarfBuzz), BiDi (SheenBidi) |

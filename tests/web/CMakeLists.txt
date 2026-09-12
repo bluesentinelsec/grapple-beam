@@ -4,6 +4,7 @@ target_link_libraries(grapple_web_test
   PRIVATE
     ${PROJECT_NAME}_lib
     Grapple::Image
+    Grapple::Mixer
     GTest::gtest_main
 )
 set_target_properties(grapple_web_test PROPERTIES SUFFIX ".html")

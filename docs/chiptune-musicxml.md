@@ -1,8 +1,10 @@
 # Chiptune MusicXML playback
 
-Implementation is tracked in issue #68 and draft PR #69. This document records
-the actual supported behavior as work progresses; it is not a claim that every
-MusicXML element already has a performance interpretation.
+Compose in Guitar Pro or MuseScore, export MusicXML, and play it through the same
+C64-inspired library used for MIDI and code-authored music. See the
+[authoring workflow and support matrix](chiptune-support.md),
+[runnable examples](../demos/chiptune/README.md), and
+[build/validation record](chiptune-validation.md).
 
 `Grapple_LoadChipSong()` and its SDL_IOStream variant detect MIDI, uncompressed
 MusicXML, or compressed MXL by content. The resulting immutable song uses the same player and
@@ -29,16 +31,10 @@ and score compilation happen at load time, outside the audio callback.
 - Exact frame conversion avoids overflowing large fractional time products.
 
 The importer chooses a common integer resolution that exactly represents the
-input durations; it never rounds them to a default MIDI grid. The current
+input durations; it never rounds them to a default MIDI grid. The
 resource limit is 100 million ticks per quarter note, 65,536 measures, 32 staves
 per part, 256 parts, one million retained events and 24 hours of performance.
 Scores that exceed exact arithmetic/resource limits fail explicitly.
-
-## Pending implementation
-
-Remaining exporter-specific techniques, advanced transport and the final support matrix remain tracked on the issue.
-Remaining expressive constructs are not yet guaranteed to affect playback;
-this importer is under development.
 
 Expat is vendored and built statically from pinned source; see `deps/expat.md`.
 The XML tree is limited to 300,000 nodes, depth 128, 64 attributes per element,
@@ -113,12 +109,12 @@ supply performed strength. Attack/release offsets use exact division units.
 Derived articulation gates round to the score resolution, refined to at least
 1/1000 quarter beat where needed; encoded durations are never quantized.
 
-Harmonic marks currently select a brighter, quieter tone using the encoded pitch;
+Plain harmonic marks select a brighter, quieter tone using the encoded pitch;
 stopped/palm-muted notes use darker, shorter gates. Cross noteheads on pitched
 notes blend noise and shorten the gate; parenthesized noteheads reduce gain.
 Tap/snap-pizzicato/fingernail markings sharpen attack strength and brightness.
 These are deliberate C64-style timbral approximations, not acoustic instrument
-models. Additional exporter-specific technical text remains under development.
+models. Unrecognized technical text is diagnosed under the import policy.
 
 ## Grace notes, ornaments and ensemble timing
 

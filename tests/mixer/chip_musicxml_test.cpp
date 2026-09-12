@@ -456,7 +456,9 @@ TEST(ChipMusicXml, MicrotonalBendReleaseAndArticulationAreIndependent)
     EXPECT_GT(notes[1].b, notes[0].b);
     for (size_t i = 0; i < song->count; ++i)
         if ((song->events[i].status >> 4) == 8 && song->events[i].note_id == notes[1].note_id)
+        {
             EXPECT_EQ(song->events[i].tick * 2, static_cast<Uint64>(song->info.ticks_per_quarter));
+        }
 }
 
 TEST(ChipMusicXml, SlidesAndSlursFollowLogicalVoices)
@@ -1146,7 +1148,9 @@ TEST(ChipMusicXml, TiesPreserveBendReleaseSpansAndFinalArticulation)
             ++updates;
         }
         if ((event.status >> 4) == 8)
+        {
             EXPECT_EQ(event.tick, 5 * ppqn / 2);
+        }
     }
     EXPECT_EQ(updates, 3);
     Player player(Grapple_CreateChipPlayer(song.get(), 8000, 8, false), Grapple_DestroyChipPlayer);

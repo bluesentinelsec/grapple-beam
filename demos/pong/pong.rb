@@ -3,7 +3,7 @@
 # Original grapple-beam code (zlib). Run it with the runner, which carries the
 # engine and the interpreter inside itself:
 #
-#     grapple demos/pong/pong.rb
+#     grapple-beam demos/pong/pong.rb
 #
 # The same game as pong.c and pong.lua, written the same way. Ruby blocks stand
 # in for the C function pointers; the loop is still the engine's, with

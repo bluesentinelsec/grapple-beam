@@ -213,22 +213,17 @@ already-queued audio. Use mixer pause/resume for transport.
   identical output regardless of rendering block size within the same build.
 - Non-looping playback drains release/effect tails. Looping resets all controllers,
   notes, and oscillator state at the musical end and uses a 2 ms edge fade;
-  notes are not tied across the loop; effect tails carry across it. Each iteration uses the musical duration
-  rounded to the nearest output sample. Reset retains preset/gain assignments.
+  notes are not tied across the loop; effect tails carry across it. Fractional sample carry prevents accumulated loop drift. Reset retains preset/gain assignments.
 
 MIDI can represent triplets precisely when the tick resolution accommodates
 them: at 480 PPQN, eighth-note triplets are 160 ticks. A player cannot repair
 incorrect timing already written by an exporter. Keep the original score for
 comparison and check that repeats/swing were exported as intended.
 
-MusicXML is the proposed next importer: it preserves explicit tuplet ratios,
-notation durations, ties, and other score structure. Its interpreter should
-produce the same internal event timeline, keeping synthesis separate from
-notation. Repeats, tempo directions, grace notes and swing need an explicit
-interpretation policy; XML alone does not guarantee matching performances.
-MusicXML partwise/timewise and MXL import are now available through the same loader.
-See [MusicXML playback](../docs/chiptune-musicxml.md) for the current support
-matrix, exact timing, staff selection, diagnostics and remaining implementation work.
+MusicXML partwise/timewise and MXL import use the same loader and performance
+representation. See [MusicXML playback](../docs/chiptune-musicxml.md) for exact
+timing, notation interpretation, diagnostics and game transport, and the
+[support matrix](../docs/chiptune-support.md) for the authoring/export contract.
 
 References: [Guitar Pro MIDI export](https://www.guitar-pro.com/docs/gp8/import-export/export/export-midi),
 [MuseScore export settings](https://handbook.musescore.org/file-management/file-export),
