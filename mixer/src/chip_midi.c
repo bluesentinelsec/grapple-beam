@@ -14,7 +14,10 @@ typedef struct ChipReader
 static bool ReadBytes(ChipReader *r, size_t n, const Uint8 **out)
 {
     if (n > r->size - r->pos)
-        return SDL_SetError("chiptune MIDI: truncated chunk at byte %zu", r->pos);
+    {
+        SDL_SetError("chiptune MIDI: truncated chunk at byte %zu", r->pos);
+        return false;
+    }
     *out = r->data + r->pos;
     r->pos += n;
     return true;

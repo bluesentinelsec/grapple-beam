@@ -124,7 +124,7 @@ than treating an unrun target as validated. The user approved the earlier pulse
 demo; subsequent synthesis changes are backed by numerical/audio regression tests.
 New subjective audition on every target is not claimed.
 
-Final local validation: **758/758 tests passed** through `make test`, including
+Final local validation: **759/759 tests passed** through `make test`, including
 SDK installation and the canonical runner tests. Both shared SDK variants also
 load/render MIDI, XML and MXL through Python ctypes. The runner and C demo pass
 static dependency audits (only OS libraries); bindings are fresh and Doxygen
