@@ -64,6 +64,7 @@ add_library(Grapple_Mixer STATIC
   src/chip_voice.c
   src/chip_player.c
   src/chip_xml.c
+  src/chip_musicxml.c
 )
 add_library(Grapple::Mixer ALIAS Grapple_Mixer)
 
@@ -102,9 +103,9 @@ target_link_libraries(Grapple_Mixer PRIVATE expat)
 
 # Original streaming synth code follows the project's strict C warning policy.
 if(MSVC)
-  set_source_files_properties(src/chip_midi.c src/chip_voice.c src/chip_player.c src/chip_song.c src/chip_effects.c src/chip_xml.c
+  set_source_files_properties(src/chip_midi.c src/chip_voice.c src/chip_player.c src/chip_song.c src/chip_effects.c src/chip_xml.c src/chip_musicxml.c
     PROPERTIES COMPILE_OPTIONS "/W4;/WX")
 else()
-  set_source_files_properties(src/chip_midi.c src/chip_voice.c src/chip_player.c src/chip_song.c src/chip_effects.c src/chip_xml.c
+  set_source_files_properties(src/chip_midi.c src/chip_voice.c src/chip_player.c src/chip_song.c src/chip_effects.c src/chip_xml.c src/chip_musicxml.c
     PROPERTIES COMPILE_OPTIONS "-Wall;-Wextra;-Wpedantic;-Werror;-Wconversion;-Wshadow")
 endif()

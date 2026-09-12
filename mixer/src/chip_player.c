@@ -40,7 +40,8 @@ struct Grapple_ChipPlayer
     Uint64 quiet_frames;
     ChipSynthVoice *voices;
     ChipPart *parts;
-    ChipChannel channels[16];
+    ChipChannel *channels;
+    int channel_count;
     int sample_rate;
     int voice_count;
     int peak_voices;
@@ -73,10 +74,15 @@ static void ResetControllers(ChipChannel *channel)
     channel->modulation = 0.0f;
 }
 
+static int EventChannel(const Grapple_ChipPlayer *p, const ChipEvent *event)
+{
+    return (p->song->independent_parts ? event->track * 16 : 0) + (event->status & 15);
+}
+
 static void Rewind(Grapple_ChipPlayer *p)
 {
     SDL_memset(p->voices, 0, (size_t)p->voice_count * sizeof(*p->voices));
-    for (int i = 0; i < 16; ++i)
+    for (int i = 0; i < p->channel_count; ++i)
     {
         ChipChannel *channel = &p->channels[i];
         SDL_zero(*channel);
@@ -90,7 +96,7 @@ static void Rewind(Grapple_ChipPlayer *p)
     {
         const ChipEvent *event = &p->song->events[i];
         if ((event->status >> 4) == 12)
-            p->channels[event->status & 15].program = event->a;
+            p->channels[EventChannel(p, event)].program = event->a;
     }
     p->beat = 0;
     p->tempo = 500000;
@@ -148,7 +154,7 @@ static Grapple_ChipPreset ResolvePreset(const Grapple_ChipPlayer *p, const ChipE
     const int channel = event->status & 15;
     if (channel == 9)
         return GRAPPLE_CHIP_PRESET_DRUMS;
-    const int program = p->channels[channel].program;
+    const int program = p->channels[EventChannel(p, event)].program;
     if (program >= 32 && program <= 39)
         return GRAPPLE_CHIP_PRESET_BASS;
     if (program >= 88 && program <= 95)
@@ -187,7 +193,8 @@ static void StartNote(Grapple_ChipPlayer *p, const ChipEvent *event)
     }
     Chip_VoiceStart(selected, preset, event->a, event->b, p->sample_rate);
     selected->track = event->track;
-    selected->channel = event->status & 15;
+    selected->channel = EventChannel(p, event);
+    selected->note_id = event->note_id;
     selected->serial = p->serial++;
 }
 
@@ -198,7 +205,8 @@ static void StopNote(Grapple_ChipPlayer *p, const ChipEvent *event)
     {
         ChipSynthVoice *v = &p->voices[i];
         if (v->active && v->held && v->track == event->track &&
-            v->channel == (event->status & 15) && v->note == event->a &&
+            v->channel == EventChannel(p, event) && v->note == event->a &&
+            (!event->note_id || v->note_id == event->note_id) &&
             (!oldest || v->serial < oldest->serial))
             oldest = v;
     }
@@ -297,7 +305,7 @@ static void DispatchEvent(Grapple_ChipPlayer *p, const ChipEvent *event)
         p->tempo = event->tempo;
         return;
     }
-    const int channel = event->status & 15;
+    const int channel = EventChannel(p, event);
     switch (event->status >> 4)
     {
     case 8:
@@ -467,9 +475,11 @@ Grapple_ChipPlayer *Grapple_CreateChipPlayer(const Grapple_ChipSong *song, int s
     p->end_frame = Chip_TimeToFrame(song, song->end_time, sample_rate);
     p->voices = SDL_calloc((size_t)voices, sizeof(*p->voices));
     p->parts = SDL_calloc((size_t)song->info.track_count, sizeof(*p->parts));
+    p->channel_count = song->independent_parts ? song->info.track_count * 16 : 16;
+    p->channels = SDL_calloc((size_t)p->channel_count, sizeof(*p->channels));
     const SDL_AudioSpec spec = {SDL_AUDIO_F32, 2, sample_rate};
     p->stream = SDL_CreateAudioStream(&spec, &spec);
-    if (!p->voices || !p->parts || !p->stream)
+    if (!p->voices || !p->parts || !p->stream || !p->channels)
         goto fail;
     for (int i = 0; i < song->info.track_count; ++i)
     {
@@ -499,6 +509,7 @@ void Grapple_DestroyChipPlayer(Grapple_ChipPlayer *p)
             Chip_EffectsDestroy(&p->effects[bus]);
         Grapple_DestroyChipSong((Grapple_ChipSong *)p->song);
         SDL_free(p->parts);
+        SDL_free(p->channels);
         SDL_free(p->voices);
         SDL_free(p);
     }

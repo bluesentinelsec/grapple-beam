@@ -66,9 +66,18 @@ bool Chip_ResolveTiming(Grapple_ChipSong *song)
 Uint64 Chip_TimeToFrame(const Grapple_ChipSong *song, Uint64 time, int sample_rate)
 {
     const Uint64 divisor = (Uint64)song->info.ticks_per_quarter * 1000000u;
-    /* Carry fractional ticks across tempo segments; round only at the sample boundary. */
-    return (time / divisor) * (Uint64)sample_rate +
-           ((time % divisor) * (Uint64)sample_rate + divisor / 2) / divisor;
+    const Uint64 fraction = time % divisor;
+    Uint64 quotient = 0;
+    Uint64 remainder = 0;
+    /* Binary long multiplication/division keeps high-resolution scores exact
+       without overflowing the product of fractional time and sample rate. */
+    for (Uint32 bit = 1u << 18; bit; bit >>= 1)
+    {
+        remainder = remainder * 2 + (((Uint32)sample_rate & bit) ? fraction : 0);
+        quotient = quotient * 2 + remainder / divisor;
+        remainder %= divisor;
+    }
+    return (time / divisor) * (Uint64)sample_rate + quotient + (remainder >= (divisor + 1) / 2);
 }
 
 struct Grapple_ChipComposer
@@ -134,6 +143,7 @@ Grapple_ChipComposer *Grapple_CreateChipComposer(int tracks, int ticks_per_quart
         SDL_free(composer);
         return NULL;
     }
+    composer->song->independent_parts = true;
     return composer;
 }
 
@@ -223,6 +233,7 @@ Grapple_ChipSong *Grapple_BuildChipSong(const Grapple_ChipComposer *composer, Ui
     if (!song)
         return NULL;
     const size_t tracks = (size_t)source->info.track_count;
+    song->independent_parts = source->independent_parts;
     SDL_memcpy(song->tracks, source->tracks, tracks * sizeof(*song->tracks));
     SDL_memcpy(song->presets, source->presets, tracks * sizeof(*song->presets));
     SDL_memcpy(song->gains, source->gains, tracks * sizeof(*song->gains));

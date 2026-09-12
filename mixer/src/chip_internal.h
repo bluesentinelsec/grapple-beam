@@ -23,6 +23,7 @@ extern "C"
         Uint8 status;
         Uint8 a;
         Uint8 b;
+        Uint32 note_id; /* Zero preserves MIDI's oldest matching note-off semantics. */
     } ChipEvent;
 
     struct Grapple_ChipSong
@@ -36,12 +37,14 @@ extern "C"
         size_t count;
         size_t capacity;
         Uint64 end_time;
+        bool independent_parts;
     };
 
     Grapple_ChipSong *Chip_NewSong(int tracks, int ppqn);
     bool Chip_AppendEvent(Grapple_ChipSong *song, ChipEvent event);
     bool Chip_ResolveTiming(Grapple_ChipSong *song);
     void Chip_RetainSong(const Grapple_ChipSong *song);
+    Grapple_ChipSong *Chip_ParseMusicXml(const void *data, size_t size);
     Uint64 Chip_TimeToFrame(const Grapple_ChipSong *song, Uint64 time, int sample_rate);
 
 #ifdef __cplusplus

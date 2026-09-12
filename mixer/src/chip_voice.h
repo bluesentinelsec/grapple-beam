@@ -18,6 +18,7 @@ extern "C"
         int channel;
         int note;
         Uint64 serial;
+        Uint32 note_id;
         Uint32 noise;
         Grapple_ChipPreset preset;
         int drum;

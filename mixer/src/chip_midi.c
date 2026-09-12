@@ -224,7 +224,8 @@ Grapple_ChipSong *Grapple_LoadChipSong_IO(SDL_IOStream *io, bool closeio)
             data = larger;
         }
     }
-    song = ParseMidi(data, size);
+    song = size >= 4 && SDL_memcmp(data, "MThd", 4) == 0 ? ParseMidi(data, size)
+                                                         : Chip_ParseMusicXml(data, size);
 done:
     SDL_free(data);
     if (closeio)

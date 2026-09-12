@@ -3,6 +3,7 @@ add_executable(grapple_mixer_test
   chiptune_test.cpp
   chip_player_test.cpp
   chip_xml_test.cpp
+  chip_musicxml_test.cpp
 )
 target_link_libraries(grapple_mixer_test
   PRIVATE

@@ -164,20 +164,24 @@ extern "C"
     } Grapple_ChipTrackInfo;
 
     /**
-     * @brief Load a MIDI type 0/1 song without rendering audio or loading patches.
-     * @param io Input stream positioned at the MIDI header; may be nonseekable.
+     * @brief Load MIDI type 0/1 or uncompressed MusicXML without rendering audio.
+     * @param io Input stream positioned at the document start; may be nonseekable.
      * @param closeio Whether to close io on success or failure.
      * @return Owned song, or NULL with SDL_GetError().
      * @details Supports PPQN timing, tempo maps, running status, and track names.
      * Type 2, SMPTE division and nonzero MIDI ports are rejected explicitly.
      * SysEx and unrecognized metadata are skipped. Limits: 64 MiB, 256 tracks,
      * one million retained events, and 24 hours. All parsing/allocation occurs here.
+     * MusicXML partwise/timewise scores preserve exact division-based timing,
+     * independent parts, ties, transposition and mapped percussion. Matching
+     * notation/TAB mirrors are played once. MusicXML support is documented in
+     * docs/chiptune-musicxml.md.
      */
     extern Grapple_ChipSong *Grapple_LoadChipSong_IO(SDL_IOStream *io, bool closeio);
 
     /**
-     * @brief Load a MIDI song from a filesystem path.
-     * @param path MIDI filename.
+     * @brief Load a MIDI or MusicXML song from a filesystem path.
+     * @param path Score filename; the format is detected from its contents.
      * @return Owned song, or NULL with SDL_GetError().
      */
     extern Grapple_ChipSong *Grapple_LoadChipSong(const char *path);
