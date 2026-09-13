@@ -16,29 +16,36 @@ exposed unchanged.
 | TOML | tomlc99 | pinned commit | `<toml.h>` |
 | YAML | libyaml | 0.2.5 | `<yaml.h>` |
 
-```cmake
-target_link_libraries(your_game PRIVATE Grapple::Formats)
-```
+For engine/player preferences use the [typed settings API](cli-implementation.md),
+which validates canonical keys and values. These parsers are for your own data
+formats; they do not automatically apply settings to an engine.
 
 ```c
-/* JSON: DOM parse + write */
+#include <cJSON.h>
+
 cJSON *level = cJSON_Parse(text);
-int hp = cJSON_GetObjectItem(level, "hp")->valueint;
-char *out = cJSON_Print(level);
-
-/* TOML: typed config lookups */
-toml_table_t *conf = toml_parse(buf, errbuf, sizeof(errbuf));
-toml_datum_t title = toml_string_in(conf, "title");
-
-/* YAML: event/document parsing */
-yaml_parser_t parser;
-yaml_parser_initialize(&parser);
+if (level) {
+    const cJSON *hp_value = cJSON_GetObjectItemCaseSensitive(level, "hp");
+    if (cJSON_IsNumber(hp_value)) {
+        double hp = hp_value->valuedouble;
+        /* Validate your game's range before using hp. */
+        (void)hp;
+    }
+    char *out = cJSON_Print(level);
+    if (out) { /* Write or consume out here. */ cJSON_free(out); }
+    cJSON_Delete(level);
+}
 ```
 
-The [Tiled](tiled.html) module uses cJSON internally to validate map
+A failed parse returns NULL. cJSON item pointers borrow the document lifetime.
+With tomlc99, check `toml_parse` and each datum's `ok` field, free returned strings
+with `free`, and release tables with `toml_free`. With libyaml, check parser/event
+results and pair each successful initialization with its matching delete call.
+
+The [Tiled](tiled.md) module uses cJSON internally to validate map
 files before parsing; C++ gets a RAII `JsonDocument` owner; Lua and Ruby
-get the `JSON.*` module — see [C++](cpp.html) and
-[Scripting](scripting.html).
+get the `JSON.*` module — see [C++](cpp.md) and
+[Scripting](scripting.md).
 
 Provenance for all three:
 [`deps/formats.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/formats.md).

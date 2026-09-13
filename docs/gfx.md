@@ -27,7 +27,7 @@ target_link_libraries(your_game PRIVATE Grapple::Gfx)
 
 The vendored primitives are CPU-bound: they compute every covered pixel
 on the CPU. The GPU layer provides equivalents — same names with a `gpu`
-prefix, same parameter order, same `bool` return — that tessellate each
+prefix, corresponding parameter order and result conventions — that tessellate each
 shape into triangles and issue **one `SDL_RenderGeometry` call**, so fill
 cost moves to the GPU and a shape is a single batched draw regardless of
 pixel area:
@@ -43,8 +43,12 @@ filled — ear-clipping triangulation handles concave shapes), bézier.
 Hairline outlines render at 1.5 px so coverage survives every rasterizer.
 
 Not mirrored: antialiased `aa*` variants (use MSAA or a filtered target),
-text (use [TTF](ttf.html)), textured polygons (call `SDL_RenderGeometry`
+text (use [TTF](ttf.md)), textured polygons (call `SDL_RenderGeometry`
 directly).
+
+These calls borrow the renderer; check their return values. If drawing through
+the engine, use its renderer inside render hooks so design-resolution transforms
+and post-processing remain in effect.
 
 Tests render headless with pixel readback and prove the CPU and GPU
 layers draw the same shapes (intersection-over-union comparison).

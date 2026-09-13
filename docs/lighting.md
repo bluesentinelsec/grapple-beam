@@ -146,6 +146,11 @@ Up to `GRAPPLE_LIGHT_MAX` (64) lights and `GRAPPLE_LIGHT_OCCLUDER_MAX`
 (512) occluder edges per frame; the shader evaluates the first 16 lights per
 pass. Limits are reported rather than silently dropping work.
 
+When using engine-managed lighting, the engine applies the player light/shadow
+budgets. Standalone scenes and custom flicker should honor those preferences
+explicitly, including reduced flashing. See [settings capabilities](cli-implementation.md#runtime-behavior-and-capabilities).
+Destroy standalone light scenes with `Grapple_DestroyLightScene` before their renderer.
+
 ## From Lua, Ruby and C++
 
 The whole surface is generated, so it is available in every language:

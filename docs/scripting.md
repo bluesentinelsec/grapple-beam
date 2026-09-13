@@ -1,6 +1,6 @@
 ---
 title: Lua & Ruby
-description: "Embedded Lua 5.4 and mruby with require-from-zip, a curated game API, a generated mirror of the whole C API, and a REPL."
+description: "Embedded Lua 5.4 and mruby with require-from-zip, a curated game API, generated C API bindings, and a REPL."
 ---
 
 # Lua &amp; Ruby scripting
@@ -21,70 +21,73 @@ mrb_state *mrb = Grapple_CreateRubyState();
 Grapple_OpenRubyBindings(mrb);
 ```
 
+Check state creation and binding registration results. Close Lua with `lua_close`
+and Ruby with `mrb_close` after releasing game resources; the runner handles its
+own interpreter lifecycle. mruby is an embedded Ruby implementation, so CRuby
+gems and native extensions are not automatically available.
+
 ## Modules load from your asset archive
 
 Both runtimes resolve `require` (Lua) and `require` (Ruby) through the
-[VFS](vfs.html): scripts ship inside the same mounted — optionally
+[VFS](vfs.md): scripts ship inside the same mounted — optionally
 encrypted — zip as the rest of the game. Ruby's `require` is
 CRuby-faithful (`$LOAD_PATH`, `$LOADED_FEATURES`, circular-require
 guard) and loads both `.rb` source and precompiled `.mrb` bytecode.
 
 ## The curated game API
 
-A hand-written `Grapple` module, identical in both languages, covers
-the game loop: window/renderer, draw primitives, texture loading, input,
-audio, physics world/body, VFS mounting, tile maps, compression, crypto,
-base64. This is the layer the Lua and Ruby Pong implementations use:
+The curated `Grapple` module provides engine creation, callbacks, drawing,
+assets, audio, physics, and UI in language-appropriate forms. Start with
+`Grapple.engine` as shown below or the [complete starter games](getting-started.md#run-your-first-script-game).
+For example, once the renderer and media are available:
 
 ```lua
-Grapple.window("pong", 640, 480)
-Grapple.load_texture("/assets/ball.png")
-local map = Grapple.load_map("/assets/level.tmj")
+local map = assert(Grapple.load_map("assets/level.tmj"))
 local w, h, tw, th = map:size()
 ```
 
 ```ruby
-Grapple.window("pong", 640, 480)
-map = Grapple.load_map("/assets/level.tmj")
+map = Grapple.load_map("assets/level.tmj")
+raise SDL.GetError unless map
 w, h, tw, th = map.size
 ```
 
-Objects are garbage-collected safely: opaque handles carry their
-destructor, and parent references are pinned so a mixer can never be
-collected before its tracks.
+Owned wrappers carry cleanup behavior, but borrowed handles still depend on their
+parents. Destroy device-dependent objects before quitting SDL, and keep callback
+state alive through the game loop. Explicit cleanup is useful for predictable
+resource release even in a garbage-collected language.
 
-## The generated flat API — the whole C surface
+## The generated flat API
 
-Beyond the curated layer, generated bindings mirror the **entire C API**
-of every module into flat namespaces with C names minus prefixes — the
-same 2,300+ functions in each language, plus enum constants:
+Generated bindings expose C APIs in modules such as `SDL`, `MIX`, `IMG`, `TTF`,
+`NET`, `PHYSFS`, `B2`, `NK`, `GFX`, `TOML`, `YAML`, `MOG`, `JSON`, and `GrappleC`.
+Modules depend on build/platform support. Callback, pointer, and ownership cases
+have explicit handling or exclusions; consult the
+[binding coverage report](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/COVERAGE.md) and
+[script signatures](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/SCRIPT_API.md).
 
 ```lua
-local s = SDL.CreateSurface(64, 48, SDL.PIXELFORMAT_RGBA8888)
-local d = JSON.Parse('{"hp": 100}')
-local w = B2.CreateWorld(B2.DefaultWorldDef())
-B2.World_Step(w, 1/60, 4)
-local c = NK.rgb(255, 128, 0)      -- POD structs marshal as tables
+local surface = assert(SDL.CreateSurface(64, 48, SDL.PIXELFORMAT_RGBA8888))
+SDL.DestroySurface(surface)
 ```
 
 ```ruby
-s = SDL.CreateSurface(64, 48, SDL::PIXELFORMAT_RGBA8888)
-d = JSON.Parse('{"hp": 100}')
-w = B2.CreateWorld(B2.DefaultWorldDef)
-B2.World_Step(w, 1.0 / 60.0, 4)
+surface = SDL.CreateSurface(64, 48, SDL::PIXELFORMAT_RGBA8888)
+raise SDL.GetError unless surface
+SDL.DestroySurface(surface)
 ```
 
-Modules: `SDL`, `MIX`, `IMG`, `TTF`, `NET`, `PHYSFS`, `B2`, `NK`,
-`GFX`, `TOML`, `YAML`, `MOG` (HTTP), `JSON`, `GrappleC`. Ownership is GC-safe by construction: pointers
-returned by create functions are destroyed by the GC exactly once, and
-calling the explicit destroy function first is also safe (never a
-double-free). Out-parameters become extra return values; structs marshal
-as tables/hashes.
+Supported out-parameters become additional return values; plain structs become
+tables or hashes. Do not infer a script signature solely from the C header. Curated objects and
+generated opaque handles are separate wrapper types: a `Grapple.engine` object
+cannot be passed to arbitrary generated `GrappleC` functions such as
+`EngineRenderer`. Use curated methods/helpers, or consistently use
+`GrappleC.ConfigCreate` / `CreateEngine` for access to the generated engine surface.
 
 ### Constants, not magic numbers
 
-Enum values *and* integer `#define` constants are registered by name with
-the library prefix stripped, so scripts never hardcode numbers:
+Registered enum values and integer constants are exposed by name. Most library
+prefixes are stripped; use the generated reference rather than hardcoded numbers:
 
 ```lua
 SDL.Init(SDL.INIT_VIDEO)
@@ -97,9 +100,10 @@ SDL.Init(SDL::INIT_VIDEO)
 SDL.CreateWindow('game', 1280, 720, SDL::WINDOW_FULLSCREEN | SDL::WINDOW_HIGH_PIXEL_DENSITY)
 ```
 
-Nuklear's constants keep their `NK_` spelling (`NK.NK_WINDOW_TITLE`)
-because its prefix is lowercase `nk_`. Each constant is emitted behind an
-`#ifdef`, so anything a platform doesn't define simply isn't registered.
+Nuklear constants keep `NK_` (`NK.NK_WINDOW_TITLE`), and engine constants keep
+`GRAPPLE_` (`GrappleC.GRAPPLE_AUDIO_MUSIC` in Lua,
+`GrappleC::GRAPPLE_AUDIO_MUSIC` in Ruby). Platform-specific macro constants are
+registered conditionally.
 
 ### The script signature is not always the C signature
 
@@ -157,29 +161,24 @@ accepts are `title`, `window`, `design`, `presentation`, `resizable`,
 `high_dpi`, `fullscreen`, `vsync`, `max_fps`, `tick_rate`, `auto_mount`,
 `headless`, `media`, `font_size` and `backend`.
 
-### The engine's own flags reach your game
-
-`grapple-beam` divides its command line three ways:
+### Launch settings and game arguments
 
 ```sh
-grapple-beam --window-mode fullscreen-borderless game.lua -- --level 3
-#       ^engine        ^script    ^your game's own
+grapple-beam --window-mode windowed --vsync off game.lua -- level-2
 ```
 
-The runner validates engine options before executing the script. Use
-`--window-mode windowed|fullscreen-exclusive|fullscreen-borderless`,
-`--window-size 1280x720`, `--vsync on|off`, `--max-fps display|unlimited|N`,
-and the graphics options listed by `--help`. Unknown names and invalid values
-are errors. Settings the player did not mention are left alone.
+The runner resolves project defaults, player preferences, explicit configuration,
+and CLI overrides before the game creates devices. Put engine options before the
+project/script; subsequent arguments go to Lua `arg` or Ruby `ARGV` untouched.
+The game runs with its project root as the working directory, so pass absolute
+paths for file arguments that originated elsewhere.
 
-`--backend` selects a concrete renderer; `--list-backends` probes the build's
-renderers and reports availability, queried versions, and missing effects.
-The full configuration contract is being implemented in stages; see
-[CLI implementation progress](cli-implementation.md) before relying on options
-from the [complete contract](cli-args.txt).
-
-Everything after the script name (or after a bare `--`) reaches the script:
-`arg` in Lua, `ARGV` in Ruby.
+`Grapple.engine` fields provide inline game defaults. Explicit settings from files,
+configuration scripts, or CLI override those fields. Configuration scripts return
+canonical settings tables/hashes such as `display.window_mode`; these are distinct
+from constructor conveniences such as `window` and `fullscreen`. Configuration
+scripts run in separate states without game bindings. See [Runner settings](cli-implementation.md)
+for exact precedence, validation, recovery, and saving only changed preferences.
 
 ### You do not have to start the loop
 
@@ -221,7 +220,7 @@ not it wants it, and Ruby counts arguments strictly where Lua ignores the
 extra one. `def update(_delta)`, not `def update`.
 
 For the widget tree that goes with it, see
-[the GUI page](gui.html#widgets-you-declare-once).
+[the GUI page](gui.md#widgets-you-declare-once).
 
 ### Some functions are hand-written, and not in `SCRIPT_API.md`
 
@@ -318,7 +317,7 @@ GrappleC.ScriptScenePush(engine, "title")
 
 The hooks are `load`, `enter`, `fixed_update`, `update`, `render`,
 `event`, `exit` and `unload` — the lifecycle documented in
-[Scenes](engine.html#scenes), in that order. They are named rather than
+[Scenes](engine.md#scenes), in that order. They are named rather than
 numbered so that a typo is an error naming the hooks that exist, instead
 of a scene that quietly never draws.
 
@@ -435,7 +434,7 @@ so ship SPIR-V, DXIL and MSL for the backends you support and pick with
 Neither language brings usable regular expressions of its own: mruby ships
 no engine at all, so `Regexp` simply does not exist in stock mruby, and
 Lua has patterns, which have no alternation, quantified groups or
-lookaround. [`Grapple::Regex`](regex.html) supplies one engine for both.
+lookaround. [`Grapple::Regex`](regex.md) supplies one engine for both.
 
 In Ruby it arrives as the real class, so literals, `$1` and `$~` work —
 mruby's compiler already emits code for them, it was only the class that
@@ -453,7 +452,7 @@ for m in Regex.new("\\d+"):gmatch("a1b22") do print(m[0]) end
 ```
 
 Both are linked in by `Grapple::Bindings`, so nothing extra is needed.
-See [Regex](regex.html) for the full surface and its limits.
+See [Regex](regex.md) for the full surface and its limits.
 
 ## Completions in your editor
 

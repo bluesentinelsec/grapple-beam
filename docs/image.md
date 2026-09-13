@@ -1,14 +1,14 @@
 ---
 title: Image
-description: "Image loading and saving for 13 formats with fully static codecs — SDL3_image without the shared-library tail."
+description: "Supported image formats, file and VFS loading, and surface/texture ownership."
 ---
 
 # Image — `Grapple::Image`
 
 A static-link-first port of SDL3_image (upstream base 3.4.4). The API is
-SDL3_image-compatible for everything supported; removed APIs are deleted
-from the header so unsupported usage fails at **compile time**, never at
-runtime.
+SDL3_image-compatible for supported features. Format-specific APIs for removed
+codecs are absent; generic loaders still report unsupported or malformed files
+at runtime through a NULL result and `SDL_GetError()`.
 
 ```cmake
 target_link_libraries(your_game PRIVATE Grapple::Image)
@@ -24,6 +24,11 @@ IMG_SavePNG(screenshot, "shot.png");
 /* from a VFS-mounted archive: */
 SDL_Surface *s = IMG_Load_IO(Grapple_OpenVFSRead("/assets/hero.png"), true);
 ```
+
+Check returned pointers and save results. Free surfaces with `SDL_DestroySurface`,
+textures with `SDL_DestroyTexture` before their renderer, and animations with the
+matching animation destructor. VFS examples also include `<grapple/vfs.h>`;
+`closeio=true` transfers stream ownership to the loader.
 
 ## Format support
 

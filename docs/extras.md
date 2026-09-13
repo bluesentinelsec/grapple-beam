@@ -28,9 +28,10 @@ unsigned char *enc = Grapple_EncryptData(bytes, size, "password", &n);
 unsigned char *dec = Grapple_DecryptData(enc, n, "password", &size);
 ```
 
-Also exposes `Grapple_SHA256` / `Grapple_HMACSHA256`. Scope honesty:
-salts/nonces come from timing entropy, not an OS CSPRNG — right for
-protecting shipped assets, not for building a messaging app.
+Also exposes `Grapple_SHA256` / `Grapple_HMACSHA256`. Salts/nonces use timing
+entropy rather than an OS CSPRNG. This container is intended for game asset
+obfuscation, not general secret storage or secure messaging. Check NULL returns
+before using output, and free both encrypted and decrypted buffers with `SDL_free`.
 
 ## Compression — `<grapple/compress.h>`
 
@@ -56,9 +57,7 @@ RFC 4648, strict decoding (whitespace skipped, anything else rejected).
 
 ## Reading text files — `<grapple/textfile.h>`
 
-`SDL_LoadFile` returns a `void*` plus a size through an out-parameter — a
-pair that cannot cross a Lua or Ruby binding boundary, so scripts had no
-way to read a file at all. `Grapple_LoadTextFile(path)` returns one
+`Grapple_LoadTextFile(path)` is the convenient script-facing text loader. It returns one
 NUL-terminated string instead: scripts receive an ordinary string (freed
 for them automatically), and C callers own the allocation and release it
 with `SDL_free`.

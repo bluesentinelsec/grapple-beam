@@ -10,6 +10,7 @@ rm -rf "$OUT"
 mkdir -p "$OUT"
 cp web/style.css "$OUT/style.css"
 cp -R docs/assets "$OUT/assets"
+cp docs/cli-args.txt "$OUT/cli-args.txt"
 
 for md in docs/*.md; do
   name="$(basename "${md%.md}")"

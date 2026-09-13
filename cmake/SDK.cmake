@@ -474,7 +474,8 @@ if(TARGET expat)
 endif()
 file(GLOB _doc_pages "${CMAKE_CURRENT_LIST_DIR}/../docs/*.md")
 if(_doc_pages)
-  install(FILES ${_doc_pages} DESTINATION ${_doc_dest})
+  install(FILES ${_doc_pages} "${CMAKE_CURRENT_LIST_DIR}/../docs/cli-args.txt"
+          DESTINATION ${_doc_dest})
   install(DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/../docs/assets/"
           DESTINATION ${_doc_dest}/assets OPTIONAL)
 endif()

@@ -6,12 +6,17 @@ description: "Nuklear immediate-mode GUI with an SDL3 backend and a weighted gri
 # GUI — `Grapple::GUI`
 
 Nuklear v4.13.3 — the single-header immediate-mode GUI — with an original
-SDL3 backend and a weighted grid layout helper. For graphical tools,
-in-game UI, and general SDL applications; static everywhere SDL3 runs.
+SDL3 backend, weighted grid layout, and a retained widget tree. Use immediate
+widgets for changing debug overlays, or describe persistent menus once with
+`Grapple_Ui`. Both use the same renderer and input integration.
 
 ```cmake
 target_link_libraries(your_app PRIVATE Grapple::GUI)
 ```
+
+Start with [retained widgets](#widgets-you-declare-once),
+[Lua/Ruby UI](#from-lua-and-ruby), or the [C++ UI guide](cpp-gui.md).
+[Player preferences](#player-preferences-and-ui-scale) covers settings and scale.
 
 ## Frame loop
 
@@ -92,7 +97,8 @@ dialog that never changes.
 callbacks, and let it draw itself:
 
 ```c
-Grapple_Ui *ui = Grapple_OpenUi(Grapple_EngineRenderer(engine), 15.0f);
+Grapple_Ui *ui = Grapple_OpenUi(Grapple_EngineRenderer(engine),
+    Grapple_EngineUiPoints(engine, 15.0f));
 const Grapple_EventSink sink = Grapple_UiEventSink(ui);
 Grapple_EngineSetEventSink(engine, &sink);
 Grapple_EngineSetOverlay(engine, Grapple_UiDrawCallback, ui);
@@ -539,8 +545,8 @@ nk_layout_row_dynamic(ctx, 380.0f * scale, 1);
 Grapple_GuiImage(gui, texture, GRAPPLE_GUI_IMAGE_ZOOM);
 ```
 
-Load textures with [Grapple::Image](image.html) (`IMG_LoadTexture`), or
-from a mounted [VFS](vfs.html) archive. Modes that can overflow the slot are
+Load textures with [Grapple::Image](image.md) (`IMG_LoadTexture`), or
+from a mounted [VFS](vfs.md) archive. Modes that can overflow the slot are
 scissored to it, so an image never spills onto neighbouring widgets.
 
 ### Drawing textures yourself
@@ -740,3 +746,17 @@ entry.
 
 Provenance and configuration:
 [`deps/nuklear.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/nuklear.md).
+
+## Player preferences and UI scale
+
+A widget's value is UI state; changing it does not automatically change engine
+settings. Apply graphics through `Grapple_EngineSetGraphics` and audio through
+`Grapple_SetAudioBusGain` / `Grapple_SetAudioMuted`. Save only the changed fields
+with `Grapple_SettingsSaveChanges`; [Runner settings](cli-implementation.md#recovery-and-saving)
+explains source tracking and requested versus actual values.
+
+`Grapple.ui(engine)` in Lua/Ruby uses the engine UI-scale preference for fonts
+and naturally sized widgets. Native callers can pass
+`Grapple_EngineUiPoints(engine, base_points)` when creating their UI. Recreate the
+UI after changing scale, and scale custom fixed dimensions explicitly. Keep the
+engine/renderer alive until the UI and its event/overlay hooks are detached.

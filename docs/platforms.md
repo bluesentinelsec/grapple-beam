@@ -1,61 +1,64 @@
 ---
 title: Platforms
-description: "Where the stack runs and how it's proven: Linux, macOS, Windows, Android, iOS, and browser WebAssembly, all exercised in CI."
+description: "Build and package grapple-beam for desktop, Android, iOS, and WebAssembly."
 ---
 
 # Platforms
 
-The same source tree builds everywhere SDL3 runs, and CI proves it on
-every push:
+The repository supports desktop SDK/runner builds and embedded mobile/browser
+builds. Start with the [support matrix](platforms-matrix.md) for available modules,
+artifacts, and the scope of runtime checks.
 
-| Platform | CI | Notes |
-|----------|----|----|
-| Linux | ✅ every push | Debug + Release, full test suite |
-| macOS | ✅ every push | Debug + Release, full test suite |
-| Windows | ✅ every push | MSVC, full test suite |
-| ASan + UBSan | ✅ every push | dedicated clang sanitizer job, full suite |
-| Android | ✅ every push | Prefab AAR build + instrumented tests on an emulator |
-| Browser WebAssembly | ✅ every push | Emscripten build, tests run in a real browser via emrun |
-| iOS | ✅ batch (workflow_dispatch) | static XCFramework build + verification |
+## Desktop
 
-## Static everywhere
+Use `make` / `build.bat`, or the installed SDK CMake package described in
+[Getting started](getting-started.md). The runner hosts Lua/Ruby projects; native
+applications link the library. Desktop shared variants are optional. System
+libraries, graphics drivers, and platform SDK requirements still apply to static
+builds.
 
-Every platform build is fully static with respect to this stack: the
-only shared libraries a binary touches are the operating system's own.
-A link audit runs as a test on every platform and fails CI if any test
-executable picks up a non-OS shared dependency.
+Use `grapple-beam --list-backends`, `--list-displays`, and `--list-display-modes`
+to inspect the local machine. Available renderer and fullscreen modes depend on
+its drivers and connected displays. [Runner settings](cli-implementation.md)
+covers requested versus achieved settings and recovery.
 
-## Platform-specific notes
+## Android
 
-- **Web:** `Grapple::Net` does not exist in Emscripten builds
-  (upstream SDL3_net only offers a stub there, and this project does not
-  ship stubs). Use [mog](http.html) for browser-side HTTP via Fetch.
-  Box2D builds with SIMD (`-msimd128`).
-- **Web canvas sizing:** SDL3's Emscripten backend decides the window size
-  by probing the canvas element's CSS box. A canvas with no explicit CSS
-  size measures as just its borders, and SDL creates a 2–3 pixel window —
-  the app renders correctly but is invisible. Give the canvas a real CSS
-  size in your shell HTML, or size it from the app after window creation:
+The [Android project](https://github.com/bluesentinelsec/grapple-beam/tree/main/android) publishes a Prefab AAR. Native games consume
+it from an Android application and provide SDLActivity lifecycle integration;
+the desktop runner is not an Android entrypoint. See the
+[Android workflow](https://github.com/bluesentinelsec/grapple-beam/blob/main/.github/workflows/android.yml) and
+[packaged tests](https://github.com/bluesentinelsec/grapple-beam/tree/main/tests/android) for build and test configuration.
 
-  ```c
-  const int w = EM_ASM_INT({ return window.innerWidth; });
-  const int h = EM_ASM_INT({ return window.innerHeight; });
-  emscripten_set_element_css_size("#canvas", w, h);
-  SDL_SetWindowSize(window, w, h);
-  ```
-- **File dialogs on web:** SDL has no Emscripten dialog backend;
-  [`Grapple::Extras`](extras.html) supplies one over browser APIs. Opening
-  works through a file input; saving downloads the file, since a page cannot
-  write to disk.
-- **Android:** consumed as a Prefab AAR; the emulator CI job runs the
-  test suite on-device.
-- **iOS:** ships as a static XCFramework (device arm64 + Simulator
-  arm64/x86_64), validated by a dispatched CI batch before merges.
-- **MIDI on all platforms** needs the GM patch set (see
-  [Mixer](mixer.html)); everything else is fully self-contained.
+## iOS
 
-## Versioning
+Build the static XCFramework with [build_ios_xcframework.sh](https://github.com/bluesentinelsec/grapple-beam/blob/main/scripts/build_ios_xcframework.sh)
+and embed it in an iOS application. It contains device and simulator slices.
+[iOS workflow](https://github.com/bluesentinelsec/grapple-beam/blob/main/.github/workflows/ios.yml) configuration supplies deployment
+versions, architectures, and SDK settings. The automatic PR job compiles the
+simulator SDK; full packaging and simulator execution use the dispatched workflow.
+Lua's shell execution is unavailable on iOS.
 
-The project follows [semantic versioning](https://semver.org/). Until
-1.0.0, minor versions may include breaking API changes; they will always
-be called out in release notes.
+## Browser WebAssembly
+
+Use the Emscripten toolchain and [web workflow](https://github.com/bluesentinelsec/grapple-beam/blob/main/.github/workflows/web.yml) as the
+build recipe. The browser owns frame pacing: use the engine's browser loop or
+Emscripten callbacks, not a blocking desktop loop. Supply assets through the
+browser/virtual filesystem, and initiate audio from an appropriate user gesture.
+
+- Raw TCP/UDP (`Grapple::Net`) and the mog C client/server (`Grapple::Http`) are
+  disabled in this build. Use browser networking APIs for a web integration.
+- Give the canvas a real CSS width and height; SDL uses its CSS box to determine
+  initial window dimensions. See [the web demo](https://github.com/bluesentinelsec/grapple-beam/tree/main/src/web) for the page setup.
+- File dialogs use browser input/download integration. See [Extras](extras.md#on-the-web)
+  and [GUI file buttons](gui.md#file-buttons-that-work-in-every-browser).
+- C64-inspired MIDI/MusicXML playback needs no patch files. General-MIDI decoding
+  through SDL_mixer's TiMidity path requires its patch configuration; see [Mixer](mixer.md).
+
+## Cross-compiling and dependencies
+
+Use `CMAKE_TOOLCHAIN_FILE` and the platform switches from the corresponding build
+scripts. Dependencies are built from source; provision enabled FetchContent
+sources before a disconnected build. The [minimal music configuration](chiptune-validation.md)
+shows how to isolate the C mixer/synth. Proprietary consoles require their own
+toolchain and platform integration and are not currently covered by CI.

@@ -28,7 +28,8 @@ python3 scripts/pack_assets.py assets/ media.bin --password "openSesame" \
 ```
 
 The zip is deterministic (sorted entries, fixed timestamps): repacking
-unchanged assets yields byte-identical archives. Encrypting the whole
+unchanged assets yields byte-identical plain ZIPs. Encryption uses new salt/nonce
+values, so encrypted output is not byte-identical. Encrypting the whole
 zip also hides file names — something classic zip passwords never did.
 
 ## Mounting at runtime
@@ -57,14 +58,25 @@ MIX_Audio *bgm = MIX_LoadAudio_IO(mixer,
     Grapple_OpenVFSRead("/assets/bgm.ogg"), false, true);
 ```
 
+Check initialization, mount, stream, and load results. Release `level` with
+`SDL_free`, surfaces with `SDL_DestroySurface`, and audio with `MIX_DestroyAudio`
+after dependent tracks are released. Close open streams and release mounted-file
+users before `PHYSFS_deinit`. The snippets assume SDL/SDL_mixer initialization
+and the appropriate image/mixer headers.
+
+The runner accepts readable media directories/archives via `--media`. Encrypted
+media and passwords are provisioned through the embedding API; see
+[asset mounting](engine.md#asset-mounting). Raw filename loaders need an `_IO`
+stream adapter to read PhysFS paths.
+
 A wrong password or a tampered blob returns `false` with
 `SDL_GetError()` set — the SSE1 container authenticates (encrypt-then-MAC)
 *before* mounting, so you never get a half-mounted archive. See
-[Extras](extras.html) for the underlying crypto.
+[Extras](extras.md) for the underlying crypto.
 
 Everything else is the native PhysFS API: search-path layering,
 `PHYSFS_enumerateFiles`, `PHYSFS_openRead`, write directories, and so on.
-The [Tiled](tiled.html) module and both [script runtimes](scripting.html)
+The [Tiled](tiled.md) module and both [script runtimes](scripting.md)
 (`require`/`load` from mounted archives) are VFS-aware out of the box.
 
 Provenance:

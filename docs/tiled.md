@@ -6,8 +6,8 @@ description: "Tiled map (.tmj) parsing via cute_tiled, VFS-aware so levels load 
 # Tiled — `Grapple::Tiled`
 
 Parses [Tiled](https://www.mapeditor.org/) JSON maps (`.tmj`) via the
-vendored single-header cute_tiled — no libxml2, no dependencies. Loading
-is **VFS-first**: if the [virtual filesystem](vfs.html) is initialized
+vendored single-header cute_tiled, with Formats validation and VFS integration. Loading
+is **VFS-first**: if the [virtual filesystem](vfs.md) is initialized
 and the path exists there, maps load from mounted (optionally encrypted)
 archives; otherwise from disk.
 
@@ -40,13 +40,13 @@ The flat accessor API covers dimensions, layers (name/type), tile GIDs,
 and objects; the full cute_tiled parse tree (tilesets, properties,
 animations) stays reachable via `Grapple_TiledRaw(map)`.
 
-Malformed input fails cleanly with `SDL_GetError()` — map data is
-validated as JSON before parsing, so truncated or corrupt files can
-never crash the loader.
+Check `map` for NULL before using it; load failures set `SDL_GetError()`.
+Input is validated as JSON before map parsing. Object strings and the raw tree
+are borrowed from the map and become invalid after `Grapple_FreeTiledMap`.
 
 C++ gets a RAII `TiledMap` wrapper (`grapple/tilemap.h`); Lua and Ruby
 get `Grapple.load_map` with GC-managed map objects — see
-[C++](cpp.html) and [Scripting](scripting.html).
+[C++](cpp.md) and [Scripting](scripting.md).
 
-Provenance and local fixes (four upstream bugs documented):
+Provenance and local fixes:
 [`deps/cute_tiled.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/cute_tiled.md).

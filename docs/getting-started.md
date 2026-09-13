@@ -1,205 +1,180 @@
 ---
-title: Getting Started
-description: "Consume SDL3 Static Extensions from CMake with FetchContent, build the repo and its tests, and open your first window."
+title: Getting started
+description: "Build and run a Lua/Ruby game, or embed the static or shared C/C++ SDK with CMake."
 ---
 
-# Getting Started
+# Getting started
 
-## Requirements
+Choose the runner for Lua/Ruby projects, or link the library into a C/C++
+application. Both use the same engine. These examples describe current main;
+runner settings added after v0.9.0 require a build containing those changes.
 
-- CMake 3.20+ and a C17/C++17 toolchain (clang, gcc, or MSVC)
-- No other dependencies: every library, codec, and language runtime is
-  vendored source
+## Build from source
 
-## Two ways in, and the one you want depends on how you build
+Requirements: CMake 3.20+, a C17/C++20 compiler, Git, and the platform's development
+SDK. The Makefile selects Ninja when available. Linux builds also need development
+packages for the enabled SDL window/audio backends; the
+[desktop workflow](https://github.com/bluesentinelsec/grapple-beam/blob/main/.github/workflows/ci.yml) records the CI package set.
 
-**From source, with FetchContent** — you are already using CMake and want
-the library built with your own flags and toolchain. Link the individual
-modules; this is the section below.
+```sh
+git clone https://github.com/bluesentinelsec/grapple-beam.git
+cd grapple-beam
+make
+make test
+```
 
-**From a release, with `find_package`** — you want to download something
-and link it. A desktop release has two primary outputs: the `grapple-beam` runner and the
-embeddable engine library. The SDK provides static and dynamic library builds,
-with C and C++ API variants, plus development support files:
+Windows equivalents are `build.bat debug` and `build.bat test`. Use `make release`
+or `build.bat release` for optimized builds. Outputs are under `build/debug/` or
+`build/release/`; multi-configuration generators may add a configuration directory.
+Pass extra CMake options with `make CMAKE_FLAGS="-DOPTION=VALUE"`.
 
-| | |
-|---|---|
-| `lib/libgrapple_sdk.a` | the C API: every module, SDL3, and the vendored libraries |
-| `lib/libgrapple_sdk_cxx.a` | all of that **plus** the C++ wrapper |
-| `bin/grapple-beam` | the runner: plays a Lua or Ruby game with no toolchain installed |
-| `lib/libgrapple.{so,dylib,dll}` | the C API as a shared library |
-| `lib/libgrapple_cxx.{so,dylib,dll}` | the C++ API as a shared library |
-| `share/doc/…` | this documentation, offline, plus the generated API references |
-| `tags`, `share/…/editor/` | ctags and script completions |
+The first configure acquires pinned FetchContent dependencies; other dependency
+sources are checked in. For disconnected or cross builds, supply all enabled
+FetchContent sources and a CMake toolchain file. See [platforms](platforms.md) and
+the [minimal music build](chiptune-validation.md) for a smaller source configuration.
 
-Static is the default and what the documentation assumes; the shared
-libraries are for hosts that need to load code at runtime — a plugin
-system, an FFI binding from Python or C#, a language that is not C++.
+## Run your first script game
 
-The C++ archive repeats the C one rather than depending on it, so a C++
-game links **one** library and a C game links the other. Neither needs to
-know the other exists, and there is no link order to get wrong.
+Create `my-game/main.lua`:
+
+```lua
+local engine = Grapple.engine { title = "My game", design = { width = 640, height = 360 } }
+local ui = Grapple.ui(engine)
+local panel = ui:panel { title = "Welcome", padding = 12, spacing = 8 }
+panel:label { text = "Hello from grapple-beam" }
+panel:button { text = "Quit", on_click = function() engine:quit() end }
+engine:on_fixed_update(function(dt)
+  if engine:key_pressed("escape") then engine:quit() end
+end)
+engine:on_post_render(function() ui:draw() end)
+```
+
+Or create `my-game/main.rb`:
+
+```ruby
+engine = Grapple.engine(title: "My game", design: { width: 640, height: 360 })
+ui = Grapple.ui(engine)
+panel = ui.panel(title: "Welcome", padding: 12, spacing: 8)
+panel.label(text: "Hello from grapple-beam")
+panel.button(text: "Quit") { engine.quit }
+engine.on_fixed_update do |dt|
+  engine.quit if engine.key_pressed("escape")
+end
+engine.on_post_render { ui.draw }
+```
+
+```sh
+./build/debug/bin/grapple-beam --window-mode windowed ./my-game
+```
+
+Keep one entrypoint, or specify `--language lua` / `--language ruby` when both
+exist. The runner starts the loop after the script registers its hooks. Close the
+window or press Escape to quit. [Pong](https://github.com/bluesentinelsec/grapple-beam/blob/main/demos/README.md) is a complete game in
+all four languages.
+
+An optional `grapple.toml` provides a stable identity for player preferences:
+
+```toml
+[game]
+organization = "MyStudio"
+id = "MyGame"
+entry = "main.lua"
+language = "lua"
+```
+
+Use project `config.toml` and `config.lua` / `config.rb` for game settings;
+player settings override them, and CLI overrides have highest priority.
+[Runner settings](cli-implementation.md) explains source order, live changes,
+saving, and recovery. Paths used by the game resolve from the project root.
+Engine options go before the project; trailing arguments are passed to the game.
+
+```sh
+grapple-beam --vsync off --max-fps 144 ./my-game -- level-2
+grapple-beam --print-settings ./my-game
+grapple-beam --safe-mode ./my-game
+grapple-beam repl --language lua
+grapple-beam eval --language ruby --code 'puts SDL.GetPlatform'
+```
+
+Omitting the project discovers one in the current directory. REPL and evaluation
+are explicit subcommands. The runner loads game scripts; notation-file playback
+uses the [music library helpers and demos](https://github.com/bluesentinelsec/grapple-beam/blob/main/demos/chiptune/README.md).
+
+## Link an installed SDK
+
+Download a matching desktop SDK from the
+[releases](https://github.com/bluesentinelsec/grapple-beam/releases), or stage one
+from your build:
+
+```sh
+cmake --install build/debug --prefix build/sdk
+```
+
+The prefix includes headers, libraries, the runner when enabled, and a CMake
+package. Import the package rather than manually listing transitive system libraries:
 
 ```cmake
 cmake_minimum_required(VERSION 3.20)
-project(my_game C)
-
-find_package(grapple-beam REQUIRED)
-
+project(my_game LANGUAGES C CXX)
+find_package(grapple-beam CONFIG REQUIRED)
 add_executable(my_game main.c)
 target_link_libraries(my_game PRIVATE grapple-beam::SDK)
 ```
 
-In C++, the same package with one target changed:
+```sh
+cmake -S . -B build -DCMAKE_PREFIX_PATH=/absolute/path/to/sdk
+cmake --build build
+```
+
+| Target | Use |
+| --- | --- |
+| `grapple-beam::SDK` | Static aggregate C API |
+| `grapple-beam::SDKCxx` | Static aggregate C and C++ APIs; use with `main.cpp` |
+| `grapple-beam::SDKShared` | Shared C API, when built |
+| `grapple-beam::SDKCxxShared` | Shared C and C++ APIs, when built |
+
+For a C++ executable, replace `main.c` with `main.cpp`, select the C++ target,
+and request C++20 explicitly:
 
 ```cmake
-project(my_game CXX)
-find_package(grapple-beam REQUIRED)
-add_executable(my_game main.cpp)
 target_link_libraries(my_game PRIVATE grapple-beam::SDKCxx)
+target_compile_features(my_game PRIVATE cxx_std_20)
 ```
 
-```cpp
-#include <grapple/grapple.h>
+Choose one aggregate target. The C++ variant includes the C API. The full C SDK
+also contains dependencies implemented in C++; its package supplies the runtime
+link requirements. A reduced C-only music build has different requirements.
+For shared linking, deploy the matching shared library as well as game assets.
+Windows DLLs install in `bin/`, with import libraries in `lib/`; Unix libraries
+install in `lib/`. Keep headers and binaries from the same build/version.
 
-auto engine = grapple::Engine::Create(config);
-while (engine->Tick()) { /* ... */ }
-```
+The [C Pong](https://github.com/bluesentinelsec/grapple-beam/blob/main/demos/pong/pong.c) example uses `Grapple_RunGame` with hooks;
+the [C++ guide](cpp.md) shows checked RAII creation and cleanup.
 
-```bash
-cmake -S . -B build -DCMAKE_PREFIX_PATH=/path/to/unpacked/sdk
-```
+## Build the library inside your CMake project
 
-Nothing else is needed: no separate SDL3, no per-module list, no link
-order to get right — the objects are in one archive, where order does not
-exist. The system libraries each platform requires (frameworks on macOS,
-`user32` and friends on Windows) come with the package.
-
-The archive contains C++ objects, so a C-only project links the C++
-runtime through the package. If your build reports a duplicate `-lc++`,
-that is why, and it is harmless.
-
-The same layout comes out of `cmake --install`, so an installed prefix and
-an unpacked release SDK are interchangeable.
-
-## Consume from your game (FetchContent)
+FetchContent makes individual `Grapple::*` source targets available:
 
 ```cmake
 cmake_minimum_required(VERSION 3.20)
-project(my_game C)
-
+project(my_game LANGUAGES C CXX)
 include(FetchContent)
 FetchContent_Declare(grapple
   GIT_REPOSITORY https://github.com/bluesentinelsec/grapple-beam.git
-  GIT_TAG        v0.2.0)
+  GIT_TAG 2130ce89af08abf8c8b0ac35f7247e674d4a687b)
 FetchContent_MakeAvailable(grapple)
-
 add_executable(my_game main.c)
-target_link_libraries(my_game PRIVATE
-  SDL3::SDL3
-  Grapple::Mixer
-  Grapple::Gfx
-  Grapple::Extras)
+target_link_libraries(my_game PRIVATE Grapple::Engine)
 ```
 
-Link only what you use — each module is its own static library. The full
-target list is on the [Modules](modules.html) page. Modules you do not
-link cost you nothing at runtime; modules you do link are compiled into
-your executable with no shared-library footprint.
+This revision includes the current settings API. Pin your tested release or
+commit when upgrading. [Modules](modules.md) lists target names and how to disable
+unneeded components. Dependencies propagate through targets; disabling a module
+also requires disabling consumers that depend on it.
 
-To trim configure/compile time you can switch off whole modules:
+## Next steps
 
-```cmake
-set(GRAPPLE_BUILD_GUI OFF)      # before MakeAvailable
-set(GRAPPLE_BUILD_RUBY OFF)
-```
-
-Everything is `ON` by default. Some options imply others (the C++ and
-script bindings need the modules they wrap); CMake will tell you exactly
-which switch to flip if a combination cannot work.
-
-## First window
-
-```c
-#include <SDL3/SDL.h>
-
-int main(void)
-{
-    SDL_Init(SDL_INIT_VIDEO);
-    SDL_Window *window = NULL;
-    SDL_Renderer *renderer = NULL;
-    SDL_CreateWindowAndRenderer("my_game", 640, 480, 0, &window, &renderer);
-
-    bool running = true;
-    while (running)
-    {
-        SDL_Event ev;
-        while (SDL_PollEvent(&ev))
-        {
-            if (ev.type == SDL_EVENT_QUIT) { running = false; }
-        }
-        SDL_SetRenderDrawColor(renderer, 24, 24, 32, 255);
-        SDL_RenderClear(renderer);
-        SDL_RenderPresent(renderer);
-    }
-
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-    return 0;
-}
-```
-
-Prefer C++? The same program with RAII lifetimes and no manual destroys is
-on the [C++ page](cpp.html). Prefer a scripting language? The
-[Lua &amp; Ruby page](scripting.html) shows the same loop in both.
-
-## Build the repository itself
-
-```bash
-git clone https://github.com/bluesentinelsec/grapple-beam.git
-cd grapple-beam
-cmake -B build/debug -DCMAKE_BUILD_TYPE=Debug
-cmake --build build/debug --parallel
-ctest --test-dir build/debug
-```
-
-The first configure downloads SDL3 and its satellites (pinned versions)
-via FetchContent; everything after that is offline.
-
-## Run a script, or open a REPL
-
-The runner builds with the tree and ships in the release SDK's `bin/`. It
-is statically linked like everything else here — it carries both
-interpreters and the whole engine, so it needs nothing installed on the
-machine.
-
-Point it at a script and it runs it. The language comes from the
-extension, so there is nothing to remember:
-
-```bash
-./build/debug/bin/grapple-beam game.lua
-./build/debug/bin/grapple-beam game.rb
-```
-
-With no script, it is an interactive REPL, and `-l` says which language
-when there is no file to infer it from:
-
-```bash
-./build/debug/bin/grapple-beam -l lua
-> SDL.GetPlatform()
-./build/debug/bin/grapple-beam -l ruby
-> SDL.GetPlatform
-```
-
-A script has the whole surface loaded — SDL3, the engine, the bindings —
-so it can drive the opinionated loop or write its own. See
-[Scripting](scripting.html).
-
-## Where to go next
-
-- [Modules](modules.html) — what each `Grapple::*` target gives you
-- [C++ bindings](cpp.html) — RAII, `Status`/`Result`, no exceptions
-- [Lua &amp; Ruby](scripting.html) — embedded scripting, require-from-zip
-- [Platforms](platforms.html) — Android, iOS, and WebAssembly specifics
-- [Platform matrix](platforms-matrix.html) — which components build where, and what each platform ships
+- [Engine](engine.md): update/render hooks, scenes, input, and asset lifetimes.
+- [C++](cpp.md) and [Lua/Ruby](scripting.md): language-specific calling conventions.
+- [Music authoring](chiptune-support.md): role names, pulse presets, supported notation.
+- [Platforms](platforms.md): native packaging, mobile lifecycle, and browser restrictions.
