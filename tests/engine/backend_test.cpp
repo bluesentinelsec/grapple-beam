@@ -5,6 +5,37 @@
 #include <set>
 #include <string>
 
+namespace
+{
+class RenderBackendSoftware : public ::testing::Test
+{
+  protected:
+    void SetUp() override
+    {
+        const char *previous = SDL_GetHint(SDL_HINT_VIDEO_DRIVER);
+        had_video_hint_ = previous != nullptr;
+        if (previous != nullptr)
+            previous_video_hint_ = previous;
+        // These tests exercise real software renderers and windows without a desktop server.
+        ASSERT_TRUE(SDL_SetHintWithPriority(SDL_HINT_VIDEO_DRIVER, "dummy", SDL_HINT_OVERRIDE));
+        ASSERT_TRUE(SDL_InitSubSystem(SDL_INIT_VIDEO)) << SDL_GetError();
+        EXPECT_STREQ(SDL_GetCurrentVideoDriver(), "dummy");
+    }
+
+    void TearDown() override
+    {
+        SDL_QuitSubSystem(SDL_INIT_VIDEO);
+        SDL_ResetHint(SDL_HINT_VIDEO_DRIVER);
+        if (had_video_hint_)
+            SDL_SetHint(SDL_HINT_VIDEO_DRIVER, previous_video_hint_.c_str());
+    }
+
+  private:
+    bool had_video_hint_ = false;
+    std::string previous_video_hint_;
+};
+} // namespace
+
 TEST(RenderBackend, CanonicalNamesAreConcreteAndUnique)
 {
     std::set<std::string> names;
@@ -62,9 +93,8 @@ TEST(RenderBackend, UnknownProbeDoesNotPretendToSucceed)
     EXPECT_FALSE(Grapple_ProbeRenderBackend("software", nullptr));
 }
 
-TEST(RenderBackend, SoftwareProbeReportsActualRendererWithoutInventingVersions)
+TEST_F(RenderBackendSoftware, SoftwareProbeReportsActualRendererWithoutInventingVersions)
 {
-    ASSERT_TRUE(SDL_InitSubSystem(SDL_INIT_VIDEO));
     Grapple_RenderBackendInfo info{};
     ASSERT_TRUE(Grapple_ProbeRenderBackend("software", &info));
     EXPECT_TRUE(info.compiled);
@@ -72,12 +102,10 @@ TEST(RenderBackend, SoftwareProbeReportsActualRendererWithoutInventingVersions)
     EXPECT_STREQ(info.renderer, "software");
     EXPECT_STREQ(info.api_version, "");
     EXPECT_FALSE(info.opengl_effects);
-    SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
-TEST(RenderBackend, CliOverridesBackendDefaultAndWindowModeAtCreation)
+TEST_F(RenderBackendSoftware, CliOverridesBackendDefaultAndWindowModeAtCreation)
 {
-    ASSERT_TRUE(SDL_InitSubSystem(SDL_INIT_VIDEO));
     Grapple_EngineConfig config{};
     config.no_auto_mount = true;
     config.start_hidden = true;
@@ -94,7 +122,6 @@ TEST(RenderBackend, CliOverridesBackendDefaultAndWindowModeAtCreation)
     EXPECT_STREQ(SDL_GetRendererName(Grapple_EngineRenderer(engine)), "software");
     EXPECT_EQ(SDL_GetWindowFlags(Grapple_EngineWindow(engine)) & SDL_WINDOW_FULLSCREEN, 0u);
     Grapple_DestroyEngine(engine);
-    SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
 TEST(GraphicsArgs, CanonicalModesAndFrameCapsAreApplied)

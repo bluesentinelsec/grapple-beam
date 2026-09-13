@@ -1,5 +1,10 @@
-#include <SDL3/SDL_opengl.h>
 #include <grapple/engine_backend.h>
+
+#ifdef SDL_PLATFORM_IOS
+#include <SDL3/SDL_opengles2.h>
+#else
+#include <SDL3/SDL_opengl.h>
+#endif
 
 typedef struct Backend
 {
