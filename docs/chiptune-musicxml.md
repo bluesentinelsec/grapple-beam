@@ -1,17 +1,22 @@
+---
+title: "Chiptune MusicXML playback"
+description: "Chiptune MusicXML playback for grapple-beam callers."
+---
+
 # Chiptune MusicXML playback
 
 Compose in Guitar Pro or MuseScore, export MusicXML, and play it through the same
 C64-inspired library used for MIDI and code-authored music. See the
 [authoring workflow and support matrix](chiptune-support.md),
-[runnable examples](../demos/chiptune/README.md), and
-[build/validation record](chiptune-validation.md).
+[runnable examples](https://github.com/bluesentinelsec/grapple-beam/blob/main/demos/chiptune/README.md), and
+[builds, resource limits, and validation](chiptune-validation.md).
 
 `Grapple_LoadChipSong()` and its SDL_IOStream variant detect MIDI, uncompressed
 MusicXML, or compressed MXL by content. The resulting immutable song uses the same player and
 instrument-name contract as MIDI and declarative composition. All XML parsing
 and score compilation happen at load time, outside the audio callback.
 
-## Implemented foundation
+## Supported score structure
 
 - Partwise and timewise documents; the supplied Guitar Pro MusicXML 2.0 export.
 - Pitched notes, rests, simultaneous chord notes, backup/forward, multiple

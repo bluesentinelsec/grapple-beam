@@ -15,8 +15,8 @@ target_link_libraries(your_game PRIVATE Grapple::Regex)
 ```
 
 This module exists because the scripting languages could not do the job
-alone. mruby ships **no regex engine at all** — `Regexp` does not exist in
-any stock mruby — and Lua has *patterns*, which have no alternation, no
+alone. the bundled mruby core needs a regex implementation for `Regexp`,
+and Lua has *patterns*, which have no alternation, no
 quantified groups and no lookaround. One C engine fixes both, and C and C++
 get it too.
 
@@ -89,7 +89,7 @@ case tag when /^ui_/ then ... end
 This works because mruby's compiler already understands regex syntax even
 though mruby has no engine: every `/pattern/flags` literal compiles into a
 call to `Regexp.compile`, and `$1`/`$~` compile into ordinary global reads.
-Supplying the class is all that was missing — **mruby itself is unpatched**.
+Supplying the class is all that was missing — the integration is supplied by Grapple bindings.
 
 Available: `Regexp.new` / `.compile` / `.escape` / `.quote` / `.union` /
 `.last_match`, and `#match`, `#match?`, `#=~`, `#===`, `#source`,
@@ -126,8 +126,9 @@ Regex.new("(?<y>\\d{4})"):match("in 2026").named.y   -- "2026"
 `Regex.new` returns `nil` plus the engine's message rather than raising, in
 keeping with the rest of the Lua surface. Positions passed *in* are 1-based
 like Lua's own string functions; the `start`/`stop` fields *inside* a match
-are the engine's 0-based byte offsets, and can be handed back to `:match`
-directly. Handles are garbage-collected.
+are 0-based byte offsets. Add 1 when passing an offset to `:match`; for example,
+`re:match(text, m.stop + 1)` resumes at the previous match's exclusive end.
+Advance further after a zero-length match, or use `:gmatch`. Handles are garbage-collected.
 
 Methods: `:match`, `:match_at`, `:gmatch`, `:gsub`, `:split`, `:test`,
 `:source`, `:flags`; module functions `Regex.new`, `Regex.escape`,
@@ -135,19 +136,18 @@ Methods: `:match`, `:match_at`, `:gmatch`, `:gsub`, `:split`, `:test`,
 
 ## C++
 
-The generated RAII owner is `grapple::gen::RegexHandle`:
+The generated RAII owner is `grapple::ext::RegexHandle`:
 
 ```cpp
-auto re = grapple::gen::RegexHandle::CompileRegex("(\\w+)@(\\w+)", nullptr);
+auto re = grapple::ext::RegexHandle::CompileRegex("(\\w+)@(\\w+)", nullptr);
 if (re) {
     if (re->RegexSearch("bob@example", 0)) { /* ... */ }
 }
 ```
 
-## Cost
+## Build selection
 
-The Release archive is about 0.7 MB. In a full web build of the REPL —
-both interpreters, every module — the engine adds roughly 8% to the wasm
-(5.65 → 6.12 MB, or 1.92 → 2.06 MB gzipped). `-DGRAPPLE_BUILD_REGEX=OFF`
-drops it from C-only builds; `GRAPPLE_BUILD_LUA`/`_RUBY` require it,
-because Ruby's `Regexp` is built on it.
+`GRAPPLE_BUILD_REGEX=OFF` omits the module when its consumers are also disabled.
+Lua and Ruby require Regex in this build. Compile patterns during loading and
+reuse them; match state belongs to each handle. Clear SDL's error before a C
+search when distinguishing an ordinary no-match from a newly reported failure.

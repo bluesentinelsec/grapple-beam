@@ -6,9 +6,9 @@ description: "Box2D v3 rigid-body physics, pure C11, statically built for every 
 # Physics — `Grapple::Physics`
 
 Box2D v3.1.1 — Erin Catto's canonical 2D physics engine, rewritten in
-pure C11 for v3. Zero external dependencies, SIMD with scalar fallback,
-works on every platform including web. The full native `b2*` API ships
-unchanged.
+pure C11 for v3. The Box2D core has no external library dependencies; the
+Grapple target also includes an SDL/Gfx debug-draw integration. SIMD has a scalar
+fallback, and the module builds for WebAssembly. Native `b2*` APIs are available.
 
 ```cmake
 target_link_libraries(your_game PRIVATE Grapple::Physics)
@@ -29,13 +29,15 @@ b2Polygon box = b2MakeBox(0.5f, 0.5f);
 b2ShapeDef shape_def = b2DefaultShapeDef();
 b2CreatePolygonShape(player, &shape_def, &box);
 
-b2World_Step(world, 1.0f / 60.0f, 4);   /* each frame */
+b2World_Step(world, 1.0f / 60.0f, 4);   /* each fixed simulation tick */
+/* At shutdown, after users of the bodies are finished: */
+b2DestroyWorld(world);                 /* also destroys its bodies/shapes */
 ```
 
 ## Debug-draw overlay (original extension)
 
 `<grapple/physics_draw.h>` renders a world's collision shapes through
-the [Gfx](gfx.html) GPU primitives — batched draws, meters-to-pixels
+the [Gfx](gfx.md) GPU primitives — batched draws, meters-to-pixels
 mapping with y flipped:
 
 ```c
@@ -52,8 +54,8 @@ events — and verify that two identical worlds evolve **bit-identically**
 (Box2D v3's determinism guarantee).
 
 C++ users get RAII `PhysicsWorld`/`PhysicsBody` owners; Lua and Ruby get
-the full `B2.*` module — see [C++](cpp.html) and
-[Scripting](scripting.html).
+generated `B2.*` bindings — see [C++](cpp.md) and
+[Scripting](scripting.md).
 
 Provenance:
 [`deps/box2d.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/deps/box2d.md).

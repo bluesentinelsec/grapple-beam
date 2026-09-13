@@ -1,150 +1,112 @@
-<div align="center">
-
 # grapple-beam
 
-**Everything a 2D game needs, pulled into one self-contained binary.**
-
-*A static-first game engine on SDL3, scriptable in Lua and Ruby.*
+*A static-first SDL3 game engine for C, C++, Lua, and Ruby.*
 
 [![CI](https://github.com/bluesentinelsec/grapple-beam/actions/workflows/ci.yml/badge.svg)](https://github.com/bluesentinelsec/grapple-beam/actions/workflows/ci.yml)
 [![License: zlib](https://img.shields.io/badge/License-zlib-informational.svg)](LICENSE)
-&nbsp;·&nbsp; **[Documentation](https://bluesentinelsec.github.io/grapple-beam/)** ·
-[Getting Started](https://bluesentinelsec.github.io/grapple-beam/getting-started.html) ·
-[Modules](https://bluesentinelsec.github.io/grapple-beam/modules.html)
 
-</div>
+<p align="center"><img src="docs/assets/grapple-beam-logo.png" alt="grapple-beam: a 2D game engine for retro and beyond" width="420"></p>
 
----
+grapple-beam provides two ways to build a game:
 
-<div align="center">
-  <img src="docs/assets/grapple-beam-logo.png" alt="grapple-beam: a pixel-art grapple beam firing across a starfield, over the wordmark and the line "a 2D game engine for retro and beyond"" width="420">
-</div>
+- **Run a Lua or Ruby project** with the `grapple-beam` executable. It hosts the
+  engine loop, input, rendering, audio, and script bindings.
+- **Embed the engine in C or C++** using individual CMake modules or the aggregate
+  SDK. Static linking is the default; desktop SDKs also offer shared libraries.
 
-SDL3 gives you a window, a renderer, input, and audio output — and then the
-dependency hunt begins: a mixer, an image loader, fonts, physics, a GUI, a
-data-format parser, an archive format, a scripting language. Each usually
-arrives as another shared library with its own transitive dependencies and
-its own packaging story on every platform.
+The engine includes fixed-step simulation with interpolated rendering, scenes,
+actors, physics, asset loading, UI, lighting, and player settings. Music can come
+from MIDI, MusicXML, or code, with polyphonic C64-inspired instruments and modern
+chorus, delay, and reverb.
 
-This project takes the opposite approach. **Every extension is vendored as
-pinned source and compiled into a static library.** Your game links a
-handful of `Grapple::*` CMake targets and produces one self-contained
-executable — no DLLs beside the binary, no `LD_LIBRARY_PATH`, no "works on
-my machine." The same tree builds for Linux, macOS, Windows, Android, iOS,
-and browser WebAssembly, and CI proves all of it on every push.
+[Getting started](docs/getting-started.md) · [Runner and settings](docs/cli-implementation.md) ·
+[Modules](docs/modules.md) · [Published documentation](https://bluesentinelsec.github.io/grapple-beam/)
 
-## The stack
+## Build and run
 
-| Need | Module | Under the hood |
-|------|--------|----------------|
-| Audio: mixing, SFX, MIDI/MusicXML, chiptunes | `Grapple::Mixer` | SDL3_mixer 3.2.4 + vendored codecs, TiMidity, MML + polyphonic C64-inspired score/code synth |
-| 2D drawing primitives | `Grapple::Gfx` | SDL3_gfx + original GPU-batched equivalents |
-| Image loading/saving (13 formats) | `Grapple::Image` | SDL3_image, all-static codecs |
-| Text and fonts, i18n shaping + BiDi | `Grapple::TTF` | SDL3_ttf + static FreeType, HarfBuzz, SheenBidi |
-| TCP/UDP networking | `Grapple::Net` | SDL3_net |
-| HTTP/S client + embedded server | `Grapple::Http` / `mog::mog` | [mog](https://github.com/bluesentinelsec/mog), statically linked |
-| Rigid-body physics | `Grapple::Physics` | Box2D v3 (pure C11) |
-| Immediate-mode GUI | `Grapple::GUI` | Nuklear + SDL3 backend + weighted grid layout |
-| Tiled map parsing (.tmj) | `Grapple::Tiled` | cute_tiled, VFS-aware |
-| Regular expressions | `Grapple::Regex` | Oniguruma (Ruby syntax) in C, C++, Lua and Ruby |
-| Dynamic 2D lighting | `Grapple::Light` | GPU shader (embedded GLSL), day/night, shadows, CPU fallback |
-| Opinionated game engine | `Grapple::Engine` | fixed-tick loop with interpolated rendering, design-resolution scaling |
-| Virtual filesystem, encrypted archives | `Grapple::VFS` | PhysFS (zip-only) + SSE1 crypto container |
-| Crypto, DEFLATE, base64, signals | `Grapple::Extras` | original code + sdefl/sinfl |
-| JSON / TOML / YAML | `Grapple::Formats` | cJSON, tomlc99, libyaml |
-| Embedded scripting | `Grapple::Lua` / `Grapple::Ruby` | Lua 5.4.8, mruby 4.0.0, require-from-zip |
-| Script game API (both languages) | `Grapple::Bindings` | curated layer + generated full-API mirror |
-| C++ RAII bindings | `Grapple::Cpp` | Google-style, `Status`/`Result`, no exceptions |
+Use CMake 3.20+, a C17/C++20 toolchain, and your platform's development SDK.
+Dependencies are built from pinned source, either checked into the repository
+or acquired with FetchContent. Initial configuration needs network access unless
+those sources are already supplied. OS libraries and frameworks are still required.
 
-## Quick start
+```sh
+git clone https://github.com/bluesentinelsec/grapple-beam.git
+cd grapple-beam
+make
+./build/debug/bin/grapple-beam --window-mode windowed demos/pong/pong.lua
+./build/debug/bin/grapple-beam --window-mode windowed demos/pong/pong.rb
+```
+
+On Windows, use `build.bat debug`; the executable is under `build/debug/bin/`
+(with a configuration subdirectory when using a multi-configuration generator).
+`make test` / `build.bat test` builds and runs the tests. `make release` builds
+an optimized runner and libraries.
+
+These guides describe **current main**, including settings added after v0.9.0.
+For a released SDK, use the documentation bundled with that release and matching
+headers/libraries.
+
+## Launch and configure a game
+
+```sh
+grapple-beam --window-mode fullscreen-borderless ./my-game
+grapple-beam --vsync off --max-fps 144 --music-volume .7 ./my-game
+grapple-beam --print-settings ./my-game
+grapple-beam --safe-mode ./my-game
+grapple-beam repl --language lua
+```
+
+A project directory contains `main.lua` or `main.rb`; an optional `grapple.toml`
+selects an entrypoint and stable player-preference identity. With no path, the
+runner discovers a project in the current directory. Engine options precede the
+project; trailing arguments belong to the game.
+
+Settings merge from engine/game defaults, project TOML and scripts, player TOML
+and scripts, explicit configuration files, then CLI overrides. Scripts win over
+TOML within each tier. `--default-settings`, `--reset-settings`, and `--safe-mode`
+provide recovery; CLI changes are never automatically saved. See the
+[settings guide](docs/cli-implementation.md) for the exact order, persistence API,
+display modes, graphics capabilities, accessibility controls, and audio buses.
+
+## Embed the library
+
+An installed SDK exports CMake targets with platform link requirements:
 
 ```cmake
-include(FetchContent)
-FetchContent_Declare(grapple
-  GIT_REPOSITORY https://github.com/bluesentinelsec/grapple-beam.git
-  GIT_TAG        v0.2.0)
-FetchContent_MakeAvailable(grapple)
-
+cmake_minimum_required(VERSION 3.20)
+project(my_game LANGUAGES C CXX)
+find_package(grapple-beam CONFIG REQUIRED)
 add_executable(my_game main.c)
-target_link_libraries(my_game PRIVATE SDL3::SDL3 Grapple::Mixer Grapple::Gfx)
+target_link_libraries(my_game PRIVATE grapple-beam::SDK)
 ```
 
-Link only what you use; switch whole modules off with
-`set(GRAPPLE_BUILD_<NAME> OFF)` before `MakeAvailable`. Full walkthrough:
-[Getting Started](https://bluesentinelsec.github.io/grapple-beam/getting-started.html).
+Configure with `-DCMAKE_PREFIX_PATH=/path/to/sdk`. For C++, use
+`grapple-beam::SDKCxx` and request `cxx_std_20` on your executable; for dynamic linking, use `SDKShared` or `SDKCxxShared`.
+[Getting started](docs/getting-started.md) also covers FetchContent and selecting
+individual `Grapple::*` source targets.
 
-To hack on the repository itself:
+## Learn by task
 
-```bash
-cmake -B build/debug -DCMAKE_BUILD_TYPE=Debug
-cmake --build build/debug --parallel
-ctest --test-dir build/debug
-```
+| Task | Guide | Examples |
+| --- | --- | --- |
+| Build the game loop, scenes, actors, input, saves | [Engine](docs/engine.md) | [Pong in four languages](demos/pong/) |
+| Use RAII and check errors in C++ | [C++](docs/cpp.md) | [C++ Pong](demos/pong/pong.cpp) |
+| Script a game or embed an interpreter | [Lua and Ruby](docs/scripting.md) | [Demos](demos/README.md) |
+| Compose and play MIDI/MusicXML or code | [Music authoring](docs/chiptune-support.md) | [C, C++, Lua, Ruby playback](demos/chiptune/README.md) |
+| Mix music, effects, speech, and ambience | [Audio](docs/mixer.md) | [Mixer APIs](mixer/README.md) |
+| Build menus and options screens | [GUI](docs/gui.md), [C++ UI](docs/cpp-gui.md) | [Settings API](docs/cli-implementation.md#recovery-and-saving) |
+| Package assets and load from archives | [VFS](docs/vfs.md) | [Asset packer](scripts/pack_assets.py) |
+| Select modules or target mobile/web | [Modules](docs/modules.md), [Platforms](docs/platforms.md) | [Platform matrix](docs/platforms-matrix.md) |
 
-## Write your game in C, C++, Lua, or Ruby
+## Dependencies, versioning, and license
 
-The whole stack is exposed on four language surfaces — [`demos/`](demos/)
-contains a complete Pong in each as living proof:
+Dependency versions, licenses, and local changes are recorded in [deps/](deps/)
+and [CMake dependency declarations](cmake/Dependencies.cmake). Module feature
+availability varies by platform and build options; see each module's guide.
+Generated binding coverage and exclusions are recorded in the
+[binding report](bindings/generated/COVERAGE.md).
 
-- **C** — the native API of every module.
-- **C++** — Google-style RAII wrappers (`grapple::Window`,
-  `grapple::Mixer`, …) with `Status`/`Result` error handling and no
-  exceptions, plus a generated surface covering every C function:
-  RAII owners for 60+ resource types, `Status` wrappers, aliases.
-  [Details](https://bluesentinelsec.github.io/grapple-beam/cpp.html).
-- **Lua & Ruby** — embedded runtimes with a curated game API plus a
-  generated mirror of the entire C API (2,156 functions per language,
-  GC-safe ownership), `require` working from mounted (optionally
-  encrypted) zip archives, and an interactive REPL (`repl -l lua|ruby`).
-  [Details](https://bluesentinelsec.github.io/grapple-beam/scripting.html).
-
-## Ship your assets sealed
-
-```bash
-python3 scripts/pack_assets.py assets/ media.bin --password "secret" \
-        --header media.h --symbol game_media
-```
-
-```c
-Grapple_MountEncryptedArchive(game_media, (int)game_media_len, "secret", "/assets");
-SDL_Surface *hero = IMG_Load_IO(Grapple_OpenVFSRead("/assets/hero.png"), true);
-```
-
-Textures, audio, maps, and scripts all load transparently from the mounted
-archive — ChaCha20 + PBKDF2 encrypted, authenticated before mounting.
-
-## Engineering discipline
-
-- **Pinned and ledgered.** Every vendored library is imported at a
-  specific release with its SHA-256 recorded; all local changes are
-  documented in [`deps/`](deps/) (12 upstream bugs found, fixed locally,
-  and written up so far).
-- **Delete, don't stub.** Features that would require shared libraries
-  are removed from the headers — misuse fails at compile time, never at
-  runtime.
-- **Tested where it runs.** 319 tests on six CI platforms (Linux, macOS,
-  Windows, ASan+UBSan, Android emulator, browser WebAssembly) plus an
-  iOS XCFramework batch job, with a link audit proving every test binary
-  depends only on OS-built-in shared libraries.
-- **Generated code is verified.** The binding generator's committed
-  output is regenerated in CI and must match byte-for-byte.
-
-## Versioning
-
-[Semantic versioning](https://semver.org/). Until 1.0.0, minor releases
-may include breaking API changes; release notes will always say so.
-
-## License
-
-zlib for all original code. Vendored components keep their own permissive
-licenses (zlib, MIT, public domain) — see [`deps/`](deps/) for the
-complete inventory.
-
-## Game runner settings
-
-Launch projects with `grapple-beam [options] ./my-game`. Use `--window-mode`
-with `windowed`, `fullscreen-exclusive`, or `fullscreen-borderless`; booleans
-such as `--vsync` take `on` or `off`. `--help-all` lists the typed settings.
-
-[Runner settings](docs/cli-implementation.md) covers project manifests, Lua/Ruby
-and TOML configuration, player preferences, recovery, graphics, and audio buses.
+The root `VERSION` file identifies the project version. Before 1.0, minor releases
+may include breaking API changes; review release notes when upgrading.
+Original code uses the [zlib license](LICENSE). Dependencies retain their own
+licenses, including the terms listed in their provenance records.

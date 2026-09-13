@@ -331,3 +331,17 @@ subtree after calling `Remove()` or `Clear()` on that subtree.
 
 Callbacks are kept alive by `Ui`, so captured application state must outlive
 the UI or otherwise remain valid while callbacks can run.
+
+## Player preferences and UI scale
+
+A widget's value is UI state; changing it does not automatically change engine
+settings. Apply graphics through `Grapple_EngineSetGraphics` and audio through
+`Grapple_SetAudioBusGain` / `Grapple_SetAudioMuted`. Save only the changed fields
+with `Grapple_SettingsSaveChanges`; [Runner settings](cli-implementation.md#recovery-and-saving)
+explains source tracking and requested versus actual values.
+
+`Grapple.ui(engine)` in Lua/Ruby uses the engine UI-scale preference for fonts
+and naturally sized widgets. Native callers can pass
+`Grapple_EngineUiPoints(engine, base_points)` when creating their UI. Recreate the
+UI after changing scale, and scale custom fixed dimensions explicitly. Keep the
+engine/renderer alive until the UI and its event/overlay hooks are detached.

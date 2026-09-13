@@ -1,77 +1,46 @@
 ---
 title: Home
-description: "SDL3 Static Extensions: static-link-first game infrastructure for SDL3 — audio, graphics, physics, GUI, scripting, and more in one dependency-free stack."
+description: "grapple-beam: an SDL3 game runner and embeddable C/C++ engine, with Lua/Ruby scripting and C64-inspired music."
 ---
 
-<div class="hero">
-  <img class="banner" src="assets/grapple-beam-logo.png" alt="grapple-beam: a pixel-art grapple beam firing across a starfield, over the wordmark and the line "a 2D game engine for retro and beyond"">
-  <h1>SDL3 Static Extensions</h1>
-  <p class="tagline">Everything a 2D game needs, statically linked into one self-contained binary. SDL3 and 12 battle-tested extension modules — audio, graphics, physics, GUI, Lua &amp; Ruby scripting — with zero shared-library dependencies.</p>
-  <div class="badges">
-    <span class="badge rounded-pill">C · C++ · Lua · Ruby</span><span class="badge rounded-pill">Linux · macOS · Windows · Android · iOS · WebAssembly</span><span class="badge rounded-pill">zlib</span><span class="badge rounded-pill">zero shared deps</span>
-  </div>
-  <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center">
-    <a class="btn btn-primary rounded-pill px-4" href="getting-started.html">Get started</a>
-    <a class="btn btn-outline-primary rounded-pill px-4" href="modules.html">Browse modules</a>
-  </div>
-</div>
+# grapple-beam
 
-## Why SDL3 Static Extensions
+![grapple-beam: a 2D game engine for retro and beyond](assets/grapple-beam-logo.png)
 
-SDL3 gives you a window, a renderer, input, and audio output — and then the
-dependency hunt begins: a mixer, an image loader, fonts, physics, a GUI, a
-data format parser, an archive format, a scripting language. Each usually
-arrives as another shared library with its own transitive dependencies, its
-own platform quirks, and its own packaging story on Android, iOS, and the web.
+Build a 2D game in C, C++, Lua, or Ruby. Use the **`grapple-beam` runner** for
+script projects, or **embed the SDK** in your application. The source tree builds
+its dependencies statically; desktop SDKs also provide shared-library targets.
+Platform SDKs and OS libraries remain part of the build and runtime environment.
 
-This project takes the opposite approach. Every extension is **vendored as
-pinned source and compiled into a static library**. Your game links a handful
-of `Grapple::*` CMake targets and produces one self-contained executable —
-no DLLs beside the binary, no `LD_LIBRARY_PATH`, no "works on my machine."
-The same source tree builds for Linux, macOS, Windows, Android, iOS, and
-browser WebAssembly, and all of it is exercised by CI on every platform.
+These pages describe current main, including the runner settings introduced after
+v0.9.0. Use matching release documentation when consuming a released SDK.
 
-- **One `FetchContent` away.** Consume the whole stack from CMake with a
-  single declaration; pick the modules you want with `GRAPPLE_BUILD_*`
-  options (everything is on by default).
-- **Four languages, one engine.** The full C API; Google-style C++ RAII
-  wrappers with `Status`/`Result` error handling and no exceptions; and Lua
-  5.4 plus mruby embedded, with both a curated game API and a generated
-  mirror of the entire C surface.
-- **Ship your assets sealed.** Pack game files into a zip, optionally
-  encrypt it (ChaCha20 + PBKDF2, encrypt-then-MAC), embed it in the binary,
-  and mount it as a virtual filesystem — scripts, maps, audio, and textures
-  all load from it transparently.
-- **Vendored does not mean stale.** Every third-party library is pinned by
-  release and checksum with a provenance ledger in `deps/`, including
-  documented local fixes (12 upstream bugs found and fixed so far).
+## Start a game
 
-## The stack at a glance
+1. [Build or install](getting-started.md), then run a Lua/Ruby project or link a C/C++ game.
+2. [Configure the runner](cli-implementation.md): window modes, graphics, audio,
+   preference files, scripts, CLI overrides, and recovery.
+3. [Use the engine](engine.md): fixed updates, rendering, scenes, actors, input,
+   physics, assets, localization, and saves.
 
-| Need | Module | Under the hood |
-|------|--------|----------------|
-| Audio: mixing, music, sound effects | [Mixer](mixer.html) | SDL3_mixer + vendored codecs, MIDI, chiptune synth |
-| 2D drawing primitives | [Gfx](gfx.html) | SDL3_gfx + original GPU-batched equivalents |
-| Image loading/saving | [Image](image.html) | SDL3_image, 13 formats, all-static codecs |
-| Text and fonts, i18n shaping + BiDi | [TTF](ttf.html) | SDL3_ttf + FreeType, HarfBuzz, SheenBidi |
-| Networking | [Net](net.html) | SDL3_net (TCP/UDP) + mog HTTP/S client |
-| Physics | [Physics](physics.html) | Box2D v3 |
-| GUI | [GUI](gui.html) | Nuklear + SDL3 backend + weighted grid layout |
-| Tile maps | [Tiled](tiled.html) | cute_tiled (.tmj) with VFS loading |
-| Regular expressions | [Regex](regex.html) | Oniguruma, Ruby syntax, all four languages |
-| Dynamic lighting | [Lighting](lighting.html) | day/night, torches, shadows; GPU shader with CPU fallback |
-| Game engine | [Engine](engine.html) | fixed-tick loop, interpolation, design resolution, frame limiter |
-| Virtual filesystem | [VFS](vfs.html) | PhysFS, encrypted-zip mounting, asset packing |
-| Crypto, compression, base64, signals | [Extras](extras.html) | original code + sdefl/sinfl |
-| JSON, TOML, YAML | [Formats](formats.html) | cJSON, tomlc99, libyaml |
-| Scripting | [Lua &amp; Ruby](scripting.html) | Lua 5.4.8 + mruby 4.0.0, require-from-zip |
+The [Pong demos](https://github.com/bluesentinelsec/grapple-beam/blob/main/demos/README.md) show the engine loop in all four languages.
+The [C++ guide](cpp.md) covers resource ownership and error handling; the
+[scripting guide](scripting.md) covers callbacks, language bindings, and imports.
 
-## Proof it works
+## Add game features
 
-The test suite runs 592 tests across six CI platforms, with a dedicated
-AddressSanitizer + UBSan job, an iOS build gate on every pull request and
-a full XCFramework validation on demand. Which components build where is
-on the [platform matrix](platforms-matrix.html). The
-repository includes four complete Pong implementations — one each in C,
-C++, Lua, and Ruby — built purely against the public APIs, and each played
-for ten seconds by CI to prove the loop still runs a real game.
+| Need | Guide |
+| --- | --- |
+| MIDI, MusicXML, or declarative C64-inspired music | [Authoring and supported notation](chiptune-support.md), [playback API](chiptune-musicxml.md) |
+| Music, sound effects, and volume buses | [Mixer](mixer.md) |
+| Menus, HUDs, and options screens | [GUI](gui.md), [C++ retained UI](cpp-gui.md) |
+| Images, primitives, text, and lighting | [Image](image.md), [Gfx](gfx.md), [TTF](ttf.md), [Lighting](lighting.md) |
+| Maps and collision simulation | [Tiled](tiled.md), [Physics](physics.md) |
+| Asset archives, data, and utilities | [VFS](vfs.md), [Formats](formats.md), [Extras](extras.md), [Regex](regex.md) |
+| Network connections and HTTP | [Net](net.md), [HTTP/S](http.md) |
+
+[Modules](modules.md) lists CMake targets. [Platforms](platforms.md) and the
+[support matrix](platforms-matrix.md) describe packaging and runtime differences.
+Public headers document API ownership and failure behavior; generated
+[script signatures](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/SCRIPT_API.md) and
+[binding coverage](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/COVERAGE.md) complement these guides.

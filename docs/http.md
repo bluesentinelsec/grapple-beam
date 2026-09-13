@@ -8,9 +8,9 @@ description: "HTTP and HTTPS via mog — a lightweight static-link-friendly clie
 HTTP and HTTPS come from [mog](https://github.com/bluesentinelsec/mog), a
 lightweight static-link-friendly HTTP/S client (and embedded server) for
 C++ with a C API on top. It is pulled in via CMake FetchContent at a
-pinned release and compiled statically — the resulting game binary stays
-fully self-contained, with the Mozilla CA bundle compiled in so HTTPS
-verifies even in a `FROM scratch` container.
+pinned release and compiled statically. Native transports may use OS networking
+services; the embedded TLS transport includes a CA bundle. Check response errors
+and status codes, and avoid blocking network operations on the render/audio thread.
 
 Two ways to use it:
 
@@ -36,7 +36,8 @@ mog_response_free(resp);
 ```
 
 An embedded HTTP/S server (`mog_server_*`) is included too — the test
-suite runs loopback round-trips against it on every platform.
+suite runs loopback round-trips on supported native platforms.
+`Grapple::Http` is disabled on Emscripten; use browser networking for web games.
 
 ## C++ API — `mog::mog`
 

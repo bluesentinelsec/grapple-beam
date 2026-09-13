@@ -57,11 +57,15 @@ in each script. Otherwise they use the file helper, which accepts any of the
 three supported formats:
 
 ```sh
-./grapple-beam demos/chiptune/play.lua tests/mixer/assets/c64-composition-named.mid
-./grapple-beam demos/chiptune/play.rb tests/mixer/assets/c64-composition-named.xml
+./grapple-beam demos/chiptune/play.lua "$PWD/tests/mixer/assets/c64-composition-named.mid"
+./grapple-beam demos/chiptune/play.rb "$PWD/tests/mixer/assets/c64-composition-named.xml"
 ./grapple-beam demos/chiptune/play.lua code
 ./grapple-beam demos/chiptune/play.rb code
 ```
+
+The runner changes to the script project directory. These file arguments use
+absolute paths so the fixture is found regardless of that working directory.
+Pass a score path explicitly when running the script demos.
 
 For declarative C/C++ composition, see the [mixer examples](../../mixer/README.md#compose-music-in-code-c-c-lua-ruby).
 All examples own their player through the game loop and destroy it before audio

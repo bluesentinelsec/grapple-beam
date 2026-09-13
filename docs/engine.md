@@ -5,25 +5,24 @@ description: "An opinionated game engine: a fixed-tick loop with interpolated re
 
 # Engine — `Grapple::Engine`
 
-An opinionated game engine. Everything else in this project is a library
-that does one thing and leaves the shape of your program alone; the engine
-is the opposite trade. It owns the loop, and in exchange it can do things a
-library cannot — chiefly render *between* two simulation states, which is
-most of the difference between a game that looks smooth and one that does
-not.
-
-The rule it holds to: **the engine owns structure, the game owns meaning.**
-It knows a frame has a duration and a simulation has a rate. It never knows
-what a goblin is.
+`Grapple::Engine` supplies a fixed-step loop with interpolated rendering, scenes,
+actors, input, physics, assets, lighting, saves, and localization. Register hooks
+for simulation and drawing; the engine manages frame pacing and presentation.
+Use it from C/C++ or through the Lua/Ruby runner.
 
 ```cmake
 target_link_libraries(your_game PRIVATE Grapple::Engine)
 ```
 
-This page covers the loop and time, presentation and scaling, scenes,
-graphics settings, the camera, actors, engine-owned rendering, input,
-actions, physics, assets and lighting. Saves, localisation and the script
-bindings follow.
+| Task | Sections |
+| --- | --- |
+| Simulate and draw | [Loop](#the-loop), [coordinates](#coordinate-spaces), [presentation](#presentation-modes), [frame limiter](#the-frame-limiter) |
+| Organize gameplay | [Scenes](#scenes), [actors](#actors), [input](#input), [actions](#actions), [physics](#physics) |
+| Render a world | [Camera](#the-camera), [rendering](#rendering), [lighting](#lighting), [backend](#the-renderer-backend) |
+| Configure and ship | [Settings](#graphics-settings), [media](#asset-mounting), [asset cache](#assets), [saves](#saves), [localization](#localisation) |
+
+For project discovery, CLI options, configuration scripts, and player preferences,
+start with [Runner settings](cli-implementation.md).
 
 ## The loop
 
@@ -421,185 +420,71 @@ level does not freeze as it leaves.
 
 ## Getting your game into the engine
 
-Three ways, depending on the language, all supported deliberately.
+C callers link `Grapple::Engine` and register hooks with `Grapple_RunGame` or an
+owned engine. C++ callers can use `grapple::Engine` from `<grapple/game.h>`.
+The [Pong demos](https://github.com/bluesentinelsec/grapple-beam/blob/main/demos/README.md) illustrate both approaches.
 
-**C and C++ link the engine.** The engine is a library first: your program
-owns `main`, fills in the hooks and links `Grapple::Engine`. No plugin
-loading, no dynamic symbols — those fight static linking, and iOS and the
-web forbid them outright.
-
-**Lua and Ruby are run by the player binary.** The engine also ships as an
-executable that hosts a script — `grapple-engine game.lua` — defaulting to
-`main.lua` or `main.rb` in the current directory. This is the Love2D model
-and it is the fastest way to start a game.
-
-**Assets come from an archive.** The player mounts `media.zip`, `media.dat`
-(both may be encrypted) or a plain `media/` directory, in that order, and
-`--media` overrides it. A finished game can have its archive appended to the
-executable so it ships as a single file.
-
-The full mechanism lands with the scripting subsystem; the loop is
-independent of it.
+Lua and Ruby games run with `grapple-beam [options] ./my-game`, or an explicit
+script path. The runner discovers the entrypoint, resolves configuration, then
+starts the loop after hooks are registered. See [Getting started](getting-started.md)
+and [Scripting](scripting.md) for complete examples.
 
 ## Graphics settings
 
-Everything a player can change lives in one struct,
-`Grapple_GraphicsSettings` — plain data, so it copies, compares and
-serialises. `<grapple/engine_graphics.h>`.
+Use `<grapple/engine_settings.h>` for typed settings, source tracking, and player
+persistence. `Grapple_GraphicsSettings` in `<grapple/engine_graphics.h>` is the
+runtime graphics structure; audio and startup settings have separate policies.
+The [runner settings guide](cli-implementation.md) documents precedence, canonical
+TOML/script keys, CLI options, recovery, and audio buses.
 
-```c
-Grapple_GraphicsSettings gfx;
-Grapple_GraphicsResolve(&gfx, argc, argv, "acme", "mygame");
+Engine defaults select borderless fullscreen, primary display, vsync, a
+display-paced frame cap, native render scale, and high quality budgets. Inline
+constructor fields provide game defaults; explicit project/player/config/CLI
+fields override them. A directly embedded engine with a zero-initialized C
+configuration retains its legacy windowed startup unless a settings snapshot or
+explicit graphics configuration is supplied.
 
-Grapple_EngineConfig config = {0};
-config.graphics = &gfx;
-config.argc = argc;                   /* so --media works */
-config.argv = argv;
-Grapple_Engine *engine = Grapple_CreateEngine(&config);
-```
-
-and an options screen is three lines:
+### Apply a graphics change
 
 ```c
 Grapple_GraphicsSettings next = *Grapple_EngineGraphics(engine);
-next.bloom = slider;
-Grapple_EngineSetGraphics(engine, &next);       /* applies now */
-Grapple_GraphicsSave(&next, "acme", "mygame");  /* persists */
-```
-
-### Where the values come from
-
-`Grapple_GraphicsResolve` walks five sources, each beating the one before:
-
-| | Source | |
-|---|---|---|
-| 1 | `Grapple_GraphicsDefaults()` | compiled in |
-| 2 | `media/config.toml` **inside the media archive** | what the game shipped with |
-| 3 | `media/config.toml` in the working directory | an installer's, or a server's |
-| 4 | `media/config.toml` in the pref directory | the player's saved settings |
-| 5 | the command line | right now |
-
-The player's saved settings beat what the game shipped with, and the command
-line beats everything — which is the order you want at 2am when a game will
-not start because of a setting somebody saved. `--config=PATH` replaces the
-search entirely: someone passing a path wants *that* file, not that file
-plus three others.
-
-Nothing here is fatal. A malformed file leaves the previous values in place
-and reports through `Grapple_GraphicsConfigError`; every value is clamped
-on the way in, so a hand-edited `brightness = 40` cannot black out a game.
-`Grapple_GraphicsConfigPath` says which file was actually read, which is
-worth logging at startup — "why is my config being ignored" is otherwise a
-long afternoon.
-
-The archive is reached through a callback rather than a PhysFS dependency,
-because by the time settings resolve the archive may be a zip, an encrypted
-`.dat`, a plain directory, or bytes compiled into the executable, and
-mounting it is the game's decision:
-
-```c
-static bool ReadFromVfs(const char *path, char **text, void *user) {
-    int size = 0;
-    unsigned char *data = Grapple_LoadVFSFile(path, &size);
-    if (data == NULL) return false;
-    *text = (char *)data;
-    return true;
+next.bloom = 0.2f;
+if (!Grapple_EngineSetGraphics(engine, &next)) {
+    SDL_Log("Could not apply graphics: %s", SDL_GetError());
 }
-Grapple_GraphicsSetArchiveReader(ReadFromVfs, NULL);   /* before Resolve */
 ```
 
-### config.toml
+Call runtime setters on the engine thread. Some changes require restart; query
+`Grapple_SettingPolicy`. Use `Grapple_EngineActualSettings` for an owned snapshot
+of achieved graphics/backend/timing, and `Grapple_EngineRequestedSettings` for the
+borrowed request snapshot. Always destroy the owned result. Audio fields in the
+actual snapshot remain launch requests; query the live audio bus getters.
 
-Keys are optional, and are accepted at the top level as well as in their
-section — someone writing this by hand should not have to know which section
-a key lives in.
+Save a fresh snapshot containing only the player's changed fields through
+`Grapple_SettingsSaveChanges`, as shown in the [persistence example](cli-implementation.md#recovery-and-saving).
+Saving the complete launch snapshot would persist temporary CLI overrides.
+Older `Grapple_GraphicsResolve`, `GraphicsLoadArgs`, and `GraphicsSave` helpers
+remain available for existing C integrations, but their permissive legacy parsing
+is not the runner's strict typed settings contract.
 
-```toml
-[display]
-vsync = true
-max_fps = 0            # 0 follows the display, negative uncaps
-window_mode = "windowed"     # windowed | borderless | exclusive
-presentation = "letterbox"   # letterbox | expand | overscan | integer | stretch | native
-render_scale = 1.0     # 0.25-2.0
-filter = "auto"        # auto | linear | nearest
+### Effects, budgets, and accessibility
 
-[quality]
-particles = "high"     # off | low | medium | high
-dynamic_lights = "high"
-shadows = "high"
+The effects switch gates AA, bloom, CRT, pixelation, and chromatic aberration
+without discarding their selected values. Brightness, contrast, saturation, and
+color-blind correction remain independent. Post-processing requires the engine's
+OpenGL/GLES shader path; other renderers report it unavailable. Draw HUD/UI in
+`post_render` to place it after these passes. Reduced flashing caps bloom and
+provides a preference that custom flashing content must also honor.
 
-[effects]
-bloom = 0.0
-bloom_threshold = 0.7
-crt = 0.0
-crt_curvature = 0.0
-pixelation = 1         # 1 is off
-chromatic_aberration = 0.0
-antialias = "off"      # off | fxaa
+Engine lighting consumes light/shadow budgets. Custom particle emitters should
+use `Grapple_GraphicsParticleDensity`; there is no built-in general particle emitter.
+`Grapple_CameraInit` and `Grapple_CameraUpdate` apply the engine's shake preference;
+do not multiply it again before `Grapple_CameraShake`.
 
-[image]
-brightness = 1.0
-contrast = 1.0
-saturation = 1.0
-color_blind = "none"   # none | protanopia | deuteranopia | tritanopia
-
-[accessibility]
-reduced_flashing = false
-screen_shake = 1.0
-ui_scale = 1.0
-```
-
-Every key has a command-line twin: `--vsync=off`, `--max-fps 120`,
-`--shadows=low`, `--bloom=0.4`, `--render-scale=0.75`, `--fullscreen`,
-`--color-blind=deuteranopia`. Both `--key=value` and `--key value` work,
-booleans take on/off/true/false/1/0 or may be bare (`--vsync`, `--no-vsync`),
-and anything unrecognised is ignored — the game owns the command line and the
-engine is only a guest on it.
-
-### Three kinds of setting, which fail differently
-
-**Engine settings** — vsync, frame cap, window mode, presentation, render
-scale, filtering — apply the moment they are set.
-
-`render_scale` deserves a mention: it renders at a fraction of the window's
-resolution and lets the display scale the result up. It is the single
-largest performance lever available, it needs no art changes, and on a
-handheld it is the difference between 30 and 60 fps.
-
-**Post-processing** — bloom, CRT scanlines and curvature, pixelation,
-chromatic aberration, FXAA, brightness/contrast/saturation, colour-blind
-correction — runs as GLSL over the finished frame, and the engine asks SDL
-for an OpenGL renderer by default so that it can. Without one they are
-skipped rather than fatal: a game must not fail to start because a player
-asked for scanlines. Ask `Grapple_EngineEffectsAvailable` and grey the
-section out rather than offering sliders that do nothing.
-
-The chain runs *before* the `post_render` hook, so a HUD drawn there is not
-scanlined along with the world — real CRT games had no UI layer, and
-applying the effect to one reads as a bug rather than a style. It is also
-the only place a screenshot shows what the player actually saw.
-
-**Budgets** — particles, dynamic lights, shadows, screen shake, UI scale —
-are carried by the engine and spent by the game. The engine cannot know what
-a particle costs in your game, so it does not pretend to; it converts the
-player's choice into concrete numbers and leaves the spending to you:
-
-```c
-const Grapple_GraphicsSettings *g = Grapple_EngineGraphics(engine);
-
-int count = (int)(base * Grapple_GraphicsParticleDensity(g->particles));
-Grapple_SetLightMapScale(scene, Grapple_GraphicsLightMapScale(g->dynamic_lights));
-Grapple_SetLightShadowRays(scene, Grapple_GraphicsShadowRays(g->shadows));
-Grapple_SetLightShadowSoftness(scene, Grapple_GraphicsShadowSoftness(g->shadows));
-```
-
-Note `Grapple_GraphicsShadowSoftness` returns 0 below the top tier: soft
-edges need rays to look soft, and a penumbra built from 32 rays reads as
-banding rather than softness.
-
-`reduced_flashing` is a safety setting rather than an aesthetic one, so it
-overrides the aesthetic ones — enabling it caps bloom, because bloom is what
-turns a bright frame into a flash.
+Script `Grapple.ui(engine)` scales fonts and naturally sized widgets. Native UI
+callers use `Grapple_EngineUiPoints`. Recreate UI after changing UI scale, and scale
+custom fixed layouts yourself. These preferences do not rewrite custom rendering
+or gameplay code.
 
 ## The camera
 
@@ -684,104 +569,59 @@ which is how a game works out whose half was clicked.
 
 ## The renderer backend
 
-SDL ships several renderer backends and, left alone, picks the platform's
-native one: Metal on Apple, Direct3D on Windows, OpenGL elsewhere. **This
-engine asks for OpenGL, everywhere, by default.**
+The runner accepts `--backend auto|directx11|directx12|vulkan|metal|opengl|opengles2|software`.
+Availability depends on compiled SDL drivers and the current machine. `auto`
+tries the GL path first, then available SDL alternatives. An explicitly selected
+backend can fail to initialize; use `--list-backends` to probe candidates.
 
-```c
-config.backend = GRAPPLE_BACKEND_OPENGL;   /* already the default */
-```
+C callers select a concrete name with `config.renderer_backend`. The older
+`config.backend` enum still provides OpenGL, native, and software preferences.
+Use `Grapple_DescribeRenderBackend` to query a live renderer instead of assuming
+that a requested API is the one in use.
 
-The reason is that the post-processing chain and the lighting module are
-GLSL. Under a native backend they cannot run at all, so the same game would
-look different on macOS from how it looks on Linux for no reason the player
-can see — and writing the effects again in MSL, HLSL and SPIR-V is three
-more implementations to keep in step. GLSL 1.x covers desktop GL, GLES on
-mobile and WebGL in a browser, which is every platform this project targets.
+Engine post-processing requires GL/GLES. The lighting module has a CPU fallback
+for other renderers, so lighting and post-processing have different capability
+rules. See [Lighting](lighting.md) and [runner capabilities](cli-implementation.md#runtime-behavior-and-capabilities).
 
-The cost is worth stating plainly. Apple deprecated OpenGL in 2018: it still
-works, it is capped at 4.1, and it will not improve. Metal has lower CPU
-overhead. Some Windows OEM drivers have weaker GL than their Direct3D. A 2D
-game is very unlikely to measure any of it, but a game that does can say:
+## Asset mounting
 
-| | |
-|---|---|
-| `GRAPPLE_BACKEND_OPENGL` | the default; the shader effects work |
-| `GRAPPLE_BACKEND_NATIVE` | Metal/Direct3D/Vulkan; no post-processing |
-| `GRAPPLE_BACKEND_SOFTWARE` | for tools, and for a machine whose drivers are broken enough that nothing else starts |
+Engine creation mounts media unless `config.no_auto_mount` is set. An explicit
+`config.media_path` (or runner `--media`) overrides discovery. Otherwise the engine
+tries embedded media, `media.zip`, `media.dat`, then `media/`. Disk discovery uses
+the working directory; the runner sets that directory to the project root.
 
-The hint is a preference, not a demand: on a machine with no working GL, SDL
-still returns a renderer and only the shader effects go missing. Better than
-refusing to start.
-
-## Assets
-
-The engine mounts the game's assets during `Grapple_CreateEngine`, before
-anything asks for a file. There is no setup call, because an opinionated
-engine that made you write mounting code would not be one.
-
-```c
-config.argc = argc;   /* so --media and --media-password work */
-config.argv = argv;
-```
-
-Search order, first match wins:
-
-| | Source | |
-|---|---|---|
-| 1 | `--media=PATH`, or `config.media_path` | replaces the search entirely |
-| 2 | an archive compiled into the executable | `Grapple_EngineEmbedMedia` |
-| 3 | `media.zip` beside the executable | possibly encrypted |
-| 4 | `media.dat` | the same, named so it does not invite a double-click |
-| 5 | `media/` | a plain directory: what you develop against |
-
-Everything mounts at `/`, so `assets/player.png` means the same file
-whichever source it came from. That is the point of the ordering: you
-develop against `media/`, ship `media.zip`, and one day embed the archive in
-the binary — and not one line of the game changes. The embedded archive
-comes *before* the files on disk, so a single-file build cannot be quietly
-overridden by whatever happens to be sitting in the working directory; the
-directory comes last, so building a release archive changes what the game
-reads without anyone having to remember to delete it.
+Assets mount at `/`, so a file at `media/assets/player.png` is requested as
+`assets/player.png`. `Grapple_EngineMediaSource` and `Grapple_EngineMediaPath` report
+the selected source. In the runner, readable media `config.toml` supplies an early
+settings layer; [configuration precedence](cli-implementation.md#projects-and-configuration)
+describes how `--media` affects it.
 
 ```c
 SDL_IOStream *io = Grapple_OpenVFSRead("assets/player.png");
-SDL_Texture *tex = IMG_LoadTexture_IO(renderer, io, true);
+SDL_Texture *tex = io ? IMG_LoadTexture_IO(renderer, io, true) : NULL;
+if (!tex) { SDL_Log("Asset load failed: %s", SDL_GetError()); }
+/* Destroy tex before its renderer. */
 ```
 
-`Grapple_EngineMediaSource` and `Grapple_EngineMediaPath` report what
-was mounted — worth logging, since "which copy of my assets is this running
-against" is otherwise guesswork. A game that wants none of it sets
-`config.no_auto_mount`.
-
-Encrypted archives take a password from `--media-password` or
-`Grapple_EngineSetMediaPassword`. Embedding an encrypted archive with its
-password in the same binary is obfuscation rather than security: it stops
-casual extraction, not a determined person with a debugger.
+Raw filename-based SDL_image/mixer loaders do not search PhysFS automatically;
+use their `_IO` variants with `Grapple_OpenVFSRead`, or the engine's asset helpers.
+Embedded/encrypted archives use `Grapple_EngineEmbedMedia` and
+`Grapple_EngineSetMediaPassword`; the runner exposes no password option.
+See [VFS](vfs.md) for packing and ownership. A password distributed with an
+executable provides asset obfuscation rather than protection from its recipient.
 
 ## Escape hatches
 
-Two command-line arguments **replace the settings entirely and read no
-config file at all**. That is the whole point — they have to work when the
-saved settings are what is broken, and reading them first would defeat it. A
-player should never have to reinstall a game to undo a setting.
+- `--default-settings` skips player configuration for this launch.
+- `--reset-settings` backs up recognized player configuration files and uses game defaults.
+- `--safe-mode` skips all configuration files/scripts and selects windowed
+  1280×720, primary display, software rendering, low budgets, effects/shadows off,
+  and a 60 FPS cap.
 
-```
---with-default-settings    the shipped defaults: borderless fullscreen,
-                           maximum fidelity
---with-safe-mode           a resizable 1280x720 window, graphics low,
-                           every shader effect off
-```
-
-Both are applied before the rest of the line, so `--with-safe-mode
---bloom=0.5` means safe mode with bloom whichever order they were typed in.
-
-Safe mode turns the budgets *down* rather than off — it still has to be
-playable enough to reach the options screen and undo whatever went wrong —
-but every shader effect is off, because if the post-processing chain is what
-broke the machine, safe mode must not run it. It is windowed and resizable
-on purpose: a window that will not display correctly can at least be dragged
-somewhere that will.
+These flags are mutually exclusive. Individual CLI settings still win; explicit
+configuration files cannot be combined with recovery flags. Reset leaves saves
+untouched, and `--reset-settings --print-settings` previews without moving files.
+The [settings guide](cli-implementation.md#recovery-and-saving) covers validation and saving.
 
 ## Multiple monitors
 
@@ -792,8 +632,9 @@ for (int i = 0; i < Grapple_EngineDisplayCount(); i++) {
 Grapple_EngineSetDisplay(engine, chosen);
 ```
 
-or persist it: `display = 1` in `config.toml`, `--display=1` on the command
-line.
+or persist `display = 1` under `[display]` in `config.toml`, or pass `--display=1`
+on the command line. Display indices are zero-based; `primary` selects the primary monitor.
+Check the boolean result of `Grapple_EngineSetDisplay`.
 
 The window and renderer are **kept, not recreated**. Recreating them is the
 obvious implementation and it is a trap: SDL textures belong to the renderer
@@ -804,9 +645,8 @@ afterwards. Moving the window achieves the same result and cannot do that —
 the fullscreen mode is dropped, the window is repositioned on the target
 display, and the mode is restored.
 
-A saved display index is clamped to what exists at launch, so unplugging the
-monitor a game was saved on does not leave it running invisibly on a display
-that is no longer there.
+An unavailable saved display falls back to the primary monitor with a diagnostic.
+An unavailable explicit CLI display fails so the caller can correct the request.
 
 ## Actors
 
@@ -1340,15 +1180,15 @@ normal case, not an edge case. Handles are reference counted —
 done — and the last release frees the texture, so a level that releases what
 it loaded gets its memory back without the engine guessing when.
 
-### Nothing returns NULL
+### Placeholders for loading or failed assets
 
 `Grapple_Texture` on a handle that is still loading, or that failed,
 returns the **placeholder**: magenta and black checks, chosen because they
 are impossible to mistake for art and impossible to miss in a screenshot.
 
-So a game may draw without checking, a missing file costs a wrong-looking
-sprite rather than a crash, and the wrongness is loud. `AssetStatusOf`
-reports `FAILED` for anyone who wants to know.
+This guarantee applies to valid asset handles. Check creation results and use
+`Grapple_AssetStatusOf` to distinguish pending, ready, and failed loads; do not
+assume an invalid handle has a texture.
 
 ### Why the main thread still does some work
 
@@ -1372,21 +1212,15 @@ Raise the budget on a loading screen, where finishing sooner is the whole
 point and there is nothing else to spend the frame on; leave it low during
 gameplay, where a hitch is worse than a late texture.
 
-### Two sharp edges this cost
+### Worker-thread and renderer lifetimes
 
-Both were found by writing the tests, and both are the kind that only show
-up on somebody else's machine:
+The loader checks whether PhysFS is initialized before searching it, then falls
+back to the real filesystem when appropriate. This also supports games that use
+`no_auto_mount` and supply disk paths.
 
-**PhysFS crashes rather than failing** when it has not been initialised — it
-dereferences its internal mutex without checking. A game that loads a
-texture before mounting an archive, or that sets `no_auto_mount`, is an
-ordinary case rather than a misuse, so the loader checks `PHYSFS_isInit()`
-before asking the VFS and falls back to the real filesystem.
-
-**A slot released while still queued** left the worker duplicating a freed
-path. A level torn down while it is still loading is not exotic — it is what
-happens when a player quits during a loading screen — so the worker
-re-checks the slot is live after dequeuing it.
+Release asset handles when leaving a scene, including pending asynchronous loads.
+The worker checks that a queued slot is still live before reading it. Keep the
+engine and its renderer alive while game code is using asset handles/textures.
 
 ## Lighting
 
@@ -1564,20 +1398,12 @@ that cannot move its own placeholders is not really a translation.
 several calls can appear in one expression without the second clobbering the
 first.
 
-## The window appears when it is ready, and in front
+## Showing the window
 
-The window is created hidden and shown once the renderer, the presentation
-and the saved display have all been applied. Two things follow from that.
+The engine creates the window hidden, applies the renderer, presentation, and
+display settings, then shows and raises it. This avoids exposing intermediate
+startup sizes. The operating system/window manager ultimately controls focus
+and stacking, so raising is a request rather than a focus guarantee.
 
-Start-up has no flicker: without it the window appears as an undecorated
-rectangle that then resizes, changes shape and sometimes jumps to another
-monitor while the player watches.
-
-And it opens *in front*. A window created by a program launched from a
-terminal otherwise opens behind whatever was already on screen on some
-platforms — the game is running, and appears to be missing. Showing it
-deliberately, and raising it, is what every other application does.
-
-A game that wants to choose the moment sets `start_hidden` in its config —
-a long load to finish first, say, or a splash to draw into the first frame —
-and calls `Grapple_EngineShowWindow` when it is ready.
+Set `start_hidden` to finish a loading screen or other preparation before showing
+the window, then call `Grapple_EngineShowWindow` when ready.

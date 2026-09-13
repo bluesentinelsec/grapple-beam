@@ -1,7 +1,11 @@
+---
+title: "Runner settings"
+description: "Runner settings for grapple-beam callers."
+---
+
 # Runner settings
 
-`grapple-beam` launches Lua/Ruby game projects. The approved argument inventory
-is [cli-args.txt](cli-args.txt); `--help-all` is generated from the same typed
+`grapple-beam` launches Lua/Ruby game projects. The [CLI reference](cli-args.txt) lists supported arguments and defaults; `--help-all` is generated from the same typed
 registry used by configuration files, scripts, and the C API.
 
 ```sh
@@ -15,6 +19,19 @@ grapple-beam --list-displays
 grapple-beam --list-display-modes --display primary
 grapple-beam --list-backends
 ```
+
+## CLI values and defaults
+
+Use `--key value` or `--key=value`. Boolean settings require `on` or `off`;
+repeated scalar options take the last value. Put all engine options before the
+project. Advanced keys use `--set engine.tick_rate=120` and are listed by
+`--help-all`. These keys are also available in TOML and configuration scripts.
+
+Defaults select borderless fullscreen, primary display, vsync, display-paced FPS,
+1280×720 when windowed, render scale 1, high budgets, and FXAA. Bloom, CRT, and
+chromatic aberration start at zero; pixelation 1 adds no pixelation. Audio gains
+start at 1 and mute is off. These are engine defaults, so games and players may
+override them. See the [full option inventory](cli-args.txt) for ranges and enums.
 
 ## Projects and configuration
 
@@ -33,8 +50,8 @@ language = "lua"
 The entrypoint stays inside the project. Without a manifest, preferences use
 a hash of the absolute project root; moving the project changes that identity.
 Shipping games should supply an ID. Preferences live in SDL's standard per-user,
-per-application directory (Application Support on macOS, AppData on Windows,
-XDG configuration on Linux). `--print-settings` shows the exact directory.
+per-application directory (Application Support on macOS, roaming AppData on Windows,
+`XDG_DATA_HOME` or `~/.local/share` on Linux). `--print-settings` shows the exact directory.
 
 Each layer supplies only its changed fields. Lowest to highest:
 
@@ -94,7 +111,7 @@ project entrypoint launch is outside this CLI contract.
 Unknown keys, wrong types, invalid enums, nonfinite/out-of-range numbers, missing
 explicit files, and script errors fail with exit 2. Script/runtime failures return
 1. Help, diagnostics, and successful execution return 0. Booleans require `on|off`
-on the CLI; TOML/scripts also support native booleans. No false/zero value is lost.
+on the CLI; TOML/scripts also support native booleans. Explicit false/zero values override earlier layers.
 Legacy graphics TOML accepts `image.*`, split window dimensions, old mode names,
 and FPS sentinels; new preferences use canonical keys and values. The older
 `Grapple_GraphicsLoadArgs` API remains permissive for existing embedders.
@@ -111,7 +128,10 @@ move. `--reset-settings --print-settings` previews without moving files.
 1280x720 on the primary display, software rendering, effects off, low budgets,
 shadows off, and a 60 FPS cap. Recovery flags are mutually exclusive and reject
 explicit configuration files. An explicitly supplied individual setting still wins.
-No launch option is automatically saved.
+No launch option is automatically saved. `--print-settings` reports requested
+values before device creation; it still evaluates selected configuration scripts
+and may create the preference directory. It does not prove a display/backend can
+initialize.
 
 Options screens should use the shared C API (also generated into C++, Lua, Ruby):
 
@@ -202,7 +222,7 @@ attach buses before playback and route their tracks; attaching reserves the mixe
 final post-mix callback, so custom callbacks must integrate deliberately. Per-song
 synthesis settings remain composition APIs.
 
-## Migration and dependencies
+## Migrating older launch commands
 
 Removed runner flags have actionable replacements: `--fullscreen`/`--windowed`
 become `--window-mode`; `--no-vsync` becomes `--vsync off`; old `--with-*` recovery
@@ -210,9 +230,7 @@ flags lose `with-`; numeric FPS sentinels become `display`/`unlimited`. Top-leve
 `-e` and implicit REPL become explicit `eval --language ... --code ...` and
 `repl --language ...`. Encryption passwords belong in the embedding API.
 
-No new package dependency: CLI11 is the existing pinned frontend dependency;
-TOML uses existing vendored tomlc99; scripts use bundled Lua/mruby; rendering and
-mixing use existing source-built SDL components. The executable remains a thin
-entrypoint into the runner library; reusable settings/audio code is in C modules.
-Public configuration, graphics and camera structures grew: rebuild SDK consumers
-against matching headers and libraries; old binaries are not ABI compatible.
+Rebuild SDK consumers against matching headers and libraries when upgrading;
+the settings work extends public configuration, graphics, and camera structures.
+The runner uses the existing CLI11, TOML, Lua, and mruby dependencies. Embedding
+the settings C API does not require the CLI frontend or either script interpreter.

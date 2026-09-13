@@ -1,10 +1,14 @@
+---
+title: "From notation to game music"
+description: "From notation to game music for grapple-beam callers."
+---
+
 # From notation to game music
 
 The engine plays MusicXML through its C64-inspired synth: independent polyphonic
 parts, pulse/saw/triangle/noise tones, envelopes, filtering and ring modulation.
-It needs no SID ROM, soundfont, sample pack or external synth process. Golden Axe
-C64 is the requested reference for pulse/motion; these presets do not reproduce
-its soundtrack or emulate a particular SID driver.
+It needs no SID ROM, soundfont, sample pack or external synth process. The presets emphasize wet, tempo-synchronized pulse motion; they are a sound
+palette rather than an emulator of a particular SID chip or driver.
 
 ## Authoring in Guitar Pro or MuseScore
 
@@ -21,7 +25,7 @@ its soundtrack or emulate a particular SID driver.
    partwise and timewise structures work. MIDI remains useful for comparisons;
    MusicXML's encoded durations preserve tuplets without passing through MIDI.
 4. Load with `Grapple_LoadChipSongEx` and inspect diagnostics. Strict mode is the
-   default. Audition with the [standalone demo](../demos/chiptune/README.md), which
+   default. Audition with the [standalone demo](https://github.com/bluesentinelsec/grapple-beam/blob/main/demos/chiptune/README.md), which
    also exports WAVs. Use `PlayChipFile` / `PlayChipSong` in your game, or construct
    a song with `CreateChipComposer`, `AddChipNoteEx`, tempo and controller calls.
 5. Use rehearsal marks for named sections. Query their expanded tick bounds and

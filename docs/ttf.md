@@ -7,8 +7,8 @@ description: "TrueType/OpenType text rendering via a minimal static FreeType, pl
 
 A static-link-first port of SDL_ttf (upstream base 3.2.2) over a minimal
 static FreeType 2.14.3, with **vendored HarfBuzz shaping and SheenBidi
-BiDi** — full international text, still zero shared-library dependencies
-(enforced in CI by a link audit).
+BiDi** for international text. Font coverage and explicit paragraph direction
+handling still matter; the libraries are built from source with the module.
 
 ```cmake
 target_link_libraries(your_game PRIVATE Grapple::TTF)
@@ -22,6 +22,10 @@ TTF_Font *font = TTF_OpenFont("kenney-pixel.ttf", 24.0f);
 SDL_Surface *label = TTF_RenderText_Blended(font, "READY?", 0,
                                             (SDL_Color){255, 255, 255, 255});
 ```
+
+Check `TTF_Init`, font creation, and render results. Destroy returned surfaces
+with `SDL_DestroySurface`, close fonts with `TTF_CloseFont`, and call `TTF_Quit`
+after all fonts/text objects are released. The renderer must outlive its text engine.
 
 ## Supported
 
@@ -69,7 +73,8 @@ SDL_free(runs);
 | WOFF2 fonts | requires Brotli |
 | Thai/Lao/Khmer dictionary line breaking | needs ICU-class data; glyphs shape correctly, wrap points don't |
 
-Removed APIs are deleted from the header — misuse fails at compile time.
+Unsupported fonts or glyph content can still fail or be missing at runtime;
+check load/render results and test the fonts your game distributes.
 
 ## Debug text (original extension)
 
