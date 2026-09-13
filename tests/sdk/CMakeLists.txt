@@ -83,7 +83,7 @@ endif()
 # compiles without executing, which is what a definition file is for.
 if(TARGET grapple-beam_app)
   add_test(NAME editor_lua_definitions_parse
-    COMMAND $<TARGET_FILE:grapple-beam_app> -l lua -e
+    COMMAND $<TARGET_FILE:grapple-beam_app> eval --language lua --code
       "local f, err = loadfile('${CMAKE_CURRENT_SOURCE_DIR}/../../bindings/generated/editor/grapple.lua') if not f then error(err) end print('definitions parse')"
   )
   set_tests_properties(editor_lua_definitions_parse PROPERTIES

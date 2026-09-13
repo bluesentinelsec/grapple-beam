@@ -11,6 +11,7 @@
 #include "engine_internal.h"
 
 #include <grapple/engine_config.h>
+#include <grapple/engine_backend.h>
 
 /* --- engine config -------------------------------------------------------- */
 
@@ -22,6 +23,7 @@ struct ConfigStrings
 {
     char *title;
     char *media_path;
+    char *renderer_backend;
     Grapple_GraphicsSettings graphics;
     bool has_graphics;
 };
@@ -54,6 +56,7 @@ void Grapple_ConfigDestroy(Grapple_EngineConfig *config)
     ConfigBlock *block = Block(config);
     SDL_free(block->owned.title);
     SDL_free(block->owned.media_path);
+    SDL_free(block->owned.renderer_backend);
     SDL_free(block);
 }
 
@@ -172,6 +175,20 @@ void Grapple_ConfigSetBackend(Grapple_EngineConfig *config, Grapple_EngineBacken
     {
         config->backend = backend;
     }
+}
+
+bool Grapple_ConfigSetRendererBackend(Grapple_EngineConfig *config, const char *name)
+{
+    if (config == NULL || !Grapple_RenderBackendValid(name))
+        return SDL_SetError("invalid renderer backend name or config");
+    char *copy = SDL_strdup(name);
+    if (copy == NULL)
+        return false;
+    ConfigBlock *block = Block(config);
+    SDL_free(block->owned.renderer_backend);
+    block->owned.renderer_backend = copy;
+    config->renderer_backend = copy;
+    return true;
 }
 
 void Grapple_ConfigSetHeadless(Grapple_EngineConfig *config, bool headless)

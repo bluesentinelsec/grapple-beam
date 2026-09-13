@@ -1,6 +1,8 @@
 /* Original Grapple code (zlib). Sample-clock sequencer and SDL streaming adapter. */
 #include "chip_player.h"
 
+#include <grapple/audio_bus.h>
+
 static void UpdateBend(ChipChannel *channel)
 {
     const float semitones = (float)channel->bend_semitones + (float)channel->bend_cents / 100.0f;
@@ -725,11 +727,12 @@ bool Grapple_PlayChipPlayer(Grapple_ChipPlayer *p)
     if (!p->managed_mixer)
     {
         const SDL_AudioSpec spec = {SDL_AUDIO_F32, 2, p->sample_rate};
-        p->managed_mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec);
+        p->managed_mixer = Grapple_CreateAudioMixer(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec);
         if (!p->managed_mixer)
             return false;
         p->managed_track = MIX_CreateTrack(p->managed_mixer);
-        if (!p->managed_track || !MIX_SetTrackAudioStream(p->managed_track, p->stream))
+        if (!p->managed_track || !Grapple_RouteAudioTrack(p->managed_track, GRAPPLE_AUDIO_MUSIC) ||
+            !MIX_SetTrackAudioStream(p->managed_track, p->stream))
         {
             MIX_DestroyMixer(p->managed_mixer);
             p->managed_mixer = NULL;

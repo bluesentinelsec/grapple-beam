@@ -2483,6 +2483,7 @@ module GrappleC
   def self.AddOccluderRect: (untyped scene, Hash[Symbol, untyped] rect) -> bool
   def self.AddOccluderSegment: (untyped scene, Float x1, Float y1, Float x2, Float y2) -> bool
   def self.AnyInput: (untyped engine) -> bool
+  def self.ApplyAudioBus: (Integer bus, Float pcm, Integer samples) -> [bool, Float]
   def self.AssetPath: (untyped engine, Integer id) -> String?
   def self.AssetRelease: (untyped engine, Integer id) -> void
   def self.AssetRetain: (untyped engine, Integer id) -> void
@@ -2495,6 +2496,8 @@ module GrappleC
   def self.AssetsSetFrameBudget: (untyped engine, Float milliseconds) -> void
   def self.AssetsSetWorkers: (untyped engine, Integer workers) -> void
   def self.AssetsWait: (untyped engine) -> void
+  def self.AttachAudioBuses: (untyped mixer) -> bool
+  def self.AudioMuted: () -> bool
   def self.BidiBaseIsRTL: (String? utf8, Integer length) -> bool
   def self.BindingFromString: (String? text) -> [bool, Hash[Symbol, untyped]]
   def self.BindingToString: (Hash[Symbol, untyped] binding, String buffer, Integer size) -> String?
@@ -2532,6 +2535,7 @@ module GrappleC
   def self.CameraX: () -> [Float, Hash[Symbol, untyped]]
   def self.CameraY: () -> [Float, Hash[Symbol, untyped]]
   def self.ChipPlayerPlaying: (untyped player) -> bool
+  def self.CloneSettings: (untyped settings) -> untyped
   def self.CompileRegex: (String? pattern, String? flags) -> untyped
   def self.ConfigCreate: () -> untyped
   def self.ConfigDestroy: (untyped config) -> void
@@ -2546,12 +2550,15 @@ module GrappleC
   def self.ConfigSetMaxFps: (untyped config, Integer max_fps) -> void
   def self.ConfigSetMediaPath: (untyped config, String? path) -> void
   def self.ConfigSetPresentation: (untyped config, Integer presentation) -> void
+  def self.ConfigSetRendererBackend: (untyped config, String? name) -> bool
   def self.ConfigSetResizable: (untyped config, bool resizable) -> void
   def self.ConfigSetTickRate: (untyped config, Integer ticks_per_second) -> void
   def self.ConfigSetTitle: (untyped config, String? title) -> void
   def self.ConfigSetVsync: (untyped config, bool vsync) -> void
   def self.ConfigSetWindowSize: (untyped config, Integer width, Integer height) -> void
   def self.CountSignalConnections: (untyped emitter, String? signal) -> Integer
+  def self.CreateAudioMixer: (Integer device, Hash[Symbol, untyped] spec) -> untyped
+  def self.CreateBackendRenderer: (untyped window, String? name) -> untyped
   def self.CreateChipComposer: (Integer tracks, Integer ticks_per_quarter) -> untyped
   def self.CreateChipPlayer: (untyped song, Integer sample_rate, Integer voices, bool loop) -> untyped
   def self.CreateChipSFX: (untyped mixer, Integer which) -> untyped
@@ -2561,10 +2568,12 @@ module GrappleC
   def self.CreateGui: (untyped renderer, String font_data, Float font_size) -> untyped
   def self.CreateGuiWithGlyphs: (untyped renderer, String font_data, Float font_size, Integer range) -> untyped
   def self.CreateLightScene: (untyped renderer) -> untyped
+  def self.CreateSettings: () -> untyped
   def self.CreateSignalEmitter: () -> untyped
   def self.CryptoSelfTest: () -> bool
   def self.DayNightAmbient: (Float hours) -> Hash[Symbol, untyped]
   def self.DayNightSunlight: (Float hours) -> Float
+  def self.DescribeRenderBackend: (untyped renderer) -> [bool, Hash[Symbol, untyped]]
   def self.DestroyChipComposer: (untyped composer) -> void
   def self.DestroyChipPlayer: (untyped player) -> void
   def self.DestroyChipSong: (untyped song) -> void
@@ -2572,6 +2581,7 @@ module GrappleC
   def self.DestroyGui: (untyped gui) -> void
   def self.DestroyLightScene: (untyped scene) -> void
   def self.DestroyRegex: (untyped regex) -> void
+  def self.DestroySettings: (untyped settings) -> void
   def self.DestroySignalEmitter: (untyped emitter) -> void
   def self.DeviceAccelerometer: (untyped engine, Float x, Float y, Float z) -> [Float, Float, Float]
   def self.DeviceGyro: (untyped engine, Float x, Float y, Float z) -> [Float, Float, Float]
@@ -2590,6 +2600,7 @@ module GrappleC
   def self.DistanceJointDefSetSpring: (untyped def_, bool enabled, Float hertz, Float damping) -> void
   def self.DrawPhysicsWorld: (Hash[Symbol, untyped] world, untyped renderer, Hash[Symbol, untyped] config) -> bool
   def self.EncodeDataBase64: (String data, Integer outputSize) -> [Integer, Integer]
+  def self.EngineActualSettings: (untyped engine) -> untyped
   def self.EngineAdvance: (untyped engine, Integer nanoseconds) -> void
   def self.EngineAlpha: (untyped engine) -> Float
   def self.EngineAssetScale: (untyped engine) -> Integer
@@ -2611,6 +2622,7 @@ module GrappleC
   def self.EngineQuit: (untyped engine) -> void
   def self.EngineRenderScale: (untyped engine) -> Float
   def self.EngineRenderer: (untyped engine) -> untyped
+  def self.EngineRequestedSettings: (untyped engine) -> untyped
   def self.EngineSafeRect: (untyped engine) -> Hash[Symbol, untyped]
   def self.EngineSetClearColor: (untyped engine, Hash[Symbol, untyped] color) -> void
   def self.EngineSetDisplay: (untyped engine, Integer index) -> bool
@@ -2627,6 +2639,7 @@ module GrappleC
   def self.EngineTick: (untyped engine) -> bool
   def self.EngineTickRate: (untyped engine) -> Integer
   def self.EngineTimeScale: (untyped engine) -> Float
+  def self.EngineUiPoints: (untyped engine, Float points) -> Float
   def self.EngineViewRect: (untyped engine) -> Hash[Symbol, untyped]
   def self.EngineWindow: (untyped engine) -> untyped
   def self.EngineWindowToDesign: (untyped engine, Float window_x, Float window_y, Float design_x, Float design_y) -> [Float, Float]
@@ -2759,6 +2772,7 @@ module GrappleC
   def self.GamepadSetLED: (untyped engine, Integer player, Integer red, Integer green, Integer blue) -> bool
   def self.GamepadStick: (untyped engine, Integer player, Integer side, Float x, Float y) -> [Float, Float]
   def self.GamepadStopRumble: (untyped engine, Integer player) -> void
+  def self.GetAudioBusGain: (Integer bus) -> Float
   def self.GetChipDiagnosticCount: (untyped song) -> Integer
   def self.GetChipDiagnosticMessage: (untyped song, Integer index) -> String?
   def self.GetChipExpressionDefaults: () -> Hash[Symbol, untyped]
@@ -2766,6 +2780,7 @@ module GrappleC
   def self.GetChipPlayerPeakVoices: (untyped player) -> Integer
   def self.GetChipPresetEffects: (Integer preset) -> [bool, Hash[Symbol, untyped]]
   def self.GetChipSectionCount: (untyped song) -> Integer
+  def self.GetLaunchSettings: () -> untyped
   def self.GraphicsClamp: () -> Hash[Symbol, untyped]
   def self.GraphicsConfigError: () -> String?
   def self.GraphicsConfigPath: () -> String?
@@ -2909,6 +2924,7 @@ module GrappleC
   def self.PrismaticJointDefSetBodies: (untyped def_, Hash[Symbol, untyped] a, Hash[Symbol, untyped] b) -> void
   def self.PrismaticJointDefSetLimit: (untyped def_, bool enabled, Float lower, Float upper) -> void
   def self.PrismaticJointDefSetMotor: (untyped def_, bool enabled, Float speed, Float max_force) -> void
+  def self.ProbeRenderBackend: (String? name) -> [bool, Hash[Symbol, untyped]]
   def self.QuitDebugText: () -> void
   def self.ReadChipDiagnostic: (untyped song, Integer index) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipPlayerPosition: (untyped player) -> [bool, Hash[Symbol, untyped]]
@@ -2930,6 +2946,9 @@ module GrappleC
   def self.RegexPattern: (untyped regex) -> String?
   def self.RegexReplace: (untyped regex, String? text, String? replacement, bool all) -> String?
   def self.RegexSearch: (untyped regex, String? text, Integer start) -> bool
+  def self.RenderBackendCount: () -> Integer
+  def self.RenderBackendName: (Integer index) -> String?
+  def self.RenderBackendValid: (String? name) -> bool
   def self.RenderDebugText: (untyped renderer, Float x, Float y, String? text) -> bool
   def self.RenderLastStats: (untyped engine) -> Hash[Symbol, untyped]
   def self.RenderLighting: (untyped scene) -> bool
@@ -2944,6 +2963,7 @@ module GrappleC
   def self.RevoluteJointDefSetLimit: (untyped def_, Float min_degrees, Float max_degrees) -> void
   def self.RevoluteJointDefSetMotor: (untyped def_, bool enabled, Float degrees_per_second, Float max_torque) -> void
   def self.RevoluteJointDefSetSpring: (untyped def_, bool enabled, Float hertz, Float damping) -> void
+  def self.RouteAudioTrack: (untyped track, Integer bus) -> bool
   def self.SHA256: (String data, Integer digest) -> [bool, Integer]
   def self.SampleLight: (untyped scene, Float x, Float y) -> Float
   def self.SaveChipSongWav: (untyped song, String? path, Integer sample_rate, Integer voices) -> bool
@@ -2981,6 +3001,8 @@ module GrappleC
   def self.ScriptSetHook: (untyped engine, Integer hook, Integer handle) -> bool
   def self.ScriptUnbind: (untyped engine) -> void
   def self.SeekChipPlayer: (untyped player, Integer tick) -> bool
+  def self.SetAudioBusGain: (Integer bus, Float gain) -> bool
+  def self.SetAudioMuted: (bool muted) -> void
   def self.SetChipPart: (untyped composer, Integer track, String? name, Integer preset, Float gain) -> bool
   def self.SetChipPlayerGain: (untyped player, Float gain) -> bool
   def self.SetChipPlayerLoop: (untyped player, Integer start_tick, Integer end_tick, bool enabled) -> bool
@@ -2994,6 +3016,7 @@ module GrappleC
   def self.SetDirectionRepeat: (untyped engine, Float delay_seconds, Float interval_seconds) -> void
   def self.SetGamepadDeadzone: (untyped engine, Float deadzone) -> void
   def self.SetGamepadMotion: (untyped engine, Integer player, bool enabled) -> bool
+  def self.SetLaunchSettings: (untyped settings) -> void
   def self.SetLightAmbient: (untyped scene, Hash[Symbol, untyped] ambient) -> void
   def self.SetLightDebugDraw: (untyped scene, bool enabled) -> void
   def self.SetLightMapScale: (untyped scene, Float scale) -> void
@@ -3004,6 +3027,24 @@ module GrappleC
   def self.SetMouseCapture: (untyped engine, bool captured) -> bool
   def self.SetTextInput: (untyped engine, bool enabled) -> void
   def self.SetTriggerThreshold: (untyped engine, Float threshold) -> void
+  def self.SettingChoices: (Integer index) -> String?
+  def self.SettingCount: () -> Integer
+  def self.SettingKey: (Integer index) -> String?
+  def self.SettingOption: (Integer index) -> String?
+  def self.SettingPolicy: (String? key) -> String?
+  def self.SettingsApply: (untyped settings, untyped config, bool overrides_only) -> [bool, Hash[Symbol, untyped]]
+  def self.SettingsCapture: (untyped config, Hash[Symbol, untyped] graphics) -> untyped
+  def self.SettingsGet: (untyped settings, String? key) -> String?
+  def self.SettingsLoadFile: (untyped settings, String? path) -> bool
+  def self.SettingsLoadToml: (untyped settings, String? toml, String? source) -> bool
+  def self.SettingsOverlay: (untyped settings, untyped overlay) -> bool
+  def self.SettingsPlayerPath: (untyped settings) -> String?
+  def self.SettingsQuality: (untyped settings, String? quality, String? source) -> bool
+  def self.SettingsSaveChanges: (untyped changes, String? path) -> bool
+  def self.SettingsSet: (untyped settings, String? key, String? value, String? source) -> bool
+  def self.SettingsSetPlayerPath: (untyped settings, String? path) -> bool
+  def self.SettingsSource: (untyped settings, String? key) -> String?
+  def self.SettingsToToml: (untyped settings, bool overrides_only) -> Integer
   def self.ShowOpenFileDialog: (untyped window, String? filter_name, String? filter_pattern, String? default_location) -> bool
   def self.ShowSaveFileDialog: (untyped window, String? filter_name, String? filter_pattern, String? default_location) -> bool
   def self.SpriteCreate: () -> untyped

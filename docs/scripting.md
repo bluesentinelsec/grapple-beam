@@ -162,15 +162,21 @@ accepts are `title`, `window`, `design`, `presentation`, `resizable`,
 `grapple-beam` divides its command line three ways:
 
 ```sh
-grapple-beam --fullscreen game.lua -- --level 3
+grapple-beam --window-mode fullscreen-borderless game.lua -- --level 3
 #       ^engine        ^script    ^your game's own
 ```
 
-Anything starting with `-` that the runner does not claim is the engine's —
-`--fullscreen`, `--window-size 1280x720`, `--max-fps`, `--with-safe-mode`
-and the rest — and `Grapple.engine{...}` passes them on, so they take
-effect. Settings the player did not mention are left alone, so a game's own
-`tick_rate` survives a `--max-fps` on the line.
+The runner validates engine options before executing the script. Use
+`--window-mode windowed|fullscreen-exclusive|fullscreen-borderless`,
+`--window-size 1280x720`, `--vsync on|off`, `--max-fps display|unlimited|N`,
+and the graphics options listed by `--help`. Unknown names and invalid values
+are errors. Settings the player did not mention are left alone.
+
+`--backend` selects a concrete renderer; `--list-backends` probes the build's
+renderers and reports availability, queried versions, and missing effects.
+The full configuration contract is being implemented in stages; see
+[CLI implementation progress](cli-implementation.md) before relying on options
+from the [complete contract](cli-args.txt).
 
 Everything after the script name (or after a bare `--`) reaches the script:
 `arg` in Lua, `ARGV` in Ruby.
@@ -496,6 +502,6 @@ For clangd, no extra file is needed: point it at your own project's
 bindings loaded:
 
 ```bash
-./build/debug/bin/grapple-beam -l lua
-./build/debug/bin/grapple-beam -l ruby
+./build/debug/bin/grapple-beam repl --language lua
+./build/debug/bin/grapple-beam repl --language ruby
 ```

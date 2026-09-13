@@ -1,0 +1,416 @@
+GRAPPLE-BEAM CLI — IMPLEMENTATION CONTRACT
+=============================================
+
+Status: implementation authorized after review. ADD means new functionality;
+KEEP means retain the existing option;
+CHANGE means retain its name but stabilize or change its behavior.
+
+1. SETTINGS PRECEDENCE
+----------------------
+
+Lowest to highest, with each layer overriding only fields it supplies:
+
+  1. Opinionated engine defaults.
+  2. Shipped game defaults in TOML.
+  3. Shipped game defaults in the game's Lua or Ruby configuration script.
+  4. Saved player settings in TOML.
+  5. Player configuration script, if present, in the game's language.
+  6. Explicit --config TOML file, if supplied.
+  7. Explicit --config-script Lua/Ruby file, if supplied.
+  8. Individual CLI settings.
+
+Scripts take precedence over TOML within the same source tier. Player settings
+always beat game defaults, regardless of format. An explicitly selected file
+beats automatically discovered preferences; an explicitly selected script beats
+an explicitly selected TOML file, regardless of argument order.
+
+The separate --config-script option and optional player script are proposals
+to make script-based overrides available as explicitly as TOML overrides.
+Ruby games use Ruby configuration scripts; Lua games use Lua scripts.
+
+Configuration scripts declare settings before devices/windows are created;
+they do not start the game loop. Their settings cannot defeat later CLI
+overrides. Missing optional files are normal. Explicitly requested missing
+files, invalid values, and script failures produce actionable errors.
+
+Automatic configuration belongs to the project and per-game preference
+directory, not whichever working directory happened to launch the runner.
+Exact filenames and compatibility with media/config.toml are implementation
+details to settle with the project layout. TOML remains the format the engine
+writes when saving preferences; it must not rewrite Lua/Ruby source code.
+
+An automatic player script can override settings saved by the options screen
+in TOML. If a player explicitly scripts a setting, the options screen must
+identify that source and explain that saving TOML cannot override it on the
+next launch. Do not silently introduce a higher-priority saved TOML layer;
+scripts retain their requested priority. Games without player scripts have
+the normal save-and-restore options-screen behavior.
+
+Keep defaults, saved preferences, and effective launch values separate.
+Temporary CLI overrides must not be persisted incidentally by an options menu.
+Expose each setting's source, requested value, actual value, and whether a
+change can apply live or requires restarting the engine.
+
+Proposed engine defaults: fullscreen-borderless on the primary display,
+desktop resolution, vsync on, display-paced frame cap, native render scale,
+resizable/high-DPI windows, high quality budgets where supported, automatic
+texture filtering, stylistic effects off. Game scripts can change these.
+
+2. INVOCATION AND PARSING
+-------------------------
+
+  grapple-beam [options] <project-directory|script.lua|script.rb> [-- game-args...]
+  grapple-beam [options]                 # discover a project in the current directory
+  grapple-beam repl --language <lua|ruby>
+  grapple-beam eval --language <lua|ruby> --code <source> [-- args...]
+
+Project discovery uses a declared entrypoint, or an unambiguous main.lua /
+main.rb fallback. No project means a clear usage message, not an implicit REPL.
+Paths and imports used by the game resolve relative to its project root.
+CLI-supplied file paths resolve relative to the invoking working directory.
+Packaged project launching is deferred; existing media archives remain usable.
+
+All engine options precede the project/script. The explicit -- separates game
+arguments. Retain existing direct-script trailing arguments for compatibility;
+they are never reparsed as engine options. A leading-dash project path can be
+written with ./ to avoid ambiguity.
+
+Accept --key=value and --key value consistently. Boolean settings REQUIRE
+on|off; do not guess whether the following script name is a boolean value.
+Only help, version, recovery, and diagnostic actions are bare flags.
+Reject unknown options, missing values, trailing numeric garbage, nonfinite
+numbers, and out-of-range values before launching the game. Do not silently
+convert invalid numbers to zero or clamp explicit CLI input.
+Repeated scalar settings: last value wins. Recovery actions are mutually
+exclusive. Expand quality/recovery presets before individual CLI fields, so
+specific field overrides win regardless of argument order.
+Exit 0 for success/help; 2 for usage/configuration errors; 1 for runtime failure.
+
+3. LAUNCH, CONFIGURATION, AND HELP
+---------------------------------
+
+KEEP    -h, --help
+        Show common options, defaults/inheritance, and runnable examples.
+
+ADD     --help-all
+        Include advanced options, accepted values, ranges, and applicability.
+
+KEEP    -V, --version
+        Print grapple-beam and the VERSION-derived version; exit successfully.
+
+CHANGE  -l, --language <lua|ruby>
+        Add the long spelling. Infer language for normal project/script runs.
+        Explicit language must agree with the selected entrypoint. Required
+        for repl and eval. It no longer implicitly selects interactive mode.
+
+CHANGE  --config <path.toml>
+        Load an explicit TOML overlay after automatic player preferences.
+        Unlike the current resolver, retain lower-layer defaults/preferences
+        for fields this file does not supply. May be repeated, in order.
+
+ADD     --config-script <path.lua|path.rb>
+        Load an explicit settings script in the game's language after explicit
+        TOML overlays. May be repeated, in order. CLI settings still win.
+
+ADD     --print-settings
+        Resolve configuration and print effective settings and their sources;
+        exit without opening game devices or starting the entrypoint/game loop.
+        Configuration scripts do run. Label this as requested configuration;
+        actual platform-applied settings are available through runtime APIs.
+
+4. RESET AND RECOVERY
+---------------------
+
+ADD     --default-settings
+        Launch with game defaults (engine -> shipped TOML -> shipped script).
+        Skip all player settings and explicit configuration overrides without
+        modifying disk. Individual CLI settings still apply.
+
+ADD     --reset-settings
+        Back up and remove the active automatic player configuration layers,
+        both TOML and settings scripts, then launch with game defaults. Keep
+        script source in the recoverable backup; do not rewrite it. Only
+        recognized files in this game's preference directory are reset;
+        explicit external files and shipped game files are untouched.
+        Never delete game entrypoints or game save data.
+        Report what was reset and where the recoverable backup was written.
+        Fail if the reset cannot be completed; do not claim it succeeded.
+
+ADD     --safe-mode
+        Ignore settings files/scripts and use engine-defined recovery defaults:
+        windowed 1280x720, primary display, resizable, 60 FPS limit, vsync on,
+        optional post-processing off, conservative quality and renderer path.
+        Bypass game configuration hooks, but still launch the game entrypoint.
+        Do not modify preferences. Explicit individual CLI settings still win.
+        Ordinary game initialization must not reapply its graphics defaults
+        over the resolved recovery settings.
+
+Explicit --config/--config-script combined with any recovery action is an
+error, rather than silently ignoring an explicitly requested file. Combining
+recovery with --print-settings previews resolution only; --reset-settings
+with --print-settings does not perform the reset.
+
+5. WINDOW, DISPLAY, AND FRAME PACING
+------------------------------------
+
+CHANGE  --window-mode <windowed|fullscreen-exclusive|fullscreen-borderless>
+        The ONLY window-mode argument. Use these exact canonical values in
+        scripts, TOML, help, and diagnostics as well.
+
+CHANGE  --window-size <WIDTHxHEIGHT>
+        Windowed dimensions; minimum 320x240, maximum 16384x16384, further
+        constrained by platform capabilities. Does not change window mode.
+        Retained for subsequent windowed use when launching fullscreen.
+
+CHANGE  --display <primary|INDEX>
+        Select the primary display or a zero-based index from --list-displays.
+        A stale saved display falls back with a diagnostic; an invalid explicit
+        CLI selection fails instead of silently choosing another display.
+
+ADD     --resolution <desktop|WIDTHxHEIGHT>
+        Exclusive-fullscreen output resolution; desktop is the default.
+        Borderless always uses desktop dimensions. An explicit non-desktop
+        value requires fullscreen-exclusive and a supported display mode.
+
+ADD     --refresh-rate <desktop|HZ>
+        Exclusive-fullscreen refresh selection; allow decimal rates such as
+        59.94. Default desktop. An explicit numeric value requires exclusive
+        fullscreen and a supported resolution/rate combination. Report the
+        actual selected mode; do not silently substitute a materially different
+        resolution or refresh rate. Enumeration supplies valid choices.
+
+ADD     --resizable <on|off>
+        Control resizing when windowed; leave the selected window mode alone.
+
+ADD     --high-dpi <on|off>
+        Control high pixel density at window creation. Requires restart when
+        the platform cannot change it on a live window.
+
+CHANGE  --vsync <on|off>
+        Explicit synchronization request. Report unsupported requests and
+        distinguish requested from effective synchronization.
+
+CHANGE  --max-fps <display|unlimited|N>
+        display follows refresh; unlimited disables the engine frame limiter;
+        N is an integer in 10..1000. This does not change simulation tick rate.
+        unlimited does not disable vsync; combine with --vsync off if wanted.
+
+ADD     --list-displays
+        List current display indexes, names, dimensions, refresh, and primary
+        status, then exit. No project required; video enumeration is allowed.
+
+ADD     --list-display-modes
+        List exclusive modes for --display (primary by default), then exit.
+        No project required. Distinguish unsupported exclusive-mode selection
+        from an empty or failed query.
+
+Fullscreen and vsync must be applied before the first visible game frame.
+Explicit unsupported display requests must be reported, not stored as if
+successfully applied. Platform limitations do not justify a false success.
+
+6. PRESENTATION AND VISUAL QUALITY
+----------------------------------
+
+KEEP    --presentation <letterbox|expand|overscan|integer|stretch|native>
+KEEP    --render-scale <NUMBER>                  range 0.25..2.0
+KEEP    --filter <auto|nearest|linear>
+
+ADD     --quality <low|medium|high>
+        A preset for particles/lights/shadows and rendering cost. Publish the
+        exact expansion. Individual fields win over the preset. Do not enable
+        stylistic effects or reset accessibility, window, or audio choices.
+
+KEEP    --particles <off|low|medium|high>
+KEEP    --lights <off|low|medium|high>
+KEEP    --shadows <off|low|medium|high>
+
+ADD     --effects <on|off>
+        Master gate for optional visual post-processing, including FXAA.
+        on permits each configured effect; it does not enable zero-intensity
+        effects. off preserves configured intensities for later re-enabling.
+        Does not switch audio effects or accessibility correction off.
+
+KEEP    --bloom <NUMBER>                         range 0..1; 0 disables
+KEEP    --bloom-threshold <NUMBER>               range 0..1
+KEEP    --crt <NUMBER>                           range 0..1; 0 disables
+KEEP    --crt-curvature <NUMBER>                 range 0..1; 0 disables
+KEEP    --pixelation <INTEGER>                   range 1..64; 1 disables
+KEEP    --chromatic-aberration <NUMBER>          range 0..1; 0 disables
+KEEP    --antialias <off|fxaa>
+
+Current particle/light/shadow controls include game-consumed budgets. Standard
+engine components must honor these; custom systems must have documented helpers.
+Do not claim that arbitrary game-created effects can be universally suppressed.
+Report unavailable effects on the selected renderer. Separating accessibility
+correction from the effects master switch requires actual renderer work.
+
+7. IMAGE AND ACCESSIBILITY
+--------------------------
+
+KEEP    --brightness <NUMBER>                    range 0.5..2.0; neutral 1
+KEEP    --contrast <NUMBER>                      range 0.5..2.0; neutral 1
+KEEP    --saturation <NUMBER>                    range 0..2.0; neutral 1
+KEEP    --color-blind <none|protanopia|deuteranopia|tritanopia>
+CHANGE  --reduced-flashing <on|off>               explicit value required
+KEEP    --screen-shake <NUMBER>                  range 0..1; 0 disables
+KEEP    --ui-scale <NUMBER>                      range 0.5..3.0
+
+Reduced flashing constrains conflicting visual intensity requests after
+resolution, with the effective constraint reported. Its support must not be
+described as guaranteeing suppression of arbitrary flashes in custom game code.
+Engine camera/UI helpers should honor shake/UI scale, and document the contract
+for custom camera and UI implementations.
+
+8. AUDIO
+---------
+
+ADD     --mute <on|off>
+ADD     --master-volume <NUMBER>                 range 0..1
+ADD     --music-volume <NUMBER>                  range 0..1
+ADD     --sfx-volume <NUMBER>                    range 0..1
+ADD     --speech-volume <NUMBER>                 range 0..1
+ADD     --ambient-volume <NUMBER>                range 0..1
+
+
+Mute preserves volume choices. Master volume multiplies category gain;
+category zero silences that category, including its effect returns.
+Provide dedicated music, SFX, speech, and ambient buses beneath the master
+bus. Speech and ambient effects must be independently routable and adjustable.
+Implement shared engine mixer buses and route standard playback helpers into
+them before advertising these flags as operational. Standalone raw PCM users
+and custom audio devices require an explicit integration contract.
+Per-instrument chiptune presets/chorus/delay/reverb remain composition/API
+settings, not global runner flags.
+
+9. ADVANCED DEVELOPMENT AND RECOVERY OPTIONS
+-------------------------------------------
+
+ADD     --list-backends
+        Enumerate concrete renderer choices for this build/platform, with
+        display names such as DirectX 11, DirectX 12, Vulkan, Metal, OpenGL,
+        OpenGL ES, and Software. No project required. Surface API versions
+        and device/driver versions where probing can determine them. A backend
+        name such as DirectX 12 is an API family, not a queried driver version.
+        Distinguish compiled candidates from successfully probed availability.
+        If a version cannot be queried, print "not reported"; never invent it.
+        Report shader/effect capabilities and probe failures. Temporary hidden
+        graphics resources may be created for probing, then destroyed.
+
+ADD     --backend <auto|directx11|directx12|vulkan|metal|opengl|opengles2|software>
+        Select a concrete backend before renderer creation. auto selects the
+        engine's supported preference and reports the concrete result. There
+        is no user-facing "native" choice. Explicit choices must be supported
+        by this build/platform and must not silently fall back to another API.
+        Vulkan must mean Vulkan, including when hosted by SDL's GPU renderer;
+        the generic GPU renderer must not silently select Metal or DirectX.
+        The enumeration reports which names can actually be used here.
+        Report actual backend, API/device/driver versions where available,
+        and unavailable graphics features. Concrete selection does not promise
+        that existing OpenGL-only effects work on every backend.
+
+ADD     --headless <on|off>
+        Use the existing software/offscreen engine path for automation. This
+        does not claim a dedicated-server implementation or disable audio.
+        Reject explicit fullscreen/display-mode requests when headless is on.
+
+CHANGE  --media <PATH>
+        Advanced asset directory/archive override, resolved before settings.
+        CLI path wins over the game's default media path. Normal project
+        launching should not require it.
+
+ADD     --auto-mount <on|off>
+        Control automatic asset mounting. Reject --media with auto-mount off.
+
+ADD     --set <REGISTERED.KEY=VALUE>              repeatable
+        Typed escape hatch for less common engine settings. Same validation,
+        precedence, and names in all APIs; unknown keys fail. Direct flags and
+        --set writes to the same field follow command-line order.
+        Initial advanced keys:
+          engine.title                         nonempty string
+          engine.design_size                   positive WIDTHxHEIGHT
+          engine.tick_rate                     integer 1..1000
+          engine.max_steps_per_frame           integer 1..1000
+          engine.max_frame_seconds             finite seconds, >0 and <=10
+          engine.interpolation                 none|lerp|extrapolate
+        Common settings also have registered names exposed by --help-all.
+        Limits above are proposed validation bounds, not current guarantees.
+        These simulation changes are developer overrides and may change game
+        behavior. Manual-clock driving and start-hidden lifecycle control stay
+        API-only; CLI options must not leave a normal launch unable to advance
+        or show its window. No arbitrary memory fields or SDL hints via --set.
+
+ADD     repl subcommand
+        Options: -l/--language lua|ruby; -h/--help. Explicit interactive shell
+        with game bindings. Does not silently launch a project.
+
+ADD     eval subcommand
+        Options: -l/--language lua|ruby; --code SOURCE; -h/--help; -- args...
+        One-shot development evaluation. No top-level -e or implicit REPL.
+
+10. REMOVE OR REPLACE
+---------------------
+
+REMOVE  --fullscreen [MODE]          use --window-mode with canonical values
+REMOVE  --windowed                   use --window-mode windowed
+REMOVE  old window-mode value aliases: window, borderless, exclusive,
+        desktop, fullscreen         use the three canonical values only
+REMOVE  --no-vsync                   use --vsync off
+REMOVE  bare --vsync                 use --vsync on
+REMOVE  bare --reduced-flashing      use --reduced-flashing on
+REMOVE  boolean value synonyms true/false/yes/no/1/0 FROM CLI values
+                                    use on/off; TOML keeps native booleans
+REMOVE  --with-safe-mode             use --safe-mode
+REMOVE  --with-default-settings      use --default-settings
+REMOVE  numeric max-fps sentinel 0 or negative values FROM CLI
+                                    use display or unlimited
+REMOVE  top-level -e CODE            use eval --language ... --code ...
+REMOVE  implicit REPL from -l alone  use repl --language ...
+REMOVE  --media-password             encrypted-media provisioning stays in
+                                    the embedding/project API for this scope
+REMOVE  backend value native         use auto or a listed concrete backend
+REMOVE  unknown-option pass-through and guessed option arity
+REMOVE  window-size implicitly selecting windowed mode
+
+Proposed migration: removed options produce a specific replacement diagnostic
+and exit 2; do not silently keep parallel spellings in the new stable contract.
+Document breaking CLI changes in release notes and update demos and tests.
+No previously removed --chip-midi/--chip-wav or other audio-player/export flags
+are reintroduced. MIDI/MusicXML playback remains an API and demo operation.
+
+11. DEFERRED / NOT PART OF THIS CLI SLICE
+----------------------------------------
+
+Packaged-game distribution format, build/export/publish commands, hot reload,
+project scaffolding, debugger server, benchmarks, frame capture, test-only
+manual-clock controls, dedicated-server networking, arbitrary game variables,
+input remapping CLI, per-device audio tuning, and per-song synthesis controls.
+No second runner executable. No new CLI/JSON/logging dependency stack.
+
+12. IMPLEMENTATION ACCEPTANCE
+------------------------------
+
+One C settings model/resolver backs C, C++, Lua, Ruby, TOML, and the runner.
+Use existing CLI11 for executable parsing and existing TOML infrastructure.
+Keep main.cpp thin and the C SDK usable independently of the C++ CLI parser.
+Generate or share option metadata so help and actual parsing stay aligned.
+
+Verify precedence (including script-over-TOML and explicit false/zero), every
+option's arity and value validation, game-argument preservation, recovery,
+reset isolation from saves, project-relative paths, and non-persistence of
+temporary overrides. Verify actual window mode, vsync, effects, and audio
+behavior on supported platforms; report capability failures accurately.
+
+Examples of the proposed final interface:
+
+  grapple-beam --window-mode windowed --window-size 1280x720 ./my-game
+  grapple-beam --window-mode fullscreen-borderless --vsync off ./my-game
+  grapple-beam --window-mode fullscreen-exclusive --resolution 1920x1080 \
+    --refresh-rate 120 ./my-game
+  grapple-beam --config player.toml --config-script player.lua \
+    --bloom 0.25 ./lua-game -- --level forest
+  grapple-beam --default-settings ./my-game
+  grapple-beam --safe-mode ./my-game
+  grapple-beam --print-settings ./my-game
+  grapple-beam --display primary --list-display-modes
+
+Implementation progress is tracked in docs/cli-implementation.md.

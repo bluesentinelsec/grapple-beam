@@ -3,6 +3,7 @@
  * Lua bindings for Grapple modules. */
 #include "../src/gen_support_lua.h"
 
+#include <grapple/audio_bus.h>
 #include <grapple/base64.h>
 #include <grapple/bidi.h>
 #include <grapple/chiptune.h>
@@ -13,6 +14,7 @@
 #include <grapple/engine.h>
 #include <grapple/engine_actor.h>
 #include <grapple/engine_assets.h>
+#include <grapple/engine_backend.h>
 #include <grapple/engine_binding.h>
 #include <grapple/engine_camera.h>
 #include <grapple/engine_config.h>
@@ -25,6 +27,7 @@
 #include <grapple/engine_save.h>
 #include <grapple/engine_scene.h>
 #include <grapple/engine_script.h>
+#include <grapple/engine_settings.h>
 #include <grapple/engine_text.h>
 #include <grapple/gpu_build.h>
 #include <grapple/gpu_primitives.h>
@@ -200,6 +203,7 @@ static void GenRead_Grapple_Camera(lua_State *L, int idx, Grapple_Camera *out)
     out->shake_amount = (float)GrappleGen_LuaFieldNum(L, idx, "shake_amount");
     out->shake_seconds = (float)GrappleGen_LuaFieldNum(L, idx, "shake_seconds");
     out->shake_remaining = (float)GrappleGen_LuaFieldNum(L, idx, "shake_remaining");
+    out->shake_scale = (float)GrappleGen_LuaFieldNum(L, idx, "shake_scale");
     lua_getfield(L, idx, "viewport");
     GenRead_SDL_FRect(L, lua_gettop(L), &out->viewport);
     lua_pop(L, 1);
@@ -210,7 +214,7 @@ static void GenRead_Grapple_Camera(lua_State *L, int idx, Grapple_Camera *out)
 
 static void GenPush_Grapple_Camera(lua_State *L, const Grapple_Camera *in)
 {
-    lua_createtable(L, 0, 14);
+    lua_createtable(L, 0, 15);
     lua_pushnumber(L, (lua_Number)in->x);
     lua_setfield(L, -2, "x");
     lua_pushnumber(L, (lua_Number)in->y);
@@ -235,6 +239,8 @@ static void GenPush_Grapple_Camera(lua_State *L, const Grapple_Camera *in)
     lua_setfield(L, -2, "shake_seconds");
     lua_pushnumber(L, (lua_Number)in->shake_remaining);
     lua_setfield(L, -2, "shake_remaining");
+    lua_pushnumber(L, (lua_Number)in->shake_scale);
+    lua_setfield(L, -2, "shake_scale");
     GenPush_SDL_FRect(L, &in->viewport);
     lua_setfield(L, -2, "viewport");
     GenPush_SDL_FRect(L, &in->visible);
@@ -554,11 +560,16 @@ static void GenRead_Grapple_GraphicsSettings(lua_State *L, int idx, Grapple_Grap
     out->reduced_flashing = (bool)GrappleGen_LuaFieldBool(L, idx, "reduced_flashing");
     out->screen_shake = (float)GrappleGen_LuaFieldNum(L, idx, "screen_shake");
     out->ui_scale = (float)GrappleGen_LuaFieldNum(L, idx, "ui_scale");
+    out->fullscreen_width = (int)GrappleGen_LuaFieldInt(L, idx, "fullscreen_width");
+    out->fullscreen_height = (int)GrappleGen_LuaFieldInt(L, idx, "fullscreen_height");
+    out->refresh_rate = (float)GrappleGen_LuaFieldNum(L, idx, "refresh_rate");
+    out->primary_display = (bool)GrappleGen_LuaFieldBool(L, idx, "primary_display");
+    out->effects_disabled = (bool)GrappleGen_LuaFieldBool(L, idx, "effects_disabled");
 }
 
 static void GenPush_Grapple_GraphicsSettings(lua_State *L, const Grapple_GraphicsSettings *in)
 {
-    lua_createtable(L, 0, 26);
+    lua_createtable(L, 0, 31);
     lua_pushboolean(L, (int)in->vsync);
     lua_setfield(L, -2, "vsync");
     lua_pushinteger(L, (lua_Integer)in->max_fps);
@@ -611,6 +622,16 @@ static void GenPush_Grapple_GraphicsSettings(lua_State *L, const Grapple_Graphic
     lua_setfield(L, -2, "screen_shake");
     lua_pushnumber(L, (lua_Number)in->ui_scale);
     lua_setfield(L, -2, "ui_scale");
+    lua_pushinteger(L, (lua_Integer)in->fullscreen_width);
+    lua_setfield(L, -2, "fullscreen_width");
+    lua_pushinteger(L, (lua_Integer)in->fullscreen_height);
+    lua_setfield(L, -2, "fullscreen_height");
+    lua_pushnumber(L, (lua_Number)in->refresh_rate);
+    lua_setfield(L, -2, "refresh_rate");
+    lua_pushboolean(L, (int)in->primary_display);
+    lua_setfield(L, -2, "primary_display");
+    lua_pushboolean(L, (int)in->effects_disabled);
+    lua_setfield(L, -2, "effects_disabled");
 }
 
 static void GenRead_SDL_FColor(lua_State *L, int idx, SDL_FColor *out)
@@ -726,6 +747,59 @@ static void GenPush_Grapple_RayHit(lua_State *L, const Grapple_RayHit *in)
     lua_setfield(L, -2, "fraction");
 }
 
+static void GenPush_Grapple_RenderBackendInfo(lua_State *L, const Grapple_RenderBackendInfo *in)
+{
+    lua_createtable(L, 0, 10);
+    {
+        size_t length = 0;
+        while (length < sizeof(in->name) && in->name[length]) ++length;
+        lua_pushlstring(L, in->name, length);
+    }
+    lua_setfield(L, -2, "name");
+    {
+        size_t length = 0;
+        while (length < sizeof(in->label) && in->label[length]) ++length;
+        lua_pushlstring(L, in->label, length);
+    }
+    lua_setfield(L, -2, "label");
+    {
+        size_t length = 0;
+        while (length < sizeof(in->renderer) && in->renderer[length]) ++length;
+        lua_pushlstring(L, in->renderer, length);
+    }
+    lua_setfield(L, -2, "renderer");
+    {
+        size_t length = 0;
+        while (length < sizeof(in->api_version) && in->api_version[length]) ++length;
+        lua_pushlstring(L, in->api_version, length);
+    }
+    lua_setfield(L, -2, "api_version");
+    {
+        size_t length = 0;
+        while (length < sizeof(in->device) && in->device[length]) ++length;
+        lua_pushlstring(L, in->device, length);
+    }
+    lua_setfield(L, -2, "device");
+    {
+        size_t length = 0;
+        while (length < sizeof(in->driver) && in->driver[length]) ++length;
+        lua_pushlstring(L, in->driver, length);
+    }
+    lua_setfield(L, -2, "driver");
+    {
+        size_t length = 0;
+        while (length < sizeof(in->error) && in->error[length]) ++length;
+        lua_pushlstring(L, in->error, length);
+    }
+    lua_setfield(L, -2, "error");
+    lua_pushboolean(L, (int)in->compiled);
+    lua_setfield(L, -2, "compiled");
+    lua_pushboolean(L, (int)in->available);
+    lua_setfield(L, -2, "available");
+    lua_pushboolean(L, (int)in->opengl_effects);
+    lua_setfield(L, -2, "opengl_effects");
+}
+
 static void GenPush_Grapple_RenderStats(lua_State *L, const Grapple_RenderStats *in)
 {
     lua_createtable(L, 0, 3);
@@ -752,6 +826,15 @@ static void GenPush_Grapple_SaveInfo(lua_State *L, const Grapple_SaveInfo *in)
         lua_pushlstring(L, in->label, length);
     }
     lua_setfield(L, -2, "label");
+}
+
+static void GenRead_SDL_AudioSpec(lua_State *L, int idx, SDL_AudioSpec *out)
+{
+    memset(out, 0, sizeof(*out));
+    if (!lua_istable(L, idx)) { return; }
+    out->format = (SDL_AudioFormat)GrappleGen_LuaFieldInt(L, idx, "format");
+    out->channels = (int)GrappleGen_LuaFieldInt(L, idx, "channels");
+    out->freq = (int)GrappleGen_LuaFieldInt(L, idx, "freq");
 }
 
 static void GenRead_SDL_Color(lua_State *L, int idx, SDL_Color *out)
@@ -1824,6 +1907,18 @@ static int GenL_Grapple_AnyInput(lua_State *L)
     return 1;
 }
 
+static int GenL_Grapple_ApplyAudioBus(lua_State *L)
+{
+    (void)L;
+    Grapple_AudioBus a0 = (Grapple_AudioBus)luaL_checkinteger(L, 1);
+    float io1 = (float)luaL_optnumber(L, 2, 0);
+    int a2 = (int)luaL_checkinteger(L, 3);
+    bool rv = Grapple_ApplyAudioBus(a0, &io1, a2);
+    lua_pushboolean(L, (int)rv);
+    lua_pushnumber(L, (lua_Number)io1);
+    return 2;
+}
+
 static int GenL_Grapple_AssetPath(lua_State *L)
 {
     (void)L;
@@ -1931,6 +2026,23 @@ static int GenL_Grapple_AssetsWait(lua_State *L)
     Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Engine");
     Grapple_AssetsWait(a0);
     return 0;
+}
+
+static int GenL_Grapple_AttachAudioBuses(lua_State *L)
+{
+    (void)L;
+    MIX_Mixer *a0 = (MIX_Mixer *)GrappleGen_LuaCheckHandle(L, 1, "MIX_Mixer");
+    bool rv = Grapple_AttachAudioBuses(a0);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
+static int GenL_Grapple_AudioMuted(lua_State *L)
+{
+    (void)L;
+    bool rv = Grapple_AudioMuted();
+    lua_pushboolean(L, (int)rv);
+    return 1;
 }
 
 static int GenL_Grapple_BidiBaseIsRTL(lua_State *L)
@@ -2383,6 +2495,15 @@ static int GenL_Grapple_ChipPlayerPlaying(lua_State *L)
     return 1;
 }
 
+static int GenL_Grapple_CloneSettings(lua_State *L)
+{
+    (void)L;
+    const Grapple_Settings *a0 = (const Grapple_Settings *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Settings");
+    Grapple_Settings * rv = Grapple_CloneSettings(a0);
+    GrappleGen_LuaPushHandle(L, (void *)rv, "Grapple_Settings");
+    return 1;
+}
+
 static int GenL_Grapple_CompileRegex(lua_State *L)
 {
     (void)L;
@@ -2514,6 +2635,16 @@ static int GenL_Grapple_ConfigSetPresentation(lua_State *L)
     return 0;
 }
 
+static int GenL_Grapple_ConfigSetRendererBackend(lua_State *L)
+{
+    (void)L;
+    Grapple_EngineConfig *a0 = (Grapple_EngineConfig *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_EngineConfig");
+    const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
+    bool rv = Grapple_ConfigSetRendererBackend(a0, a1);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
 static int GenL_Grapple_ConfigSetResizable(lua_State *L)
 {
     (void)L;
@@ -2567,6 +2698,31 @@ static int GenL_Grapple_CountSignalConnections(lua_State *L)
     const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
     int rv = Grapple_CountSignalConnections(a0, a1);
     lua_pushinteger(L, (lua_Integer)rv);
+    return 1;
+}
+
+static int GenL_Grapple_CreateAudioMixer(lua_State *L)
+{
+    (void)L;
+    SDL_AudioDeviceID a0 = (SDL_AudioDeviceID)luaL_checkinteger(L, 1);
+    SDL_AudioSpec tmp1;
+    const SDL_AudioSpec *a1 = NULL;
+    if (!lua_isnoneornil(L, 2)) {
+        GenRead_SDL_AudioSpec(L, 2, &tmp1);
+        a1 = &tmp1;
+    }
+    MIX_Mixer * rv = Grapple_CreateAudioMixer(a0, a1);
+    GrappleGen_LuaPushHandle(L, (void *)rv, "MIX_Mixer");
+    return 1;
+}
+
+static int GenL_Grapple_CreateBackendRenderer(lua_State *L)
+{
+    (void)L;
+    SDL_Window *a0 = (SDL_Window *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Window");
+    const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
+    SDL_Renderer * rv = Grapple_CreateBackendRenderer(a0, a1);
+    GrappleGen_LuaPushHandle(L, (void *)rv, "SDL_Renderer");
     return 1;
 }
 
@@ -2670,6 +2826,14 @@ static int GenL_Grapple_CreateLightScene(lua_State *L)
     return 1;
 }
 
+static int GenL_Grapple_CreateSettings(lua_State *L)
+{
+    (void)L;
+    Grapple_Settings * rv = Grapple_CreateSettings();
+    GrappleGen_LuaPushHandle(L, (void *)rv, "Grapple_Settings");
+    return 1;
+}
+
 static int GenL_Grapple_CreateSignalEmitter(lua_State *L)
 {
     (void)L;
@@ -2702,6 +2866,18 @@ static int GenL_Grapple_DayNightSunlight(lua_State *L)
     float rv = Grapple_DayNightSunlight(a0);
     lua_pushnumber(L, (lua_Number)rv);
     return 1;
+}
+
+static int GenL_Grapple_DescribeRenderBackend(lua_State *L)
+{
+    (void)L;
+    SDL_Renderer *a0 = (SDL_Renderer *)GrappleGen_LuaCheckHandle(L, 1, "SDL_Renderer");
+    Grapple_RenderBackendInfo out1;
+    memset(&out1, 0, sizeof(out1));
+    bool rv = Grapple_DescribeRenderBackend(a0, &out1);
+    lua_pushboolean(L, (int)rv);
+    GenPush_Grapple_RenderBackendInfo(L, &out1);
+    return 2;
 }
 
 static int GenL_Grapple_DestroyChipComposer(lua_State *L)
@@ -2757,6 +2933,14 @@ static int GenL_Grapple_DestroyRegex(lua_State *L)
     (void)L;
     Grapple_Regex *a0 = (Grapple_Regex *)GrappleGen_LuaTakeHandle(L, 1, "Grapple_Regex");
     Grapple_DestroyRegex(a0);
+    return 0;
+}
+
+static int GenL_Grapple_DestroySettings(lua_State *L)
+{
+    (void)L;
+    Grapple_Settings *a0 = (Grapple_Settings *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Settings");
+    Grapple_DestroySettings(a0);
     return 0;
 }
 
@@ -2946,6 +3130,15 @@ static int GenL_Grapple_EncodeDataBase64(lua_State *L)
     if (rv != NULL) { SDL_free(rv); }
     lua_pushinteger(L, (lua_Integer)io2);
     return 2;
+}
+
+static int GenL_Grapple_EngineActualSettings(lua_State *L)
+{
+    (void)L;
+    Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Engine");
+    Grapple_Settings * rv = Grapple_EngineActualSettings(a0);
+    GrappleGen_LuaPushHandle(L, (void *)rv, "Grapple_Settings");
+    return 1;
 }
 
 static int GenL_Grapple_EngineAdvance(lua_State *L)
@@ -3142,6 +3335,15 @@ static int GenL_Grapple_EngineRenderer(lua_State *L)
     return 1;
 }
 
+static int GenL_Grapple_EngineRequestedSettings(lua_State *L)
+{
+    (void)L;
+    Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Engine");
+    const Grapple_Settings * rv = Grapple_EngineRequestedSettings(a0);
+    GrappleGen_LuaPushHandle(L, (void *)rv, "Grapple_Settings");
+    return 1;
+}
+
 static int GenL_Grapple_EngineSafeRect(lua_State *L)
 {
     (void)L;
@@ -3290,6 +3492,16 @@ static int GenL_Grapple_EngineTimeScale(lua_State *L)
     (void)L;
     Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Engine");
     float rv = Grapple_EngineTimeScale(a0);
+    lua_pushnumber(L, (lua_Number)rv);
+    return 1;
+}
+
+static int GenL_Grapple_EngineUiPoints(lua_State *L)
+{
+    (void)L;
+    Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Engine");
+    float a1 = (float)luaL_checknumber(L, 2);
+    float rv = Grapple_EngineUiPoints(a0, a1);
     lua_pushnumber(L, (lua_Number)rv);
     return 1;
 }
@@ -4569,6 +4781,15 @@ static int GenL_Grapple_GamepadStopRumble(lua_State *L)
     return 0;
 }
 
+static int GenL_Grapple_GetAudioBusGain(lua_State *L)
+{
+    (void)L;
+    Grapple_AudioBus a0 = (Grapple_AudioBus)luaL_checkinteger(L, 1);
+    float rv = Grapple_GetAudioBusGain(a0);
+    lua_pushnumber(L, (lua_Number)rv);
+    return 1;
+}
+
 static int GenL_Grapple_GetChipDiagnosticCount(lua_State *L)
 {
     (void)L;
@@ -4636,6 +4857,14 @@ static int GenL_Grapple_GetChipSectionCount(lua_State *L)
     const Grapple_ChipSong *a0 = (const Grapple_ChipSong *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_ChipSong");
     int rv = Grapple_GetChipSectionCount(a0);
     lua_pushinteger(L, (lua_Integer)rv);
+    return 1;
+}
+
+static int GenL_Grapple_GetLaunchSettings(lua_State *L)
+{
+    (void)L;
+    const Grapple_Settings * rv = Grapple_GetLaunchSettings();
+    GrappleGen_LuaPushHandle(L, (void *)rv, "Grapple_Settings");
     return 1;
 }
 
@@ -6090,6 +6319,18 @@ static int GenL_Grapple_PrismaticJointDefSetMotor(lua_State *L)
     return 0;
 }
 
+static int GenL_Grapple_ProbeRenderBackend(lua_State *L)
+{
+    (void)L;
+    const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
+    Grapple_RenderBackendInfo out1;
+    memset(&out1, 0, sizeof(out1));
+    bool rv = Grapple_ProbeRenderBackend(a0, &out1);
+    lua_pushboolean(L, (int)rv);
+    GenPush_Grapple_RenderBackendInfo(L, &out1);
+    return 2;
+}
+
 static int GenL_Grapple_QuitDebugText(lua_State *L)
 {
     (void)L;
@@ -6318,6 +6559,32 @@ static int GenL_Grapple_RegexSearch(lua_State *L)
     return 1;
 }
 
+static int GenL_Grapple_RenderBackendCount(lua_State *L)
+{
+    (void)L;
+    int rv = Grapple_RenderBackendCount();
+    lua_pushinteger(L, (lua_Integer)rv);
+    return 1;
+}
+
+static int GenL_Grapple_RenderBackendName(lua_State *L)
+{
+    (void)L;
+    int a0 = (int)luaL_checkinteger(L, 1);
+    const char * rv = Grapple_RenderBackendName(a0);
+    if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
+    return 1;
+}
+
+static int GenL_Grapple_RenderBackendValid(lua_State *L)
+{
+    (void)L;
+    const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
+    bool rv = Grapple_RenderBackendValid(a0);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
 static int GenL_Grapple_RenderDebugText(lua_State *L)
 {
     (void)L;
@@ -6461,6 +6728,16 @@ static int GenL_Grapple_RevoluteJointDefSetSpring(lua_State *L)
     float a3 = (float)luaL_checknumber(L, 4);
     Grapple_RevoluteJointDefSetSpring(a0, a1, a2, a3);
     return 0;
+}
+
+static int GenL_Grapple_RouteAudioTrack(lua_State *L)
+{
+    (void)L;
+    MIX_Track *a0 = (MIX_Track *)GrappleGen_LuaCheckHandle(L, 1, "MIX_Track");
+    Grapple_AudioBus a1 = (Grapple_AudioBus)luaL_checkinteger(L, 2);
+    bool rv = Grapple_RouteAudioTrack(a0, a1);
+    lua_pushboolean(L, (int)rv);
+    return 1;
 }
 
 static int GenL_Grapple_SHA256(lua_State *L)
@@ -6839,6 +7116,24 @@ static int GenL_Grapple_SeekChipPlayer(lua_State *L)
     return 1;
 }
 
+static int GenL_Grapple_SetAudioBusGain(lua_State *L)
+{
+    (void)L;
+    Grapple_AudioBus a0 = (Grapple_AudioBus)luaL_checkinteger(L, 1);
+    float a1 = (float)luaL_checknumber(L, 2);
+    bool rv = Grapple_SetAudioBusGain(a0, a1);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
+static int GenL_Grapple_SetAudioMuted(lua_State *L)
+{
+    (void)L;
+    bool a0 = (bool)lua_toboolean(L, 1);
+    Grapple_SetAudioMuted(a0);
+    return 0;
+}
+
 static int GenL_Grapple_SetChipPart(lua_State *L)
 {
     (void)L;
@@ -6992,6 +7287,14 @@ static int GenL_Grapple_SetGamepadMotion(lua_State *L)
     return 1;
 }
 
+static int GenL_Grapple_SetLaunchSettings(lua_State *L)
+{
+    (void)L;
+    const Grapple_Settings *a0 = (const Grapple_Settings *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Settings");
+    Grapple_SetLaunchSettings(a0);
+    return 0;
+}
+
 static int GenL_Grapple_SetLightAmbient(lua_State *L)
 {
     (void)L;
@@ -7082,6 +7385,193 @@ static int GenL_Grapple_SetTriggerThreshold(lua_State *L)
     float a1 = (float)luaL_checknumber(L, 2);
     Grapple_SetTriggerThreshold(a0, a1);
     return 0;
+}
+
+static int GenL_Grapple_SettingChoices(lua_State *L)
+{
+    (void)L;
+    int a0 = (int)luaL_checkinteger(L, 1);
+    const char * rv = Grapple_SettingChoices(a0);
+    if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
+    return 1;
+}
+
+static int GenL_Grapple_SettingCount(lua_State *L)
+{
+    (void)L;
+    int rv = Grapple_SettingCount();
+    lua_pushinteger(L, (lua_Integer)rv);
+    return 1;
+}
+
+static int GenL_Grapple_SettingKey(lua_State *L)
+{
+    (void)L;
+    int a0 = (int)luaL_checkinteger(L, 1);
+    const char * rv = Grapple_SettingKey(a0);
+    if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
+    return 1;
+}
+
+static int GenL_Grapple_SettingOption(lua_State *L)
+{
+    (void)L;
+    int a0 = (int)luaL_checkinteger(L, 1);
+    const char * rv = Grapple_SettingOption(a0);
+    if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
+    return 1;
+}
+
+static int GenL_Grapple_SettingPolicy(lua_State *L)
+{
+    (void)L;
+    const char *a0 = lua_isnoneornil(L, 1) ? NULL : luaL_checkstring(L, 1);
+    const char * rv = Grapple_SettingPolicy(a0);
+    if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
+    return 1;
+}
+
+static int GenL_Grapple_SettingsApply(lua_State *L)
+{
+    (void)L;
+    const Grapple_Settings *a0 = (const Grapple_Settings *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Settings");
+    Grapple_EngineConfig *a1 = (Grapple_EngineConfig *)GrappleGen_LuaCheckHandle(L, 2, "Grapple_EngineConfig");
+    Grapple_GraphicsSettings out2;
+    memset(&out2, 0, sizeof(out2));
+    bool a3 = (bool)lua_toboolean(L, 3);
+    bool rv = Grapple_SettingsApply(a0, a1, &out2, a3);
+    lua_pushboolean(L, (int)rv);
+    GenPush_Grapple_GraphicsSettings(L, &out2);
+    return 2;
+}
+
+static int GenL_Grapple_SettingsCapture(lua_State *L)
+{
+    (void)L;
+    const Grapple_EngineConfig *a0 = (const Grapple_EngineConfig *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_EngineConfig");
+    Grapple_GraphicsSettings tmp1;
+    const Grapple_GraphicsSettings *a1 = NULL;
+    if (!lua_isnoneornil(L, 2)) {
+        GenRead_Grapple_GraphicsSettings(L, 2, &tmp1);
+        a1 = &tmp1;
+    }
+    Grapple_Settings * rv = Grapple_SettingsCapture(a0, a1);
+    GrappleGen_LuaPushHandle(L, (void *)rv, "Grapple_Settings");
+    return 1;
+}
+
+static int GenL_Grapple_SettingsGet(lua_State *L)
+{
+    (void)L;
+    const Grapple_Settings *a0 = (const Grapple_Settings *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Settings");
+    const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
+    const char * rv = Grapple_SettingsGet(a0, a1);
+    if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
+    return 1;
+}
+
+static int GenL_Grapple_SettingsLoadFile(lua_State *L)
+{
+    (void)L;
+    Grapple_Settings *a0 = (Grapple_Settings *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Settings");
+    const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
+    bool rv = Grapple_SettingsLoadFile(a0, a1);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
+static int GenL_Grapple_SettingsLoadToml(lua_State *L)
+{
+    (void)L;
+    Grapple_Settings *a0 = (Grapple_Settings *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Settings");
+    const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
+    const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checkstring(L, 3);
+    bool rv = Grapple_SettingsLoadToml(a0, a1, a2);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
+static int GenL_Grapple_SettingsOverlay(lua_State *L)
+{
+    (void)L;
+    Grapple_Settings *a0 = (Grapple_Settings *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Settings");
+    const Grapple_Settings *a1 = (const Grapple_Settings *)GrappleGen_LuaCheckHandle(L, 2, "Grapple_Settings");
+    bool rv = Grapple_SettingsOverlay(a0, a1);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
+static int GenL_Grapple_SettingsPlayerPath(lua_State *L)
+{
+    (void)L;
+    const Grapple_Settings *a0 = (const Grapple_Settings *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Settings");
+    const char * rv = Grapple_SettingsPlayerPath(a0);
+    if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
+    return 1;
+}
+
+static int GenL_Grapple_SettingsQuality(lua_State *L)
+{
+    (void)L;
+    Grapple_Settings *a0 = (Grapple_Settings *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Settings");
+    const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
+    const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checkstring(L, 3);
+    bool rv = Grapple_SettingsQuality(a0, a1, a2);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
+static int GenL_Grapple_SettingsSaveChanges(lua_State *L)
+{
+    (void)L;
+    const Grapple_Settings *a0 = (const Grapple_Settings *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Settings");
+    const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
+    bool rv = Grapple_SettingsSaveChanges(a0, a1);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
+static int GenL_Grapple_SettingsSet(lua_State *L)
+{
+    (void)L;
+    Grapple_Settings *a0 = (Grapple_Settings *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Settings");
+    const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
+    const char *a2 = lua_isnoneornil(L, 3) ? NULL : luaL_checkstring(L, 3);
+    const char *a3 = lua_isnoneornil(L, 4) ? NULL : luaL_checkstring(L, 4);
+    bool rv = Grapple_SettingsSet(a0, a1, a2, a3);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
+static int GenL_Grapple_SettingsSetPlayerPath(lua_State *L)
+{
+    (void)L;
+    Grapple_Settings *a0 = (Grapple_Settings *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Settings");
+    const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
+    bool rv = Grapple_SettingsSetPlayerPath(a0, a1);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
+static int GenL_Grapple_SettingsSource(lua_State *L)
+{
+    (void)L;
+    const Grapple_Settings *a0 = (const Grapple_Settings *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Settings");
+    const char *a1 = lua_isnoneornil(L, 2) ? NULL : luaL_checkstring(L, 2);
+    const char * rv = Grapple_SettingsSource(a0, a1);
+    if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
+    return 1;
+}
+
+static int GenL_Grapple_SettingsToToml(lua_State *L)
+{
+    (void)L;
+    const Grapple_Settings *a0 = (const Grapple_Settings *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Settings");
+    bool a1 = (bool)lua_toboolean(L, 2);
+    char * rv = Grapple_SettingsToToml(a0, a1);
+    if (rv == NULL) { lua_pushnil(L); } else { lua_pushstring(L, rv); }
+    if (rv != NULL) { SDL_free(rv); }
+    return 1;
 }
 
 static int GenL_Grapple_ShowOpenFileDialog(lua_State *L)
@@ -7563,7 +8053,7 @@ static int GenL_Grapple_WheelJointDefSetSpring(lua_State *L)
 int GrappleGen_OpenLua_grapple(lua_State *L);
 int GrappleGen_OpenLua_grapple(lua_State *L)
 {
-    lua_createtable(L, 0, 663);
+    lua_createtable(L, 0, 704);
     lua_pushcfunction(L, GenL_Grapple_ActionBind);
     lua_setfield(L, -2, "ActionBind");
     lua_pushcfunction(L, GenL_Grapple_ActionBindAxis);
@@ -7752,6 +8242,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "AddOccluderSegment");
     lua_pushcfunction(L, GenL_Grapple_AnyInput);
     lua_setfield(L, -2, "AnyInput");
+    lua_pushcfunction(L, GenL_Grapple_ApplyAudioBus);
+    lua_setfield(L, -2, "ApplyAudioBus");
     lua_pushcfunction(L, GenL_Grapple_AssetPath);
     lua_setfield(L, -2, "AssetPath");
     lua_pushcfunction(L, GenL_Grapple_AssetRelease);
@@ -7776,6 +8268,10 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "AssetsSetWorkers");
     lua_pushcfunction(L, GenL_Grapple_AssetsWait);
     lua_setfield(L, -2, "AssetsWait");
+    lua_pushcfunction(L, GenL_Grapple_AttachAudioBuses);
+    lua_setfield(L, -2, "AttachAudioBuses");
+    lua_pushcfunction(L, GenL_Grapple_AudioMuted);
+    lua_setfield(L, -2, "AudioMuted");
     lua_pushcfunction(L, GenL_Grapple_BidiBaseIsRTL);
     lua_setfield(L, -2, "BidiBaseIsRTL");
     lua_pushcfunction(L, GenL_Grapple_BindingFromString);
@@ -7850,6 +8346,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "CameraY");
     lua_pushcfunction(L, GenL_Grapple_ChipPlayerPlaying);
     lua_setfield(L, -2, "ChipPlayerPlaying");
+    lua_pushcfunction(L, GenL_Grapple_CloneSettings);
+    lua_setfield(L, -2, "CloneSettings");
     lua_pushcfunction(L, GenL_Grapple_CompileRegex);
     lua_setfield(L, -2, "CompileRegex");
     lua_pushcfunction(L, GenL_Grapple_ConfigCreate);
@@ -7878,6 +8376,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "ConfigSetMediaPath");
     lua_pushcfunction(L, GenL_Grapple_ConfigSetPresentation);
     lua_setfield(L, -2, "ConfigSetPresentation");
+    lua_pushcfunction(L, GenL_Grapple_ConfigSetRendererBackend);
+    lua_setfield(L, -2, "ConfigSetRendererBackend");
     lua_pushcfunction(L, GenL_Grapple_ConfigSetResizable);
     lua_setfield(L, -2, "ConfigSetResizable");
     lua_pushcfunction(L, GenL_Grapple_ConfigSetTickRate);
@@ -7890,6 +8390,10 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "ConfigSetWindowSize");
     lua_pushcfunction(L, GenL_Grapple_CountSignalConnections);
     lua_setfield(L, -2, "CountSignalConnections");
+    lua_pushcfunction(L, GenL_Grapple_CreateAudioMixer);
+    lua_setfield(L, -2, "CreateAudioMixer");
+    lua_pushcfunction(L, GenL_Grapple_CreateBackendRenderer);
+    lua_setfield(L, -2, "CreateBackendRenderer");
     lua_pushcfunction(L, GenL_Grapple_CreateChipComposer);
     lua_setfield(L, -2, "CreateChipComposer");
     lua_pushcfunction(L, GenL_Grapple_CreateChipPlayer);
@@ -7908,6 +8412,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "CreateGuiWithGlyphs");
     lua_pushcfunction(L, GenL_Grapple_CreateLightScene);
     lua_setfield(L, -2, "CreateLightScene");
+    lua_pushcfunction(L, GenL_Grapple_CreateSettings);
+    lua_setfield(L, -2, "CreateSettings");
     lua_pushcfunction(L, GenL_Grapple_CreateSignalEmitter);
     lua_setfield(L, -2, "CreateSignalEmitter");
     lua_pushcfunction(L, GenL_Grapple_CryptoSelfTest);
@@ -7916,6 +8422,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "DayNightAmbient");
     lua_pushcfunction(L, GenL_Grapple_DayNightSunlight);
     lua_setfield(L, -2, "DayNightSunlight");
+    lua_pushcfunction(L, GenL_Grapple_DescribeRenderBackend);
+    lua_setfield(L, -2, "DescribeRenderBackend");
     lua_pushcfunction(L, GenL_Grapple_DestroyChipComposer);
     lua_setfield(L, -2, "DestroyChipComposer");
     lua_pushcfunction(L, GenL_Grapple_DestroyChipPlayer);
@@ -7930,6 +8438,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "DestroyLightScene");
     lua_pushcfunction(L, GenL_Grapple_DestroyRegex);
     lua_setfield(L, -2, "DestroyRegex");
+    lua_pushcfunction(L, GenL_Grapple_DestroySettings);
+    lua_setfield(L, -2, "DestroySettings");
     lua_pushcfunction(L, GenL_Grapple_DestroySignalEmitter);
     lua_setfield(L, -2, "DestroySignalEmitter");
     lua_pushcfunction(L, GenL_Grapple_DeviceAccelerometer);
@@ -7966,6 +8476,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "DrawPhysicsWorld");
     lua_pushcfunction(L, GenL_Grapple_EncodeDataBase64);
     lua_setfield(L, -2, "EncodeDataBase64");
+    lua_pushcfunction(L, GenL_Grapple_EngineActualSettings);
+    lua_setfield(L, -2, "EngineActualSettings");
     lua_pushcfunction(L, GenL_Grapple_EngineAdvance);
     lua_setfield(L, -2, "EngineAdvance");
     lua_pushcfunction(L, GenL_Grapple_EngineAlpha);
@@ -8008,6 +8520,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "EngineRenderScale");
     lua_pushcfunction(L, GenL_Grapple_EngineRenderer);
     lua_setfield(L, -2, "EngineRenderer");
+    lua_pushcfunction(L, GenL_Grapple_EngineRequestedSettings);
+    lua_setfield(L, -2, "EngineRequestedSettings");
     lua_pushcfunction(L, GenL_Grapple_EngineSafeRect);
     lua_setfield(L, -2, "EngineSafeRect");
     lua_pushcfunction(L, GenL_Grapple_EngineSetClearColor);
@@ -8040,6 +8554,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "EngineTickRate");
     lua_pushcfunction(L, GenL_Grapple_EngineTimeScale);
     lua_setfield(L, -2, "EngineTimeScale");
+    lua_pushcfunction(L, GenL_Grapple_EngineUiPoints);
+    lua_setfield(L, -2, "EngineUiPoints");
     lua_pushcfunction(L, GenL_Grapple_EngineViewRect);
     lua_setfield(L, -2, "EngineViewRect");
     lua_pushcfunction(L, GenL_Grapple_EngineWindow);
@@ -8304,6 +8820,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GamepadStick");
     lua_pushcfunction(L, GenL_Grapple_GamepadStopRumble);
     lua_setfield(L, -2, "GamepadStopRumble");
+    lua_pushcfunction(L, GenL_Grapple_GetAudioBusGain);
+    lua_setfield(L, -2, "GetAudioBusGain");
     lua_pushcfunction(L, GenL_Grapple_GetChipDiagnosticCount);
     lua_setfield(L, -2, "GetChipDiagnosticCount");
     lua_pushcfunction(L, GenL_Grapple_GetChipDiagnosticMessage);
@@ -8318,6 +8836,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GetChipPresetEffects");
     lua_pushcfunction(L, GenL_Grapple_GetChipSectionCount);
     lua_setfield(L, -2, "GetChipSectionCount");
+    lua_pushcfunction(L, GenL_Grapple_GetLaunchSettings);
+    lua_setfield(L, -2, "GetLaunchSettings");
     lua_pushcfunction(L, GenL_Grapple_GraphicsClamp);
     lua_setfield(L, -2, "GraphicsClamp");
     lua_pushcfunction(L, GenL_Grapple_GraphicsConfigError);
@@ -8604,6 +9124,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "PrismaticJointDefSetLimit");
     lua_pushcfunction(L, GenL_Grapple_PrismaticJointDefSetMotor);
     lua_setfield(L, -2, "PrismaticJointDefSetMotor");
+    lua_pushcfunction(L, GenL_Grapple_ProbeRenderBackend);
+    lua_setfield(L, -2, "ProbeRenderBackend");
     lua_pushcfunction(L, GenL_Grapple_QuitDebugText);
     lua_setfield(L, -2, "QuitDebugText");
     lua_pushcfunction(L, GenL_Grapple_ReadChipDiagnostic);
@@ -8646,6 +9168,12 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "RegexReplace");
     lua_pushcfunction(L, GenL_Grapple_RegexSearch);
     lua_setfield(L, -2, "RegexSearch");
+    lua_pushcfunction(L, GenL_Grapple_RenderBackendCount);
+    lua_setfield(L, -2, "RenderBackendCount");
+    lua_pushcfunction(L, GenL_Grapple_RenderBackendName);
+    lua_setfield(L, -2, "RenderBackendName");
+    lua_pushcfunction(L, GenL_Grapple_RenderBackendValid);
+    lua_setfield(L, -2, "RenderBackendValid");
     lua_pushcfunction(L, GenL_Grapple_RenderDebugText);
     lua_setfield(L, -2, "RenderDebugText");
     lua_pushcfunction(L, GenL_Grapple_RenderLastStats);
@@ -8674,6 +9202,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "RevoluteJointDefSetMotor");
     lua_pushcfunction(L, GenL_Grapple_RevoluteJointDefSetSpring);
     lua_setfield(L, -2, "RevoluteJointDefSetSpring");
+    lua_pushcfunction(L, GenL_Grapple_RouteAudioTrack);
+    lua_setfield(L, -2, "RouteAudioTrack");
     lua_pushcfunction(L, GenL_Grapple_SHA256);
     lua_setfield(L, -2, "SHA256");
     lua_pushcfunction(L, GenL_Grapple_SampleLight);
@@ -8748,6 +9278,10 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "ScriptUnbind");
     lua_pushcfunction(L, GenL_Grapple_SeekChipPlayer);
     lua_setfield(L, -2, "SeekChipPlayer");
+    lua_pushcfunction(L, GenL_Grapple_SetAudioBusGain);
+    lua_setfield(L, -2, "SetAudioBusGain");
+    lua_pushcfunction(L, GenL_Grapple_SetAudioMuted);
+    lua_setfield(L, -2, "SetAudioMuted");
     lua_pushcfunction(L, GenL_Grapple_SetChipPart);
     lua_setfield(L, -2, "SetChipPart");
     lua_pushcfunction(L, GenL_Grapple_SetChipPlayerGain);
@@ -8774,6 +9308,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "SetGamepadDeadzone");
     lua_pushcfunction(L, GenL_Grapple_SetGamepadMotion);
     lua_setfield(L, -2, "SetGamepadMotion");
+    lua_pushcfunction(L, GenL_Grapple_SetLaunchSettings);
+    lua_setfield(L, -2, "SetLaunchSettings");
     lua_pushcfunction(L, GenL_Grapple_SetLightAmbient);
     lua_setfield(L, -2, "SetLightAmbient");
     lua_pushcfunction(L, GenL_Grapple_SetLightDebugDraw);
@@ -8794,6 +9330,42 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "SetTextInput");
     lua_pushcfunction(L, GenL_Grapple_SetTriggerThreshold);
     lua_setfield(L, -2, "SetTriggerThreshold");
+    lua_pushcfunction(L, GenL_Grapple_SettingChoices);
+    lua_setfield(L, -2, "SettingChoices");
+    lua_pushcfunction(L, GenL_Grapple_SettingCount);
+    lua_setfield(L, -2, "SettingCount");
+    lua_pushcfunction(L, GenL_Grapple_SettingKey);
+    lua_setfield(L, -2, "SettingKey");
+    lua_pushcfunction(L, GenL_Grapple_SettingOption);
+    lua_setfield(L, -2, "SettingOption");
+    lua_pushcfunction(L, GenL_Grapple_SettingPolicy);
+    lua_setfield(L, -2, "SettingPolicy");
+    lua_pushcfunction(L, GenL_Grapple_SettingsApply);
+    lua_setfield(L, -2, "SettingsApply");
+    lua_pushcfunction(L, GenL_Grapple_SettingsCapture);
+    lua_setfield(L, -2, "SettingsCapture");
+    lua_pushcfunction(L, GenL_Grapple_SettingsGet);
+    lua_setfield(L, -2, "SettingsGet");
+    lua_pushcfunction(L, GenL_Grapple_SettingsLoadFile);
+    lua_setfield(L, -2, "SettingsLoadFile");
+    lua_pushcfunction(L, GenL_Grapple_SettingsLoadToml);
+    lua_setfield(L, -2, "SettingsLoadToml");
+    lua_pushcfunction(L, GenL_Grapple_SettingsOverlay);
+    lua_setfield(L, -2, "SettingsOverlay");
+    lua_pushcfunction(L, GenL_Grapple_SettingsPlayerPath);
+    lua_setfield(L, -2, "SettingsPlayerPath");
+    lua_pushcfunction(L, GenL_Grapple_SettingsQuality);
+    lua_setfield(L, -2, "SettingsQuality");
+    lua_pushcfunction(L, GenL_Grapple_SettingsSaveChanges);
+    lua_setfield(L, -2, "SettingsSaveChanges");
+    lua_pushcfunction(L, GenL_Grapple_SettingsSet);
+    lua_setfield(L, -2, "SettingsSet");
+    lua_pushcfunction(L, GenL_Grapple_SettingsSetPlayerPath);
+    lua_setfield(L, -2, "SettingsSetPlayerPath");
+    lua_pushcfunction(L, GenL_Grapple_SettingsSource);
+    lua_setfield(L, -2, "SettingsSource");
+    lua_pushcfunction(L, GenL_Grapple_SettingsToToml);
+    lua_setfield(L, -2, "SettingsToToml");
     lua_pushcfunction(L, GenL_Grapple_ShowOpenFileDialog);
     lua_setfield(L, -2, "ShowOpenFileDialog");
     lua_pushcfunction(L, GenL_Grapple_ShowSaveFileDialog);
@@ -8902,6 +9474,18 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GRAPPLE_ASSET_READY");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_ASSET_FAILED);
     lua_setfield(L, -2, "GRAPPLE_ASSET_FAILED");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_AUDIO_MASTER);
+    lua_setfield(L, -2, "GRAPPLE_AUDIO_MASTER");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_AUDIO_MUSIC);
+    lua_setfield(L, -2, "GRAPPLE_AUDIO_MUSIC");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_AUDIO_SFX);
+    lua_setfield(L, -2, "GRAPPLE_AUDIO_SFX");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_AUDIO_SPEECH);
+    lua_setfield(L, -2, "GRAPPLE_AUDIO_SPEECH");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_AUDIO_AMBIENT);
+    lua_setfield(L, -2, "GRAPPLE_AUDIO_AMBIENT");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_AUDIO_BUS_COUNT);
+    lua_setfield(L, -2, "GRAPPLE_AUDIO_BUS_COUNT");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_BIND_NONE);
     lua_setfield(L, -2, "GRAPPLE_BIND_NONE");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_BIND_KEY);

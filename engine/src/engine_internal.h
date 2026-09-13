@@ -11,14 +11,15 @@
 
 #include <grapple/engine.h>
 #include <grapple/engine_graphics.h>
-#include <grapple/engine_media.h>
 #include <grapple/engine_input.h>
 #include <grapple/engine_light.h>
+#include <grapple/engine_media.h>
 #include <grapple/engine_render.h>
 #include <grapple/engine_scene.h>
 
 #define NS_PER_SECOND 1000000000ull
 
+struct Grapple_Settings;
 struct Grapple_PostFX;
 struct Grapple_ActorWorld;
 struct Grapple_DrawItem;
@@ -32,27 +33,28 @@ struct Grapple_ScriptBridge;
 
 struct Grapple_Engine
 {
+    struct Grapple_Settings *requested_settings;
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Surface *headless_surface; /* owned by us: see DestroyEngine */
 
-    int design_width, design_height;   /* the reference space */
-    float view_width, view_height;     /* what is actually visible */
+    int design_width, design_height; /* the reference space */
+    float view_width, view_height;   /* what is actually visible */
     Grapple_EnginePresentation presentation;
     SDL_FColor clear_color;
 
     /* Timing. All internal time is nanoseconds; the API speaks seconds. */
-    Uint64 step_ns;         /* one simulation step */
-    Uint64 accumulator_ns;  /* unsimulated time carried between frames */
-    Uint64 last_ns;         /* clock reading at the start of the last frame */
-    Uint64 refresh_ns;      /* display period, 0 if unknown */
-    Uint64 max_frame_ns;    /* longer than this is a stall */
-    Uint64 manual_ns;       /* the injected clock, when manual */
+    Uint64 step_ns;        /* one simulation step */
+    Uint64 accumulator_ns; /* unsimulated time carried between frames */
+    Uint64 last_ns;        /* clock reading at the start of the last frame */
+    Uint64 refresh_ns;     /* display period, 0 if unknown */
+    Uint64 max_frame_ns;   /* longer than this is a stall */
+    Uint64 manual_ns;      /* the injected clock, when manual */
     bool manual_clock;
 
     int tick_rate;
     int max_steps;
-    int max_fps;          /* 0 = follow the display, <0 = no limiter */
+    int max_fps;           /* 0 = follow the display, <0 = no limiter */
     Uint64 frame_start_ns; /* for the limiter */
     Grapple_EngineInterpolation interpolation;
     float time_scale;
@@ -130,7 +132,6 @@ extern void Grapple_EngineLightDestroy(Grapple_Engine *engine);
 extern Grapple_LightDef *Grapple_ActorLightSlot(Grapple_Actor *actor, bool create);
 extern void Grapple_ActorLightRemove(Grapple_Actor *actor);
 
-
 /* --- assets -------------------------------------------------------------- */
 
 /** Turn decoded surfaces into textures, within this frame's time budget.
@@ -146,10 +147,10 @@ extern void Grapple_EnginePhysicsDestroy(Grapple_Engine *engine);
 
 /** A Box2D body handle, stored on the actor as its three fields so that the
  *  actor system needs no Box2D header. */
-extern void Grapple_ActorSetBody(Grapple_Actor *actor, int index, Uint16 world,
-                                   Uint16 generation, float offset_x, float offset_y);
+extern void Grapple_ActorSetBody(Grapple_Actor *actor, int index, Uint16 world, Uint16 generation,
+                                 float offset_x, float offset_y);
 extern bool Grapple_ActorGetBody(Grapple_Actor *actor, int *index, Uint16 *world,
-                                   Uint16 *generation, float *offset_x, float *offset_y);
+                                 Uint16 *generation, float *offset_x, float *offset_y);
 extern void Grapple_ActorClearBody(Grapple_Actor *actor);
 
 /* --- input --------------------------------------------------------------- */
@@ -206,8 +207,8 @@ extern void Grapple_ActorWorldDestroy(Grapple_Engine *engine);
 /* --- media --------------------------------------------------------------- */
 
 /** Run the mount search and record what it found on the engine. */
-extern void Grapple_EngineMountMedia(Grapple_Engine *engine, const char *explicit_path,
-                                       int argc, char *const *argv);
+extern void Grapple_EngineMountMedia(Grapple_Engine *engine, const char *explicit_path, int argc,
+                                     char *const *argv);
 
 /** Point the settings resolver at the mounted archive, so a game's shipped
  *  config.toml is found wherever it lives. */

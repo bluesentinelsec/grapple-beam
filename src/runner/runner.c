@@ -3,10 +3,10 @@
  *
  * Original Grapple code (zlib).
  *
- *   grapple-beam -l lua                      interactive Lua shell
- *   grapple-beam -l ruby                     interactive Ruby shell
- *   grapple-beam -l lua  -e 'print(1+2)'     evaluate a one-liner
- *   grapple-beam -l ruby script.rb a b      run a script (args in ARGV / arg)
+ *   grapple-beam repl --language lua                    interactive Lua shell
+ *   grapple-beam repl --language ruby                   interactive Ruby shell
+ *   grapple-beam eval --language lua --code 'print(1+2)' evaluate a one-liner
+ *   grapple-beam script.rb -- a b                       run a script
  *
  * Both states come up with the game bindings (Grapple module) and
  * VFS-aware require already installed; "." is on the Ruby $LOAD_PATH.
@@ -24,22 +24,6 @@
 #include <mruby/variable.h>
 #include <stdio.h>
 #include <string.h>
-
-static int Usage(void)
-{
-    fprintf(stderr, "usage: grapple-beam [runner options] [engine options] [script] [-- args...]\n"
-                    "\n"
-                    "Runner:\n"
-                    "  -l <lua|ruby>   language; inferred from a .lua or .rb script\n"
-                    "  -e <code>       run a string instead of a file\n"
-                    "  -h, --help      this text\n"
-                    "  -V, --version   version\n"
-                    "\n"
-                    "Engine options (--fullscreen, --window-size WxH, --max-fps, --with-safe-mode\n"
-                    "and others) are passed through to the engine the script creates.\n"
-                    "Arguments after -- reach the script as `arg` (Lua) or ARGV (Ruby).\n");
-    return 2;
-}
 
 /* ------------------------------------------------------------- Lua ------ */
 
@@ -194,124 +178,10 @@ static int RunRuby(const char *code, const char *script, int argc, char **argv)
     return rc;
 }
 
-int GrappleRunner_Run(int argc, char **argv, const char *version)
+int GrappleRunner_Execute(const char *language, const char *code, const char *script, int argc,
+                          char **argv)
 {
-    const char *language = NULL;
-    const char *code = NULL;
-    const char *script = NULL;
-    int script_args_at = argc;
-
-    /* Engine options precede the script; subsequent arguments belong to the game. */
-    char *engine_args[64];
-    int engine_argc = 0;
-    engine_args[engine_argc++] = argv[0];
-
-    for (int i = 1; i < argc; ++i)
-    {
-        if (strcmp(argv[i], "--") == 0)
-        {
-            script_args_at = i + 1;
-            break;
-        }
-        if (strcmp(argv[i], "-l") == 0 && i + 1 < argc)
-        {
-            language = argv[++i];
-        }
-        else if (strcmp(argv[i], "-e") == 0 && i + 1 < argc)
-        {
-            code = argv[++i];
-        }
-        else if (strcmp(argv[i], "-l") == 0 || strcmp(argv[i], "-e") == 0)
-        {
-            fprintf(stderr, "error: %s requires a value\n", argv[i]);
-            return 2;
-        }
-        else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0)
-        {
-            Usage();
-            return 0;
-        }
-        else if (strcmp(argv[i], "-V") == 0 || strcmp(argv[i], "--version") == 0)
-        {
-            printf("grapple-beam %s\n", version);
-            return 0;
-        }
-        else if (argv[i][0] == '-' && argv[i][1] != '\0')
-        {
-            /* The engine's. A value that does not itself look like a flag
-               comes with it, so `--window-size 640x360` stays together. */
-            if (engine_argc < (int)(sizeof(engine_args) / sizeof(engine_args[0])) - 2)
-            {
-                engine_args[engine_argc++] = argv[i];
-                const bool flag =
-                    strcmp(argv[i], "--fullscreen") == 0 || strcmp(argv[i], "--windowed") == 0 ||
-                    strcmp(argv[i], "--vsync") == 0 || strcmp(argv[i], "--no-vsync") == 0 ||
-                    strcmp(argv[i], "--with-safe-mode") == 0 ||
-                    strcmp(argv[i], "--with-default-settings") == 0 || strchr(argv[i], '=') != NULL;
-                const char *next = i + 1 < argc ? argv[i + 1] : "";
-                const bool optional_value =
-                    (strcmp(argv[i], "--fullscreen") == 0 &&
-                     (strcmp(next, "exclusive") == 0 || strcmp(next, "borderless") == 0 ||
-                      strcmp(next, "desktop") == 0 || strcmp(next, "windowed") == 0)) ||
-                    (strcmp(argv[i], "--vsync") == 0 &&
-                     (strcmp(next, "on") == 0 || strcmp(next, "off") == 0 ||
-                      strcmp(next, "true") == 0 || strcmp(next, "false") == 0 ||
-                      strcmp(next, "1") == 0 || strcmp(next, "0") == 0));
-                if ((!flag || optional_value) && i + 1 < argc && argv[i + 1][0] != '-')
-                {
-                    engine_args[engine_argc++] = argv[++i];
-                }
-            }
-            else
-            {
-                fprintf(stderr, "error: too many engine arguments\n");
-                return 2;
-            }
-        }
-        else
-        {
-            script = argv[i];
-            script_args_at = i + 1;
-            /* `game.lua -- --level 3` and `game.lua --level 3` should reach
-               the script the same way: the separator is punctuation between
-               two argument lists, not one of the arguments. */
-            if (script_args_at < argc && strcmp(argv[script_args_at], "--") == 0)
-            {
-                script_args_at++;
-            }
-            break;
-        }
-    }
-
-    Grapple_SetScriptProcessArgs(engine_argc, engine_args);
-    if (language == NULL && script != NULL)
-    {
-        const char *dot = strrchr(script, '.');
-        if (dot != NULL)
-        {
-            if (strcmp(dot, ".lua") == 0)
-            {
-                language = "lua";
-            }
-            else if (strcmp(dot, ".rb") == 0)
-            {
-                language = "ruby";
-            }
-        }
-    }
-    if (language == NULL)
-    {
-        return Usage();
-    }
-    const int extra = argc - script_args_at;
-    char **extra_argv = argv + script_args_at;
     if (strcmp(language, "lua") == 0)
-    {
-        return RunLua(code, script, extra, extra_argv);
-    }
-    if (strcmp(language, "ruby") == 0)
-    {
-        return RunRuby(code, script, extra, extra_argv);
-    }
-    return Usage();
+        return RunLua(code, script, argc, argv);
+    return RunRuby(code, script, argc, argv);
 }
