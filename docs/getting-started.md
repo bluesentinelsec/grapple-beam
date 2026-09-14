@@ -35,6 +35,10 @@ the [minimal music build](chiptune-validation.md) for a smaller source configura
 
 ## Run your first script game
 
+For a complete C desktop workspace, use `grapple-beam new starfall --model=c`.
+The [C project guide](projects.md) covers its Make/CMake build, tests, documentation,
+GitHub setup, and `grapple-beam package` workflow.
+
 Create `my-game/main.lua`:
 
 ```lua

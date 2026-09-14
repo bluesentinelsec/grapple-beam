@@ -20,6 +20,7 @@ from MIDI, MusicXML, or code, with polyphonic C64-inspired instruments and moder
 chorus, delay, and reverb.
 
 [Getting started](docs/getting-started.md) · [Runner and settings](docs/cli-implementation.md) ·
+[C desktop projects](docs/projects.md) ·
 [Modules](docs/modules.md) · [Published documentation](https://bluesentinelsec.github.io/grapple-beam/)
 
 ## Build and run
@@ -46,7 +47,26 @@ These guides describe **current main**, including settings added after v0.9.0.
 For a released SDK, use the documentation bundled with that release and matching
 headers/libraries.
 
-## Launch and configure a game
+## Create a C desktop game
+
+```sh
+grapple-beam new starfall --model=c
+cd starfall
+make                 # Debug; equivalent to make build.
+make test
+grapple-beam package
+```
+
+The generated project includes CMake/FetchContent integration, a playable C starter,
+media/configuration, tests, player docs, Git initialization, and desktop CI/release
+workflows. Its five Make targets are `build`, `build-release`, `test`, `fmt`, and
+`clean`; Windows gets matching `build.bat` operations. Game sources under
+`src/starfall/` are discovered automatically. Packaging belongs to the CLI.
+See [C desktop projects](docs/projects.md) for version pins, optional GitHub creation,
+requirements, and distribution details. These CLI commands require a build containing
+project support; the default engine source pin can still use v0.9.0.
+
+## Launch and configure a script game
 
 ```sh
 grapple-beam --window-mode fullscreen-borderless ./my-game

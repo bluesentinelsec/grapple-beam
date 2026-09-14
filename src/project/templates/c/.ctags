@@ -1,0 +1,6 @@
+--recurse=yes
+--languages=C
+--tag-relative=yes
+--exclude=build
+--exclude=dist
+--exclude=.git

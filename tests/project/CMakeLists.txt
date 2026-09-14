@@ -1,0 +1,6 @@
+add_executable(grapple_project_test project_test.cpp)
+target_include_directories(grapple_project_test PRIVATE "${PROJECT_SOURCE_DIR}/src/project")
+target_link_libraries(grapple_project_test PRIVATE grapple_project GTest::gtest_main SDL3::SDL3)
+target_compile_definitions(grapple_project_test PRIVATE PROJECT_TEST_CMAKE="${CMAKE_COMMAND}")
+grapple_set_project_warnings(grapple_project_test)
+gtest_discover_tests(grapple_project_test DISCOVERY_TIMEOUT 30 PROPERTIES TIMEOUT 45)

@@ -1,0 +1,10 @@
+/build/
+/dist/
+/compile_commands.json
+/tags
+/TAGS
+/CMakeUserPresets.json
+/.vscode/
+/.idea/
+.DS_Store
+*.swp
