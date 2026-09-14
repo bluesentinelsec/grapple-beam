@@ -62,7 +62,8 @@ TEST_F(ProjectTest, LatestIsResolvedOnceAndStoredAsImmutableCommit)
         return Source(url);
     };
     Create(options, services);
-    EXPECT_EQ(urls.size(), 6U);
+    ASSERT_EQ(urls.size(), 6U);
+    EXPECT_TRUE(urls[1].ends_with("commits/refs/tags/v0.9.0"));
     const auto pin = Read(options.destination / "cmake/GrappleDependency.cmake");
     EXPECT_NE(pin.find(kSha), std::string::npos);
     EXPECT_EQ(pin.find("GIT_TAG main"), std::string::npos);
@@ -79,9 +80,22 @@ TEST_F(ProjectTest, ExplicitVersionDoesNotQueryLatest)
     options.version = "v0.9.0";
     services.get = [](const std::string &url) {
         EXPECT_EQ(url.find("releases/latest"), std::string::npos);
+        if (url.find("commits/") != std::string::npos)
+            EXPECT_TRUE(url.ends_with("commits/refs/tags/v0.9.0"));
         return Source(url);
     };
     Create(options, services);
+}
+TEST_F(ProjectTest, BranchCannotSubstituteForMissingVersionTag)
+{
+    options.version = "main";
+    services.get = [](const std::string &url) {
+        if (url.ends_with("commits/refs/tags/main"))
+            throw std::runtime_error("GitHub ref not found");
+        return Source(url);
+    };
+    EXPECT_THROW(Create(options, services), std::runtime_error);
+    EXPECT_FALSE(fs::exists(options.destination));
 }
 TEST_F(ProjectTest, FullCommitMustMatchServerResponse)
 {

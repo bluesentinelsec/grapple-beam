@@ -2,6 +2,7 @@
 #include "templates.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <chrono>
 #include <fstream>
 #include <iostream>
@@ -127,7 +128,8 @@ EngineRef Resolve(const NewOptions &options, const ReadUrl &get)
         if (!std::regex_match(ref.requested, std::regex("[A-Za-z0-9][A-Za-z0-9._-]{0,100}")))
             throw std::runtime_error("Invalid release tag returned by GitHub");
     }
-    const auto commit = nlohmann::json::parse(get(kApi + "commits/" + ref.requested));
+    const auto revision = options.commit.empty() ? "refs/tags/" + ref.requested : ref.requested;
+    const auto commit = nlohmann::json::parse(get(kApi + "commits/" + revision));
     ref.commit = commit.at("sha").get<std::string>();
     if (!std::regex_match(ref.commit, std::regex("[a-f0-9]{40}")))
         throw std::runtime_error("Invalid commit returned by GitHub");
