@@ -28,7 +28,10 @@ file(GLOB_RECURSE inline_notices LIST_DIRECTORIES false
   "${grapple_engine_SOURCE_DIR}/extras/*sdefl*.h" "${grapple_engine_SOURCE_DIR}/extras/*sinfl*.h"
   "${grapple_engine_SOURCE_DIR}/image/*stb*.h" "${grapple_engine_SOURCE_DIR}/image/*nanosvg*.h")
 foreach(license IN LISTS inline_notices)
-  file(COPY "${license}" DESTINATION "${notices}/image/inline-notices")
+  file(RELATIVE_PATH name "${grapple_engine_SOURCE_DIR}" "${license}")
+  get_filename_component(dir "${notices}/inline-notices/${name}" DIRECTORY)
+  file(MAKE_DIRECTORY "${dir}")
+  file(COPY "${license}" DESTINATION "${dir}")
 endforeach()
 FetchContent_GetProperties(SDL3 SOURCE_DIR sdl_source)
 if(NOT EXISTS "${sdl_source}/LICENSE.txt")

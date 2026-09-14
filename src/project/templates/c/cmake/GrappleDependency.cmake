@@ -5,7 +5,7 @@ foreach(option BUILD_APP BUILD_TESTS BUILD_BENCHMARKS BUILD_DEMOS BUILD_PRACTICE
   set(GRAPPLE_BEAM_${option} OFF CACHE BOOL "" FORCE)
 endforeach()
 foreach(module SHARED_SDK TTF MIXER NET GUI LUA RUBY HTTP TILED REGEX CPP)
-  set(GRAPPLE_BUILD_${module} OFF CACHE BOOL "" FORCE)
+  set(GRAPPLE_BUILD_${module} OFF CACHE BOOL "Build optional engine module ${module}")
 endforeach()
 foreach(module ENGINE IMAGE EXTRAS GFX VFS FORMATS PHYSICS LIGHT)
   set(GRAPPLE_BUILD_${module} ON CACHE BOOL "" FORCE)

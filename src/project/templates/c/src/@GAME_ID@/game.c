@@ -16,7 +16,13 @@ static bool Load(void *user)
 {
     Application *app = user;
     app->sprite = Grapple_LoadTexture(app->engine, "sprites/player.svg");
-    return Grapple_AssetStatusOf(app->engine, app->sprite) == GRAPPLE_ASSET_READY;
+    if (Grapple_AssetStatusOf(app->engine, app->sprite) != GRAPPLE_ASSET_READY)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not load sprites/player.svg: %s",
+                     SDL_GetError());
+        return false;
+    }
+    return true;
 }
 static void Update(void *user, float step)
 {
@@ -34,13 +40,14 @@ static void Render(void *user, float alpha)
     (void)alpha;
     Application *app = user;
     SDL_Renderer *renderer = Grapple_EngineRenderer(app->engine);
-    SDL_SetRenderDrawColor(renderer, 18, 22, 34, 255);
-    SDL_RenderClear(renderer);
     SDL_FRect player = {app->state.x, app->state.y, 32.0f, 32.0f};
-    if (!SDL_RenderTexture(renderer, Grapple_Texture(app->engine, app->sprite), NULL, &player))
+    if (!SDL_SetRenderDrawColor(renderer, 18, 22, 34, 255) || !SDL_RenderClear(renderer) ||
+        !SDL_RenderTexture(renderer, Grapple_Texture(app->engine, app->sprite), NULL, &player))
     {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Rendering failed: %s", SDL_GetError());
         app->passed = false;
         Grapple_EngineQuit(app->engine);
+        return;
     }
     if (app->self_test && ++app->frames == 12)
     {
