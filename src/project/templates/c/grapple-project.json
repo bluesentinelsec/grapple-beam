@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "model": "c",
+  "id": "@GAME_ID@",
+  "organization": "games",
+  "cli_commit": "@CLI_COMMIT@"
+}

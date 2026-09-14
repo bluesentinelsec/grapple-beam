@@ -5,7 +5,9 @@ description: "Runner settings for grapple-beam callers."
 
 # Runner settings
 
-`grapple-beam` launches Lua/Ruby game projects. The [CLI reference](cli-args.txt) lists supported arguments and defaults; `--help-all` is generated from the same typed
+`grapple-beam` launches Lua/Ruby game projects. `new --model=c` and `package` manage
+[C desktop projects](projects.md); the settings below describe script-game launches.
+The [CLI reference](cli-args.txt) lists supported arguments and defaults; `--help-all` is generated from the same typed
 registry used by configuration files, scripts, and the C API.
 
 ```sh

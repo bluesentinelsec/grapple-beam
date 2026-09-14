@@ -388,6 +388,7 @@ if(GRAPPLE_BEAM_BUILD_APP)
   if(NOT TARGET Grapple_Bindings)
     message(FATAL_ERROR "The grapple-beam runner requires LUA and RUBY bindings; set GRAPPLE_BEAM_BUILD_APP=OFF for a library-only build")
   endif()
+  add_subdirectory(src/project)
   add_subdirectory(src/runner)
 endif()
 
@@ -494,4 +495,3 @@ install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
 )
-
