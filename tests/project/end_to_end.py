@@ -44,6 +44,12 @@ for config in ("Debug", "Release"):
     run(["cmake", "--build", build, "--config", config, "--parallel", "4"])
     run(["ctest", "--test-dir", build, "-C", config, "--output-on-failure", "--timeout", "30"])
 
+# Exercise the supported wrappers as well as direct CMake, using the same build trees.
+wrapper = ["cmd", "/d", "/c", "build.bat"] if os.name == "nt" else ["make"]
+run(wrapper)
+run(wrapper + ["build-release"])
+run(wrapper + ["test"])
+
 # A header and nested C implementation must participate in the next incremental build.
 source = project / "src/space_game/combat"
 header = project / "include/space_game/combat"
@@ -71,7 +77,7 @@ shutil.rmtree(source); shutil.rmtree(header)
 run(["cmake", "--build", debug, "--config", "Debug", "--parallel", "4"])
 run(["ctest", "--test-dir", debug, "-C", "Debug", "--output-on-failure", "--timeout", "30"])
 
-run(["cmake", "-P", "cmake/Format.cmake"])
+run(wrapper + ["fmt"])
 run(["cmake", "-DCHECK=ON", "-P", "cmake/Format.cmake"])
 run(["python3" if os.name != "nt" else "python", "scripts/build-docs.py"])
 if shutil.which("doxygen"):
@@ -95,8 +101,8 @@ assert not list(unpacked.rglob("grapple-beam*exe"))
 # Reset/print cannot touch ordinary player preferences in this integration mode.
 assert "window_mode=windowed" in run([binaries[0], "--self-test", "--print-settings"], root, 30)
 # Cleaning is complete and idempotent, preserving authored inputs and Git.
-run(["cmake", "-P", "cmake/Clean.cmake"])
-run(["cmake", "-P", "cmake/Clean.cmake"])
+run(wrapper + ["clean"])
+run(wrapper + ["clean"])
 assert not (project / "build").exists() and not (project / "dist").exists()
 assert (project / ".git").is_dir() and (project / "media/sprites/player.svg").is_file()
 print("PASS: fresh C desktop build, discovery, tests, docs, packaging, relocation and cleanup")

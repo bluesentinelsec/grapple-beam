@@ -185,4 +185,34 @@ TEST(ProjectProcess, TimeoutTerminatesTheChild)
                  std::runtime_error);
     EXPECT_LT(std::chrono::steady_clock::now() - before, std::chrono::seconds(10));
 }
+
+#ifndef _WIN32
+TEST_F(ProjectTest, CompletedParentCannotLeaveBackgroundChildren)
+{
+    const auto marker = root / "unexpected-background-write";
+    // All shell text is fixed; paths are passed as separate positional arguments.
+    const auto result = grapple::project::Run(
+        {"sh", "-c", "(sleep 2; touch \"$1\") &", "project-test", marker.string()}, root, 10);
+    EXPECT_EQ(result.status, 0);
+    SDL_Delay(2500);
+    EXPECT_FALSE(fs::exists(marker));
+}
+#endif
+TEST_F(ProjectTest, UnsupportedReleaseFailsBeforeWriting)
+{
+    services.get = [](const std::string &url) {
+        return url.ends_with("VERSION") ? std::string("0.8.9\n") : Source(url);
+    };
+    EXPECT_THROW(Create(options, services), std::runtime_error);
+    EXPECT_TRUE(fs::is_empty(root));
+}
+TEST_F(ProjectTest, ExplicitCommitAndMitWithoutGit)
+{
+    options.commit = kSha;
+    options.license = "MIT";
+    options.no_git = true;
+    Create(options, services);
+    EXPECT_TRUE(commands.empty());
+    EXPECT_NE(Read(options.destination / "LICENSE").find("MIT License"), std::string::npos);
+}
 } // namespace

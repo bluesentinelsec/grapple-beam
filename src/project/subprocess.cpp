@@ -186,6 +186,14 @@ ProcessResult Run(const Command &args, const std::filesystem::path &cwd, int tim
         (void)ignored;
         _exit(127);
     }
+    if (setpgid(pid, pid) != 0 && errno != EACCES && errno != ESRCH)
+    {
+        kill(pid, SIGKILL);
+        while (waitpid(pid, nullptr, 0) < 0 && errno == EINTR)
+        {
+        }
+        throw std::runtime_error("Cannot establish subprocess ownership");
+    }
     struct Child
     {
         pid_t pid;
@@ -228,12 +236,11 @@ ProcessResult Run(const Command &args, const std::filesystem::path &cwd, int tim
     while (true)
     {
         drain();
-        const auto waited = waitpid(pid, &status, WNOHANG);
-        if (waited == pid)
-        {
-            child.reaped = true;
+        siginfo_t information{};
+        const int waited =
+            waitid(P_PID, static_cast<id_t>(pid), &information, WEXITED | WNOHANG | WNOWAIT);
+        if (waited == 0 && information.si_pid == pid)
             break;
-        }
         if (waited < 0 && errno != EINTR)
             throw std::runtime_error("Cannot wait for child process");
         if (SDL_GetTicks() - start > static_cast<Uint64>(timeout_seconds) * 1000)
@@ -241,6 +248,12 @@ ProcessResult Run(const Command &args, const std::filesystem::path &cwd, int tim
         SDL_Delay(10);
     }
     drain();
+    // Retain the parent's PID until group cleanup, preventing PID reuse races.
+    kill(-pid, SIGKILL);
+    while (waitpid(pid, &status, 0) < 0)
+        if (errno != EINTR)
+            throw std::runtime_error("Cannot collect child process exit status");
+    child.reaped = true;
     result.status = WIFEXITED(status) ? WEXITSTATUS(status) : 1;
 #endif
     return result;
