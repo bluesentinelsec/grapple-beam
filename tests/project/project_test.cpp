@@ -81,7 +81,9 @@ TEST_F(ProjectTest, ExplicitVersionDoesNotQueryLatest)
     services.get = [](const std::string &url) {
         EXPECT_EQ(url.find("releases/latest"), std::string::npos);
         if (url.find("commits/") != std::string::npos)
+        {
             EXPECT_TRUE(url.ends_with("commits/refs/tags/v0.9.0"));
+        }
         return Source(url);
     };
     Create(options, services);
