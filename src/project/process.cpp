@@ -19,6 +19,17 @@ std::string Get(const std::string &url)
     mog_request_set_max_response_bytes(request.get(), 2 * 1024 * 1024);
     mog_request_set_user_agent(request.get(), "grapple-beam-projects");
     mog_request_set_verify_tls(request.get(), 1);
+    // Public use needs no login. CI can opt into authenticated metadata limits.
+    // The token is never forwarded to redirects or raw/download hosts.
+    if (url.starts_with("https://api.github.com/"))
+    {
+        const char *token = SDL_getenv("GITHUB_TOKEN");
+        if (token && *token)
+        {
+            mog_request_set_bearer_token(request.get(), token);
+            mog_request_set_allow_redirects(request.get(), 0);
+        }
+    }
     std::unique_ptr<mog_response, decltype(&mog_response_free)> response{mog_perform(request.get()),
                                                                          mog_response_free};
     if (!response || !mog_response_ok(response.get()))

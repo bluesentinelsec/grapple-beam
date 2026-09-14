@@ -44,6 +44,9 @@ endforeach()
 install(DIRECTORY "${notices}/" DESTINATION "${resource_dest}/licenses" COMPONENT Game)
 # Every engine module selected by the starter is static. Only OS/runtime imports
 # are permitted; an added shared dependency requires an explicit packaging rule.
-file(GENERATE OUTPUT "${CMAKE_BINARY_DIR}/runtime-audit-$<CONFIG>.cmake" CONTENT
-"file(GET_RUNTIME_DEPENDENCIES EXECUTABLES \"$<TARGET_FILE:@GAME_ID@>\" RESOLVED_DEPENDENCIES_VAR resolved UNRESOLVED_DEPENDENCIES_VAR unresolved\n PRE_EXCLUDE_REGEXES \"api-ms-.*\" \"ext-ms-.*\"\n POST_EXCLUDE_REGEXES \"^/System/Library/.*\" \"^/usr/lib/.*\" \"^/lib/.*\" \"^/lib64/.*\" \"^/usr/lib64/.*\" \"[Ww][Ii][Nn][Dd][Oo][Ww][Ss]/[Ss][Yy][Ss][Tt][Ee][Mm]32/.*\")\nif(resolved OR unresolved)\n message(FATAL_ERROR \"Unpackaged runtime dependencies: \${resolved}; unresolved: \${unresolved}. Add explicit redistributable install rules before shipping.\")\nendif()\n")
+set(GAME_EXECUTABLE "$<TARGET_FILE:@GAME_ID@>")
+configure_file("${PROJECT_SOURCE_DIR}/cmake/RuntimeAudit.cmake.in"
+  "${CMAKE_BINARY_DIR}/runtime-audit.in" @ONLY)
+file(GENERATE OUTPUT "${CMAKE_BINARY_DIR}/runtime-audit-$<CONFIG>.cmake"
+  INPUT "${CMAKE_BINARY_DIR}/runtime-audit.in")
 install(SCRIPT "${CMAKE_BINARY_DIR}/runtime-audit-\${CMAKE_INSTALL_CONFIG_NAME}.cmake" COMPONENT Game)

@@ -21,18 +21,12 @@ static bool LoadConfig(GameStartup *s, const char *path, bool required)
 {
     if (!required && !SDL_GetPathInfo(path, NULL))
         return true;
-    FILE *file = NULL;
-#ifdef _MSC_VER
-    if (fopen_s(&file, path, "r") != 0)
-        file = NULL;
-#else
-    file = fopen(path, "r");
-#endif
-    if (!file)
-        return SDL_SetError("Cannot read config: %s", path);
+    char *text = SDL_LoadFile(path, NULL);
+    if (!text)
+        return false;
     char error[256];
-    toml_table_t *root = toml_parse_file(file, error, sizeof(error));
-    fclose(file);
+    toml_table_t *root = toml_parse(text, error, sizeof(error));
+    SDL_free(text);
     if (!root)
         return SDL_SetError("%s: %s", path, error);
     bool ok = true;

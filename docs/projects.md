@@ -36,6 +36,9 @@ grapple-beam new starfall --model=c --engine-commit=8aa69342b95ff06043fa664ba9e2
 These options are mutually exclusive. Public resolution uses the built-in HTTP
 client, without requiring gh authentication. Network/ref/compatibility errors
 stop generation; there is no silent fallback to a branch or another release.
+CI may supply `GITHUB_TOKEN` for higher GitHub metadata rate limits. It is used
+only for API requests, never written to the generated project or forwarded to
+download hosts. GitHub repository creation still delegates authentication to gh.
 The supported baseline is v0.9.0's C engine API. The starter adapts its documented
 configuration subset to that API, without depending on newer typed settings APIs.
 

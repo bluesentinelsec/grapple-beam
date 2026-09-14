@@ -56,6 +56,7 @@ jobs:
       - name: Generate, build, test, document, package and relocate a fresh C game
         env:
           PROJECT_GENERATOR: ${{ matrix.generator }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: python tests/project/end_to_end.py --runner build/project-cli/bin/grapple-beam --generator "$PROJECT_GENERATOR" --work "$RUNNER_TEMP/game-project-contract"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: failure()

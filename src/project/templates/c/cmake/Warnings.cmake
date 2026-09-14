@@ -1,5 +1,6 @@
 option(GAME_SANITIZERS "Instrument game code with ASan and UBSan (Linux)" OFF)
 function(game_warnings target)
+  set_target_properties(${target} PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)
   if(MSVC)
     target_compile_options(${target} PRIVATE /W4 /WX $<$<CONFIG:Release>:/Zi>)
     target_link_options(${target} PRIVATE $<$<CONFIG:Release>:/DEBUG>)

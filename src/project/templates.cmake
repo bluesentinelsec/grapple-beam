@@ -21,6 +21,7 @@ set(project_templates
   "cmake/GrappleDependency.cmake"
   "cmake/Packaging.cmake"
   "cmake/Warnings.cmake"
+  "cmake/RuntimeAudit.cmake.in"
   "config.toml"
   "deps/README.md"
   "deps/grapple-beam.md"
