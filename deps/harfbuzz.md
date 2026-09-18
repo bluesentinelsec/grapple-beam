@@ -1,11 +1,11 @@
-# HarfBuzz (vendored under `ttf/harfbuzz/`)
+# HarfBuzz (vendored under `modules/ttf/harfbuzz/`)
 
 | | |
 |--|--|
 | Upstream | https://github.com/harfbuzz/harfbuzz |
 | Version | 14.3.1 (release tarball) |
 | SHA-256 | `9dae9538aae2ffdf70cec31f2c27bf68e2aaeeae3112688467697d5faf6194f7` (harfbuzz-14.3.1.tar.xz) |
-| License | "Old MIT" (see `ttf/harfbuzz/COPYING`) — commercial/closed-source safe |
+| License | "Old MIT" (see `modules/ttf/harfbuzz/COPYING`) — commercial/closed-source safe |
 | Imported | 2026-08-14 |
 | Dependencies | none required; built against our vendored static FreeType via `hb-ft` |
 

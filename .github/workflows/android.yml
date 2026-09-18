@@ -35,18 +35,18 @@ jobs:
 
       - name: Build Debug AAR and consumer APK
         run: |
-          bash android/gradlew -p android --no-daemon :grapple:assembleDebug
-          bash android/gradlew -p android --no-daemon :test-app:assembleDebug
+          bash platforms/android/gradlew -p platforms/android --no-daemon :grapple:assembleDebug
+          bash platforms/android/gradlew -p platforms/android --no-daemon :test-app:assembleDebug
 
       - name: Build Release AAR and consumer APK
         run: |
-          bash android/gradlew -p android --no-daemon :grapple:assembleRelease
-          bash android/gradlew -p android --no-daemon :test-app:assembleRelease
+          bash platforms/android/gradlew -p platforms/android --no-daemon :grapple:assembleRelease
+          bash platforms/android/gradlew -p platforms/android --no-daemon :test-app:assembleRelease
 
       - name: Verify Release AAR
         run: |
           set -euo pipefail
-          aar=android/grapple/build/outputs/aar/grapple-release.aar
+          aar=platforms/android/grapple/build/outputs/aar/grapple-release.aar
           test -f "${aar}"
           unzip -Z1 "${aar}" > aar-entries.txt
           for abi in armeabi-v7a arm64-v8a x86_64; do
@@ -115,7 +115,7 @@ jobs:
           version="$(tr -d '[:space:]' < VERSION | sed 's/^v//;s/^V//;s/#.*//')"
           stem="grapple-beam-android-release-${version}"
           mkdir -p dist
-          cp android/grapple/build/outputs/aar/grapple-release.aar "dist/${stem}.aar"
+          cp platforms/android/grapple/build/outputs/aar/grapple-release.aar "dist/${stem}.aar"
           echo "artifact_name=${stem}" >> "${GITHUB_OUTPUT}"
           echo "artifact_path=dist/${stem}.aar" >> "${GITHUB_OUTPUT}"
 

@@ -35,8 +35,8 @@ PUBLIC_VALUE_TYPES = {"nk_color", "nk_colorf", "nk_rect", "nk_scroll", "nk_vec2"
 
 def main() -> int:
     repo = Path(__file__).resolve().parent.parent
-    header = (repo / "gui" / "include" / "nuklear.h").read_text(errors="ignore")
-    generated = (repo / "bindings" / "generated" / "gen_lua_nk.c").read_text()
+    header = (repo / "modules" / "gui" / "include" / "nuklear.h").read_text(errors="ignore")
+    generated = (repo / "modules" / "bindings" / "generated" / "gen_lua_nk.c").read_text()
 
     public = set(re.findall(r"NK_API[^;{]*?\b(nk_\w+)\s*\(", header))
     internal = set(re.findall(r"NK_(?:LIB|INTERN)[^;{]*?\b(nk_\w+)\s*\(", header))

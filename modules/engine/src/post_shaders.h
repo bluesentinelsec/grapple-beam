@@ -11,7 +11,7 @@
 #ifndef GRAPPLE_ENGINE_POST_SHADERS_H
 #define GRAPPLE_ENGINE_POST_SHADERS_H
 
-/* engine/shaders/post.vert */
+/* modules/engine/shaders/post.vert */
 static const char kPostVert[] =
     "/* Fullscreen pass for the post-processing chain.\n"
     " *\n"
@@ -35,7 +35,7 @@ static const char kPostVert[] =
     "}\n"
     ;
 
-/* engine/shaders/post_blur.frag */
+/* modules/engine/shaders/post_blur.frag */
 static const char kPostBlurFrag[] =
     "/* Bloom, pass 2 of 3: a separable Gaussian, run twice.\n"
     " *\n"
@@ -84,7 +84,7 @@ static const char kPostBlurFrag[] =
     "}\n"
     ;
 
-/* engine/shaders/post_bright.frag */
+/* modules/engine/shaders/post_bright.frag */
 static const char kPostBrightFrag[] =
     "/* Bloom, pass 1 of 3: keep only what is bright enough to glow.\n"
     " *\n"
@@ -135,7 +135,7 @@ static const char kPostBrightFrag[] =
     "}\n"
     ;
 
-/* engine/shaders/post_composite.frag */
+/* modules/engine/shaders/post_composite.frag */
 static const char kPostCompositeFrag[] =
     "/* The composite: every remaining effect, in one pass.\n"
     " *\n"

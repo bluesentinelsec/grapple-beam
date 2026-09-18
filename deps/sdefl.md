@@ -1,4 +1,4 @@
-# sdefl / sinfl (vendored under `extras/src/sdefl/`)
+# sdefl / sinfl (vendored under `modules/extras/src/sdefl/`)
 
 | | |
 |--|--|
@@ -10,7 +10,7 @@
 
 The same single-header DEFLATE implementation raylib vendors, backing
 `Grapple_CompressData` / `Grapple_DecompressData` (see
-`extras/include/grapple/compress.h`). We use the `zsdeflate`/`zsinflate`
+`modules/extras/include/grapple/compress.h`). We use the `zsdeflate`/`zsinflate`
 zlib-format entry points for their adler32 integrity check.
 
 ## Local modifications (found by our sanitizer suite, kept local)

@@ -1,4 +1,4 @@
-# SDL3_gfx (vendored under `gfx/`)
+# SDL3_gfx (vendored under `modules/gfx/`)
 
 | | |
 |--|--|

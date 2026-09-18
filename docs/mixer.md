@@ -77,7 +77,7 @@ Assets mounted in the [VFS](vfs.md) stream directly:
 ## General-MIDI decoding
 
 TiMidity is compiled in; point `TIMIDITY_CFG` at the generated
-General-MIDI patch set shipped in `mixer/gm-patches/` and `.mid` files
+General-MIDI patch set shipped in `modules/mixer/gm-patches/` and `.mid` files
 load like any other format. Without patches configured, loads fail
 cleanly rather than playing silence.
 

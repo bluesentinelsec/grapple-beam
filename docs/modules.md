@@ -6,7 +6,8 @@ description: "Every Grapple module: CMake target, what it provides, and what is 
 # Modules
 
 Every module is a static library with a `Grapple::` CMake alias target.
-Link what you need; each page below covers the API surface, examples, and
+Sources live under `modules/<name>/`. Link what you need; each page below
+covers the API surface, examples, and
 the exact upstream provenance. Deeper reference material lives with the
 code in each module's `README.md` and in the [`deps/`
 ledgers](https://github.com/bluesentinelsec/grapple-beam/tree/main/deps),

@@ -1,6 +1,6 @@
 """C++ emitter: RAII classes + Status wrappers + aliases per library.
 
-Output: cpp/include/grapple/gen/<key>.h under namespace
+Output: modules/cpp/include/grapple/gen/<key>.h under namespace
 grapple::<ns>. Generated classes never collide with the hand-written
 ergonomic layer (different namespaces); the C API stays fully reachable.
 
@@ -217,7 +217,7 @@ class _ClassBuilder:
 
 def emit_cpp(manifest: Manifest, repo: Path) -> dict[str, dict[str, CppPlan]]:
     tt = TypeTable(manifest)
-    outdir = repo / "cpp" / "include" / "grapple" / "gen"
+    outdir = repo / "modules" / "cpp" / "include" / "grapple" / "gen"
     outdir.mkdir(parents=True, exist_ok=True)
     outcomes: dict[str, dict[str, CppPlan]] = {}
     umbrella_includes: list[str] = []

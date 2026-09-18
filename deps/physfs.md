@@ -1,4 +1,4 @@
-# PhysFS (vendored under `vfs/`)
+# PhysFS (vendored under `modules/vfs/`)
 
 | | |
 |--|--|

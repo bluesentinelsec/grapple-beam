@@ -1,4 +1,4 @@
-# mruby (vendored under `mruby/`)
+# mruby (vendored under `modules/mruby/`)
 | | |
 |--|--|
 | Upstream | https://github.com/mruby/mruby |

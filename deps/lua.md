@@ -1,4 +1,4 @@
-# Lua (vendored under `lua/`)
+# Lua (vendored under `modules/lua/`)
 | | |
 |--|--|
 | Upstream | https://www.lua.org (lua-5.4.8.tar.gz) |

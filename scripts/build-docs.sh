@@ -8,7 +8,7 @@ OUT="${1:-site}"
 
 rm -rf "$OUT"
 mkdir -p "$OUT"
-cp web/style.css "$OUT/style.css"
+cp platforms/web/style.css "$OUT/style.css"
 cp -R docs/assets "$OUT/assets"
 cp docs/cli-args.txt "$OUT/cli-args.txt"
 
@@ -17,8 +17,8 @@ for md in docs/*.md; do
   pandoc "$md" \
     --from gfm \
     --to html5 \
-    --template web/template.html \
-    --lua-filter web/bootstrap.lua \
+    --template platforms/web/template.html \
+    --lua-filter platforms/web/bootstrap.lua \
     --css style.css \
     --output "$OUT/$name.html"
   echo "  built $OUT/$name.html"

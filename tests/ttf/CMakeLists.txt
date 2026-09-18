@@ -9,7 +9,7 @@ target_link_libraries(grapple_ttf_test
 )
 # shaping_test.cpp probes the vendored HarfBuzz directly.
 target_include_directories(grapple_ttf_test SYSTEM PRIVATE
-  ${CMAKE_SOURCE_DIR}/ttf/harfbuzz
+  ${CMAKE_SOURCE_DIR}/modules/ttf/harfbuzz
 )
 target_compile_definitions(grapple_ttf_test PRIVATE
   TTF_TEST_ASSETS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets"

@@ -1,4 +1,4 @@
-# cute_tiled (vendored under `tiled/`)
+# cute_tiled (vendored under `modules/tiled/`)
 
 | | |
 |--|--|

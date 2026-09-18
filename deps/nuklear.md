@@ -1,4 +1,4 @@
-# Nuklear (vendored under `gui/`)
+# Nuklear (vendored under `modules/gui/`)
 
 | | |
 |--|--|

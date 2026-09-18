@@ -1,4 +1,4 @@
-# SDL3_ttf (vendored under `ttf/`)
+# SDL3_ttf (vendored under `modules/ttf/`)
 
 | | |
 |--|--|

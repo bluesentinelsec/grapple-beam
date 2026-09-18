@@ -10,7 +10,7 @@
 #ifndef GRAPPLE_LIGHT_SHADERS_H
 #define GRAPPLE_LIGHT_SHADERS_H
 
-/* light/shaders/light_map.frag */
+/* modules/light/shaders/light_map.frag */
 static const char kLightMapFrag[] =
     "/* The lights, evaluated per pixel and added to the light map.\n"
     " *\n"
@@ -173,7 +173,7 @@ static const char kLightMapFrag[] =
     "}\n"
     ;
 
-/* light/shaders/light_map.vert */
+/* modules/light/shaders/light_map.vert */
 static const char kLightMapVert[] =
     "/* Fullscreen pass for the light map.\n"
     " *\n"

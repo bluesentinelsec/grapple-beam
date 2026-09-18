@@ -428,7 +428,7 @@ class _LibEmitter:
 
 def emit_lua(manifest: Manifest, repo: Path) -> dict[str, dict[str, ScriptPlan]]:
     tt = TypeTable(manifest)
-    outdir = repo / "bindings" / "generated"
+    outdir = repo / "modules" / "bindings" / "generated"
     outdir.mkdir(parents=True, exist_ok=True)
     outcomes: dict[str, dict[str, ScriptPlan]] = {}
     opens: list[str] = []

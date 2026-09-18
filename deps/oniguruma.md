@@ -1,4 +1,4 @@
-# Oniguruma (vendored under `regex/oniguruma/`)
+# Oniguruma (vendored under `modules/regex/oniguruma/`)
 
 | | |
 |--|--|

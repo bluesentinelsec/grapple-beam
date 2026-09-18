@@ -1,4 +1,4 @@
-# Box2D (vendored under `physics/`)
+# Box2D (vendored under `modules/physics/`)
 
 | | |
 |--|--|

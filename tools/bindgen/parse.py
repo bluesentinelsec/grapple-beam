@@ -50,8 +50,8 @@ _PLATFORM_GATE_RE = re.compile(
 )
 
 # Macros defined by our single-header configs / build. Conditions that test
-# one of these resolve exactly; see gui/include/grapple/nuklear.h.
-# Mirrors gui/include/grapple/nuklear.h exactly — the tool verifies this
+# one of these resolve exactly; see modules/gui/include/grapple/nuklear.h.
+# Mirrors modules/gui/include/grapple/nuklear.h exactly — the tool verifies this
 # at generation time (see check_nk_config).
 _KNOWN_TRUE = {
     "NK_INCLUDE_FIXED_TYPES",
