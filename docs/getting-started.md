@@ -68,7 +68,7 @@ engine.on_post_render { ui.draw }
 ```
 
 ```sh
-./build/debug/bin/grapple-beam --window-mode windowed ./my-game
+./build/debug/bin/grapple-beam run --window-mode windowed ./my-game
 ```
 
 Keep one entrypoint, or specify `--language lua` / `--language ruby` when both
@@ -93,15 +93,15 @@ saving, and recovery. Paths used by the game resolve from the project root.
 Engine options go before the project; trailing arguments are passed to the game.
 
 ```sh
-grapple-beam --vsync off --max-fps 144 ./my-game -- level-2
-grapple-beam --print-settings ./my-game
-grapple-beam --safe-mode ./my-game
+grapple-beam run --vsync off --max-fps 144 ./my-game -- level-2
+grapple-beam run --print-settings ./my-game
+grapple-beam run --safe-mode ./my-game
 grapple-beam repl --language lua
 grapple-beam eval --language ruby --code 'puts SDL.GetPlatform'
 ```
 
-Omitting the project discovers one in the current directory. REPL and evaluation
-are explicit subcommands. The runner loads game scripts; notation-file playback
+Omitting the project after `run` discovers one in the current directory. REPL and
+evaluation are explicit subcommands. The runner loads game scripts; notation-file playback
 uses the [music library helpers and demos](https://github.com/bluesentinelsec/grapple-beam/blob/main/demos/chiptune/README.md).
 
 ## Link an installed SDK

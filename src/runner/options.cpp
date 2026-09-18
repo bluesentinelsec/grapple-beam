@@ -35,6 +35,58 @@ std::string Replacement(const std::string &option)
     return {};
 }
 
+int CollectHostedArgs(CLI::App &root, CLI::App *command, int argc, char **argv, bool developer,
+                      grapple::runner::LaunchRequest &request, std::vector<char *> &option_args,
+                      int &game_at)
+{
+    option_args = {argv[0], argv[1]};
+    game_at = argc;
+    for (int i = 2; i < argc; ++i)
+    {
+        std::string token = argv[i];
+        if (token == "--")
+        {
+            game_at = i + 1;
+            break;
+        }
+        if (token.empty() || token[0] != '-')
+        {
+            if (developer)
+            {
+                std::cerr << "error: use -- before evaluation arguments\n";
+                return 2;
+            }
+            request.project = argv[i];
+            game_at = i + 1;
+            if (game_at < argc && std::string(argv[game_at]) == "--")
+                ++game_at;
+            break;
+        }
+        std::string key = token.substr(0, token.find('='));
+        const auto *option = command->get_option_no_throw(key);
+        if (!option)
+            option = root.get_option_no_throw(key);
+        if (!option)
+        {
+            auto replacement = Replacement(key);
+            std::cerr << "error: " << key << ": "
+                      << (replacement.empty() ? "unknown option; see --help" : replacement) << '\n';
+            return 2;
+        }
+        option_args.push_back(argv[i]);
+        if (option->get_expected_min() > 0 && token.find('=') == std::string::npos)
+        {
+            if (i + 1 == argc)
+            {
+                std::cerr << "error: " << key << " requires a value\n";
+                return 2;
+            }
+            option_args.push_back(argv[++i]);
+        }
+    }
+    return 0;
+}
+
 int ListBackends()
 {
     if (!SDL_InitSubSystem(SDL_INIT_VIDEO))
@@ -202,27 +254,20 @@ class LaunchSettings
 } // namespace
 int GrappleRunner_Run(int argc, char **argv, const char *version)
 {
-    if (argc > 1 && (std::string(argv[1]) == "new" || std::string(argv[1]) == "package"))
-        return grapple::project::RunCli(argc, argv);
     using namespace grapple::runner;
-    CLI::App app{"Create C games with new, ship with package, or run a Lua/Ruby project or script. "
-                 "Engine options precede the project; -- "
-                 "introduces game arguments.",
-                 "grapple-beam"};
+    CLI::App app{"Create C games, ship packages, or run a Lua/Ruby project.", "grapple-beam"};
     app.set_version_flag("-V,--version", std::string("grapple-beam ") + version);
-    app.set_help_all_flag("--help-all", "Include registered settings and advanced options");
+    app.set_help_all_flag("--help-all", "Expand all command help");
+    app.require_subcommand(1);
+    app.footer("Examples:\n  grapple-beam new starfall --model=c\n  grapple-beam package\n  "
+               "grapple-beam run --window-mode windowed .\n  grapple-beam repl --language lua\n");
+    grapple::project::Cli project;
+    grapple::project::AddCommands(app, project);
     LaunchRequest request;
-    app.add_option("-l,--language", request.language,
-                   "Language inferred from project or entrypoint")
-        ->check(CLI::IsMember({"lua", "ruby"}))
-        ->take_last();
-    const bool repl = argc > 1 && std::string(argv[1]) == "repl",
-               eval = argc > 1 && std::string(argv[1]) == "eval";
-    const bool developer = repl || eval;
     std::string code, quality;
     bool backends = false, displays = false, modes = false;
-    SettingsPtr cli{Grapple_CreateSettings(), Grapple_DestroySettings};
-    if (!cli)
+    SettingsPtr settings{Grapple_CreateSettings(), Grapple_DestroySettings};
+    if (!settings)
     {
         std::cerr << SDL_GetError() << '\n';
         return 1;
@@ -231,125 +276,109 @@ int GrappleRunner_Run(int argc, char **argv, const char *version)
         std::string value = raw;
         if (!value.empty() && (key == "media" || key == "engine.media"))
             value = std::filesystem::absolute(raw).lexically_normal().string();
-        if (!Grapple_SettingsSet(cli.get(), key.c_str(), value.c_str(), "CLI"))
+        if (!Grapple_SettingsSet(settings.get(), key.c_str(), value.c_str(), "CLI"))
             throw CLI::ValidationError(key, SDL_GetError());
     };
-    if (developer)
+    auto *run = app.add_subcommand("run", "Run a Lua/Ruby project or script");
+    auto *repl = app.add_subcommand("repl", "Interactive Lua/Ruby shell");
+    auto *eval = app.add_subcommand("eval", "Evaluate Lua/Ruby source");
+    run->fallthrough();
+    repl->fallthrough();
+    eval->fallthrough();
+    auto language = [&](CLI::App *command, bool required) {
+        auto *option = command
+                           ->add_option("-l,--language", request.language,
+                                        "Language inferred from project or entrypoint")
+                           ->check(CLI::IsMember({"lua", "ruby"}))
+                           ->take_last();
+        if (required)
+            option->required();
+    };
+    language(run, false);
+    language(repl, true);
+    language(eval, true);
+    eval->add_option("--code", code, "Source to evaluate")->required();
+    run->add_flag("--list-backends", backends, "Probe concrete renderers and report versions");
+    run->add_flag("--list-displays", displays, "List displays without launching a project");
+    run->add_flag("--list-display-modes", modes, "List exclusive modes for --display");
+    run->add_flag("--print-settings", request.print,
+                  "Resolve requested settings and sources, then exit");
+    run->add_flag("--safe-mode", request.safe,
+                  "Bypass configuration scripts/files; use recovery defaults");
+    run->add_flag("--default-settings", request.defaults, "Ignore player settings for this launch");
+    run->add_flag("--reset-settings", request.reset,
+                  "Back up player settings and restore game defaults");
+    run->add_option_function<std::string>(
+           "--config",
+           [&](const std::string &v) { request.configs.push_back(std::filesystem::absolute(v)); },
+           "Explicit TOML overlay (repeatable)")
+        ->expected(1)
+        ->trigger_on_parse();
+    run->add_option_function<std::string>(
+           "--config-script",
+           [&](const std::string &v) { request.scripts.push_back(std::filesystem::absolute(v)); },
+           "Explicit Lua/Ruby settings overlay (repeatable)")
+        ->expected(1)
+        ->trigger_on_parse();
+    run->add_option("--quality", quality,
+                    "Preset: low=.75 scale/no FXAA; medium/high=1 scale/FXAA; matching budgets")
+        ->check(CLI::IsMember({"low", "medium", "high"}))
+        ->take_last();
+    run->add_option_function<std::string>(
+           "--set",
+           [&](const std::string &v) {
+               auto eq = v.find('=');
+               if (eq == std::string::npos)
+                   throw CLI::ValidationError("--set", "expected REGISTERED.KEY=VALUE");
+               set(v.substr(0, eq), v.substr(eq + 1));
+           },
+           "Advanced typed override; keys listed below")
+        ->expected(1)
+        ->trigger_on_parse();
+    std::string footer = "Engine options precede the project; -- introduces game arguments.\n"
+                         "Advanced keys (use --set KEY=VALUE):\n";
+    for (int i = 0; i < Grapple_SettingCount(); ++i)
     {
-        app.description(repl ? "Interactive Lua/Ruby shell" : "Evaluate Lua/Ruby source");
-        app.get_option("--language")->required();
-        if (eval)
-            app.add_option("--code", code, "Source to evaluate")->required();
-    }
-    else
-    {
-        app.add_flag("--list-backends", backends, "Probe concrete renderers and report versions");
-        app.add_flag("--list-displays", displays, "List displays without launching a project");
-        app.add_flag("--list-display-modes", modes, "List exclusive modes for --display");
-        app.add_flag("--print-settings", request.print,
-                     "Resolve requested settings and sources, then exit");
-        app.add_flag("--safe-mode", request.safe,
-                     "Bypass configuration scripts/files; use recovery defaults");
-        app.add_flag("--default-settings", request.defaults,
-                     "Ignore player settings for this launch");
-        app.add_flag("--reset-settings", request.reset,
-                     "Back up player settings and restore game defaults");
-        app.add_option_function<std::string>(
-               "--config",
-               [&](const std::string &v) {
-                   request.configs.push_back(std::filesystem::absolute(v));
-               },
-               "Explicit TOML overlay (repeatable)")
-            ->expected(1)
-            ->trigger_on_parse();
-        app.add_option_function<std::string>(
-               "--config-script",
-               [&](const std::string &v) {
-                   request.scripts.push_back(std::filesystem::absolute(v));
-               },
-               "Explicit Lua/Ruby settings overlay (repeatable)")
-            ->expected(1)
-            ->trigger_on_parse();
-        app.add_option("--quality", quality,
-                       "Preset: low=.75 scale/no FXAA; medium/high=1 scale/FXAA; matching budgets")
-            ->check(CLI::IsMember({"low", "medium", "high"}))
-            ->take_last();
-        app.add_option_function<std::string>(
-               "--set",
-               [&](const std::string &v) {
-                   auto eq = v.find('=');
-                   if (eq == std::string::npos)
-                       throw CLI::ValidationError("--set", "expected REGISTERED.KEY=VALUE");
-                   set(v.substr(0, eq), v.substr(eq + 1));
-               },
-               "Advanced typed override; keys listed below")
-            ->expected(1)
-            ->trigger_on_parse();
-        std::string footer = "Advanced keys (use --set KEY=VALUE):\n";
-        for (int i = 0; i < Grapple_SettingCount(); ++i)
+        std::string key = Grapple_SettingKey(i), name = Grapple_SettingOption(i);
+        if (name.empty())
         {
-            std::string key = Grapple_SettingKey(i), name = Grapple_SettingOption(i);
-            if (name.empty())
-            {
-                footer += "  " + key + " (" + Grapple_SettingChoices(i) + ")\n";
-                continue;
-            }
-            app.add_option_function<std::string>(
-                   "--" + name, [&, key](const std::string &v) { set(key, v); },
-                   key + "; inherited default " + Grapple_SettingsGet(cli.get(), key.c_str()))
-                ->expected(1)
-                ->trigger_on_parse()
-                ->type_name(Grapple_SettingChoices(i));
+            footer += "  " + key + " (" + Grapple_SettingChoices(i) + ")\n";
+            continue;
         }
-        app.footer(footer + "\nExamples:\n  grapple-beam --window-mode windowed .\n  grapple-beam "
-                            "--config player.toml ./game -- --level forest\n");
+        run->add_option_function<std::string>(
+               "--" + name, [&, key](const std::string &v) { set(key, v); },
+               key + "; inherited default " + Grapple_SettingsGet(settings.get(), key.c_str()))
+            ->expected(1)
+            ->trigger_on_parse()
+            ->type_name(Grapple_SettingChoices(i));
     }
+    run->footer(footer + "\nExamples:\n  grapple-beam run --window-mode windowed .\n  grapple-beam "
+                         "run --config player.toml ./game -- --level forest\n");
     std::vector<char *> option_args{argv[0]};
     int game_at = argc;
-    for (int i = developer ? 2 : 1; i < argc; ++i)
+    CLI::App *hosted = nullptr;
+    if (argc > 1)
     {
-        std::string token = argv[i];
-        if (token == "--")
-        {
-            game_at = i + 1;
-            break;
-        }
-        if (token.empty() || token[0] != '-')
-        {
-            if (developer)
-            {
-                std::cerr << "error: use -- before evaluation arguments\n";
-                return 2;
-            }
-            request.project = argv[i];
-            game_at = i + 1;
-            if (game_at < argc && std::string(argv[game_at]) == "--")
-                ++game_at;
-            break;
-        }
-        std::string key = token.substr(0, token.find('='));
-        const auto *option = app.get_option_no_throw(key);
-        if (!option)
-        {
-            auto replacement = Replacement(key);
-            std::cerr << "error: " << key << ": "
-                      << (replacement.empty() ? "unknown option; see --help" : replacement) << '\n';
-            return 2;
-        }
-        option_args.push_back(argv[i]);
-        if (option->get_expected_min() > 0 && token.find('=') == std::string::npos)
-        {
-            if (i + 1 == argc)
-            {
-                std::cerr << "error: " << key << " requires a value\n";
-                return 2;
-            }
-            option_args.push_back(argv[++i]);
-        }
+        const std::string name = argv[1];
+        if (name == "run")
+            hosted = run;
+        else if (name == "repl")
+            hosted = repl;
+        else if (name == "eval")
+            hosted = eval;
     }
+    const bool developer = hosted == repl || hosted == eval;
     try
     {
-        app.parse(static_cast<int>(option_args.size()), option_args.data());
+        if (hosted == run || developer)
+        {
+            if (int status = CollectHostedArgs(app, hosted, argc, argv, developer, request,
+                                               option_args, game_at))
+                return status;
+            app.parse(static_cast<int>(option_args.size()), option_args.data());
+        }
+        else
+            app.parse(argc, argv);
     }
     catch (const CLI::ParseError &error)
     {
@@ -362,9 +391,22 @@ int GrappleRunner_Run(int argc, char **argv, const char *version)
     }
     try
     {
+        if (*project.create)
+        {
+            project.options.destination = project.destination;
+            grapple::project::Create(project.options,
+                                     {grapple::project::Run, grapple::project::Get});
+            return 0;
+        }
+        if (*project.package)
+        {
+            grapple::project::Package(project.directory, grapple::project::Run);
+            return 0;
+        }
         if (developer)
-            return GrappleRunner_Execute(request.language.c_str(), eval ? code.c_str() : nullptr,
-                                         nullptr, argc - game_at, argv + game_at);
+            return GrappleRunner_Execute(request.language.c_str(),
+                                         hosted == eval ? code.c_str() : nullptr, nullptr,
+                                         argc - game_at, argv + game_at);
         if (static_cast<int>(backends) + static_cast<int>(displays) + static_cast<int>(modes) > 1)
             throw std::runtime_error("enumeration actions are mutually exclusive");
         if (backends || displays || modes)
@@ -377,22 +419,22 @@ int GrappleRunner_Run(int argc, char **argv, const char *version)
             for (int i = 0; i < Grapple_SettingCount(); ++i)
             {
                 const auto *key = Grapple_SettingKey(i);
-                if (std::string(Grapple_SettingsSource(cli.get(), key)) != "engine defaults" &&
+                if (std::string(Grapple_SettingsSource(settings.get(), key)) != "engine defaults" &&
                     !(modes && std::string(key) == "display.display"))
                     throw std::runtime_error(
                         "launch settings are not valid with this enumeration action");
             }
-            return backends ? ListBackends() : ListDisplays(cli.get(), modes);
+            return backends ? ListBackends() : ListDisplays(settings.get(), modes);
         }
         if (!quality.empty())
         {
             SettingsPtr preset{Grapple_CreateSettings(), Grapple_DestroySettings};
             if (!preset || !Grapple_SettingsQuality(preset.get(), quality.c_str(), "CLI quality") ||
-                !Grapple_SettingsOverlay(preset.get(), cli.get()))
+                !Grapple_SettingsOverlay(preset.get(), settings.get()))
                 throw std::runtime_error(SDL_GetError());
-            cli.swap(preset);
+            settings.swap(preset);
         }
-        auto launch = ResolveLaunch(request, cli.get());
+        auto launch = ResolveLaunch(request, settings.get());
         if (request.print)
         {
             PrintSettings(launch.settings.get());
@@ -411,6 +453,6 @@ int GrappleRunner_Run(int argc, char **argv, const char *version)
     catch (const std::exception &error)
     {
         std::cerr << "error: " << error.what() << '\n';
-        return 2;
+        return *project.create || *project.package ? 1 : 2;
     }
 }

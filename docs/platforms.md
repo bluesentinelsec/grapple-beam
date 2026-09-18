@@ -17,7 +17,7 @@ applications link the library. Desktop shared variants are optional. System
 libraries, graphics drivers, and platform SDK requirements still apply to static
 builds.
 
-Use `grapple-beam --list-backends`, `--list-displays`, and `--list-display-modes`
+Use `grapple-beam run --list-backends`, `--list-displays`, and `--list-display-modes`
 to inspect the local machine. Available renderer and fullscreen modes depend on
 its drivers and connected displays. [Runner settings](cli-implementation.md)
 covers requested versus achieved settings and recovery.

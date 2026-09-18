@@ -34,8 +34,8 @@ those sources are already supplied. OS libraries and frameworks are still requir
 git clone https://github.com/bluesentinelsec/grapple-beam.git
 cd grapple-beam
 make
-./build/debug/bin/grapple-beam --window-mode windowed demos/pong/pong.lua
-./build/debug/bin/grapple-beam --window-mode windowed demos/pong/pong.rb
+./build/debug/bin/grapple-beam run --window-mode windowed demos/pong/pong.lua
+./build/debug/bin/grapple-beam run --window-mode windowed demos/pong/pong.rb
 ```
 
 On Windows, use `build.bat debug`; the executable is under `build/debug/bin/`
@@ -69,17 +69,18 @@ project support; the default engine source pin can still use v0.9.0.
 ## Launch and configure a script game
 
 ```sh
-grapple-beam --window-mode fullscreen-borderless ./my-game
-grapple-beam --vsync off --max-fps 144 --music-volume .7 ./my-game
-grapple-beam --print-settings ./my-game
-grapple-beam --safe-mode ./my-game
+grapple-beam run --window-mode fullscreen-borderless ./my-game
+grapple-beam run --vsync off --max-fps 144 --music-volume .7 ./my-game
+grapple-beam run --print-settings ./my-game
+grapple-beam run --safe-mode ./my-game
 grapple-beam repl --language lua
 ```
 
 A project directory contains `main.lua` or `main.rb`; an optional `grapple.toml`
-selects an entrypoint and stable player-preference identity. With no path, the
-runner discovers a project in the current directory. Engine options precede the
-project; trailing arguments belong to the game.
+selects an entrypoint and stable player-preference identity. With no path, `run`
+discovers a project in the current directory. Engine options precede the
+project; trailing arguments belong to the game. `grapple-beam --help` lists
+`new`, `package`, `run`, `repl`, and `eval`.
 
 Settings merge from engine/game defaults, project TOML and scripts, player TOML
 and scripts, explicit configuration files, then CLI overrides. Scripts win over

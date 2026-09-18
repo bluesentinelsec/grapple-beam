@@ -57,10 +57,10 @@ in each script. Otherwise they use the file helper, which accepts any of the
 three supported formats:
 
 ```sh
-./grapple-beam demos/chiptune/play.lua "$PWD/tests/mixer/assets/c64-composition-named.mid"
-./grapple-beam demos/chiptune/play.rb "$PWD/tests/mixer/assets/c64-composition-named.xml"
-./grapple-beam demos/chiptune/play.lua code
-./grapple-beam demos/chiptune/play.rb code
+./grapple-beam run demos/chiptune/play.lua "$PWD/tests/mixer/assets/c64-composition-named.mid"
+./grapple-beam run demos/chiptune/play.rb "$PWD/tests/mixer/assets/c64-composition-named.xml"
+./grapple-beam run demos/chiptune/play.lua code
+./grapple-beam run demos/chiptune/play.rb code
 ```
 
 The runner changes to the script project directory. These file arguments use

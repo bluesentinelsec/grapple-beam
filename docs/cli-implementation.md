@@ -5,21 +5,22 @@ description: "Runner settings for grapple-beam callers."
 
 # Runner settings
 
-`grapple-beam` launches Lua/Ruby game projects. `new --model=c` and `package` manage
+`grapple-beam run` launches Lua/Ruby game projects. `new --model=c` and `package` manage
 [C desktop projects](projects.md); the settings below describe script-game launches.
-The [CLI reference](cli-args.txt) lists supported arguments and defaults; `--help-all` is generated from the same typed
-registry used by configuration files, scripts, and the C API.
+The [CLI reference](cli-args.txt) lists supported arguments and defaults; `run --help`
+lists launch flags from the same typed registry used by configuration files, scripts,
+and the C API. `grapple-beam --help` lists every subcommand.
 
 ```sh
-grapple-beam --window-mode windowed --window-size 1280x720 ./my-game
-grapple-beam --window-mode fullscreen-exclusive --resolution 1920x1080 --refresh-rate 60 ./my-game
-grapple-beam --vsync off --max-fps 144 --effects off ./my-game
-grapple-beam --music-volume .7 --speech-volume 1 ./my-game
-grapple-beam --print-settings ./my-game
-grapple-beam --safe-mode ./my-game
-grapple-beam --list-displays
-grapple-beam --list-display-modes --display primary
-grapple-beam --list-backends
+grapple-beam run --window-mode windowed --window-size 1280x720 ./my-game
+grapple-beam run --window-mode fullscreen-exclusive --resolution 1920x1080 --refresh-rate 60 ./my-game
+grapple-beam run --vsync off --max-fps 144 --effects off ./my-game
+grapple-beam run --music-volume .7 --speech-volume 1 ./my-game
+grapple-beam run --print-settings ./my-game
+grapple-beam run --safe-mode ./my-game
+grapple-beam run --list-displays
+grapple-beam run --list-display-modes --display primary
+grapple-beam run --list-backends
 ```
 
 ## CLI values and defaults
@@ -27,7 +28,7 @@ grapple-beam --list-backends
 Use `--key value` or `--key=value`. Boolean settings require `on` or `off`;
 repeated scalar options take the last value. Put all engine options before the
 project. Advanced keys use `--set engine.tick_rate=120` and are listed by
-`--help-all`. These keys are also available in TOML and configuration scripts.
+`run --help`. These keys are also available in TOML and configuration scripts.
 
 Defaults select borderless fullscreen, primary display, vsync, display-paced FPS,
 1280×720 when windowed, render scale 1, high budgets, and FXAA. Bloom, CRT, and
@@ -37,7 +38,7 @@ override them. See the [full option inventory](cli-args.txt) for ranges and enum
 
 ## Projects and configuration
 
-Launch a directory, a `.lua`/`.rb` script, or omit the path to use the current
+`run` launches a directory, a `.lua`/`.rb` script, or omits the path to use the current
 directory. A directory discovers `main.lua` or `main.rb`; if both exist, select
 `--language`. An optional `grapple.toml` declares a stable preference identity:
 
