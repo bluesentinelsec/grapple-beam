@@ -1,0 +1,19 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {"major": 3, "minor": 25, "patch": 0},
+  "configurePresets": [
+    {"name": "debug", "generator": "Ninja", "binaryDir": "${sourceDir}/build/debug", "cacheVariables": {"CMAKE_BUILD_TYPE": "Debug"}},
+    {"name": "release", "inherits": "debug", "binaryDir": "${sourceDir}/build/release", "cacheVariables": {"CMAKE_BUILD_TYPE": "Release"}},
+    {"name": "sanitizer", "inherits": "debug", "binaryDir": "${sourceDir}/build/sanitizer", "cacheVariables": {"GAME_SANITIZERS": "ON"}}
+  ],
+  "buildPresets": [
+    {"name": "debug", "configurePreset": "debug", "configuration": "Debug"},
+    {"name": "release", "configurePreset": "release", "configuration": "Release"},
+    {"name": "sanitizer", "configurePreset": "sanitizer", "configuration": "Debug"}
+  ],
+  "testPresets": [
+    {"name": "debug", "configurePreset": "debug", "configuration": "Debug", "output": {"outputOnFailure": true}, "execution": {"timeout": 30}},
+    {"name": "release", "configurePreset": "release", "configuration": "Release", "output": {"outputOnFailure": true}, "execution": {"timeout": 30}},
+    {"name": "sanitizer", "configurePreset": "sanitizer", "output": {"outputOnFailure": true}, "execution": {"timeout": 30}}
+  ]
+}

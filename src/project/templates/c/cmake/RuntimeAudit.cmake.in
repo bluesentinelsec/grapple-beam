@@ -1,0 +1,14 @@
+# Exclude platform libraries before descending into their OS-managed imports.
+# CMake can report mixed separators in resolved Windows paths.
+file(GET_RUNTIME_DEPENDENCIES
+  EXECUTABLES "@GAME_EXECUTABLE@"
+  RESOLVED_DEPENDENCIES_VAR resolved
+  UNRESOLVED_DEPENDENCIES_VAR unresolved
+  PRE_EXCLUDE_REGEXES "api-ms-.*" "ext-ms-.*"
+  POST_EXCLUDE_REGEXES
+    "^/System/Library/.*" "^/usr/lib/.*" "^/lib/.*" "^/lib64/.*" "^/usr/lib64/.*"
+    [=[[\\/][Ww][Ii][Nn][Dd][Oo][Ww][Ss][\\/][Ss][Yy][Ss][Tt][Ee][Mm]32[\\/]]=])
+if(resolved OR unresolved)
+  message(FATAL_ERROR
+    "Unpackaged runtime dependencies: ${resolved}; unresolved: ${unresolved}. Add explicit redistributable install rules before shipping.")
+endif()

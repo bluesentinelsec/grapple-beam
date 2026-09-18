@@ -1,0 +1,1 @@
+The game_render_assets CTest case invokes GameRun --self-test through the actual application. It renders the real sprite in a window, checks pixels and movement, and exits after 12 frames. CTest enforces a 30-second outer timeout.

@@ -1,3 +1,4 @@
+#include "../project/project.hpp"
 #include "launch.hpp"
 #include "runner.h"
 
@@ -201,8 +202,11 @@ class LaunchSettings
 } // namespace
 int GrappleRunner_Run(int argc, char **argv, const char *version)
 {
+    if (argc > 1 && (std::string(argv[1]) == "new" || std::string(argv[1]) == "package"))
+        return grapple::project::RunCli(argc, argv);
     using namespace grapple::runner;
-    CLI::App app{"Run a Lua/Ruby project or script. Engine options precede the project; -- "
+    CLI::App app{"Create C games with new, ship with package, or run a Lua/Ruby project or script. "
+                 "Engine options precede the project; -- "
                  "introduces game arguments.",
                  "grapple-beam"};
     app.set_version_flag("-V,--version", std::string("grapple-beam ") + version);

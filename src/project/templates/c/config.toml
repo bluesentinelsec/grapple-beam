@@ -1,0 +1,8 @@
+# Shipped defaults. Omitted values inherit the Debug/Release profile.
+# Player config.toml overrides this file; explicit --config and CLI values win.
+[display]
+vsync = true
+# window_mode = "windowed" # or "fullscreen-borderless", "fullscreen-exclusive"
+# max_fps = 60             # 0 follows the display; -1 uncaps
+# window_width = 1280
+# window_height = 720

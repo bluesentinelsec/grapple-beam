@@ -1,0 +1,67 @@
+name: C desktop project contract
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: scaffold-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  generated-project:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            generator: Unix Makefiles
+          - os: macos-14
+            generator: Ninja
+          - os: windows-2022
+            generator: Visual Studio 17 2022
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - uses: ilammy/msvc-dev-cmd@0b201ec74fa43914dc39ae48a89fd1d8cb592756
+        if: runner.os == 'Windows'
+      - name: CMake, Ninja and clang-format
+        run: python -m pip install cmake==3.31.6 ninja==1.11.1.4 clang-format==19.1.7
+      - name: Linux desktop and documentation prerequisites
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc xvfb libasound2-dev libpulse-dev libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libxtst-dev libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev libegl1-mesa-dev libdbus-1-dev libudev-dev libwayland-dev libdecor-0-dev libpipewire-0.3-dev
+          Xvfb :99 -screen 0 1280x720x24 > /tmp/xvfb.log 2>&1 &
+          echo DISPLAY=:99 >> "$GITHUB_ENV"
+      - name: macOS documentation prerequisite
+        if: runner.os == 'macOS'
+        run: brew install pandoc
+      - name: Windows documentation prerequisite
+        if: runner.os == 'Windows'
+        run: choco install pandoc --no-progress -y
+      - name: Build runner and project contract tests
+        run: |
+          cmake -S . -B build/project-cli -G Ninja -DCMAKE_BUILD_TYPE=Debug -DGRAPPLE_BEAM_BUILD_BENCHMARKS=OFF -DGRAPPLE_BEAM_BUILD_DEMOS=OFF -DGRAPPLE_BUILD_SHARED_SDK=OFF
+          cmake --build build/project-cli --target grapple-beam_app grapple_project_test --parallel 4
+          ctest --test-dir build/project-cli -R 'Project(Test|Utilities|Process)' --output-on-failure --timeout 45
+      - name: Generate, build, test, document, package and relocate a fresh C game
+        env:
+          PROJECT_GENERATOR: ${{ matrix.generator }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python tests/project/end_to_end.py --runner build/project-cli/bin/grapple-beam --generator "$PROJECT_GENERATOR" --work "$RUNNER_TEMP/game-project-contract"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: failure()
+        with:
+          name: project-contract-${{ matrix.os }}
+          path: |
+            ${{ runner.temp }}/game-project-contract/Space Game/build/*/Testing/Temporary/*.log
+            ${{ runner.temp }}/game-project-contract/Space Game/build/*/CMakeFiles/CMakeConfigureLog.yaml
