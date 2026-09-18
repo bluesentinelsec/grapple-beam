@@ -1,4 +1,4 @@
-# Expat (vendored under `mixer/src/expat/`)
+# Expat (vendored under `modules/mixer/src/expat/`)
 
 | | |
 |---|---|

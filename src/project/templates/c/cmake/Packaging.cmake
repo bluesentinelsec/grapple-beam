@@ -15,7 +15,10 @@ foreach(module image gfx vfs physics formats light extras)
   file(GLOB_RECURSE license_files LIST_DIRECTORIES false
     "${grapple_engine_SOURCE_DIR}/${module}/LICENSE*"
     "${grapple_engine_SOURCE_DIR}/${module}/COPYING*"
-    "${grapple_engine_SOURCE_DIR}/${module}/NOTICE*")
+    "${grapple_engine_SOURCE_DIR}/${module}/NOTICE*"
+    "${grapple_engine_SOURCE_DIR}/modules/${module}/LICENSE*"
+    "${grapple_engine_SOURCE_DIR}/modules/${module}/COPYING*"
+    "${grapple_engine_SOURCE_DIR}/modules/${module}/NOTICE*")
   foreach(license IN LISTS license_files)
     file(RELATIVE_PATH name "${grapple_engine_SOURCE_DIR}" "${license}")
     get_filename_component(dir "${notices}/${name}" DIRECTORY)
@@ -26,7 +29,9 @@ endforeach()
 # These single-header dependencies carry their complete license in the source.
 file(GLOB_RECURSE inline_notices LIST_DIRECTORIES false
   "${grapple_engine_SOURCE_DIR}/extras/*sdefl*.h" "${grapple_engine_SOURCE_DIR}/extras/*sinfl*.h"
-  "${grapple_engine_SOURCE_DIR}/image/*stb*.h" "${grapple_engine_SOURCE_DIR}/image/*nanosvg*.h")
+  "${grapple_engine_SOURCE_DIR}/image/*stb*.h" "${grapple_engine_SOURCE_DIR}/image/*nanosvg*.h"
+  "${grapple_engine_SOURCE_DIR}/modules/extras/*sdefl*.h" "${grapple_engine_SOURCE_DIR}/modules/extras/*sinfl*.h"
+  "${grapple_engine_SOURCE_DIR}/modules/image/*stb*.h" "${grapple_engine_SOURCE_DIR}/modules/image/*nanosvg*.h")
 foreach(license IN LISTS inline_notices)
   file(RELATIVE_PATH name "${grapple_engine_SOURCE_DIR}" "${license}")
   get_filename_component(dir "${notices}/inline-notices/${name}" DIRECTORY)

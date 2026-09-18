@@ -1,4 +1,4 @@
-# SDL3_mixer (vendored under `mixer/`)
+# SDL3_mixer (vendored under `modules/mixer/`)
 
 | | |
 |--|--|
@@ -40,7 +40,7 @@
 Enabled: **WAV, OGG Vorbis, MP3, FLAC** (the big four), plus AIFF, AU, VOC,
 RAW, generated sine waves, and **MIDI** via statically linked TiMidity.
 TiMidity needs GUS patch data at runtime; the repo ships an original
-**generated** GM patch set (`mixer/gm-patches/`, built by
+**generated** GM patch set (`modules/mixer/gm-patches/`, built by
 `scripts/gen_gus_patches.py` — no third-party samples, zlib). Without
 patches, MIDI loads fail cleanly with zero link-time cost.
 

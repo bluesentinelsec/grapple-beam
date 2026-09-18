@@ -114,7 +114,7 @@ individual `Grapple::*` source targets.
 | Use RAII and check errors in C++ | [C++](docs/cpp.md) | [C++ Pong](demos/pong/pong.cpp) |
 | Script a game or embed an interpreter | [Lua and Ruby](docs/scripting.md) | [Demos](demos/README.md) |
 | Compose and play MIDI/MusicXML or code | [Music authoring](docs/chiptune-support.md) | [C, C++, Lua, Ruby playback](demos/chiptune/README.md) |
-| Mix music, effects, speech, and ambience | [Audio](docs/mixer.md) | [Mixer APIs](mixer/README.md) |
+| Mix music, effects, speech, and ambience | [Audio](docs/mixer.md) | [Mixer APIs](modules/mixer/README.md) |
 | Build menus and options screens | [GUI](docs/gui.md), [C++ UI](docs/cpp-gui.md) | [Settings API](docs/cli-implementation.md#recovery-and-saving) |
 | Package assets and load from archives | [VFS](docs/vfs.md) | [Asset packer](scripts/pack_assets.py) |
 | Select modules or target mobile/web | [Modules](docs/modules.md), [Platforms](docs/platforms.md) | [Platform matrix](docs/platforms-matrix.md) |
@@ -125,7 +125,7 @@ Dependency versions, licenses, and local changes are recorded in [deps/](deps/)
 and [CMake dependency declarations](cmake/Dependencies.cmake). Module feature
 availability varies by platform and build options; see each module's guide.
 Generated binding coverage and exclusions are recorded in the
-[binding report](bindings/generated/COVERAGE.md).
+[binding report](modules/bindings/generated/COVERAGE.md).
 
 The root `VERSION` file identifies the project version. Before 1.0, minor releases
 may include breaking API changes; review release notes when upgrading.

@@ -67,7 +67,7 @@ The runner changes to the script project directory. These file arguments use
 absolute paths so the fixture is found regardless of that working directory.
 Pass a score path explicitly when running the script demos.
 
-For declarative C/C++ composition, see the [mixer examples](../../mixer/README.md#compose-music-in-code-c-c-lua-ruby).
+For declarative C/C++ composition, see the [mixer examples](../../modules/mixer/README.md#compose-music-in-code-c-c-lua-ruby).
 All examples own their player through the game loop and destroy it before audio
 shutdown. The generated C++ wrappers use `grapple::ext::ChipSong`, `ChipComposer`
 and `ChipPlayer`; Lua/Ruby use `GrappleC`. Import options and diagnostic records are

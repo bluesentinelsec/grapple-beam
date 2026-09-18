@@ -118,6 +118,6 @@ def emit_script_api(manifest: Manifest, outcomes: dict, repo: Path) -> None:
             sig, rets = _signature(bound[cname], f"{spec.script_module}.{script_name}")
             w(f"| `{sig}` | {rets} |")
         w("")
-    (repo / "bindings" / "generated" / "SCRIPT_API.md").write_text(
+    (repo / "modules" / "bindings" / "generated" / "SCRIPT_API.md").write_text(
         "\n".join(lines) + "\n", encoding="utf-8"
     )

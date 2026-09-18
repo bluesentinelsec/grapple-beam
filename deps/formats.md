@@ -1,4 +1,4 @@
-# cJSON / tomlc99 / libyaml (vendored under `formats/`)
+# cJSON / tomlc99 / libyaml (vendored under `modules/formats/`)
 
 All three are plain C, MIT-licensed, and have zero external dependencies —
 they don't even use SDL — so `Grapple::Formats` is inherently

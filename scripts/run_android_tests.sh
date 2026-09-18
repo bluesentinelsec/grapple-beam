@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-apk="${1:-android/test-app/build/outputs/apk/release/test-app-release.apk}"
+apk="${1:-platforms/android/test-app/build/outputs/apk/release/test-app-release.apk}"
 package="com.example.sdl3staticextensions.test"
 activity="${package}/.TestActivity"
 # The APK carries the whole SDK — a 70 MB shared object per ABI, where it

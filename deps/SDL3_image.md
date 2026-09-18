@@ -1,4 +1,4 @@
-# SDL3_image (vendored under `image/`)
+# SDL3_image (vendored under `modules/image/`)
 
 | | |
 |--|--|

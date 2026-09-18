@@ -9,7 +9,7 @@ zlib-clean set: band-limited single-cycle waveforms for melodic programs and
 synthesized one-shots for percussion, plus the timidity.cfg mapping all 128
 GM programs and the common drum notes.
 
-Output (default): mixer/gm-patches/
+Output (default): modules/mixer/gm-patches/
 Regenerate with:  python3 scripts/gen_gus_patches.py
 
 GF1 .pat layout matches what src/timidity/instrum.c actually reads:
@@ -205,7 +205,7 @@ DRUMS = {
 
 def main() -> int:
     out = Path(sys.argv[1]) if len(sys.argv) > 1 else \
-        Path(__file__).resolve().parent.parent / "mixer" / "gm-patches"
+        Path(__file__).resolve().parent.parent / "modules" / "mixer" / "gm-patches"
     out.mkdir(parents=True, exist_ok=True)
 
     for name, harmonics in MELODIC.items():

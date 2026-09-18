@@ -42,5 +42,5 @@ The [C++ guide](cpp.md) covers resource ownership and error handling; the
 [Modules](modules.md) lists CMake targets. [Platforms](platforms.md) and the
 [support matrix](platforms-matrix.md) describe packaging and runtime differences.
 Public headers document API ownership and failure behavior; generated
-[script signatures](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/SCRIPT_API.md) and
-[binding coverage](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/COVERAGE.md) complement these guides.
+[script signatures](https://github.com/bluesentinelsec/grapple-beam/blob/main/modules/bindings/generated/SCRIPT_API.md) and
+[binding coverage](https://github.com/bluesentinelsec/grapple-beam/blob/main/modules/bindings/generated/COVERAGE.md) complement these guides.

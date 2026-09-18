@@ -8,8 +8,8 @@ building the project needs no Python.
 
 Two modules have shaders, and they are embedded the same way:
 
-    light/shaders/   -> light/src/light_shaders.h
-    engine/shaders/  -> engine/src/post_shaders.h
+    modules/light/shaders/   -> modules/light/src/light_shaders.h
+    modules/engine/shaders/  -> modules/engine/src/post_shaders.h
 
 Regenerate after editing any shader:
 
@@ -37,15 +37,15 @@ class Bundle:
 
 BUNDLES = (
     Bundle(
-        source_dir=REPO / "light" / "shaders",
-        output=REPO / "light" / "src" / "light_shaders.h",
+        source_dir=REPO / "modules" / "light" / "shaders",
+        output=REPO / "modules" / "light" / "src" / "light_shaders.h",
         guard="GRAPPLE_LIGHT_SHADERS_H",
         blurb="The GLSL sources in light/shaders/ as string literals, so a game ships\n"
         " * one binary with no shader files beside it.",
     ),
     Bundle(
-        source_dir=REPO / "engine" / "shaders",
-        output=REPO / "engine" / "src" / "post_shaders.h",
+        source_dir=REPO / "modules" / "engine" / "shaders",
+        output=REPO / "modules" / "engine" / "src" / "post_shaders.h",
         guard="GRAPPLE_ENGINE_POST_SHADERS_H",
         blurb="The GLSL sources in engine/shaders/ as string literals: the\n"
         " * post-processing chain that bloom, CRT, chromatic aberration and FXAA\n"

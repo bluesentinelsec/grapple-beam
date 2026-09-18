@@ -84,7 +84,7 @@ endif()
 if(TARGET grapple-beam_app)
   add_test(NAME editor_lua_definitions_parse
     COMMAND $<TARGET_FILE:grapple-beam_app> eval --language lua --code
-      "local f, err = loadfile('${CMAKE_CURRENT_SOURCE_DIR}/../../bindings/generated/editor/grapple.lua') if not f then error(err) end print('definitions parse')"
+      "local f, err = loadfile('${CMAKE_CURRENT_SOURCE_DIR}/../../modules/bindings/generated/editor/grapple.lua') if not f then error(err) end print('definitions parse')"
   )
   set_tests_properties(editor_lua_definitions_parse PROPERTIES
     PASS_REGULAR_EXPRESSION "definitions parse")
@@ -98,11 +98,11 @@ if(Python3_Interpreter_FOUND)
   add_test(NAME editor_rbs_definitions_shape
     COMMAND ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/../editor/check_rbs.py
-            ${CMAKE_CURRENT_SOURCE_DIR}/../../bindings/generated/editor/grapple.rbs
+            ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/bindings/generated/editor/grapple.rbs
   )
   add_test(NAME editor_tags_shape
     COMMAND ${Python3_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/../editor/check_tags.py
-            ${CMAKE_CURRENT_SOURCE_DIR}/../../bindings/generated/editor/tags
+            ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/bindings/generated/editor/tags
   )
 endif()

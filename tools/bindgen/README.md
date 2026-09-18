@@ -5,12 +5,12 @@ repo, three ways:
 
 | Surface | Output | What you get |
 |---|---|---|
-| C++ | `cpp/include/grapple/gen/*.h` | RAII owners for every resource with a create/destroy pair, `Status`/`Result` wrappers for fallible functions, namespace aliases for everything else — 100% of the parsed API accounted for, `namespace grapple::{sdl,mix,img,ttf,net,vfs,b2,nk,json,ext}` |
-| Lua | `bindings/generated/gen_lua_*.c` | Flat global tables mirroring C names minus prefixes (`SDL.CreateSurface`, `B2.World_Step`, `JSON.Parse`) plus enum constants; owned handles are GC-managed userdata |
-| Ruby | `bindings/generated/gen_ruby_*.c` | Same surface as Lua on mruby modules; owned handles are GC-managed Data objects |
+| C++ | `modules/cpp/include/grapple/gen/*.h` | RAII owners for every resource with a create/destroy pair, `Status`/`Result` wrappers for fallible functions, namespace aliases for everything else — 100% of the parsed API accounted for, `namespace grapple::{sdl,mix,img,ttf,net,vfs,b2,nk,json,ext}` |
+| Lua | `modules/bindings/generated/gen_lua_*.c` | Flat global tables mirroring C names minus prefixes (`SDL.CreateSurface`, `B2.World_Step`, `JSON.Parse`) plus enum constants; owned handles are GC-managed userdata |
+| Ruby | `modules/bindings/generated/gen_ruby_*.c` | Same surface as Lua on mruby modules; owned handles are GC-managed Data objects |
 
 Coverage, including every skipped function and why, is written to
-`bindings/generated/COVERAGE.md`.
+`modules/bindings/generated/COVERAGE.md`.
 
 ## Running
 
@@ -38,7 +38,7 @@ never depend on Python, and diffs are reviewable.
   `#if` nesting so platform-gated declarations and Nuklear config
   sections outside our pinned `NK_INCLUDE_*` set are dropped
   (`check_nk_config` fails generation if the tool's model of that set
-  drifts from `gui/include/grapple/nuklear.h`).
+  drifts from `modules/gui/include/grapple/nuklear.h`).
 - `classify.py` — resolves typedefs, categorizes every type
   (scalar/enum/string/handle/POD/callback), and produces one plan per
   function per surface. Lua and Ruby share the same plans, so their

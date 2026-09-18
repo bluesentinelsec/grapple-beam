@@ -1,11 +1,11 @@
-# SheenBidi (vendored under `ttf/sheenbidi/`)
+# SheenBidi (vendored under `modules/ttf/sheenbidi/`)
 
 | | |
 |--|--|
 | Upstream | https://github.com/Tehreer/SheenBidi |
 | Version | v3.0.0 (release tag tarball) |
 | SHA-256 | `86c56014034739ba39a24c23eb00323b0bf6f737354f665786015fca842af786` (v3.0.0.tar.gz) |
-| License | Apache-2.0 (see `ttf/sheenbidi/LICENSE`) — commercial/closed-source safe; attribution required and provided by shipping the license text |
+| License | Apache-2.0 (see `modules/ttf/sheenbidi/LICENSE`) — commercial/closed-source safe; attribution required and provided by shipping the license text |
 | Imported | 2026-08-14 |
 | Dependencies | none — pure C |
 

@@ -78,7 +78,7 @@ Generated namespaces cover additional module APIs, including `grapple::sdl`,
 `mix`, `img`, `ttf`, `net`, `vfs`, `b2`, `nk`, `gfx`, `toml`, `yaml`, `mog`,
 `json`, and `ext`. They contain selected resource owners, checked wrappers, and
 aliases to C functions. Coverage categories and exclusions are recorded in the
-[binding report](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/COVERAGE.md); availability also depends on
+[binding report](https://github.com/bluesentinelsec/grapple-beam/blob/main/modules/bindings/generated/COVERAGE.md); availability also depends on
 which modules were built. Raw C APIs remain available.
 
 ## Music and player settings

@@ -3,7 +3,7 @@
 add_subdirectory(version)
 # The desktop engine runner is onboarded after its script/binding dependencies.
 
-# Android Prefab shared library (built by the android/ Gradle project).
+# Android Prefab shared library (built by the platforms/android Gradle project).
 if(ANDROID)
   add_subdirectory(android)
 endif()

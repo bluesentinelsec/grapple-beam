@@ -450,7 +450,7 @@ endforeach()
 # file for the C and C++ headers, and completion definitions for the two
 # scripting languages. They ship with the SDK because an API nobody's editor
 # knows about is an API read from a browser tab.
-set(_editor_dir "${CMAKE_CURRENT_LIST_DIR}/../bindings/generated/editor")
+set(_editor_dir "${CMAKE_CURRENT_LIST_DIR}/../modules/bindings/generated/editor")
 if(EXISTS "${_editor_dir}/tags")
   install(FILES "${_editor_dir}/tags" DESTINATION .)
   install(FILES "${_editor_dir}/grapple.lua" "${_editor_dir}/grapple.rbs"
@@ -467,7 +467,7 @@ endif()
 # and COVERAGE.md records what is bound and what was skipped and why.
 set(_doc_dest ${CMAKE_INSTALL_DATADIR}/doc/${PROJECT_NAME})
 if(TARGET expat)
-  install(FILES "${CMAKE_CURRENT_LIST_DIR}/../mixer/src/expat/COPYING"
+  install(FILES "${CMAKE_CURRENT_LIST_DIR}/../modules/mixer/src/expat/COPYING"
           DESTINATION ${_doc_dest}/licenses RENAME expat.txt)
   install(FILES "${CMAKE_CURRENT_LIST_DIR}/../deps/expat.md"
           DESTINATION ${_doc_dest}/deps)
@@ -480,8 +480,8 @@ if(_doc_pages)
           DESTINATION ${_doc_dest}/assets OPTIONAL)
 endif()
 foreach(reference SCRIPT_API.md COVERAGE.md)
-  if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/../bindings/generated/${reference}")
-    install(FILES "${CMAKE_CURRENT_LIST_DIR}/../bindings/generated/${reference}"
+  if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/../modules/bindings/generated/${reference}")
+    install(FILES "${CMAKE_CURRENT_LIST_DIR}/../modules/bindings/generated/${reference}"
             DESTINATION ${_doc_dest})
   endif()
 endforeach()

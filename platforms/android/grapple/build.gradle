@@ -2,7 +2,7 @@ plugins {
     id "com.android.library"
 }
 
-def repositoryRoot = rootProject.projectDir.parentFile
+def repositoryRoot = rootProject.projectDir.toPath().resolve("../..").toFile().canonicalFile
 def prefabHeaders = file("${buildDir}/generated/prefab-headers")
 // SDL3's Java glue. Anything loading a library that contains SDL3 needs
 // org.libsdl.app.SDLActivity present, or the process aborts on load — so

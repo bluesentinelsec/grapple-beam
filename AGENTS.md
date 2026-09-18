@@ -8,17 +8,20 @@ For day-to-day build commands, see [README.md](README.md).
 
 - **Entrypoint:** the program starts in **`src/main.cpp`** — always. No alternate
   app tree; do not invent a second `main`.
-- **Library first:** reusable code belongs in the library target under
-  `src/<component>/`, not in `main.cpp`.
+- **Library first:** reusable engine code belongs under `modules/<name>/`, not in
+  `main.cpp`. The runner and project CLI live in `src/`.
 - **Main is thin:** `src/main.cpp` only wires startup and calls into the library.
-- **Components:** group related code under `src/<component>/`, `tests/<component>/`,
-  and `benchmarks/<component>/`.
+- **Layout:** `modules/` is Grapple::* libraries; `src/` is the desktop app;
+  `platforms/` is Android/web packaging; tests stay in `tests/<name>/` and
+  benches in `benchmarks/<name>/`.
 - **Explicit sources:** every translation unit is listed in that directory's
   `CMakeLists.txt`. Never use `file(GLOB)` for project sources.
-- **Onboard a component:** add the directory, list files in its `CMakeLists.txt`,
-  then `add_subdirectory(...)` from the parent.
+- **Onboard a module:** add `modules/<name>/`, list files in its `CMakeLists.txt`,
+  then `add_subdirectory(<name>)` from `modules/CMakeLists.txt`.
 
-Public headers live under `include/grapple/` (directory tree matches the C++ namespace).
+Public headers for a module live in that module's `include/grapple/` (the
+directory tree matches the C++ namespace). Headers shared by modules that must
+not depend on each other live under the repo-root `include/grapple/`.
 
 ## Preferred libraries
 
@@ -65,10 +68,10 @@ Prefer the Makefile (Unix) or `build.bat` (Windows) wrappers:
   Release, tests, benchmarks on Linux/macOS/Windows). Keep it green.
 - If present, `.github/workflows/sanitizers.yml` runs ASan+UBSan on Linux;
   treat sanitizer failures as bugs. Locally: `make sanitizer`.
-- If present, `android/` is the Android Prefab AAR Gradle project (library
-  module + on-device test app). `.github/workflows/android.yml` builds it and
-  runs `scripts/run_android_tests.sh` on an emulator; keep it green. Android
-  device tests live in `tests/android/`, not the GoogleTest tree.
+- If present, `platforms/android/` is the Android Prefab AAR Gradle project
+  (library module + on-device test app). `.github/workflows/android.yml` builds
+  it and runs `scripts/run_android_tests.sh` on an emulator; keep it green.
+  Android device tests live in `tests/android/`, not the GoogleTest tree.
 - If present, `scripts/build_ios_xcframework.sh` packages the iOS XCFramework
   and `.github/workflows/ios.yml` builds + tests it in an iOS Simulator
   (`scripts/run_ios_tests.sh`); keep it green. iOS package tests live in

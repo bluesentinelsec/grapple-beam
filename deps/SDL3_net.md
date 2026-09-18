@@ -1,4 +1,4 @@
-# SDL3_net (vendored under `net/`)
+# SDL3_net (vendored under `modules/net/`)
 
 | | |
 |--|--|

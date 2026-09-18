@@ -357,7 +357,7 @@ def emit_editor(manifest: Manifest, outcomes: dict, target: Path, deps: Path,
     against that produced a tags file that differed from the committed one
     for no reason but the output location.
     """
-    out_dir = target / "bindings" / "generated" / "editor"
+    out_dir = target / "modules" / "bindings" / "generated" / "editor"
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "grapple.lua").write_text(_emit_lua(manifest, outcomes), encoding="utf-8")
     (out_dir / "grapple.rbs").write_text(_emit_rbs(manifest, outcomes), encoding="utf-8")

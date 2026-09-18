@@ -63,8 +63,8 @@ Generated bindings expose C APIs in modules such as `SDL`, `MIX`, `IMG`, `TTF`,
 `NET`, `PHYSFS`, `B2`, `NK`, `GFX`, `TOML`, `YAML`, `MOG`, `JSON`, and `GrappleC`.
 Modules depend on build/platform support. Callback, pointer, and ownership cases
 have explicit handling or exclusions; consult the
-[binding coverage report](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/COVERAGE.md) and
-[script signatures](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/SCRIPT_API.md).
+[binding coverage report](https://github.com/bluesentinelsec/grapple-beam/blob/main/modules/bindings/generated/COVERAGE.md) and
+[script signatures](https://github.com/bluesentinelsec/grapple-beam/blob/main/modules/bindings/generated/SCRIPT_API.md).
 
 ```lua
 local surface = assert(SDL.CreateSurface(64, 48, SDL.PIXELFORMAT_RGBA8888))
@@ -108,7 +108,7 @@ registered conditionally.
 ### The script signature is not always the C signature
 
 Check
-[`SCRIPT_API.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/SCRIPT_API.md)
+[`SCRIPT_API.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/modules/bindings/generated/SCRIPT_API.md)
 — it lists every bound function with the signature the *script* sees.
 Three rules make it differ from C:
 
@@ -123,7 +123,7 @@ Three rules make it differ from C:
 
 Functions that cannot cross a script boundary (callbacks, varargs,
 threading) are skipped **with the reason recorded** in
-[`COVERAGE.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/bindings/generated/COVERAGE.md).
+[`COVERAGE.md`](https://github.com/bluesentinelsec/grapple-beam/blob/main/modules/bindings/generated/COVERAGE.md).
 
 
 ### The short way to open an engine

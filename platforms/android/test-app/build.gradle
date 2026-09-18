@@ -54,7 +54,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            path rootProject.projectDir.toPath().resolve("../tests/android/CMakeLists.txt").toFile()
+            path rootProject.projectDir.toPath().resolve("../../tests/android/CMakeLists.txt").toFile()
             version "3.22.1"
         }
     }
