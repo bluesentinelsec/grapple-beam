@@ -424,7 +424,7 @@ C callers link `Grapple::Engine` and register hooks with `Grapple_RunGame` or an
 owned engine. C++ callers can use `grapple::Engine` from `<grapple/game.h>`.
 The [Pong demos](https://github.com/bluesentinelsec/grapple-beam/blob/main/demos/README.md) illustrate both approaches.
 
-Lua and Ruby games run with `grapple-beam [options] ./my-game`, or an explicit
+Lua and Ruby games run with `grapple-beam run [options] ./my-game`, or an explicit
 script path. The runner discovers the entrypoint, resolves configuration, then
 starts the loop after hooks are registered. See [Getting started](getting-started.md)
 and [Scripting](scripting.md) for complete examples.

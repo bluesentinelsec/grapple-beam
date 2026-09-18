@@ -11,7 +11,7 @@ import zipfile
 executable = str(Path(sys.argv[1]).resolve())
 
 def run(*args, status=0, cwd=None):
-    result = subprocess.run([executable, *map(str, args)], text=True, capture_output=True,
+    result = subprocess.run([executable, "run", *map(str, args)], text=True, capture_output=True,
                             timeout=20, cwd=cwd)
     assert result.returncode == status, (args, result.returncode, result.stdout, result.stderr)
     return result.stdout + result.stderr

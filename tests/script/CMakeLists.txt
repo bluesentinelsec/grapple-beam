@@ -18,7 +18,7 @@ if(TARGET grapple-beam_app)
   set_tests_properties(runner_lua_eval PROPERTIES PASS_REGULAR_EXPRESSION "^3")
   add_test(NAME runner_ruby_eval COMMAND grapple-beam_app eval --language ruby --code "puts 6 * 7")
   set_tests_properties(runner_ruby_eval PROPERTIES PASS_REGULAR_EXPRESSION "^42")
-  add_test(NAME runner_bad_language COMMAND grapple-beam_app -l cobol)
+  add_test(NAME runner_bad_language COMMAND grapple-beam_app run -l cobol)
   set_tests_properties(runner_bad_language PROPERTIES WILL_FAIL TRUE)
 endif()
 
@@ -35,14 +35,14 @@ if(TARGET grapple-beam_app)
   set_tests_properties(runner_version PROPERTIES PASS_REGULAR_EXPRESSION "grapple-beam [0-9]")
   add_test(NAME runner_help COMMAND grapple-beam_app --help)
   set_tests_properties(runner_help PROPERTIES
-    PASS_REGULAR_EXPRESSION "grapple-beam"
+    PASS_REGULAR_EXPRESSION "new"
     FAIL_REGULAR_EXPRESSION "chip-midi|chip-wav")
   add_test(NAME runner_missing_eval COMMAND grapple-beam_app eval --language lua --code)
   set_tests_properties(runner_missing_eval PROPERTIES WILL_FAIL TRUE)
   foreach(language lua rb)
     foreach(option --window-mode=fullscreen-borderless --vsync=on --safe-mode --reduced-flashing=on)
       add_test(NAME runner_${language}_${option}
-        COMMAND grapple-beam_app ${option}
+        COMMAND grapple-beam_app run ${option}
                 ${CMAKE_CURRENT_SOURCE_DIR}/runner/arguments.${language} -- --level 3)
       set_tests_properties(runner_${language}_${option} PROPERTIES
         PASS_REGULAR_EXPRESSION "runner arguments preserved")
@@ -50,7 +50,7 @@ if(TARGET grapple-beam_app)
   endforeach()
   configure_file(runner/arguments.rb "runner's arguments.rb" COPYONLY)
   add_test(NAME runner_ruby_quoted_path
-    COMMAND grapple-beam_app "${CMAKE_CURRENT_BINARY_DIR}/runner's arguments.rb" --level 3)
+    COMMAND grapple-beam_app run "${CMAKE_CURRENT_BINARY_DIR}/runner's arguments.rb" --level 3)
   set_tests_properties(runner_ruby_quoted_path PROPERTIES PASS_REGULAR_EXPRESSION "runner arguments preserved")
 endif()
 

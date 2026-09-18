@@ -2,18 +2,22 @@ GRAPPLE-BEAM CLI REFERENCE
 ==========================
 
 This reference describes current main (settings introduced after v0.9.0).
-Run grapple-beam --help-all to inspect the executable you are actually using.
+Run grapple-beam --help for subcommands and grapple-beam run --help for launch
+flags. --help-all expands every command.
 The typed settings come from engine/src/settings_schema.inc.
 See cli-implementation.md (cli-implementation.html on the docs site) for
 project layout, precedence, saving, recovery, and runtime capability behavior.
 
 INVOCATION
 
-  grapple-beam [options] [project-directory|script.lua|script.rb] [-- game-args...]
+  grapple-beam new [options] destination
+  grapple-beam package [directory]
+  grapple-beam run [options] [project-directory|script.lua|script.rb] [-- game-args...]
   grapple-beam repl --language lua|ruby
   grapple-beam eval --language lua|ruby --code SOURCE [-- args...]
 
-No path means project discovery in the current directory. No implicit REPL.
+A subcommand is required. No path after run means project discovery in the
+current directory. No implicit REPL.
 All engine options precede the project; trailing tokens belong to the game.
 CLI file paths use the invocation directory; game paths use the project root.
 Use --key=value or --key value. Scalar repeats take the last value; boolean
@@ -36,13 +40,13 @@ Recovery flags are mutually exclusive and reject explicit config files:
 Individual CLI settings still override recovery presets. No automatic saving.
 --reset-settings --print-settings previews without moving player files.
 
-IMPLEMENTED OPTIONS (grapple-beam --help-all)
+IMPLEMENTED OPTIONS (grapple-beam run --help)
 
 Run a Lua/Ruby project or script. Engine options precede the project; --
 introduces game arguments.
 
 
-grapple-beam [OPTIONS]
+grapple-beam run [OPTIONS]
 
 
 OPTIONS:
@@ -138,8 +142,8 @@ engine.max_frame_seconds (1e-06..10)
 engine.interpolation (lerp|none|extrapolate)
 
 Examples:
-grapple-beam --window-mode windowed .
-grapple-beam --config player.toml ./game -- --level forest
+grapple-beam run --window-mode windowed .
+grapple-beam run --config player.toml ./game -- --level forest
 
 
 MIGRATION

@@ -6,6 +6,7 @@ description: "Create, develop, test and package a C game with grapple-beam."
 # C desktop projects
 
 `grapple-beam new` creates an editable C17 game for macOS, Windows, and Linux.
+`grapple-beam --help` lists `new` and `package` with the other subcommands.
 The generated project uses CMake and source-built engine dependencies. This
 workflow currently supports `--model=c`; other languages and web/mobile project
 templates are separate work. The existing Lua/Ruby runner remains available.

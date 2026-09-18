@@ -42,7 +42,7 @@ if(GRAPPLE_BEAM_BUILD_TESTS AND TARGET grapple-beam_app)
         set(score code)
       endif()
       add_test(NAME demo_chiptune_${language}_${mode} COMMAND grapple-beam_app
-        ${CMAKE_CURRENT_SOURCE_DIR}/play.${language} ${score})
+        run ${CMAKE_CURRENT_SOURCE_DIR}/play.${language} ${score})
       set_tests_properties(demo_chiptune_${language}_${mode} PROPERTIES
         ENVIRONMENT "GRAPPLE_HEADLESS=1;SDL_AUDIODRIVER=dummy" TIMEOUT 40)
     endforeach()

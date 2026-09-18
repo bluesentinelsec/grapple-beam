@@ -39,7 +39,7 @@ endif()
 if(TARGET grapple-beam_app)
   foreach(lang lua rb)
     add_test(NAME runner_runs_${lang}_script
-      COMMAND $<TARGET_FILE:grapple-beam_app> ${CMAKE_CURRENT_SOURCE_DIR}/hello.${lang}
+      COMMAND $<TARGET_FILE:grapple-beam_app> run ${CMAKE_CURRENT_SOURCE_DIR}/hello.${lang}
     )
     set_tests_properties(runner_runs_${lang}_script PROPERTIES
       PASS_REGULAR_EXPRESSION "runner ok"

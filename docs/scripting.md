@@ -164,7 +164,7 @@ accepts are `title`, `window`, `design`, `presentation`, `resizable`,
 ### Launch settings and game arguments
 
 ```sh
-grapple-beam --window-mode windowed --vsync off game.lua -- level-2
+grapple-beam run --window-mode windowed --vsync off game.lua -- level-2
 ```
 
 The runner resolves project defaults, player preferences, explicit configuration,

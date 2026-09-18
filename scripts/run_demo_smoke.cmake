@@ -22,7 +22,7 @@ endif()
 
 set(command "${DEMO}")
 if(DEFINED SCRIPT)
-  list(APPEND command "${SCRIPT}")
+  list(APPEND command "run" "${SCRIPT}")
 endif()
 
 # The dummy drivers let this run on a CI machine with no display and no sound

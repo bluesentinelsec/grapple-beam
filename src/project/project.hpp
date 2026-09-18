@@ -6,6 +6,11 @@
 #include <string>
 #include <vector>
 
+namespace CLI
+{
+class App;
+}
+
 namespace grapple::project
 {
 struct ProcessResult
@@ -44,8 +49,21 @@ EngineRef Resolve(const NewOptions &options, const ReadUrl &get);
 void Create(const NewOptions &options, const Services &services);
 /** @brief Package a generated C desktop project with CMake and verify its payload. */
 void Package(const std::filesystem::path &directory, const RunCommand &run);
-/** @brief Parse and execute the new/package command, returning a process exit status. */
-int RunCli(int argc, char **argv);
+
+/** @brief CLI11 subcommand state for new and package. */
+struct Cli
+{
+    CLI::App *create = nullptr;
+    CLI::App *package = nullptr;
+    NewOptions options;
+    std::string destination;
+    std::string directory = ".";
+};
+
+/** @brief Register new and package on an existing CLI11 application.
+ *  @param app Parent application that already requires a subcommand.
+ *  @param cli Option storage and subcommand pointers; must outlive parse. */
+void AddCommands(CLI::App &app, Cli &cli);
 std::string Identifier(const std::string &name);
 std::string Replace(std::string text, const std::map<std::string, std::string> &values);
 void Write(const std::filesystem::path &path, const std::string &text);
