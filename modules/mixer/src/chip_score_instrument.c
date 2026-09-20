@@ -27,6 +27,13 @@ const ScoreInstrument *Chip_ScoreInstrument(ScoreReader *r, const ChipXmlNode *n
     }
     if (low < r->instrument_count && SDL_strcmp(r->instruments[low].id, id) == 0)
         return &r->instruments[low];
+    if (*id && SDL_strcmp(id, r->default_instrument) != 0)
+    {
+        if (!Chip_ScoreWarn(r, node, GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE,
+                            "unresolved instrument ID; using part default"))
+            return NULL;
+        return Chip_ScoreInstrument(r, node, r->default_instrument);
+    }
     Chip_ScoreFail(r, node, GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE, "unresolved instrument ID");
     return NULL;
 }

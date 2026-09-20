@@ -105,6 +105,10 @@ The interpreter is not a MusicXML schema validator or engraving application.
 | Bend, release, pre-bend, tremolo-bar/with-bar | Implemented/configurable | Independent continuous curves; acceleration honored; no MIDI control quantization |
 | Vibrato/wide vibrato | Approximated/configurable | Independent beat-based pitch modulation through expression API/recognized technical text |
 | Natural/artificial harmonics | Approximated/configurable | Explicit sounding pitch preferred; common base/touch pairs select partials 2–6 |
+| Note instrument ID missing from the part | Approximated | First declared instrument of the part, with a retained warning |
+| Extra harmonic base/touch marks in a sounding chord | Approximated | Keep the sounding pitch; extra visual marks warn |
+| Unpaired harmonic base or touch | Approximated | Written pitch is the sounding note |
+| Tie stop without an adjacent start, or unterminated tie | Approximated | New attack or written duration, with a warning |
 | Ambiguous harmonic or unpitched note without sound metadata | Unsupported | Exporter-omission diagnostic; display location cannot recover the missing pitch |
 | Palm mute, stopped/muted/dead/ghost notes, pizzicato | Approximated/configurable | Darker/shorter or noisy/soft attacks as appropriate |
 | Let ring | Approximated/configurable | Recognized technical text; next same-string attack (voice fallback), capped at bar end |
