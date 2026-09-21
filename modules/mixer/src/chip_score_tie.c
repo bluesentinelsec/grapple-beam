@@ -45,19 +45,28 @@ bool Chip_ResolveTies(ScoreReader *r)
                     break;
             }
             if (t == ties)
-                return Chip_ScoreError(r, n->node, "tie stop without a matching adjacent start");
-            target = active[t];
-            ScoreNote *first = &r->notes[target];
-            if ((!first->curve_first && !AppendCurve(r, first, first)) || !AppendCurve(r, first, n))
-                return false;
-            const Sint64 combined = first->duration + n->duration;
-            first->gate =
-                ((double)first->duration + (double)n->duration * n->gate) / (double)combined;
-            first->release = n->release;
-            first->duration = combined;
-            n->skipped = true;
-            n->tied_continuation = true;
-            active[t] = active[--ties];
+            {
+                if (!Chip_ScoreWarn(r, n->node, GRAPPLE_CHIP_DIAGNOSTIC_SCORE,
+                                    "tie stop without a matching start; beginning a new attack"))
+                    return false;
+                n->tie_stop = false;
+            }
+            else
+            {
+                target = active[t];
+                ScoreNote *first = &r->notes[target];
+                if ((!first->curve_first && !AppendCurve(r, first, first)) ||
+                    !AppendCurve(r, first, n))
+                    return false;
+                const Sint64 combined = first->duration + n->duration;
+                first->gate =
+                    ((double)first->duration + (double)n->duration * n->gate) / (double)combined;
+                first->release = n->release;
+                first->duration = combined;
+                n->skipped = true;
+                n->tied_continuation = true;
+                active[t] = active[--ties];
+            }
         }
         if (n->tie_start)
         {
@@ -67,7 +76,10 @@ bool Chip_ResolveTies(ScoreReader *r)
             active[ties++] = target;
         }
     }
-    return !ties || Chip_ScoreError(r, NULL, "unterminated tie");
+    if (ties && !Chip_ScoreWarn(r, NULL, GRAPPLE_CHIP_DIAGNOSTIC_SCORE,
+                                "unterminated tie; using the written duration"))
+        return false;
+    return true;
 }
 
 bool Chip_EmitTieCurves(ScoreReader *r, const ScoreNote *note, ChipEvent event)

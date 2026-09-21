@@ -239,7 +239,9 @@ and part count; callback scratch space is about 4 KiB plus voice DSP stack.
 
 Instrument IDs are indexed per part (up to 256). A declared score instrument
 without MIDI metadata uses a pitched default. The first declared instrument is
-the default for notes without an ID; lexical ID order does not change it.
+the default for notes without an ID or whose ID is not declared; lexical ID
+order does not change it. Unresolved IDs keep a cross-reference warning and
+use that default's MIDI metadata, including percussion `midi-unpitched`.
 Program, volume and pan are carried per note, so simultaneous instruments sharing
 a nominal MIDI channel do not overwrite each other's timbre or stereo placement.
 Explicit part controllers remain a separate layer. `sound/midi-instrument` changes

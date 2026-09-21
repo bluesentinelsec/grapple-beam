@@ -116,6 +116,8 @@ bool Chip_ScoreFail(ScoreReader *r, const ChipXmlNode *node, Grapple_ChipDiagnos
                     const char *message);
 bool Chip_CheckScorePerformance(ScoreReader *r, const ChipXmlNode *node);
 bool Chip_ScoreUnsupported(ScoreReader *r, const ChipXmlNode *node, const char *message);
+bool Chip_ScoreWarn(ScoreReader *r, const ChipXmlNode *node, Grapple_ChipDiagnosticCode code,
+                    const char *message);
 bool Chip_ValidateScoreReferences(ScoreReader *r, const ChipXmlNode *list);
 bool Chip_ScoreError(ScoreReader *r, const ChipXmlNode *node, const char *message);
 bool Chip_ScoreGrow(void **array, size_t *capacity, size_t count, size_t item_size);

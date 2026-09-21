@@ -157,9 +157,7 @@ TEST(ChipMusicXml, RejectsInvalidTimingPitchAndInstrumentReferences)
 {
     EXPECT_FALSE(LoadXml(Score("<measure><backup><duration>1</duration></backup></measure>")));
     EXPECT_FALSE(LoadXml(Score("<measure>" + Note("0") + "</measure>")));
-    EXPECT_FALSE(
-        LoadXml(Score("<measure>" + Note("1", "<instrument id='missing'/>") + "</measure>")));
-    EXPECT_FALSE(LoadXml(Score("<measure>" + Note("1", "<tie type='stop'/>") + "</measure>")));
+    EXPECT_TRUE(LoadXml(Score("<measure>" + Note("1", "<tie type='stop'/>") + "</measure>")));
     EXPECT_FALSE(LoadXml(Score("<measure><attributes><divisions>100000001</divisions>"
                                "</attributes>" +
                                Note("1") + "</measure>")));
@@ -825,6 +823,30 @@ TEST(ChipMusicXml, InstrumentChangesRespectOffsetsAndDocumentOrderIndependently)
     }
 }
 
+TEST(ChipMusicXml, UnresolvedInstrumentIdUsesPartDefault)
+{
+    const auto song =
+        LoadXml("<score-partwise><part-list><score-part id='P'><part-name>kit</part-name>"
+                "<score-instrument id='snare'/><midi-instrument id='snare'>"
+                "<midi-channel>10</midi-channel><midi-unpitched>39</midi-unpitched>"
+                "</midi-instrument></score-part></part-list><part id='P'><measure>"
+                "<note><unpitched/><duration>1</duration><instrument id='ghost'/></note>"
+                "<note><unpitched/><duration>1</duration><instrument id='ghost'/></note>"
+                "</measure></part></score-partwise>");
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 2u);
+    EXPECT_TRUE(notes[0].unpitched);
+    EXPECT_EQ(notes[0].a, 38);
+    EXPECT_EQ(Grapple_GetChipDiagnosticCount(song.get()), 1);
+    Grapple_ChipDiagnostic error{};
+    ASSERT_TRUE(Grapple_ReadChipDiagnostic(song.get(), 0, &error));
+    EXPECT_EQ(error.code, GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE);
+    EXPECT_EQ(error.severity, GRAPPLE_CHIP_DIAGNOSTIC_WARNING);
+    EXPECT_STREQ(Grapple_GetChipDiagnosticMessage(song.get(), 0),
+                 "unresolved instrument ID; using part default");
+}
+
 TEST(ChipMusicXml, UnpitchedMetadataChoosesDrumsOnAnyMidiChannel)
 {
     const auto song = LoadXml(
@@ -860,11 +882,13 @@ TEST(ChipMusicXml, NamedInstrumentWithoutMidiMetadataStillHasAPitchedDefault)
 
 TEST(ChipMusicXml, DifferentMicrotonalPitchesCannotBeTiedTogether)
 {
-    EXPECT_FALSE(
+    const auto song =
         LoadXml(Score("<measure>" + Note("1", "<tie type='start'/>") +
                       "<note><pitch><step>C</step><alter>0.5</alter><octave>4</octave></pitch>"
-                      "<duration>1</duration><tie type='stop'/></note></measure>")));
-    EXPECT_NE(std::string(SDL_GetError()).find("tie stop"), std::string::npos);
+                      "<duration>1</duration><tie type='stop'/></note></measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    EXPECT_EQ(Onsets(song.get()).size(), 2u);
+    EXPECT_GE(Grapple_GetChipDiagnosticCount(song.get()), 1);
 }
 
 TEST(ChipMusicXml, AllMetronomeBeatUnitsAndTiedUnitsUseQuarterBeatTempo)
@@ -960,6 +984,40 @@ TEST(ChipMusicXml, DiagnosticsIdentifyVoiceElementAndMissingReferences)
     EXPECT_FALSE(song);
     EXPECT_EQ(error.code, GRAPPLE_CHIP_DIAGNOSTIC_CROSS_REFERENCE);
     EXPECT_STREQ(error.element, "score-part");
+}
+
+TEST(ChipMusicXml, UnpairedHarmonicBaseKeepsWrittenPitch)
+{
+    const auto song = LoadXml(
+        Score("<measure>" +
+              Note("1", "<notations><technical><harmonic><natural/><base-pitch/></harmonic></"
+                        "technical></notations>") +
+              "</measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 1u);
+    EXPECT_EQ(notes[0].a, 60);
+}
+
+TEST(ChipMusicXml, ExtraHarmonicTouchingPitchKeepsSoundingNote)
+{
+    const auto song = LoadXml(Score(
+        "<measure>" +
+        Note("1", "<notations><technical><harmonic><artificial/><base-pitch/></harmonic></"
+                  "technical></notations>") +
+        "<note><chord/><pitch><step>G</step><octave>4</octave></pitch><duration>1</duration>"
+        "<notations><technical><harmonic><artificial/><touching-pitch/></harmonic></technical>"
+        "</notations></note>"
+        "<note><chord/><pitch><step>C</step><octave>5</octave></pitch><duration>1</duration>"
+        "<notations><technical><harmonic><artificial/><touching-pitch/></harmonic></technical>"
+        "</notations></note>"
+        "<note><chord/><pitch><step>C</step><octave>6</octave></pitch><duration>1</duration>"
+        "<notations><technical><harmonic><artificial/><sounding-pitch/></harmonic></technical>"
+        "</notations></note></measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 1u);
+    EXPECT_EQ(notes[0].a, 84);
 }
 
 TEST(ChipMusicXml, HarmonicBaseAndTouchProduceOneSoundingPartial)

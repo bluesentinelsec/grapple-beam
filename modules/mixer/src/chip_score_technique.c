@@ -57,31 +57,47 @@ static bool HarmonicGroup(ScoreReader *r, ScoreNote **notes, size_t count)
         if (Chip_XmlChild(harmonic, "base-pitch"))
         {
             if (base)
-                return Chip_ScoreError(r, harmonic, "ambiguous simultaneous harmonic bases");
-            base = notes[i];
+            {
+                if (!Chip_ScoreWarn(r, harmonic, GRAPPLE_CHIP_DIAGNOSTIC_SCORE,
+                                    "extra simultaneous harmonic base; using the first"))
+                    return false;
+            }
+            else
+                base = notes[i];
         }
         if (Chip_XmlChild(harmonic, "touching-pitch"))
         {
             if (touch)
-                return Chip_ScoreError(r, harmonic,
-                                       "ambiguous simultaneous harmonic touching pitches");
-            touch = notes[i];
+            {
+                if (!Chip_ScoreWarn(r, harmonic, GRAPPLE_CHIP_DIAGNOSTIC_SCORE,
+                                    "extra simultaneous harmonic touching pitch; using the first"))
+                    return false;
+            }
+            else
+                touch = notes[i];
         }
     }
     if (!base && !touch)
         return true;
     if (sounding)
     {
-        if (base)
-            base->skipped = true;
-        if (touch)
-            touch->skipped = true;
+        for (size_t i = 0; i < count; ++i)
+        {
+            const ChipXmlNode *harmonic = Harmonic(notes[i]);
+            if (Chip_XmlChild(harmonic, "base-pitch") || Chip_XmlChild(harmonic, "touching-pitch"))
+                notes[i]->skipped = true;
+        }
         return true;
     }
     if (!base || !touch)
-        return Chip_ScoreFail(
-            r, (base ? base : touch)->node, GRAPPLE_CHIP_DIAGNOSTIC_EXPORTER_OMISSION,
-            "harmonic base/touch notation needs a sounding pitch or paired pitches");
+    {
+        ScoreNote *marked = base ? base : touch;
+        if (!Chip_ScoreWarn(r, marked->node, GRAPPLE_CHIP_DIAGNOSTIC_EXPORTER_OMISSION,
+                            "unpaired harmonic mark; using the written pitch"))
+            return false;
+        return Chip_ScoreApproximation(
+            r, marked, "Unpaired harmonic mark uses the written pitch as the sounding note");
+    }
     const double interval =
         (double)touch->pitch + touch->expression.tuning - base->pitch - base->expression.tuning;
     static const int intervals[] = {12, 7, 5, 4, 3};

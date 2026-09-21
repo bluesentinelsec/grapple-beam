@@ -46,6 +46,19 @@ bool Chip_ScoreError(ScoreReader *r, const ChipXmlNode *node, const char *messag
     return Chip_ScoreFail(r, node, GRAPPLE_CHIP_DIAGNOSTIC_SCORE, message);
 }
 
+bool Chip_ScoreWarn(ScoreReader *r, const ChipXmlNode *node, Grapple_ChipDiagnosticCode code,
+                    const char *message)
+{
+    for (int i = 0; i < r->song->diagnostic_count; ++i)
+        if (r->song->diagnostics[i].code == code && r->song->diagnostics[i].part == r->part &&
+            SDL_strcmp(r->song->diagnostic_messages[i], message) == 0)
+            return true;
+    Grapple_ChipDiagnostic diagnostic = {
+        code, GRAPPLE_CHIP_DIAGNOSTIC_WARNING, r->part, r->measure, 0, 0, "", ""};
+    Chip_DiagnosticContext(&diagnostic, node);
+    return Chip_AddDiagnostic(r->song, diagnostic, message);
+}
+
 bool Chip_ScoreUnsupported(ScoreReader *r, const ChipXmlNode *node, const char *message)
 {
     char fallback[256];
