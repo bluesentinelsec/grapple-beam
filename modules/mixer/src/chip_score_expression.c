@@ -233,31 +233,51 @@ static bool Connect(ScoreReader *r, ScoreNote *n, ScoreLine *line, const ChipXml
             const char *type = Chip_XmlAttribute(c, "type");
             if (SDL_strcmp(type, "start") == 0)
             {
-                if (line->slides[number])
-                    return Chip_ScoreError(r, c, "overlapping slide with the same number");
+                if (line->slides[number] &&
+                    !Chip_ScoreWarn(
+                        r, c, GRAPPLE_CHIP_DIAGNOSTIC_SCORE,
+                        "overlapping slide with the same number; using the later start"))
+                    return false;
                 line->slides[number] = index + 1;
                 line->stepped[number] = Named(c, "glissando");
             }
             else if (SDL_strcmp(type, "stop") == 0)
             {
                 if (!line->slides[number])
-                    return Chip_ScoreError(r, c, "slide stop without matching start");
-                ScoreNote *a = &r->notes[line->slides[number] - 1];
-                if (n->start <= a->start)
-                    return Chip_ScoreError(r, c, "slide endpoint must follow its start");
-                a->duration = n->start - a->start;
-                a->gate = 1;
-                a->expression.bend_first = 0.5f;
-                a->expression.bend_middle = 1;
-                a->expression.bend_last = 1;
-                a->expression.bend_peak =
-                    (float)(n->pitch - a->pitch) + n->expression.tuning - a->expression.tuning;
-                a->expression.bend_end = a->expression.bend_peak;
-                a->expression.stepped_pitch = line->stepped[number];
-                if (!Chip_ValidExpression(&a->expression))
-                    return Chip_ScoreError(r, c, "slide exceeds synthesis pitch range");
-                n->expression.legato = true;
-                line->slides[number] = 0;
+                {
+                    if (!Chip_ScoreWarn(r, c, GRAPPLE_CHIP_DIAGNOSTIC_SCORE,
+                                        "slide stop without matching start"))
+                        return false;
+                }
+                else
+                {
+                    ScoreNote *a = &r->notes[line->slides[number] - 1];
+                    /* Grace notes share the principal's tick until later timing. */
+                    const bool grace_into_principal = a->grace && n->start == a->start;
+                    if (n->start < a->start || (n->start == a->start && !grace_into_principal))
+                    {
+                        if (!Chip_ScoreWarn(r, c, GRAPPLE_CHIP_DIAGNOSTIC_SCORE,
+                                            "slide endpoint must follow its start"))
+                            return false;
+                    }
+                    else
+                    {
+                        if (n->start > a->start)
+                            a->duration = n->start - a->start;
+                        a->gate = 1;
+                        a->expression.bend_first = 0.5f;
+                        a->expression.bend_middle = 1;
+                        a->expression.bend_last = 1;
+                        a->expression.bend_peak = (float)(n->pitch - a->pitch) +
+                                                  n->expression.tuning - a->expression.tuning;
+                        a->expression.bend_end = a->expression.bend_peak;
+                        a->expression.stepped_pitch = line->stepped[number];
+                        if (!Chip_ValidExpression(&a->expression))
+                            return Chip_ScoreError(r, c, "slide exceeds synthesis pitch range");
+                        n->expression.legato = true;
+                    }
+                    line->slides[number] = 0;
+                }
             }
         }
         if (!Connect(r, n, line, c->children, index))
@@ -307,7 +327,11 @@ bool Chip_ResolveNoteExpression(ScoreReader *r)
     for (size_t i = 0; ok && i < count; ++i)
         for (int n = 0; ok && n < 16; ++n)
             if (lines[i].slides[n])
-                ok = Chip_ScoreError(r, NULL, "unterminated slide");
+            {
+                r->part = lines[i].part;
+                if (!Chip_ScoreWarn(r, NULL, GRAPPLE_CHIP_DIAGNOSTIC_SCORE, "unterminated slide"))
+                    ok = false;
+            }
     SDL_free(lines);
     return ok;
 }

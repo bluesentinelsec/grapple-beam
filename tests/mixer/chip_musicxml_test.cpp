@@ -481,8 +481,36 @@ TEST(ChipMusicXml, SlidesAndSlursFollowLogicalVoices)
     EXPECT_EQ(slide.lane, target.lane);
     EXPECT_TRUE(target.legato);
     EXPECT_FALSE(other.legato);
-    EXPECT_FALSE(LoadXml(Score(
-        "<measure>" + Note("1", "<notations><slide type='stop'/></notations>") + "</measure>")));
+}
+
+TEST(ChipMusicXml, UnmatchedSlideStopKeepsTheWrittenNote)
+{
+    const auto song = LoadXml(Score(
+        "<measure>" + Note("1", "<notations><slide type='stop'/></notations>") + "</measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    EXPECT_EQ(Onsets(song.get()).size(), 1u);
+    EXPECT_GE(Grapple_GetChipDiagnosticCount(song.get()), 1);
+    EXPECT_STREQ(Grapple_GetChipDiagnosticMessage(song.get(), 0),
+                 "slide stop without matching start");
+}
+
+TEST(ChipMusicXml, GraceNoteSlideIntoPrincipalKeepsThePitchBend)
+{
+    const auto song = LoadXml(
+        Score("<measure>"
+              "<note><grace slash='yes'/><pitch><step>G</step><octave>5</octave></pitch>"
+              "<voice>1</voice><notations><slide type='start'/></notations></note>"
+              "<note><pitch><step>F</step><octave>5</octave></pitch><duration>1</duration>"
+              "<voice>1</voice><notations><slide type='stop'/></notations></note></measure>"));
+    ASSERT_TRUE(song) << SDL_GetError();
+    const auto notes = Onsets(song.get());
+    ASSERT_EQ(notes.size(), 2u);
+    EXPECT_EQ(notes[0].a, 79);
+    EXPECT_EQ(notes[1].a, 77);
+    ASSERT_GT(notes[0].expression, 0u);
+    const auto &slide = song->expressions[notes[0].expression - 1];
+    EXPECT_FLOAT_EQ(slide.bend_end, -2);
+    EXPECT_TRUE(song->expressions[notes[1].expression - 1].legato);
 }
 
 TEST(ChipMusicXml, ExplicitAttackReleaseOffsetsPreserveFractionalDurations)
