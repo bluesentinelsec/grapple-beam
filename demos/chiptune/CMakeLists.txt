@@ -6,7 +6,7 @@ grapple_set_project_warnings(chiptune_demo)
 
 add_executable(chiptune_player player.c)
 set_target_properties(chiptune_player PROPERTIES OUTPUT_NAME chiptune-player)
-target_link_libraries(chiptune_player PRIVATE Grapple::Engine Grapple::Mixer Grapple::TTF)
+target_link_libraries(chiptune_player PRIVATE Grapple::Engine Grapple::Mixer Grapple::TTF Grapple::GUI)
 grapple_set_project_warnings(chiptune_player)
 
 if(GRAPPLE_BEAM_BUILD_TESTS)

@@ -114,3 +114,33 @@ TEST(ChipStyle, SetChipPartNoiseSucceeds)
     EXPECT_TRUE(Grapple_SetChipPart(composer, 0, "fx", GRAPPLE_CHIP_PRESET_NOISE, 1));
     Grapple_DestroyChipComposer(composer);
 }
+
+TEST(ChipStyle, RoleControlsAndPhaserRoundTrip)
+{
+    Grapple_ChipComposer *composer = Grapple_CreateChipComposer(1, 480);
+    ASSERT_TRUE(composer);
+    ASSERT_TRUE(Grapple_SetChipPart(composer, 0, "lead", GRAPPLE_CHIP_PRESET_LEAD, 1));
+    Grapple_ChipNote note{0, 60, 90, 0, 480};
+    ASSERT_TRUE(Grapple_AddChipNote(composer, &note));
+    Song song(Grapple_BuildChipSong(composer, 480), Grapple_DestroyChipSong);
+    Grapple_DestroyChipComposer(composer);
+    ASSERT_TRUE(song);
+    Player player(Grapple_CreateChipPlayer(song.get(), 8000, 8, false), Grapple_DestroyChipPlayer);
+    ASSERT_TRUE(player);
+    Grapple_ChipRoleControls controls{};
+    ASSERT_TRUE(Grapple_ReadChipRoleControls(player.get(), GRAPPLE_CHIP_PRESET_LEAD, &controls));
+    controls.level = 1.25f;
+    controls.duty = 0.25f;
+    controls.effects.phaser = 0.4f;
+    controls.effects.flanger = 0.3f;
+    ASSERT_TRUE(Grapple_SetChipRoleControls(player.get(), GRAPPLE_CHIP_PRESET_LEAD, &controls))
+        << SDL_GetError();
+    Grapple_ChipRoleControls again{};
+    ASSERT_TRUE(Grapple_ReadChipRoleControls(player.get(), GRAPPLE_CHIP_PRESET_LEAD, &again));
+    EXPECT_FLOAT_EQ(again.level, 1.25f);
+    EXPECT_FLOAT_EQ(again.duty, 0.25f);
+    EXPECT_FLOAT_EQ(again.effects.phaser, 0.4f);
+    EXPECT_FLOAT_EQ(again.effects.flanger, 0.3f);
+    std::vector<float> pcm(256);
+    EXPECT_GT(Grapple_RenderChipPlayer(player.get(), pcm.data(), 128), 0);
+}

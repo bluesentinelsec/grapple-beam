@@ -593,7 +593,24 @@ extern "C"
                                0.5 (eighths). */
         float
             pulse_depth; /**< Harmony amplitude pulse depth, 0..1; zero leaves sustained volume. */
+        float phaser;    /**< All-pass phaser wet mix, 0..1. */
+        float flanger;   /**< Short modulated delay wet mix, 0..1. */
     } Grapple_ChipEffects;
+
+    /** @brief Live instrument knobs for one role in the active style. */
+    typedef struct Grapple_ChipRoleControls
+    {
+        float level;                 /**< Voice amplitude, 0..2. */
+        float attack_ms;             /**< Envelope attack, 0..2000. */
+        float decay_ms;              /**< Envelope decay, 0..4000. */
+        float sustain;               /**< Envelope sustain, 0..1. */
+        float release_ms;            /**< Envelope release, 0..4000. */
+        float duty;                  /**< Pulse width, 0.05..0.95. */
+        float pwm;                   /**< Pulse-width LFO depth, 0..1. */
+        float vibrato;               /**< Pitch LFO depth, 0..1. */
+        float cutoff_hz;             /**< Filter cutoff, 0..20000. */
+        Grapple_ChipEffects effects; /**< Shared role effect bus. */
+    } Grapple_ChipRoleControls;
 
     /** @brief Independent game mix controls; pan balances the imported stereo image. */
     typedef struct Grapple_ChipTrackMix
@@ -732,6 +749,22 @@ extern "C"
      */
     extern bool Grapple_SetChipPresetEffects(Grapple_ChipPlayer *player, Grapple_ChipPreset preset,
                                              const Grapple_ChipEffects *effects);
+    /**
+     * @brief Read the live instrument knobs for one role on a player.
+     * @param player Live player. @param preset LEAD through LAST.
+     * @param controls Caller-owned output.
+     * @return True, or false with SDL_GetError().
+     */
+    extern bool Grapple_ReadChipRoleControls(Grapple_ChipPlayer *player, Grapple_ChipPreset preset,
+                                             Grapple_ChipRoleControls *controls);
+    /**
+     * @brief Apply instrument knobs to one role. New notes use the values immediately.
+     * @param player Live player. @param preset LEAD through LAST.
+     * @param controls Copied settings.
+     * @return True, or false with SDL_GetError().
+     */
+    extern bool Grapple_SetChipRoleControls(Grapple_ChipPlayer *player, Grapple_ChipPreset preset,
+                                            const Grapple_ChipRoleControls *controls);
     /**
      * @brief Play through a player-owned mixer on the default audio device.
      * @param player Player to start or resume. Initialize SDL audio and MIX_Init first.

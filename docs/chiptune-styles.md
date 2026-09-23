@@ -53,11 +53,16 @@ Minimal file (`lead`, `harmony`, `bass`, `drums` required). Effects default dry:
 
 Unknown keys fail the load. `voice: sample` is reserved.
 
-## Player
+## Player / mixer
 
 ```sh
 ./build/debug/bin/chiptune-player /path/to/score.xml
 ```
 
-Space play/pause, arrows seek, R/Home restart, N next MusicXML in the same
-directory, L loop, 1–6 styles, Esc quit.
+The window is a 1920×1080 design surface (scales to 4K). Each track has a
+volume slider with a numeric readout (0.00–2.00). Those mix values are stored
+**per style**, so switching 1–6 restores that palette's volumes. Reverb, chorus,
+delay, phaser and flanger are per-track. **Edit instrument** loads ADSR / duty /
+PWM knobs for that track's role; those edits also stick to the current style.
+
+Space play/pause, arrows seek, R/Home restart, N next file, L loop, 1–6 styles.

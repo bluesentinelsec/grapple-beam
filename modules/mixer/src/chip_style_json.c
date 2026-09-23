@@ -168,7 +168,9 @@ static bool ParseEffects(const cJSON *node, Grapple_ChipEffects *e, Grapple_Chip
         !ReadNumber(node, "delay_feedback", &e->delay_feedback, 0, 0.85f, true) ||
         !ReadNumber(node, "reverb", &e->reverb, 0, 1, true) ||
         !ReadNumber(node, "motion", &e->motion, 0, 1, true) ||
-        !ReadNumber(node, "pulse_depth", &e->pulse_depth, 0, 1, true))
+        !ReadNumber(node, "pulse_depth", &e->pulse_depth, 0, 1, true) ||
+        !ReadNumber(node, "phaser", &e->phaser, 0, 1, true) ||
+        !ReadNumber(node, "flanger", &e->flanger, 0, 1, true))
         return false;
     const cJSON *pb = Get(node, "pulse_beats");
     if (pb)

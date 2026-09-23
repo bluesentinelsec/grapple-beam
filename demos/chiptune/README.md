@@ -21,7 +21,7 @@ After `make`, run from the repository root:
 # A second positional argument exports a WAV instead of opening a device/window.
 ./build/debug/bin/chiptune-demo tests/mixer/assets/c64-composition-named.xml build/c64-demo.wav
 
-# Interactive player: loop, seek, next file, keys 1-6 for styles.
+# Mixer/editor: per-track volume and effects, per-style mix memory, instrument knobs.
 ./build/debug/bin/chiptune-player tests/mixer/assets/c64-composition-named.xml
 ```
 
