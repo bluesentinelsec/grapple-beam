@@ -9,6 +9,7 @@
 #include <grapple/engine.h>
 #include <grapple/engine_input.h>
 #include <grapple/gui.h>
+#include <grapple/gui_grid.h>
 #include <grapple/widgets.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -64,16 +65,8 @@ typedef struct MusicPlayer
     Grapple_UiWidget *position_label;
     Grapple_UiWidget *style_radio;
     Grapple_UiWidget *loop_check;
-    Grapple_UiWidget *tracks_row;
-    Grapple_UiWidget *vol_label[PLAYER_MAX_TRACKS];
-    Grapple_UiWidget *vol_slider[PLAYER_MAX_TRACKS];
-    Grapple_UiWidget *fx_label[PLAYER_MAX_TRACKS][5];
-    Grapple_UiWidget *fx_slider[PLAYER_MAX_TRACKS][5];
     Grapple_UiWidget *knob_label[9];
     Grapple_UiWidget *knob_slider[9];
-    Bind vol_bind[PLAYER_MAX_TRACKS];
-    Bind fx_bind[PLAYER_MAX_TRACKS][5];
-    Bind select_bind[PLAYER_MAX_TRACKS];
     Bind knob_bind[9];
 } MusicPlayer;
 
@@ -88,6 +81,8 @@ static void FormatValue(char *out, size_t cap, float value)
 {
     SDL_snprintf(out, cap, "%.2f", (double)value);
 }
+
+static void SetStatus(MusicPlayer *mp, const char *text);
 
 static bool HasScoreExt(const char *name)
 {
@@ -254,7 +249,6 @@ static void RestoreStyleEdits(MusicPlayer *mp)
 }
 
 static void RefreshKnobLabels(MusicPlayer *mp);
-static void RebuildTracks(MusicPlayer *mp);
 
 static void LoadKnobsFromTrack(MusicPlayer *mp)
 {
@@ -289,7 +283,6 @@ static void ApplyStyle(MusicPlayer *mp, int index)
         SDL_snprintf(mp->status, sizeof(mp->status), "style %d: %s", index + 1, info.name);
         if (mp->style_radio)
             Grapple_UiSetSelected(mp->style_radio, index);
-        RebuildTracks(mp);
         LoadKnobsFromTrack(mp);
     }
     if (mp->status_label)
@@ -300,53 +293,6 @@ static void OnStyle(Grapple_UiWidget *widget, void *user)
 {
     MusicPlayer *mp = user;
     ApplyStyle(mp, Grapple_UiSelected(widget));
-}
-
-static void OnVolume(Grapple_UiWidget *widget, void *user)
-{
-    Bind *bind = user;
-    MusicPlayer *mp = bind->mp;
-    const float gain = Grapple_UiValue(widget);
-    mp->styles[mp->style_index].tracks[bind->track].gain = gain;
-    ApplyTrackAudio(mp, bind->track);
-    char text[32];
-    FormatValue(text, sizeof(text), gain);
-    if (mp->vol_label[bind->track])
-        Grapple_UiSetText(mp->vol_label[bind->track], text);
-    const Grapple_ChipTrackInfo *info =
-        mp->song ? Grapple_GetChipTrackInfo(mp->song, bind->track) : NULL;
-    SDL_snprintf(mp->status, sizeof(mp->status), "%s volume %s (style %s)",
-                 info && info->name[0] ? info->name : "track", text, kStyleIds[mp->style_index]);
-    if (mp->status_label)
-        Grapple_UiSetText(mp->status_label, mp->status);
-}
-
-static void OnFx(Grapple_UiWidget *widget, void *user)
-{
-    Bind *bind = user;
-    MusicPlayer *mp = bind->mp;
-    TrackState *st = &mp->styles[mp->style_index].tracks[bind->track];
-    *FxField(&st->fx, bind->field) = Grapple_UiValue(widget);
-    if (bind->field == 2 && st->fx.delay > 0 && st->fx.delay_beats <= 0)
-        st->fx.delay_beats = 0.5;
-    st->has_fx = true;
-    ApplyTrackAudio(mp, bind->track);
-    char text[48];
-    FormatValue(text, sizeof(text), Grapple_UiValue(widget));
-    if (mp->fx_label[bind->track][bind->field])
-        Grapple_UiSetText(mp->fx_label[bind->track][bind->field], text);
-    SDL_snprintf(mp->status, sizeof(mp->status), "track %d %s %s (style %s)", bind->track + 1,
-                 kFxNames[bind->field], text, kStyleIds[mp->style_index]);
-    if (mp->status_label)
-        Grapple_UiSetText(mp->status_label, mp->status);
-}
-
-static void OnSelectTrack(Grapple_UiWidget *widget, void *user)
-{
-    (void)widget;
-    Bind *bind = user;
-    bind->mp->selected_track = bind->track;
-    LoadKnobsFromTrack(bind->mp);
 }
 
 static void OnKnob(Grapple_UiWidget *widget, void *user)
@@ -435,39 +381,116 @@ static Grapple_UiWidget *AddLabeledSlider(Grapple_UiWidget *parent, const char *
     return slider;
 }
 
-static void RebuildTracks(MusicPlayer *mp)
+static void DrawMixer(struct nk_context *ctx, void *user)
 {
-    if (!mp->tracks_row || !mp->song)
+    MusicPlayer *mp = user;
+    const int tracks = mp->track_count;
+    if (!ctx)
         return;
-    Grapple_UiClear(mp->tracks_row);
-    SDL_zero(mp->vol_label);
-    SDL_zero(mp->vol_slider);
-    SDL_zero(mp->fx_label);
-    SDL_zero(mp->fx_slider);
-    mp->track_count = TrackCount(mp);
-    for (int i = 0; i < mp->track_count; ++i)
+    if (tracks <= 0)
     {
-        const Grapple_ChipTrackInfo *info = Grapple_GetChipTrackInfo(mp->song, i);
-        TrackState *st = &mp->styles[mp->style_index].tracks[i];
-        Grapple_UiWidget *col =
-            Grapple_UiColumn(mp->tracks_row, &(Grapple_UiStripDef){.spacing = 4});
-        Grapple_UiLabel(col,
-                        &(Grapple_UiLabelDef){.text = info && info->name[0] ? info->name : "Track",
-                                              .align = GRAPPLE_UI_CENTER});
-        mp->vol_bind[i] = (Bind){mp, i, 0};
-        mp->vol_slider[i] = AddLabeledSlider(col, "Volume", 0, 2, st->gain, OnVolume,
-                                             &mp->vol_bind[i], &mp->vol_label[i]);
-        for (int f = 0; f < 5; ++f)
-        {
-            mp->fx_bind[i][f] = (Bind){mp, i, f};
-            mp->fx_slider[i][f] = AddLabeledSlider(col, kFxNames[f], 0, 1, *FxField(&st->fx, f),
-                                                   OnFx, &mp->fx_bind[i][f], &mp->fx_label[i][f]);
-        }
-        mp->select_bind[i] = (Bind){mp, i, 0};
-        Grapple_UiButton(col, &(Grapple_UiButtonDef){.text = "Edit instrument",
-                                                     .on_click = OnSelectTrack,
-                                                     .user = &mp->select_bind[i]});
+        nk_layout_row_dynamic(ctx, 28, 1);
+        nk_label(ctx, "No tracks loaded.", NK_TEXT_LEFT);
+        return;
     }
+
+    Grapple_Gui *gui = mp->ui ? Grapple_UiGui(mp->ui) : NULL;
+    const float row = gui ? Grapple_GuiFontHeight(gui) * 1.85f : 28.0f;
+    Grapple_GuiGrid grid;
+    const int cols = tracks + 1;
+    if (!Grapple_GuiGridBegin(ctx, &grid, cols, NULL, row))
+        return;
+    Grapple_GuiGridSpacing(&grid, 10.0f, 8.0f);
+
+    Grapple_GuiGridCell(&grid);
+    nk_label(ctx, "Track", NK_TEXT_LEFT);
+    for (int i = 0; i < tracks; ++i)
+    {
+        const Grapple_ChipTrackInfo *info = mp->song ? Grapple_GetChipTrackInfo(mp->song, i) : NULL;
+        Grapple_GuiGridCell(&grid);
+        nk_label(ctx, info && info->name[0] ? info->name : "Track", NK_TEXT_CENTERED);
+    }
+
+    Grapple_GuiGridCell(&grid);
+    nk_label(ctx, "Volume 0-2", NK_TEXT_LEFT);
+    for (int i = 0; i < tracks; ++i)
+    {
+        TrackState *st = &mp->styles[mp->style_index].tracks[i];
+        float gain = st->gain;
+        Grapple_GuiGridCell(&grid);
+        if (nk_slider_float(ctx, 0.0f, &gain, 2.0f, 0.01f))
+        {
+            st->gain = gain;
+            ApplyTrackAudio(mp, i);
+            char text[32];
+            FormatValue(text, sizeof(text), gain);
+            const Grapple_ChipTrackInfo *info =
+                mp->song ? Grapple_GetChipTrackInfo(mp->song, i) : NULL;
+            SDL_snprintf(mp->status, sizeof(mp->status), "%s volume %s (style %s)",
+                         info && info->name[0] ? info->name : "track", text,
+                         kStyleIds[mp->style_index]);
+            SetStatus(mp, mp->status);
+        }
+    }
+
+    Grapple_GuiGridCell(&grid);
+    nk_label(ctx, "", NK_TEXT_LEFT);
+    for (int i = 0; i < tracks; ++i)
+    {
+        char text[16];
+        FormatValue(text, sizeof(text), mp->styles[mp->style_index].tracks[i].gain);
+        Grapple_GuiGridCell(&grid);
+        nk_label(ctx, text, NK_TEXT_CENTERED);
+    }
+
+    for (int f = 0; f < 5; ++f)
+    {
+        Grapple_GuiGridCell(&grid);
+        nk_label(ctx, kFxNames[f], NK_TEXT_LEFT);
+        for (int i = 0; i < tracks; ++i)
+        {
+            TrackState *st = &mp->styles[mp->style_index].tracks[i];
+            float *field = FxField(&st->fx, f);
+            float value = *field;
+            Grapple_GuiGridCell(&grid);
+            if (nk_slider_float(ctx, 0.0f, &value, 1.0f, 0.01f))
+            {
+                *field = value;
+                if (f == 2 && st->fx.delay > 0 && st->fx.delay_beats <= 0)
+                    st->fx.delay_beats = 0.5;
+                st->has_fx = true;
+                ApplyTrackAudio(mp, i);
+                char text[32];
+                FormatValue(text, sizeof(text), value);
+                SDL_snprintf(mp->status, sizeof(mp->status), "track %d %s %s (style %s)", i + 1,
+                             kFxNames[f], text, kStyleIds[mp->style_index]);
+                SetStatus(mp, mp->status);
+            }
+        }
+
+        Grapple_GuiGridCell(&grid);
+        nk_label(ctx, "", NK_TEXT_LEFT);
+        for (int i = 0; i < tracks; ++i)
+        {
+            char text[16];
+            FormatValue(text, sizeof(text), *FxField(&mp->styles[mp->style_index].tracks[i].fx, f));
+            Grapple_GuiGridCell(&grid);
+            nk_label(ctx, text, NK_TEXT_CENTERED);
+        }
+    }
+
+    Grapple_GuiGridCell(&grid);
+    nk_label(ctx, "Instrument", NK_TEXT_LEFT);
+    for (int i = 0; i < tracks; ++i)
+    {
+        Grapple_GuiGridCell(&grid);
+        if (nk_button_label(ctx, mp->selected_track == i ? "Editing" : "Edit"))
+        {
+            mp->selected_track = i;
+            LoadKnobsFromTrack(mp);
+        }
+    }
+    Grapple_GuiGridEnd(&grid);
 }
 
 static bool LoadCurrent(MusicPlayer *mp);
@@ -780,6 +803,16 @@ static void DrawUi(void *user)
     Grapple_GuiPushStyleColor(gui, GRAPPLE_GUI_COLOR_BUTTON_HOVER, (SDL_Color){64, 92, 128, 255});
     Grapple_GuiPushStyleColor(gui, GRAPPLE_GUI_COLOR_BUTTON_TEXT, (SDL_Color){236, 240, 248, 255});
     Grapple_GuiPushStyleColor(gui, GRAPPLE_GUI_COLOR_HEADER, (SDL_Color){28, 32, 44, 255});
+    struct nk_context *ctx = Grapple_GuiContext(gui);
+    if (ctx)
+    {
+        ctx->style.slider.bar_normal = nk_rgb(48, 56, 72);
+        ctx->style.slider.bar_hover = nk_rgb(64, 80, 104);
+        ctx->style.slider.bar_filled = nk_rgb(70, 150, 220);
+        ctx->style.slider.cursor_normal = nk_style_item_color(nk_rgb(230, 236, 248));
+        ctx->style.slider.cursor_hover = nk_style_item_color(nk_rgb(255, 255, 255));
+        ctx->style.slider.cursor_active = nk_style_item_color(nk_rgb(120, 200, 255));
+    }
     Grapple_UiDraw(mp->ui);
     Grapple_GuiPopStyleColor(gui, 6);
 }
@@ -793,9 +826,12 @@ static bool BuildUi(MusicPlayer *mp)
     Grapple_EngineSetEventSink(mp->engine, &sink);
     Grapple_EngineSetOverlay(mp->engine, DrawUi, mp);
 
-    Grapple_UiWidget *panel = Grapple_UiPanel(
-        mp->ui, &(Grapple_UiPanelDef){
-                    .title = "Chiptune mixer", .fill = true, .padding = 14, .spacing = 8});
+    Grapple_UiWidget *panel =
+        Grapple_UiPanel(mp->ui, &(Grapple_UiPanelDef){.title = "Chiptune mixer",
+                                                      .fill = true,
+                                                      .padding = 14,
+                                                      .spacing = 8,
+                                                      .scrollable = true});
     Grapple_UiSetPanelColors(panel, (SDL_Color){18, 20, 28, 255}, (SDL_Color){226, 230, 240, 255});
 
     Grapple_UiLabel(panel, &(Grapple_UiLabelDef){.text = "MusicXML instrument editor"});
@@ -825,10 +861,11 @@ static bool BuildUi(MusicPlayer *mp)
                                                        .user = mp,
                                                        .height = GRAPPLE_UI_EM(2.0f)});
 
-    Grapple_UiWidget *body =
-        Grapple_UiRow(panel, &(Grapple_UiStripDef){.height = GRAPPLE_UI_STRETCH, .spacing = 12});
-    mp->tracks_row = Grapple_UiRow(body, &(Grapple_UiStripDef){.spacing = 10});
-    Grapple_UiWidget *inst = Grapple_UiColumn(body, &(Grapple_UiStripDef){.spacing = 4});
+    Grapple_UiLabel(panel, &(Grapple_UiLabelDef){.text = "Per-track mix (volume 0.00-2.00)"});
+    Grapple_UiRaw(
+        panel, &(Grapple_UiRawDef){.draw = DrawMixer, .user = mp, .height = GRAPPLE_UI_EM(24.0f)});
+
+    Grapple_UiWidget *inst = Grapple_UiColumn(panel, &(Grapple_UiStripDef){.spacing = 4});
     Grapple_UiLabel(inst, &(Grapple_UiLabelDef){.text = "Instrument (selected track)"});
     const float knob_min[] = {0, 0, 0, 0, 0, 0.05f, 0, 0, 0};
     const float knob_max[] = {2, 400, 800, 1, 800, 0.95f, 1, 0.02f, 8000};
@@ -840,7 +877,6 @@ static bool BuildUi(MusicPlayer *mp)
             AddLabeledSlider(inst, kKnobNames[i], knob_min[i], knob_max[i], knob_def[i], OnKnob,
                              &mp->knob_bind[i], &mp->knob_label[i]);
     }
-    RebuildTracks(mp);
     LoadKnobsFromTrack(mp);
     return true;
 }
