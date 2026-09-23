@@ -10,6 +10,7 @@
 #include <grapple/engine_input.h>
 #include <grapple/gui.h>
 #include <grapple/widgets.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -522,6 +523,252 @@ static void OnLoop(Grapple_UiWidget *w, void *user)
     Grapple_SetChipPlayerLoop(mp->player, 0, info->duration_ticks, mp->loop);
 }
 
+static const char *RoleName(Grapple_ChipPreset preset)
+{
+    switch (preset)
+    {
+    case GRAPPLE_CHIP_PRESET_LEAD:
+        return "lead";
+    case GRAPPLE_CHIP_PRESET_BASS:
+        return "bass";
+    case GRAPPLE_CHIP_PRESET_CHORD:
+        return "chord";
+    case GRAPPLE_CHIP_PRESET_RING:
+        return "harmony";
+    case GRAPPLE_CHIP_PRESET_DRUMS:
+        return "drums";
+    case GRAPPLE_CHIP_PRESET_NOISE:
+        return "noise";
+    default:
+        return "lead";
+    }
+}
+
+static const char *TempDirectory(void)
+{
+#ifdef _WIN32
+    const char *dir = SDL_getenv("TEMP");
+    if (!dir || !*dir)
+        dir = SDL_getenv("TMP");
+#else
+    const char *dir = SDL_getenv("TMPDIR");
+#endif
+    if (dir && *dir)
+        return dir;
+#ifdef _WIN32
+    return ".";
+#else
+    return "/tmp";
+#endif
+}
+
+static void JoinPath(char *out, size_t cap, const char *dir, const char *file)
+{
+    const size_t n = SDL_strlen(dir);
+    const bool slash = n > 0 && (dir[n - 1] == '/' || dir[n - 1] == '\\');
+#ifdef _WIN32
+    const char sep = '\\';
+#else
+    const char sep = '/';
+#endif
+    if (slash)
+        SDL_snprintf(out, cap, "%s%s", dir, file);
+    else
+        SDL_snprintf(out, cap, "%s%c%s", dir, sep, file);
+}
+
+typedef struct DumpBuf
+{
+    char *data;
+    size_t size;
+    size_t cap;
+    bool ok;
+} DumpBuf;
+
+static void DumpAppend(DumpBuf *buf, SDL_PRINTF_FORMAT_STRING const char *fmt, ...)
+{
+    if (!buf->ok)
+        return;
+    va_list ap;
+    va_start(ap, fmt);
+    const int need = SDL_vsnprintf(NULL, 0, fmt, ap);
+    va_end(ap);
+    if (need < 0)
+    {
+        buf->ok = false;
+        return;
+    }
+    const size_t want = buf->size + (size_t)need + 1;
+    if (want > buf->cap)
+    {
+        size_t cap = buf->cap ? buf->cap * 2 : 4096;
+        while (cap < want)
+            cap *= 2;
+        char *grown = (char *)SDL_realloc(buf->data, cap);
+        if (!grown)
+        {
+            buf->ok = false;
+            return;
+        }
+        buf->data = grown;
+        buf->cap = cap;
+    }
+    va_start(ap, fmt);
+    SDL_vsnprintf(buf->data + buf->size, buf->cap - buf->size, fmt, ap);
+    va_end(ap);
+    buf->size += (size_t)need;
+}
+
+static void DumpEffects(DumpBuf *buf, const Grapple_ChipEffects *fx, int indent)
+{
+    DumpAppend(
+        buf,
+        "%*s\"reverb\": %.4g,\n%*s\"chorus\": %.4g,\n%*s\"delay\": %.4g,\n%*s\"delay_beats\": "
+        "%.4g,\n%*s\"delay_feedback\": %.4g,\n%*s\"phaser\": %.4g,\n%*s\"flanger\": %.4g",
+        indent, "", (double)fx->reverb, indent, "", (double)fx->chorus, indent, "",
+        (double)fx->delay, indent, "", fx->delay_beats, indent, "", (double)fx->delay_feedback,
+        indent, "", (double)fx->phaser, indent, "", (double)fx->flanger);
+}
+
+static void DumpRole(DumpBuf *buf, const Grapple_ChipRoleControls *c, const char *name)
+{
+    DumpAppend(buf,
+               "      \"%s\": {\n        \"level\": %.4g,\n        \"attack_ms\": %.4g,\n        "
+               "\"decay_ms\": %.4g,\n        \"sustain\": %.4g,\n        \"release_ms\": %.4g,\n   "
+               "     \"duty\": %.4g,\n        \"pwm\": %.4g,\n        \"vibrato\": %.4g,\n        "
+               "\"cutoff_hz\": %.4g,\n        \"effects\": {\n",
+               name, (double)c->level, (double)c->attack_ms, (double)c->decay_ms,
+               (double)c->sustain, (double)c->release_ms, (double)c->duty, (double)c->pwm,
+               (double)c->vibrato, (double)c->cutoff_hz);
+    DumpEffects(buf, &c->effects, 10);
+    DumpAppend(buf, "\n        }\n      }");
+}
+
+static void DumpJsonEscape(DumpBuf *buf, const char *text)
+{
+    for (const unsigned char *p = (const unsigned char *)(text ? text : ""); *p; ++p)
+    {
+        if (*p == '\\' || *p == '"')
+            DumpAppend(buf, "\\%c", *p);
+        else if (*p == '\n')
+            DumpAppend(buf, "\\n");
+        else if (*p < 32)
+            DumpAppend(buf, " ");
+        else
+            DumpAppend(buf, "%c", *p);
+    }
+}
+
+static bool WriteConfigDump(MusicPlayer *mp, char *path, size_t path_cap)
+{
+    DumpBuf buf = {.ok = true};
+    const char *score = (mp->list.count && mp->list.paths) ? mp->list.paths[mp->list.index] : "";
+    Grapple_ChipStyleInfo style = {0};
+    if (mp->player)
+        Grapple_GetChipPlayerStyleInfo(mp->player, &style);
+    DumpAppend(&buf, "{\n  \"app\": \"chiptune-player\",\n  \"score\": \"");
+    DumpJsonEscape(&buf, score);
+    DumpAppend(
+        &buf, "\",\n  \"loop\": %s,\n  \"current_style\": {\n    \"id\": \"%s\",\n    \"name\": \"",
+        mp->loop ? "true" : "false", kStyleIds[mp->style_index]);
+    DumpJsonEscape(&buf, style.name);
+    DumpAppend(&buf, "\"\n  },\n  \"tracks\": [\n");
+    for (int i = 0; i < mp->track_count; ++i)
+    {
+        const Grapple_ChipTrackInfo *info = mp->song ? Grapple_GetChipTrackInfo(mp->song, i) : NULL;
+        const TrackState *st = &mp->styles[mp->style_index].tracks[i];
+        const Grapple_ChipPreset role = TrackRole(mp, i);
+        DumpAppend(&buf, "    {\n      \"index\": %d,\n      \"name\": \"", i);
+        DumpJsonEscape(&buf, info && info->name[0] ? info->name : "Track");
+        DumpAppend(&buf,
+                   "\",\n      \"role\": \"%s\",\n      \"volume\": %.4g,\n      \"effects\": {\n",
+                   RoleName(role), (double)st->gain);
+        DumpEffects(&buf, &st->fx, 8);
+        DumpAppend(&buf, "\n      }\n    }%s\n", i + 1 < mp->track_count ? "," : "");
+    }
+    DumpAppend(&buf, "  ],\n  \"roles\": {\n");
+    bool first_role = true;
+    for (int p = GRAPPLE_CHIP_PRESET_FIRST; p <= GRAPPLE_CHIP_PRESET_LAST; ++p)
+    {
+        Grapple_ChipRoleControls c = {0};
+        if (!mp->player || !Grapple_ReadChipRoleControls(mp->player, (Grapple_ChipPreset)p, &c))
+            continue;
+        if (!first_role)
+            DumpAppend(&buf, ",\n");
+        first_role = false;
+        DumpRole(&buf, &c, RoleName((Grapple_ChipPreset)p));
+    }
+    DumpAppend(&buf, "\n  },\n  \"remembered_styles\": {\n");
+    bool first_style = true;
+    for (int s = 0; s < PLAYER_STYLES; ++s)
+    {
+        if (!mp->styles[s].used)
+            continue;
+        if (!first_style)
+            DumpAppend(&buf, ",\n");
+        first_style = false;
+        DumpAppend(&buf, "    \"%s\": {\n      \"tracks\": [\n", kStyleIds[s]);
+        const int n = mp->track_count;
+        for (int i = 0; i < n; ++i)
+        {
+            const TrackState *st = &mp->styles[s].tracks[i];
+            DumpAppend(&buf, "        {\"index\": %d, \"volume\": %.4g}%s\n", i, (double)st->gain,
+                       i + 1 < n ? "," : "");
+        }
+        DumpAppend(&buf, "      ]\n    }");
+    }
+    DumpAppend(&buf, "\n  }\n}\n");
+    if (!buf.ok || !buf.data)
+    {
+        SDL_free(buf.data);
+        return false;
+    }
+
+    char dir[1024];
+    JoinPath(dir, sizeof(dir), TempDirectory(), "chiptune-player");
+    SDL_CreateDirectory(dir);
+    const Uint64 now = SDL_GetTicks();
+    char file[128];
+    SDL_snprintf(file, sizeof(file), "config-%s-%" SDL_PRIu64 ".json", kStyleIds[mp->style_index],
+                 now);
+    JoinPath(path, path_cap, dir, file);
+    const bool saved = SDL_SaveFile(path, buf.data, buf.size);
+    SDL_free(buf.data);
+    return saved;
+}
+
+static void SetStatus(MusicPlayer *mp, const char *text)
+{
+    SDL_strlcpy(mp->status, text, sizeof(mp->status));
+    if (mp->status_label)
+        Grapple_UiSetText(mp->status_label, mp->status);
+}
+
+static void OnDumpConfig(Grapple_UiWidget *w, void *user)
+{
+    (void)w;
+    MusicPlayer *mp = user;
+    char path[1400];
+    if (!WriteConfigDump(mp, path, sizeof(path)))
+    {
+        const char *err = SDL_GetError();
+        char msg[512];
+        SDL_snprintf(msg, sizeof(msg), "dump failed: %s", err && *err ? err : "write error");
+        SetStatus(mp, msg);
+        fprintf(stderr, "%s\n", msg);
+        if (mp->ui)
+            Grapple_UiMessage(mp->ui, "Dump config", msg);
+        return;
+    }
+    char msg[1600];
+    SDL_snprintf(msg, sizeof(msg), "Wrote config to %s", path);
+    SetStatus(mp, msg);
+    printf("%s\n", msg);
+    fflush(stdout);
+    if (mp->ui)
+        Grapple_UiMessage(mp->ui, "Dump config", msg);
+}
+
 static void DrawUi(void *user)
 {
     MusicPlayer *mp = user;
@@ -568,6 +815,8 @@ static bool BuildUi(MusicPlayer *mp)
     mp->loop_check = Grapple_UiCheck(
         transport, &(Grapple_UiCheckDef){
                        .text = "Loop", .checked = mp->loop, .on_change = OnLoop, .user = mp});
+    Grapple_UiButton(transport, &(Grapple_UiButtonDef){
+                                    .text = "Dump config", .on_click = OnDumpConfig, .user = mp});
 
     mp->style_radio =
         Grapple_UiSelect(panel, &(Grapple_UiSelectDef){.options = kStyleNames,

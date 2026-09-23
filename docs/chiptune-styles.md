@@ -66,3 +66,5 @@ delay, phaser and flanger are per-track. **Edit instrument** loads ADSR / duty /
 PWM knobs for that track's role; those edits also stick to the current style.
 
 Space play/pause, arrows seek, R/Home restart, N next file, L loop, 1–6 styles.
+**Dump config** writes the live mix/instrument JSON to the user temp directory
+(`$TMPDIR` / `%TEMP%` / `/tmp`) and shows the path in the UI, a dialog, and stdout.
