@@ -387,10 +387,15 @@ static void DrawMixer(struct nk_context *ctx, void *user)
     const int tracks = mp->track_count;
     if (!ctx)
         return;
+    /* UiRaw is drawn inside one parent row. A group gives the grid its own
+       layout context; nested nk_layout_row_begin otherwise produces no widgets. */
+    if (!nk_group_begin(ctx, "per-track-mix", NK_WINDOW_BORDER))
+        return;
     if (tracks <= 0)
     {
         nk_layout_row_dynamic(ctx, 28, 1);
         nk_label(ctx, "No tracks loaded.", NK_TEXT_LEFT);
+        nk_group_end(ctx);
         return;
     }
 
@@ -399,7 +404,10 @@ static void DrawMixer(struct nk_context *ctx, void *user)
     Grapple_GuiGrid grid;
     const int cols = tracks + 1;
     if (!Grapple_GuiGridBegin(ctx, &grid, cols, NULL, row))
+    {
+        nk_group_end(ctx);
         return;
+    }
     Grapple_GuiGridSpacing(&grid, 10.0f, 8.0f);
 
     Grapple_GuiGridCell(&grid);
@@ -491,6 +499,7 @@ static void DrawMixer(struct nk_context *ctx, void *user)
         }
     }
     Grapple_GuiGridEnd(&grid);
+    nk_group_end(ctx);
 }
 
 static bool LoadCurrent(MusicPlayer *mp);
@@ -848,11 +857,13 @@ static bool BuildUi(MusicPlayer *mp)
                      &(Grapple_UiButtonDef){.text = "Restart", .on_click = OnRestart, .user = mp});
     Grapple_UiButton(transport,
                      &(Grapple_UiButtonDef){.text = "Next", .on_click = OnNext, .user = mp});
+    Grapple_UiWidget *tools =
+        Grapple_UiRow(panel, &(Grapple_UiStripDef){.height = GRAPPLE_UI_EM(2.2f), .spacing = 8});
     mp->loop_check = Grapple_UiCheck(
-        transport, &(Grapple_UiCheckDef){
-                       .text = "Loop", .checked = mp->loop, .on_change = OnLoop, .user = mp});
-    Grapple_UiButton(transport, &(Grapple_UiButtonDef){
-                                    .text = "Dump config", .on_click = OnDumpConfig, .user = mp});
+        tools, &(Grapple_UiCheckDef){
+                   .text = "Loop", .checked = mp->loop, .on_change = OnLoop, .user = mp});
+    Grapple_UiButton(
+        tools, &(Grapple_UiButtonDef){.text = "Dump config", .on_click = OnDumpConfig, .user = mp});
 
     mp->style_radio =
         Grapple_UiSelect(panel, &(Grapple_UiSelectDef){.options = kStyleNames,
@@ -863,7 +874,7 @@ static bool BuildUi(MusicPlayer *mp)
 
     Grapple_UiLabel(panel, &(Grapple_UiLabelDef){.text = "Per-track mix (volume 0.00-2.00)"});
     Grapple_UiRaw(
-        panel, &(Grapple_UiRawDef){.draw = DrawMixer, .user = mp, .height = GRAPPLE_UI_EM(24.0f)});
+        panel, &(Grapple_UiRawDef){.draw = DrawMixer, .user = mp, .height = GRAPPLE_UI_EM(28.0f)});
 
     Grapple_UiWidget *inst = Grapple_UiColumn(panel, &(Grapple_UiStripDef){.spacing = 4});
     Grapple_UiLabel(inst, &(Grapple_UiLabelDef){.text = "Instrument (selected track)"});
@@ -1016,10 +1027,9 @@ int main(int argc, char **argv)
     }
     Grapple_EngineConfig config = {0};
     config.title = "Chiptune mixer";
-    config.design_width = 1920;
-    config.design_height = 1080;
-    config.window_width = 1920;
-    config.window_height = 1080;
+    config.window_width = 1600;
+    config.window_height = 1000;
+    config.presentation = GRAPPLE_PRESENT_NATIVE;
     config.no_auto_mount = true;
     config.headless = SDL_getenv("GRAPPLE_HEADLESS") != NULL;
     mp.engine = Grapple_CreateEngine(&config);
