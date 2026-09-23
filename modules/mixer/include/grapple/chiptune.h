@@ -122,23 +122,50 @@ extern "C"
     /** @brief Built-in SID-inspired instrument programs; no external patches needed. */
     typedef enum Grapple_ChipPreset
     {
-        GRAPPLE_CHIP_PRESET_AUTO =
-            0,                     /**< Use the first case-insensitive role word in the part name:
-                                   melody/lead, harmony/chords, bass, percussion/percussions/drums.
-                                   Whole words are separated by ASCII punctuation or whitespace
-                                   (including underscores); digits belong to words. Otherwise
-                                   use MIDI channel 10 for drums, GM bass/pads for bass/chord,
-                                   and lead for remaining programs. */
-        GRAPPLE_CHIP_PRESET_LEAD,  /**< Pulse-width modulation and vibrato. */
-        GRAPPLE_CHIP_PRESET_BASS,  /**< Filtered pulse/saw bass. */
-        GRAPPLE_CHIP_PRESET_CHORD, /**< Polyphonic pulse pad. */
+        GRAPPLE_CHIP_PRESET_AUTO = 0, /**< Use the first case-insensitive role word in the part
+                                      name: melody/lead, harmony/chords, bass,
+                                      percussion/percussions/drums, noise/sfx/fx/effect/effects.
+                                      Whole words are separated by ASCII punctuation or whitespace
+                                      (including underscores); digits belong to words. Otherwise
+                                      use MIDI channel 10 for drums, GM bass/pads for bass/chord,
+                                      and lead for remaining programs. */
+        GRAPPLE_CHIP_PRESET_LEAD,     /**< Pulse-width modulation and vibrato. */
+        GRAPPLE_CHIP_PRESET_BASS,     /**< Filtered pulse/saw bass. */
+        GRAPPLE_CHIP_PRESET_CHORD,    /**< Polyphonic pulse pad. */
         GRAPPLE_CHIP_PRESET_RING,  /**< Triangle carrier polarity-switched by a private oscillator.
                                     */
         GRAPPLE_CHIP_PRESET_DRUMS, /**< GM note-number mapping to synthesized percussion. */
+        GRAPPLE_CHIP_PRESET_NOISE, /**< Noise / effects role (name or override only). */
         GRAPPLE_CHIP_PRESET_HARMONY =
             GRAPPLE_CHIP_PRESET_RING /**< Recommended harmony: ring timbre, wet eighth-note pulse by
                                         default. */
     } Grapple_ChipPreset;
+
+#define GRAPPLE_CHIP_PRESET_FIRST GRAPPLE_CHIP_PRESET_LEAD
+#define GRAPPLE_CHIP_PRESET_LAST GRAPPLE_CHIP_PRESET_NOISE
+
+    /** @brief Oscillator family used by a style recipe. */
+    typedef enum Grapple_ChipVoiceKind
+    {
+        GRAPPLE_CHIP_VOICE_OSCILLATOR = 0, /**< Pulse/saw/triangle/noise/sine mix. */
+        GRAPPLE_CHIP_VOICE_FM,             /**< 2-operator sine FM (Genesis/AdLib-inspired). */
+        GRAPPLE_CHIP_VOICE_SAMPLE /**< Reserved; load fails until a sample engine exists. */
+    } Grapple_ChipVoiceKind;
+
+    /** @brief Catalog metadata for a chiptune style/palette. */
+    typedef struct Grapple_ChipStyleInfo
+    {
+        char id[64];                 /**< Stable catalog id, e.g. nes-smb. */
+        char name[128];              /**< User-facing name. */
+        char description[256];       /**< One-line inspired-by disclaimer. */
+        Grapple_ChipVoiceKind voice; /**< Dominant voice family. */
+        int polyphony;               /**< 0 uses the player's voice pool as-is. */
+        bool builtin;                /**< True for compiled-in palettes. */
+        bool approximation;          /**< True when this is not the target chip family. */
+    } Grapple_ChipStyleInfo;
+
+    /** @brief Immutable instrument palette (role recipes + mix policy). */
+    typedef struct Grapple_ChipStyle Grapple_ChipStyle;
 
     /** @brief Immutable composition. Players retain it independently. */
     typedef struct Grapple_ChipSong Grapple_ChipSong;
@@ -674,7 +701,7 @@ extern "C"
                                             const Grapple_ChipEffects *effects);
     /** @brief Read effective private/shared settings for a part and preset.
      * @param player Live player. @param track Zero-based part.
-     * @param preset Fallback preset for a part using shared routing, LEAD..DRUMS.
+     * @param preset Fallback preset for a part using shared routing, LEAD..LAST.
      * @param effects Caller-owned output. @return True, or false on error. */
     extern bool Grapple_ReadChipTrackEffects(Grapple_ChipPlayer *player, int track,
                                              Grapple_ChipPreset preset,
@@ -687,8 +714,8 @@ extern "C"
 
     /**
      * @brief Retrieve the built-in effect settings for an instrument.
-     * @param preset Explicit instrument (LEAD through DRUMS); AUTO is invalid.
-     * @param effects Output settings. Lead: tempo delay/reverb; bass: chorus; drums: dry.
+     * @param preset Explicit instrument (LEAD through LAST); AUTO is invalid.
+     * @param effects Output settings. Lead: tempo delay/reverb; bass: chorus; drums/noise: dry.
      * @return True on success, false with SDL_GetError(). CHORD/RING enable harmony motion.
      */
     extern bool Grapple_GetChipPresetEffects(Grapple_ChipPreset preset,
@@ -696,7 +723,7 @@ extern "C"
     /**
      * @brief Override effects for every voice using an instrument preset.
      * @param player Player to configure; safe during stream playback.
-     * @param preset Explicit instrument (LEAD through DRUMS).
+     * @param preset Explicit instrument (LEAD through LAST).
      * @param effects Settings copied during the call. Existing echo/reverb tails are cleared.
      * @return True on success, false with SDL_GetError().
      * @details Echo follows tempo changes, with smoothed delay-time transitions; delay is capped
@@ -728,6 +755,60 @@ extern "C"
      * @return True on success, false with SDL_GetError().
      */
     extern bool Grapple_ReadChipSongInfo(const Grapple_ChipSong *song, Grapple_ChipSongInfo *info);
+
+    /**
+     * @brief Load a style document from a UTF-8 JSON file (owned handle).
+     * @param path Filesystem path to a schema-1 style file, at most 64 KiB.
+     * @return Owned style, or NULL with SDL_GetError(). Destroy with Grapple_DestroyChipStyle.
+     */
+    extern Grapple_ChipStyle *Grapple_LoadChipStyle(const char *path);
+    /**
+     * @brief Parse a style document from memory (owned handle).
+     * @param json UTF-8 JSON bytes. @param size Byte count, 1..65536.
+     * @return Owned style, or NULL with SDL_GetError().
+     */
+    extern Grapple_ChipStyle *Grapple_LoadChipStyleMemory(const void *json, size_t size);
+    /**
+     * @brief Borrow a catalog style by id (compiled-in or previously registered).
+     * @param id Style id such as "c64" or "nes-smb".
+     * @return Borrowed style valid until process exit; do not destroy. NULL if unknown.
+     */
+    extern const Grapple_ChipStyle *Grapple_GetChipStyle(const char *id);
+    /**
+     * @brief Intern an owned style into the process catalog (takes ownership).
+     * @param style Style from LoadChipStyle*; NULL is invalid.
+     * @return True; later GetChipStyle(id) returns this document. Duplicate ids replace.
+     * @details Catalog APIs are not thread-safe; call from the load/main thread.
+     */
+    extern bool Grapple_RegisterChipStyle(Grapple_ChipStyle *style);
+    /** @brief Destroy an owned style. No-op for NULL or interned/builtin documents. */
+    extern void Grapple_DestroyChipStyle(Grapple_ChipStyle *style);
+    /** @brief Number of catalog entries (builtins first). */
+    extern int Grapple_GetChipStyleCount(void);
+    /** @brief Copy metadata from a style handle. */
+    extern bool Grapple_ReadChipStyleInfo(const Grapple_ChipStyle *style,
+                                          Grapple_ChipStyleInfo *info);
+    /** @brief Copy metadata for catalog index 0..count-1 (builtins first). */
+    extern bool Grapple_ReadChipStyleInfoAt(int index, Grapple_ChipStyleInfo *info);
+    /**
+     * @brief Apply a style to a player (copies recipes; style may be destroyed after).
+     * @param player Live player. @param style Catalog or owned style; NULL restores c64.
+     * @return True, or false with SDL_GetError().
+     * @details Locks the stream. Installs recipes, rebuilds a loop checkpoint if needed,
+     * then clears wet buses and releases in-flight notes. Failure restores prior recipes
+     * and checkpoint without cutting sounding voices.
+     */
+    extern bool Grapple_SetChipPlayerStyle(Grapple_ChipPlayer *player,
+                                           const Grapple_ChipStyle *style);
+    /** @brief Copy the style currently applied to a player. */
+    extern bool Grapple_GetChipPlayerStyleInfo(Grapple_ChipPlayer *player,
+                                               Grapple_ChipStyleInfo *info);
+    /**
+     * @brief Append a directory of `*.json` style files to the catalog search path.
+     * @param path Directory; scanned on the next catalog use if not yet loaded.
+     * @return True, or false for NULL/empty.
+     */
+    extern bool Grapple_AddChipStyleSearchPath(const char *path);
 
 #ifdef __cplusplus
 }

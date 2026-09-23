@@ -2,6 +2,8 @@
 #ifndef GRAPPLE_CHIP_VOICE_H
 #define GRAPPLE_CHIP_VOICE_H
 
+#include "chip_style.h"
+
 #include <grapple/chiptune.h>
 
 #ifdef __cplusplus
@@ -27,6 +29,7 @@ extern "C"
         double gain_beat, gain_duration;
         Uint32 noise;
         Grapple_ChipPreset preset;
+        ChipRoleRecipe recipe;
         int drum;
         double phase;
         double mod_phase;
@@ -51,6 +54,8 @@ extern "C"
 
     void Chip_VoiceStart(ChipSynthVoice *voice, Grapple_ChipPreset preset, int note, int velocity,
                          int sample_rate);
+    void Chip_VoiceStartRecipe(ChipSynthVoice *voice, const ChipRoleRecipe *recipe,
+                               Grapple_ChipPreset preset, int note, int velocity, int sample_rate);
     void Chip_VoiceRelease(ChipSynthVoice *voice, int sample_rate);
     float Chip_VoiceSample(ChipSynthVoice *voice, float bend, float modulation, int sample_rate);
     float Chip_VoiceSampleMotion(ChipSynthVoice *voice, float bend, float modulation,

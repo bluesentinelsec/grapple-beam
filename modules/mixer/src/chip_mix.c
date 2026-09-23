@@ -86,7 +86,7 @@ bool Grapple_ReadChipTrackEffects(Grapple_ChipPlayer *p, int track, Grapple_Chip
                                   Grapple_ChipEffects *effects)
 {
     if (!p || track < 0 || track >= p->song->info.track_count || !effects ||
-        preset < GRAPPLE_CHIP_PRESET_LEAD || preset > GRAPPLE_CHIP_PRESET_DRUMS)
+        preset < GRAPPLE_CHIP_PRESET_FIRST || preset > GRAPPLE_CHIP_PRESET_LAST)
         return SDL_SetError("chiptune: invalid track effect output");
     if (!SDL_LockAudioStream(p->stream))
         return false;

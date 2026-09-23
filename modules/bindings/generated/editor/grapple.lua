@@ -14329,6 +14329,11 @@ function GrappleC.AddChipNoteEx(composer, note, expression) end
 ---@return boolean
 function GrappleC.AddChipSection(composer, name, start_tick, end_tick) end
 
+---Calls `Grapple_AddChipStyleSearchPath`.
+---@param path string?
+---@return boolean
+function GrappleC.AddChipStyleSearchPath(path) end
+
 ---Calls `Grapple_AddChipTempo`.
 ---@param composer userdata
 ---@param tick integer
@@ -14879,6 +14884,10 @@ function GrappleC.DestroyChipPlayer(player) end
 ---Calls `Grapple_DestroyChipSong`.
 ---@param song userdata
 function GrappleC.DestroyChipSong(song) end
+
+---Calls `Grapple_DestroyChipStyle`.
+---@param style userdata
+function GrappleC.DestroyChipStyle(style) end
 
 ---Calls `Grapple_DestroyEngine`.
 ---@param engine userdata
@@ -15971,6 +15980,11 @@ function GrappleC.GetChipImportDefaults() end
 ---@return integer
 function GrappleC.GetChipPlayerPeakVoices(player) end
 
+---Calls `Grapple_GetChipPlayerStyleInfo`.
+---@param player userdata
+---@return boolean, table
+function GrappleC.GetChipPlayerStyleInfo(player) end
+
 ---Calls `Grapple_GetChipPresetEffects`.
 ---@param preset integer
 ---@return boolean, table
@@ -15980,6 +15994,15 @@ function GrappleC.GetChipPresetEffects(preset) end
 ---@param song userdata
 ---@return integer
 function GrappleC.GetChipSectionCount(song) end
+
+---Calls `Grapple_GetChipStyle`.
+---@param id string?
+---@return userdata?
+function GrappleC.GetChipStyle(id) end
+
+---Calls `Grapple_GetChipStyleCount`.
+---@return integer
+function GrappleC.GetChipStyleCount() end
 
 ---Calls `Grapple_GetLaunchSettings`.
 ---@return userdata?
@@ -16526,6 +16549,11 @@ function GrappleC.LoadChipSong(path) end
 ---@return userdata?, table
 function GrappleC.LoadChipSongEx(path, options) end
 
+---Calls `Grapple_LoadChipStyle`.
+---@param path string?
+---@return userdata?
+function GrappleC.LoadChipStyle(path) end
+
 ---Calls `Grapple_LoadTextFile`.
 ---@param path string?
 ---@return integer
@@ -16811,6 +16839,16 @@ function GrappleC.ReadChipSection(song, index) end
 ---@return boolean, table
 function GrappleC.ReadChipSongInfo(song) end
 
+---Calls `Grapple_ReadChipStyleInfo`.
+---@param style userdata
+---@return boolean, table
+function GrappleC.ReadChipStyleInfo(style) end
+
+---Calls `Grapple_ReadChipStyleInfoAt`.
+---@param index integer
+---@return boolean, table
+function GrappleC.ReadChipStyleInfoAt(index) end
+
 ---Calls `Grapple_ReadChipTrackEffects`.
 ---@param player userdata
 ---@param track integer
@@ -16907,6 +16945,11 @@ function GrappleC.RegexReplace(regex, text, replacement, all) end
 ---@param start integer
 ---@return boolean
 function GrappleC.RegexSearch(regex, text, start) end
+
+---Calls `Grapple_RegisterChipStyle`.
+---@param style userdata
+---@return boolean
+function GrappleC.RegisterChipStyle(style) end
 
 ---Calls `Grapple_RenderBackendCount`.
 ---@return integer
@@ -17265,6 +17308,12 @@ function GrappleC.SetChipPlayerGain(player, gain) end
 ---@param enabled boolean
 ---@return boolean
 function GrappleC.SetChipPlayerLoop(player, start_tick, end_tick, enabled) end
+
+---Calls `Grapple_SetChipPlayerStyle`.
+---@param player userdata
+---@param style userdata
+---@return boolean
+function GrappleC.SetChipPlayerStyle(player, style) end
 
 ---Calls `Grapple_SetChipPlayerTempo`.
 ---@param player userdata

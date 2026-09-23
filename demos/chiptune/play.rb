@@ -28,6 +28,15 @@ else
   player = GrappleC.PlayChipFile(path, false)
 end
 raise SDL.GetError unless player
+style_arg = ARGV[1]
+if style_arg && !style_arg.empty?
+  style = if style_arg.match?(%r{[/\\.]})
+            GrappleC.LoadChipStyle(style_arg)
+          else
+            GrappleC.GetChipStyle(style_arg)
+          end
+  raise SDL.GetError unless style && GrappleC.SetChipPlayerStyle(player, style)
+end
 config = GrappleC.ConfigCreate
 GrappleC.ConfigSetTitle(config, 'Chiptune from Ruby')
 GrappleC.ConfigSetDesignSize(config, 800, 240)

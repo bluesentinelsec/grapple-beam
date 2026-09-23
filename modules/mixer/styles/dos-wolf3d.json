@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "id": "dos-wolf3d",
+  "name": "MS-DOS (Wolfenstein 3D-inspired)",
+  "description": "Original Grapple 2-operator FM inspired by typical AdLib/OPL use. Not a recreation of any copyrighted soundtrack.",
+  "voice": "fm",
+  "approximation": true,
+  "polyphony": 9,
+  "roles": {
+    "lead": {
+      "voice": "fm",
+      "fm_index": 3.2,
+      "filter": "off",
+      "attack_ms": 2,
+      "decay_ms": 90,
+      "sustain": 0.35,
+      "release_ms": 40,
+      "level": 0.22
+    },
+    "harmony": {
+      "voice": "fm",
+      "fm_index": 1.8,
+      "filter": "off",
+      "attack_ms": 4,
+      "decay_ms": 140,
+      "sustain": 0.4,
+      "release_ms": 70,
+      "level": 0.14,
+      "ring_ratio": 0
+    },
+    "bass": {
+      "voice": "fm",
+      "fm_index": 0.8,
+      "filter": "off",
+      "attack_ms": 3,
+      "decay_ms": 80,
+      "sustain": 0.6,
+      "release_ms": 40,
+      "level": 0.26
+    },
+    "drums": {
+      "oscillator": "noise",
+      "filter": "off",
+      "drums": "none",
+      "attack_ms": 1,
+      "decay_ms": 55,
+      "sustain": 0,
+      "release_ms": 20,
+      "level": 0.24
+    }
+  }
+}

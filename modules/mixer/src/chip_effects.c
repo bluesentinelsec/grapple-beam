@@ -3,7 +3,7 @@
 
 bool Grapple_GetChipPresetEffects(Grapple_ChipPreset preset, Grapple_ChipEffects *effects)
 {
-    if (!effects || preset < GRAPPLE_CHIP_PRESET_LEAD || preset > GRAPPLE_CHIP_PRESET_DRUMS)
+    if (!effects || preset < GRAPPLE_CHIP_PRESET_FIRST || preset > GRAPPLE_CHIP_PRESET_LAST)
         return SDL_SetError("chiptune: invalid effect preset");
     SDL_zero(*effects);
     if (preset == GRAPPLE_CHIP_PRESET_LEAD)

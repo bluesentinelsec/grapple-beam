@@ -70,6 +70,7 @@ GRAPPLE_CHIP_PRESET_CHORD	include/grapple/audio_bus.h	/^.*GRAPPLE_CHIP_PRESET_CH
 GRAPPLE_CHIP_PRESET_DRUMS	include/grapple/audio_bus.h	/^.*GRAPPLE_CHIP_PRESET_DRUMS/;"	e
 GRAPPLE_CHIP_PRESET_HARMONY	include/grapple/audio_bus.h	/^.*GRAPPLE_CHIP_PRESET_HARMONY/;"	e
 GRAPPLE_CHIP_PRESET_LEAD	include/grapple/audio_bus.h	/^.*GRAPPLE_CHIP_PRESET_LEAD/;"	e
+GRAPPLE_CHIP_PRESET_NOISE	include/grapple/audio_bus.h	/^.*GRAPPLE_CHIP_PRESET_NOISE/;"	e
 GRAPPLE_CHIP_PRESET_RING	include/grapple/audio_bus.h	/^.*GRAPPLE_CHIP_PRESET_RING/;"	e
 GRAPPLE_CHIP_SAW	include/grapple/audio_bus.h	/^.*GRAPPLE_CHIP_SAW/;"	e
 GRAPPLE_CHIP_SINE	include/grapple/audio_bus.h	/^.*GRAPPLE_CHIP_SINE/;"	e
@@ -77,6 +78,9 @@ GRAPPLE_CHIP_SQUARE_125	include/grapple/audio_bus.h	/^.*GRAPPLE_CHIP_SQUARE_125/
 GRAPPLE_CHIP_SQUARE_25	include/grapple/audio_bus.h	/^.*GRAPPLE_CHIP_SQUARE_25/;"	e
 GRAPPLE_CHIP_SQUARE_50	include/grapple/audio_bus.h	/^.*GRAPPLE_CHIP_SQUARE_50/;"	e
 GRAPPLE_CHIP_TRIANGLE	include/grapple/audio_bus.h	/^.*GRAPPLE_CHIP_TRIANGLE/;"	e
+GRAPPLE_CHIP_VOICE_FM	include/grapple/audio_bus.h	/^.*GRAPPLE_CHIP_VOICE_FM/;"	e
+GRAPPLE_CHIP_VOICE_OSCILLATOR	include/grapple/audio_bus.h	/^.*GRAPPLE_CHIP_VOICE_OSCILLATOR/;"	e
+GRAPPLE_CHIP_VOICE_SAMPLE	include/grapple/audio_bus.h	/^.*GRAPPLE_CHIP_VOICE_SAMPLE/;"	e
 GRAPPLE_COLORBLIND_DEUTERANOPIA	include/grapple/audio_bus.h	/^.*GRAPPLE_COLORBLIND_DEUTERANOPIA/;"	e
 GRAPPLE_COLORBLIND_NONE	include/grapple/audio_bus.h	/^.*GRAPPLE_COLORBLIND_NONE/;"	e
 GRAPPLE_COLORBLIND_PROTANOPIA	include/grapple/audio_bus.h	/^.*GRAPPLE_COLORBLIND_PROTANOPIA/;"	e
@@ -308,6 +312,7 @@ Grapple_AddChipControl	include/grapple/chiptune.h	/^.*Grapple_AddChipControl *(/
 Grapple_AddChipNote	include/grapple/chiptune.h	/^.*Grapple_AddChipNote *(/;"	f
 Grapple_AddChipNoteEx	include/grapple/chiptune.h	/^.*Grapple_AddChipNoteEx *(/;"	f
 Grapple_AddChipSection	include/grapple/chiptune.h	/^.*Grapple_AddChipSection *(/;"	f
+Grapple_AddChipStyleSearchPath	include/grapple/chiptune.h	/^.*Grapple_AddChipStyleSearchPath *(/;"	f
 Grapple_AddChipTempo	include/grapple/chiptune.h	/^.*Grapple_AddChipTempo *(/;"	f
 Grapple_AddDarkZone	include/grapple/light.h	/^.*Grapple_AddDarkZone *(/;"	f
 Grapple_AddLight	include/grapple/light.h	/^.*Grapple_AddLight *(/;"	f
@@ -391,9 +396,11 @@ Grapple_ChipPreset	include/grapple/audio_bus.h	/^.*Grapple_ChipPreset/;"	g
 Grapple_ChipSFX	include/grapple/audio_bus.h	/^.*Grapple_ChipSFX/;"	g
 Grapple_ChipSection	include/grapple/audio_bus.h	/^.*Grapple_ChipSection/;"	s
 Grapple_ChipSongInfo	include/grapple/audio_bus.h	/^.*Grapple_ChipSongInfo/;"	s
+Grapple_ChipStyleInfo	include/grapple/audio_bus.h	/^.*Grapple_ChipStyleInfo/;"	s
 Grapple_ChipToneDesc	include/grapple/audio_bus.h	/^.*Grapple_ChipToneDesc/;"	s
 Grapple_ChipTrackInfo	include/grapple/audio_bus.h	/^.*Grapple_ChipTrackInfo/;"	s
 Grapple_ChipTrackMix	include/grapple/audio_bus.h	/^.*Grapple_ChipTrackMix/;"	s
+Grapple_ChipVoiceKind	include/grapple/audio_bus.h	/^.*Grapple_ChipVoiceKind/;"	g
 Grapple_ChipWave	include/grapple/audio_bus.h	/^.*Grapple_ChipWave/;"	g
 Grapple_CloneSettings	include/grapple/engine_settings.h	/^.*Grapple_CloneSettings *(/;"	f
 Grapple_ColorBlindMode	include/grapple/audio_bus.h	/^.*Grapple_ColorBlindMode/;"	g
@@ -443,6 +450,7 @@ Grapple_DescribeRenderBackend	include/grapple/engine_backend.h	/^.*Grapple_Descr
 Grapple_DestroyChipComposer	include/grapple/chiptune.h	/^.*Grapple_DestroyChipComposer *(/;"	f
 Grapple_DestroyChipPlayer	include/grapple/chiptune.h	/^.*Grapple_DestroyChipPlayer *(/;"	f
 Grapple_DestroyChipSong	include/grapple/chiptune.h	/^.*Grapple_DestroyChipSong *(/;"	f
+Grapple_DestroyChipStyle	include/grapple/chiptune.h	/^.*Grapple_DestroyChipStyle *(/;"	f
 Grapple_DestroyEngine	include/grapple/engine.h	/^.*Grapple_DestroyEngine *(/;"	f
 Grapple_DestroyGui	include/grapple/gui.h	/^.*Grapple_DestroyGui *(/;"	f
 Grapple_DestroyLightScene	include/grapple/light.h	/^.*Grapple_DestroyLightScene *(/;"	f
@@ -664,9 +672,12 @@ Grapple_GetChipExpressionDefaults	include/grapple/chiptune.h	/^.*Grapple_GetChip
 Grapple_GetChipImportDefaults	include/grapple/chiptune.h	/^.*Grapple_GetChipImportDefaults *(/;"	f
 Grapple_GetChipPlayerPeakVoices	include/grapple/chiptune.h	/^.*Grapple_GetChipPlayerPeakVoices *(/;"	f
 Grapple_GetChipPlayerStream	include/grapple/chiptune.h	/^.*Grapple_GetChipPlayerStream *(/;"	f
+Grapple_GetChipPlayerStyleInfo	include/grapple/chiptune.h	/^.*Grapple_GetChipPlayerStyleInfo *(/;"	f
 Grapple_GetChipPresetEffects	include/grapple/chiptune.h	/^.*Grapple_GetChipPresetEffects *(/;"	f
 Grapple_GetChipSectionCount	include/grapple/chiptune.h	/^.*Grapple_GetChipSectionCount *(/;"	f
 Grapple_GetChipSongInfo	include/grapple/chiptune.h	/^.*Grapple_GetChipSongInfo *(/;"	f
+Grapple_GetChipStyle	include/grapple/chiptune.h	/^.*Grapple_GetChipStyle *(/;"	f
+Grapple_GetChipStyleCount	include/grapple/chiptune.h	/^.*Grapple_GetChipStyleCount *(/;"	f
 Grapple_GetChipTrackInfo	include/grapple/chiptune.h	/^.*Grapple_GetChipTrackInfo *(/;"	f
 Grapple_GetFinger	include/grapple/engine_input.h	/^.*Grapple_GetFinger *(/;"	f
 Grapple_GetLaunchSettings	include/grapple/engine_settings.h	/^.*Grapple_GetLaunchSettings *(/;"	f
@@ -792,6 +803,8 @@ Grapple_LoadChipSongEx	include/grapple/chiptune.h	/^.*Grapple_LoadChipSongEx *(/
 Grapple_LoadChipSongMemory	include/grapple/chiptune.h	/^.*Grapple_LoadChipSongMemory *(/;"	f
 Grapple_LoadChipSong_IO	include/grapple/chiptune.h	/^.*Grapple_LoadChipSong_IO *(/;"	f
 Grapple_LoadChipSong_IOEx	include/grapple/chiptune.h	/^.*Grapple_LoadChipSong_IOEx *(/;"	f
+Grapple_LoadChipStyle	include/grapple/chiptune.h	/^.*Grapple_LoadChipStyle *(/;"	f
+Grapple_LoadChipStyleMemory	include/grapple/chiptune.h	/^.*Grapple_LoadChipStyleMemory *(/;"	f
 Grapple_LoadTextFile	include/grapple/textfile.h	/^.*Grapple_LoadTextFile *(/;"	f
 Grapple_LoadTexture	include/grapple/engine_assets.h	/^.*Grapple_LoadTexture *(/;"	f
 Grapple_LoadTextureAsync	include/grapple/engine_assets.h	/^.*Grapple_LoadTextureAsync *(/;"	f
@@ -848,6 +861,8 @@ Grapple_ReadChipDiagnostic	include/grapple/chiptune.h	/^.*Grapple_ReadChipDiagno
 Grapple_ReadChipPlayerPosition	include/grapple/chiptune.h	/^.*Grapple_ReadChipPlayerPosition *(/;"	f
 Grapple_ReadChipSection	include/grapple/chiptune.h	/^.*Grapple_ReadChipSection *(/;"	f
 Grapple_ReadChipSongInfo	include/grapple/chiptune.h	/^.*Grapple_ReadChipSongInfo *(/;"	f
+Grapple_ReadChipStyleInfo	include/grapple/chiptune.h	/^.*Grapple_ReadChipStyleInfo *(/;"	f
+Grapple_ReadChipStyleInfoAt	include/grapple/chiptune.h	/^.*Grapple_ReadChipStyleInfoAt *(/;"	f
 Grapple_ReadChipTrackEffects	include/grapple/chiptune.h	/^.*Grapple_ReadChipTrackEffects *(/;"	f
 Grapple_ReadChipTrackMapping	include/grapple/chiptune.h	/^.*Grapple_ReadChipTrackMapping *(/;"	f
 Grapple_ReadChipTrackMix	include/grapple/chiptune.h	/^.*Grapple_ReadChipTrackMix *(/;"	f
@@ -864,6 +879,7 @@ Grapple_RegexNamedGroupName	include/grapple/regex.h	/^.*Grapple_RegexNamedGroupN
 Grapple_RegexPattern	include/grapple/regex.h	/^.*Grapple_RegexPattern *(/;"	f
 Grapple_RegexReplace	include/grapple/regex.h	/^.*Grapple_RegexReplace *(/;"	f
 Grapple_RegexSearch	include/grapple/regex.h	/^.*Grapple_RegexSearch *(/;"	f
+Grapple_RegisterChipStyle	include/grapple/chiptune.h	/^.*Grapple_RegisterChipStyle *(/;"	f
 Grapple_RenderBackendCount	include/grapple/engine_backend.h	/^.*Grapple_RenderBackendCount *(/;"	f
 Grapple_RenderBackendInfo	include/grapple/audio_bus.h	/^.*Grapple_RenderBackendInfo/;"	s
 Grapple_RenderBackendName	include/grapple/engine_backend.h	/^.*Grapple_RenderBackendName *(/;"	f
@@ -940,6 +956,7 @@ Grapple_SetAudioMuted	include/grapple/audio_bus.h	/^.*Grapple_SetAudioMuted *(/;
 Grapple_SetChipPart	include/grapple/chiptune.h	/^.*Grapple_SetChipPart *(/;"	f
 Grapple_SetChipPlayerGain	include/grapple/chiptune.h	/^.*Grapple_SetChipPlayerGain *(/;"	f
 Grapple_SetChipPlayerLoop	include/grapple/chiptune.h	/^.*Grapple_SetChipPlayerLoop *(/;"	f
+Grapple_SetChipPlayerStyle	include/grapple/chiptune.h	/^.*Grapple_SetChipPlayerStyle *(/;"	f
 Grapple_SetChipPlayerTempo	include/grapple/chiptune.h	/^.*Grapple_SetChipPlayerTempo *(/;"	f
 Grapple_SetChipPresetEffects	include/grapple/chiptune.h	/^.*Grapple_SetChipPresetEffects *(/;"	f
 Grapple_SetChipTrackEffects	include/grapple/chiptune.h	/^.*Grapple_SetChipTrackEffects *(/;"	f
@@ -4624,6 +4641,7 @@ antialias	include/grapple/audio_bus.h	/^.*antialias/;"	m
 api_version	include/grapple/audio_bus.h	/^.*api_version/;"	m
 applyRestitution	include/box2d/base.h	/^.*applyRestitution/;"	m
 approachSpeed	include/box2d/base.h	/^.*approachSpeed/;"	m
+approximation	include/grapple/audio_bus.h	/^.*approximation/;"	m
 arcColor	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*arcColor *(/;"	f
 arcRGBA	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*arcRGBA *(/;"	f
 arc_segment_count	include/nuklear.h	/^.*arc_segment_count/;"	m
@@ -5361,6 +5379,7 @@ buffer	include/nuklear.h	/^.*buffer/;"	m
 buffer_slot	include/SDL3/SDL_assert.h	/^.*buffer_slot/;"	m
 buflen	include/SDL3_net/SDL_net.h	/^.*buflen/;"	m
 build	include/nuklear.h	/^.*build/;"	m
+builtin	include/grapple/audio_bus.h	/^.*builtin/;"	m
 bullet	include/grapple/audio_bus.h	/^.*bullet/;"	m
 bullets	include/box2d/base.h	/^.*bullets/;"	m
 bus_type	include/SDL3/SDL_assert.h	/^.*bus_type/;"	m
@@ -5641,6 +5660,7 @@ depth_fail_op	include/SDL3/SDL_assert.h	/^.*depth_fail_op/;"	m
 depth_stencil_format	include/SDL3/SDL_assert.h	/^.*depth_stencil_format/;"	m
 depth_stencil_state	include/SDL3/SDL_assert.h	/^.*depth_stencil_state/;"	m
 descent	include/nuklear.h	/^.*descent/;"	m
+description	include/grapple/audio_bus.h	/^.*description/;"	m
 description	include/physfs.h	/^.*description/;"	m
 design_height	include/grapple/audio_bus.h	/^.*design_height/;"	m
 design_width	include/grapple/audio_bus.h	/^.*design_width/;"	m
@@ -6979,6 +6999,7 @@ points	include/box2d/base.h	/^.*points/;"	m
 points	include/nuklear.h	/^.*points/;"	m
 polygonColor	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*polygonColor *(/;"	f
 polygonRGBA	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*polygonRGBA *(/;"	f
+polyphony	include/grapple/audio_bus.h	/^.*polyphony/;"	m
 pool	include/nuklear.h	/^.*pool/;"	m
 popup	include/nuklear.h	/^.*popup/;"	m
 popup_border	include/nuklear.h	/^.*popup_border/;"	m

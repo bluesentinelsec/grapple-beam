@@ -12,7 +12,6 @@
 enable_language(C)
 
 add_library(Grapple_Formats STATIC
-  src/cjson/cJSON.c
   src/tomlc99/toml.c
   src/libyaml/api.c
   src/libyaml/dumper.c
@@ -49,5 +48,10 @@ target_compile_definitions(Grapple_Formats PRIVATE
 )
 target_compile_definitions(Grapple_Formats PUBLIC
   YAML_DECLARE_STATIC
-  CJSON_HIDE_SYMBOLS
 )
+if(TARGET Grapple::CJson)
+  target_link_libraries(Grapple_Formats PUBLIC Grapple::CJson)
+else()
+  target_sources(Grapple_Formats PRIVATE src/cjson/cJSON.c)
+  target_compile_definitions(Grapple_Formats PUBLIC CJSON_HIDE_SYMBOLS)
+endif()

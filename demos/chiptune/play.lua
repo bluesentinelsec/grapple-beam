@@ -27,6 +27,16 @@ if path == 'code' then
 else
   player = assert(G.PlayChipFile(path, false), SDL.GetError())
 end
+local style_arg = arg[2]
+if style_arg and style_arg ~= '' then
+  local style
+  if style_arg:find('[/\\.]') then
+    style = assert(G.LoadChipStyle(style_arg), SDL.GetError())
+  else
+    style = assert(G.GetChipStyle(style_arg), 'unknown style ' .. style_arg)
+  end
+  assert(G.SetChipPlayerStyle(player, style), SDL.GetError())
+end
 local config = G.ConfigCreate()
 G.ConfigSetTitle(config, 'Chiptune from Lua')
 G.ConfigSetDesignSize(config, 800, 240)
