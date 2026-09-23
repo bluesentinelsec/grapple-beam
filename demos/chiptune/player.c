@@ -431,13 +431,14 @@ static void DrawMixer(struct nk_context *ctx, void *user)
             st->gain = gain;
             ApplyTrackAudio(mp, i);
             char text[32];
+            char msg[256];
             FormatValue(text, sizeof(text), gain);
             const Grapple_ChipTrackInfo *info =
                 mp->song ? Grapple_GetChipTrackInfo(mp->song, i) : NULL;
-            SDL_snprintf(mp->status, sizeof(mp->status), "%s volume %s (style %s)",
+            SDL_snprintf(msg, sizeof(msg), "%s volume %s (style %s)",
                          info && info->name[0] ? info->name : "track", text,
                          kStyleIds[mp->style_index]);
-            SetStatus(mp, mp->status);
+            SetStatus(mp, msg);
         }
     }
 
@@ -469,10 +470,11 @@ static void DrawMixer(struct nk_context *ctx, void *user)
                 st->has_fx = true;
                 ApplyTrackAudio(mp, i);
                 char text[32];
+                char msg[256];
                 FormatValue(text, sizeof(text), value);
-                SDL_snprintf(mp->status, sizeof(mp->status), "track %d %s %s (style %s)", i + 1,
-                             kFxNames[f], text, kStyleIds[mp->style_index]);
-                SetStatus(mp, mp->status);
+                SDL_snprintf(msg, sizeof(msg), "track %d %s %s (style %s)", i + 1, kFxNames[f],
+                             text, kStyleIds[mp->style_index]);
+                SetStatus(mp, msg);
             }
         }
 
@@ -771,7 +773,8 @@ static bool WriteConfigDump(MusicPlayer *mp, char *path, size_t path_cap)
 
 static void SetStatus(MusicPlayer *mp, const char *text)
 {
-    SDL_strlcpy(mp->status, text, sizeof(mp->status));
+    if (text != mp->status)
+        SDL_strlcpy(mp->status, text, sizeof(mp->status));
     if (mp->status_label)
         Grapple_UiSetText(mp->status_label, mp->status);
 }
