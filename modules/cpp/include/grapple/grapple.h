@@ -15,6 +15,7 @@
 #include "grapple/filesystem.h"  // IWYU pragma: export
 #include "grapple/gen/gen.h"      // IWYU pragma: export
 #include "grapple/tilemap.h"   // IWYU pragma: export
+#include "grapple/platformer_level.h"  // IWYU pragma: export
 #include "grapple/ui.h"          // IWYU pragma: export
 
 #endif  // GRAPPLE_CPP_GRAPPLE_H_

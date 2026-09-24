@@ -115,6 +115,11 @@ extern Grapple_Scene *Grapple_SceneCurrent(Grapple_Engine *engine);
 /** How many scenes are stacked. */
 extern int Grapple_SceneDepth(Grapple_Engine *engine);
 
+/** True while a push, replace or reset is waiting for the end of the frame
+ *  to land — so a caller that pushed before the loop started can tell the
+ *  stack is about to have something on it. */
+extern bool Grapple_ScenePending(Grapple_Engine *engine);
+
 /** Find a scene by definition name anywhere in the stack — a pause menu
  *  asking the level below it a question. NULL when not present. */
 extern Grapple_Scene *Grapple_SceneFind(Grapple_Engine *engine, const char *name);

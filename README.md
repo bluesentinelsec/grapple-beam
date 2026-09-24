@@ -111,6 +111,7 @@ individual `Grapple::*` source targets.
 | Task | Guide | Examples |
 | --- | --- | --- |
 | Build the game loop, scenes, actors, input, saves | [Engine](docs/engine.md) | [Pong in four languages](demos/pong/) |
+| Build a 2D platformer: levels, a player, scrolling | [Platformer](docs/platformer.md) | [Platformer in four languages](demos/platformer/) |
 | Use RAII and check errors in C++ | [C++](docs/cpp.md) | [C++ Pong](demos/pong/pong.cpp) |
 | Script a game or embed an interpreter | [Lua and Ruby](docs/scripting.md) | [Demos](demos/README.md) |
 | Compose and play MIDI/MusicXML or code | [Music authoring](docs/chiptune-support.md) | [C, C++, Lua, Ruby playback](demos/chiptune/README.md) |

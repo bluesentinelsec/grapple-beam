@@ -205,6 +205,7 @@ LIBRARIES: list[LibrarySpec] = [
             "modules/ttf/include/grapple/*.h",
             "modules/engine/include/grapple/*.h",
             "modules/physics/include/grapple/*.h",
+            "modules/platformer/include/grapple/*.h",
         ],
         includes=[],
         error_fn="SDL_GetError()",
@@ -396,6 +397,9 @@ RESOURCES: dict[str, list[ResourceSpec]] = {
                      ["Grapple_CompileRegex"]),
         ResourceSpec("Grapple_LightScene", "LightSceneHandle",
                      "Grapple_DestroyLightScene", ["Grapple_CreateLightScene"]),
+        ResourceSpec("Grapple_Platformer", "PlatformerHandle",
+                     "Grapple_DestroyPlatformer",
+                     ["Grapple_CreatePlatformer", "Grapple_LoadPlatformer"]),
     ],
 }
 

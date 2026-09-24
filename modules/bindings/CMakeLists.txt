@@ -46,6 +46,8 @@ add_library(Grapple_Bindings STATIC
   src/grapple_ui_lua.c
   src/grapple_engine_lua.c
   src/grapple_ui_ruby.c
+  src/grapple_platformer_lua.c
+  src/grapple_platformer_ruby.c
   ${GRAPPLE_GEN_SOURCES}
 )
 
@@ -78,6 +80,9 @@ if(GRAPPLE_BUILD_LIGHT)
 endif()
 if(GRAPPLE_BUILD_ENGINE)
   target_link_libraries(Grapple_Bindings PUBLIC Grapple::Engine)
+endif()
+if(GRAPPLE_BUILD_PLATFORMER)
+  target_link_libraries(Grapple_Bindings PUBLIC Grapple::Platformer)
 endif()
 if(GRAPPLE_BUILD_NET)
   target_link_libraries(Grapple_Bindings PUBLIC Grapple::Net)

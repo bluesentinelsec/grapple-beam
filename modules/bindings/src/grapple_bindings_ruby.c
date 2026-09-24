@@ -791,5 +791,10 @@ bool Grapple_OpenRubyBindings(mrb_state *mrb)
     {
         return false;
     }
+    /* A platformer level and its player, as objects. */
+    if (!Grapple_OpenRubyPlatformer(mrb))
+    {
+        return false;
+    }
     return true;
 }

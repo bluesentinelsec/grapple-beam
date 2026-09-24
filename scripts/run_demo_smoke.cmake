@@ -1,6 +1,7 @@
 # Play a demo for a few seconds with no display, and fail if it dies.
 #
-#   cmake -DDEMO=<executable> [-DSCRIPT=<file>] -DSECONDS=5 -P scripts/run_demo_smoke.cmake
+#   cmake -DDEMO=<executable> [-DSCRIPT=<file>] [-DPATTERN=<regex>] -DSECONDS=5 \
+#         -P scripts/run_demo_smoke.cmake
 #
 # What this checks is the thing a demo is uniquely placed to catch — that the
 # engine survives being *run*, frame after frame, rather than being called once
@@ -11,6 +12,9 @@
 # each point when they run without a window, and a run that scored nothing is a
 # failure. That makes a pass mean the loop ticked, the ball moved, and it
 # bounced off something.
+#
+# PATTERN is what "something happened" looks like for this demo: Pong's score
+# line by default, a state change for a demo that narrates differently.
 cmake_minimum_required(VERSION 3.20)
 
 if(NOT DEFINED DEMO)
@@ -18,6 +22,9 @@ if(NOT DEFINED DEMO)
 endif()
 if(NOT DEFINED SECONDS)
   set(SECONDS 5)
+endif()
+if(NOT DEFINED PATTERN)
+  set(PATTERN "score [0-9]+-[0-9]+")
 endif()
 
 set(command "${DEMO}")
@@ -42,15 +49,15 @@ execute_process(
 )
 
 if(result MATCHES "timeout" OR result EQUAL 0)
-  if(NOT output MATCHES "score [0-9]+-[0-9]+")
+  if(NOT output MATCHES "${PATTERN}")
     message(FATAL_ERROR
-      "the demo ran but never scored a point, so the simulation is not "
+      "the demo ran but never printed '${PATTERN}', so the simulation is not "
       "advancing:\n${output}")
   endif()
 endif()
 
 if(result MATCHES "timeout")
-  message(STATUS "still playing after ${SECONDS}s, points scored — ok")
+  message(STATUS "still playing after ${SECONDS}s, and something happened — ok")
   return()
 endif()
 

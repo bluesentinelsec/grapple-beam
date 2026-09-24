@@ -55,8 +55,17 @@ extern "C"
     /** `Grapple.engine{...}`: one table instead of a run of setters. */
     extern bool Grapple_OpenLuaEngine(lua_State *L);
 
+    /** Grapple.create_level / Grapple.load_level and the level and player
+     *  objects over Grapple::Platformer. Called for you by
+     *  Grapple_OpenLuaBindings. */
+    extern bool Grapple_OpenLuaPlatformer(lua_State *L);
+
     /** The same pair for Ruby: Grapple.engine(...) and Grapple.ui(engine). */
     extern bool Grapple_OpenRubyUi(mrb_state *mrb);
+
+    /** The same platformer objects for Ruby. Called for you by
+     *  Grapple_OpenRubyBindings. */
+    extern bool Grapple_OpenRubyPlatformer(mrb_state *mrb);
 
     /** @brief Load a settings script in an isolated interpreter without game bindings.
      * @param settings Snapshot to overlay atomically. @param language lua or ruby.

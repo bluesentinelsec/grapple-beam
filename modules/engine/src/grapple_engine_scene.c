@@ -330,6 +330,12 @@ int Grapple_SceneDepth(Grapple_Engine *engine)
     return (stack != NULL) ? stack->depth : 0;
 }
 
+bool Grapple_ScenePending(Grapple_Engine *engine)
+{
+    struct Grapple_SceneStack *stack = Stack(engine);
+    return stack != NULL && stack->pending != PENDING_NONE;
+}
+
 Grapple_Scene *Grapple_SceneFind(Grapple_Engine *engine, const char *name)
 {
     struct Grapple_SceneStack *stack = Stack(engine);

@@ -221,6 +221,17 @@ bool Grapple_ScriptSetHook(Grapple_Engine *engine, Grapple_ScriptHook hook, Sint
 
 bool Grapple_ScriptHasHandlers(Grapple_Engine *engine)
 {
+    if (engine == NULL)
+    {
+        return false;
+    }
+    /* A scene on the stack — or one about to land there, since pushes are
+       deferred — is a game described without a single hook: a level built
+       through Grapple::Platformer, say. It counts. */
+    if (Grapple_SceneDepth(engine) > 0 || Grapple_ScenePending(engine))
+    {
+        return true;
+    }
     struct Grapple_ScriptBridge *bridge = Bridge(engine, false);
     if (bridge == NULL)
     {
@@ -238,8 +249,12 @@ bool Grapple_ScriptHasHandlers(Grapple_Engine *engine)
 
 bool Grapple_ScriptRun(Grapple_Engine *engine)
 {
-    struct Grapple_ScriptBridge *bridge = Bridge(engine, false);
-    if (bridge == NULL || !Grapple_ScriptHasHandlers(engine))
+    /* A game described entirely by scenes never bound a hook, so it has no
+       bridge yet; it still gets one, because the loop wants a hooks struct
+       to run — an empty one is fine. */
+    struct Grapple_ScriptBridge *bridge =
+        Grapple_ScriptHasHandlers(engine) ? Bridge(engine, true) : NULL;
+    if (bridge == NULL)
     {
         /* A script that calls Run with nothing registered has almost
            certainly forgotten to register, and a silent black window is a

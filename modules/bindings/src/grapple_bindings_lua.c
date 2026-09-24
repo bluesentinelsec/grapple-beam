@@ -783,5 +783,10 @@ bool Grapple_OpenLuaBindings(lua_State *L)
     {
         return false;
     }
+    /* A platformer level and its player, as objects. */
+    if (!Grapple_OpenLuaPlatformer(L))
+    {
+        return false;
+    }
     return true;
 }

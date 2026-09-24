@@ -177,6 +177,19 @@ GRAPPLE_PAD_START	include/grapple/audio_bus.h	/^.*GRAPPLE_PAD_START/;"	e
 GRAPPLE_PAD_TOUCHPAD	include/grapple/audio_bus.h	/^.*GRAPPLE_PAD_TOUCHPAD/;"	e
 GRAPPLE_PAD_X	include/grapple/audio_bus.h	/^.*GRAPPLE_PAD_X/;"	e
 GRAPPLE_PAD_Y	include/grapple/audio_bus.h	/^.*GRAPPLE_PAD_Y/;"	e
+GRAPPLE_PLATFORMER_EMPTY	include/grapple/audio_bus.h	/^.*GRAPPLE_PLATFORMER_EMPTY/;"	e
+GRAPPLE_PLATFORMER_ONE_WAY	include/grapple/audio_bus.h	/^.*GRAPPLE_PLATFORMER_ONE_WAY/;"	e
+GRAPPLE_PLATFORMER_SCROLL_FORWARD	include/grapple/audio_bus.h	/^.*GRAPPLE_PLATFORMER_SCROLL_FORWARD/;"	e
+GRAPPLE_PLATFORMER_SCROLL_FREE	include/grapple/audio_bus.h	/^.*GRAPPLE_PLATFORMER_SCROLL_FREE/;"	e
+GRAPPLE_PLATFORMER_SOLID	include/grapple/audio_bus.h	/^.*GRAPPLE_PLATFORMER_SOLID/;"	e
+GRAPPLE_PLATFORMER_TILE_COUNT	include/grapple/audio_bus.h	/^.*GRAPPLE_PLATFORMER_TILE_COUNT/;"	e
+GRAPPLE_PLAYER_FALL	include/grapple/audio_bus.h	/^.*GRAPPLE_PLAYER_FALL/;"	e
+GRAPPLE_PLAYER_IDLE	include/grapple/audio_bus.h	/^.*GRAPPLE_PLAYER_IDLE/;"	e
+GRAPPLE_PLAYER_JUMP	include/grapple/audio_bus.h	/^.*GRAPPLE_PLAYER_JUMP/;"	e
+GRAPPLE_PLAYER_PAUSED	include/grapple/audio_bus.h	/^.*GRAPPLE_PLAYER_PAUSED/;"	e
+GRAPPLE_PLAYER_RUN	include/grapple/audio_bus.h	/^.*GRAPPLE_PLAYER_RUN/;"	e
+GRAPPLE_PLAYER_STATE_COUNT	include/grapple/audio_bus.h	/^.*GRAPPLE_PLAYER_STATE_COUNT/;"	e
+GRAPPLE_PLAYER_WALK	include/grapple/audio_bus.h	/^.*GRAPPLE_PLAYER_WALK/;"	e
 GRAPPLE_PRESENT_EXPAND	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_EXPAND/;"	e
 GRAPPLE_PRESENT_INTEGER	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_INTEGER/;"	e
 GRAPPLE_PRESENT_LETTERBOX	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_LETTERBOX/;"	e
@@ -439,6 +452,7 @@ Grapple_CreateEngine	include/grapple/engine.h	/^.*Grapple_CreateEngine *(/;"	f
 Grapple_CreateGui	include/grapple/gui.h	/^.*Grapple_CreateGui *(/;"	f
 Grapple_CreateGuiWithGlyphs	include/grapple/gui.h	/^.*Grapple_CreateGuiWithGlyphs *(/;"	f
 Grapple_CreateLightScene	include/grapple/light.h	/^.*Grapple_CreateLightScene *(/;"	f
+Grapple_CreatePlatformer	include/grapple/platformer.h	/^.*Grapple_CreatePlatformer *(/;"	f
 Grapple_CreateSettings	include/grapple/engine_settings.h	/^.*Grapple_CreateSettings *(/;"	f
 Grapple_CreateSignalEmitter	include/grapple/signals.h	/^.*Grapple_CreateSignalEmitter *(/;"	f
 Grapple_CryptoSelfTest	include/grapple/crypto.h	/^.*Grapple_CryptoSelfTest *(/;"	f
@@ -455,6 +469,7 @@ Grapple_DestroyChipStyle	include/grapple/chiptune.h	/^.*Grapple_DestroyChipStyle
 Grapple_DestroyEngine	include/grapple/engine.h	/^.*Grapple_DestroyEngine *(/;"	f
 Grapple_DestroyGui	include/grapple/gui.h	/^.*Grapple_DestroyGui *(/;"	f
 Grapple_DestroyLightScene	include/grapple/light.h	/^.*Grapple_DestroyLightScene *(/;"	f
+Grapple_DestroyPlatformer	include/grapple/platformer.h	/^.*Grapple_DestroyPlatformer *(/;"	f
 Grapple_DestroyRegex	include/grapple/regex.h	/^.*Grapple_DestroyRegex *(/;"	f
 Grapple_DestroySettings	include/grapple/engine_settings.h	/^.*Grapple_DestroySettings *(/;"	f
 Grapple_DestroySignalEmitter	include/grapple/signals.h	/^.*Grapple_DestroySignalEmitter *(/;"	f
@@ -806,6 +821,7 @@ Grapple_LoadChipSong_IO	include/grapple/chiptune.h	/^.*Grapple_LoadChipSong_IO *
 Grapple_LoadChipSong_IOEx	include/grapple/chiptune.h	/^.*Grapple_LoadChipSong_IOEx *(/;"	f
 Grapple_LoadChipStyle	include/grapple/chiptune.h	/^.*Grapple_LoadChipStyle *(/;"	f
 Grapple_LoadChipStyleMemory	include/grapple/chiptune.h	/^.*Grapple_LoadChipStyleMemory *(/;"	f
+Grapple_LoadPlatformer	include/grapple/platformer.h	/^.*Grapple_LoadPlatformer *(/;"	f
 Grapple_LoadTextFile	include/grapple/textfile.h	/^.*Grapple_LoadTextFile *(/;"	f
 Grapple_LoadTexture	include/grapple/engine_assets.h	/^.*Grapple_LoadTexture *(/;"	f
 Grapple_LoadTextureAsync	include/grapple/engine_assets.h	/^.*Grapple_LoadTextureAsync *(/;"	f
@@ -845,9 +861,78 @@ Grapple_PhysicsSetGravity	include/grapple/engine_physics.h	/^.*Grapple_PhysicsSe
 Grapple_PhysicsSetPaused	include/grapple/engine_physics.h	/^.*Grapple_PhysicsSetPaused *(/;"	f
 Grapple_PhysicsSetPixelsPerMetre	include/grapple/engine_physics.h	/^.*Grapple_PhysicsSetPixelsPerMetre *(/;"	f
 Grapple_PhysicsSetSubSteps	include/grapple/engine_physics.h	/^.*Grapple_PhysicsSetSubSteps *(/;"	f
+Grapple_PlatformerActionDown	include/grapple/platformer.h	/^.*Grapple_PlatformerActionDown *(/;"	f
+Grapple_PlatformerActionPressed	include/grapple/platformer.h	/^.*Grapple_PlatformerActionPressed *(/;"	f
+Grapple_PlatformerActionReleased	include/grapple/platformer.h	/^.*Grapple_PlatformerActionReleased *(/;"	f
+Grapple_PlatformerActionValue	include/grapple/platformer.h	/^.*Grapple_PlatformerActionValue *(/;"	f
+Grapple_PlatformerActions	include/grapple/platformer.h	/^.*Grapple_PlatformerActions *(/;"	f
+Grapple_PlatformerAddSolid	include/grapple/platformer.h	/^.*Grapple_PlatformerAddSolid *(/;"	f
+Grapple_PlatformerAttach	include/grapple/platformer.h	/^.*Grapple_PlatformerAttach *(/;"	f
+Grapple_PlatformerAttached	include/grapple/platformer.h	/^.*Grapple_PlatformerAttached *(/;"	f
+Grapple_PlatformerBind	include/grapple/platformer.h	/^.*Grapple_PlatformerBind *(/;"	f
+Grapple_PlatformerCamera	include/grapple/platformer.h	/^.*Grapple_PlatformerCamera *(/;"	f
+Grapple_PlatformerCameraPosition	include/grapple/platformer.h	/^.*Grapple_PlatformerCameraPosition *(/;"	f
+Grapple_PlatformerCreateBlock	include/grapple/platformer.h	/^.*Grapple_PlatformerCreateBlock *(/;"	f
+Grapple_PlatformerCreateFloor	include/grapple/platformer.h	/^.*Grapple_PlatformerCreateFloor *(/;"	f
+Grapple_PlatformerCreatePlatform	include/grapple/platformer.h	/^.*Grapple_PlatformerCreatePlatform *(/;"	f
+Grapple_PlatformerCreatePlayer	include/grapple/platformer.h	/^.*Grapple_PlatformerCreatePlayer *(/;"	f
+Grapple_PlatformerCreateStairs	include/grapple/platformer.h	/^.*Grapple_PlatformerCreateStairs *(/;"	f
+Grapple_PlatformerCreateWall	include/grapple/platformer.h	/^.*Grapple_PlatformerCreateWall *(/;"	f
+Grapple_PlatformerDetach	include/grapple/platformer.h	/^.*Grapple_PlatformerDetach *(/;"	f
+Grapple_PlatformerEngine	include/grapple/platformer.h	/^.*Grapple_PlatformerEngine *(/;"	f
+Grapple_PlatformerFillTiles	include/grapple/platformer.h	/^.*Grapple_PlatformerFillTiles *(/;"	f
+Grapple_PlatformerHasPlayer	include/grapple/platformer.h	/^.*Grapple_PlatformerHasPlayer *(/;"	f
+Grapple_PlatformerHeight	include/grapple/platformer.h	/^.*Grapple_PlatformerHeight *(/;"	f
+Grapple_PlatformerPixelSize	include/grapple/platformer.h	/^.*Grapple_PlatformerPixelSize *(/;"	f
+Grapple_PlatformerPlayer	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayer *(/;"	f
+Grapple_PlatformerPlayerBumped	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerBumped *(/;"	f
+Grapple_PlatformerPlayerFacing	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerFacing *(/;"	f
+Grapple_PlatformerPlayerFell	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerFell *(/;"	f
+Grapple_PlatformerPlayerGrounded	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerGrounded *(/;"	f
+Grapple_PlatformerPlayerJumped	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerJumped *(/;"	f
+Grapple_PlatformerPlayerLanded	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerLanded *(/;"	f
+Grapple_PlatformerPlayerPaused	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerPaused *(/;"	f
+Grapple_PlatformerPlayerPosition	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerPosition *(/;"	f
+Grapple_PlatformerPlayerRespawn	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerRespawn *(/;"	f
+Grapple_PlatformerPlayerRespawnAtStart	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerRespawnAtStart *(/;"	f
+Grapple_PlatformerPlayerSize	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerSize *(/;"	f
+Grapple_PlatformerPlayerState	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerState *(/;"	f
+Grapple_PlatformerPlayerStateChanged	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerStateChanged *(/;"	f
+Grapple_PlatformerPlayerStateName	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerStateName *(/;"	f
+Grapple_PlatformerPlayerTuning	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerTuning *(/;"	f
+Grapple_PlatformerPlayerTuningCount	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerTuningCount *(/;"	f
+Grapple_PlatformerPlayerTuningKey	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerTuningKey *(/;"	f
+Grapple_PlatformerPlayerVelocity	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerVelocity *(/;"	f
+Grapple_PlatformerRemovePlayer	include/grapple/platformer.h	/^.*Grapple_PlatformerRemovePlayer *(/;"	f
+Grapple_PlatformerRemoveSolid	include/grapple/platformer.h	/^.*Grapple_PlatformerRemoveSolid *(/;"	f
+Grapple_PlatformerRender	include/grapple/platformer.h	/^.*Grapple_PlatformerRender *(/;"	f
+Grapple_PlatformerScriptInput	include/grapple/platformer.h	/^.*Grapple_PlatformerScriptInput *(/;"	f
+Grapple_PlatformerScriptedInput	include/grapple/platformer.h	/^.*Grapple_PlatformerScriptedInput *(/;"	f
+Grapple_PlatformerScroll	include/grapple/audio_bus.h	/^.*Grapple_PlatformerScroll/;"	g
+Grapple_PlatformerScrollMode	include/grapple/platformer.h	/^.*Grapple_PlatformerScrollMode *(/;"	f
+Grapple_PlatformerSetBackgroundColor	include/grapple/platformer.h	/^.*Grapple_PlatformerSetBackgroundColor *(/;"	f
+Grapple_PlatformerSetCameraSmoothing	include/grapple/platformer.h	/^.*Grapple_PlatformerSetCameraSmoothing *(/;"	f
+Grapple_PlatformerSetPlayerColor	include/grapple/platformer.h	/^.*Grapple_PlatformerSetPlayerColor *(/;"	f
+Grapple_PlatformerSetPlayerPaused	include/grapple/platformer.h	/^.*Grapple_PlatformerSetPlayerPaused *(/;"	f
+Grapple_PlatformerSetPlayerSize	include/grapple/platformer.h	/^.*Grapple_PlatformerSetPlayerSize *(/;"	f
+Grapple_PlatformerSetPlayerTuning	include/grapple/platformer.h	/^.*Grapple_PlatformerSetPlayerTuning *(/;"	f
+Grapple_PlatformerSetScriptedInput	include/grapple/platformer.h	/^.*Grapple_PlatformerSetScriptedInput *(/;"	f
+Grapple_PlatformerSetScroll	include/grapple/platformer.h	/^.*Grapple_PlatformerSetScroll *(/;"	f
+Grapple_PlatformerSetTile	include/grapple/platformer.h	/^.*Grapple_PlatformerSetTile *(/;"	f
+Grapple_PlatformerSetTileColor	include/grapple/platformer.h	/^.*Grapple_PlatformerSetTileColor *(/;"	f
+Grapple_PlatformerSetTileTexture	include/grapple/platformer.h	/^.*Grapple_PlatformerSetTileTexture *(/;"	f
+Grapple_PlatformerSolidCount	include/grapple/platformer.h	/^.*Grapple_PlatformerSolidCount *(/;"	f
+Grapple_PlatformerStep	include/grapple/platformer.h	/^.*Grapple_PlatformerStep *(/;"	f
+Grapple_PlatformerTile	include/grapple/audio_bus.h	/^.*Grapple_PlatformerTile/;"	g
+Grapple_PlatformerTileAt	include/grapple/platformer.h	/^.*Grapple_PlatformerTileAt *(/;"	f
+Grapple_PlatformerTileSize	include/grapple/platformer.h	/^.*Grapple_PlatformerTileSize *(/;"	f
+Grapple_PlatformerUpdate	include/grapple/platformer.h	/^.*Grapple_PlatformerUpdate *(/;"	f
+Grapple_PlatformerWidth	include/grapple/platformer.h	/^.*Grapple_PlatformerWidth *(/;"	f
 Grapple_PlayChipFile	include/grapple/chiptune.h	/^.*Grapple_PlayChipFile *(/;"	f
 Grapple_PlayChipPlayer	include/grapple/chiptune.h	/^.*Grapple_PlayChipPlayer *(/;"	f
 Grapple_PlayChipSong	include/grapple/chiptune.h	/^.*Grapple_PlayChipSong *(/;"	f
+Grapple_PlayerState	include/grapple/audio_bus.h	/^.*Grapple_PlayerState/;"	g
+Grapple_PlayerStateName	include/grapple/platformer.h	/^.*Grapple_PlayerStateName *(/;"	f
 Grapple_PrismaticJointDefCreate	include/grapple/physics_build.h	/^.*Grapple_PrismaticJointDefCreate *(/;"	f
 Grapple_PrismaticJointDefDestroy	include/grapple/physics_build.h	/^.*Grapple_PrismaticJointDefDestroy *(/;"	f
 Grapple_PrismaticJointDefSetAnchors	include/grapple/physics_build.h	/^.*Grapple_PrismaticJointDefSetAnchors *(/;"	f
@@ -926,6 +1011,7 @@ Grapple_SceneHook	include/grapple/audio_bus.h	/^.*Grapple_SceneHook/;"	g
 Grapple_SceneIsActive	include/grapple/engine_scene.h	/^.*Grapple_SceneIsActive *(/;"	f
 Grapple_SceneKey	include/grapple/engine_script.h	/^.*Grapple_SceneKey *(/;"	f
 Grapple_SceneName	include/grapple/engine_scene.h	/^.*Grapple_SceneName *(/;"	f
+Grapple_ScenePending	include/grapple/engine_scene.h	/^.*Grapple_ScenePending *(/;"	f
 Grapple_ScenePop	include/grapple/engine_scene.h	/^.*Grapple_ScenePop *(/;"	f
 Grapple_ScenePush	include/grapple/engine_scene.h	/^.*Grapple_ScenePush *(/;"	f
 Grapple_SceneReplace	include/grapple/engine_scene.h	/^.*Grapple_SceneReplace *(/;"	f

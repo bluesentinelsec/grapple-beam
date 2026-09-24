@@ -2595,6 +2595,7 @@ returns as an array.
 | `GrappleC.CreateGui(renderer: SDL_Renderer, font_data: string|nil, font_size: number)` | Grapple_Gui|nil |
 | `GrappleC.CreateGuiWithGlyphs(renderer: SDL_Renderer, font_data: string|nil, font_size: number, range: integer)` | Grapple_Gui|nil |
 | `GrappleC.CreateLightScene(renderer: SDL_Renderer)` | Grapple_LightScene|nil |
+| `GrappleC.CreatePlatformer(engine: Grapple_Engine, width: integer, height: integer, tile_size: integer)` | Grapple_Platformer|nil |
 | `GrappleC.CreateSettings()` | Grapple_Settings|nil |
 | `GrappleC.CreateSignalEmitter()` | Grapple_SignalEmitter|nil |
 | `GrappleC.CryptoSelfTest()` | boolean |
@@ -2608,6 +2609,7 @@ returns as an array.
 | `GrappleC.DestroyEngine(engine: Grapple_Engine)` | nil |
 | `GrappleC.DestroyGui(gui: Grapple_Gui)` | nil |
 | `GrappleC.DestroyLightScene(scene: Grapple_LightScene)` | nil |
+| `GrappleC.DestroyPlatformer(level: Grapple_Platformer)` | nil |
 | `GrappleC.DestroyRegex(regex: Grapple_Regex)` | nil |
 | `GrappleC.DestroySettings(settings: Grapple_Settings)` | nil |
 | `GrappleC.DestroySignalEmitter(emitter: Grapple_SignalEmitter)` | nil |
@@ -2912,6 +2914,7 @@ returns as an array.
 | `GrappleC.LoadChipSong(path: string|nil)` | Grapple_ChipSong|nil |
 | `GrappleC.LoadChipSongEx(path: string|nil, options: Grapple_ChipImportOptions table)` | Grapple_ChipSong|nil, error: Grapple_ChipDiagnostic table |
 | `GrappleC.LoadChipStyle(path: string|nil)` | Grapple_ChipStyle|nil |
+| `GrappleC.LoadPlatformer(engine: Grapple_Engine, path: string|nil)` | Grapple_Platformer|nil |
 | `GrappleC.LoadTextFile(path: string|nil)` | string|nil |
 | `GrappleC.LoadTexture(engine: Grapple_Engine, path: string|nil)` | integer |
 | `GrappleC.LoadTextureAsync(engine: Grapple_Engine, path: string|nil)` | integer |
@@ -2946,9 +2949,74 @@ returns as an array.
 | `GrappleC.PhysicsSetPaused(engine: Grapple_Engine, paused: boolean)` | nil |
 | `GrappleC.PhysicsSetPixelsPerMetre(engine: Grapple_Engine, pixels: number)` | nil |
 | `GrappleC.PhysicsSetSubSteps(engine: Grapple_Engine, sub_steps: integer)` | nil |
+| `GrappleC.PlatformerActionDown(level: Grapple_Platformer, action: string|nil)` | boolean |
+| `GrappleC.PlatformerActionPressed(level: Grapple_Platformer, action: string|nil)` | boolean |
+| `GrappleC.PlatformerActionReleased(level: Grapple_Platformer, action: string|nil)` | boolean |
+| `GrappleC.PlatformerActionValue(level: Grapple_Platformer, action: string|nil)` | number |
+| `GrappleC.PlatformerActions(level: Grapple_Platformer)` | Grapple_ActionMap|nil |
+| `GrappleC.PlatformerAddSolid(level: Grapple_Platformer, x: number, y: number, w: number, h: number)` | integer |
+| `GrappleC.PlatformerAttach(level: Grapple_Platformer)` | boolean |
+| `GrappleC.PlatformerAttached(level: Grapple_Platformer)` | boolean |
+| `GrappleC.PlatformerBind(level: Grapple_Platformer, action: string|nil, binding: string|nil)` | boolean |
+| `GrappleC.PlatformerCameraPosition(level: Grapple_Platformer, x: number, y: number)` | x: number, y: number |
+| `GrappleC.PlatformerCreateBlock(level: Grapple_Platformer, x: integer, y: integer, width: integer, height: integer)` | boolean |
+| `GrappleC.PlatformerCreateFloor(level: Grapple_Platformer, x: integer, y: integer, width: integer, depth: integer)` | boolean |
+| `GrappleC.PlatformerCreatePlatform(level: Grapple_Platformer, x: integer, y: integer, width: integer)` | boolean |
+| `GrappleC.PlatformerCreatePlayer(level: Grapple_Platformer, tile_x: integer, tile_y: integer)` | integer |
+| `GrappleC.PlatformerCreateStairs(level: Grapple_Platformer, x: integer, y: integer, steps: integer, rising: boolean)` | boolean |
+| `GrappleC.PlatformerCreateWall(level: Grapple_Platformer, x: integer, y: integer, height: integer)` | boolean |
+| `GrappleC.PlatformerDetach(level: Grapple_Platformer)` | nil |
+| `GrappleC.PlatformerEngine(level: Grapple_Platformer)` | Grapple_Engine|nil |
+| `GrappleC.PlatformerFillTiles(level: Grapple_Platformer, x: integer, y: integer, width: integer, height: integer, tile: integer)` | integer |
+| `GrappleC.PlatformerHasPlayer(level: Grapple_Platformer)` | boolean |
+| `GrappleC.PlatformerHeight(level: Grapple_Platformer)` | integer |
+| `GrappleC.PlatformerPixelSize(level: Grapple_Platformer, width: number, height: number)` | width: number, height: number |
+| `GrappleC.PlatformerPlayer(level: Grapple_Platformer)` | integer |
+| `GrappleC.PlatformerPlayerBumped(level: Grapple_Platformer)` | boolean |
+| `GrappleC.PlatformerPlayerFacing(level: Grapple_Platformer)` | integer |
+| `GrappleC.PlatformerPlayerFell(level: Grapple_Platformer)` | boolean |
+| `GrappleC.PlatformerPlayerGrounded(level: Grapple_Platformer)` | boolean |
+| `GrappleC.PlatformerPlayerJumped(level: Grapple_Platformer)` | boolean |
+| `GrappleC.PlatformerPlayerLanded(level: Grapple_Platformer)` | boolean |
+| `GrappleC.PlatformerPlayerPaused(level: Grapple_Platformer)` | boolean |
+| `GrappleC.PlatformerPlayerPosition(level: Grapple_Platformer, x: number, y: number)` | x: number, y: number |
+| `GrappleC.PlatformerPlayerRespawn(level: Grapple_Platformer, x: number, y: number)` | nil |
+| `GrappleC.PlatformerPlayerRespawnAtStart(level: Grapple_Platformer)` | nil |
+| `GrappleC.PlatformerPlayerSize(level: Grapple_Platformer, width: number, height: number)` | width: number, height: number |
+| `GrappleC.PlatformerPlayerState(level: Grapple_Platformer)` | integer |
+| `GrappleC.PlatformerPlayerStateChanged(level: Grapple_Platformer)` | boolean |
+| `GrappleC.PlatformerPlayerStateName(level: Grapple_Platformer)` | string|nil |
+| `GrappleC.PlatformerPlayerTuning(level: Grapple_Platformer, key: string|nil)` | number |
+| `GrappleC.PlatformerPlayerTuningCount()` | integer |
+| `GrappleC.PlatformerPlayerTuningKey(index: integer)` | string|nil |
+| `GrappleC.PlatformerPlayerVelocity(level: Grapple_Platformer, vx: number, vy: number)` | vx: number, vy: number |
+| `GrappleC.PlatformerRemovePlayer(level: Grapple_Platformer)` | nil |
+| `GrappleC.PlatformerRemoveSolid(level: Grapple_Platformer, id: integer)` | boolean |
+| `GrappleC.PlatformerRender(level: Grapple_Platformer, alpha: number)` | nil |
+| `GrappleC.PlatformerScriptInput(level: Grapple_Platformer, move_x: number, jump: boolean, run: boolean)` | nil |
+| `GrappleC.PlatformerScriptedInput(level: Grapple_Platformer)` | boolean |
+| `GrappleC.PlatformerScrollMode(level: Grapple_Platformer)` | integer |
+| `GrappleC.PlatformerSetBackgroundColor(level: Grapple_Platformer, r: number, g: number, b: number, a: number)` | nil |
+| `GrappleC.PlatformerSetCameraSmoothing(level: Grapple_Platformer, seconds: number)` | nil |
+| `GrappleC.PlatformerSetPlayerColor(level: Grapple_Platformer, r: number, g: number, b: number, a: number)` | nil |
+| `GrappleC.PlatformerSetPlayerPaused(level: Grapple_Platformer, paused: boolean)` | nil |
+| `GrappleC.PlatformerSetPlayerSize(level: Grapple_Platformer, width: number, height: number)` | nil |
+| `GrappleC.PlatformerSetPlayerTuning(level: Grapple_Platformer, key: string|nil, value: number)` | boolean |
+| `GrappleC.PlatformerSetScriptedInput(level: Grapple_Platformer, enabled: boolean)` | nil |
+| `GrappleC.PlatformerSetScroll(level: Grapple_Platformer, mode: integer)` | nil |
+| `GrappleC.PlatformerSetTile(level: Grapple_Platformer, x: integer, y: integer, tile: integer)` | boolean |
+| `GrappleC.PlatformerSetTileColor(level: Grapple_Platformer, tile: integer, r: number, g: number, b: number, a: number)` | nil |
+| `GrappleC.PlatformerSetTileTexture(level: Grapple_Platformer, tile: integer, texture: SDL_Texture)` | nil |
+| `GrappleC.PlatformerSolidCount(level: Grapple_Platformer)` | integer |
+| `GrappleC.PlatformerStep(level: Grapple_Platformer, step: number)` | nil |
+| `GrappleC.PlatformerTileAt(level: Grapple_Platformer, x: integer, y: integer)` | integer |
+| `GrappleC.PlatformerTileSize(level: Grapple_Platformer)` | integer |
+| `GrappleC.PlatformerUpdate(level: Grapple_Platformer, dt: number)` | nil |
+| `GrappleC.PlatformerWidth(level: Grapple_Platformer)` | integer |
 | `GrappleC.PlayChipFile(path: string|nil, loop: boolean)` | Grapple_ChipPlayer|nil |
 | `GrappleC.PlayChipPlayer(player: Grapple_ChipPlayer)` | boolean |
 | `GrappleC.PlayChipSong(song: Grapple_ChipSong, loop: boolean)` | Grapple_ChipPlayer|nil |
+| `GrappleC.PlayerStateName(state: integer)` | string|nil |
 | `GrappleC.PrismaticJointDefCreate()` | b2PrismaticJointDef|nil |
 | `GrappleC.PrismaticJointDefDestroy(def: b2PrismaticJointDef)` | nil |
 | `GrappleC.PrismaticJointDefSetAnchors(def: b2PrismaticJointDef, ax: number, ay: number, bx: number, by: number)` | nil |
@@ -3016,6 +3084,7 @@ returns as an array.
 | `GrappleC.SceneIsActive(scene: Grapple_Scene)` | boolean |
 | `GrappleC.SceneKey(scene: Grapple_Scene)` | integer |
 | `GrappleC.SceneName(scene: Grapple_Scene)` | string|nil |
+| `GrappleC.ScenePending(engine: Grapple_Engine)` | boolean |
 | `GrappleC.ScenePop(engine: Grapple_Engine)` | boolean |
 | `GrappleC.ScenePush(engine: Grapple_Engine, def: Grapple_SceneDef)` | boolean |
 | `GrappleC.SceneReplace(engine: Grapple_Engine, def: Grapple_SceneDef)` | boolean |

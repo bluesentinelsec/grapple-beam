@@ -12,6 +12,25 @@ None of them contains a `while (running)`.
 The [C chiptune demo](chiptune/README.md) loads and plays MIDI, MusicXML and MXL
 through the library and engine loop. It also demonstrates offline WAV export.
 
+## Platformer
+
+The opening stretch of a Super Mario Bros. style level — floor, blocks, walls,
+stairs, pits — and a character that runs and jumps around it, on
+[`Grapple::Platformer`](../docs/platformer.md). Everything on screen is a
+filled rectangle; the shapes are where the art goes. Same game four times:
+
+| File | Language | How it runs |
+| --- | --- | --- |
+| [`platformer/platformer.c`](platformer/platformer.c) | C | compiled to `platformer-c` |
+| [`platformer/platformer.cpp`](platformer/platformer.cpp) | C++ | compiled to `platformer-cpp` |
+| [`platformer/platformer.lua`](platformer/platformer.lua) | Lua | `grapple-beam run platformer.lua` |
+| [`platformer/platformer.rb`](platformer/platformer.rb) | Ruby | `grapple-beam run platformer.rb` |
+
+Controls: **A**/**D** or the arrows walk, **Shift** or **X** runs, **Space**
+or **Z** jumps. An Xbox-layout pad works the same — left stick or d-pad,
+**X** or the right trigger to run, **A** to jump. **Escape** quits. Headless,
+the level plays itself and narrates its state changes, which is what CI checks.
+
 ## Pong
 
 The same game four times, once per supported language. They are deliberately
