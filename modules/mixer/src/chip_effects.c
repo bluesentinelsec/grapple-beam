@@ -3,7 +3,7 @@
 
 bool Grapple_GetChipPresetEffects(Grapple_ChipPreset preset, Grapple_ChipEffects *effects)
 {
-    if (!effects || preset < GRAPPLE_CHIP_PRESET_LEAD || preset > GRAPPLE_CHIP_PRESET_DRUMS)
+    if (!effects || preset < GRAPPLE_CHIP_PRESET_FIRST || preset > GRAPPLE_CHIP_PRESET_LAST)
         return SDL_SetError("chiptune: invalid effect preset");
     SDL_zero(*effects);
     if (preset == GRAPPLE_CHIP_PRESET_LEAD)
@@ -31,7 +31,8 @@ bool Chip_EffectsValid(const Grapple_ChipEffects *s)
            s->delay_beats >= 0 && s->delay_beats <= 4 && s->delay_feedback >= 0 &&
            s->delay_feedback <= 0.85f && s->reverb >= 0 && s->reverb <= 1 && s->motion >= 0 &&
            s->motion <= 1 && (s->delay == 0 || s->delay_beats > 0) && s->pulse_depth >= 0 &&
-           s->pulse_depth <= 1 &&
+           s->pulse_depth <= 1 && s->phaser >= 0 && s->phaser <= 1 && s->flanger >= 0 &&
+           s->flanger <= 1 &&
            (s->pulse_beats == 0 || (s->pulse_beats >= 0.0625 && s->pulse_beats <= 16));
 }
 
@@ -42,6 +43,7 @@ bool Chip_EffectsInit(ChipEffectBus *b, Grapple_ChipPreset preset, int rate)
         return false;
     b->delay_size = rate * 4 + 2;
     b->chorus_size = rate / 20 + 2;
+    b->flanger_size = rate / 50 + 2;
     const float lengths[8] = {0.0297f, 0.0371f, 0.0411f, 0.0437f,
                               0.0307f, 0.0383f, 0.0423f, 0.0449f};
     for (int i = 0; i < 8; ++i)
@@ -51,8 +53,9 @@ bool Chip_EffectsInit(ChipEffectBus *b, Grapple_ChipPreset preset, int rate)
     }
     b->delay = SDL_calloc((size_t)b->delay_size * 2, sizeof(float));
     b->chorus = SDL_calloc((size_t)b->chorus_size * 2, sizeof(float));
+    b->flanger = SDL_calloc((size_t)b->flanger_size * 2, sizeof(float));
     b->room = SDL_calloc((size_t)b->room_size, sizeof(float));
-    return b->delay && b->chorus && b->room;
+    return b->delay && b->chorus && b->flanger && b->room;
 }
 
 void Chip_EffectsClear(ChipEffectBus *b)
@@ -61,12 +64,16 @@ void Chip_EffectsClear(ChipEffectBus *b)
         SDL_memset(b->delay, 0, (size_t)b->delay_size * 2 * sizeof(float));
     if (b->chorus)
         SDL_memset(b->chorus, 0, (size_t)b->chorus_size * 2 * sizeof(float));
+    if (b->flanger)
+        SDL_memset(b->flanger, 0, (size_t)b->flanger_size * 2 * sizeof(float));
     if (b->room)
         SDL_memset(b->room, 0, (size_t)b->room_size * sizeof(float));
     SDL_zeroa(b->comb_pos);
     SDL_zeroa(b->damp);
-    b->delay_pos = b->chorus_pos = 0;
+    SDL_zeroa(b->phaser_z);
+    b->delay_pos = b->chorus_pos = b->flanger_pos = 0;
     b->phase = 0;
+    b->flanger_phase = 0;
     b->delay_frames = 0;
 }
 
@@ -74,7 +81,15 @@ void Chip_EffectsDestroy(ChipEffectBus *b)
 {
     SDL_free(b->delay);
     SDL_free(b->chorus);
+    SDL_free(b->flanger);
     SDL_free(b->room);
+}
+
+static float Allpass(float sample, float *state, float coeff)
+{
+    const float out = -coeff * sample + *state;
+    *state = out * coeff + sample;
+    return out;
 }
 
 static float ReadDelay(const float *buffer, int size, int position, float frames, int channel)
@@ -108,6 +123,37 @@ void Chip_EffectsProcess(ChipEffectBus *b, int rate, float seconds_per_beat, flo
         b->phase += 0.65 / rate;
         if (b->phase >= 1)
             b->phase -= 1;
+    }
+    if (s->flanger > 0 && b->flanger)
+    {
+        const float lfo = SDL_sinf((float)b->flanger_phase * 2.0f * SDL_PI_F);
+        const float frames = SDL_max(1.0f, (0.0015f + lfo * 0.0015f) * (float)rate);
+        const float delayed_left =
+            ReadDelay(b->flanger, b->flanger_size, b->flanger_pos, frames, 0);
+        const float delayed_right =
+            ReadDelay(b->flanger, b->flanger_size, b->flanger_pos, frames, 1);
+        b->flanger[b->flanger_pos * 2] = *left + delayed_left * s->flanger * 0.4f;
+        b->flanger[b->flanger_pos * 2 + 1] = *right + delayed_right * s->flanger * 0.4f;
+        *left = *left * (1.0f - s->flanger * 0.5f) + delayed_left * s->flanger * 0.5f;
+        *right = *right * (1.0f - s->flanger * 0.5f) + delayed_right * s->flanger * 0.5f;
+        b->flanger_pos = (b->flanger_pos + 1) % b->flanger_size;
+        b->flanger_phase += 0.35 / rate;
+        if (b->flanger_phase >= 1)
+            b->flanger_phase -= 1;
+    }
+    if (s->phaser > 0)
+    {
+        const float lfo = 0.5f + 0.5f * SDL_sinf((float)b->phase * 5.0f * SDL_PI_F);
+        const float coeff = 0.2f + 0.7f * lfo;
+        float phased_left = *left;
+        float phased_right = *right;
+        for (int i = 0; i < 4; ++i)
+        {
+            phased_left = Allpass(phased_left, &b->phaser_z[i], coeff);
+            phased_right = Allpass(phased_right, &b->phaser_z[i + 4], coeff);
+        }
+        *left = *left * (1.0f - s->phaser * 0.5f) + phased_left * s->phaser * 0.5f;
+        *right = *right * (1.0f - s->phaser * 0.5f) + phased_right * s->phaser * 0.5f;
     }
     if (s->delay > 0)
     {

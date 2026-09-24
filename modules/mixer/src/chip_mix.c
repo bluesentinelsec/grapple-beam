@@ -86,12 +86,71 @@ bool Grapple_ReadChipTrackEffects(Grapple_ChipPlayer *p, int track, Grapple_Chip
                                   Grapple_ChipEffects *effects)
 {
     if (!p || track < 0 || track >= p->song->info.track_count || !effects ||
-        preset < GRAPPLE_CHIP_PRESET_LEAD || preset > GRAPPLE_CHIP_PRESET_DRUMS)
+        preset < GRAPPLE_CHIP_PRESET_FIRST || preset > GRAPPLE_CHIP_PRESET_LAST)
         return SDL_SetError("chiptune: invalid track effect output");
     if (!SDL_LockAudioStream(p->stream))
         return false;
     *effects =
         p->parts[track].effects ? p->parts[track].effects->settings : p->effects[preset].settings;
+    SDL_UnlockAudioStream(p->stream);
+    return true;
+}
+
+static bool RoleControlsValid(const Grapple_ChipRoleControls *c)
+{
+    return c && c->level >= 0 && c->level <= 2 && c->attack_ms >= 0 && c->attack_ms <= 2000 &&
+           c->decay_ms >= 0 && c->decay_ms <= 4000 && c->sustain >= 0 && c->sustain <= 1 &&
+           c->release_ms >= 0 && c->release_ms <= 4000 && c->duty >= 0.05f && c->duty <= 0.95f &&
+           c->pwm >= 0 && c->pwm <= 1 && c->vibrato >= 0 && c->vibrato <= 1 && c->cutoff_hz >= 0 &&
+           c->cutoff_hz <= 20000 && Chip_EffectsValid(&c->effects);
+}
+
+bool Grapple_ReadChipRoleControls(Grapple_ChipPlayer *p, Grapple_ChipPreset preset,
+                                  Grapple_ChipRoleControls *controls)
+{
+    if (!p || !controls || preset < GRAPPLE_CHIP_PRESET_FIRST || preset > GRAPPLE_CHIP_PRESET_LAST)
+        return SDL_SetError("chiptune: invalid role controls");
+    if (!SDL_LockAudioStream(p->stream))
+        return false;
+    const ChipRoleRecipe *r = &p->recipes[preset];
+    *controls = (Grapple_ChipRoleControls){
+        .level = r->level,
+        .attack_ms = r->attack_ms,
+        .decay_ms = r->decay_ms,
+        .sustain = r->sustain,
+        .release_ms = r->release_ms,
+        .duty = r->duty,
+        .pwm = r->pwm,
+        .vibrato = r->vibrato,
+        .cutoff_hz = r->cutoff_hz,
+        .effects = p->effects[preset].settings,
+    };
+    SDL_UnlockAudioStream(p->stream);
+    return true;
+}
+
+bool Grapple_SetChipRoleControls(Grapple_ChipPlayer *p, Grapple_ChipPreset preset,
+                                 const Grapple_ChipRoleControls *controls)
+{
+    if (!p || preset < GRAPPLE_CHIP_PRESET_FIRST || preset > GRAPPLE_CHIP_PRESET_LAST ||
+        !RoleControlsValid(controls))
+        return SDL_SetError("chiptune: invalid role controls");
+    if (!SDL_LockAudioStream(p->stream))
+        return false;
+    ChipRoleRecipe *r = &p->recipes[preset];
+    r->level = controls->level;
+    r->attack_ms = controls->attack_ms;
+    r->decay_ms = controls->decay_ms;
+    r->sustain = controls->sustain;
+    r->release_ms = controls->release_ms;
+    r->duty = controls->duty;
+    r->pwm = controls->pwm;
+    r->vibrato = controls->vibrato;
+    r->cutoff_hz = controls->cutoff_hz;
+    r->effects = controls->effects;
+    p->effects[preset].settings = controls->effects;
+    Chip_EffectsClear(&p->effects[preset]);
+    p->effect_used[preset] = false;
     SDL_UnlockAudioStream(p->stream);
     return true;
 }

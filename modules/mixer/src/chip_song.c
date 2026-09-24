@@ -220,7 +220,7 @@ bool Grapple_SetChipPart(Grapple_ChipComposer *composer, int track, const char *
                          Grapple_ChipPreset preset, float gain)
 {
     if (!composer || !name || track < 0 || track >= composer->song->info.track_count ||
-        preset < GRAPPLE_CHIP_PRESET_AUTO || preset > GRAPPLE_CHIP_PRESET_DRUMS ||
+        preset < GRAPPLE_CHIP_PRESET_AUTO || preset > GRAPPLE_CHIP_PRESET_LAST ||
         !(gain >= 0.0f && gain <= 2.0f))
         return SDL_SetError("chiptune composer: invalid part description");
     Grapple_ChipSong *song = composer->song;

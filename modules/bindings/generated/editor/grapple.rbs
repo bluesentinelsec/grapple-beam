@@ -2477,6 +2477,7 @@ module GrappleC
   def self.AddChipNote: (untyped composer, Hash[Symbol, untyped] note) -> bool
   def self.AddChipNoteEx: (untyped composer, Hash[Symbol, untyped] note, Hash[Symbol, untyped] expression) -> bool
   def self.AddChipSection: (untyped composer, String? name, Integer start_tick, Integer end_tick) -> bool
+  def self.AddChipStyleSearchPath: (String? path) -> bool
   def self.AddChipTempo: (untyped composer, Integer tick, Float bpm) -> bool
   def self.AddDarkZone: (untyped scene, Hash[Symbol, untyped] rect, Hash[Symbol, untyped] ambient) -> bool
   def self.AddLight: (untyped scene, Hash[Symbol, untyped] light) -> bool
@@ -2577,6 +2578,7 @@ module GrappleC
   def self.DestroyChipComposer: (untyped composer) -> void
   def self.DestroyChipPlayer: (untyped player) -> void
   def self.DestroyChipSong: (untyped song) -> void
+  def self.DestroyChipStyle: (untyped style) -> void
   def self.DestroyEngine: (untyped engine) -> void
   def self.DestroyGui: (untyped gui) -> void
   def self.DestroyLightScene: (untyped scene) -> void
@@ -2778,8 +2780,11 @@ module GrappleC
   def self.GetChipExpressionDefaults: () -> Hash[Symbol, untyped]
   def self.GetChipImportDefaults: () -> [bool, Hash[Symbol, untyped]]
   def self.GetChipPlayerPeakVoices: (untyped player) -> Integer
+  def self.GetChipPlayerStyleInfo: (untyped player) -> [bool, Hash[Symbol, untyped]]
   def self.GetChipPresetEffects: (Integer preset) -> [bool, Hash[Symbol, untyped]]
   def self.GetChipSectionCount: (untyped song) -> Integer
+  def self.GetChipStyle: (String? id) -> untyped
+  def self.GetChipStyleCount: () -> Integer
   def self.GetLaunchSettings: () -> untyped
   def self.GraphicsClamp: () -> Hash[Symbol, untyped]
   def self.GraphicsConfigError: () -> String?
@@ -2880,6 +2885,7 @@ module GrappleC
   def self.LightUsesShaders: (untyped scene) -> bool
   def self.LoadChipSong: (String? path) -> untyped
   def self.LoadChipSongEx: (String? path, Hash[Symbol, untyped] options) -> [untyped, Hash[Symbol, untyped]]
+  def self.LoadChipStyle: (String? path) -> untyped
   def self.LoadTextFile: (String? path) -> Integer
   def self.LoadTexture: (untyped engine, String? path) -> Integer
   def self.LoadTextureAsync: (untyped engine, String? path) -> Integer
@@ -2928,8 +2934,11 @@ module GrappleC
   def self.QuitDebugText: () -> void
   def self.ReadChipDiagnostic: (untyped song, Integer index) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipPlayerPosition: (untyped player) -> [bool, Hash[Symbol, untyped]]
+  def self.ReadChipRoleControls: (untyped player, Integer preset) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipSection: (untyped song, Integer index) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipSongInfo: (untyped song) -> [bool, Hash[Symbol, untyped]]
+  def self.ReadChipStyleInfo: (untyped style) -> [bool, Hash[Symbol, untyped]]
+  def self.ReadChipStyleInfoAt: (Integer index) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipTrackEffects: (untyped player, Integer track, Integer preset) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipTrackMapping: (untyped player, Integer track, Integer channel) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipTrackMix: (untyped player, Integer track) -> [bool, Hash[Symbol, untyped]]
@@ -2946,6 +2955,7 @@ module GrappleC
   def self.RegexPattern: (untyped regex) -> String?
   def self.RegexReplace: (untyped regex, String? text, String? replacement, bool all) -> String?
   def self.RegexSearch: (untyped regex, String? text, Integer start) -> bool
+  def self.RegisterChipStyle: (untyped style) -> bool
   def self.RenderBackendCount: () -> Integer
   def self.RenderBackendName: (Integer index) -> String?
   def self.RenderBackendValid: (String? name) -> bool
@@ -3006,8 +3016,10 @@ module GrappleC
   def self.SetChipPart: (untyped composer, Integer track, String? name, Integer preset, Float gain) -> bool
   def self.SetChipPlayerGain: (untyped player, Float gain) -> bool
   def self.SetChipPlayerLoop: (untyped player, Integer start_tick, Integer end_tick, bool enabled) -> bool
+  def self.SetChipPlayerStyle: (untyped player, untyped style) -> bool
   def self.SetChipPlayerTempo: (untyped player, Float scale) -> bool
   def self.SetChipPresetEffects: (untyped player, Integer preset, Hash[Symbol, untyped] effects) -> bool
+  def self.SetChipRoleControls: (untyped player, Integer preset, Hash[Symbol, untyped] controls) -> bool
   def self.SetChipTrackEffects: (untyped player, Integer track, Hash[Symbol, untyped] effects) -> bool
   def self.SetChipTrackMix: (untyped player, Integer track, Hash[Symbol, untyped] mix) -> bool
   def self.SetChipTrackPreset: (untyped player, Integer track, Integer preset, Float gain) -> bool

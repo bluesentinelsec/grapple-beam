@@ -223,6 +223,11 @@ TEST_F(ChipPlayer, RoleWordsMapMidiNamesBeforeChannelAndProgramDefaults)
                  {"Disharmony", 0, 89, GRAPPLE_CHIP_PRESET_CHORD},
                  {"Steel Guitar", 0, 25, GRAPPLE_CHIP_PRESET_LEAD},
                  {"Kit", 9, 0, GRAPPLE_CHIP_PRESET_DRUMS},
+                 {"Sound Effects", 0, 0, GRAPPLE_CHIP_PRESET_NOISE},
+                 {"SFX", 0, 0, GRAPPLE_CHIP_PRESET_NOISE},
+                 {"[effects]", 0, 0, GRAPPLE_CHIP_PRESET_NOISE},
+                 {"FX_2", 0, 0, GRAPPLE_CHIP_PRESET_NOISE},
+                 {"Affection", 0, 0, GRAPPLE_CHIP_PRESET_LEAD},
                  {"", 0, 0, GRAPPLE_CHIP_PRESET_LEAD}};
     for (const auto &entry : cases)
     {

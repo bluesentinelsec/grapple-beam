@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "id": "genesis-sonic",
+  "name": "Genesis (Sonic-inspired)",
+  "description": "Original Grapple 2-operator FM inspired by typical use of this era's hardware. Not a recreation of any copyrighted soundtrack.",
+  "voice": "fm",
+  "approximation": true,
+  "polyphony": 6,
+  "roles": {
+    "lead": {
+      "voice": "fm",
+      "fm_index": 2.4,
+      "filter": "off",
+      "attack_ms": 3,
+      "decay_ms": 180,
+      "sustain": 0.55,
+      "release_ms": 80,
+      "level": 0.2
+    },
+    "harmony": {
+      "voice": "fm",
+      "fm_index": 1.4,
+      "filter": "off",
+      "attack_ms": 8,
+      "decay_ms": 220,
+      "sustain": 0.5,
+      "release_ms": 120,
+      "level": 0.14,
+      "ring_ratio": 0
+    },
+    "bass": {
+      "oscillator": "pulse50",
+      "filter": "svf_low",
+      "cutoff_hz": 1800,
+      "filter_env": 0.4,
+      "attack_ms": 4,
+      "decay_ms": 100,
+      "sustain": 0.7,
+      "release_ms": 50,
+      "level": 0.28
+    },
+    "drums": {
+      "oscillator": "noise",
+      "filter": "off",
+      "drums": "none",
+      "attack_ms": 1,
+      "decay_ms": 80,
+      "sustain": 0,
+      "release_ms": 30,
+      "level": 0.22
+    }
+  }
+}

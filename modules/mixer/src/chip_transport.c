@@ -68,8 +68,10 @@ static void AdvanceVoices(Grapple_ChipPlayer *p, long double frames)
         }
         const double cycles = seconds * v->frequency * p->channels[v->channel].pitch;
         v->phase = SDL_fmod(v->phase + cycles, 1);
-        v->mod_phase = SDL_fmod(v->mod_phase + cycles * 1.5, 1);
-        v->lfo_phase = SDL_fmod(v->lfo_phase + seconds * 5, 1);
+        const double ring = v->recipe.ring_ratio > 0 ? (double)v->recipe.ring_ratio : 2.0;
+        const double lfo_hz = v->recipe.lfo_hz > 0 ? (double)v->recipe.lfo_hz : 5.2;
+        v->mod_phase = SDL_fmod(v->mod_phase + cycles * ring, 1);
+        v->lfo_phase = SDL_fmod(v->lfo_phase + seconds * lfo_hz, 1);
         v->sweep *= SDL_powf(v->sweep_decay, (float)frames);
     }
 }
@@ -143,7 +145,7 @@ bool Chip_RefreshCheckpoint(Grapple_ChipPlayer *p)
 
 void Chip_ClearPlayerEffects(Grapple_ChipPlayer *p)
 {
-    for (int bus = GRAPPLE_CHIP_PRESET_LEAD; bus <= GRAPPLE_CHIP_PRESET_DRUMS; ++bus)
+    for (int bus = GRAPPLE_CHIP_PRESET_FIRST; bus <= GRAPPLE_CHIP_PRESET_LAST; ++bus)
         Chip_EffectsClear(&p->effects[bus]);
     SDL_zeroa(p->effect_used);
     for (int i = 0; i < p->song->info.track_count; ++i)

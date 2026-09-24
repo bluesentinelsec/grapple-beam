@@ -9,6 +9,18 @@ if(GRAPPLE_BUILD_TTF)
   add_subdirectory(ttf)
 endif()
 
+if(GRAPPLE_BUILD_MIXER OR GRAPPLE_BUILD_FORMATS)
+  enable_language(C)
+  add_library(Grapple_CJson STATIC formats/src/cjson/cJSON.c)
+  add_library(Grapple::CJson ALIAS Grapple_CJson)
+  set_target_properties(Grapple_CJson PROPERTIES
+    OUTPUT_NAME Grapple_CJson
+    POSITION_INDEPENDENT_CODE ON)
+  target_include_directories(Grapple_CJson PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/formats/include>)
+  target_compile_definitions(Grapple_CJson PUBLIC CJSON_HIDE_SYMBOLS)
+endif()
+
 if(GRAPPLE_BUILD_MIXER)
   add_subdirectory(mixer)
 endif()

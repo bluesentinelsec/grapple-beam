@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "id": "nes-smb",
+  "name": "NES (Super Mario Bros-inspired)",
+  "description": "Original Grapple synthesis inspired by typical use of this era's hardware. Not a recreation of any copyrighted soundtrack.",
+  "polyphony": 4,
+  "roles": {
+    "lead": {
+      "oscillator": "pulse25",
+      "pwm": 0,
+      "vibrato": 0,
+      "filter": "off",
+      "attack_ms": 2,
+      "decay_ms": 80,
+      "sustain": 0.7,
+      "release_ms": 40,
+      "level": 0.22
+    },
+    "harmony": {
+      "oscillator": "pulse50",
+      "pwm": 0,
+      "filter": "off",
+      "attack_ms": 2,
+      "decay_ms": 90,
+      "sustain": 0.6,
+      "release_ms": 40,
+      "level": 0.16,
+      "ring_ratio": 0
+    },
+    "bass": {
+      "oscillator": "triangle",
+      "triangle": "nes",
+      "filter": "off",
+      "attack_ms": 1,
+      "decay_ms": 40,
+      "sustain": 1,
+      "release_ms": 20,
+      "level": 0.28
+    },
+    "drums": {
+      "oscillator": "noise",
+      "filter": "off",
+      "drums": "none",
+      "attack_ms": 1,
+      "decay_ms": 70,
+      "sustain": 0,
+      "release_ms": 30,
+      "level": 0.22,
+      "share": "drums"
+    },
+    "noise": {
+      "oscillator": "noise",
+      "filter": "off",
+      "attack_ms": 1,
+      "decay_ms": 50,
+      "sustain": 0,
+      "level": 0.18,
+      "share": "drums"
+    }
+  }
+}

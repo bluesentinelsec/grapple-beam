@@ -2503,6 +2503,7 @@ returns as an array.
 | `GrappleC.AddChipNote(composer: Grapple_ChipComposer, note: Grapple_ChipNote table)` | boolean |
 | `GrappleC.AddChipNoteEx(composer: Grapple_ChipComposer, note: Grapple_ChipNote table, expression: Grapple_ChipExpression table)` | boolean |
 | `GrappleC.AddChipSection(composer: Grapple_ChipComposer, name: string|nil, start_tick: integer, end_tick: integer)` | boolean |
+| `GrappleC.AddChipStyleSearchPath(path: string|nil)` | boolean |
 | `GrappleC.AddChipTempo(composer: Grapple_ChipComposer, tick: integer, bpm: number)` | boolean |
 | `GrappleC.AddDarkZone(scene: Grapple_LightScene, rect: SDL_FRect table, ambient: SDL_FColor table)` | boolean |
 | `GrappleC.AddLight(scene: Grapple_LightScene, light: Grapple_Light table)` | boolean |
@@ -2603,6 +2604,7 @@ returns as an array.
 | `GrappleC.DestroyChipComposer(composer: Grapple_ChipComposer)` | nil |
 | `GrappleC.DestroyChipPlayer(player: Grapple_ChipPlayer)` | nil |
 | `GrappleC.DestroyChipSong(song: Grapple_ChipSong)` | nil |
+| `GrappleC.DestroyChipStyle(style: Grapple_ChipStyle)` | nil |
 | `GrappleC.DestroyEngine(engine: Grapple_Engine)` | nil |
 | `GrappleC.DestroyGui(gui: Grapple_Gui)` | nil |
 | `GrappleC.DestroyLightScene(scene: Grapple_LightScene)` | nil |
@@ -2804,8 +2806,11 @@ returns as an array.
 | `GrappleC.GetChipExpressionDefaults()` | expression: Grapple_ChipExpression table |
 | `GrappleC.GetChipImportDefaults()` | boolean, options: Grapple_ChipImportOptions table |
 | `GrappleC.GetChipPlayerPeakVoices(player: Grapple_ChipPlayer)` | integer |
+| `GrappleC.GetChipPlayerStyleInfo(player: Grapple_ChipPlayer)` | boolean, info: Grapple_ChipStyleInfo table |
 | `GrappleC.GetChipPresetEffects(preset: integer)` | boolean, effects: Grapple_ChipEffects table |
 | `GrappleC.GetChipSectionCount(song: Grapple_ChipSong)` | integer |
+| `GrappleC.GetChipStyle(id: string|nil)` | Grapple_ChipStyle|nil |
+| `GrappleC.GetChipStyleCount()` | integer |
 | `GrappleC.GetLaunchSettings()` | Grapple_Settings|nil |
 | `GrappleC.GraphicsClamp()` | settings: Grapple_GraphicsSettings table |
 | `GrappleC.GraphicsConfigError()` | string|nil |
@@ -2906,6 +2911,7 @@ returns as an array.
 | `GrappleC.LightUsesShaders(scene: Grapple_LightScene)` | boolean |
 | `GrappleC.LoadChipSong(path: string|nil)` | Grapple_ChipSong|nil |
 | `GrappleC.LoadChipSongEx(path: string|nil, options: Grapple_ChipImportOptions table)` | Grapple_ChipSong|nil, error: Grapple_ChipDiagnostic table |
+| `GrappleC.LoadChipStyle(path: string|nil)` | Grapple_ChipStyle|nil |
 | `GrappleC.LoadTextFile(path: string|nil)` | string|nil |
 | `GrappleC.LoadTexture(engine: Grapple_Engine, path: string|nil)` | integer |
 | `GrappleC.LoadTextureAsync(engine: Grapple_Engine, path: string|nil)` | integer |
@@ -2954,8 +2960,11 @@ returns as an array.
 | `GrappleC.QuitDebugText()` | nil |
 | `GrappleC.ReadChipDiagnostic(song: Grapple_ChipSong, index: integer)` | boolean, diagnostic: Grapple_ChipDiagnostic table |
 | `GrappleC.ReadChipPlayerPosition(player: Grapple_ChipPlayer)` | boolean, position: Grapple_ChipPosition table |
+| `GrappleC.ReadChipRoleControls(player: Grapple_ChipPlayer, preset: integer)` | boolean, controls: Grapple_ChipRoleControls table |
 | `GrappleC.ReadChipSection(song: Grapple_ChipSong, index: integer)` | boolean, section: Grapple_ChipSection table |
 | `GrappleC.ReadChipSongInfo(song: Grapple_ChipSong)` | boolean, info: Grapple_ChipSongInfo table |
+| `GrappleC.ReadChipStyleInfo(style: Grapple_ChipStyle)` | boolean, info: Grapple_ChipStyleInfo table |
+| `GrappleC.ReadChipStyleInfoAt(index: integer)` | boolean, info: Grapple_ChipStyleInfo table |
 | `GrappleC.ReadChipTrackEffects(player: Grapple_ChipPlayer, track: integer, preset: integer)` | boolean, effects: Grapple_ChipEffects table |
 | `GrappleC.ReadChipTrackMapping(player: Grapple_ChipPlayer, track: integer, channel: integer)` | boolean, mapping: Grapple_ChipMapping table |
 | `GrappleC.ReadChipTrackMix(player: Grapple_ChipPlayer, track: integer)` | boolean, mix: Grapple_ChipTrackMix table |
@@ -2972,6 +2981,7 @@ returns as an array.
 | `GrappleC.RegexPattern(regex: Grapple_Regex)` | string|nil |
 | `GrappleC.RegexReplace(regex: Grapple_Regex, text: string|nil, replacement: string|nil, all: boolean)` | string|nil |
 | `GrappleC.RegexSearch(regex: Grapple_Regex, text: string|nil, start: integer)` | boolean |
+| `GrappleC.RegisterChipStyle(style: Grapple_ChipStyle)` | boolean |
 | `GrappleC.RenderBackendCount()` | integer |
 | `GrappleC.RenderBackendName(index: integer)` | string|nil |
 | `GrappleC.RenderBackendValid(name: string|nil)` | boolean |
@@ -3032,8 +3042,10 @@ returns as an array.
 | `GrappleC.SetChipPart(composer: Grapple_ChipComposer, track: integer, name: string|nil, preset: integer, gain: number)` | boolean |
 | `GrappleC.SetChipPlayerGain(player: Grapple_ChipPlayer, gain: number)` | boolean |
 | `GrappleC.SetChipPlayerLoop(player: Grapple_ChipPlayer, start_tick: integer, end_tick: integer, enabled: boolean)` | boolean |
+| `GrappleC.SetChipPlayerStyle(player: Grapple_ChipPlayer, style: Grapple_ChipStyle)` | boolean |
 | `GrappleC.SetChipPlayerTempo(player: Grapple_ChipPlayer, scale: number)` | boolean |
 | `GrappleC.SetChipPresetEffects(player: Grapple_ChipPlayer, preset: integer, effects: Grapple_ChipEffects table)` | boolean |
+| `GrappleC.SetChipRoleControls(player: Grapple_ChipPlayer, preset: integer, controls: Grapple_ChipRoleControls table)` | boolean |
 | `GrappleC.SetChipTrackEffects(player: Grapple_ChipPlayer, track: integer, effects: Grapple_ChipEffects table)` | boolean |
 | `GrappleC.SetChipTrackMix(player: Grapple_ChipPlayer, track: integer, mix: Grapple_ChipTrackMix table)` | boolean |
 | `GrappleC.SetChipTrackPreset(player: Grapple_ChipPlayer, track: integer, preset: integer, gain: number)` | boolean |

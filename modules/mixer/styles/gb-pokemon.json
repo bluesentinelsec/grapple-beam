@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "id": "gb-pokemon",
+  "name": "Game Boy (Pokemon-inspired)",
+  "description": "Original Grapple synthesis inspired by typical use of this era's hardware. Not a recreation of any copyrighted soundtrack.",
+  "polyphony": 4,
+  "roles": {
+    "lead": {
+      "oscillator": "pulse50",
+      "pwm": 0,
+      "vibrato": 0.001,
+      "vibrato_delay_ms": 80,
+      "filter": "off",
+      "attack_ms": 4,
+      "decay_ms": 120,
+      "sustain": 0.75,
+      "release_ms": 60,
+      "level": 0.2
+    },
+    "harmony": {
+      "oscillator": "pulse25",
+      "pwm": 0,
+      "filter": "off",
+      "attack_ms": 6,
+      "decay_ms": 140,
+      "sustain": 0.65,
+      "release_ms": 80,
+      "level": 0.14,
+      "ring_ratio": 0
+    },
+    "bass": {
+      "oscillator": "triangle",
+      "triangle": "nes",
+      "filter": "off",
+      "attack_ms": 2,
+      "decay_ms": 60,
+      "sustain": 0.9,
+      "release_ms": 40,
+      "level": 0.24
+    },
+    "drums": {
+      "oscillator": "noise",
+      "noise_metallic": true,
+      "filter": "off",
+      "drums": "none",
+      "attack_ms": 1,
+      "decay_ms": 90,
+      "sustain": 0,
+      "release_ms": 40,
+      "level": 0.18,
+      "share": "drums"
+    },
+    "noise": {
+      "oscillator": "noise",
+      "filter": "off",
+      "attack_ms": 1,
+      "decay_ms": 60,
+      "sustain": 0,
+      "level": 0.16,
+      "share": "drums"
+    }
+  }
+}

@@ -335,6 +335,12 @@ class ChipPlayer {
   Status SetChipPresetEffects(Grapple_ChipPreset preset, const Grapple_ChipEffects *effects) {
     return ::Grapple_SetChipPresetEffects(value_, preset, effects) ? Status() : Status::FromSdl();
   }
+  Status ReadChipRoleControls(Grapple_ChipPreset preset, Grapple_ChipRoleControls *controls) {
+    return ::Grapple_ReadChipRoleControls(value_, preset, controls) ? Status() : Status::FromSdl();
+  }
+  Status SetChipRoleControls(Grapple_ChipPreset preset, const Grapple_ChipRoleControls *controls) {
+    return ::Grapple_SetChipRoleControls(value_, preset, controls) ? Status() : Status::FromSdl();
+  }
   Status PlayChipPlayer() {
     return ::Grapple_PlayChipPlayer(value_) ? Status() : Status::FromSdl();
   }
@@ -343,9 +349,78 @@ class ChipPlayer {
   bool ChipPlayerPlaying() {
     return ::Grapple_ChipPlayerPlaying(value_);
   }
+  Status SetChipPlayerStyle(const Grapple_ChipStyle *style) {
+    return ::Grapple_SetChipPlayerStyle(value_, style) ? Status() : Status::FromSdl();
+  }
+  Status GetChipPlayerStyleInfo(Grapple_ChipStyleInfo *info) {
+    return ::Grapple_GetChipPlayerStyleInfo(value_, info) ? Status() : Status::FromSdl();
+  }
  private:
   explicit ChipPlayer(Grapple_ChipPlayer* value) : value_(value), engaged_(true) {}
   Grapple_ChipPlayer* value_{};
+  bool engaged_ = false;
+};
+
+// RAII owner for Grapple_ChipStyle (destroyed with Grapple_DestroyChipStyle).
+class ChipStyle {
+ public:
+  static Result<ChipStyle> LoadChipStyle(const char *path) {
+    Grapple_ChipStyle* created_ = ::Grapple_LoadChipStyle(path);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipStyle(created_);
+  }
+  static Result<ChipStyle> LoadChipStyleMemory(const void *json, size_t size) {
+    Grapple_ChipStyle* created_ = ::Grapple_LoadChipStyleMemory(json, size);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return ChipStyle(created_);
+  }
+
+  ChipStyle() = default;
+  ~ChipStyle() { reset(); }
+  ChipStyle(ChipStyle&& other) noexcept
+      : value_(other.value_), engaged_(other.engaged_) {
+    other.value_ = nullptr;
+    other.engaged_ = false;
+  }
+  ChipStyle& operator=(ChipStyle&& other) noexcept {
+    if (this != &other) {
+      reset();
+      value_ = other.value_;
+      engaged_ = other.engaged_;
+      other.value_ = nullptr;
+      other.engaged_ = false;
+    }
+    return *this;
+  }
+  ChipStyle(const ChipStyle&) = delete;
+  ChipStyle& operator=(const ChipStyle&) = delete;
+
+  Grapple_ChipStyle* get() const { return value_; }
+  Grapple_ChipStyle* release() {
+    Grapple_ChipStyle* out = value_;
+    value_ = nullptr;
+    engaged_ = false;
+    return out;
+  }
+  void reset() {
+    if (value_ != nullptr) ::Grapple_DestroyChipStyle(value_);
+    value_ = nullptr;
+    engaged_ = false;
+  }
+
+  Status RegisterChipStyle() {
+    return ::Grapple_RegisterChipStyle(value_) ? Status() : Status::FromSdl();
+  }
+  Status ReadChipStyleInfo(Grapple_ChipStyleInfo *info) {
+    return ::Grapple_ReadChipStyleInfo(value_, info) ? Status() : Status::FromSdl();
+  }
+ private:
+  explicit ChipStyle(Grapple_ChipStyle* value) : value_(value), engaged_(true) {}
+  Grapple_ChipStyle* value_{};
   bool engaged_ = false;
 };
 
@@ -891,6 +966,9 @@ inline Status ActorSetParent(Grapple_Actor *actor, Grapple_ActorId parent) {
 inline Status ActorSetSprite(Grapple_Actor *actor, const Grapple_Sprite *sprite) {
   return ::Grapple_ActorSetSprite(actor, sprite) ? Status() : Status::FromSdl();
 }
+inline Status AddChipStyleSearchPath(const char *path) {
+  return ::Grapple_AddChipStyleSearchPath(path) ? Status() : Status::FromSdl();
+}
 inline Status AnyInput(Grapple_Engine *engine) {
   return ::Grapple_AnyInput(engine) ? Status() : Status::FromSdl();
 }
@@ -1079,6 +1157,9 @@ inline Status PhysicsPaused(Grapple_Engine *engine) {
 }
 inline Status ProbeRenderBackend(const char *name, Grapple_RenderBackendInfo *info) {
   return ::Grapple_ProbeRenderBackend(name, info) ? Status() : Status::FromSdl();
+}
+inline Status ReadChipStyleInfoAt(int index, Grapple_ChipStyleInfo *info) {
+  return ::Grapple_ReadChipStyleInfoAt(index, info) ? Status() : Status::FromSdl();
 }
 inline Status RenderBackendValid(const char *name) {
   return ::Grapple_RenderBackendValid(name) ? Status() : Status::FromSdl();
@@ -1516,6 +1597,8 @@ inline constexpr auto& GamepadStick = ::Grapple_GamepadStick;
 inline constexpr auto& GamepadStopRumble = ::Grapple_GamepadStopRumble;
 inline constexpr auto& GetAudioBusGain = ::Grapple_GetAudioBusGain;
 inline constexpr auto& GetChipExpressionDefaults = ::Grapple_GetChipExpressionDefaults;
+inline constexpr auto& GetChipStyle = ::Grapple_GetChipStyle;
+inline constexpr auto& GetChipStyleCount = ::Grapple_GetChipStyleCount;
 inline constexpr auto& GetFinger = ::Grapple_GetFinger;
 inline constexpr auto& GetLaunchSettings = ::Grapple_GetLaunchSettings;
 inline constexpr auto& GraphicsArgsConfigPath = ::Grapple_GraphicsArgsConfigPath;

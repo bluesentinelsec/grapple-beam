@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "id": "snes-zelda",
+  "name": "SNES (Zelda-inspired)",
+  "description": "Original Grapple synthesis inspired by typical use of this era's hardware. Not a recreation of any copyrighted soundtrack.",
+  "approximation": true,
+  "polyphony": 8,
+  "roles": {
+    "lead": {
+      "oscillator": "pulse50",
+      "pwm": 0.04,
+      "vibrato": 0.0015,
+      "vibrato_delay_ms": 160,
+      "filter": "svf_low",
+      "cutoff_hz": 5200,
+      "attack_ms": 8,
+      "decay_ms": 240,
+      "sustain": 0.7,
+      "release_ms": 180,
+      "level": 0.18,
+      "effects": { "chorus": 0.18, "reverb": 0.12 }
+    },
+    "harmony": {
+      "mix": { "pulse": 0.4, "triangle": 0.6 },
+      "triangle": "analog",
+      "filter": "svf_low",
+      "cutoff_hz": 3600,
+      "attack_ms": 18,
+      "decay_ms": 320,
+      "sustain": 0.65,
+      "release_ms": 240,
+      "level": 0.14,
+      "ring_ratio": 0,
+      "effects": { "chorus": 0.22, "reverb": 0.16 }
+    },
+    "bass": {
+      "oscillator": "saw",
+      "filter": "svf_low",
+      "cutoff_hz": 900,
+      "filter_env": 0.5,
+      "attack_ms": 6,
+      "decay_ms": 160,
+      "sustain": 0.8,
+      "release_ms": 120,
+      "level": 0.26
+    },
+    "drums": {
+      "oscillator": "noise",
+      "filter": "svf_low",
+      "cutoff_hz": 5000,
+      "drums": "none",
+      "attack_ms": 1,
+      "decay_ms": 110,
+      "sustain": 0,
+      "release_ms": 60,
+      "level": 0.2
+    }
+  }
+}

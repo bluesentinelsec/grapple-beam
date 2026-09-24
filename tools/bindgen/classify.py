@@ -210,6 +210,7 @@ class TypeTable:
 SCRIPT_EXCLUDE_PREFIXES: dict[str, str] = {
     # Raw buffers and externally borrowed streams stay on the native surface.
     "Grapple_LoadChipSongMemory": "sized input buffer requires C/C++",
+    "Grapple_LoadChipStyleMemory": "sized input buffer requires C/C++",
     "Grapple_SaveChipSongWav_IO": "output stream ownership requires C/C++",
     "Grapple_LoadChipSong_IO": "input stream ownership requires C/C++",
     "Grapple_LoadChipSong_IOEx": "input stream ownership requires C/C++",

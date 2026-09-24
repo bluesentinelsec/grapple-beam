@@ -5,6 +5,9 @@ engine loop, ownership/cleanup, and optional offline WAV export. MIDI, MusicXML
 and MXL all use the same library calls. It is a standalone demo, not a mode of
 the `grapple-beam` game runner, and is never installed in the SDK.
 
+Interactive transport (loop, pause, seek, next file, number-key styles) lives in
+[`player.c`](player.c) as `chiptune-player`. See [chiptune styles](../../docs/chiptune-styles.md).
+
 After `make`, run from the repository root:
 
 ```sh
@@ -17,6 +20,9 @@ After `make`, run from the repository root:
 
 # A second positional argument exports a WAV instead of opening a device/window.
 ./build/debug/bin/chiptune-demo tests/mixer/assets/c64-composition-named.xml build/c64-demo.wav
+
+# Mixer/editor: per-track volume and effects, per-style mix memory, instrument knobs.
+./build/debug/bin/chiptune-player tests/mixer/assets/c64-composition-named.xml
 ```
 
 The window closes when the song and effect tails finish. Closing it early stops

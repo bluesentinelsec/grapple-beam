@@ -3,6 +3,7 @@
 #define GRAPPLE_CHIP_PLAYER_H
 #include "chip_effects.h"
 #include "chip_internal.h"
+#include "chip_style.h"
 #include "chip_voice.h"
 
 typedef struct ChipChannel
@@ -42,8 +43,13 @@ struct Grapple_ChipPlayer
     SDL_AudioStream *stream;
     MIX_Mixer *managed_mixer;
     MIX_Track *managed_track;
-    ChipEffectBus effects[GRAPPLE_CHIP_PRESET_DRUMS + 1];
-    bool effect_used[GRAPPLE_CHIP_PRESET_DRUMS + 1];
+    ChipEffectBus effects[GRAPPLE_CHIP_PRESET_LAST + 1];
+    bool effect_used[GRAPPLE_CHIP_PRESET_LAST + 1];
+    ChipRoleRecipe recipes[GRAPPLE_CHIP_PRESET_LAST + 1];
+    Grapple_ChipStyleInfo style_info;
+    ChipStealMode steal;
+    float style_gain;
+    int style_polyphony;
     double beat;
     Uint32 tempo;
     Uint64 quiet_frames;
