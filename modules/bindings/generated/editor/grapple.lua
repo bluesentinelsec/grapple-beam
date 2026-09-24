@@ -16828,6 +16828,12 @@ function GrappleC.ReadChipDiagnostic(song, index) end
 ---@return boolean, table
 function GrappleC.ReadChipPlayerPosition(player) end
 
+---Calls `Grapple_ReadChipRoleControls`.
+---@param player userdata
+---@param preset integer
+---@return boolean, table
+function GrappleC.ReadChipRoleControls(player, preset) end
+
 ---Calls `Grapple_ReadChipSection`.
 ---@param song userdata
 ---@param index integer
@@ -17327,6 +17333,13 @@ function GrappleC.SetChipPlayerTempo(player, scale) end
 ---@param effects table
 ---@return boolean
 function GrappleC.SetChipPresetEffects(player, preset, effects) end
+
+---Calls `Grapple_SetChipRoleControls`.
+---@param player userdata
+---@param preset integer
+---@param controls table
+---@return boolean
+function GrappleC.SetChipRoleControls(player, preset, controls) end
 
 ---Calls `Grapple_SetChipTrackEffects`.
 ---@param player userdata

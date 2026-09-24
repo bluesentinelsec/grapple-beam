@@ -236,6 +236,8 @@ static void GenRead_Grapple_ChipEffects(mrb_state *mrb, mrb_value h, Grapple_Chi
     out->motion = (float)GrappleGen_RubyFieldNum(mrb, h, "motion");
     out->pulse_beats = (double)GrappleGen_RubyFieldNum(mrb, h, "pulse_beats");
     out->pulse_depth = (float)GrappleGen_RubyFieldNum(mrb, h, "pulse_depth");
+    out->phaser = (float)GrappleGen_RubyFieldNum(mrb, h, "phaser");
+    out->flanger = (float)GrappleGen_RubyFieldNum(mrb, h, "flanger");
 }
 
 static mrb_value GenPush_Grapple_ChipEffects(mrb_state *mrb, const Grapple_ChipEffects *in)
@@ -249,6 +251,8 @@ static mrb_value GenPush_Grapple_ChipEffects(mrb_state *mrb, const Grapple_ChipE
     GrappleGen_RubyHashSet(mrb, h, "motion", mrb_float_value(mrb, (mrb_float)in->motion));
     GrappleGen_RubyHashSet(mrb, h, "pulse_beats", mrb_float_value(mrb, (mrb_float)in->pulse_beats));
     GrappleGen_RubyHashSet(mrb, h, "pulse_depth", mrb_float_value(mrb, (mrb_float)in->pulse_depth));
+    GrappleGen_RubyHashSet(mrb, h, "phaser", mrb_float_value(mrb, (mrb_float)in->phaser));
+    GrappleGen_RubyHashSet(mrb, h, "flanger", mrb_float_value(mrb, (mrb_float)in->flanger));
     return h;
 }
 
@@ -363,6 +367,38 @@ static mrb_value GenPush_Grapple_ChipPosition(mrb_state *mrb, const Grapple_Chip
     GrappleGen_RubyHashSet(mrb, h, "measure_visit", mrb_int_value(mrb, (mrb_int)in->measure_visit));
     GrappleGen_RubyHashSet(mrb, h, "measure_beat", mrb_float_value(mrb, (mrb_float)in->measure_beat));
     GrappleGen_RubyHashSet(mrb, h, "loop_count", mrb_int_value(mrb, (mrb_int)in->loop_count));
+    return h;
+}
+
+static void GenRead_Grapple_ChipRoleControls(mrb_state *mrb, mrb_value h, Grapple_ChipRoleControls *out)
+{
+    memset(out, 0, sizeof(*out));
+    if (!mrb_hash_p(h)) { return; }
+    out->level = (float)GrappleGen_RubyFieldNum(mrb, h, "level");
+    out->attack_ms = (float)GrappleGen_RubyFieldNum(mrb, h, "attack_ms");
+    out->decay_ms = (float)GrappleGen_RubyFieldNum(mrb, h, "decay_ms");
+    out->sustain = (float)GrappleGen_RubyFieldNum(mrb, h, "sustain");
+    out->release_ms = (float)GrappleGen_RubyFieldNum(mrb, h, "release_ms");
+    out->duty = (float)GrappleGen_RubyFieldNum(mrb, h, "duty");
+    out->pwm = (float)GrappleGen_RubyFieldNum(mrb, h, "pwm");
+    out->vibrato = (float)GrappleGen_RubyFieldNum(mrb, h, "vibrato");
+    out->cutoff_hz = (float)GrappleGen_RubyFieldNum(mrb, h, "cutoff_hz");
+    GenRead_Grapple_ChipEffects(mrb, GrappleGen_RubyFieldGet(mrb, h, "effects"), &out->effects);
+}
+
+static mrb_value GenPush_Grapple_ChipRoleControls(mrb_state *mrb, const Grapple_ChipRoleControls *in)
+{
+    mrb_value h = mrb_hash_new(mrb);
+    GrappleGen_RubyHashSet(mrb, h, "level", mrb_float_value(mrb, (mrb_float)in->level));
+    GrappleGen_RubyHashSet(mrb, h, "attack_ms", mrb_float_value(mrb, (mrb_float)in->attack_ms));
+    GrappleGen_RubyHashSet(mrb, h, "decay_ms", mrb_float_value(mrb, (mrb_float)in->decay_ms));
+    GrappleGen_RubyHashSet(mrb, h, "sustain", mrb_float_value(mrb, (mrb_float)in->sustain));
+    GrappleGen_RubyHashSet(mrb, h, "release_ms", mrb_float_value(mrb, (mrb_float)in->release_ms));
+    GrappleGen_RubyHashSet(mrb, h, "duty", mrb_float_value(mrb, (mrb_float)in->duty));
+    GrappleGen_RubyHashSet(mrb, h, "pwm", mrb_float_value(mrb, (mrb_float)in->pwm));
+    GrappleGen_RubyHashSet(mrb, h, "vibrato", mrb_float_value(mrb, (mrb_float)in->vibrato));
+    GrappleGen_RubyHashSet(mrb, h, "cutoff_hz", mrb_float_value(mrb, (mrb_float)in->cutoff_hz));
+    GrappleGen_RubyHashSet(mrb, h, "effects", GenPush_Grapple_ChipEffects(mrb, &in->effects));
     return h;
 }
 
@@ -8727,6 +8763,25 @@ static mrb_value GenR_Grapple_ReadChipPlayerPosition(mrb_state *mrb, mrb_value s
     }
 }
 
+static mrb_value GenR_Grapple_ReadChipRoleControls(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_ChipPlayer *a0 = (Grapple_ChipPlayer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_ChipPlayer");
+    Grapple_ChipPreset a1 = (Grapple_ChipPreset)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Grapple_ChipRoleControls out2;
+    memset(&out2, 0, sizeof(out2));
+    bool rv = Grapple_ReadChipRoleControls(a0, a1, &out2);
+    mrb_value rets[2];
+    rets[0] = mrb_bool_value((mrb_bool)(rv != 0));
+    rets[1] = GenPush_Grapple_ChipRoleControls(mrb, &out2);
+    return mrb_ary_new_from_values(mrb, 2, rets);
+    }
+}
+
 static mrb_value GenR_Grapple_ReadChipSection(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -9964,6 +10019,26 @@ static mrb_value GenR_Grapple_SetChipPresetEffects(mrb_state *mrb, mrb_value sel
         a2 = &tmp2;
     }
     bool rv = Grapple_SetChipPresetEffects(a0, a1, a2);
+    return mrb_bool_value((mrb_bool)(rv != 0));
+    }
+}
+
+static mrb_value GenR_Grapple_SetChipRoleControls(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_ChipPlayer *a0 = (Grapple_ChipPlayer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_ChipPlayer");
+    Grapple_ChipPreset a1 = (Grapple_ChipPreset)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Grapple_ChipRoleControls tmp2;
+    const Grapple_ChipRoleControls *a2 = NULL;
+    if (argc > 2 && mrb_hash_p(argv[2])) {
+        GenRead_Grapple_ChipRoleControls(mrb, argv[2], &tmp2);
+        a2 = &tmp2;
+    }
+    bool rv = Grapple_SetChipRoleControls(a0, a1, a2);
     return mrb_bool_value((mrb_bool)(rv != 0));
     }
 }
@@ -11752,6 +11827,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "QuitDebugText", GenR_Grapple_QuitDebugText, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ReadChipDiagnostic", GenR_Grapple_ReadChipDiagnostic, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ReadChipPlayerPosition", GenR_Grapple_ReadChipPlayerPosition, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "ReadChipRoleControls", GenR_Grapple_ReadChipRoleControls, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ReadChipSection", GenR_Grapple_ReadChipSection, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ReadChipSongInfo", GenR_Grapple_ReadChipSongInfo, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "ReadChipStyleInfo", GenR_Grapple_ReadChipStyleInfo, MRB_ARGS_ANY());
@@ -11836,6 +11912,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "SetChipPlayerStyle", GenR_Grapple_SetChipPlayerStyle, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "SetChipPlayerTempo", GenR_Grapple_SetChipPlayerTempo, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "SetChipPresetEffects", GenR_Grapple_SetChipPresetEffects, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "SetChipRoleControls", GenR_Grapple_SetChipRoleControls, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "SetChipTrackEffects", GenR_Grapple_SetChipTrackEffects, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "SetChipTrackMix", GenR_Grapple_SetChipTrackMix, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "SetChipTrackPreset", GenR_Grapple_SetChipTrackPreset, MRB_ARGS_ANY());

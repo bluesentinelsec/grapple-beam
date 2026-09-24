@@ -2934,6 +2934,7 @@ module GrappleC
   def self.QuitDebugText: () -> void
   def self.ReadChipDiagnostic: (untyped song, Integer index) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipPlayerPosition: (untyped player) -> [bool, Hash[Symbol, untyped]]
+  def self.ReadChipRoleControls: (untyped player, Integer preset) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipSection: (untyped song, Integer index) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipSongInfo: (untyped song) -> [bool, Hash[Symbol, untyped]]
   def self.ReadChipStyleInfo: (untyped style) -> [bool, Hash[Symbol, untyped]]
@@ -3018,6 +3019,7 @@ module GrappleC
   def self.SetChipPlayerStyle: (untyped player, untyped style) -> bool
   def self.SetChipPlayerTempo: (untyped player, Float scale) -> bool
   def self.SetChipPresetEffects: (untyped player, Integer preset, Hash[Symbol, untyped] effects) -> bool
+  def self.SetChipRoleControls: (untyped player, Integer preset, Hash[Symbol, untyped] controls) -> bool
   def self.SetChipTrackEffects: (untyped player, Integer track, Hash[Symbol, untyped] effects) -> bool
   def self.SetChipTrackMix: (untyped player, Integer track, Hash[Symbol, untyped] mix) -> bool
   def self.SetChipTrackPreset: (untyped player, Integer track, Integer preset, Float gain) -> bool

@@ -393,6 +393,7 @@ Grapple_ChipNote	include/grapple/audio_bus.h	/^.*Grapple_ChipNote/;"	s
 Grapple_ChipPlayerPlaying	include/grapple/chiptune.h	/^.*Grapple_ChipPlayerPlaying *(/;"	f
 Grapple_ChipPosition	include/grapple/audio_bus.h	/^.*Grapple_ChipPosition/;"	s
 Grapple_ChipPreset	include/grapple/audio_bus.h	/^.*Grapple_ChipPreset/;"	g
+Grapple_ChipRoleControls	include/grapple/audio_bus.h	/^.*Grapple_ChipRoleControls/;"	s
 Grapple_ChipSFX	include/grapple/audio_bus.h	/^.*Grapple_ChipSFX/;"	g
 Grapple_ChipSection	include/grapple/audio_bus.h	/^.*Grapple_ChipSection/;"	s
 Grapple_ChipSongInfo	include/grapple/audio_bus.h	/^.*Grapple_ChipSongInfo/;"	s
@@ -859,6 +860,7 @@ Grapple_QuitDebugText	include/grapple/debug_text.h	/^.*Grapple_QuitDebugText *(/
 Grapple_RayHit	include/grapple/audio_bus.h	/^.*Grapple_RayHit/;"	s
 Grapple_ReadChipDiagnostic	include/grapple/chiptune.h	/^.*Grapple_ReadChipDiagnostic *(/;"	f
 Grapple_ReadChipPlayerPosition	include/grapple/chiptune.h	/^.*Grapple_ReadChipPlayerPosition *(/;"	f
+Grapple_ReadChipRoleControls	include/grapple/chiptune.h	/^.*Grapple_ReadChipRoleControls *(/;"	f
 Grapple_ReadChipSection	include/grapple/chiptune.h	/^.*Grapple_ReadChipSection *(/;"	f
 Grapple_ReadChipSongInfo	include/grapple/chiptune.h	/^.*Grapple_ReadChipSongInfo *(/;"	f
 Grapple_ReadChipStyleInfo	include/grapple/chiptune.h	/^.*Grapple_ReadChipStyleInfo *(/;"	f
@@ -959,6 +961,7 @@ Grapple_SetChipPlayerLoop	include/grapple/chiptune.h	/^.*Grapple_SetChipPlayerLo
 Grapple_SetChipPlayerStyle	include/grapple/chiptune.h	/^.*Grapple_SetChipPlayerStyle *(/;"	f
 Grapple_SetChipPlayerTempo	include/grapple/chiptune.h	/^.*Grapple_SetChipPlayerTempo *(/;"	f
 Grapple_SetChipPresetEffects	include/grapple/chiptune.h	/^.*Grapple_SetChipPresetEffects *(/;"	f
+Grapple_SetChipRoleControls	include/grapple/chiptune.h	/^.*Grapple_SetChipRoleControls *(/;"	f
 Grapple_SetChipTrackEffects	include/grapple/chiptune.h	/^.*Grapple_SetChipTrackEffects *(/;"	f
 Grapple_SetChipTrackMix	include/grapple/chiptune.h	/^.*Grapple_SetChipTrackMix *(/;"	f
 Grapple_SetChipTrackPreset	include/grapple/chiptune.h	/^.*Grapple_SetChipTrackPreset *(/;"	f
@@ -5623,6 +5626,7 @@ curve_segment_count	include/nuklear.h	/^.*curve_segment_count/;"	m
 custom	include/SDL3/SDL_assert.h	/^.*custom/;"	m
 custom	include/nuklear.h	/^.*custom/;"	m
 customColor	include/box2d/base.h	/^.*customColor/;"	m
+cutoff_hz	include/grapple/audio_bus.h	/^.*cutoff_hz/;"	m
 cx	include/box2d/base.h	/^.*cx/;"	m
 cx	include/nuklear.h	/^.*cx/;"	m
 cy	include/box2d/base.h	/^.*cy/;"	m
@@ -5642,6 +5646,7 @@ deadzone_h	include/grapple/audio_bus.h	/^.*deadzone_h/;"	m
 deadzone_w	include/grapple/audio_bus.h	/^.*deadzone_w/;"	m
 dec_button	include/nuklear.h	/^.*dec_button/;"	m
 dec_symbol	include/nuklear.h	/^.*dec_symbol/;"	m
+decay_ms	include/grapple/audio_bus.h	/^.*decay_ms/;"	m
 default_font	include/nuklear.h	/^.*default_font/;"	m
 delay	include/SDL3/SDL_assert.h	/^.*delay/;"	m
 delay	include/grapple/audio_bus.h	/^.*delay/;"	m
@@ -5705,6 +5710,7 @@ duration	include/SDL3/SDL_assert.h	/^.*duration/;"	m
 duration_ms	include/grapple/audio_bus.h	/^.*duration_ms/;"	m
 duration_seconds	include/grapple/audio_bus.h	/^.*duration_seconds/;"	m
 duration_ticks	include/grapple/audio_bus.h	/^.*duration_ticks/;"	m
+duty	include/grapple/audio_bus.h	/^.*duty/;"	m
 dx	include/SDL3/SDL_assert.h	/^.*dx/;"	m
 dx	include/grapple/audio_bus.h	/^.*dx/;"	m
 dy	include/SDL3/SDL_assert.h	/^.*dy/;"	m
@@ -5713,6 +5719,7 @@ dynamic_lights	include/grapple/audio_bus.h	/^.*dynamic_lights/;"	m
 edit	include/SDL3/SDL_assert.h	/^.*edit/;"	m
 edit	include/nuklear.h	/^.*edit/;"	m
 edit_candidates	include/SDL3/SDL_assert.h	/^.*edit_candidates/;"	m
+effects	include/grapple/audio_bus.h	/^.*effects/;"	m
 effects_disabled	include/grapple/audio_bus.h	/^.*effects_disabled/;"	m
 elem_count	include/nuklear.h	/^.*elem_count/;"	m
 element	include/grapple/audio_bus.h	/^.*element/;"	m
@@ -5800,6 +5807,7 @@ flags	include/SDL3/SDL_assert.h	/^.*flags/;"	m
 flags	include/SDL3_ttf/SDL_textengine.h	/^.*flags/;"	m
 flags	include/grapple/audio_bus.h	/^.*flags/;"	m
 flags	include/nuklear.h	/^.*flags/;"	m
+flanger	include/grapple/audio_bus.h	/^.*flanger/;"	m
 flicker	include/grapple/audio_bus.h	/^.*flicker/;"	m
 flip	include/grapple/audio_bus.h	/^.*flip/;"	m
 flip_mode	include/SDL3/SDL_assert.h	/^.*flip_mode/;"	m
@@ -6005,6 +6013,7 @@ length	include/box2d/base.h	/^.*length/;"	m
 length	include/grapple/audio_bus.h	/^.*length/;"	m
 length	include/nuklear.h	/^.*length/;"	m
 level	include/SDL3/SDL_assert.h	/^.*level/;"	m
+level	include/grapple/audio_bus.h	/^.*level/;"	m
 line	include/grapple/audio_bus.h	/^.*line/;"	m
 line	include/yaml.h	/^.*line/;"	m
 lineColor	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*lineColor *(/;"	f
@@ -6973,6 +6982,7 @@ periodic	include/SDL3/SDL_assert.h	/^.*periodic/;"	m
 permanent	include/nuklear.h	/^.*permanent/;"	m
 persisted	include/box2d/base.h	/^.*persisted/;"	m
 phase	include/SDL3/SDL_assert.h	/^.*phase/;"	m
+phaser	include/grapple/audio_bus.h	/^.*phaser/;"	m
 pieColor	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*pieColor *(/;"	f
 pieRGBA	include/SDL3_gfx/SDL3_gfxPrimitives.h	/^.*pieRGBA *(/;"	f
 pinch	include/SDL3/SDL_assert.h	/^.*pinch/;"	m
@@ -7048,6 +7058,7 @@ pulse_beats	include/grapple/audio_bus.h	/^.*pulse_beats/;"	m
 pulse_depth	include/grapple/audio_bus.h	/^.*pulse_depth/;"	m
 push	include/box2d/base.h	/^.*push/;"	m
 pushLimit	include/box2d/base.h	/^.*pushLimit/;"	m
+pwm	include/grapple/audio_bus.h	/^.*pwm/;"	m
 q	include/box2d/base.h	/^.*q/;"	m
 q1	include/box2d/base.h	/^.*q1/;"	m
 q2	include/box2d/base.h	/^.*q2/;"	m
@@ -7260,6 +7271,7 @@ style_items	include/nuklear.h	/^.*style_items/;"	m
 styled	include/grapple/audio_bus.h	/^.*styled/;"	m
 supportsSymlinks	include/physfs.h	/^.*supportsSymlinks/;"	m
 surface	include/SDL3/SDL_assert.h	/^.*surface/;"	m
+sustain	include/grapple/audio_bus.h	/^.*sustain/;"	m
 sweepA	include/box2d/base.h	/^.*sweepA/;"	m
 sweepB	include/box2d/base.h	/^.*sweepB/;"	m
 swing_ratio	include/grapple/audio_bus.h	/^.*swing_ratio/;"	m
@@ -7462,6 +7474,7 @@ vertex_shader	include/SDL3/SDL_assert.h	/^.*vertex_shader/;"	m
 vertex_size	include/nuklear.h	/^.*vertex_size/;"	m
 vertices	include/box2d/base.h	/^.*vertices/;"	m
 vertices	include/nuklear.h	/^.*vertices/;"	m
+vibrato	include/grapple/audio_bus.h	/^.*vibrato/;"	m
 vibrato_beats	include/grapple/audio_bus.h	/^.*vibrato_beats/;"	m
 vibrato_depth	include/grapple/audio_bus.h	/^.*vibrato_depth/;"	m
 vibrato_hz	include/grapple/audio_bus.h	/^.*vibrato_hz/;"	m

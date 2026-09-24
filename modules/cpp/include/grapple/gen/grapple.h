@@ -335,6 +335,12 @@ class ChipPlayer {
   Status SetChipPresetEffects(Grapple_ChipPreset preset, const Grapple_ChipEffects *effects) {
     return ::Grapple_SetChipPresetEffects(value_, preset, effects) ? Status() : Status::FromSdl();
   }
+  Status ReadChipRoleControls(Grapple_ChipPreset preset, Grapple_ChipRoleControls *controls) {
+    return ::Grapple_ReadChipRoleControls(value_, preset, controls) ? Status() : Status::FromSdl();
+  }
+  Status SetChipRoleControls(Grapple_ChipPreset preset, const Grapple_ChipRoleControls *controls) {
+    return ::Grapple_SetChipRoleControls(value_, preset, controls) ? Status() : Status::FromSdl();
+  }
   Status PlayChipPlayer() {
     return ::Grapple_PlayChipPlayer(value_) ? Status() : Status::FromSdl();
   }
