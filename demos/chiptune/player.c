@@ -34,10 +34,13 @@ typedef struct TrackState
 
 typedef struct StyleState
 {
-    bool used;
+    bool captured;
+    TrackState factory_tracks[PLAYER_MAX_TRACKS];
+    TrackState applied_tracks[PLAYER_MAX_TRACKS];
     TrackState tracks[PLAYER_MAX_TRACKS];
+    Grapple_ChipRoleControls factory_roles[GRAPPLE_CHIP_PRESET_LAST + 1];
+    Grapple_ChipRoleControls applied_roles[GRAPPLE_CHIP_PRESET_LAST + 1];
     Grapple_ChipRoleControls roles[GRAPPLE_CHIP_PRESET_LAST + 1];
-    bool role_used[GRAPPLE_CHIP_PRESET_LAST + 1];
 } StyleState;
 
 typedef struct Bind
@@ -65,9 +68,12 @@ typedef struct MusicPlayer
     Grapple_UiWidget *position_label;
     Grapple_UiWidget *style_radio;
     Grapple_UiWidget *loop_check;
+    Grapple_UiWidget *track_picker;
+    Grapple_UiWidget *instrument_title;
     Grapple_UiWidget *knob_label[9];
     Grapple_UiWidget *knob_slider[9];
     Bind knob_bind[9];
+    Bind track_bind[PLAYER_MAX_TRACKS];
 } MusicPlayer;
 
 static const char *kStyleIds[] = {"c64",           "nes-smb",    "gb-pokemon",
@@ -83,6 +89,10 @@ static void FormatValue(char *out, size_t cap, float value)
 }
 
 static void SetStatus(MusicPlayer *mp, const char *text);
+static void OnSelectTrack(Grapple_UiWidget *widget, void *user);
+static void OnApplyEdits(Grapple_UiWidget *widget, void *user);
+static void OnDiscardEdits(Grapple_UiWidget *widget, void *user);
+static void OnResetDefaults(Grapple_UiWidget *widget, void *user);
 
 static bool HasScoreExt(const char *name)
 {
@@ -170,6 +180,12 @@ static int TrackCount(const MusicPlayer *mp)
     return n > PLAYER_MAX_TRACKS ? PLAYER_MAX_TRACKS : n;
 }
 
+static const char *TrackName(MusicPlayer *mp, int track)
+{
+    const Grapple_ChipTrackInfo *info = mp->song ? Grapple_GetChipTrackInfo(mp->song, track) : NULL;
+    return info && info->name[0] ? info->name : "Track";
+}
+
 static Grapple_ChipPreset TrackRole(MusicPlayer *mp, int track)
 {
     Grapple_ChipMapping mapping = {0};
@@ -212,57 +228,102 @@ static void ApplyTrackAudio(MusicPlayer *mp, int track)
     Grapple_SetChipTrackEffects(mp->player, track, &fx);
 }
 
+static void CopyTracks(TrackState *dst, const TrackState *src)
+{
+    SDL_memcpy(dst, src, sizeof(TrackState) * PLAYER_MAX_TRACKS);
+}
+
+static void CopyRoles(Grapple_ChipRoleControls *dst, const Grapple_ChipRoleControls *src)
+{
+    SDL_memcpy(dst, src, sizeof(Grapple_ChipRoleControls) * (GRAPPLE_CHIP_PRESET_LAST + 1));
+}
+
+static void ApplyWorkingAudio(MusicPlayer *mp)
+{
+    for (int i = 0; i < mp->track_count; ++i)
+        ApplyTrackAudio(mp, i);
+    StyleState *st = &mp->styles[mp->style_index];
+    for (int p = GRAPPLE_CHIP_PRESET_FIRST; p <= GRAPPLE_CHIP_PRESET_LAST; ++p)
+        Grapple_SetChipRoleControls(mp->player, (Grapple_ChipPreset)p, &st->roles[p]);
+}
+
 static void CaptureStyleDefaults(MusicPlayer *mp)
 {
     StyleState *st = &mp->styles[mp->style_index];
-    if (st->used)
+    if (st->captured)
         return;
-    st->used = true;
     for (int i = 0; i < mp->track_count; ++i)
     {
         Grapple_ChipTrackMix mix = {0};
         Grapple_ReadChipTrackMix(mp->player, i, &mix);
-        st->tracks[i].gain = mix.gain > 0 ? mix.gain : 1.0f;
-        Grapple_ReadChipTrackEffects(mp->player, i, TrackRole(mp, i), &st->tracks[i].fx);
-        st->tracks[i].has_fx = true;
+        st->factory_tracks[i].gain = mix.gain > 0 ? mix.gain : 1.0f;
+        Grapple_ReadChipTrackEffects(mp->player, i, TrackRole(mp, i), &st->factory_tracks[i].fx);
+        st->factory_tracks[i].has_fx = true;
     }
     for (int p = GRAPPLE_CHIP_PRESET_FIRST; p <= GRAPPLE_CHIP_PRESET_LAST; ++p)
-    {
-        if (Grapple_ReadChipRoleControls(mp->player, (Grapple_ChipPreset)p, &st->roles[p]))
-            st->role_used[p] = true;
-    }
+        Grapple_ReadChipRoleControls(mp->player, (Grapple_ChipPreset)p, &st->factory_roles[p]);
+    CopyTracks(st->applied_tracks, st->factory_tracks);
+    CopyTracks(st->tracks, st->factory_tracks);
+    CopyRoles(st->applied_roles, st->factory_roles);
+    CopyRoles(st->roles, st->factory_roles);
+    st->captured = true;
 }
 
 static void RestoreStyleEdits(MusicPlayer *mp)
 {
     StyleState *st = &mp->styles[mp->style_index];
-    if (!st->used)
+    if (!st->captured)
     {
         CaptureStyleDefaults(mp);
         return;
     }
-    for (int i = 0; i < mp->track_count; ++i)
-        ApplyTrackAudio(mp, i);
-    for (int p = GRAPPLE_CHIP_PRESET_FIRST; p <= GRAPPLE_CHIP_PRESET_LAST; ++p)
-        if (st->role_used[p])
-            Grapple_SetChipRoleControls(mp->player, (Grapple_ChipPreset)p, &st->roles[p]);
+    ApplyWorkingAudio(mp);
 }
 
 static void RefreshKnobLabels(MusicPlayer *mp);
+static void UpdateSelectionLabel(MusicPlayer *mp);
 
 static void LoadKnobsFromTrack(MusicPlayer *mp)
 {
     if (!mp->player)
         return;
-    Grapple_ChipRoleControls c = {0};
-    if (!Grapple_ReadChipRoleControls(mp->player, TrackRole(mp, mp->selected_track), &c))
-        return;
-    const float values[] = {c.level, c.attack_ms, c.decay_ms, c.sustain,  c.release_ms,
-                            c.duty,  c.pwm,       c.vibrato,  c.cutoff_hz};
+    StyleState *st = &mp->styles[mp->style_index];
+    const Grapple_ChipPreset role = TrackRole(mp, mp->selected_track);
+    const Grapple_ChipRoleControls *c = &st->roles[role];
+    const float values[] = {c->level, c->attack_ms, c->decay_ms, c->sustain,  c->release_ms,
+                            c->duty,  c->pwm,       c->vibrato,  c->cutoff_hz};
     for (int i = 0; i < 9; ++i)
         if (mp->knob_slider[i])
             Grapple_UiSetValue(mp->knob_slider[i], values[i]);
     RefreshKnobLabels(mp);
+    UpdateSelectionLabel(mp);
+}
+
+static void UpdateSelectionLabel(MusicPlayer *mp)
+{
+    if (!mp->instrument_title)
+        return;
+    char title[160];
+    SDL_snprintf(title, sizeof(title), "Instrument: %s  (style %s)",
+                 TrackName(mp, mp->selected_track), kStyleIds[mp->style_index]);
+    Grapple_UiSetText(mp->instrument_title, title);
+}
+
+static void RebuildTrackPicker(MusicPlayer *mp)
+{
+    if (!mp->track_picker)
+        return;
+    Grapple_UiClear(mp->track_picker);
+    for (int i = 0; i < mp->track_count; ++i)
+    {
+        char label[80];
+        SDL_snprintf(label, sizeof(label), "%s%s", i == mp->selected_track ? "> " : "",
+                     TrackName(mp, i));
+        mp->track_bind[i] = (Bind){mp, i, 0};
+        Grapple_UiButton(mp->track_picker, &(Grapple_UiButtonDef){.text = label,
+                                                                  .on_click = OnSelectTrack,
+                                                                  .user = &mp->track_bind[i]});
+    }
 }
 
 static void ApplyStyle(MusicPlayer *mp, int index)
@@ -284,6 +345,7 @@ static void ApplyStyle(MusicPlayer *mp, int index)
         if (mp->style_radio)
             Grapple_UiSetSelected(mp->style_radio, index);
         LoadKnobsFromTrack(mp);
+        RebuildTrackPicker(mp);
     }
     if (mp->status_label)
         Grapple_UiSetText(mp->status_label, mp->status);
@@ -293,6 +355,61 @@ static void OnStyle(Grapple_UiWidget *widget, void *user)
 {
     MusicPlayer *mp = user;
     ApplyStyle(mp, Grapple_UiSelected(widget));
+}
+
+static void OnSelectTrack(Grapple_UiWidget *widget, void *user)
+{
+    (void)widget;
+    Bind *bind = user;
+    bind->mp->selected_track = bind->track;
+    LoadKnobsFromTrack(bind->mp);
+    RebuildTrackPicker(bind->mp);
+    char msg[160];
+    SDL_snprintf(msg, sizeof(msg), "editing %s", TrackName(bind->mp, bind->track));
+    SetStatus(bind->mp, msg);
+}
+
+static void OnApplyEdits(Grapple_UiWidget *widget, void *user)
+{
+    (void)widget;
+    MusicPlayer *mp = user;
+    StyleState *st = &mp->styles[mp->style_index];
+    CopyTracks(st->applied_tracks, st->tracks);
+    CopyRoles(st->applied_roles, st->roles);
+    ApplyWorkingAudio(mp);
+    char msg[160];
+    SDL_snprintf(msg, sizeof(msg), "applied edits (%s)", kStyleIds[mp->style_index]);
+    SetStatus(mp, msg);
+}
+
+static void OnDiscardEdits(Grapple_UiWidget *widget, void *user)
+{
+    (void)widget;
+    MusicPlayer *mp = user;
+    StyleState *st = &mp->styles[mp->style_index];
+    CopyTracks(st->tracks, st->applied_tracks);
+    CopyRoles(st->roles, st->applied_roles);
+    ApplyWorkingAudio(mp);
+    LoadKnobsFromTrack(mp);
+    char msg[160];
+    SDL_snprintf(msg, sizeof(msg), "discarded unapplied edits (%s)", kStyleIds[mp->style_index]);
+    SetStatus(mp, msg);
+}
+
+static void OnResetDefaults(Grapple_UiWidget *widget, void *user)
+{
+    (void)widget;
+    MusicPlayer *mp = user;
+    StyleState *st = &mp->styles[mp->style_index];
+    CopyTracks(st->tracks, st->factory_tracks);
+    CopyTracks(st->applied_tracks, st->factory_tracks);
+    CopyRoles(st->roles, st->factory_roles);
+    CopyRoles(st->applied_roles, st->factory_roles);
+    ApplyWorkingAudio(mp);
+    LoadKnobsFromTrack(mp);
+    char msg[160];
+    SDL_snprintf(msg, sizeof(msg), "reset %s to style defaults", kStyleIds[mp->style_index]);
+    SetStatus(mp, msg);
 }
 
 static void OnKnob(Grapple_UiWidget *widget, void *user)
@@ -336,15 +453,14 @@ static void OnKnob(Grapple_UiWidget *widget, void *user)
     }
     Grapple_SetChipRoleControls(mp->player, role, &c);
     mp->styles[mp->style_index].roles[role] = c;
-    mp->styles[mp->style_index].role_used[role] = true;
     char text[48];
     FormatValue(text, sizeof(text), value);
     if (mp->knob_label[bind->field])
         Grapple_UiSetText(mp->knob_label[bind->field], text);
-    SDL_snprintf(mp->status, sizeof(mp->status), "role %d %s %s (style %s)", (int)role,
+    char msg[256];
+    SDL_snprintf(msg, sizeof(msg), "%s %s %s (style %s)", TrackName(mp, mp->selected_track),
                  kKnobNames[bind->field], text, kStyleIds[mp->style_index]);
-    if (mp->status_label)
-        Grapple_UiSetText(mp->status_label, mp->status);
+    SetStatus(mp, msg);
 }
 
 static void RefreshKnobLabels(MusicPlayer *mp)
@@ -411,12 +527,19 @@ static void DrawMixer(struct nk_context *ctx, void *user)
     Grapple_GuiGridSpacing(&grid, 10.0f, 8.0f);
 
     Grapple_GuiGridCell(&grid);
-    nk_label(ctx, "Track", NK_TEXT_LEFT);
+    nk_label(ctx, "Select", NK_TEXT_LEFT);
     for (int i = 0; i < tracks; ++i)
     {
-        const Grapple_ChipTrackInfo *info = mp->song ? Grapple_GetChipTrackInfo(mp->song, i) : NULL;
+        char caption[80];
+        SDL_snprintf(caption, sizeof(caption), "%s%s", i == mp->selected_track ? "> " : "",
+                     TrackName(mp, i));
         Grapple_GuiGridCell(&grid);
-        nk_label(ctx, info && info->name[0] ? info->name : "Track", NK_TEXT_CENTERED);
+        if (nk_button_label(ctx, caption))
+        {
+            mp->selected_track = i;
+            LoadKnobsFromTrack(mp);
+            RebuildTrackPicker(mp);
+        }
     }
 
     Grapple_GuiGridCell(&grid);
@@ -489,17 +612,6 @@ static void DrawMixer(struct nk_context *ctx, void *user)
         }
     }
 
-    Grapple_GuiGridCell(&grid);
-    nk_label(ctx, "Instrument", NK_TEXT_LEFT);
-    for (int i = 0; i < tracks; ++i)
-    {
-        Grapple_GuiGridCell(&grid);
-        if (nk_button_label(ctx, mp->selected_track == i ? "Editing" : "Edit"))
-        {
-            mp->selected_track = i;
-            LoadKnobsFromTrack(mp);
-        }
-    }
     Grapple_GuiGridEnd(&grid);
     nk_group_end(ctx);
 }
@@ -736,7 +848,7 @@ static bool WriteConfigDump(MusicPlayer *mp, char *path, size_t path_cap)
     bool first_style = true;
     for (int s = 0; s < PLAYER_STYLES; ++s)
     {
-        if (!mp->styles[s].used)
+        if (!mp->styles[s].captured)
             continue;
         if (!first_style)
             DumpAppend(&buf, ",\n");
@@ -875,12 +987,27 @@ static bool BuildUi(MusicPlayer *mp)
                                                        .user = mp,
                                                        .height = GRAPPLE_UI_EM(2.0f)});
 
+    Grapple_UiLabel(panel, &(Grapple_UiLabelDef){.text = "Select track to edit"});
+    mp->track_picker =
+        Grapple_UiRow(panel, &(Grapple_UiStripDef){.height = GRAPPLE_UI_EM(2.2f), .spacing = 8});
+
     Grapple_UiLabel(panel, &(Grapple_UiLabelDef){.text = "Per-track mix (volume 0.00-2.00)"});
     Grapple_UiRaw(
-        panel, &(Grapple_UiRawDef){.draw = DrawMixer, .user = mp, .height = GRAPPLE_UI_EM(28.0f)});
+        panel, &(Grapple_UiRawDef){.draw = DrawMixer, .user = mp, .height = GRAPPLE_UI_EM(26.0f)});
+
+    Grapple_UiWidget *actions =
+        Grapple_UiRow(panel, &(Grapple_UiStripDef){.height = GRAPPLE_UI_EM(2.2f), .spacing = 8});
+    Grapple_UiButton(actions,
+                     &(Grapple_UiButtonDef){.text = "Apply", .on_click = OnApplyEdits, .user = mp});
+    Grapple_UiButton(
+        actions, &(Grapple_UiButtonDef){.text = "Discard", .on_click = OnDiscardEdits, .user = mp});
+    Grapple_UiButton(actions, &(Grapple_UiButtonDef){.text = "Reset to defaults",
+                                                     .on_click = OnResetDefaults,
+                                                     .user = mp});
 
     Grapple_UiWidget *inst = Grapple_UiColumn(panel, &(Grapple_UiStripDef){.spacing = 4});
-    Grapple_UiLabel(inst, &(Grapple_UiLabelDef){.text = "Instrument (selected track)"});
+    mp->instrument_title =
+        Grapple_UiLabel(inst, &(Grapple_UiLabelDef){.text = "Instrument: (select a track)"});
     const float knob_min[] = {0, 0, 0, 0, 0, 0.05f, 0, 0, 0};
     const float knob_max[] = {2, 400, 800, 1, 800, 0.95f, 1, 0.02f, 8000};
     const float knob_def[] = {1, 8, 160, 0.65f, 70, 0.3f, 0, 0, 6500};
@@ -891,6 +1018,7 @@ static bool BuildUi(MusicPlayer *mp)
             AddLabeledSlider(inst, kKnobNames[i], knob_min[i], knob_max[i], knob_def[i], OnKnob,
                              &mp->knob_bind[i], &mp->knob_label[i]);
     }
+    RebuildTrackPicker(mp);
     LoadKnobsFromTrack(mp);
     return true;
 }
@@ -914,7 +1042,10 @@ static bool LoadCurrent(MusicPlayer *mp)
         return false;
     }
     mp->track_count = TrackCount(mp);
+    if (mp->selected_track >= mp->track_count)
+        mp->selected_track = 0;
     ApplyStyle(mp, mp->style_index);
+    RebuildTrackPicker(mp);
     if (!Grapple_PlayChipPlayer(mp->player))
         return false;
     mp->playing = true;
