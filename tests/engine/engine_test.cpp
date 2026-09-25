@@ -252,7 +252,14 @@ TEST_F(EngineHarness, TickRateChangesAtRuntime)
 // none snaps. Games that cannot afford the render latency need the choice.
 TEST_F(EngineHarness, InterpolationModesReportDifferentAlphas)
 {
-    SDL_Quit(); // rebuild the engine per mode
+    // Rebuild the engine per mode. The fixture's engine goes first: quitting
+    // SDL under a live engine invalidates its renderer but leaves it in SDL's
+    // renderer list, where a later DestroyEngine cannot unlink it and the
+    // next video shutdown spins on it forever. (Only visible when the whole
+    // binary runs as one process; ctest isolates each case.)
+    Grapple_DestroyEngine(engine_);
+    engine_ = nullptr;
+    SDL_Quit();
     auto alpha_after_half_step = [](Grapple_EngineInterpolation mode) {
         SDL_Init(0);
         Grapple_EngineConfig config{};
