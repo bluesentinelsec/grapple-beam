@@ -2609,6 +2609,7 @@ module GrappleC
   def self.EngineAlpha: (untyped engine) -> Float
   def self.EngineAssetScale: (untyped engine) -> Integer
   def self.EngineDelta: (untyped engine) -> Float
+  def self.EngineDesignExplicit: (untyped engine) -> bool
   def self.EngineDesignSize: (untyped engine, Integer width, Integer height) -> [Integer, Integer]
   def self.EngineDisplay: (untyped engine) -> Integer
   def self.EngineDisplayCount: () -> Integer
@@ -2629,6 +2630,7 @@ module GrappleC
   def self.EngineRequestedSettings: (untyped engine) -> untyped
   def self.EngineSafeRect: (untyped engine) -> Hash[Symbol, untyped]
   def self.EngineSetClearColor: (untyped engine, Hash[Symbol, untyped] color) -> void
+  def self.EngineSetDesignSize: (untyped engine, Integer width, Integer height) -> bool
   def self.EngineSetDisplay: (untyped engine, Integer index) -> bool
   def self.EngineSetGraphics: (untyped engine, Hash[Symbol, untyped] settings) -> bool
   def self.EngineSetMaxFps: (untyped engine, Integer max_fps) -> void

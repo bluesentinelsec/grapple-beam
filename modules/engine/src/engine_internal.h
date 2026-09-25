@@ -39,6 +39,7 @@ struct Grapple_Engine
     SDL_Surface *headless_surface; /* owned by us: see DestroyEngine */
 
     int design_width, design_height; /* the reference space */
+    bool design_explicit;            /* the game said, rather than the 1920x1080 default */
     float view_width, view_height;   /* what is actually visible */
     Grapple_EnginePresentation presentation;
     SDL_FColor clear_color;

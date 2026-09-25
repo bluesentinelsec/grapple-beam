@@ -23,11 +23,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* A 16:9 frame of 16-pixel tiles, 24 wide by 13.5 tall, that scales by whole
-   numbers to 1080p (5x) and 4K (10x); the engine letterboxes it to whatever
-   the window is, so the level is written once, in tiles. */
-#define DESIGN_WIDTH 384
-#define DESIGN_HEIGHT 216
+/* Nothing in this file is about the display: the level frames the view at
+   24 x 13.5 tiles and presents it the way pixel art wants. A game that wants
+   a different frame sets config.design_width/height. */
 #define TILE 16
 
 typedef struct Game
@@ -118,10 +116,12 @@ static void Update(void *user, float dt)
     }
 }
 
-/* The scene drew the level; the HUD goes over it in design coordinates. */
-static void Render(void *user, float alpha)
+/* The scene drew the level; the HUD goes over it in design coordinates.
+   As post_render, not render: it runs after the pixel-art frame has been
+   enlarged to the window, so the text rasterises at the window's density
+   rather than being drawn into the small frame and blown up. */
+static void PostRender(void *user)
 {
-    (void)alpha;
     Game *game = (Game *)user;
     SDL_Renderer *renderer = Grapple_EngineRenderer(game->engine);
     float x = 0.0f;
@@ -148,9 +148,6 @@ int main(int argc, char **argv)
 
     Grapple_EngineConfig config = {0};
     config.title = "Platformer — grapple-beam";
-    config.design_width = DESIGN_WIDTH;
-    config.design_height = DESIGN_HEIGHT;
-    config.presentation = GRAPPLE_PRESENT_PIXEL; /* pixel art: whole-number enlargement */
     config.no_auto_mount = true; /* rectangles only: nothing to load */
     config.headless = game.headless;
     game.engine = Grapple_CreateEngine(&config);
@@ -179,7 +176,7 @@ int main(int argc, char **argv)
 
     Grapple_GameHooks hooks = {0};
     hooks.update = Update;
-    hooks.render = Render;
+    hooks.post_render = PostRender;
     const bool ok = Grapple_RunGame(game.engine, &hooks, &game);
 
     Grapple_DestroyPlatformer(game.level);

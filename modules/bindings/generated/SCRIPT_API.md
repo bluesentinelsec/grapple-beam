@@ -2635,6 +2635,7 @@ returns as an array.
 | `GrappleC.EngineAlpha(engine: Grapple_Engine)` | number |
 | `GrappleC.EngineAssetScale(engine: Grapple_Engine)` | integer |
 | `GrappleC.EngineDelta(engine: Grapple_Engine)` | number |
+| `GrappleC.EngineDesignExplicit(engine: Grapple_Engine)` | boolean |
 | `GrappleC.EngineDesignSize(engine: Grapple_Engine, width: integer, height: integer)` | width: integer, height: integer |
 | `GrappleC.EngineDisplay(engine: Grapple_Engine)` | integer |
 | `GrappleC.EngineDisplayCount()` | integer |
@@ -2655,6 +2656,7 @@ returns as an array.
 | `GrappleC.EngineRequestedSettings(engine: Grapple_Engine)` | Grapple_Settings|nil |
 | `GrappleC.EngineSafeRect(engine: Grapple_Engine)` | SDL_FRect table |
 | `GrappleC.EngineSetClearColor(engine: Grapple_Engine, color: SDL_FColor table)` | nil |
+| `GrappleC.EngineSetDesignSize(engine: Grapple_Engine, width: integer, height: integer)` | boolean |
 | `GrappleC.EngineSetDisplay(engine: Grapple_Engine, index: integer)` | boolean |
 | `GrappleC.EngineSetGraphics(engine: Grapple_Engine, settings: Grapple_GraphicsSettings table)` | boolean |
 | `GrappleC.EngineSetMaxFps(engine: Grapple_Engine, max_fps: integer)` | nil |

@@ -4106,6 +4106,19 @@ static mrb_value GenR_Grapple_EngineDelta(mrb_state *mrb, mrb_value self)
     }
 }
 
+static mrb_value GenR_Grapple_EngineDesignExplicit(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_Engine");
+    bool rv = Grapple_EngineDesignExplicit(a0);
+    return mrb_bool_value((mrb_bool)(rv != 0));
+    }
+}
+
 static mrb_value GenR_Grapple_EngineDesignSize(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -4376,6 +4389,21 @@ static mrb_value GenR_Grapple_EngineSetClearColor(mrb_state *mrb, mrb_value self
     GenRead_SDL_FColor(mrb, (argc > 1 ? argv[1] : mrb_nil_value()), &a1);
     Grapple_EngineSetClearColor(a0, a1);
     return mrb_nil_value();
+    }
+}
+
+static mrb_value GenR_Grapple_EngineSetDesignSize(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_Engine");
+    int a1 = (int)GrappleGen_RubyToInt(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    int a2 = (int)GrappleGen_RubyToInt(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    bool rv = Grapple_EngineSetDesignSize(a0, a1, a2);
+    return mrb_bool_value((mrb_bool)(rv != 0));
     }
 }
 
@@ -12549,6 +12577,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "EngineAlpha", GenR_Grapple_EngineAlpha, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineAssetScale", GenR_Grapple_EngineAssetScale, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineDelta", GenR_Grapple_EngineDelta, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "EngineDesignExplicit", GenR_Grapple_EngineDesignExplicit, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineDesignSize", GenR_Grapple_EngineDesignSize, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineDisplay", GenR_Grapple_EngineDisplay, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineDisplayCount", GenR_Grapple_EngineDisplayCount, MRB_ARGS_ANY());
@@ -12569,6 +12598,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "EngineRequestedSettings", GenR_Grapple_EngineRequestedSettings, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineSafeRect", GenR_Grapple_EngineSafeRect, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineSetClearColor", GenR_Grapple_EngineSetClearColor, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "EngineSetDesignSize", GenR_Grapple_EngineSetDesignSize, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineSetDisplay", GenR_Grapple_EngineSetDisplay, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineSetGraphics", GenR_Grapple_EngineSetGraphics, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineSetMaxFps", GenR_Grapple_EngineSetMaxFps, MRB_ARGS_ANY());

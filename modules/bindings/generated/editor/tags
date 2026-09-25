@@ -503,6 +503,7 @@ Grapple_EngineAssetScale	include/grapple/engine.h	/^.*Grapple_EngineAssetScale *
 Grapple_EngineBackend	include/grapple/audio_bus.h	/^.*Grapple_EngineBackend/;"	g
 Grapple_EngineConfig	include/grapple/audio_bus.h	/^.*Grapple_EngineConfig/;"	s
 Grapple_EngineDelta	include/grapple/engine.h	/^.*Grapple_EngineDelta *(/;"	f
+Grapple_EngineDesignExplicit	include/grapple/engine.h	/^.*Grapple_EngineDesignExplicit *(/;"	f
 Grapple_EngineDesignSize	include/grapple/engine.h	/^.*Grapple_EngineDesignSize *(/;"	f
 Grapple_EngineDisplay	include/grapple/engine_graphics.h	/^.*Grapple_EngineDisplay *(/;"	f
 Grapple_EngineDisplayCount	include/grapple/engine_graphics.h	/^.*Grapple_EngineDisplayCount *(/;"	f
@@ -526,6 +527,7 @@ Grapple_EngineRenderer	include/grapple/engine.h	/^.*Grapple_EngineRenderer *(/;"
 Grapple_EngineRequestedSettings	include/grapple/engine_settings.h	/^.*Grapple_EngineRequestedSettings *(/;"	f
 Grapple_EngineSafeRect	include/grapple/engine.h	/^.*Grapple_EngineSafeRect *(/;"	f
 Grapple_EngineSetClearColor	include/grapple/engine.h	/^.*Grapple_EngineSetClearColor *(/;"	f
+Grapple_EngineSetDesignSize	include/grapple/engine.h	/^.*Grapple_EngineSetDesignSize *(/;"	f
 Grapple_EngineSetDisplay	include/grapple/engine_graphics.h	/^.*Grapple_EngineSetDisplay *(/;"	f
 Grapple_EngineSetEventSink	include/grapple/engine.h	/^.*Grapple_EngineSetEventSink *(/;"	f
 Grapple_EngineSetGraphics	include/grapple/engine_graphics.h	/^.*Grapple_EngineSetGraphics *(/;"	f

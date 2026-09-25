@@ -11,8 +11,6 @@
 
 engine = Grapple.engine(
   title: "Platformer — grapple-beam",
-  design: [384, 216], # 16:9, 24 x 13.5 tiles; 5x at 1080p, 10x at 4K
-  presentation: :pixel, # pixel art: whole-number enlargement, crisp everywhere
   auto_mount: false,
   headless: !SDL.getenv("GRAPPLE_HEADLESS").nil?
 )
@@ -82,7 +80,8 @@ engine.on_update do |dt|
   end
 end
 
-engine.on_render do |_alpha|
+# post_render: after the frame is enlarged, so the text is drawn at window density.
+engine.on_post_render do
   renderer = GrappleC.EngineRenderer(engine)
   x, = player.position
   GrappleC.SetDebugTextSize(8)

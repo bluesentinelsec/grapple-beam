@@ -206,6 +206,24 @@ Grapple_Platformer *Grapple_CreatePlatformer(Grapple_Engine *engine, int width, 
     DefaultColors(level);
     DefaultActions(level);
 
+    /* The display is the level's business, not the game's. A game that gave
+       no design size gets a 16:9 frame of 24 x 13.5 tiles — the framing of
+       the modern Mario games, and one that 1080p and 4K enlarge by whole
+       numbers — and pixel art's presentation: the frame drawn at design
+       size and enlarged as a whole, so nothing is scaled per sprite and
+       every art pixel is a square block. A game that chose a design size,
+       or a presentation other than the engine's letterbox default, keeps
+       its choice. */
+    if (!Grapple_EngineDesignExplicit(engine))
+    {
+        Grapple_EngineSetDesignSize(engine, GRAPPLE_PLATFORMER_VIEW_TILES_WIDE * tile_size,
+                                    (GRAPPLE_PLATFORMER_VIEW_TILES_HIGH_X2 * tile_size) / 2);
+    }
+    if (Grapple_EnginePresentation_(engine) == GRAPPLE_PRESENT_LETTERBOX)
+    {
+        Grapple_EngineSetPresentation(engine, GRAPPLE_PRESENT_PIXEL);
+    }
+
     Grapple_CameraInit(&level->camera, engine);
     level->camera.bounds =
         (SDL_FRect){0.0f, 0.0f, (float)(width * tile_size), (float)(height * tile_size)};

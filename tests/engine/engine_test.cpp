@@ -527,6 +527,31 @@ TEST_F(PresentationHarness, IntegerReportsTheFlooredScale)
     Grapple_DestroyEngine(engine);
 }
 
+// The design size can be chosen after creation, by whoever knows best.
+TEST_F(PresentationHarness, DesignSizeCanBeSetLaterAndReportsWhetherItWas)
+{
+    Grapple_EngineConfig config{};
+    config.headless = true;
+    config.manual_clock = true;
+    config.window_width = 1920;
+    config.window_height = 1080;
+    Grapple_Engine *engine = Grapple_CreateEngine(&config);
+    ASSERT_NE(engine, nullptr);
+    EXPECT_FALSE(Grapple_EngineDesignExplicit(engine));
+    EXPECT_FLOAT_EQ(Grapple_EngineViewRect(engine).w, 1920.0f);
+    ASSERT_TRUE(Grapple_EngineSetDesignSize(engine, 384, 216));
+    EXPECT_TRUE(Grapple_EngineDesignExplicit(engine));
+    EXPECT_FLOAT_EQ(Grapple_EngineViewRect(engine).w, 384.0f);
+    EXPECT_NEAR(Grapple_EngineRenderScale(engine), 5.0f, 0.01f);
+    EXPECT_FALSE(Grapple_EngineSetDesignSize(engine, 0, 216));
+    Grapple_DestroyEngine(engine);
+
+    Grapple_Engine *chosen = Make(1920, 1080, GRAPPLE_PRESENT_LETTERBOX);
+    ASSERT_NE(chosen, nullptr);
+    EXPECT_TRUE(Grapple_EngineDesignExplicit(chosen));
+    Grapple_DestroyEngine(chosen);
+}
+
 // PIXEL draws the frame at the design size and enlarges it. The view is the
 // design, like LETTERBOX; the reported scale is the aspect-true fit; and a
 // window that is not an exact multiple still renders, frame after frame.

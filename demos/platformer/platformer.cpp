@@ -16,9 +16,7 @@
 namespace
 {
 
-// 16:9, 24 x 13.5 tiles of 16 px; 5x at 1080p, 10x at 4K.
-constexpr int kDesignWidth = 384;
-constexpr int kDesignHeight = 216;
+// Nothing here is about the display: the level frames and presents the view.
 constexpr int kTile = 16;
 
 class PlatformerGame
@@ -43,9 +41,6 @@ class PlatformerGame
 
         Grapple_EngineConfig config{};
         config.title = "Platformer — grapple-beam";
-        config.design_width = kDesignWidth;
-        config.design_height = kDesignHeight;
-        config.presentation = GRAPPLE_PRESENT_PIXEL;  // pixel art: whole-number enlargement
         config.no_auto_mount = true;
         config.headless = headless_;
         engine_ = Grapple_CreateEngine(&config);
@@ -83,7 +78,8 @@ class PlatformerGame
         hooks.update = [](void *user, float dt) {
             static_cast<PlatformerGame *>(user)->Update(dt);
         };
-        hooks.render = [](void *user, float) { static_cast<PlatformerGame *>(user)->Render(); };
+        // post_render: after the frame is enlarged, so the text is drawn at window density.
+        hooks.post_render = [](void *user) { static_cast<PlatformerGame *>(user)->Render(); };
         const bool ok = Grapple_RunGame(engine_, &hooks, this);
 
         level_.reset();

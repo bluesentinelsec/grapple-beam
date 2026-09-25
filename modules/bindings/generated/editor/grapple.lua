@@ -15047,6 +15047,11 @@ function GrappleC.EngineAssetScale(engine) end
 ---@return number
 function GrappleC.EngineDelta(engine) end
 
+---Calls `Grapple_EngineDesignExplicit`.
+---@param engine userdata
+---@return boolean
+function GrappleC.EngineDesignExplicit(engine) end
+
 ---Calls `Grapple_EngineDesignSize`.
 ---@param engine userdata
 ---@param width integer
@@ -15148,6 +15153,13 @@ function GrappleC.EngineSafeRect(engine) end
 ---@param engine userdata
 ---@param color table
 function GrappleC.EngineSetClearColor(engine, color) end
+
+---Calls `Grapple_EngineSetDesignSize`.
+---@param engine userdata
+---@param width integer
+---@param height integer
+---@return boolean
+function GrappleC.EngineSetDesignSize(engine, width, height) end
 
 ---Calls `Grapple_EngineSetDisplay`.
 ---@param engine userdata

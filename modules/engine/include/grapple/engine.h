@@ -427,6 +427,15 @@ extern Grapple_EnginePresentation Grapple_EnginePresentation_(Grapple_Engine *en
 /** The design (reference) space the game was configured with. */
 extern void Grapple_EngineDesignSize(Grapple_Engine *engine, int *width, int *height);
 
+/** Change the design space after creation. The view rect, the presentation
+ *  and the offscreen frame follow on the next call. A subsystem that knows
+ *  the right frame for its kind of game — a tile level that wants a whole
+ *  number of tiles across — uses this when the game gave no design size. */
+extern bool Grapple_EngineSetDesignSize(Grapple_Engine *engine, int width, int height);
+/** True when the game (or SetDesignSize) chose the design size, false while
+ *  it is still the engine's 1920x1080 default. */
+extern bool Grapple_EngineDesignExplicit(Grapple_Engine *engine);
+
 /** The design-space rectangle actually visible in the window.
  *
  *  Equal to the design size for every mode except EXPAND, where the window's

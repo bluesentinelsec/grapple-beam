@@ -258,6 +258,9 @@ The others are each a considered trade against that:
   cameras in Unity and Godot use; `INTEGER` gives the same crispness but
   leaves most of the screen as bars on any display that is not a multiple.
   Render scale does not apply under `PIXEL`: the design *is* the resolution.
+  Text and UI belong in `post_render`, which runs after the enlargement and
+  so rasterises at the window's density; drawn in `render` they go into the
+  small frame and come out as blocks.
 
 Whichever you pick, these two calls describe what the player is seeing:
 

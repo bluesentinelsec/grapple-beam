@@ -1222,8 +1222,14 @@ inline Status DisconnectSignal(Grapple_SignalEmitter *emitter, Uint64 connection
 inline Status DrawPhysicsWorld(b2WorldId world, SDL_Renderer *renderer, const Grapple_PhysicsDrawConfig *config) {
   return ::Grapple_DrawPhysicsWorld(world, renderer, config) ? Status() : Status::FromSdl();
 }
+inline Status EngineDesignExplicit(Grapple_Engine *engine) {
+  return ::Grapple_EngineDesignExplicit(engine) ? Status() : Status::FromSdl();
+}
 inline Status EngineEffectsAvailable(Grapple_Engine *engine) {
   return ::Grapple_EngineEffectsAvailable(engine) ? Status() : Status::FromSdl();
+}
+inline Status EngineSetDesignSize(Grapple_Engine *engine, int width, int height) {
+  return ::Grapple_EngineSetDesignSize(engine, width, height) ? Status() : Status::FromSdl();
 }
 inline Status EngineSetDisplay(Grapple_Engine *engine, int index) {
   return ::Grapple_EngineSetDisplay(engine, index) ? Status() : Status::FromSdl();

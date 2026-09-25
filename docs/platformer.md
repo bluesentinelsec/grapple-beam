@@ -20,7 +20,7 @@ target_link_libraries(your_game PRIVATE Grapple::Platformer)
 A complete, playable level in Lua:
 
 ```lua
-local engine = Grapple.engine{ title = "1-1", design = { 384, 216 }, presentation = "pixel" }
+local engine = Grapple.engine{ title = "1-1" }
 
 local level = Grapple.create_level(engine, { width = 212, height = 22 })
 level:create_floor{ x = 0,  y = 13, width = 69 }
@@ -65,22 +65,21 @@ and passable from below and the sides. The left and right edges of the
 level read as solid, so the player cannot walk out of it; the top and
 bottom are open, so a high jump is not a head bump and a pit is a pit.
 
-Design at the resolution the art will be drawn at, in the shape of the
-displays it will play on, and present it with `presentation = "pixel"` —
-the engine draws the frame at the design size, enlarges it by the largest
-whole number that fits the window with point sampling, and fits the rest
-with a stretch of less than an art pixel. See [the engine's presentation
-modes](engine.md#presentation-modes) for why that is the industry's
-pipeline for pixel art.
+The display is the level's business, not the game's. A level frames the
+view at **24 by 13.5 tiles** — the framing of the modern Mario games, and
+at 16-pixel tiles a 384×216 frame that 1080p and 4K enlarge by exactly 5×
+and 10× — and presents it with the engine's [`pixel`
+mode](engine.md#presentation-modes): the whole frame is drawn once at that
+size and enlarged as one picture, by the largest whole number that fits the
+display, with any remainder a stretch of less than an art pixel. Nothing is
+scaled per sprite or per tile, so every art pixel is a square block on a
+laptop and on a 4K monitor alike, and a game never has to think about it.
 
-For 16-pixel tiles on a 16:9 screen, **384×216** is the frame: 24 tiles
-wide by 13.5 tall — the framing of the modern Mario games — and 1080p (5×)
-and 4K (10×) are exact multiples. A game whose art is drawn for 4K rather
-than merely scaled to it draws 32-pixel tiles into a **768×432** frame,
-the same 24×13.5 tiles with four times the detail; 4K is then 5× and
-1080p a 2× enlargement softened by a quarter pixel. The NES's 256×240 is
-the near-4:3 shape of the originals and is right only for a game that
-wants their bars.
+To take over, say so at the engine: a `design` size changes the frame (the
+level leaves an explicit one alone), and any `presentation` other than the
+default letterbox is kept. For art drawn for 4K rather than scaled to it,
+use 32-pixel tiles: the same 24×13.5 framing becomes 768×432, which 4K
+enlarges 5× and 1080p 2× with a quarter-pixel stretch.
 
 ### Dedicated objects
 
@@ -285,8 +284,10 @@ wall to the player. `camera_position` is there for a HUD; C and C++ get the
 the player steps in the fixed tick, the camera follows in the per-frame
 update, and the render draws the cells then the actors through the camera,
 sorted, culled and interpolated by the engine. The game's own `on_update`
-and `on_render` hooks run around it, so a HUD drawn in `on_render` sits on
-top. A game with scenes of its own — a title screen, a pause menu — calls
+and `on_post_render` hooks run around it. Draw a HUD in `on_post_render`:
+it runs after the pixel-art frame has been enlarged to the window, so text
+is rasterised at the window's density rather than drawn into the small
+frame and blown up. A game with scenes of its own — a title screen, a pause menu — calls
 `step`, `update` and `render` from them instead.
 
 Because the push is a scene, a script that builds a level and registers no

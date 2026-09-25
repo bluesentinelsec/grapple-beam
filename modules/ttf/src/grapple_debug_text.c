@@ -48,16 +48,37 @@ static void ClearCache(void)
     }
 }
 
+/* Screen pixels per logical unit: the window's pixel density times the
+   logical presentation's scale. A design of 384x216 shown in a 1080p window
+   is 5 pixels per unit, and a glyph rasterised at 1 would be enlarged five
+   times into blocks. Sizing the font by this keeps every glyph pixel a
+   screen pixel, whatever the design space. */
 static float RendererDensity(SDL_Renderer *renderer)
 {
+    float density = 1.0f; /* software / offscreen renderers */
     SDL_Window *window = SDL_GetRenderWindow(renderer);
     if (window) {
-        float density = SDL_GetWindowPixelDensity(window);
-        if (density > 0.0f) {
-            return density;
+        float window_density = SDL_GetWindowPixelDensity(window);
+        if (window_density > 0.0f) {
+            density = window_density;
         }
     }
-    return 1.0f; /* software / offscreen renderers */
+    {
+        int logical_w = 0;
+        int logical_h = 0;
+        SDL_RendererLogicalPresentation mode = SDL_LOGICAL_PRESENTATION_DISABLED;
+        SDL_FRect dst;
+        if (SDL_GetRenderLogicalPresentation(renderer, &logical_w, &logical_h, &mode) &&
+            mode != SDL_LOGICAL_PRESENTATION_DISABLED && logical_w > 0 &&
+            SDL_GetRenderLogicalPresentationRect(renderer, &dst) && dst.w > 0.0f) {
+            /* The rect is in pixels; the window density is already in it. */
+            float scale = dst.w / (float)logical_w;
+            if (scale > 0.0f) {
+                return scale;
+            }
+        }
+    }
+    return density;
 }
 
 static bool EnsureReady(SDL_Renderer *renderer)

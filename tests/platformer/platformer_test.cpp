@@ -658,6 +658,66 @@ TEST_F(PlatformerHarness, DefaultActionsCoverKeyboardAndPadAndCanBeRebound)
     EXPECT_FLOAT_EQ(Grapple_PlatformerActionValue(level_, "move_x"), 0.0f);
 }
 
+// --- the display -------------------------------------------------------------
+
+TEST(PlatformerDisplay, ALevelFramesAndPresentsAnEngineThatChoseNothing)
+{
+    ASSERT_TRUE(SDL_Init(0));
+    Grapple_EngineConfig config{};
+    config.headless = true;
+    config.manual_clock = true;
+    config.no_auto_mount = true;
+    config.window_width = 1920;
+    config.window_height = 1080;
+    Grapple_Engine *engine = Grapple_CreateEngine(&config);
+    ASSERT_NE(engine, nullptr);
+    EXPECT_FALSE(Grapple_EngineDesignExplicit(engine));
+
+    Grapple_Platformer *level = Grapple_CreatePlatformer(engine, 40, 20, 16);
+    ASSERT_NE(level, nullptr);
+    const SDL_FRect view = Grapple_EngineViewRect(engine);
+    EXPECT_FLOAT_EQ(view.w, 384.0f); // 24 tiles
+    EXPECT_FLOAT_EQ(view.h, 216.0f); // 13.5 tiles
+    EXPECT_EQ(Grapple_EnginePresentation_(engine), GRAPPLE_PRESENT_PIXEL);
+    EXPECT_NEAR(Grapple_EngineRenderScale(engine), 5.0f, 0.01f);
+    // The camera was framed against the new view, not the 1080p default.
+    EXPECT_FLOAT_EQ(Grapple_PlatformerCamera(level)->viewport.w, 384.0f);
+    Grapple_DestroyPlatformer(level);
+
+    // Bigger tiles, bigger frame: the same 24 x 13.5 tiles.
+    Grapple_Engine *engine32 = Grapple_CreateEngine(&config);
+    ASSERT_NE(engine32, nullptr);
+    Grapple_Platformer *level32 = Grapple_CreatePlatformer(engine32, 40, 20, 32);
+    ASSERT_NE(level32, nullptr);
+    EXPECT_FLOAT_EQ(Grapple_EngineViewRect(engine32).w, 768.0f);
+    EXPECT_FLOAT_EQ(Grapple_EngineViewRect(engine32).h, 432.0f);
+    Grapple_DestroyPlatformer(level32);
+    Grapple_DestroyEngine(engine32);
+    Grapple_DestroyEngine(engine);
+    SDL_Quit();
+}
+
+TEST(PlatformerDisplay, AGameThatChoseKeepsItsChoice)
+{
+    ASSERT_TRUE(SDL_Init(0));
+    Grapple_EngineConfig config{};
+    config.headless = true;
+    config.manual_clock = true;
+    config.no_auto_mount = true;
+    config.design_width = 256;
+    config.design_height = 240;
+    config.presentation = GRAPPLE_PRESENT_INTEGER;
+    Grapple_Engine *engine = Grapple_CreateEngine(&config);
+    ASSERT_NE(engine, nullptr);
+    Grapple_Platformer *level = Grapple_CreatePlatformer(engine, 40, 20, 16);
+    ASSERT_NE(level, nullptr);
+    EXPECT_FLOAT_EQ(Grapple_EngineViewRect(engine).w, 256.0f);
+    EXPECT_EQ(Grapple_EnginePresentation_(engine), GRAPPLE_PRESENT_INTEGER);
+    Grapple_DestroyPlatformer(level);
+    Grapple_DestroyEngine(engine);
+    SDL_Quit();
+}
+
 // --- the scene -----------------------------------------------------------------
 
 TEST_F(PlatformerHarness, AttachingCountsAsAGameForTheScriptRunner)

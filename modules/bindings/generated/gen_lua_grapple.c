@@ -3307,6 +3307,15 @@ static int GenL_Grapple_EngineDelta(lua_State *L)
     return 1;
 }
 
+static int GenL_Grapple_EngineDesignExplicit(lua_State *L)
+{
+    (void)L;
+    Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Engine");
+    bool rv = Grapple_EngineDesignExplicit(a0);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
 static int GenL_Grapple_EngineDesignSize(lua_State *L)
 {
     (void)L;
@@ -3491,6 +3500,17 @@ static int GenL_Grapple_EngineSetClearColor(lua_State *L)
     GenRead_SDL_FColor(L, 2, &a1);
     Grapple_EngineSetClearColor(a0, a1);
     return 0;
+}
+
+static int GenL_Grapple_EngineSetDesignSize(lua_State *L)
+{
+    (void)L;
+    Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Engine");
+    int a1 = (int)luaL_checkinteger(L, 2);
+    int a2 = (int)luaL_checkinteger(L, 3);
+    bool rv = Grapple_EngineSetDesignSize(a0, a1, a2);
+    lua_pushboolean(L, (int)rv);
+    return 1;
 }
 
 static int GenL_Grapple_EngineSetDisplay(lua_State *L)
@@ -8995,7 +9015,7 @@ static int GenL_Grapple_WheelJointDefSetSpring(lua_State *L)
 int GrappleGen_OpenLua_grapple(lua_State *L);
 int GrappleGen_OpenLua_grapple(lua_State *L)
 {
-    lua_createtable(L, 0, 788);
+    lua_createtable(L, 0, 790);
     lua_pushcfunction(L, GenL_Grapple_ActionBind);
     lua_setfield(L, -2, "ActionBind");
     lua_pushcfunction(L, GenL_Grapple_ActionBindAxis);
@@ -9436,6 +9456,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "EngineAssetScale");
     lua_pushcfunction(L, GenL_Grapple_EngineDelta);
     lua_setfield(L, -2, "EngineDelta");
+    lua_pushcfunction(L, GenL_Grapple_EngineDesignExplicit);
+    lua_setfield(L, -2, "EngineDesignExplicit");
     lua_pushcfunction(L, GenL_Grapple_EngineDesignSize);
     lua_setfield(L, -2, "EngineDesignSize");
     lua_pushcfunction(L, GenL_Grapple_EngineDisplay);
@@ -9476,6 +9498,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "EngineSafeRect");
     lua_pushcfunction(L, GenL_Grapple_EngineSetClearColor);
     lua_setfield(L, -2, "EngineSetClearColor");
+    lua_pushcfunction(L, GenL_Grapple_EngineSetDesignSize);
+    lua_setfield(L, -2, "EngineSetDesignSize");
     lua_pushcfunction(L, GenL_Grapple_EngineSetDisplay);
     lua_setfield(L, -2, "EngineSetDisplay");
     lua_pushcfunction(L, GenL_Grapple_EngineSetGraphics);

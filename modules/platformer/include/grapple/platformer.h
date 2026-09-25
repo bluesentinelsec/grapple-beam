@@ -86,11 +86,23 @@ extern "C"
         GRAPPLE_PLAYER_STATE_COUNT
     } Grapple_PlayerState;
 
+/** The frame a level gives an engine that chose no design size: 24 tiles
+ *  wide by 13.5 tall (the height is doubled here to stay an integer). At
+ *  16-pixel tiles that is 384x216, which 1080p and 4K enlarge by whole
+ *  numbers; at 32-pixel tiles, 768x432, for art drawn for 4K. */
+#define GRAPPLE_PLATFORMER_VIEW_TILES_WIDE 24
+#define GRAPPLE_PLATFORMER_VIEW_TILES_HIGH_X2 27
+
     /* --- the level ---------------------------------------------------------- */
 
     /** An empty level `width` x `height` tiles of `tile_size` pixels each.
      *  NULL + SDL_GetError on a bad size. Destroy with
-     *  Grapple_DestroyPlatformer, after the engine has stopped running it. */
+     *  Grapple_DestroyPlatformer, after the engine has stopped running it.
+     *
+     *  The display is taken care of: an engine that was given no design
+     *  size is framed at 24 x 13.5 tiles, and one still on the letterbox
+     *  default is switched to GRAPPLE_PRESENT_PIXEL, the whole-frame
+     *  enlargement pixel art wants. A game that set either keeps it. */
     extern Grapple_Platformer *Grapple_CreatePlatformer(Grapple_Engine *engine, int width,
                                                         int height, int tile_size);
 

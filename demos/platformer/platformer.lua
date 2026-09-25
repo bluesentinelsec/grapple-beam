@@ -20,16 +20,13 @@
 -- An Xbox-layout pad works the same: left stick or d-pad, X or the right
 -- trigger to run, A to jump. Escape quits.
 
--- 384x216 is a 16:9 frame with 16-pixel tiles, 24 wide by 13.5 tall, and it
--- scales by whole numbers to 1080p (5x) and 4K (10x). Under the "pixel"
--- presentation the engine draws the frame at that size, enlarges it by the
--- largest whole number that fits the window, and letterboxes the rest — so
--- the game is written once, in tiles, and every art pixel is a crisp square
--- block on every display.
+-- Nothing here is about the display. The level frames the view — 24 by
+-- 13.5 tiles, a 16:9 frame that 1080p and 4K enlarge by whole numbers — and
+-- presents it the way pixel art wants: drawn once at that size and enlarged
+-- as a whole, so it is crisp on a laptop and on a 4K monitor alike. A game
+-- that wants a different frame gives the engine a design size.
 local engine = Grapple.engine{
   title = "Platformer — grapple-beam",
-  design = { 384, 216 },
-  presentation = "pixel",   -- pixel art: whole-number enlargement, crisp everywhere
   auto_mount = false,       -- rectangles only: nothing to load
   headless = SDL.getenv("GRAPPLE_HEADLESS") ~= nil,
 }
@@ -122,8 +119,11 @@ engine:on_update(function(dt)
   end
 end)
 
--- The scene drew the level; this draws over it, in design coordinates.
-engine:on_render(function(alpha)
+-- The scene drew the level; the HUD goes over it, in design coordinates.
+-- post_render, not render: it runs after the pixel-art frame has been
+-- enlarged to the window, so text rasterises at the window's density
+-- instead of being drawn into the tiny frame and blown up.
+engine:on_post_render(function()
   local renderer = GrappleC.EngineRenderer(engine)
   local x = player:position()
   GrappleC.SetDebugTextSize(8)
