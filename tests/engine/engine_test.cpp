@@ -566,7 +566,7 @@ TEST_F(PresentationHarness, PixelKeepsTheDesignViewAndSurvivesAnyWindow)
 {
     for (const auto mode : {GRAPPLE_PRESENT_PIXEL, GRAPPLE_PRESENT_PIXEL_SNAP})
     {
-        for (const auto [w, h, scale, whole] : {std::tuple{3840, 2160, 2.0f, 2},
+        for (const auto &[w, h, scale, whole] : {std::tuple{3840, 2160, 2.0f, 2},
                                                 std::tuple{2560, 1440, 1.3333f, 1},
                                                 std::tuple{1000, 700, 0.5208f, 1}})
         {
