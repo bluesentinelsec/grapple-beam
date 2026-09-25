@@ -213,6 +213,12 @@ static bool ParsePresentation(const char *name, Grapple_EnginePresentation *out)
     return false;
 }
 
+Grapple_Engine *Grapple_LuaEngineTest(lua_State *L, int index)
+{
+    EngineBox *box = (EngineBox *)luaL_testudata(L, index, ENGINE_MT);
+    return (box != NULL) ? box->engine : NULL;
+}
+
 Grapple_Engine *Grapple_LuaEngineAt(lua_State *L, int index)
 {
     /* Either spelling: the object this file makes, or the generated handle

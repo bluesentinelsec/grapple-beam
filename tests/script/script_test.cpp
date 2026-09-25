@@ -209,6 +209,43 @@ TEST(BindingsLua, PhysicsAndUtilsDriveFromScriptWithGc)
     lua_close(L); /* remaining handles finalize here; ASan verifies */
 }
 
+/* Grapple.engine builds a curated object; GrappleC.* takes generated
+   handles. A script that has one should be able to use the other — the
+   platformer demo's HUD did GrappleC.EngineRenderer(engine) and got a type
+   error on every frame. */
+TEST(BindingsLua, CuratedEngineIsAcceptedByGeneratedFunctions)
+{
+    ASSERT_TRUE(SDL_Init(0)) << SDL_GetError();
+    lua_State *L = Grapple_CreateLuaState();
+    ASSERT_NE(L, nullptr);
+    ASSERT_TRUE(Grapple_OpenLuaBindings(L));
+    const char *script =
+        "local engine = Grapple.engine{ headless = true, auto_mount = false }\n"
+        "assert(GrappleC.EngineRenderer(engine) ~= nil, 'renderer')\n"
+        "assert(GrappleC.EngineTickRate(engine) == 60, 'tick rate')\n"
+        "assert(not GrappleC.KeyDown(engine, SDL.SCANCODE_SPACE))\n";
+    ASSERT_EQ(luaL_dostring(L, script), LUA_OK) << lua_tostring(L, -1);
+    lua_close(L);
+    SDL_Quit();
+}
+
+TEST(BindingsRuby, CuratedEngineIsAcceptedByGeneratedFunctions)
+{
+    ASSERT_TRUE(SDL_Init(0)) << SDL_GetError();
+    mrb_state *mrb = Grapple_CreateRubyState();
+    ASSERT_NE(mrb, nullptr);
+    ASSERT_TRUE(Grapple_OpenRubyBindings(mrb));
+    const char *script =
+        "engine = Grapple.engine(headless: true, auto_mount: false)\n"
+        "raise 'renderer' if GrappleC.EngineRenderer(engine).nil?\n"
+        "raise 'tick rate' unless GrappleC.EngineTickRate(engine) == 60\n"
+        "raise 'key' if GrappleC.KeyDown(engine, SDL::SCANCODE_SPACE)\n";
+    mrb_load_string(mrb, script);
+    ASSERT_FALSE(mrb->exc) << mrb_str_to_cstr(mrb, mrb_inspect(mrb, mrb_obj_value(mrb->exc)));
+    mrb_close(mrb);
+    SDL_Quit();
+}
+
 TEST(BindingsRuby, PhysicsAndUtilsDriveFromScriptWithGc)
 {
     mrb_state *mrb = Grapple_CreateRubyState();

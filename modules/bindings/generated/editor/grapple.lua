@@ -17017,6 +17017,11 @@ function GrappleC.PlatformerPlayerTuningKey(index) end
 ---@return number, number
 function GrappleC.PlatformerPlayerVelocity(level, vx, vy) end
 
+---Calls `Grapple_PlatformerPlayerWall`.
+---@param level userdata
+---@return integer
+function GrappleC.PlatformerPlayerWall(level) end
+
 ---Calls `Grapple_PlatformerRemovePlayer`.
 ---@param level userdata
 function GrappleC.PlatformerRemovePlayer(level) end
@@ -17056,6 +17061,17 @@ function GrappleC.PlatformerScrollMode(level) end
 ---@param b number
 ---@param a number
 function GrappleC.PlatformerSetBackgroundColor(level, r, g, b, a) end
+
+---Calls `Grapple_PlatformerSetCameraDeadzone`.
+---@param level userdata
+---@param width number
+---@param height number
+function GrappleC.PlatformerSetCameraDeadzone(level, width, height) end
+
+---Calls `Grapple_PlatformerSetCameraLookAhead`.
+---@param level userdata
+---@param pixels number
+function GrappleC.PlatformerSetCameraLookAhead(level, pixels) end
 
 ---Calls `Grapple_PlatformerSetCameraSmoothing`.
 ---@param level userdata

@@ -996,6 +996,8 @@ class PlatformerHandle {
     return ::Grapple_PlatformerScrollMode(value_);
   }
   void PlatformerSetCameraSmoothing(float seconds) { ::Grapple_PlatformerSetCameraSmoothing(value_, seconds); }
+  void PlatformerSetCameraLookAhead(float pixels) { ::Grapple_PlatformerSetCameraLookAhead(value_, pixels); }
+  void PlatformerSetCameraDeadzone(float width, float height) { ::Grapple_PlatformerSetCameraDeadzone(value_, width, height); }
   void PlatformerCameraPosition(float *x, float *y) { ::Grapple_PlatformerCameraPosition(value_, x, y); }
   Grapple_Camera* PlatformerCamera() {
     return ::Grapple_PlatformerCamera(value_);
@@ -1052,6 +1054,9 @@ class PlatformerHandle {
   }
   Status PlatformerPlayerGrounded() {
     return ::Grapple_PlatformerPlayerGrounded(value_) ? Status() : Status::FromSdl();
+  }
+  int PlatformerPlayerWall() {
+    return ::Grapple_PlatformerPlayerWall(value_);
   }
   int PlatformerPlayerFacing() {
     return ::Grapple_PlatformerPlayerFacing(value_);

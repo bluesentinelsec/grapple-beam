@@ -15,6 +15,8 @@
 -- script has finished, the same bargain Love2D and Godot make.
 --
 -- Controls: A/D or the arrow keys walk, Shift or X runs, Space or Z jumps.
+-- Press into a wall while falling to slide down it; jump to kick off, and
+-- keep alternating to climb.
 -- An Xbox-layout pad works the same: left stick or d-pad, X or the right
 -- trigger to run, A to jump. Escape quits.
 
@@ -29,54 +31,70 @@ local engine = Grapple.engine{
   headless = SDL.getenv("GRAPPLE_HEADLESS") ~= nil,
 }
 
--- 1-1 is 212 tiles long; this is its opening stretch.
-local level = Grapple.create_level(engine, {
-  width = 212, height = 15,
-  scroll = "forward",       -- the screen never scrolls back, like 1985
-})
+-- 22 rows tall against a 15-row view, so there is somewhere to scroll up to.
+-- The camera is the modern kind: it leads the way the player faces, holds
+-- the ground level through a jump, and follows anywhere. scroll = "forward"
+-- gets 1985 back.
+local level = Grapple.create_level(engine, { width = 212, height = 22 })
 
 -- The ground: a long floor with two pits in it.
-level:create_floor{ x = 0,   y = 13, width = 69 }
-level:create_floor{ x = 71,  y = 13, width = 15 }
-level:create_floor{ x = 89,  y = 13, width = 64 }
-level:create_floor{ x = 155, y = 13, width = 57 }
+level:create_floor{ x = 0, y = 20, width = 69 }
+level:create_floor{ x = 71, y = 20, width = 15 }
+level:create_floor{ x = 89, y = 20, width = 64 }
+level:create_floor{ x = 155, y = 20, width = 57 }
 
--- Blocks to jump on and bump: singles, rows, and a couple stacked high.
-level:create_block{ x = 16, y = 9 }
-level:create_block{ x = 20, y = 9, width = 5 }
-level:create_block{ x = 22, y = 5 }
-level:create_platform{ x = 30, y = 8, width = 4 }     -- a ledge: jump up through it
-level:create_block{ x = 37, y = 8, width = 3 }
-level:create_block{ x = 45, y = 10 }
-level:create_block{ x = 52, y = 9, width = 2 }
-level:create_platform{ x = 58, y = 6, width = 5 }
-level:create_block{ x = 77, y = 9, width = 3 }
-level:create_block{ x = 80, y = 5, width = 8 }
-level:create_block{ x = 91, y = 5, width = 3 }
-level:create_block{ x = 94, y = 9, width = 2 }
+-- Blocks to jump on and bump; a tower of floating ones climbs to a high
+-- platform, which is where the vertical scrolling shows.
+level:create_block{ x = 16, y = 16 }
+level:create_block{ x = 20, y = 16, width = 5 }
+level:create_block{ x = 22, y = 12 }
+level:create_block{ x = 37, y = 15, width = 3 }
+level:create_block{ x = 45, y = 17 }
+level:create_block{ x = 52, y = 16, width = 2 }
+level:create_block{ x = 77, y = 16, width = 3 }
+level:create_block{ x = 80, y = 12, width = 8 }
+level:create_block{ x = 91, y = 12, width = 3 }
+level:create_block{ x = 94, y = 16, width = 2 }
+level:create_block{ x = 64, y = 17, width = 2 }
+level:create_block{ x = 66, y = 14, width = 2 }
+level:create_block{ x = 68, y = 11, width = 2 }
+level:create_block{ x = 70, y = 8, width = 2 }
+level:create_block{ x = 72, y = 5, width = 6 }
+level:create_block{ x = 96, y = 3, width = 4 }
+level:create_block{ x = 105, y = 3, width = 6 }
+level:create_block{ x = 189, y = 12, height = 8 }
 
--- Walls, pipes, whatever the game will call them: columns to climb over.
-level:create_wall{ x = 28, y = 11, height = 2 }
-level:create_wall{ x = 29, y = 11, height = 2 }
-level:create_wall{ x = 38, y = 10, height = 3 }
-level:create_wall{ x = 39, y = 10, height = 3 }
-level:create_wall{ x = 46, y = 9, height = 4 }
-level:create_wall{ x = 47, y = 9, height = 4 }
-level:create_wall{ x = 57, y = 9, height = 4 }
-level:create_wall{ x = 58, y = 9, height = 4 }
+-- Ledges: jump up through them, land on them from above.
+level:create_platform{ x = 30, y = 15, width = 4 }
+level:create_platform{ x = 58, y = 13, width = 5 }
+level:create_platform{ x = 113, y = 6, width = 4 }
+level:create_platform{ x = 119, y = 9, width = 4 }
 
--- Stairs up, a gap, stairs down: the staircase near the end of 1-1.
-level:create_stairs{ x = 134, y = 12, steps = 4, direction = "up" }
-level:create_stairs{ x = 140, y = 12, steps = 4, direction = "down" }
-level:create_stairs{ x = 148, y = 12, steps = 4, direction = "up" }
-level:create_stairs{ x = 155, y = 12, steps = 4, direction = "down" }
-level:create_stairs{ x = 181, y = 12, steps = 8, direction = "up" }
-level:create_block{ x = 189, y = 5, width = 1, height = 8 }   -- the top of the flagpole hill
+-- Walls: pipes to climb over, and at x = 100 a tall shaft three tiles wide.
+-- Press into either side of it while falling to slide, jump to kick off, and
+-- keep alternating to climb out onto the ledges at the top.
+level:create_wall{ x = 28, y = 18, height = 2 }
+level:create_wall{ x = 29, y = 18, height = 2 }
+level:create_wall{ x = 38, y = 17, height = 3 }
+level:create_wall{ x = 39, y = 17, height = 3 }
+level:create_wall{ x = 46, y = 16, height = 4 }
+level:create_wall{ x = 47, y = 16, height = 4 }
+level:create_wall{ x = 57, y = 16, height = 4 }
+level:create_wall{ x = 58, y = 16, height = 4 }
+level:create_wall{ x = 100, y = 4, height = 16 }
+level:create_wall{ x = 104, y = 4, height = 16 }
+
+-- Stairs up, a gap, stairs down: the staircases near the end of 1-1.
+level:create_stairs{ x = 134, y = 19, steps = 4, direction = "up" }
+level:create_stairs{ x = 140, y = 19, steps = 4, direction = "down" }
+level:create_stairs{ x = 148, y = 19, steps = 4, direction = "up" }
+level:create_stairs{ x = 155, y = 19, steps = 4, direction = "down" }
+level:create_stairs{ x = 181, y = 19, steps = 8, direction = "up" }
 
 -- The player: a red rectangle standing on the ground three tiles in. The
 -- defaults are Super Mario Bros.' numbers; a table of tuning keys —
 -- run_speed, jump_height, coyote_time and the rest — changes the feel here.
-local player = level:create_player{ x = 3, y = 12 }
+local player = level:create_player{ x = 3, y = 19 }
 
 -- Without a window there is nobody to press the buttons, so the level plays
 -- itself: run right, jump every so often, and narrate. That is how CI tells
@@ -108,5 +126,5 @@ engine:on_render(function(alpha)
   GrappleC.SetDebugTextSize(8)
   GrappleC.RenderDebugText(renderer, 8, 8,
     string.format("%s  x=%d", player:state(), math.floor(x / 16)))
-  GrappleC.RenderDebugText(renderer, 8, 226, "arrows/AD move  shift run  space jump  esc quit")
+  GrappleC.RenderDebugText(renderer, 8, 226, "arrows/AD move  shift run  space jump (walls too)  esc quit")
 end)

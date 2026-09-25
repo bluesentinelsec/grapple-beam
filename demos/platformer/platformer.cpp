@@ -54,7 +54,7 @@ class PlatformerGame
             return EXIT_FAILURE;
         }
 
-        auto level = grapple::Platformer::Create(engine_, 212, 15, kTile);
+        auto level = grapple::Platformer::Create(engine_, 212, 22, kTile);
         if (!level.ok())
         {
             SDL_Log("could not create the level: %s", level.status().message().c_str());
@@ -62,9 +62,8 @@ class PlatformerGame
             return EXIT_FAILURE;
         }
         level_ = std::move(*level);
-        level_.set_scroll(GRAPPLE_PLATFORMER_SCROLL_FORWARD);
         Build();
-        auto player = level_.CreatePlayer(3, 12);
+        auto player = level_.CreatePlayer(3, 19);
         if (!player.ok())
         {
             SDL_Log("could not create the player: %s", player.status().message().c_str());
@@ -93,38 +92,50 @@ class PlatformerGame
 
     void Build()
     {
-        level_.CreateFloor(0, 13, 69);
-        level_.CreateFloor(71, 13, 15);
-        level_.CreateFloor(89, 13, 64);
-        level_.CreateFloor(155, 13, 57);
+        level_.CreateFloor(0, 20, 69);
+        level_.CreateFloor(71, 20, 15);
+        level_.CreateFloor(89, 20, 64);
+        level_.CreateFloor(155, 20, 57);
 
-        level_.CreateBlock(16, 9);
-        level_.CreateBlock(20, 9, 5);
-        level_.CreateBlock(22, 5);
-        level_.CreatePlatform(30, 8, 4);
-        level_.CreateBlock(37, 8, 3);
-        level_.CreateBlock(45, 10);
-        level_.CreateBlock(52, 9, 2);
-        level_.CreatePlatform(58, 6, 5);
-        level_.CreateBlock(77, 9, 3);
-        level_.CreateBlock(80, 5, 8);
-        level_.CreateBlock(91, 5, 3);
-        level_.CreateBlock(94, 9, 2);
+        level_.CreateBlock(16, 16, 1, 1);
+        level_.CreateBlock(20, 16, 5, 1);
+        level_.CreateBlock(22, 12, 1, 1);
+        level_.CreateBlock(37, 15, 3, 1);
+        level_.CreateBlock(45, 17, 1, 1);
+        level_.CreateBlock(52, 16, 2, 1);
+        level_.CreateBlock(77, 16, 3, 1);
+        level_.CreateBlock(80, 12, 8, 1);
+        level_.CreateBlock(91, 12, 3, 1);
+        level_.CreateBlock(94, 16, 2, 1);
+        level_.CreateBlock(64, 17, 2, 1);
+        level_.CreateBlock(66, 14, 2, 1);
+        level_.CreateBlock(68, 11, 2, 1);
+        level_.CreateBlock(70, 8, 2, 1);
+        level_.CreateBlock(72, 5, 6, 1);
+        level_.CreateBlock(96, 3, 4, 1);
+        level_.CreateBlock(105, 3, 6, 1);
+        level_.CreateBlock(189, 12, 1, 8);
 
+        level_.CreatePlatform(30, 15, 4);
+        level_.CreatePlatform(58, 13, 5);
+        level_.CreatePlatform(113, 6, 4);
+        level_.CreatePlatform(119, 9, 4);
+
+        // Pipes to climb over, and at x = 100 a shaft three tiles wide to wall-jump up.
         for (const auto &[x, y, height] :
-             {std::tuple{28, 11, 2}, std::tuple{29, 11, 2}, std::tuple{38, 10, 3},
-              std::tuple{39, 10, 3}, std::tuple{46, 9, 4}, std::tuple{47, 9, 4},
-              std::tuple{57, 9, 4}, std::tuple{58, 9, 4}})
+             {std::tuple{28, 18, 2}, std::tuple{29, 18, 2}, std::tuple{38, 17, 3},
+              std::tuple{39, 17, 3}, std::tuple{46, 16, 4}, std::tuple{47, 16, 4},
+              std::tuple{57, 16, 4}, std::tuple{58, 16, 4}, std::tuple{100, 4, 16},
+              std::tuple{104, 4, 16}})
         {
             level_.CreateWall(x, y, height);
         }
 
-        level_.CreateStairs(134, 12, 4, true);
-        level_.CreateStairs(140, 12, 4, false);
-        level_.CreateStairs(148, 12, 4, true);
-        level_.CreateStairs(155, 12, 4, false);
-        level_.CreateStairs(181, 12, 8, true);
-        level_.CreateBlock(189, 5, 1, 8);
+        level_.CreateStairs(134, 19, 4, true);
+        level_.CreateStairs(140, 19, 4, false);
+        level_.CreateStairs(148, 19, 4, true);
+        level_.CreateStairs(155, 19, 4, false);
+        level_.CreateStairs(181, 19, 8, true);
     }
 
     void Update(float dt)
@@ -153,7 +164,7 @@ class PlatformerGame
         Grapple_RenderDebugTextFormat(renderer, 8.0f, 8.0f, "%s  x=%d", player_.state_name(),
                                       static_cast<int>(x / kTile));
         Grapple_RenderDebugText(renderer, 8.0f, 226.0f,
-                                "arrows/AD move  shift run  space jump  esc quit");
+                                "arrows/AD move  shift run  space jump (walls too)  esc quit");
     }
 
     Grapple_Engine *engine_ = nullptr;

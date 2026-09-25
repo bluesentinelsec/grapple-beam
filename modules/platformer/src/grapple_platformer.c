@@ -212,8 +212,14 @@ Grapple_Platformer *Grapple_CreatePlatformer(Grapple_Engine *engine, int width, 
     /* A deadzone a few tiles wide is what stops the screen twitching every
        time the player hops; the smoothing is short so a sprint still feels
        tracked rather than dragged. */
-    level->camera.deadzone_w = 3.0f * (float)tile_size;
-    level->camera.deadzone_h = 2.0f * (float)tile_size;
+    /* Both deadzones are applied here rather than by the camera, because the
+       look-ahead is added on top of the deadzone-tracked position, not
+       inside it — the view leads the player, not the box. */
+    level->camera.deadzone_w = 0.0f;
+    level->camera.deadzone_h = 0.0f;
+    level->deadzone_w = 3.0f * (float)tile_size;
+    level->look_ahead = 4.0f * (float)tile_size;
+    level->vertical_band = 5.5f * (float)tile_size; /* a running jump fits inside it */
     level->camera.smoothing = 0.12f;
 
     SDL_snprintf(level->scene_name, sizeof(level->scene_name), "platformer#%u", ++g_scene_serial);
@@ -533,6 +539,23 @@ void Grapple_PlatformerSetCameraSmoothing(Grapple_Platformer *level, float secon
     }
 }
 
+void Grapple_PlatformerSetCameraLookAhead(Grapple_Platformer *level, float pixels)
+{
+    if (level != NULL)
+    {
+        level->look_ahead = (pixels > 0.0f) ? pixels : 0.0f;
+    }
+}
+
+void Grapple_PlatformerSetCameraDeadzone(Grapple_Platformer *level, float width, float height)
+{
+    if (level != NULL)
+    {
+        level->deadzone_w = (width > 0.0f) ? width : 0.0f;
+        level->vertical_band = (height > 0.0f) ? height : 0.0f;
+    }
+}
+
 void Grapple_PlatformerCameraPosition(Grapple_Platformer *level, float *x, float *y)
 {
     if (x != NULL)
@@ -638,10 +661,45 @@ void Grapple_PlatformerUpdate(Grapple_Platformer *level, float dt)
     Grapple_Camera *camera = &level->camera;
     if (level->player.exists)
     {
-        /* Follow the middle of the player, not the feet: framing a
-           character by the feet leaves the head near the top of the
-           screen on every jump. */
-        const float target_y = level->player.y - level->player.height * 0.5f;
+        const PlatformerPlayer *p = &level->player;
+        const float half_height = p->height * 0.5f;
+
+        /* Look ahead of the player in the direction faced, easing there so
+           a turn swings the view over rather than snapping it. */
+        const float want_look = (float)p->facing * level->look_ahead;
+        const float ease = (dt > 0.0f) ? SDL_min(1.0f, dt * 4.0f) : 1.0f;
+        level->look += (want_look - level->look) * ease;
+        /* The player moves inside a box before the view follows; the box is
+           what stops a hop or a half-step from twitching the screen. */
+        const float half_zone = level->deadzone_w * 0.5f;
+        if (p->x > level->follow_x + half_zone)
+        {
+            level->follow_x = p->x - half_zone;
+        }
+        else if (p->x < level->follow_x - half_zone)
+        {
+            level->follow_x = p->x + half_zone;
+        }
+        const float target_x = level->follow_x + level->look;
+
+        /* Vertically, hold the last ground level through a jump — a camera
+           that chases every hop makes a platformer nauseating — and only
+           follow when the player leaves a band around it: climbing out of
+           the top of the view, or falling out of the bottom. Grounded, the
+           feet's level is the ground level, so stairs and ledges scroll. */
+        float target_y = p->ground_y - half_height;
+        const float mid_y = p->y - half_height;
+        if (!p->grounded && level->vertical_band > 0.0f)
+        {
+            if (mid_y < target_y - level->vertical_band)
+            {
+                target_y = mid_y + level->vertical_band;
+            }
+            else if (mid_y > target_y + level->vertical_band)
+            {
+                target_y = mid_y - level->vertical_band;
+            }
+        }
         if (!level->camera_snapped)
         {
             /* A fresh start: the whole level is in bounds again, whatever
@@ -649,12 +707,14 @@ void Grapple_PlatformerUpdate(Grapple_Platformer *level, float dt)
                player instead of sliding there. */
             camera->bounds = (SDL_FRect){0.0f, 0.0f, (float)(level->width * level->tile),
                                          (float)(level->height * level->tile)};
-            Grapple_CameraSnap(camera, level->player.x, target_y);
+            level->look = want_look;
+            level->follow_x = p->x;
+            Grapple_CameraSnap(camera, p->x + level->look, target_y);
             level->camera_snapped = true;
         }
         else
         {
-            Grapple_CameraFollow(camera, level->player.x, target_y);
+            Grapple_CameraFollow(camera, target_x, target_y);
         }
     }
     Grapple_CameraUpdate(camera, level->engine, dt);

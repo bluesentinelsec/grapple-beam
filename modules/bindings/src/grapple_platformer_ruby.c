@@ -274,7 +274,15 @@ static bool ParseScroll(const char *name, Grapple_PlatformerScroll *out)
 /* --- constructors ------------------------------------------------------------ */
 
 static const char *const kLevelKeys[] = {
-    "width", "height", "tile", "scroll", "attach", "background", "camera_smoothing",
+    "width",
+    "height",
+    "tile",
+    "scroll",
+    "attach",
+    "background",
+    "camera_smoothing",
+    "camera_look_ahead",
+    "camera_deadzone",
 };
 
 static void ApplyLevelOptions(mrb_state *mrb, mrb_value options, Grapple_Platformer *level)
@@ -299,6 +307,18 @@ static void ApplyLevelOptions(mrb_state *mrb, mrb_value options, Grapple_Platfor
     if (IsNumber(smoothing))
     {
         Grapple_PlatformerSetCameraSmoothing(level, (float)mrb_as_float(mrb, smoothing));
+    }
+    const mrb_value look = Key(mrb, options, "camera_look_ahead");
+    if (IsNumber(look))
+    {
+        Grapple_PlatformerSetCameraLookAhead(level, (float)mrb_as_float(mrb, look));
+    }
+    const mrb_value deadzone = Key(mrb, options, "camera_deadzone");
+    if (mrb_array_p(deadzone) && RARRAY_LEN(deadzone) >= 2)
+    {
+        Grapple_PlatformerSetCameraDeadzone(
+            level, (float)mrb_as_float(mrb, mrb_ary_ref(mrb, deadzone, 0)),
+            (float)mrb_as_float(mrb, mrb_ary_ref(mrb, deadzone, 1)));
     }
     if (OptBool(mrb, options, "attach", true) && !Grapple_PlatformerAttach(level))
     {
@@ -594,6 +614,23 @@ static mrb_value RCameraSmoothing(mrb_state *mrb, mrb_value self)
     return mrb_nil_value();
 }
 
+static mrb_value RCameraLookAhead(mrb_state *mrb, mrb_value self)
+{
+    mrb_float pixels = 0.0;
+    mrb_get_args(mrb, "f", &pixels);
+    Grapple_PlatformerSetCameraLookAhead(LevelOf(mrb, self), (float)pixels);
+    return mrb_nil_value();
+}
+
+static mrb_value RCameraDeadzone(mrb_state *mrb, mrb_value self)
+{
+    mrb_float w = 0.0;
+    mrb_float h = 0.0;
+    mrb_get_args(mrb, "ff", &w, &h);
+    Grapple_PlatformerSetCameraDeadzone(LevelOf(mrb, self), (float)w, (float)h);
+    return mrb_nil_value();
+}
+
 static mrb_value RCameraPosition(mrb_state *mrb, mrb_value self)
 {
     float x = 0.0f;
@@ -808,6 +845,11 @@ PLAYER_BOOL(RPFell, Grapple_PlatformerPlayerFell)
 PLAYER_BOOL(RPGrounded, Grapple_PlatformerPlayerGrounded)
 PLAYER_BOOL(RPPaused, Grapple_PlatformerPlayerPaused)
 
+static mrb_value RPWall(mrb_state *mrb, mrb_value self)
+{
+    return mrb_fixnum_value(Grapple_PlatformerPlayerWall(PlayerLevel(mrb, self)));
+}
+
 static mrb_value RPFacing(mrb_state *mrb, mrb_value self)
 {
     return mrb_fixnum_value(Grapple_PlatformerPlayerFacing(PlayerLevel(mrb, self)));
@@ -992,6 +1034,8 @@ bool Grapple_OpenRubyPlatformer(mrb_state *mrb)
     mrb_define_method(mrb, level, "set_scroll", RSetScroll, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, level, "scroll", RScroll, MRB_ARGS_NONE());
     mrb_define_method(mrb, level, "camera_smoothing=", RCameraSmoothing, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, level, "camera_look_ahead=", RCameraLookAhead, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, level, "camera_deadzone", RCameraDeadzone, MRB_ARGS_REQ(2));
     mrb_define_method(mrb, level, "camera_position", RCameraPosition, MRB_ARGS_NONE());
     mrb_define_method(mrb, level, "attach", RAttach, MRB_ARGS_NONE());
     mrb_define_method(mrb, level, "detach", RDetach, MRB_ARGS_NONE());
@@ -1021,6 +1065,7 @@ bool Grapple_OpenRubyPlatformer(mrb_state *mrb)
     mrb_define_method(mrb, player, "grounded?", RPGrounded, MRB_ARGS_NONE());
     mrb_define_method(mrb, player, "paused?", RPPaused, MRB_ARGS_NONE());
     mrb_define_method(mrb, player, "facing", RPFacing, MRB_ARGS_NONE());
+    mrb_define_method(mrb, player, "wall", RPWall, MRB_ARGS_NONE());
     mrb_define_method(mrb, player, "position", RPPosition, MRB_ARGS_NONE());
     mrb_define_method(mrb, player, "velocity", RPVelocity, MRB_ARGS_NONE());
     mrb_define_method(mrb, player, "size", RPSize, MRB_ARGS_NONE());

@@ -409,6 +409,179 @@ TEST_F(PlatformerHarness, StateChangeIsReportedForTheWholeFrame)
     EXPECT_FALSE(Grapple_PlatformerPlayerStateChanged(level_));
 }
 
+// --- walls -------------------------------------------------------------------
+
+// A shaft: walls at columns 4 and 8 from the top of the level down to the
+// floor at row 22, a lid across the top, three tiles of air between them,
+// the player at the bottom.
+class WallHarness : public PlatformerHarness
+{
+  protected:
+    void MakeShaft()
+    {
+        level_ = Grapple_CreatePlatformer(engine_, 20, 24, kTile);
+        ASSERT_NE(level_, nullptr);
+        ASSERT_TRUE(Grapple_PlatformerCreateFloor(level_, 0, 22, 20, 0));
+        ASSERT_TRUE(Grapple_PlatformerCreateWall(level_, 4, 0, 22));
+        ASSERT_TRUE(Grapple_PlatformerCreateWall(level_, 8, 0, 22));
+        ASSERT_TRUE(Grapple_PlatformerCreateBlock(level_, 4, 0, 5, 1));
+        ASSERT_NE(Grapple_PlatformerCreatePlayer(level_, 6, 21), GRAPPLE_ACTOR_NONE);
+        Grapple_PlatformerSetScriptedInput(level_, true);
+        ASSERT_TRUE(Grapple_PlatformerAttach(level_));
+        Frames(20);
+        ASSERT_TRUE(Grapple_PlatformerPlayerGrounded(level_));
+    }
+
+    bool Sliding() const
+    {
+        return Grapple_PlatformerPlayerState(level_) == GRAPPLE_PLAYER_WALL_SLIDE;
+    }
+
+    // A full jump toward the right wall, holding right, until the slide
+    // starts; the jump button is then released while still sliding.
+    void JumpOntoRightWall()
+    {
+        Frames(1, 1.0f, true);
+        for (int i = 0; i < 90 && !Sliding(); ++i)
+        {
+            Frames(1, 1.0f, true);
+        }
+        ASSERT_TRUE(Sliding()) << "never reached the wall";
+        Frames(1, 1.0f, false);
+        ASSERT_TRUE(Sliding());
+    }
+};
+
+TEST_F(WallHarness, HoldingIntoAWallWhileFallingSlidesDownIt)
+{
+    MakeShaft();
+    JumpOntoRightWall();
+    EXPECT_EQ(Grapple_PlatformerPlayerWall(level_), 1);
+    EXPECT_STREQ(Grapple_PlatformerPlayerStateName(level_), "wall_slide");
+    Frames(10, 1.0f, false);
+    EXPECT_LE(Vy(), Grapple_PlatformerPlayerTuning(level_, "wall_slide_speed") + 0.01f);
+    EXPECT_GT(Vy(), 0.0f);
+    // Letting go of the wall drops off it.
+    Frames(2, 0.0f, false);
+    EXPECT_EQ(Grapple_PlatformerPlayerWall(level_), 0);
+    EXPECT_EQ(Grapple_PlatformerPlayerState(level_), GRAPPLE_PLAYER_FALL);
+}
+
+TEST_F(WallHarness, WallJumpKicksAwayAndUpAndIgnoresTheStickBriefly)
+{
+    MakeShaft();
+    JumpOntoRightWall();
+    const float x_on_wall = X();
+    Frames(1, 1.0f, true); // a fresh press while still holding into the wall
+    EXPECT_TRUE(Grapple_PlatformerPlayerJumped(level_));
+    EXPECT_LT(Vx(), 0.0f);
+    EXPECT_LT(Vy(), 0.0f);
+    EXPECT_EQ(Grapple_PlatformerPlayerFacing(level_), -1);
+    EXPECT_EQ(Grapple_PlatformerPlayerState(level_), GRAPPLE_PLAYER_JUMP);
+    // Still holding right through the lock: the kick carries anyway.
+    Frames(5, 1.0f, true);
+    EXPECT_LT(X(), x_on_wall - 8.0f);
+}
+
+TEST_F(WallHarness, RepeatedWallJumpsClimbTheShaft)
+{
+    MakeShaft();
+    const float start_y = Y();
+    Frames(1, 1.0f, true);
+    // hold counts frames the button stays down after a press, then goes
+    // negative for frames it has been up: a kick needs a fresh press, so
+    // the button must have been released at least once in between.
+    int hold = 12;
+    for (int i = 0; i < 200; ++i)
+    {
+        // Steer into the nearer wall; when touching it and the button has
+        // been up, press jump and hold it so the kick gets its full height.
+        const float toward = (X() < 6.5f * kTile) ? -1.0f : 1.0f;
+        if (Grapple_PlatformerPlayerWall(level_) != 0 && hold < 0)
+        {
+            hold = 12;
+        }
+        Frames(1, toward, hold > 0);
+        hold--;
+    }
+    EXPECT_LT(Y(), start_y - 8.0f * kTile);
+    EXPECT_FALSE(Grapple_PlatformerPlayerGrounded(level_));
+}
+
+TEST_F(PlatformerHarness, TheEdgeOfTheLevelIsNotAWallToJumpFrom)
+{
+    MakeLevel();
+    Settle();
+    // Run into the left edge, jump, and hold into it: no slide, no kick.
+    Frames(120, -1.0f, false, true);
+    Frames(1, -1.0f, true);
+    bool slid = false;
+    for (int i = 0; i < 25; ++i)
+    {
+        Frames(1, -1.0f, i < 10);
+        slid = slid || Grapple_PlatformerPlayerWall(level_) != 0;
+    }
+    EXPECT_FALSE(slid);
+    ASSERT_FALSE(Grapple_PlatformerPlayerGrounded(level_));
+    Frames(1, -1.0f, true); // a fresh press in the air, against the edge
+    EXPECT_FALSE(Grapple_PlatformerPlayerJumped(level_));
+}
+
+TEST_F(WallHarness, ZeroWallJumpHeightTurnsItOff)
+{
+    MakeShaft();
+    ASSERT_TRUE(Grapple_PlatformerSetPlayerTuning(level_, "wall_jump_y", 0.0f));
+    JumpOntoRightWall();
+    Frames(1, 1.0f, true);
+    EXPECT_FALSE(Grapple_PlatformerPlayerJumped(level_));
+    EXPECT_GE(Vx(), 0.0f);
+}
+
+// --- camera ------------------------------------------------------------------
+
+TEST_F(PlatformerHarness, CameraHoldsGroundLevelThroughAJumpAndFollowsALedge)
+{
+    // A big level with the floor mid-way, so the view can move every way.
+    level_ = Grapple_CreatePlatformer(engine_, 80, 40, kTile);
+    ASSERT_NE(level_, nullptr);
+    ASSERT_TRUE(Grapple_PlatformerCreateFloor(level_, 0, 20, 80, 0));
+    ASSERT_TRUE(Grapple_PlatformerCreatePlatform(level_, 40, 12, 4));
+    ASSERT_NE(Grapple_PlatformerCreatePlayer(level_, 40, 19), GRAPPLE_ACTOR_NONE);
+    Grapple_PlatformerSetScriptedInput(level_, true);
+    ASSERT_TRUE(Grapple_PlatformerAttach(level_));
+    Frames(30);
+    float cam_y0 = 0.0f;
+    Grapple_PlatformerCameraPosition(level_, nullptr, &cam_y0);
+
+    // A full standing jump, four tiles up and back: the view holds still.
+    Frames(1, 0.0f, true);
+    for (int i = 0; i < 60; ++i)
+    {
+        Frames(1, 0.0f, true);
+        float cam_y = 0.0f;
+        Grapple_PlatformerCameraPosition(level_, nullptr, &cam_y);
+        EXPECT_NEAR(cam_y, cam_y0, 0.01f) << "frame " << i;
+    }
+
+    // The view leads the way the player faces: ahead to the right while
+    // walking right, ahead to the left once walking left.
+    Frames(90, 1.0f);
+    float cam_x = 0.0f;
+    Grapple_PlatformerCameraPosition(level_, &cam_x, nullptr);
+    EXPECT_GT(cam_x - X(), 8.0f);
+    Frames(180, -1.0f);
+    Grapple_PlatformerCameraPosition(level_, &cam_x, nullptr);
+    EXPECT_LT(cam_x - X(), -8.0f);
+
+    // Standing on a ledge eight tiles up is a new ground level: the view climbs.
+    Grapple_PlatformerPlayerRespawn(level_, 41.5f * kTile, 12.0f * kTile);
+    Frames(60);
+    ASSERT_TRUE(Grapple_PlatformerPlayerGrounded(level_));
+    float cam_y = 0.0f;
+    Grapple_PlatformerCameraPosition(level_, nullptr, &cam_y);
+    EXPECT_LT(cam_y, cam_y0 - 100.0f);
+}
+
 // --- tuning and input --------------------------------------------------------
 
 TEST_F(PlatformerHarness, TuningKeysRoundTripAndUnknownKeysAreNamed)

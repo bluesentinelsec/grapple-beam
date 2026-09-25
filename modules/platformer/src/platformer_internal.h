@@ -26,6 +26,11 @@ typedef enum PlatformerTuning
     TUNE_MAX_FALL,
     TUNE_COYOTE_TIME,
     TUNE_JUMP_BUFFER,
+    TUNE_WALL_SLIDE_SPEED,
+    TUNE_WALL_JUMP_X,
+    TUNE_WALL_JUMP_Y,
+    TUNE_WALL_COYOTE_TIME,
+    TUNE_WALL_JUMP_LOCK,
     TUNE_COUNT
 } PlatformerTuning;
 
@@ -58,6 +63,12 @@ typedef struct PlatformerPlayer
     bool rising;        /* holding the button still shortens gravity */
     bool jump_was_down; /* edge detection, per step */
 
+    int wall;          /* -1/+1: airborne and pressed against a wall that side */
+    int last_wall;     /* the wall most recently slid on, for the kick */
+    float wall_coyote; /* seconds left in which a wall jump still counts */
+    float wall_lock;   /* seconds left with the stick ignored after a kick */
+    float ground_y;    /* the feet's y the last time they stood on ground */
+
     /* Frame events: set during the steps of a frame, cleared at the first
        step of the next one. event_frame is the frame they belong to. */
     Uint64 event_frame;
@@ -87,6 +98,11 @@ struct Grapple_Platformer
     Grapple_Camera camera;
     Grapple_PlatformerScroll scroll;
     bool camera_snapped;
+    float deadzone_w;    /* pixels the player may move before the view follows */
+    float follow_x;      /* the deadzone's anchor: where the view follows from */
+    float look_ahead;    /* pixels, in the facing direction */
+    float look;          /* where the look-ahead currently is, eased */
+    float vertical_band; /* pixels above and below the ground level before following */
 
     char scene_name[32];
     bool attached;

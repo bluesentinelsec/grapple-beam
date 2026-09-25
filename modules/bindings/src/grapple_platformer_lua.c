@@ -251,7 +251,15 @@ static bool ParseScroll(const char *name, Grapple_PlatformerScroll *out)
 /* --- constructors --------------------------------------------------------- */
 
 static const char *const kLevelKeys[] = {
-    "width", "height", "tile", "scroll", "attach", "background", "camera_smoothing",
+    "width",
+    "height",
+    "tile",
+    "scroll",
+    "attach",
+    "background",
+    "camera_smoothing",
+    "camera_look_ahead",
+    "camera_deadzone",
 };
 
 /* Options shared by create_level and load_level, read from the table at
@@ -284,6 +292,28 @@ static void ApplyLevelOptions(lua_State *L, int table, Grapple_Platformer *level
     if (lua_isnumber(L, -1))
     {
         Grapple_PlatformerSetCameraSmoothing(level, (float)lua_tonumber(L, -1));
+    }
+    lua_pop(L, 1);
+    lua_getfield(L, table, "camera_look_ahead");
+    if (lua_isnumber(L, -1))
+    {
+        Grapple_PlatformerSetCameraLookAhead(level, (float)lua_tonumber(L, -1));
+    }
+    lua_pop(L, 1);
+    lua_getfield(L, table, "camera_deadzone");
+    if (lua_istable(L, -1))
+    {
+        /* { width, height } or { w = , h = } */
+        const int nested = lua_gettop(L);
+        lua_rawgeti(L, nested, 1);
+        const float w =
+            lua_isnumber(L, -1) ? (float)lua_tonumber(L, -1) : (float)OptNumber(L, nested, "w", 0);
+        lua_pop(L, 1);
+        lua_rawgeti(L, nested, 2);
+        const float h =
+            lua_isnumber(L, -1) ? (float)lua_tonumber(L, -1) : (float)OptNumber(L, nested, "h", 0);
+        lua_pop(L, 1);
+        Grapple_PlatformerSetCameraDeadzone(level, w, h);
     }
     lua_pop(L, 1);
     if (OptBool(L, table, "attach", true) && !Grapple_PlatformerAttach(level))
@@ -567,6 +597,19 @@ static int LCameraSmoothing(lua_State *L)
     return 0;
 }
 
+static int LCameraLookAhead(lua_State *L)
+{
+    Grapple_PlatformerSetCameraLookAhead(CheckLevel(L, 1), (float)luaL_checknumber(L, 2));
+    return 0;
+}
+
+static int LCameraDeadzone(lua_State *L)
+{
+    Grapple_PlatformerSetCameraDeadzone(CheckLevel(L, 1), (float)luaL_checknumber(L, 2),
+                                        (float)luaL_checknumber(L, 3));
+    return 0;
+}
+
 static int LCameraPosition(lua_State *L)
 {
     float x = 0.0f;
@@ -789,6 +832,12 @@ PLAYER_BOOL(LPFell, Grapple_PlatformerPlayerFell)
 PLAYER_BOOL(LPGrounded, Grapple_PlatformerPlayerGrounded)
 PLAYER_BOOL(LPPaused, Grapple_PlatformerPlayerPaused)
 
+static int LPWall(lua_State *L)
+{
+    lua_pushinteger(L, Grapple_PlatformerPlayerWall(CheckPlayer(L, 1)));
+    return 1;
+}
+
 static int LPFacing(lua_State *L)
 {
     lua_pushinteger(L, Grapple_PlatformerPlayerFacing(CheckPlayer(L, 1)));
@@ -953,6 +1002,8 @@ bool Grapple_OpenLuaPlatformer(lua_State *L)
         {"set_scroll", LSetScroll},
         {"scroll", LScroll},
         {"camera_smoothing", LCameraSmoothing},
+        {"camera_look_ahead", LCameraLookAhead},
+        {"camera_deadzone", LCameraDeadzone},
         {"camera_position", LCameraPosition},
         {"attach", LAttach},
         {"detach", LDetach},
@@ -981,6 +1032,7 @@ bool Grapple_OpenLuaPlatformer(lua_State *L)
         {"fell", LPFell},
         {"grounded", LPGrounded},
         {"facing", LPFacing},
+        {"wall", LPWall},
         {"position", LPPosition},
         {"velocity", LPVelocity},
         {"size", LPSize},

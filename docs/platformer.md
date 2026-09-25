@@ -22,7 +22,7 @@ A complete, playable level in Lua:
 ```lua
 local engine = Grapple.engine{ title = "1-1", design = { 256, 240 } }
 
-local level = Grapple.create_level(engine, { width = 212, height = 15, scroll = "forward" })
+local level = Grapple.create_level(engine, { width = 212, height = 22 })
 level:create_floor{ x = 0,  y = 13, width = 69 }
 level:create_floor{ x = 71, y = 13, width = 15 }        -- a pit between them
 level:create_wall{  x = 28, y = 11, height = 2 }
@@ -128,7 +128,7 @@ local sprite = GrappleC.ActorSprite(GrappleC.ActorGet(engine, mario:actor()))
 GrappleC.SpriteSetTexture(sprite, GrappleC.Texture(engine, GrappleC.LoadTexture(engine, "mario.png")))
 ```
 
-Its movement is the classic one. Gravity is applied every step and the
+Its movement is the classic one, with the modern additions. Gravity is applied every step and the
 floor cancels it, so "am I standing" is something the collision pass
 produces rather than a question a raycast answers. Movement is swept one
 axis at a time against the grid, which is what makes a head bump stop the
@@ -138,6 +138,14 @@ heavy, which is the whole of the variable-height jump. **Coyote time** lets
 a jump pressed just after walking off a ledge still happen, and the **jump
 buffer** lets one pressed just before landing happen on landing — the
 difference between "the game ate my jump" and a controller that feels read.
+
+Walls work the way the modern Mario games and Mega Man X do them. Press
+into a wall while falling and the player **wall slides** down it at a
+fraction of falling speed; jump from there and it **kicks off**, away from
+the wall and up, facing the way it goes, with the stick ignored for a
+moment so a player still holding toward the wall does not cancel the kick.
+Steer back into the wall and it repeats, so a single wall, or a shaft
+between two, can be climbed. Letting go of the stick drops off the wall.
 
 ### Tuning
 
@@ -156,6 +164,9 @@ is a key:
 | `jump_gravity`, `fall_gravity` | 450, 1575 px/s² | while the button is held on the way up, and otherwise |
 | `max_fall` | 272 px/s | terminal velocity |
 | `coyote_time`, `jump_buffer` | 0.08, 0.10 s | the two forgivenesses above |
+| `wall_slide_speed` | 64 px/s | how fast a wall slide falls |
+| `wall_jump_x`, `wall_jump_y` | 176, 224 px/s | the kick off a wall; a `wall_jump_y` of 0 turns wall jumping off |
+| `wall_coyote_time`, `wall_jump_lock` | 0.10, 0.12 s | how long after leaving a wall a jump still kicks, and how long the stick is ignored after one |
 
 ```lua
 local mario = level:create_player{ x = 3, y = 12, run_speed = 200, jump_height = 80 }
@@ -176,7 +187,7 @@ the frame in which they happened, whichever hook asks:
 
 ```lua
 engine:on_update(function(dt)
-  if mario:state_changed() then sprite:play(mario:state()) end   -- "idle" "walk" "run" "jump" "fall" "paused"
+  if mario:state_changed() then sprite:play(mario:state()) end   -- "idle" "walk" "run" "jump" "fall" "wall_slide" "paused"
   if mario:landed() then Grapple.sfx("land") end
   if mario:bumped() then bump_the_block_above(mario:position()) end
   if mario:fell()   then lives = lives - 1 end
@@ -184,7 +195,8 @@ end)
 ```
 
 `position` is the feet in pixels, `velocity` in pixels per second,
-`grounded` and `facing` (−1 or +1) are the obvious things. A player that
+`grounded` and `facing` (−1 or +1) are the obvious things, and `wall` is
+−1 or +1 while pressed against a wall in the air, else 0. A player that
 falls out of the bottom of the level is put back where it spawned in the
 same step and reports `fell`; a game that wants a death animation pauses
 the player there and takes over. `respawn(x, y)` and `respawn()` teleport,
@@ -229,11 +241,25 @@ texture to draw instead.
 
 ## The camera
 
-The camera follows the middle of the player through a deadzone a few tiles
-wide, with a short smoothing time, clamped to the level. `scroll = "forward"`
-never scrolls back left: what has left the screen is gone and its edge is a
-wall to the player, exactly as in the game it copies. `camera_smoothing`
-and `camera_position` are there for a HUD; C and C++ get the
+The camera is the modern kind — Super Mario World, Donkey Kong Country, the
+SNES Zeldas — and follows anywhere the level goes:
+
+- **It leads.** The view sits a couple of tiles ahead of the player in the
+  direction faced, easing across when the player turns, so there is more
+  screen in front than behind.
+- **It ignores hops.** Horizontally, the player moves inside a deadzone a
+  few tiles wide before the view follows. Vertically, the view holds the
+  *last ground level* through a jump, however high, and only climbs or
+  drops when the player leaves a band around it — climbing out of the top
+  of the view, or falling out of the bottom. Land on a ledge and that is the
+  new ground level, so stairs and towers scroll.
+- **It stays in the level**, and a level smaller than the view is centred.
+
+`camera_look_ahead` (pixels), `camera_deadzone{ width, height }` (the
+horizontal box and the vertical band, pixels) and `camera_smoothing`
+(seconds) tune it, as constructor options or methods. `scroll = "forward"`
+gets 1985 back: the view never scrolls left, and what has scrolled off is a
+wall to the player. `camera_position` is there for a HUD; C and C++ get the
 `Grapple_Camera` itself to draw through.
 
 ## The loop
@@ -272,7 +298,7 @@ scripting languages for anything the objects do not spell.
 
 ## What is next
 
-Ducking, sliding, wall jumps, ladders, slopes and loops are the next states
+Ducking, sliding, ladders, slopes and loops are the next states
 of the same machine and the same collision pass — slopes as height-mask
 cells, the way Super Mario World and Sonic did them, so the mover keeps its
 shape. Animation clips from Aseprite exports plug into `state_changed`.

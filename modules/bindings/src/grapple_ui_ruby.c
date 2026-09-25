@@ -357,6 +357,16 @@ static Grapple_UiWidget *WidgetOf(mrb_state *mrb, mrb_value self)
     return (Grapple_UiWidget *)mrb_data_get_ptr(mrb, self, &kWidgetType);
 }
 
+Grapple_Engine *Grapple_RubyEngineTest(mrb_state *mrb, mrb_value value)
+{
+    (void)mrb;
+    if (mrb_data_p(value) && DATA_TYPE(value) == &kEngineType)
+    {
+        return (Grapple_Engine *)DATA_PTR(value);
+    }
+    return NULL;
+}
+
 Grapple_Engine *Grapple_RubyEngineAt(mrb_state *mrb, mrb_value value)
 {
     if (mrb_data_p(value) && DATA_TYPE(value) == &kEngineType)

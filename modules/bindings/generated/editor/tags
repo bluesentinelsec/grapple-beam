@@ -190,6 +190,7 @@ GRAPPLE_PLAYER_PAUSED	include/grapple/audio_bus.h	/^.*GRAPPLE_PLAYER_PAUSED/;"	e
 GRAPPLE_PLAYER_RUN	include/grapple/audio_bus.h	/^.*GRAPPLE_PLAYER_RUN/;"	e
 GRAPPLE_PLAYER_STATE_COUNT	include/grapple/audio_bus.h	/^.*GRAPPLE_PLAYER_STATE_COUNT/;"	e
 GRAPPLE_PLAYER_WALK	include/grapple/audio_bus.h	/^.*GRAPPLE_PLAYER_WALK/;"	e
+GRAPPLE_PLAYER_WALL_SLIDE	include/grapple/audio_bus.h	/^.*GRAPPLE_PLAYER_WALL_SLIDE/;"	e
 GRAPPLE_PRESENT_EXPAND	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_EXPAND/;"	e
 GRAPPLE_PRESENT_INTEGER	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_INTEGER/;"	e
 GRAPPLE_PRESENT_LETTERBOX	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_LETTERBOX/;"	e
@@ -903,6 +904,7 @@ Grapple_PlatformerPlayerTuning	include/grapple/platformer.h	/^.*Grapple_Platform
 Grapple_PlatformerPlayerTuningCount	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerTuningCount *(/;"	f
 Grapple_PlatformerPlayerTuningKey	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerTuningKey *(/;"	f
 Grapple_PlatformerPlayerVelocity	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerVelocity *(/;"	f
+Grapple_PlatformerPlayerWall	include/grapple/platformer.h	/^.*Grapple_PlatformerPlayerWall *(/;"	f
 Grapple_PlatformerRemovePlayer	include/grapple/platformer.h	/^.*Grapple_PlatformerRemovePlayer *(/;"	f
 Grapple_PlatformerRemoveSolid	include/grapple/platformer.h	/^.*Grapple_PlatformerRemoveSolid *(/;"	f
 Grapple_PlatformerRender	include/grapple/platformer.h	/^.*Grapple_PlatformerRender *(/;"	f
@@ -911,6 +913,8 @@ Grapple_PlatformerScriptedInput	include/grapple/platformer.h	/^.*Grapple_Platfor
 Grapple_PlatformerScroll	include/grapple/audio_bus.h	/^.*Grapple_PlatformerScroll/;"	g
 Grapple_PlatformerScrollMode	include/grapple/platformer.h	/^.*Grapple_PlatformerScrollMode *(/;"	f
 Grapple_PlatformerSetBackgroundColor	include/grapple/platformer.h	/^.*Grapple_PlatformerSetBackgroundColor *(/;"	f
+Grapple_PlatformerSetCameraDeadzone	include/grapple/platformer.h	/^.*Grapple_PlatformerSetCameraDeadzone *(/;"	f
+Grapple_PlatformerSetCameraLookAhead	include/grapple/platformer.h	/^.*Grapple_PlatformerSetCameraLookAhead *(/;"	f
 Grapple_PlatformerSetCameraSmoothing	include/grapple/platformer.h	/^.*Grapple_PlatformerSetCameraSmoothing *(/;"	f
 Grapple_PlatformerSetPlayerColor	include/grapple/platformer.h	/^.*Grapple_PlatformerSetPlayerColor *(/;"	f
 Grapple_PlatformerSetPlayerPaused	include/grapple/platformer.h	/^.*Grapple_PlatformerSetPlayerPaused *(/;"	f

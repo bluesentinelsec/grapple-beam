@@ -18,9 +18,13 @@
 
 /* The tuning keys, in PlatformerTuning order. */
 static const char *const kTuningKeys[TUNE_COUNT] = {
-    "walk_speed",   "run_speed", "accel",       "decel",          "skid_decel",
-    "air_accel",    "air_decel", "jump_speed",  "run_jump_bonus", "jump_gravity",
-    "fall_gravity", "max_fall",  "coyote_time", "jump_buffer",
+    "walk_speed",     "run_speed",    "accel",
+    "decel",          "skid_decel",   "air_accel",
+    "air_decel",      "jump_speed",   "run_jump_bonus",
+    "jump_gravity",   "fall_gravity", "max_fall",
+    "coyote_time",    "jump_buffer",  "wall_slide_speed",
+    "wall_jump_x",    "wall_jump_y",  "wall_coyote_time",
+    "wall_jump_lock",
 };
 
 /* Defaults in *tiles* per second (and per second squared), so a level with
@@ -29,14 +33,27 @@ static const char *const kTuningKeys[TUNE_COUNT] = {
    of 0.125 px/frame² while the button is held and 0.4375 once it is not,
    all at 60 frames a second and 16-pixel tiles. */
 static const float kTuningDefaultsInTiles[TUNE_COUNT] = {
-    [TUNE_WALK_SPEED] = 6.0f,      [TUNE_RUN_SPEED] = 10.0f,    [TUNE_ACCEL] = 25.0f,
-    [TUNE_DECEL] = 37.5f,          [TUNE_SKID_DECEL] = 56.0f,   [TUNE_AIR_ACCEL] = 18.75f,
-    [TUNE_AIR_DECEL] = 0.0f,       [TUNE_JUMP_SPEED] = 15.0f,   [TUNE_RUN_JUMP_BONUS] = 2.0f,
-    [TUNE_JUMP_GRAVITY] = 28.125f, [TUNE_FALL_GRAVITY] = 98.0f, [TUNE_MAX_FALL] = 17.0f,
+    [TUNE_WALK_SPEED] = 6.0f,
+    [TUNE_RUN_SPEED] = 10.0f,
+    [TUNE_ACCEL] = 25.0f,
+    [TUNE_DECEL] = 37.5f,
+    [TUNE_SKID_DECEL] = 56.0f,
+    [TUNE_AIR_ACCEL] = 18.75f,
+    [TUNE_AIR_DECEL] = 0.0f,
+    [TUNE_JUMP_SPEED] = 15.0f,
+    [TUNE_RUN_JUMP_BONUS] = 2.0f,
+    [TUNE_JUMP_GRAVITY] = 28.125f,
+    [TUNE_FALL_GRAVITY] = 98.0f,
+    [TUNE_MAX_FALL] = 17.0f,
+    /* The wall jump: slide at a quarter of terminal velocity, kick off a
+       little slower than a ground jump and well out from the wall. */
+    [TUNE_WALL_SLIDE_SPEED] = 4.0f,
+    [TUNE_WALL_JUMP_X] = 11.0f,
+    [TUNE_WALL_JUMP_Y] = 14.0f,
 };
 
 static const char *const kStateNames[GRAPPLE_PLAYER_STATE_COUNT] = {
-    "idle", "walk", "run", "jump", "fall", "paused",
+    "idle", "walk", "run", "jump", "fall", "wall_slide", "paused",
 };
 
 static int TuningIndex(const char *key)
@@ -66,6 +83,8 @@ void PlatformerPlayerInit(Grapple_Platformer *level)
     }
     p->tuning[TUNE_COYOTE_TIME] = 0.08f;
     p->tuning[TUNE_JUMP_BUFFER] = 0.10f;
+    p->tuning[TUNE_WALL_COYOTE_TIME] = 0.10f;
+    p->tuning[TUNE_WALL_JUMP_LOCK] = 0.12f;
     /* A little under a tile wide and just under two tall: SMB's big Mario
        is drawn 16x32 and collides narrower, which is what keeps him from
        catching on the lip of a one-tile gap he visually fits through. */
@@ -196,6 +215,7 @@ static bool MoveX(Grapple_Platformer *level, PlatformerPlayer *p, float dx)
 
     float x = p->x + dx;
     bool hit = false;
+    bool real_wall = false; /* a cell or solid, not the edge of the level */
     if (dx > 0.0f)
     {
         const int col = FloorDiv(x + half - EDGE_EPSILON, size);
@@ -205,6 +225,7 @@ static bool MoveX(Grapple_Platformer *level, PlatformerPlayer *p, float dx)
             {
                 x = (float)col * size - half;
                 hit = true;
+                real_wall = col < level->width;
                 break;
             }
         }
@@ -218,6 +239,7 @@ static bool MoveX(Grapple_Platformer *level, PlatformerPlayer *p, float dx)
             {
                 x = (float)(col + 1) * size + half;
                 hit = true;
+                real_wall = col >= 0;
                 break;
             }
         }
@@ -227,8 +249,15 @@ static bool MoveX(Grapple_Platformer *level, PlatformerPlayer *p, float dx)
     {
         x = (dx > 0.0f) ? solid.x - half : solid.x + solid.w + half;
         hit = true;
+        real_wall = true;
     }
     p->x = x;
+    if (real_wall)
+    {
+        /* The invisible wall at the edge of the level stops the player but
+           is nothing to kick off: a wall jump off empty air reads as a bug. */
+        p->wall = (dx > 0.0f) ? 1 : -1;
+    }
     return hit;
 }
 
@@ -403,7 +432,15 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
     const float top_speed = run_down ? t[TUNE_RUN_SPEED] : t[TUNE_WALK_SPEED];
     const float target = move * top_speed;
     float rate;
-    if (p->grounded)
+    if (p->wall_lock > 0.0f)
+    {
+        /* Just kicked off a wall: the stick is ignored for a moment, or a
+           player still holding toward the wall would cancel the kick
+           before it carried them anywhere — the Mega Man X rule. */
+        p->wall_lock = SDL_max(0.0f, p->wall_lock - step);
+        rate = 0.0f;
+    }
+    else if (p->grounded)
     {
         if (move != 0.0f && p->vx != 0.0f && (move > 0.0f) != (p->vx > 0.0f))
         {
@@ -419,13 +456,16 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
         rate = (move != 0.0f) ? t[TUNE_AIR_ACCEL] : t[TUNE_AIR_DECEL];
     }
     p->vx = Approach(p->vx, target, rate * step);
-    if (move > 0.05f)
+    if (p->wall_lock <= 0.0f)
     {
-        p->facing = 1;
-    }
-    else if (move < -0.05f)
-    {
-        p->facing = -1;
+        if (move > 0.05f)
+        {
+            p->facing = 1;
+        }
+        else if (move < -0.05f)
+        {
+            p->facing = -1;
+        }
     }
 
     /* Jumping. Coyote time lets a jump pressed just after walking off a
@@ -461,6 +501,20 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
         p->buffer = 0.0f;
         p->jumped = true;
     }
+    else if (p->buffer > 0.0f && p->wall_coyote > 0.0f && t[TUNE_WALL_JUMP_Y] > 0.0f)
+    {
+        /* Off the wall: away from it and up, facing the way we go. Holds for
+           a moment after leaving the wall, the same forgiveness a ledge
+           gets, so a jump pressed as the slide ends still kicks. */
+        p->vx = (float)-p->last_wall * t[TUNE_WALL_JUMP_X];
+        p->vy = -t[TUNE_WALL_JUMP_Y];
+        p->facing = -p->last_wall;
+        p->rising = true;
+        p->wall_lock = t[TUNE_WALL_JUMP_LOCK];
+        p->wall_coyote = 0.0f;
+        p->buffer = 0.0f;
+        p->jumped = true;
+    }
 
     /* Gravity: light while the button is held on the way up, heavy
        otherwise. Letting go early ends the light phase, which is the whole
@@ -477,6 +531,7 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
        the downward move was stopped. */
     const bool was_grounded = p->grounded;
     p->grounded = false;
+    p->wall = 0;
     Sweep(level, p, p->vx * step, p->vy * step);
     if (p->grounded && p->vy > 0.0f)
     {
@@ -490,6 +545,29 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
     if (p->grounded && !was_grounded)
     {
         p->landed = true;
+    }
+    if (p->grounded)
+    {
+        p->ground_y = p->y;
+    }
+
+    /* Against a wall in the air, holding toward it: a wall slide. The wall
+       is only held while the stick pushes into it, so letting go drops off
+       the wall — how it reads in every game that has one. */
+    const bool holding_wall = !p->grounded && p->wall != 0 && move * (float)p->wall > 0.3f;
+    if (holding_wall)
+    {
+        p->last_wall = p->wall;
+        p->wall_coyote = t[TUNE_WALL_COYOTE_TIME];
+        if (p->vy > t[TUNE_WALL_SLIDE_SPEED])
+        {
+            p->vy = t[TUNE_WALL_SLIDE_SPEED];
+        }
+    }
+    else
+    {
+        p->wall = 0;
+        p->wall_coyote = p->grounded ? 0.0f : SDL_max(0.0f, p->wall_coyote - step);
     }
 
     /* Forward scrolling: what has scrolled off the left is gone, and the
@@ -517,7 +595,11 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
         return;
     }
 
-    if (!p->grounded)
+    if (holding_wall && p->vy >= 0.0f)
+    {
+        SetState(p, GRAPPLE_PLAYER_WALL_SLIDE);
+    }
+    else if (!p->grounded)
     {
         SetState(p, (p->vy < 0.0f) ? GRAPPLE_PLAYER_JUMP : GRAPPLE_PLAYER_FALL);
     }
@@ -565,6 +647,10 @@ Grapple_ActorId Grapple_PlatformerCreatePlayer(Grapple_Platformer *level, int ti
     p->vx = 0.0f;
     p->vy = 0.0f;
     p->grounded = false;
+    p->wall = 0;
+    p->wall_coyote = 0.0f;
+    p->wall_lock = 0.0f;
+    p->ground_y = p->y;
     p->state = GRAPPLE_PLAYER_IDLE;
     p->facing = 1;
     p->exists = true;
@@ -763,6 +849,11 @@ bool Grapple_PlatformerPlayerGrounded(Grapple_Platformer *level)
     return level != NULL && level->player.grounded;
 }
 
+int Grapple_PlatformerPlayerWall(Grapple_Platformer *level)
+{
+    return (level != NULL) ? level->player.wall : 0;
+}
+
 int Grapple_PlatformerPlayerFacing(Grapple_Platformer *level)
 {
     return (level != NULL) ? level->player.facing : 1;
@@ -807,6 +898,10 @@ void Grapple_PlatformerPlayerRespawn(Grapple_Platformer *level, float x, float y
     p->rising = false;
     p->coyote = 0.0f;
     p->buffer = 0.0f;
+    p->wall = 0;
+    p->wall_coyote = 0.0f;
+    p->wall_lock = 0.0f;
+    p->ground_y = y;
     Grapple_Actor *actor = Grapple_ActorGet(level->engine, p->id);
     if (actor != NULL)
     {

@@ -2990,6 +2990,7 @@ returns as an array.
 | `GrappleC.PlatformerPlayerTuningCount()` | integer |
 | `GrappleC.PlatformerPlayerTuningKey(index: integer)` | string|nil |
 | `GrappleC.PlatformerPlayerVelocity(level: Grapple_Platformer, vx: number, vy: number)` | vx: number, vy: number |
+| `GrappleC.PlatformerPlayerWall(level: Grapple_Platformer)` | integer |
 | `GrappleC.PlatformerRemovePlayer(level: Grapple_Platformer)` | nil |
 | `GrappleC.PlatformerRemoveSolid(level: Grapple_Platformer, id: integer)` | boolean |
 | `GrappleC.PlatformerRender(level: Grapple_Platformer, alpha: number)` | nil |
@@ -2997,6 +2998,8 @@ returns as an array.
 | `GrappleC.PlatformerScriptedInput(level: Grapple_Platformer)` | boolean |
 | `GrappleC.PlatformerScrollMode(level: Grapple_Platformer)` | integer |
 | `GrappleC.PlatformerSetBackgroundColor(level: Grapple_Platformer, r: number, g: number, b: number, a: number)` | nil |
+| `GrappleC.PlatformerSetCameraDeadzone(level: Grapple_Platformer, width: number, height: number)` | nil |
+| `GrappleC.PlatformerSetCameraLookAhead(level: Grapple_Platformer, pixels: number)` | nil |
 | `GrappleC.PlatformerSetCameraSmoothing(level: Grapple_Platformer, seconds: number)` | nil |
 | `GrappleC.PlatformerSetPlayerColor(level: Grapple_Platformer, r: number, g: number, b: number, a: number)` | nil |
 | `GrappleC.PlatformerSetPlayerPaused(level: Grapple_Platformer, paused: boolean)` | nil |

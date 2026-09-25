@@ -61,8 +61,14 @@ extern "C"
     /** How the camera follows the player. */
     typedef enum Grapple_PlatformerScroll
     {
-        GRAPPLE_PLATFORMER_SCROLL_FREE = 0, /**< follows in every direction */
-        GRAPPLE_PLATFORMER_SCROLL_FORWARD,  /**< never scrolls back left (SMB 1) */
+        /** Follows in every direction, the way Super Mario World, Donkey Kong
+         *  Country and the SNES Zeldas do: a look-ahead in the direction the
+         *  player faces, a horizontal deadzone so hops do not twitch it, and
+         *  a vertical follow that holds the last ground level through a jump
+         *  and only climbs or drops when the player leaves the middle of the
+         *  view. The default. */
+        GRAPPLE_PLATFORMER_SCROLL_FREE = 0,
+        GRAPPLE_PLATFORMER_SCROLL_FORWARD, /**< as above, but never back left (SMB 1) */
     } Grapple_PlatformerScroll;
 
     /** The player's state machine. `Grapple_PlatformerPlayerStateName` spells
@@ -75,6 +81,7 @@ extern "C"
         GRAPPLE_PLAYER_RUN,
         GRAPPLE_PLAYER_JUMP,
         GRAPPLE_PLAYER_FALL,
+        GRAPPLE_PLAYER_WALL_SLIDE, /**< pressed against a wall, sliding down it */
         GRAPPLE_PLAYER_PAUSED,
         GRAPPLE_PLAYER_STATE_COUNT
     } Grapple_PlayerState;
@@ -179,6 +186,14 @@ extern "C"
     extern Grapple_PlatformerScroll Grapple_PlatformerScrollMode(Grapple_Platformer *level);
     /** Seconds for the camera to catch the player up; 0 locks it on. */
     extern void Grapple_PlatformerSetCameraSmoothing(Grapple_Platformer *level, float seconds);
+    /** How far ahead of the player, in pixels, the view leads in the
+     *  direction faced. Four tiles by default; 0 centres on the player. */
+    extern void Grapple_PlatformerSetCameraLookAhead(Grapple_Platformer *level, float pixels);
+    /** The box, in pixels, the player can move in before the view follows
+     *  horizontally, and the band above and below the last ground level the
+     *  player can jump within before it follows vertically. */
+    extern void Grapple_PlatformerSetCameraDeadzone(Grapple_Platformer *level, float width,
+                                                    float height);
     /** The world point at the centre of the view. */
     extern void Grapple_PlatformerCameraPosition(Grapple_Platformer *level, float *x, float *y);
     /** The camera itself, for a game that wants to draw through it. Borrowed. */
@@ -212,6 +227,14 @@ extern "C"
      *   walk_speed run_speed accel decel skid_decel air_accel air_decel
      *   jump_speed jump_height run_jump_bonus jump_gravity fall_gravity
      *   max_fall coyote_time jump_buffer
+     *   wall_slide_speed wall_jump_x wall_jump_y wall_coyote_time wall_jump_lock
+     *
+     * The wall keys make the wall jump of the modern Mario games and Mega
+     * Man X: pressing into a wall while falling slides down it at
+     * wall_slide_speed, and jumping from there kicks off at (wall_jump_x,
+     * wall_jump_y) with the stick ignored for wall_jump_lock seconds so the
+     * kick carries. Steer back into the wall and it repeats, so a single
+     * wall can be climbed. A wall_jump_y of zero turns wall jumping off.
      *
      * Speeds are pixels per second, accelerations pixels per second squared,
      * times seconds. jump_height is jump_speed spelled as the tiles-tall
@@ -261,6 +284,9 @@ extern "C"
     extern bool Grapple_PlatformerPlayerFell(Grapple_Platformer *level);
 
     extern bool Grapple_PlatformerPlayerGrounded(Grapple_Platformer *level);
+    /** -1 or +1 while the player is airborne and pressed against a wall on
+     *  that side — the state a wall jump kicks off from — else 0. */
+    extern int Grapple_PlatformerPlayerWall(Grapple_Platformer *level);
     /** -1 facing left, +1 facing right. */
     extern int Grapple_PlatformerPlayerFacing(Grapple_Platformer *level);
     /** The feet, in pixels. */

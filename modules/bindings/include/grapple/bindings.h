@@ -96,6 +96,8 @@ extern "C"
 
     /** The engine behind either Ruby spelling. */
     extern Grapple_Engine *Grapple_RubyEngineAt(mrb_state *mrb, mrb_value value);
+    /** The curated engine object, or NULL if `value` is something else. */
+    extern Grapple_Engine *Grapple_RubyEngineTest(mrb_state *mrb, mrb_value value);
 
     /** Bind one block to one engine hook. */
     extern bool Grapple_RubyBindEngineHook(mrb_state *mrb, Grapple_Engine *engine,
@@ -103,6 +105,9 @@ extern "C"
 
     /** The engine behind either spelling — the object or a generated handle. */
     extern Grapple_Engine *Grapple_LuaEngineAt(lua_State *L, int index);
+    /** The curated engine object at `index`, or NULL if the value is
+     *  something else — no error raised. */
+    extern Grapple_Engine *Grapple_LuaEngineTest(lua_State *L, int index);
 
     /** Bind one Lua function to one engine hook. Used by both spellings. */
     extern bool Grapple_LuaBindEngineHook(lua_State *L, Grapple_Engine *engine,

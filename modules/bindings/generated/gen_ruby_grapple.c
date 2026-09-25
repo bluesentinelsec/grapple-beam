@@ -9194,6 +9194,19 @@ static mrb_value GenR_Grapple_PlatformerPlayerVelocity(mrb_state *mrb, mrb_value
     }
 }
 
+static mrb_value GenR_Grapple_PlatformerPlayerWall(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_Platformer *a0 = (Grapple_Platformer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_Platformer");
+    int rv = Grapple_PlatformerPlayerWall(a0);
+    return mrb_int_value(mrb, (mrb_int)rv);
+    }
+}
+
 static mrb_value GenR_Grapple_PlatformerRemovePlayer(mrb_state *mrb, mrb_value self)
 {
     const mrb_value *argv = NULL;
@@ -9290,6 +9303,35 @@ static mrb_value GenR_Grapple_PlatformerSetBackgroundColor(mrb_state *mrb, mrb_v
     float a3 = (float)GrappleGen_RubyToNum(mrb, (argc > 3 ? argv[3] : mrb_nil_value()));
     float a4 = (float)GrappleGen_RubyToNum(mrb, (argc > 4 ? argv[4] : mrb_nil_value()));
     Grapple_PlatformerSetBackgroundColor(a0, a1, a2, a3, a4);
+    return mrb_nil_value();
+    }
+}
+
+static mrb_value GenR_Grapple_PlatformerSetCameraDeadzone(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_Platformer *a0 = (Grapple_Platformer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_Platformer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    float a2 = (float)GrappleGen_RubyToNum(mrb, (argc > 2 ? argv[2] : mrb_nil_value()));
+    Grapple_PlatformerSetCameraDeadzone(a0, a1, a2);
+    return mrb_nil_value();
+    }
+}
+
+static mrb_value GenR_Grapple_PlatformerSetCameraLookAhead(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_Platformer *a0 = (Grapple_Platformer *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_Platformer");
+    float a1 = (float)GrappleGen_RubyToNum(mrb, (argc > 1 ? argv[1] : mrb_nil_value()));
+    Grapple_PlatformerSetCameraLookAhead(a0, a1);
     return mrb_nil_value();
     }
 }
@@ -12862,6 +12904,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "PlatformerPlayerTuningCount", GenR_Grapple_PlatformerPlayerTuningCount, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PlatformerPlayerTuningKey", GenR_Grapple_PlatformerPlayerTuningKey, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PlatformerPlayerVelocity", GenR_Grapple_PlatformerPlayerVelocity, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "PlatformerPlayerWall", GenR_Grapple_PlatformerPlayerWall, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PlatformerRemovePlayer", GenR_Grapple_PlatformerRemovePlayer, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PlatformerRemoveSolid", GenR_Grapple_PlatformerRemoveSolid, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PlatformerRender", GenR_Grapple_PlatformerRender, MRB_ARGS_ANY());
@@ -12869,6 +12912,8 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "PlatformerScriptedInput", GenR_Grapple_PlatformerScriptedInput, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PlatformerScrollMode", GenR_Grapple_PlatformerScrollMode, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PlatformerSetBackgroundColor", GenR_Grapple_PlatformerSetBackgroundColor, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "PlatformerSetCameraDeadzone", GenR_Grapple_PlatformerSetCameraDeadzone, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "PlatformerSetCameraLookAhead", GenR_Grapple_PlatformerSetCameraLookAhead, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PlatformerSetCameraSmoothing", GenR_Grapple_PlatformerSetCameraSmoothing, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PlatformerSetPlayerColor", GenR_Grapple_PlatformerSetPlayerColor, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "PlatformerSetPlayerPaused", GenR_Grapple_PlatformerSetPlayerPaused, MRB_ARGS_ANY());
@@ -13254,6 +13299,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_const(mrb, mod, "GRAPPLE_PLAYER_RUN", mrb_int_value(mrb, (mrb_int)GRAPPLE_PLAYER_RUN));
     mrb_define_const(mrb, mod, "GRAPPLE_PLAYER_JUMP", mrb_int_value(mrb, (mrb_int)GRAPPLE_PLAYER_JUMP));
     mrb_define_const(mrb, mod, "GRAPPLE_PLAYER_FALL", mrb_int_value(mrb, (mrb_int)GRAPPLE_PLAYER_FALL));
+    mrb_define_const(mrb, mod, "GRAPPLE_PLAYER_WALL_SLIDE", mrb_int_value(mrb, (mrb_int)GRAPPLE_PLAYER_WALL_SLIDE));
     mrb_define_const(mrb, mod, "GRAPPLE_PLAYER_PAUSED", mrb_int_value(mrb, (mrb_int)GRAPPLE_PLAYER_PAUSED));
     mrb_define_const(mrb, mod, "GRAPPLE_PLAYER_STATE_COUNT", mrb_int_value(mrb, (mrb_int)GRAPPLE_PLAYER_STATE_COUNT));
     mrb_define_const(mrb, mod, "GRAPPLE_SCENE_DEFAULT", mrb_int_value(mrb, (mrb_int)GRAPPLE_SCENE_DEFAULT));

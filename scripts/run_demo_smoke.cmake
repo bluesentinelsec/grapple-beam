@@ -49,6 +49,11 @@ execute_process(
 )
 
 if(result MATCHES "timeout" OR result EQUAL 0)
+  # A script hook that errors is logged and the loop carries on, so a demo
+  # can survive the clock while every frame fails. That is not a pass.
+  if(output MATCHES "ERROR: engine hook")
+    message(FATAL_ERROR "a hook raised an error every frame:\n${output}")
+  endif()
   if(NOT output MATCHES "${PATTERN}")
     message(FATAL_ERROR
       "the demo ran but never printed '${PATTERN}', so the simulation is not "

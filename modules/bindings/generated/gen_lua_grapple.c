@@ -6814,6 +6814,15 @@ static int GenL_Grapple_PlatformerPlayerVelocity(lua_State *L)
     return 2;
 }
 
+static int GenL_Grapple_PlatformerPlayerWall(lua_State *L)
+{
+    (void)L;
+    Grapple_Platformer *a0 = (Grapple_Platformer *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Platformer");
+    int rv = Grapple_PlatformerPlayerWall(a0);
+    lua_pushinteger(L, (lua_Integer)rv);
+    return 1;
+}
+
 static int GenL_Grapple_PlatformerRemovePlayer(lua_State *L)
 {
     (void)L;
@@ -6879,6 +6888,25 @@ static int GenL_Grapple_PlatformerSetBackgroundColor(lua_State *L)
     float a3 = (float)luaL_checknumber(L, 4);
     float a4 = (float)luaL_checknumber(L, 5);
     Grapple_PlatformerSetBackgroundColor(a0, a1, a2, a3, a4);
+    return 0;
+}
+
+static int GenL_Grapple_PlatformerSetCameraDeadzone(lua_State *L)
+{
+    (void)L;
+    Grapple_Platformer *a0 = (Grapple_Platformer *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Platformer");
+    float a1 = (float)luaL_checknumber(L, 2);
+    float a2 = (float)luaL_checknumber(L, 3);
+    Grapple_PlatformerSetCameraDeadzone(a0, a1, a2);
+    return 0;
+}
+
+static int GenL_Grapple_PlatformerSetCameraLookAhead(lua_State *L)
+{
+    (void)L;
+    Grapple_Platformer *a0 = (Grapple_Platformer *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Platformer");
+    float a1 = (float)luaL_checknumber(L, 2);
+    Grapple_PlatformerSetCameraLookAhead(a0, a1);
     return 0;
 }
 
@@ -8967,7 +8995,7 @@ static int GenL_Grapple_WheelJointDefSetSpring(lua_State *L)
 int GrappleGen_OpenLua_grapple(lua_State *L);
 int GrappleGen_OpenLua_grapple(lua_State *L)
 {
-    lua_createtable(L, 0, 785);
+    lua_createtable(L, 0, 788);
     lua_pushcfunction(L, GenL_Grapple_ActionBind);
     lua_setfield(L, -2, "ActionBind");
     lua_pushcfunction(L, GenL_Grapple_ActionBindAxis);
@@ -10118,6 +10146,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "PlatformerPlayerTuningKey");
     lua_pushcfunction(L, GenL_Grapple_PlatformerPlayerVelocity);
     lua_setfield(L, -2, "PlatformerPlayerVelocity");
+    lua_pushcfunction(L, GenL_Grapple_PlatformerPlayerWall);
+    lua_setfield(L, -2, "PlatformerPlayerWall");
     lua_pushcfunction(L, GenL_Grapple_PlatformerRemovePlayer);
     lua_setfield(L, -2, "PlatformerRemovePlayer");
     lua_pushcfunction(L, GenL_Grapple_PlatformerRemoveSolid);
@@ -10132,6 +10162,10 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "PlatformerScrollMode");
     lua_pushcfunction(L, GenL_Grapple_PlatformerSetBackgroundColor);
     lua_setfield(L, -2, "PlatformerSetBackgroundColor");
+    lua_pushcfunction(L, GenL_Grapple_PlatformerSetCameraDeadzone);
+    lua_setfield(L, -2, "PlatformerSetCameraDeadzone");
+    lua_pushcfunction(L, GenL_Grapple_PlatformerSetCameraLookAhead);
+    lua_setfield(L, -2, "PlatformerSetCameraLookAhead");
     lua_pushcfunction(L, GenL_Grapple_PlatformerSetCameraSmoothing);
     lua_setfield(L, -2, "PlatformerSetCameraSmoothing");
     lua_pushcfunction(L, GenL_Grapple_PlatformerSetPlayerColor);
@@ -10902,6 +10936,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GRAPPLE_PLAYER_JUMP");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_PLAYER_FALL);
     lua_setfield(L, -2, "GRAPPLE_PLAYER_FALL");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_PLAYER_WALL_SLIDE);
+    lua_setfield(L, -2, "GRAPPLE_PLAYER_WALL_SLIDE");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_PLAYER_PAUSED);
     lua_setfield(L, -2, "GRAPPLE_PLAYER_PAUSED");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_PLAYER_STATE_COUNT);

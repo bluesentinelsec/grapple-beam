@@ -4,6 +4,8 @@
  */
 #include "gen_support_lua.h"
 
+#include <grapple/bindings.h>
+
 #include <string.h>
 
 #define GEN_MT "GrappleGen.Handle"
@@ -83,6 +85,17 @@ void *GrappleGen_LuaCheckHandle(lua_State *L, int idx, const char *ctype)
     if (lua_isnoneornil(L, idx))
     {
         return NULL;
+    }
+    /* The curated Grapple.engine object is an engine too: a script that
+       built one should be able to hand it to any GrappleC.* function that
+       wants a Grapple_Engine, not just to the object's own methods. */
+    if (strcmp(ctype, "Grapple_Engine") == 0)
+    {
+        Grapple_Engine *engine = Grapple_LuaEngineTest(L, idx);
+        if (engine != NULL)
+        {
+            return engine;
+        }
     }
     return GenCheck(L, idx, ctype)->ptr;
 }

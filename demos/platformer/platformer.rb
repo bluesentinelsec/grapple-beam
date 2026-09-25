@@ -17,43 +17,53 @@ engine = Grapple.engine(
   headless: !SDL.getenv("GRAPPLE_HEADLESS").nil?
 )
 
-level = Grapple.create_level(engine, width: 212, height: 15, scroll: :forward)
+level = Grapple.create_level(engine, width: 212, height: 22)
 
 # The ground, with two pits.
-level.create_floor(x: 0, y: 13, width: 69)
-level.create_floor(x: 71, y: 13, width: 15)
-level.create_floor(x: 89, y: 13, width: 64)
-level.create_floor(x: 155, y: 13, width: 57)
+level.create_floor(x: 0, y: 20, width: 69)
+level.create_floor(x: 71, y: 20, width: 15)
+level.create_floor(x: 89, y: 20, width: 64)
+level.create_floor(x: 155, y: 20, width: 57)
 
-# Blocks and ledges.
-level.create_block(x: 16, y: 9)
-level.create_block(x: 20, y: 9, width: 5)
-level.create_block(x: 22, y: 5)
-level.create_platform(x: 30, y: 8, width: 4)
-level.create_block(x: 37, y: 8, width: 3)
-level.create_block(x: 45, y: 10)
-level.create_block(x: 52, y: 9, width: 2)
-level.create_platform(x: 58, y: 6, width: 5)
-level.create_block(x: 77, y: 9, width: 3)
-level.create_block(x: 80, y: 5, width: 8)
-level.create_block(x: 91, y: 5, width: 3)
-level.create_block(x: 94, y: 9, width: 2)
+# Blocks, a tower of floating ones up to a high platform.
+level.create_block(x: 16, y: 16)
+level.create_block(x: 20, y: 16, width: 5)
+level.create_block(x: 22, y: 12)
+level.create_block(x: 37, y: 15, width: 3)
+level.create_block(x: 45, y: 17)
+level.create_block(x: 52, y: 16, width: 2)
+level.create_block(x: 77, y: 16, width: 3)
+level.create_block(x: 80, y: 12, width: 8)
+level.create_block(x: 91, y: 12, width: 3)
+level.create_block(x: 94, y: 16, width: 2)
+level.create_block(x: 64, y: 17, width: 2)
+level.create_block(x: 66, y: 14, width: 2)
+level.create_block(x: 68, y: 11, width: 2)
+level.create_block(x: 70, y: 8, width: 2)
+level.create_block(x: 72, y: 5, width: 6)
+level.create_block(x: 96, y: 3, width: 4)
+level.create_block(x: 105, y: 3, width: 6)
+level.create_block(x: 189, y: 12, height: 8)
 
-# Walls to climb over.
-[[28, 11, 2], [29, 11, 2], [38, 10, 3], [39, 10, 3],
- [46, 9, 4], [47, 9, 4], [57, 9, 4], [58, 9, 4]].each do |x, y, height|
+# Ledges.
+level.create_platform(x: 30, y: 15, width: 4)
+level.create_platform(x: 58, y: 13, width: 5)
+level.create_platform(x: 113, y: 6, width: 4)
+level.create_platform(x: 119, y: 9, width: 4)
+
+# Walls, including the wall-jump shaft at x = 100.
+[[28, 18, 2], [29, 18, 2], [38, 17, 3], [39, 17, 3], [46, 16, 4], [47, 16, 4], [57, 16, 4], [58, 16, 4], [100, 4, 16], [104, 4, 16]].each do |x, y, height|
   level.create_wall(x: x, y: y, height: height)
 end
 
 # Stairs.
-level.create_stairs(x: 134, y: 12, steps: 4, direction: :up)
-level.create_stairs(x: 140, y: 12, steps: 4, direction: :down)
-level.create_stairs(x: 148, y: 12, steps: 4, direction: :up)
-level.create_stairs(x: 155, y: 12, steps: 4, direction: :down)
-level.create_stairs(x: 181, y: 12, steps: 8, direction: :up)
-level.create_block(x: 189, y: 5, width: 1, height: 8)
+level.create_stairs(x: 134, y: 19, steps: 4, direction: :up)
+level.create_stairs(x: 140, y: 19, steps: 4, direction: :down)
+level.create_stairs(x: 148, y: 19, steps: 4, direction: :up)
+level.create_stairs(x: 155, y: 19, steps: 4, direction: :down)
+level.create_stairs(x: 181, y: 19, steps: 8, direction: :up)
 
-player = level.create_player(x: 3, y: 12)
+player = level.create_player(x: 3, y: 19)
 
 # Headless: the level plays itself and narrates, so CI can tell it ran.
 headless = !SDL.getenv("GRAPPLE_HEADLESS").nil?
@@ -77,5 +87,5 @@ engine.on_render do |_alpha|
   x, = player.position
   GrappleC.SetDebugTextSize(8)
   GrappleC.RenderDebugText(renderer, 8, 8, format("%s  x=%d", player.state, (x / 16).floor))
-  GrappleC.RenderDebugText(renderer, 8, 226, "arrows/AD move  shift run  space jump  esc quit")
+  GrappleC.RenderDebugText(renderer, 8, 226, "arrows/AD move  shift run  space jump (walls too)  esc quit")
 end

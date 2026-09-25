@@ -47,6 +47,8 @@ class PlatformerPlayer {
   bool fell() const { return Grapple_PlatformerPlayerFell(level_); }
   bool grounded() const { return Grapple_PlatformerPlayerGrounded(level_); }
   int facing() const { return Grapple_PlatformerPlayerFacing(level_); }
+  // -1 or +1 while airborne and pressed against a wall on that side.
+  int wall() const { return Grapple_PlatformerPlayerWall(level_); }
 
   std::pair<float, float> position() const {
     float x = 0.0f;
@@ -198,6 +200,12 @@ class Platformer {
   Grapple_PlatformerScroll scroll() const { return Grapple_PlatformerScrollMode(level_); }
   void set_camera_smoothing(float seconds) const {
     Grapple_PlatformerSetCameraSmoothing(level_, seconds);
+  }
+  void set_camera_look_ahead(float pixels) const {
+    Grapple_PlatformerSetCameraLookAhead(level_, pixels);
+  }
+  void set_camera_deadzone(float width, float height) const {
+    Grapple_PlatformerSetCameraDeadzone(level_, width, height);
   }
   std::pair<float, float> camera_position() const {
     float x = 0.0f;
