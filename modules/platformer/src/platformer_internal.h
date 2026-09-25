@@ -31,6 +31,8 @@ typedef enum PlatformerTuning
     TUNE_WALL_JUMP_Y,
     TUNE_WALL_COYOTE_TIME,
     TUNE_WALL_JUMP_LOCK,
+    TUNE_WALL_RETURN_ACCEL,
+    TUNE_WALL_RETURN_TIME,
     TUNE_COUNT
 } PlatformerTuning;
 
@@ -67,6 +69,7 @@ typedef struct PlatformerPlayer
     int last_wall;     /* the wall most recently slid on, for the kick */
     float wall_coyote; /* seconds left in which a wall jump still counts */
     float wall_lock;   /* seconds left with the stick ignored after a kick */
+    float wall_return; /* seconds left of strong steering back to the wall left */
     float ground_y;    /* the feet's y the last time they stood on ground */
 
     /* Frame events: set during the steps of a frame, cleared at the first

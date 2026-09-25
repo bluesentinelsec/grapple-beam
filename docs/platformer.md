@@ -144,8 +144,10 @@ into a wall while falling and the player **wall slides** down it at a
 fraction of falling speed; jump from there and it **kicks off**, away from
 the wall and up, facing the way it goes, with the stick ignored for a
 moment so a player still holding toward the wall does not cancel the kick.
-Steer back into the wall and it repeats, so a single wall, or a shaft
-between two, can be climbed. Letting go of the stick drops off the wall.
+Then, as in Super Mario Wonder, steering back toward that wall turns the
+player around hard, so they catch the same wall again higher up: a single
+wall is climbed kick after kick, with no second wall needed. Letting go of
+the stick drops off the wall.
 
 ### Tuning
 
@@ -165,8 +167,9 @@ is a key:
 | `max_fall` | 272 px/s | terminal velocity |
 | `coyote_time`, `jump_buffer` | 0.08, 0.10 s | the two forgivenesses above |
 | `wall_slide_speed` | 64 px/s | how fast a wall slide falls |
-| `wall_jump_x`, `wall_jump_y` | 176, 224 px/s | the kick off a wall; a `wall_jump_y` of 0 turns wall jumping off |
-| `wall_coyote_time`, `wall_jump_lock` | 0.10, 0.12 s | how long after leaving a wall a jump still kicks, and how long the stick is ignored after one |
+| `wall_jump_x`, `wall_jump_y` | 96, 240 px/s | the kick off a wall, as high as a ground jump; a `wall_jump_y` of 0 turns wall jumping off |
+| `wall_coyote_time`, `wall_jump_lock` | 0.10, 0.05 s | how long after leaving a wall a jump still kicks, and how long the stick is ignored after one |
+| `wall_return_accel`, `wall_return_time` | 1200 px/s², 0.6 s | how hard, and for how long after a kick, steering back toward the wall just left turns the player around |
 
 ```lua
 local mario = level:create_player{ x = 3, y = 12, run_speed = 200, jump_height = 80 }

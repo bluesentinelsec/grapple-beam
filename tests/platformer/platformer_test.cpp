@@ -508,6 +508,38 @@ TEST_F(WallHarness, RepeatedWallJumpsClimbTheShaft)
     EXPECT_FALSE(Grapple_PlatformerPlayerGrounded(level_));
 }
 
+TEST_F(PlatformerHarness, ASingleWallIsClimbedByKickingAndSteeringBack)
+{
+    // One wall, at column 8, from the top of the level to the floor; the
+    // player kicks off it and steers straight back into it, every time.
+    level_ = Grapple_CreatePlatformer(engine_, 20, 30, kTile);
+    ASSERT_NE(level_, nullptr);
+    ASSERT_TRUE(Grapple_PlatformerCreateFloor(level_, 0, 28, 20, 0));
+    ASSERT_TRUE(Grapple_PlatformerCreateWall(level_, 8, 0, 28));
+    ASSERT_NE(Grapple_PlatformerCreatePlayer(level_, 6, 27), GRAPPLE_ACTOR_NONE);
+    Grapple_PlatformerSetScriptedInput(level_, true);
+    ASSERT_TRUE(Grapple_PlatformerAttach(level_));
+    Frames(20);
+    const float start_y = Y();
+    Frames(1, 1.0f, true);
+    int hold = 12;
+    float lowest_x = X();
+    for (int i = 0; i < 240; ++i)
+    {
+        if (Grapple_PlatformerPlayerWall(level_) != 0 && hold < 0)
+        {
+            hold = 12;
+        }
+        Frames(1, 1.0f, hold > 0); // always toward the wall
+        hold--;
+        lowest_x = std::fmin(lowest_x, X());
+    }
+    EXPECT_LT(Y(), start_y - 12.0f * kTile);
+    EXPECT_FALSE(Grapple_PlatformerPlayerGrounded(level_));
+    // It never strayed more than a couple of tiles from the wall.
+    EXPECT_GT(lowest_x, 8.0f * kTile - 3.0f * kTile);
+}
+
 TEST_F(PlatformerHarness, TheEdgeOfTheLevelIsNotAWallToJumpFrom)
 {
     MakeLevel();

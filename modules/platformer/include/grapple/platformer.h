@@ -228,13 +228,17 @@ extern "C"
      *   jump_speed jump_height run_jump_bonus jump_gravity fall_gravity
      *   max_fall coyote_time jump_buffer
      *   wall_slide_speed wall_jump_x wall_jump_y wall_coyote_time wall_jump_lock
+     *   wall_return_accel wall_return_time
      *
      * The wall keys make the wall jump of the modern Mario games and Mega
      * Man X: pressing into a wall while falling slides down it at
      * wall_slide_speed, and jumping from there kicks off at (wall_jump_x,
      * wall_jump_y) with the stick ignored for wall_jump_lock seconds so the
-     * kick carries. Steer back into the wall and it repeats, so a single
-     * wall can be climbed. A wall_jump_y of zero turns wall jumping off.
+     * kick carries. For wall_return_time seconds after a kick, steering back
+     * toward the wall just left accelerates at wall_return_accel instead of
+     * air_accel, which is what lets a single wall be climbed kick after
+     * kick, as in Super Mario Wonder. A wall_jump_y of zero turns wall
+     * jumping off.
      *
      * Speeds are pixels per second, accelerations pixels per second squared,
      * times seconds. jump_height is jump_speed spelled as the tiles-tall

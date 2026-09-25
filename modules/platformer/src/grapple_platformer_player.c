@@ -18,13 +18,13 @@
 
 /* The tuning keys, in PlatformerTuning order. */
 static const char *const kTuningKeys[TUNE_COUNT] = {
-    "walk_speed",     "run_speed",    "accel",
-    "decel",          "skid_decel",   "air_accel",
-    "air_decel",      "jump_speed",   "run_jump_bonus",
-    "jump_gravity",   "fall_gravity", "max_fall",
-    "coyote_time",    "jump_buffer",  "wall_slide_speed",
-    "wall_jump_x",    "wall_jump_y",  "wall_coyote_time",
-    "wall_jump_lock",
+    "walk_speed",     "run_speed",         "accel",
+    "decel",          "skid_decel",        "air_accel",
+    "air_decel",      "jump_speed",        "run_jump_bonus",
+    "jump_gravity",   "fall_gravity",      "max_fall",
+    "coyote_time",    "jump_buffer",       "wall_slide_speed",
+    "wall_jump_x",    "wall_jump_y",       "wall_coyote_time",
+    "wall_jump_lock", "wall_return_accel", "wall_return_time",
 };
 
 /* Defaults in *tiles* per second (and per second squared), so a level with
@@ -48,8 +48,12 @@ static const float kTuningDefaultsInTiles[TUNE_COUNT] = {
     /* The wall jump: slide at a quarter of terminal velocity, kick off a
        little slower than a ground jump and well out from the wall. */
     [TUNE_WALL_SLIDE_SPEED] = 4.0f,
-    [TUNE_WALL_JUMP_X] = 11.0f,
-    [TUNE_WALL_JUMP_Y] = 14.0f,
+    [TUNE_WALL_JUMP_X] = 6.0f,
+    [TUNE_WALL_JUMP_Y] = 15.0f,
+    /* Steering back toward the wall just left is fast — Super Mario Wonder
+       lets a single wall be climbed kick after kick — so a player holding
+       into the wall is back on it while still above where they kicked. */
+    [TUNE_WALL_RETURN_ACCEL] = 75.0f,
 };
 
 static const char *const kStateNames[GRAPPLE_PLAYER_STATE_COUNT] = {
@@ -84,7 +88,8 @@ void PlatformerPlayerInit(Grapple_Platformer *level)
     p->tuning[TUNE_COYOTE_TIME] = 0.08f;
     p->tuning[TUNE_JUMP_BUFFER] = 0.10f;
     p->tuning[TUNE_WALL_COYOTE_TIME] = 0.10f;
-    p->tuning[TUNE_WALL_JUMP_LOCK] = 0.12f;
+    p->tuning[TUNE_WALL_JUMP_LOCK] = 0.05f;
+    p->tuning[TUNE_WALL_RETURN_TIME] = 0.6f;
     /* A little under a tile wide and just under two tall: SMB's big Mario
        is drawn 16x32 and collides narrower, which is what keeps him from
        catching on the lip of a one-tile gap he visually fits through. */
@@ -454,6 +459,16 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
     else
     {
         rate = (move != 0.0f) ? t[TUNE_AIR_ACCEL] : t[TUNE_AIR_DECEL];
+        if (p->wall_return > 0.0f)
+        {
+            /* Just kicked off a wall and steering back toward it: turn
+               around hard, so the same wall can be caught again higher up. */
+            p->wall_return = SDL_max(0.0f, p->wall_return - step);
+            if (move * (float)p->last_wall > 0.3f)
+            {
+                rate = t[TUNE_WALL_RETURN_ACCEL];
+            }
+        }
     }
     p->vx = Approach(p->vx, target, rate * step);
     if (p->wall_lock <= 0.0f)
@@ -511,6 +526,7 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
         p->facing = -p->last_wall;
         p->rising = true;
         p->wall_lock = t[TUNE_WALL_JUMP_LOCK];
+        p->wall_return = t[TUNE_WALL_RETURN_TIME];
         p->wall_coyote = 0.0f;
         p->buffer = 0.0f;
         p->jumped = true;
@@ -549,6 +565,7 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
     if (p->grounded)
     {
         p->ground_y = p->y;
+        p->wall_return = 0.0f;
     }
 
     /* Against a wall in the air, holding toward it: a wall slide. The wall
@@ -650,6 +667,7 @@ Grapple_ActorId Grapple_PlatformerCreatePlayer(Grapple_Platformer *level, int ti
     p->wall = 0;
     p->wall_coyote = 0.0f;
     p->wall_lock = 0.0f;
+    p->wall_return = 0.0f;
     p->ground_y = p->y;
     p->state = GRAPPLE_PLAYER_IDLE;
     p->facing = 1;
@@ -901,6 +919,7 @@ void Grapple_PlatformerPlayerRespawn(Grapple_Platformer *level, float x, float y
     p->wall = 0;
     p->wall_coyote = 0.0f;
     p->wall_lock = 0.0f;
+    p->wall_return = 0.0f;
     p->ground_y = y;
     Grapple_Actor *actor = Grapple_ActorGet(level->engine, p->id);
     if (actor != NULL)
