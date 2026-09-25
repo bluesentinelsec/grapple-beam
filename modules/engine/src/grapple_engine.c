@@ -92,6 +92,10 @@ static SDL_RendererLogicalPresentation PresentationMode(Grapple_EnginePresentati
         /* EXPAND is letterbox with a logical size chosen to match the
            window's aspect exactly, so there is never anything to bar. */
         return SDL_LOGICAL_PRESENTATION_LETTERBOX;
+    case GRAPPLE_PRESENT_PIXEL:
+        /* The window is fitted like a letterbox; the integer step happens
+           in the offscreen frame (grapple_engine_target.c), so this is what
+           the final stretch and the mouse mapping see. */
     case GRAPPLE_PRESENT_LETTERBOX:
     default:
         return SDL_LOGICAL_PRESENTATION_LETTERBOX;
@@ -148,9 +152,11 @@ static void ApplyPresentation(Grapple_Engine *engine)
 
     /* Pixel art wants nearest, everything else wants linear. Setting it as
        the renderer's default means a game never has to remember. */
-    SDL_SetDefaultTextureScaleMode(
-        engine->renderer, (engine->presentation == GRAPPLE_PRESENT_INTEGER) ? SDL_SCALEMODE_NEAREST
-                                                                            : SDL_SCALEMODE_LINEAR);
+    SDL_SetDefaultTextureScaleMode(engine->renderer,
+                                   (engine->presentation == GRAPPLE_PRESENT_INTEGER ||
+                                    engine->presentation == GRAPPLE_PRESENT_PIXEL)
+                                       ? SDL_SCALEMODE_NEAREST
+                                       : SDL_SCALEMODE_LINEAR);
 }
 
 /* The display's refresh rate, so the smoothing above has something to snap

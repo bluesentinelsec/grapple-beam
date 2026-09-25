@@ -111,7 +111,8 @@ static bool ParsePresentation(const char *text, Grapple_EnginePresentation *out)
                   {"overscan", GRAPPLE_PRESENT_OVERSCAN},
                   {"integer", GRAPPLE_PRESENT_INTEGER},
                   {"stretch", GRAPPLE_PRESENT_STRETCH},
-                  {"native", GRAPPLE_PRESENT_NATIVE}};
+                  {"native", GRAPPLE_PRESENT_NATIVE},
+                  {"pixel", GRAPPLE_PRESENT_PIXEL}};
     if (text == NULL || out == NULL)
     {
         return false;
@@ -141,6 +142,8 @@ static const char *PresentationName(Grapple_EnginePresentation mode)
         return "stretch";
     case GRAPPLE_PRESENT_NATIVE:
         return "native";
+    case GRAPPLE_PRESENT_PIXEL:
+        return "pixel";
     case GRAPPLE_PRESENT_LETTERBOX:
     default:
         return "letterbox";

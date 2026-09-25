@@ -196,6 +196,7 @@ GRAPPLE_PRESENT_INTEGER	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_INTEGER/
 GRAPPLE_PRESENT_LETTERBOX	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_LETTERBOX/;"	e
 GRAPPLE_PRESENT_NATIVE	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_NATIVE/;"	e
 GRAPPLE_PRESENT_OVERSCAN	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_OVERSCAN/;"	e
+GRAPPLE_PRESENT_PIXEL	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_PIXEL/;"	e
 GRAPPLE_PRESENT_STRETCH	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_STRETCH/;"	e
 GRAPPLE_QUALITY_HIGH	include/grapple/audio_bus.h	/^.*GRAPPLE_QUALITY_HIGH/;"	e
 GRAPPLE_QUALITY_LOW	include/grapple/audio_bus.h	/^.*GRAPPLE_QUALITY_LOW/;"	e

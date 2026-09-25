@@ -92,7 +92,19 @@ typedef enum Grapple_EnginePresentation
      *  nearest, because a fractional scale is what makes pixel art shimmer. */
     GRAPPLE_PRESENT_INTEGER,
     GRAPPLE_PRESENT_STRETCH, /**< fill, ignoring aspect ratio: distorts */
-    GRAPPLE_PRESENT_NATIVE   /**< no scaling: coordinates are pixels */
+    GRAPPLE_PRESENT_NATIVE,  /**< no scaling: coordinates are pixels */
+    /** Pixel art's mode. The frame is drawn at exactly the design size into
+     *  an offscreen texture, enlarged by the largest whole number that
+     *  fits the window with point sampling, and the remainder — if the
+     *  window is not an exact multiple — is a linear stretch of that already
+     *  enlarged frame. Every art pixel is a crisp square block on a 1080p or
+     *  4K display that the design divides, and a faintly softened one, never
+     *  an uneven one, on a display it does not; the aspect is kept and
+     *  the rest is bars. Positions snap to design pixels, as they did on the
+     *  hardware this imitates. This is the pipeline Celeste, Shovel Knight
+     *  and the pixel-perfect cameras of Unity and Godot use. The view rect
+     *  is the design rect, as in LETTERBOX. */
+    GRAPPLE_PRESENT_PIXEL
 } Grapple_EnginePresentation;
 
 /**

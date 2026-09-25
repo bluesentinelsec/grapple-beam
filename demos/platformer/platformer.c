@@ -150,7 +150,7 @@ int main(int argc, char **argv)
     config.title = "Platformer — grapple-beam";
     config.design_width = DESIGN_WIDTH;
     config.design_height = DESIGN_HEIGHT;
-    config.presentation = GRAPPLE_PRESENT_LETTERBOX;
+    config.presentation = GRAPPLE_PRESENT_PIXEL; /* pixel art: whole-number enlargement */
     config.no_auto_mount = true; /* rectangles only: nothing to load */
     config.headless = game.headless;
     game.engine = Grapple_CreateEngine(&config);

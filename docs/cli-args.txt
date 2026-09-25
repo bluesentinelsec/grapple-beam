@@ -85,7 +85,7 @@ OPTIONS:
                               display.max_fps; inherited default display
           --resizable on|off  display.resizable; inherited default on
           --high-dpi on|off   display.high_dpi; inherited default on
-          --presentation letterbox|expand|overscan|integer|stretch|native
+          --presentation letterbox|expand|overscan|integer|stretch|native|pixel
                               display.presentation; inherited default letterbox
           --render-scale 0.25..2
                               display.render_scale; inherited default 1

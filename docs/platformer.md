@@ -20,7 +20,7 @@ target_link_libraries(your_game PRIVATE Grapple::Platformer)
 A complete, playable level in Lua:
 
 ```lua
-local engine = Grapple.engine{ title = "1-1", design = { 384, 216 } }
+local engine = Grapple.engine{ title = "1-1", design = { 384, 216 }, presentation = "pixel" }
 
 local level = Grapple.create_level(engine, { width = 212, height = 22 })
 level:create_floor{ x = 0,  y = 13, width = 69 }
@@ -65,13 +65,22 @@ and passable from below and the sides. The left and right edges of the
 level read as solid, so the player cannot walk out of it; the top and
 bottom are open, so a high jump is not a head bump and a pit is a pit.
 
-Design at the resolution the art will be drawn at, and in the shape of the
-displays it will play on. For 16-pixel tiles on a 16:9 screen, **384×216**
-is the frame to use: 24 tiles wide by 13.5 tall, and it scales by whole
-numbers to 1080p (5×) and 4K (10×), so pixel art stays crisp under
-`integer` presentation with no bars on either. The NES's 256×240 is the
-4:3-ish shape of the originals and is the right choice only for a game that
-wants their bars. The engine's presentation scales either to the window.
+Design at the resolution the art will be drawn at, in the shape of the
+displays it will play on, and present it with `presentation = "pixel"` —
+the engine draws the frame at the design size, enlarges it by the largest
+whole number that fits the window with point sampling, and fits the rest
+with a stretch of less than an art pixel. See [the engine's presentation
+modes](engine.md#presentation-modes) for why that is the industry's
+pipeline for pixel art.
+
+For 16-pixel tiles on a 16:9 screen, **384×216** is the frame: 24 tiles
+wide by 13.5 tall — the framing of the modern Mario games — and 1080p (5×)
+and 4K (10×) are exact multiples. A game whose art is drawn for 4K rather
+than merely scaled to it draws 32-pixel tiles into a **768×432** frame,
+the same 24×13.5 tiles with four times the detail; 4K is then 5× and
+1080p a 2× enlargement softened by a quarter pixel. The NES's 256×240 is
+the near-4:3 shape of the originals and is right only for a game that
+wants their bars.
 
 ### Dedicated objects
 

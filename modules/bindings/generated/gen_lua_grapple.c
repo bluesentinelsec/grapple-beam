@@ -10754,6 +10754,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GRAPPLE_PRESENT_STRETCH");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_PRESENT_NATIVE);
     lua_setfield(L, -2, "GRAPPLE_PRESENT_NATIVE");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_PRESENT_PIXEL);
+    lua_setfield(L, -2, "GRAPPLE_PRESENT_PIXEL");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_AXIS_LEFT_X);
     lua_setfield(L, -2, "GRAPPLE_AXIS_LEFT_X");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_AXIS_LEFT_Y);

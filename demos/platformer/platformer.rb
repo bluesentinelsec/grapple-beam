@@ -12,7 +12,7 @@
 engine = Grapple.engine(
   title: "Platformer — grapple-beam",
   design: [384, 216], # 16:9, 24 x 13.5 tiles; 5x at 1080p, 10x at 4K
-  presentation: :letterbox,
+  presentation: :pixel, # pixel art: whole-number enlargement, crisp everywhere
   auto_mount: false,
   headless: !SDL.getenv("GRAPPLE_HEADLESS").nil?
 )

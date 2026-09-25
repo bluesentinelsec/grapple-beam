@@ -21,13 +21,15 @@
 -- trigger to run, A to jump. Escape quits.
 
 -- 384x216 is a 16:9 frame with 16-pixel tiles, 24 wide by 13.5 tall, and it
--- scales by whole numbers to 1080p (5x) and 4K (10x). The engine scales it
--- to the window — a laptop, a 4K display — and letterboxes the difference,
--- so the game is written once, in tiles, and is right everywhere.
+-- scales by whole numbers to 1080p (5x) and 4K (10x). Under the "pixel"
+-- presentation the engine draws the frame at that size, enlarges it by the
+-- largest whole number that fits the window, and letterboxes the rest — so
+-- the game is written once, in tiles, and every art pixel is a crisp square
+-- block on every display.
 local engine = Grapple.engine{
   title = "Platformer — grapple-beam",
   design = { 384, 216 },
-  presentation = "letterbox",
+  presentation = "pixel",   -- pixel art: whole-number enlargement, crisp everywhere
   auto_mount = false,       -- rectangles only: nothing to load
   headless = SDL.getenv("GRAPPLE_HEADLESS") ~= nil,
 }

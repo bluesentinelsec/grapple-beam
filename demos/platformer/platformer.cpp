@@ -45,7 +45,7 @@ class PlatformerGame
         config.title = "Platformer — grapple-beam";
         config.design_width = kDesignWidth;
         config.design_height = kDesignHeight;
-        config.presentation = GRAPPLE_PRESENT_LETTERBOX;
+        config.presentation = GRAPPLE_PRESENT_PIXEL;  // pixel art: whole-number enlargement
         config.no_auto_mount = true;
         config.headless = headless_;
         engine_ = Grapple_CreateEngine(&config);

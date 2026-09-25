@@ -527,6 +527,29 @@ TEST_F(PresentationHarness, IntegerReportsTheFlooredScale)
     Grapple_DestroyEngine(engine);
 }
 
+// PIXEL draws the frame at the design size and enlarges it. The view is the
+// design, like LETTERBOX; the reported scale is the aspect-true fit; and a
+// window that is not an exact multiple still renders, frame after frame.
+TEST_F(PresentationHarness, PixelKeepsTheDesignViewAndSurvivesAnyWindow)
+{
+    for (const auto [w, h, scale] :
+         {std::tuple{3840, 2160, 2.0f}, std::tuple{2560, 1440, 1.3333f}, std::tuple{1000, 700, 0.5208f}})
+    {
+        Grapple_Engine *engine = Make(w, h, GRAPPLE_PRESENT_PIXEL);
+        ASSERT_NE(engine, nullptr) << SDL_GetError();
+        const SDL_FRect view = Grapple_EngineViewRect(engine);
+        EXPECT_FLOAT_EQ(view.w, 1920.0f) << w << "x" << h;
+        EXPECT_FLOAT_EQ(view.h, 1080.0f) << w << "x" << h;
+        EXPECT_NEAR(Grapple_EngineRenderScale(engine), scale, 0.01f) << w << "x" << h;
+        for (int i = 0; i < 3; ++i)
+        {
+            Grapple_EngineAdvance(engine, 16666667ull);
+            Grapple_EngineTick(engine);
+        }
+        Grapple_DestroyEngine(engine);
+    }
+}
+
 // Overscan is the one mode that *crops*. The view and safe rects have to
 // shrink to what survives, or a HUD anchored to the safe rect walks off the
 // screen on exactly the displays overscan exists to serve.

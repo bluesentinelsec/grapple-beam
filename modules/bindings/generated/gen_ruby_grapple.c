@@ -13208,6 +13208,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_const(mrb, mod, "GRAPPLE_PRESENT_INTEGER", mrb_int_value(mrb, (mrb_int)GRAPPLE_PRESENT_INTEGER));
     mrb_define_const(mrb, mod, "GRAPPLE_PRESENT_STRETCH", mrb_int_value(mrb, (mrb_int)GRAPPLE_PRESENT_STRETCH));
     mrb_define_const(mrb, mod, "GRAPPLE_PRESENT_NATIVE", mrb_int_value(mrb, (mrb_int)GRAPPLE_PRESENT_NATIVE));
+    mrb_define_const(mrb, mod, "GRAPPLE_PRESENT_PIXEL", mrb_int_value(mrb, (mrb_int)GRAPPLE_PRESENT_PIXEL));
     mrb_define_const(mrb, mod, "GRAPPLE_AXIS_LEFT_X", mrb_int_value(mrb, (mrb_int)GRAPPLE_AXIS_LEFT_X));
     mrb_define_const(mrb, mod, "GRAPPLE_AXIS_LEFT_Y", mrb_int_value(mrb, (mrb_int)GRAPPLE_AXIS_LEFT_Y));
     mrb_define_const(mrb, mod, "GRAPPLE_AXIS_RIGHT_X", mrb_int_value(mrb, (mrb_int)GRAPPLE_AXIS_RIGHT_X));
