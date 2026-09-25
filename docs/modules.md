@@ -27,6 +27,7 @@ which record every vendored version, checksum, deletion, and local fix.
 | `Grapple::Regex` | [Regex](regex.md) | regular expressions (Oniguruma), Ruby syntax, `Regexp` for mruby |
 | `Grapple::Light` | [Lighting](lighting.md) | dynamic 2D lighting: day/night ambient, coloured lights, hard shadows |
 | `Grapple::Engine` | [Engine](engine.md) | opinionated game engine: loop, scenes, actors, assets, typed settings |
+| `Grapple::Platformer` | [Platformer](platformer.md) | 2D platformer layer: tile-grid levels with dedicated objects, a Mario-tuned player, pre-bound actions, scrolling camera |
 | `Grapple::VFS` | [VFS](vfs.md) | PhysFS virtual filesystem, encrypted-zip mounting, asset packing |
 | `Grapple::Extras` | [Extras](extras.md) | password crypto, DEFLATE compression, base64, signals/events |
 | `Grapple::Formats` | [Formats](formats.md) | JSON (cJSON), TOML (tomlc99), YAML (libyaml) |

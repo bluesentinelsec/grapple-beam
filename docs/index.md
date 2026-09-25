@@ -35,6 +35,7 @@ The [C++ guide](cpp.md) covers resource ownership and error handling; the
 | Music, sound effects, and volume buses | [Mixer](mixer.md) |
 | Menus, HUDs, and options screens | [GUI](gui.md), [C++ retained UI](cpp-gui.md) |
 | Images, primitives, text, and lighting | [Image](image.md), [Gfx](gfx.md), [TTF](ttf.md), [Lighting](lighting.md) |
+| A 2D platformer: levels, a player character, scrolling | [Platformer](platformer.md) |
 | Maps and collision simulation | [Tiled](tiled.md), [Physics](physics.md) |
 | Asset archives, data, and utilities | [VFS](vfs.md), [Formats](formats.md), [Extras](extras.md), [Regex](regex.md) |
 | Network connections and HTTP | [Net](net.md), [HTTP/S](http.md) |

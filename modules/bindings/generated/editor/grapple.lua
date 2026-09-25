@@ -14846,6 +14846,14 @@ function GrappleC.CreateGuiWithGlyphs(renderer, font_data, font_size, range) end
 ---@return userdata?
 function GrappleC.CreateLightScene(renderer) end
 
+---Calls `Grapple_CreatePlatformer`.
+---@param engine userdata
+---@param width integer
+---@param height integer
+---@param tile_size integer
+---@return userdata?
+function GrappleC.CreatePlatformer(engine, width, height, tile_size) end
+
 ---Calls `Grapple_CreateSettings`.
 ---@return userdata?
 function GrappleC.CreateSettings() end
@@ -14900,6 +14908,10 @@ function GrappleC.DestroyGui(gui) end
 ---Calls `Grapple_DestroyLightScene`.
 ---@param scene userdata
 function GrappleC.DestroyLightScene(scene) end
+
+---Calls `Grapple_DestroyPlatformer`.
+---@param level userdata
+function GrappleC.DestroyPlatformer(level) end
 
 ---Calls `Grapple_DestroyRegex`.
 ---@param regex userdata
@@ -15035,6 +15047,11 @@ function GrappleC.EngineAssetScale(engine) end
 ---@return number
 function GrappleC.EngineDelta(engine) end
 
+---Calls `Grapple_EngineDesignExplicit`.
+---@param engine userdata
+---@return boolean
+function GrappleC.EngineDesignExplicit(engine) end
+
 ---Calls `Grapple_EngineDesignSize`.
 ---@param engine userdata
 ---@param width integer
@@ -15075,6 +15092,11 @@ function GrappleC.EngineFps(engine) end
 ---@param engine userdata
 ---@return integer
 function GrappleC.EngineFrameCount(engine) end
+
+---Calls `Grapple_EngineFrameScale`.
+---@param engine userdata
+---@return integer
+function GrappleC.EngineFrameScale(engine) end
 
 ---Calls `Grapple_EngineMaxFps`.
 ---@param engine userdata
@@ -15136,6 +15158,13 @@ function GrappleC.EngineSafeRect(engine) end
 ---@param engine userdata
 ---@param color table
 function GrappleC.EngineSetClearColor(engine, color) end
+
+---Calls `Grapple_EngineSetDesignSize`.
+---@param engine userdata
+---@param width integer
+---@param height integer
+---@return boolean
+function GrappleC.EngineSetDesignSize(engine, width, height) end
 
 ---Calls `Grapple_EngineSetDisplay`.
 ---@param engine userdata
@@ -16554,6 +16583,12 @@ function GrappleC.LoadChipSongEx(path, options) end
 ---@return userdata?
 function GrappleC.LoadChipStyle(path) end
 
+---Calls `Grapple_LoadPlatformer`.
+---@param engine userdata
+---@param path string?
+---@return userdata?
+function GrappleC.LoadPlatformer(engine, path) end
+
 ---Calls `Grapple_LoadTextFile`.
 ---@param path string?
 ---@return integer
@@ -16750,6 +16785,407 @@ function GrappleC.PhysicsSetPixelsPerMetre(engine, pixels) end
 ---@param sub_steps integer
 function GrappleC.PhysicsSetSubSteps(engine, sub_steps) end
 
+---Calls `Grapple_PlatformerActionDown`.
+---@param level userdata
+---@param action string?
+---@return boolean
+function GrappleC.PlatformerActionDown(level, action) end
+
+---Calls `Grapple_PlatformerActionPressed`.
+---@param level userdata
+---@param action string?
+---@return boolean
+function GrappleC.PlatformerActionPressed(level, action) end
+
+---Calls `Grapple_PlatformerActionReleased`.
+---@param level userdata
+---@param action string?
+---@return boolean
+function GrappleC.PlatformerActionReleased(level, action) end
+
+---Calls `Grapple_PlatformerActionValue`.
+---@param level userdata
+---@param action string?
+---@return number
+function GrappleC.PlatformerActionValue(level, action) end
+
+---Calls `Grapple_PlatformerActions`.
+---@param level userdata
+---@return userdata?
+function GrappleC.PlatformerActions(level) end
+
+---Calls `Grapple_PlatformerAddSolid`.
+---@param level userdata
+---@param x number
+---@param y number
+---@param w number
+---@param h number
+---@return integer
+function GrappleC.PlatformerAddSolid(level, x, y, w, h) end
+
+---Calls `Grapple_PlatformerAttach`.
+---@param level userdata
+---@return boolean
+function GrappleC.PlatformerAttach(level) end
+
+---Calls `Grapple_PlatformerAttached`.
+---@param level userdata
+---@return boolean
+function GrappleC.PlatformerAttached(level) end
+
+---Calls `Grapple_PlatformerBind`.
+---@param level userdata
+---@param action string?
+---@param binding string?
+---@return boolean
+function GrappleC.PlatformerBind(level, action, binding) end
+
+---Calls `Grapple_PlatformerCameraPosition`.
+---@param level userdata
+---@param x number
+---@param y number
+---@return number, number
+function GrappleC.PlatformerCameraPosition(level, x, y) end
+
+---Calls `Grapple_PlatformerCreateBlock`.
+---@param level userdata
+---@param x integer
+---@param y integer
+---@param width integer
+---@param height integer
+---@return boolean
+function GrappleC.PlatformerCreateBlock(level, x, y, width, height) end
+
+---Calls `Grapple_PlatformerCreateFloor`.
+---@param level userdata
+---@param x integer
+---@param y integer
+---@param width integer
+---@param depth integer
+---@return boolean
+function GrappleC.PlatformerCreateFloor(level, x, y, width, depth) end
+
+---Calls `Grapple_PlatformerCreatePlatform`.
+---@param level userdata
+---@param x integer
+---@param y integer
+---@param width integer
+---@return boolean
+function GrappleC.PlatformerCreatePlatform(level, x, y, width) end
+
+---Calls `Grapple_PlatformerCreatePlayer`.
+---@param level userdata
+---@param tile_x integer
+---@param tile_y integer
+---@return integer
+function GrappleC.PlatformerCreatePlayer(level, tile_x, tile_y) end
+
+---Calls `Grapple_PlatformerCreateStairs`.
+---@param level userdata
+---@param x integer
+---@param y integer
+---@param steps integer
+---@param rising boolean
+---@return boolean
+function GrappleC.PlatformerCreateStairs(level, x, y, steps, rising) end
+
+---Calls `Grapple_PlatformerCreateWall`.
+---@param level userdata
+---@param x integer
+---@param y integer
+---@param height integer
+---@return boolean
+function GrappleC.PlatformerCreateWall(level, x, y, height) end
+
+---Calls `Grapple_PlatformerDetach`.
+---@param level userdata
+function GrappleC.PlatformerDetach(level) end
+
+---Calls `Grapple_PlatformerEngine`.
+---@param level userdata
+---@return userdata?
+function GrappleC.PlatformerEngine(level) end
+
+---Calls `Grapple_PlatformerFillTiles`.
+---@param level userdata
+---@param x integer
+---@param y integer
+---@param width integer
+---@param height integer
+---@param tile integer
+---@return integer
+function GrappleC.PlatformerFillTiles(level, x, y, width, height, tile) end
+
+---Calls `Grapple_PlatformerHasPlayer`.
+---@param level userdata
+---@return boolean
+function GrappleC.PlatformerHasPlayer(level) end
+
+---Calls `Grapple_PlatformerHeight`.
+---@param level userdata
+---@return integer
+function GrappleC.PlatformerHeight(level) end
+
+---Calls `Grapple_PlatformerPixelSize`.
+---@param level userdata
+---@param width number
+---@param height number
+---@return number, number
+function GrappleC.PlatformerPixelSize(level, width, height) end
+
+---Calls `Grapple_PlatformerPlayer`.
+---@param level userdata
+---@return integer
+function GrappleC.PlatformerPlayer(level) end
+
+---Calls `Grapple_PlatformerPlayerBumped`.
+---@param level userdata
+---@return boolean
+function GrappleC.PlatformerPlayerBumped(level) end
+
+---Calls `Grapple_PlatformerPlayerFacing`.
+---@param level userdata
+---@return integer
+function GrappleC.PlatformerPlayerFacing(level) end
+
+---Calls `Grapple_PlatformerPlayerFell`.
+---@param level userdata
+---@return boolean
+function GrappleC.PlatformerPlayerFell(level) end
+
+---Calls `Grapple_PlatformerPlayerGrounded`.
+---@param level userdata
+---@return boolean
+function GrappleC.PlatformerPlayerGrounded(level) end
+
+---Calls `Grapple_PlatformerPlayerJumped`.
+---@param level userdata
+---@return boolean
+function GrappleC.PlatformerPlayerJumped(level) end
+
+---Calls `Grapple_PlatformerPlayerLanded`.
+---@param level userdata
+---@return boolean
+function GrappleC.PlatformerPlayerLanded(level) end
+
+---Calls `Grapple_PlatformerPlayerPaused`.
+---@param level userdata
+---@return boolean
+function GrappleC.PlatformerPlayerPaused(level) end
+
+---Calls `Grapple_PlatformerPlayerPosition`.
+---@param level userdata
+---@param x number
+---@param y number
+---@return number, number
+function GrappleC.PlatformerPlayerPosition(level, x, y) end
+
+---Calls `Grapple_PlatformerPlayerRespawn`.
+---@param level userdata
+---@param x number
+---@param y number
+function GrappleC.PlatformerPlayerRespawn(level, x, y) end
+
+---Calls `Grapple_PlatformerPlayerRespawnAtStart`.
+---@param level userdata
+function GrappleC.PlatformerPlayerRespawnAtStart(level) end
+
+---Calls `Grapple_PlatformerPlayerSize`.
+---@param level userdata
+---@param width number
+---@param height number
+---@return number, number
+function GrappleC.PlatformerPlayerSize(level, width, height) end
+
+---Calls `Grapple_PlatformerPlayerState`.
+---@param level userdata
+---@return integer
+function GrappleC.PlatformerPlayerState(level) end
+
+---Calls `Grapple_PlatformerPlayerStateChanged`.
+---@param level userdata
+---@return boolean
+function GrappleC.PlatformerPlayerStateChanged(level) end
+
+---Calls `Grapple_PlatformerPlayerStateName`.
+---@param level userdata
+---@return string?
+function GrappleC.PlatformerPlayerStateName(level) end
+
+---Calls `Grapple_PlatformerPlayerTuning`.
+---@param level userdata
+---@param key string?
+---@return number
+function GrappleC.PlatformerPlayerTuning(level, key) end
+
+---Calls `Grapple_PlatformerPlayerTuningCount`.
+---@return integer
+function GrappleC.PlatformerPlayerTuningCount() end
+
+---Calls `Grapple_PlatformerPlayerTuningKey`.
+---@param index integer
+---@return string?
+function GrappleC.PlatformerPlayerTuningKey(index) end
+
+---Calls `Grapple_PlatformerPlayerVelocity`.
+---@param level userdata
+---@param vx number
+---@param vy number
+---@return number, number
+function GrappleC.PlatformerPlayerVelocity(level, vx, vy) end
+
+---Calls `Grapple_PlatformerPlayerWall`.
+---@param level userdata
+---@return integer
+function GrappleC.PlatformerPlayerWall(level) end
+
+---Calls `Grapple_PlatformerRemovePlayer`.
+---@param level userdata
+function GrappleC.PlatformerRemovePlayer(level) end
+
+---Calls `Grapple_PlatformerRemoveSolid`.
+---@param level userdata
+---@param id integer
+---@return boolean
+function GrappleC.PlatformerRemoveSolid(level, id) end
+
+---Calls `Grapple_PlatformerRender`.
+---@param level userdata
+---@param alpha number
+function GrappleC.PlatformerRender(level, alpha) end
+
+---Calls `Grapple_PlatformerScriptInput`.
+---@param level userdata
+---@param move_x number
+---@param jump boolean
+---@param run boolean
+function GrappleC.PlatformerScriptInput(level, move_x, jump, run) end
+
+---Calls `Grapple_PlatformerScriptedInput`.
+---@param level userdata
+---@return boolean
+function GrappleC.PlatformerScriptedInput(level) end
+
+---Calls `Grapple_PlatformerScrollMode`.
+---@param level userdata
+---@return integer
+function GrappleC.PlatformerScrollMode(level) end
+
+---Calls `Grapple_PlatformerSetBackgroundColor`.
+---@param level userdata
+---@param r number
+---@param g number
+---@param b number
+---@param a number
+function GrappleC.PlatformerSetBackgroundColor(level, r, g, b, a) end
+
+---Calls `Grapple_PlatformerSetCameraDeadzone`.
+---@param level userdata
+---@param width number
+---@param height number
+function GrappleC.PlatformerSetCameraDeadzone(level, width, height) end
+
+---Calls `Grapple_PlatformerSetCameraLookAhead`.
+---@param level userdata
+---@param pixels number
+function GrappleC.PlatformerSetCameraLookAhead(level, pixels) end
+
+---Calls `Grapple_PlatformerSetCameraSmoothing`.
+---@param level userdata
+---@param seconds number
+function GrappleC.PlatformerSetCameraSmoothing(level, seconds) end
+
+---Calls `Grapple_PlatformerSetPlayerColor`.
+---@param level userdata
+---@param r number
+---@param g number
+---@param b number
+---@param a number
+function GrappleC.PlatformerSetPlayerColor(level, r, g, b, a) end
+
+---Calls `Grapple_PlatformerSetPlayerPaused`.
+---@param level userdata
+---@param paused boolean
+function GrappleC.PlatformerSetPlayerPaused(level, paused) end
+
+---Calls `Grapple_PlatformerSetPlayerSize`.
+---@param level userdata
+---@param width number
+---@param height number
+function GrappleC.PlatformerSetPlayerSize(level, width, height) end
+
+---Calls `Grapple_PlatformerSetPlayerTuning`.
+---@param level userdata
+---@param key string?
+---@param value number
+---@return boolean
+function GrappleC.PlatformerSetPlayerTuning(level, key, value) end
+
+---Calls `Grapple_PlatformerSetScriptedInput`.
+---@param level userdata
+---@param enabled boolean
+function GrappleC.PlatformerSetScriptedInput(level, enabled) end
+
+---Calls `Grapple_PlatformerSetScroll`.
+---@param level userdata
+---@param mode integer
+function GrappleC.PlatformerSetScroll(level, mode) end
+
+---Calls `Grapple_PlatformerSetTile`.
+---@param level userdata
+---@param x integer
+---@param y integer
+---@param tile integer
+---@return boolean
+function GrappleC.PlatformerSetTile(level, x, y, tile) end
+
+---Calls `Grapple_PlatformerSetTileColor`.
+---@param level userdata
+---@param tile integer
+---@param r number
+---@param g number
+---@param b number
+---@param a number
+function GrappleC.PlatformerSetTileColor(level, tile, r, g, b, a) end
+
+---Calls `Grapple_PlatformerSetTileTexture`.
+---@param level userdata
+---@param tile integer
+---@param texture userdata
+function GrappleC.PlatformerSetTileTexture(level, tile, texture) end
+
+---Calls `Grapple_PlatformerSolidCount`.
+---@param level userdata
+---@return integer
+function GrappleC.PlatformerSolidCount(level) end
+
+---Calls `Grapple_PlatformerStep`.
+---@param level userdata
+---@param step number
+function GrappleC.PlatformerStep(level, step) end
+
+---Calls `Grapple_PlatformerTileAt`.
+---@param level userdata
+---@param x integer
+---@param y integer
+---@return integer
+function GrappleC.PlatformerTileAt(level, x, y) end
+
+---Calls `Grapple_PlatformerTileSize`.
+---@param level userdata
+---@return integer
+function GrappleC.PlatformerTileSize(level) end
+
+---Calls `Grapple_PlatformerUpdate`.
+---@param level userdata
+---@param dt number
+function GrappleC.PlatformerUpdate(level, dt) end
+
+---Calls `Grapple_PlatformerWidth`.
+---@param level userdata
+---@return integer
+function GrappleC.PlatformerWidth(level) end
+
 ---Calls `Grapple_PlayChipFile`.
 ---@param path string?
 ---@param loop boolean
@@ -16766,6 +17202,11 @@ function GrappleC.PlayChipPlayer(player) end
 ---@param loop boolean
 ---@return userdata?
 function GrappleC.PlayChipSong(song, loop) end
+
+---Calls `Grapple_PlayerStateName`.
+---@param state integer
+---@return string?
+function GrappleC.PlayerStateName(state) end
 
 ---Calls `Grapple_PrismaticJointDefCreate`.
 ---@return userdata?
@@ -17153,6 +17594,11 @@ function GrappleC.SceneKey(scene) end
 ---@param scene userdata
 ---@return string?
 function GrappleC.SceneName(scene) end
+
+---Calls `Grapple_ScenePending`.
+---@param engine userdata
+---@return boolean
+function GrappleC.ScenePending(engine) end
 
 ---Calls `Grapple_ScenePop`.
 ---@param engine userdata

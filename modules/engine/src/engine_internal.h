@@ -39,6 +39,7 @@ struct Grapple_Engine
     SDL_Surface *headless_surface; /* owned by us: see DestroyEngine */
 
     int design_width, design_height; /* the reference space */
+    bool design_explicit;            /* the game said, rather than the 1920x1080 default */
     float view_width, view_height;   /* what is actually visible */
     Grapple_EnginePresentation presentation;
     SDL_FColor clear_color;
@@ -94,6 +95,11 @@ struct Grapple_Engine
     SDL_Texture *frame_target;
     int frame_target_w, frame_target_h;
     bool frame_target_active; /* set between Begin and End, so End knows */
+    /* PIXEL presentation: the design-sized frame enlarged by a whole number
+       with point sampling, before the final linear fit. Only made when the
+       window is not an exact multiple. */
+    SDL_Texture *pixel_target;
+    int pixel_target_w, pixel_target_h;
     struct Grapple_PostFX *postfx;
     bool postfx_failed; /* tried once, could not: do not try every frame */
 

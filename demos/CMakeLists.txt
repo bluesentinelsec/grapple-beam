@@ -10,6 +10,10 @@
 # demonstrating.
 add_subdirectory(pong)
 
+if(GRAPPLE_BUILD_PLATFORMER)
+  add_subdirectory(platformer)
+endif()
+
 if(GRAPPLE_BUILD_MIXER AND NOT EMSCRIPTEN)
   add_subdirectory(chiptune)
 endif()

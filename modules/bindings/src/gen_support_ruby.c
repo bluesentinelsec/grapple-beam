@@ -4,6 +4,8 @@
  */
 #include "gen_support_ruby.h"
 
+#include <grapple/bindings.h>
+
 #include <string.h>
 
 static void GenRubyDfree(mrb_state *mrb, void *p)
@@ -90,6 +92,15 @@ void *GrappleGen_RubyCheckHandle(mrb_state *mrb, mrb_value v, const char *ctype)
     if (mrb_nil_p(v))
     {
         return NULL;
+    }
+    /* The curated Grapple.engine object is an engine too. */
+    if (strcmp(ctype, "Grapple_Engine") == 0)
+    {
+        Grapple_Engine *engine = Grapple_RubyEngineTest(mrb, v);
+        if (engine != NULL)
+        {
+            return engine;
+        }
     }
     return GenCheck(mrb, v, ctype)->ptr;
 }

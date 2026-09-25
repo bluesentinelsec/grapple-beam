@@ -232,6 +232,14 @@ static void DrawItems(Grapple_Engine *engine, const DrawItem *items, int count,
                       const Grapple_Camera *camera)
 {
     SDL_Renderer *renderer = engine->renderer;
+    /* Under the pixel presentations the frame has a whole number of texels
+       per design unit, and a sprite lands on it cleanly only if its corner
+       is put on that grid. Rounding here, after the camera, means a sprite
+       a constant distance from a camera that is itself on the grid draws at
+       a constant texel offset — instead of flickering by one as its own
+       fractional part and the camera's round different ways. */
+    const int grid = Grapple_EngineFrameScale(engine);
+    const float unit = (grid > 0) ? 1.0f / (float)grid : 0.0f;
     for (int i = 0; i < count; ++i)
     {
         const DrawItem *item = &items[i];
@@ -244,6 +252,11 @@ static void DrawItems(Grapple_Engine *engine, const DrawItem *items, int count,
                so scaling here as well would apply it twice. */
             Grapple_CameraPoint(camera, destination.x, destination.y, &destination.x,
                                   &destination.y);
+        }
+        if (unit > 0.0f)
+        {
+            destination.x = SDL_floorf(destination.x / unit + 0.5f) * unit;
+            destination.y = SDL_floorf(destination.y / unit + 0.5f) * unit;
         }
 
         if (sprite->texture == NULL)

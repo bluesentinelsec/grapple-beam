@@ -55,8 +55,17 @@ extern "C"
     /** `Grapple.engine{...}`: one table instead of a run of setters. */
     extern bool Grapple_OpenLuaEngine(lua_State *L);
 
+    /** Grapple.create_level / Grapple.load_level and the level and player
+     *  objects over Grapple::Platformer. Called for you by
+     *  Grapple_OpenLuaBindings. */
+    extern bool Grapple_OpenLuaPlatformer(lua_State *L);
+
     /** The same pair for Ruby: Grapple.engine(...) and Grapple.ui(engine). */
     extern bool Grapple_OpenRubyUi(mrb_state *mrb);
+
+    /** The same platformer objects for Ruby. Called for you by
+     *  Grapple_OpenRubyBindings. */
+    extern bool Grapple_OpenRubyPlatformer(mrb_state *mrb);
 
     /** @brief Load a settings script in an isolated interpreter without game bindings.
      * @param settings Snapshot to overlay atomically. @param language lua or ruby.
@@ -87,6 +96,8 @@ extern "C"
 
     /** The engine behind either Ruby spelling. */
     extern Grapple_Engine *Grapple_RubyEngineAt(mrb_state *mrb, mrb_value value);
+    /** The curated engine object, or NULL if `value` is something else. */
+    extern Grapple_Engine *Grapple_RubyEngineTest(mrb_state *mrb, mrb_value value);
 
     /** Bind one block to one engine hook. */
     extern bool Grapple_RubyBindEngineHook(mrb_state *mrb, Grapple_Engine *engine,
@@ -94,6 +105,9 @@ extern "C"
 
     /** The engine behind either spelling — the object or a generated handle. */
     extern Grapple_Engine *Grapple_LuaEngineAt(lua_State *L, int index);
+    /** The curated engine object at `index`, or NULL if the value is
+     *  something else — no error raised. */
+    extern Grapple_Engine *Grapple_LuaEngineTest(lua_State *L, int index);
 
     /** Bind one Lua function to one engine hook. Used by both spellings. */
     extern bool Grapple_LuaBindEngineHook(lua_State *L, Grapple_Engine *engine,

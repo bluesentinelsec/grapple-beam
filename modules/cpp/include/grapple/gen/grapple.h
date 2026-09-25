@@ -37,6 +37,7 @@
 #include <grapple/light.h>
 #include <grapple/physics_build.h>
 #include <grapple/physics_draw.h>
+#include <grapple/platformer.h>
 #include <grapple/regex.h>
 #include <grapple/signals.h>
 #include <grapple/textfile.h>
@@ -890,6 +891,213 @@ class LightSceneHandle {
   bool engaged_ = false;
 };
 
+// RAII owner for Grapple_Platformer (destroyed with Grapple_DestroyPlatformer).
+class PlatformerHandle {
+ public:
+  static Result<PlatformerHandle> CreatePlatformer(Grapple_Engine *engine, int width, int height, int tile_size) {
+    Grapple_Platformer* created_ = ::Grapple_CreatePlatformer(engine, width, height, tile_size);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return PlatformerHandle(created_);
+  }
+  static Result<PlatformerHandle> LoadPlatformer(Grapple_Engine *engine, const char *path) {
+    Grapple_Platformer* created_ = ::Grapple_LoadPlatformer(engine, path);
+    if (created_ == nullptr) {
+      return Status::FromSdl();
+    }
+    return PlatformerHandle(created_);
+  }
+
+  PlatformerHandle() = default;
+  ~PlatformerHandle() { reset(); }
+  PlatformerHandle(PlatformerHandle&& other) noexcept
+      : value_(other.value_), engaged_(other.engaged_) {
+    other.value_ = nullptr;
+    other.engaged_ = false;
+  }
+  PlatformerHandle& operator=(PlatformerHandle&& other) noexcept {
+    if (this != &other) {
+      reset();
+      value_ = other.value_;
+      engaged_ = other.engaged_;
+      other.value_ = nullptr;
+      other.engaged_ = false;
+    }
+    return *this;
+  }
+  PlatformerHandle(const PlatformerHandle&) = delete;
+  PlatformerHandle& operator=(const PlatformerHandle&) = delete;
+
+  Grapple_Platformer* get() const { return value_; }
+  Grapple_Platformer* release() {
+    Grapple_Platformer* out = value_;
+    value_ = nullptr;
+    engaged_ = false;
+    return out;
+  }
+  void reset() {
+    if (value_ != nullptr) ::Grapple_DestroyPlatformer(value_);
+    value_ = nullptr;
+    engaged_ = false;
+  }
+
+  Grapple_Engine* PlatformerEngine() {
+    return ::Grapple_PlatformerEngine(value_);
+  }
+  int PlatformerWidth() {
+    return ::Grapple_PlatformerWidth(value_);
+  }
+  int PlatformerHeight() {
+    return ::Grapple_PlatformerHeight(value_);
+  }
+  int PlatformerTileSize() {
+    return ::Grapple_PlatformerTileSize(value_);
+  }
+  void PlatformerPixelSize(float *width, float *height) { ::Grapple_PlatformerPixelSize(value_, width, height); }
+  Status PlatformerSetTile(int x, int y, Grapple_PlatformerTile tile) {
+    return ::Grapple_PlatformerSetTile(value_, x, y, tile) ? Status() : Status::FromSdl();
+  }
+  Grapple_PlatformerTile PlatformerTileAt(int x, int y) {
+    return ::Grapple_PlatformerTileAt(value_, x, y);
+  }
+  int PlatformerFillTiles(int x, int y, int width, int height, Grapple_PlatformerTile tile) {
+    return ::Grapple_PlatformerFillTiles(value_, x, y, width, height, tile);
+  }
+  Status PlatformerCreateFloor(int x, int y, int width, int depth) {
+    return ::Grapple_PlatformerCreateFloor(value_, x, y, width, depth) ? Status() : Status::FromSdl();
+  }
+  Status PlatformerCreateWall(int x, int y, int height) {
+    return ::Grapple_PlatformerCreateWall(value_, x, y, height) ? Status() : Status::FromSdl();
+  }
+  Status PlatformerCreateBlock(int x, int y, int width, int height) {
+    return ::Grapple_PlatformerCreateBlock(value_, x, y, width, height) ? Status() : Status::FromSdl();
+  }
+  Status PlatformerCreateStairs(int x, int y, int steps, bool rising) {
+    return ::Grapple_PlatformerCreateStairs(value_, x, y, steps, rising) ? Status() : Status::FromSdl();
+  }
+  Status PlatformerCreatePlatform(int x, int y, int width) {
+    return ::Grapple_PlatformerCreatePlatform(value_, x, y, width) ? Status() : Status::FromSdl();
+  }
+  int PlatformerAddSolid(float x, float y, float w, float h) {
+    return ::Grapple_PlatformerAddSolid(value_, x, y, w, h);
+  }
+  Status PlatformerRemoveSolid(int id) {
+    return ::Grapple_PlatformerRemoveSolid(value_, id) ? Status() : Status::FromSdl();
+  }
+  int PlatformerSolidCount() {
+    return ::Grapple_PlatformerSolidCount(value_);
+  }
+  void PlatformerSetBackgroundColor(float r, float g, float b, float a) { ::Grapple_PlatformerSetBackgroundColor(value_, r, g, b, a); }
+  void PlatformerSetTileColor(Grapple_PlatformerTile tile, float r, float g, float b, float a) { ::Grapple_PlatformerSetTileColor(value_, tile, r, g, b, a); }
+  void PlatformerSetTileTexture(Grapple_PlatformerTile tile, SDL_Texture *texture) { ::Grapple_PlatformerSetTileTexture(value_, tile, texture); }
+  void PlatformerSetScroll(Grapple_PlatformerScroll mode) { ::Grapple_PlatformerSetScroll(value_, mode); }
+  Grapple_PlatformerScroll PlatformerScrollMode() {
+    return ::Grapple_PlatformerScrollMode(value_);
+  }
+  void PlatformerSetCameraSmoothing(float seconds) { ::Grapple_PlatformerSetCameraSmoothing(value_, seconds); }
+  void PlatformerSetCameraLookAhead(float pixels) { ::Grapple_PlatformerSetCameraLookAhead(value_, pixels); }
+  void PlatformerSetCameraDeadzone(float width, float height) { ::Grapple_PlatformerSetCameraDeadzone(value_, width, height); }
+  void PlatformerCameraPosition(float *x, float *y) { ::Grapple_PlatformerCameraPosition(value_, x, y); }
+  Grapple_Camera* PlatformerCamera() {
+    return ::Grapple_PlatformerCamera(value_);
+  }
+  Status PlatformerAttach() {
+    return ::Grapple_PlatformerAttach(value_) ? Status() : Status::FromSdl();
+  }
+  void PlatformerDetach() { ::Grapple_PlatformerDetach(value_); }
+  Status PlatformerAttached() {
+    return ::Grapple_PlatformerAttached(value_) ? Status() : Status::FromSdl();
+  }
+  void PlatformerStep(float step) { ::Grapple_PlatformerStep(value_, step); }
+  void PlatformerUpdate(float dt) { ::Grapple_PlatformerUpdate(value_, dt); }
+  void PlatformerRender(float alpha) { ::Grapple_PlatformerRender(value_, alpha); }
+  Grapple_ActorId PlatformerCreatePlayer(int tile_x, int tile_y) {
+    return ::Grapple_PlatformerCreatePlayer(value_, tile_x, tile_y);
+  }
+  Grapple_ActorId PlatformerPlayer() {
+    return ::Grapple_PlatformerPlayer(value_);
+  }
+  Status PlatformerHasPlayer() {
+    return ::Grapple_PlatformerHasPlayer(value_) ? Status() : Status::FromSdl();
+  }
+  void PlatformerRemovePlayer() { ::Grapple_PlatformerRemovePlayer(value_); }
+  void PlatformerSetPlayerSize(float width, float height) { ::Grapple_PlatformerSetPlayerSize(value_, width, height); }
+  void PlatformerPlayerSize(float *width, float *height) { ::Grapple_PlatformerPlayerSize(value_, width, height); }
+  void PlatformerSetPlayerColor(float r, float g, float b, float a) { ::Grapple_PlatformerSetPlayerColor(value_, r, g, b, a); }
+  Status PlatformerSetPlayerTuning(const char *key, float value) {
+    return ::Grapple_PlatformerSetPlayerTuning(value_, key, value) ? Status() : Status::FromSdl();
+  }
+  float PlatformerPlayerTuning(const char *key) {
+    return ::Grapple_PlatformerPlayerTuning(value_, key);
+  }
+  Grapple_PlayerState PlatformerPlayerState() {
+    return ::Grapple_PlatformerPlayerState(value_);
+  }
+  const char* PlatformerPlayerStateName() {
+    return ::Grapple_PlatformerPlayerStateName(value_);
+  }
+  Status PlatformerPlayerStateChanged() {
+    return ::Grapple_PlatformerPlayerStateChanged(value_) ? Status() : Status::FromSdl();
+  }
+  Status PlatformerPlayerLanded() {
+    return ::Grapple_PlatformerPlayerLanded(value_) ? Status() : Status::FromSdl();
+  }
+  Status PlatformerPlayerJumped() {
+    return ::Grapple_PlatformerPlayerJumped(value_) ? Status() : Status::FromSdl();
+  }
+  Status PlatformerPlayerBumped() {
+    return ::Grapple_PlatformerPlayerBumped(value_) ? Status() : Status::FromSdl();
+  }
+  Status PlatformerPlayerFell() {
+    return ::Grapple_PlatformerPlayerFell(value_) ? Status() : Status::FromSdl();
+  }
+  Status PlatformerPlayerGrounded() {
+    return ::Grapple_PlatformerPlayerGrounded(value_) ? Status() : Status::FromSdl();
+  }
+  int PlatformerPlayerWall() {
+    return ::Grapple_PlatformerPlayerWall(value_);
+  }
+  int PlatformerPlayerFacing() {
+    return ::Grapple_PlatformerPlayerFacing(value_);
+  }
+  void PlatformerPlayerPosition(float *x, float *y) { ::Grapple_PlatformerPlayerPosition(value_, x, y); }
+  void PlatformerPlayerVelocity(float *vx, float *vy) { ::Grapple_PlatformerPlayerVelocity(value_, vx, vy); }
+  void PlatformerPlayerRespawn(float x, float y) { ::Grapple_PlatformerPlayerRespawn(value_, x, y); }
+  void PlatformerPlayerRespawnAtStart() { ::Grapple_PlatformerPlayerRespawnAtStart(value_); }
+  void PlatformerSetPlayerPaused(bool paused) { ::Grapple_PlatformerSetPlayerPaused(value_, paused); }
+  Status PlatformerPlayerPaused() {
+    return ::Grapple_PlatformerPlayerPaused(value_) ? Status() : Status::FromSdl();
+  }
+  Grapple_ActionMap* PlatformerActions() {
+    return ::Grapple_PlatformerActions(value_);
+  }
+  Status PlatformerBind(const char *action, const char *binding) {
+    return ::Grapple_PlatformerBind(value_, action, binding) ? Status() : Status::FromSdl();
+  }
+  Status PlatformerActionDown(const char *action) {
+    return ::Grapple_PlatformerActionDown(value_, action) ? Status() : Status::FromSdl();
+  }
+  Status PlatformerActionPressed(const char *action) {
+    return ::Grapple_PlatformerActionPressed(value_, action) ? Status() : Status::FromSdl();
+  }
+  Status PlatformerActionReleased(const char *action) {
+    return ::Grapple_PlatformerActionReleased(value_, action) ? Status() : Status::FromSdl();
+  }
+  float PlatformerActionValue(const char *action) {
+    return ::Grapple_PlatformerActionValue(value_, action);
+  }
+  void PlatformerSetScriptedInput(bool enabled) { ::Grapple_PlatformerSetScriptedInput(value_, enabled); }
+  Status PlatformerScriptedInput() {
+    return ::Grapple_PlatformerScriptedInput(value_) ? Status() : Status::FromSdl();
+  }
+  void PlatformerScriptInput(float move_x, bool jump, bool run) { ::Grapple_PlatformerScriptInput(value_, move_x, jump, run); }
+ private:
+  explicit PlatformerHandle(Grapple_Platformer* value) : value_(value), engaged_(true) {}
+  Grapple_Platformer* value_{};
+  bool engaged_ = false;
+};
+
 // bool-returning C functions surfaced as Status.
 inline Status ActionBind(Grapple_ActionMap *map, const char *action, Grapple_Binding binding) {
   return ::Grapple_ActionBind(map, action, binding) ? Status() : Status::FromSdl();
@@ -1014,8 +1222,14 @@ inline Status DisconnectSignal(Grapple_SignalEmitter *emitter, Uint64 connection
 inline Status DrawPhysicsWorld(b2WorldId world, SDL_Renderer *renderer, const Grapple_PhysicsDrawConfig *config) {
   return ::Grapple_DrawPhysicsWorld(world, renderer, config) ? Status() : Status::FromSdl();
 }
+inline Status EngineDesignExplicit(Grapple_Engine *engine) {
+  return ::Grapple_EngineDesignExplicit(engine) ? Status() : Status::FromSdl();
+}
 inline Status EngineEffectsAvailable(Grapple_Engine *engine) {
   return ::Grapple_EngineEffectsAvailable(engine) ? Status() : Status::FromSdl();
+}
+inline Status EngineSetDesignSize(Grapple_Engine *engine, int width, int height) {
+  return ::Grapple_EngineSetDesignSize(engine, width, height) ? Status() : Status::FromSdl();
 }
 inline Status EngineSetDisplay(Grapple_Engine *engine, int index) {
   return ::Grapple_EngineSetDisplay(engine, index) ? Status() : Status::FromSdl();
@@ -1187,6 +1401,9 @@ inline Status SaveWrite(Grapple_Engine *engine, int slot, const void *data, size
 }
 inline Status SceneIsActive(Grapple_Scene *scene) {
   return ::Grapple_SceneIsActive(scene) ? Status() : Status::FromSdl();
+}
+inline Status ScenePending(Grapple_Engine *engine) {
+  return ::Grapple_ScenePending(engine) ? Status() : Status::FromSdl();
 }
 inline Status ScenePop(Grapple_Engine *engine) {
   return ::Grapple_ScenePop(engine) ? Status() : Status::FromSdl();
@@ -1455,6 +1672,7 @@ inline constexpr auto& EngineDisplayName = ::Grapple_EngineDisplayName;
 inline constexpr auto& EngineEmbedMedia = ::Grapple_EngineEmbedMedia;
 inline constexpr auto& EngineFps = ::Grapple_EngineFps;
 inline constexpr auto& EngineFrameCount = ::Grapple_EngineFrameCount;
+inline constexpr auto& EngineFrameScale = ::Grapple_EngineFrameScale;
 inline constexpr auto& EngineGraphics = ::Grapple_EngineGraphics;
 inline constexpr auto& EngineMaxFps = ::Grapple_EngineMaxFps;
 inline constexpr auto& EngineMediaPath = ::Grapple_EngineMediaPath;
@@ -1679,6 +1897,9 @@ inline constexpr auto& PhysicsSetGravity = ::Grapple_PhysicsSetGravity;
 inline constexpr auto& PhysicsSetPaused = ::Grapple_PhysicsSetPaused;
 inline constexpr auto& PhysicsSetPixelsPerMetre = ::Grapple_PhysicsSetPixelsPerMetre;
 inline constexpr auto& PhysicsSetSubSteps = ::Grapple_PhysicsSetSubSteps;
+inline constexpr auto& PlatformerPlayerTuningCount = ::Grapple_PlatformerPlayerTuningCount;
+inline constexpr auto& PlatformerPlayerTuningKey = ::Grapple_PlatformerPlayerTuningKey;
+inline constexpr auto& PlayerStateName = ::Grapple_PlayerStateName;
 inline constexpr auto& PrismaticJointDefCreate = ::Grapple_PrismaticJointDefCreate;
 inline constexpr auto& PrismaticJointDefDestroy = ::Grapple_PrismaticJointDefDestroy;
 inline constexpr auto& PrismaticJointDefSetAnchors = ::Grapple_PrismaticJointDefSetAnchors;

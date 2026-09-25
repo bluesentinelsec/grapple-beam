@@ -113,6 +113,12 @@ extern "C"
         /** Filled in by Grapple_CameraUpdate: the world rectangle currently
          *  visible, which is what to cull against. */
         SDL_FRect visible;
+        /* --- smoothing state ------------------------------------------------ */
+        /** Where the target was last update, so the smoothing can integrate
+         *  against the target's motion within the frame rather than its
+         *  position at the end of it. Managed by CameraUpdate. */
+        float last_target_x, last_target_y;
+        bool has_last_target;
     } Grapple_Camera;
 
     /** Set up a camera covering the engine's whole view, at zoom 1, looking at

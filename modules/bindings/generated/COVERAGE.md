@@ -25,13 +25,13 @@ types). The full C API additionally stays reachable from C/C++.
 | libyaml | 48 | 0 | 0 | 48 | 2 | 46 |
 | mog HTTP/S | 69 | 54 | 0 | 12 | 67 | 2 |
 | cJSON | 78 | 57 | 0 | 20 | 70 | 8 |
-| Grapple modules | 763 | 155 | 136 | 463 | 716 | 47 |
-| **Total** | 3655 | 1173 | 360 | 2070 | 3042 | 613 |
+| Grapple modules | 839 | 223 | 139 | 467 | 791 | 48 |
+| **Total** | 3731 | 1241 | 363 | 2074 | 3117 | 614 |
 
 ## Script-surface skip reasons
 
 - 281: unmarshalable parameter type
-- 134: unmarshalable return type
+- 135: unmarshalable return type
 - 76: stdlib clone
 - 53: math clone
 - 47: threading
@@ -679,7 +679,7 @@ types). The full C API additionally stays reachable from C/C++.
 
 </details>
 
-<details><summary>Grapple modules (47)</summary>
+<details><summary>Grapple modules (48)</summary>
 
 - `Grapple_ActorEach` — param visit: <funcptr>*
 - `Grapple_ActorLight` — returns struct pointer
@@ -718,6 +718,7 @@ types). The full C API additionally stays reachable from C/C++.
 - `Grapple_LoadChipStyleMemory` — sized input buffer requires C/C++
 - `Grapple_LoadVFSFile` — return type unsigned char*
 - `Grapple_PhysicsSetCollisionCallback` — param callback: Grapple_CollisionCallback
+- `Grapple_PlatformerCamera` — returns struct pointer
 - `Grapple_RenderChipPlayer` — sized PCM output buffer requires C/C++
 - `Grapple_RunGame` — param user: void*
 - `Grapple_SaveChipSongWav_IO` — output stream ownership requires C/C++

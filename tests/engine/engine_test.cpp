@@ -252,7 +252,14 @@ TEST_F(EngineHarness, TickRateChangesAtRuntime)
 // none snaps. Games that cannot afford the render latency need the choice.
 TEST_F(EngineHarness, InterpolationModesReportDifferentAlphas)
 {
-    SDL_Quit(); // rebuild the engine per mode
+    // Rebuild the engine per mode. The fixture's engine goes first: quitting
+    // SDL under a live engine invalidates its renderer but leaves it in SDL's
+    // renderer list, where a later DestroyEngine cannot unlink it and the
+    // next video shutdown spins on it forever. (Only visible when the whole
+    // binary runs as one process; ctest isolates each case.)
+    Grapple_DestroyEngine(engine_);
+    engine_ = nullptr;
+    SDL_Quit();
     auto alpha_after_half_step = [](Grapple_EngineInterpolation mode) {
         SDL_Init(0);
         Grapple_EngineConfig config{};
@@ -525,6 +532,66 @@ TEST_F(PresentationHarness, IntegerReportsTheFlooredScale)
         << "floored, not the 1.95 that would have fitted";
     EXPECT_EQ(Grapple_EngineAssetScale(engine), 1);
     Grapple_DestroyEngine(engine);
+}
+
+// The design size can be chosen after creation, by whoever knows best.
+TEST_F(PresentationHarness, DesignSizeCanBeSetLaterAndReportsWhetherItWas)
+{
+    Grapple_EngineConfig config{};
+    config.headless = true;
+    config.manual_clock = true;
+    config.window_width = 1920;
+    config.window_height = 1080;
+    Grapple_Engine *engine = Grapple_CreateEngine(&config);
+    ASSERT_NE(engine, nullptr);
+    EXPECT_FALSE(Grapple_EngineDesignExplicit(engine));
+    EXPECT_FLOAT_EQ(Grapple_EngineViewRect(engine).w, 1920.0f);
+    ASSERT_TRUE(Grapple_EngineSetDesignSize(engine, 384, 216));
+    EXPECT_TRUE(Grapple_EngineDesignExplicit(engine));
+    EXPECT_FLOAT_EQ(Grapple_EngineViewRect(engine).w, 384.0f);
+    EXPECT_NEAR(Grapple_EngineRenderScale(engine), 5.0f, 0.01f);
+    EXPECT_FALSE(Grapple_EngineSetDesignSize(engine, 0, 216));
+    Grapple_DestroyEngine(engine);
+
+    Grapple_Engine *chosen = Make(1920, 1080, GRAPPLE_PRESENT_LETTERBOX);
+    ASSERT_NE(chosen, nullptr);
+    EXPECT_TRUE(Grapple_EngineDesignExplicit(chosen));
+    Grapple_DestroyEngine(chosen);
+}
+
+// PIXEL draws the frame at the design size and enlarges it. The view is the
+// design, like LETTERBOX; the reported scale is the aspect-true fit; and a
+// window that is not an exact multiple still renders, frame after frame.
+TEST_F(PresentationHarness, PixelKeepsTheDesignViewAndSurvivesAnyWindow)
+{
+    for (const auto mode : {GRAPPLE_PRESENT_PIXEL, GRAPPLE_PRESENT_PIXEL_SNAP})
+    {
+        for (const auto &[w, h, scale, whole] : {std::tuple{3840, 2160, 2.0f, 2},
+                                                std::tuple{2560, 1440, 1.3333f, 1},
+                                                std::tuple{1000, 700, 0.5208f, 1}})
+        {
+            Grapple_Engine *engine = Make(w, h, mode);
+            ASSERT_NE(engine, nullptr) << SDL_GetError();
+            const SDL_FRect view = Grapple_EngineViewRect(engine);
+            EXPECT_FLOAT_EQ(view.w, 1920.0f) << w << "x" << h;
+            EXPECT_FLOAT_EQ(view.h, 1080.0f) << w << "x" << h;
+            EXPECT_NEAR(Grapple_EngineRenderScale(engine), scale, 0.01f) << w << "x" << h;
+            // PIXEL draws the frame at the whole multiple; PIXEL_SNAP at 1.
+            EXPECT_EQ(Grapple_EngineFrameScale(engine),
+                      (mode == GRAPPLE_PRESENT_PIXEL) ? whole : 1)
+                << w << "x" << h;
+            for (int i = 0; i < 3; ++i)
+            {
+                Grapple_EngineAdvance(engine, 16666667ull);
+                Grapple_EngineTick(engine);
+            }
+            Grapple_DestroyEngine(engine);
+        }
+    }
+    Grapple_Engine *plain = Make(1920, 1080, GRAPPLE_PRESENT_LETTERBOX);
+    ASSERT_NE(plain, nullptr);
+    EXPECT_EQ(Grapple_EngineFrameScale(plain), 0);
+    Grapple_DestroyEngine(plain);
 }
 
 // Overscan is the one mode that *crops*. The view and safe rects have to

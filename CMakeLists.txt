@@ -153,6 +153,7 @@ option(GRAPPLE_BUILD_TILED "Build the Grapple::Tiled map parser (cute_tiled)" ON
 option(GRAPPLE_BUILD_REGEX "Build the Grapple::Regex engine (Oniguruma)" ON)
 option(GRAPPLE_BUILD_LIGHT "Build the Grapple::Light 2D lighting engine" ON)
 option(GRAPPLE_BUILD_ENGINE "Build the Grapple::Engine game engine" ON)
+option(GRAPPLE_BUILD_PLATFORMER "Build the Grapple::Platformer 2D platformer layer" ON)
 # mog's C API and server are not supported in browsers.
 if(EMSCRIPTEN)
   set(GRAPPLE_BUILD_HTTP OFF)

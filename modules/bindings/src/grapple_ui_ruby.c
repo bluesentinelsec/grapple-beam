@@ -357,6 +357,16 @@ static Grapple_UiWidget *WidgetOf(mrb_state *mrb, mrb_value self)
     return (Grapple_UiWidget *)mrb_data_get_ptr(mrb, self, &kWidgetType);
 }
 
+Grapple_Engine *Grapple_RubyEngineTest(mrb_state *mrb, mrb_value value)
+{
+    (void)mrb;
+    if (mrb_data_p(value) && DATA_TYPE(value) == &kEngineType)
+    {
+        return (Grapple_Engine *)DATA_PTR(value);
+    }
+    return NULL;
+}
+
 Grapple_Engine *Grapple_RubyEngineAt(mrb_state *mrb, mrb_value value)
 {
     if (mrb_data_p(value) && DATA_TYPE(value) == &kEngineType)
@@ -415,6 +425,7 @@ static bool ParsePresentation(const char *name, Grapple_EnginePresentation *out)
         {"letterbox", GRAPPLE_PRESENT_LETTERBOX}, {"expand", GRAPPLE_PRESENT_EXPAND},
         {"overscan", GRAPPLE_PRESENT_OVERSCAN},   {"integer", GRAPPLE_PRESENT_INTEGER},
         {"stretch", GRAPPLE_PRESENT_STRETCH},     {"native", GRAPPLE_PRESENT_NATIVE},
+        {"pixel", GRAPPLE_PRESENT_PIXEL},         {"pixel_snap", GRAPPLE_PRESENT_PIXEL_SNAP},
     };
     for (size_t i = 0; i < SDL_arraysize(kModes); ++i)
     {

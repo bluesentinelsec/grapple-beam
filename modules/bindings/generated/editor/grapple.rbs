@@ -2569,6 +2569,7 @@ module GrappleC
   def self.CreateGui: (untyped renderer, String font_data, Float font_size) -> untyped
   def self.CreateGuiWithGlyphs: (untyped renderer, String font_data, Float font_size, Integer range) -> untyped
   def self.CreateLightScene: (untyped renderer) -> untyped
+  def self.CreatePlatformer: (untyped engine, Integer width, Integer height, Integer tile_size) -> untyped
   def self.CreateSettings: () -> untyped
   def self.CreateSignalEmitter: () -> untyped
   def self.CryptoSelfTest: () -> bool
@@ -2582,6 +2583,7 @@ module GrappleC
   def self.DestroyEngine: (untyped engine) -> void
   def self.DestroyGui: (untyped gui) -> void
   def self.DestroyLightScene: (untyped scene) -> void
+  def self.DestroyPlatformer: (untyped level) -> void
   def self.DestroyRegex: (untyped regex) -> void
   def self.DestroySettings: (untyped settings) -> void
   def self.DestroySignalEmitter: (untyped emitter) -> void
@@ -2607,6 +2609,7 @@ module GrappleC
   def self.EngineAlpha: (untyped engine) -> Float
   def self.EngineAssetScale: (untyped engine) -> Integer
   def self.EngineDelta: (untyped engine) -> Float
+  def self.EngineDesignExplicit: (untyped engine) -> bool
   def self.EngineDesignSize: (untyped engine, Integer width, Integer height) -> [Integer, Integer]
   def self.EngineDisplay: (untyped engine) -> Integer
   def self.EngineDisplayCount: () -> Integer
@@ -2615,6 +2618,7 @@ module GrappleC
   def self.EngineEmbedMedia: (String data, String? password) -> void
   def self.EngineFps: (untyped engine) -> Float
   def self.EngineFrameCount: (untyped engine) -> Integer
+  def self.EngineFrameScale: (untyped engine) -> Integer
   def self.EngineMaxFps: (untyped engine) -> Integer
   def self.EngineMediaPath: (untyped engine) -> String?
   def self.EngineMediaSource: (untyped engine) -> Integer
@@ -2627,6 +2631,7 @@ module GrappleC
   def self.EngineRequestedSettings: (untyped engine) -> untyped
   def self.EngineSafeRect: (untyped engine) -> Hash[Symbol, untyped]
   def self.EngineSetClearColor: (untyped engine, Hash[Symbol, untyped] color) -> void
+  def self.EngineSetDesignSize: (untyped engine, Integer width, Integer height) -> bool
   def self.EngineSetDisplay: (untyped engine, Integer index) -> bool
   def self.EngineSetGraphics: (untyped engine, Hash[Symbol, untyped] settings) -> bool
   def self.EngineSetMaxFps: (untyped engine, Integer max_fps) -> void
@@ -2886,6 +2891,7 @@ module GrappleC
   def self.LoadChipSong: (String? path) -> untyped
   def self.LoadChipSongEx: (String? path, Hash[Symbol, untyped] options) -> [untyped, Hash[Symbol, untyped]]
   def self.LoadChipStyle: (String? path) -> untyped
+  def self.LoadPlatformer: (untyped engine, String? path) -> untyped
   def self.LoadTextFile: (String? path) -> Integer
   def self.LoadTexture: (untyped engine, String? path) -> Integer
   def self.LoadTextureAsync: (untyped engine, String? path) -> Integer
@@ -2920,9 +2926,77 @@ module GrappleC
   def self.PhysicsSetPaused: (untyped engine, bool paused) -> void
   def self.PhysicsSetPixelsPerMetre: (untyped engine, Float pixels) -> void
   def self.PhysicsSetSubSteps: (untyped engine, Integer sub_steps) -> void
+  def self.PlatformerActionDown: (untyped level, String? action) -> bool
+  def self.PlatformerActionPressed: (untyped level, String? action) -> bool
+  def self.PlatformerActionReleased: (untyped level, String? action) -> bool
+  def self.PlatformerActionValue: (untyped level, String? action) -> Float
+  def self.PlatformerActions: (untyped level) -> untyped
+  def self.PlatformerAddSolid: (untyped level, Float x, Float y, Float w, Float h) -> Integer
+  def self.PlatformerAttach: (untyped level) -> bool
+  def self.PlatformerAttached: (untyped level) -> bool
+  def self.PlatformerBind: (untyped level, String? action, String? binding) -> bool
+  def self.PlatformerCameraPosition: (untyped level, Float x, Float y) -> [Float, Float]
+  def self.PlatformerCreateBlock: (untyped level, Integer x, Integer y, Integer width, Integer height) -> bool
+  def self.PlatformerCreateFloor: (untyped level, Integer x, Integer y, Integer width, Integer depth) -> bool
+  def self.PlatformerCreatePlatform: (untyped level, Integer x, Integer y, Integer width) -> bool
+  def self.PlatformerCreatePlayer: (untyped level, Integer tile_x, Integer tile_y) -> Integer
+  def self.PlatformerCreateStairs: (untyped level, Integer x, Integer y, Integer steps, bool rising) -> bool
+  def self.PlatformerCreateWall: (untyped level, Integer x, Integer y, Integer height) -> bool
+  def self.PlatformerDetach: (untyped level) -> void
+  def self.PlatformerEngine: (untyped level) -> untyped
+  def self.PlatformerFillTiles: (untyped level, Integer x, Integer y, Integer width, Integer height, Integer tile) -> Integer
+  def self.PlatformerHasPlayer: (untyped level) -> bool
+  def self.PlatformerHeight: (untyped level) -> Integer
+  def self.PlatformerPixelSize: (untyped level, Float width, Float height) -> [Float, Float]
+  def self.PlatformerPlayer: (untyped level) -> Integer
+  def self.PlatformerPlayerBumped: (untyped level) -> bool
+  def self.PlatformerPlayerFacing: (untyped level) -> Integer
+  def self.PlatformerPlayerFell: (untyped level) -> bool
+  def self.PlatformerPlayerGrounded: (untyped level) -> bool
+  def self.PlatformerPlayerJumped: (untyped level) -> bool
+  def self.PlatformerPlayerLanded: (untyped level) -> bool
+  def self.PlatformerPlayerPaused: (untyped level) -> bool
+  def self.PlatformerPlayerPosition: (untyped level, Float x, Float y) -> [Float, Float]
+  def self.PlatformerPlayerRespawn: (untyped level, Float x, Float y) -> void
+  def self.PlatformerPlayerRespawnAtStart: (untyped level) -> void
+  def self.PlatformerPlayerSize: (untyped level, Float width, Float height) -> [Float, Float]
+  def self.PlatformerPlayerState: (untyped level) -> Integer
+  def self.PlatformerPlayerStateChanged: (untyped level) -> bool
+  def self.PlatformerPlayerStateName: (untyped level) -> String?
+  def self.PlatformerPlayerTuning: (untyped level, String? key) -> Float
+  def self.PlatformerPlayerTuningCount: () -> Integer
+  def self.PlatformerPlayerTuningKey: (Integer index) -> String?
+  def self.PlatformerPlayerVelocity: (untyped level, Float vx, Float vy) -> [Float, Float]
+  def self.PlatformerPlayerWall: (untyped level) -> Integer
+  def self.PlatformerRemovePlayer: (untyped level) -> void
+  def self.PlatformerRemoveSolid: (untyped level, Integer id) -> bool
+  def self.PlatformerRender: (untyped level, Float alpha) -> void
+  def self.PlatformerScriptInput: (untyped level, Float move_x, bool jump, bool run) -> void
+  def self.PlatformerScriptedInput: (untyped level) -> bool
+  def self.PlatformerScrollMode: (untyped level) -> Integer
+  def self.PlatformerSetBackgroundColor: (untyped level, Float r, Float g, Float b, Float a) -> void
+  def self.PlatformerSetCameraDeadzone: (untyped level, Float width, Float height) -> void
+  def self.PlatformerSetCameraLookAhead: (untyped level, Float pixels) -> void
+  def self.PlatformerSetCameraSmoothing: (untyped level, Float seconds) -> void
+  def self.PlatformerSetPlayerColor: (untyped level, Float r, Float g, Float b, Float a) -> void
+  def self.PlatformerSetPlayerPaused: (untyped level, bool paused) -> void
+  def self.PlatformerSetPlayerSize: (untyped level, Float width, Float height) -> void
+  def self.PlatformerSetPlayerTuning: (untyped level, String? key, Float value) -> bool
+  def self.PlatformerSetScriptedInput: (untyped level, bool enabled) -> void
+  def self.PlatformerSetScroll: (untyped level, Integer mode) -> void
+  def self.PlatformerSetTile: (untyped level, Integer x, Integer y, Integer tile) -> bool
+  def self.PlatformerSetTileColor: (untyped level, Integer tile, Float r, Float g, Float b, Float a) -> void
+  def self.PlatformerSetTileTexture: (untyped level, Integer tile, untyped texture) -> void
+  def self.PlatformerSolidCount: (untyped level) -> Integer
+  def self.PlatformerStep: (untyped level, Float step) -> void
+  def self.PlatformerTileAt: (untyped level, Integer x, Integer y) -> Integer
+  def self.PlatformerTileSize: (untyped level) -> Integer
+  def self.PlatformerUpdate: (untyped level, Float dt) -> void
+  def self.PlatformerWidth: (untyped level) -> Integer
   def self.PlayChipFile: (String? path, bool loop) -> untyped
   def self.PlayChipPlayer: (untyped player) -> bool
   def self.PlayChipSong: (untyped song, bool loop) -> untyped
+  def self.PlayerStateName: (Integer state) -> String?
   def self.PrismaticJointDefCreate: () -> untyped
   def self.PrismaticJointDefDestroy: (untyped def_) -> void
   def self.PrismaticJointDefSetAnchors: (untyped def_, Float ax, Float ay, Float bx, Float by) -> void
@@ -2990,6 +3064,7 @@ module GrappleC
   def self.SceneIsActive: (untyped scene) -> bool
   def self.SceneKey: (untyped scene) -> Integer
   def self.SceneName: (untyped scene) -> String?
+  def self.ScenePending: (untyped engine) -> bool
   def self.ScenePop: (untyped engine) -> bool
   def self.ScenePush: (untyped engine, untyped def_) -> bool
   def self.SceneReplace: (untyped engine, untyped def_) -> bool

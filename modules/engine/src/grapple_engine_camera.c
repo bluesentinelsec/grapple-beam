@@ -55,6 +55,7 @@ void Grapple_CameraSnap(Grapple_Camera *camera, float world_x, float world_y)
     camera->target_y = world_y;
     camera->x = world_x;
     camera->y = world_y;
+    camera->has_last_target = false; /* a cut, not a move to integrate */
 }
 
 void Grapple_CameraShake(Grapple_Camera *camera, float amount, float seconds)
@@ -125,16 +126,34 @@ void Grapple_CameraUpdate(Grapple_Camera *camera, Grapple_Engine *engine, float 
         /* Exponential decay against dt, not a fixed fraction per frame. A
            fraction-per-frame camera is faster at 144 Hz than at 60, so the
            game feels different on different machines — the classic reason a
-           camera "feels wrong" on someone else's computer. */
-        const float t = 1.0f - SDL_expf(-dt / camera->smoothing);
-        camera->x += (want_x - camera->x) * t;
-        camera->y += (want_y - camera->y) * t;
+           camera "feels wrong" on someone else's computer.
+
+           Integrated exactly against a target that moved *during* the frame,
+           not one that jumped to its new place at the end of it. The plain
+           step, x += (want - x) * (1 - e^(-dt/tau)), settles a constant
+           distance behind a moving target plus half a frame's travel — and
+           frames are not all the same length, so a walking character
+           wobbles against the camera by the difference. With the target's
+           motion accounted for the settled distance is exactly speed times
+           tau, whatever the frame times. */
+        const float decay = SDL_expf(-dt / camera->smoothing);
+        const float from_x = camera->has_last_target ? camera->last_target_x : want_x;
+        const float from_y = camera->has_last_target ? camera->last_target_y : want_y;
+        const float vx = (want_x - from_x) / dt;
+        const float vy = (want_y - from_y) / dt;
+        const float lag_x = vx * camera->smoothing;
+        const float lag_y = vy * camera->smoothing;
+        camera->x = want_x - lag_x + (camera->x - from_x + lag_x) * decay;
+        camera->y = want_y - lag_y + (camera->y - from_y + lag_y) * decay;
     }
     else
     {
         camera->x = want_x;
         camera->y = want_y;
     }
+    camera->last_target_x = want_x;
+    camera->last_target_y = want_y;
+    camera->has_last_target = true;
 
     /* The world rectangle the viewport covers, before clamping. */
     const float view_w = camera->viewport.w / camera->zoom;

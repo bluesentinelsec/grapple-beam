@@ -92,6 +92,11 @@ static SDL_RendererLogicalPresentation PresentationMode(Grapple_EnginePresentati
         /* EXPAND is letterbox with a logical size chosen to match the
            window's aspect exactly, so there is never anything to bar. */
         return SDL_LOGICAL_PRESENTATION_LETTERBOX;
+    case GRAPPLE_PRESENT_PIXEL:
+    case GRAPPLE_PRESENT_PIXEL_SNAP:
+        /* The window is fitted like a letterbox; the integer step happens
+           in the offscreen frame (grapple_engine_target.c), so this is what
+           the final stretch and the mouse mapping see. */
     case GRAPPLE_PRESENT_LETTERBOX:
     default:
         return SDL_LOGICAL_PRESENTATION_LETTERBOX;
@@ -148,9 +153,12 @@ static void ApplyPresentation(Grapple_Engine *engine)
 
     /* Pixel art wants nearest, everything else wants linear. Setting it as
        the renderer's default means a game never has to remember. */
-    SDL_SetDefaultTextureScaleMode(
-        engine->renderer, (engine->presentation == GRAPPLE_PRESENT_INTEGER) ? SDL_SCALEMODE_NEAREST
-                                                                            : SDL_SCALEMODE_LINEAR);
+    SDL_SetDefaultTextureScaleMode(engine->renderer,
+                                   (engine->presentation == GRAPPLE_PRESENT_INTEGER ||
+                                    engine->presentation == GRAPPLE_PRESENT_PIXEL ||
+                                    engine->presentation == GRAPPLE_PRESENT_PIXEL_SNAP)
+                                       ? SDL_SCALEMODE_NEAREST
+                                       : SDL_SCALEMODE_LINEAR);
 }
 
 /* The display's refresh rate, so the smoothing above has something to snap
@@ -251,6 +259,7 @@ Grapple_Engine *Grapple_CreateEngine(const Grapple_EngineConfig *config)
     engine->max_fps = config->max_fps;
     engine->time_scale = 1.0f;
     engine->manual_clock = config->manual_clock;
+    engine->design_explicit = config->design_width > 0 && config->design_height > 0;
     engine->design_width = (config->design_width > 0) ? config->design_width : 1920;
     engine->design_height = (config->design_height > 0) ? config->design_height : 1080;
     engine->presentation = config->presentation;
@@ -970,6 +979,28 @@ bool Grapple_EngineSetPresentation(Grapple_Engine *engine, Grapple_EnginePresent
     engine->presentation = mode;
     ApplyPresentation(engine);
     return true;
+}
+
+bool Grapple_EngineSetDesignSize(Grapple_Engine *engine, int width, int height)
+{
+    if (engine == NULL)
+    {
+        return SDL_InvalidParamError("engine");
+    }
+    if (width <= 0 || height <= 0)
+    {
+        return SDL_SetError("a design size must be positive: %dx%d", width, height);
+    }
+    engine->design_width = width;
+    engine->design_height = height;
+    engine->design_explicit = true;
+    ApplyPresentation(engine); /* the view and the offscreen frame follow */
+    return true;
+}
+
+bool Grapple_EngineDesignExplicit(Grapple_Engine *engine)
+{
+    return engine != NULL && engine->design_explicit;
 }
 
 Grapple_EnginePresentation Grapple_EnginePresentation_(Grapple_Engine *engine)
