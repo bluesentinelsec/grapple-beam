@@ -16,8 +16,9 @@
 namespace
 {
 
-constexpr int kDesignWidth = 256;
-constexpr int kDesignHeight = 240;
+// 16:9, 24 x 13.5 tiles of 16 px; 5x at 1080p, 10x at 4K.
+constexpr int kDesignWidth = 384;
+constexpr int kDesignHeight = 216;
 constexpr int kTile = 16;
 
 class PlatformerGame
@@ -163,7 +164,7 @@ class PlatformerGame
         Grapple_SetDebugTextSize(8.0f);
         Grapple_RenderDebugTextFormat(renderer, 8.0f, 8.0f, "%s  x=%d", player_.state_name(),
                                       static_cast<int>(x / kTile));
-        Grapple_RenderDebugText(renderer, 8.0f, 226.0f,
+        Grapple_RenderDebugText(renderer, 8.0f, 202.0f,
                                 "arrows/AD move  shift run  space jump (walls too)  esc quit");
     }
 

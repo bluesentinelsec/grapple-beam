@@ -11,7 +11,7 @@
 
 engine = Grapple.engine(
   title: "Platformer — grapple-beam",
-  design: [256, 240],
+  design: [384, 216], # 16:9, 24 x 13.5 tiles; 5x at 1080p, 10x at 4K
   presentation: :letterbox,
   auto_mount: false,
   headless: !SDL.getenv("GRAPPLE_HEADLESS").nil?
@@ -87,5 +87,5 @@ engine.on_render do |_alpha|
   x, = player.position
   GrappleC.SetDebugTextSize(8)
   GrappleC.RenderDebugText(renderer, 8, 8, format("%s  x=%d", player.state, (x / 16).floor))
-  GrappleC.RenderDebugText(renderer, 8, 226, "arrows/AD move  shift run  space jump (walls too)  esc quit")
+  GrappleC.RenderDebugText(renderer, 8, 202, "arrows/AD move  shift run  space jump (walls too)  esc quit")
 end

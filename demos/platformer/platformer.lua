@@ -20,12 +20,13 @@
 -- An Xbox-layout pad works the same: left stick or d-pad, X or the right
 -- trigger to run, A to jump. Escape quits.
 
--- The NES drew 256x240 and its tiles were 16 pixels. The engine scales that
+-- 384x216 is a 16:9 frame with 16-pixel tiles, 24 wide by 13.5 tall, and it
+-- scales by whole numbers to 1080p (5x) and 4K (10x). The engine scales it
 -- to the window — a laptop, a 4K display — and letterboxes the difference,
 -- so the game is written once, in tiles, and is right everywhere.
 local engine = Grapple.engine{
   title = "Platformer — grapple-beam",
-  design = { 256, 240 },
+  design = { 384, 216 },
   presentation = "letterbox",
   auto_mount = false,       -- rectangles only: nothing to load
   headless = SDL.getenv("GRAPPLE_HEADLESS") ~= nil,
@@ -126,5 +127,5 @@ engine:on_render(function(alpha)
   GrappleC.SetDebugTextSize(8)
   GrappleC.RenderDebugText(renderer, 8, 8,
     string.format("%s  x=%d", player:state(), math.floor(x / 16)))
-  GrappleC.RenderDebugText(renderer, 8, 226, "arrows/AD move  shift run  space jump (walls too)  esc quit")
+  GrappleC.RenderDebugText(renderer, 8, 202, "arrows/AD move  shift run  space jump (walls too)  esc quit")
 end)

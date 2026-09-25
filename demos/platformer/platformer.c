@@ -23,10 +23,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* The NES drew 256x240 with 16-pixel tiles; the engine letterboxes that to
-   whatever the window is, so the level is written once, in tiles. */
-#define DESIGN_WIDTH 256
-#define DESIGN_HEIGHT 240
+/* A 16:9 frame of 16-pixel tiles, 24 wide by 13.5 tall, that scales by whole
+   numbers to 1080p (5x) and 4K (10x); the engine letterboxes it to whatever
+   the window is, so the level is written once, in tiles. */
+#define DESIGN_WIDTH 384
+#define DESIGN_HEIGHT 216
 #define TILE 16
 
 typedef struct Game
@@ -128,7 +129,7 @@ static void Render(void *user, float alpha)
     Grapple_SetDebugTextSize(8.0f);
     Grapple_RenderDebugTextFormat(renderer, 8.0f, 8.0f, "%s  x=%d",
                                   Grapple_PlatformerPlayerStateName(game->level), (int)(x / TILE));
-    Grapple_RenderDebugText(renderer, 8.0f, 226.0f,
+    Grapple_RenderDebugText(renderer, 8.0f, 202.0f,
                             "arrows/AD move  shift run  space jump (walls too)  esc quit");
 }
 

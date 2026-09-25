@@ -20,7 +20,7 @@ target_link_libraries(your_game PRIVATE Grapple::Platformer)
 A complete, playable level in Lua:
 
 ```lua
-local engine = Grapple.engine{ title = "1-1", design = { 256, 240 } }
+local engine = Grapple.engine{ title = "1-1", design = { 384, 216 } }
 
 local level = Grapple.create_level(engine, { width = 212, height = 22 })
 level:create_floor{ x = 0,  y = 13, width = 69 }
@@ -65,9 +65,13 @@ and passable from below and the sides. The left and right edges of the
 level read as solid, so the player cannot walk out of it; the top and
 bottom are open, so a high jump is not a head bump and a pit is a pit.
 
-Design at the resolution the art will be drawn at: the NES was 256×240 with
-16-pixel tiles. The engine's presentation scales that to the window, from
-a laptop to 4K, and `integer` presentation keeps pixel art crisp.
+Design at the resolution the art will be drawn at, and in the shape of the
+displays it will play on. For 16-pixel tiles on a 16:9 screen, **384×216**
+is the frame to use: 24 tiles wide by 13.5 tall, and it scales by whole
+numbers to 1080p (5×) and 4K (10×), so pixel art stays crisp under
+`integer` presentation with no bars on either. The NES's 256×240 is the
+4:3-ish shape of the originals and is the right choice only for a game that
+wants their bars. The engine's presentation scales either to the window.
 
 ### Dedicated objects
 
