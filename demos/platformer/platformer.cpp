@@ -22,16 +22,11 @@ constexpr int kTile = 16;
 class PlatformerGame
 {
   public:
+    // No SDL_Init here: the engine brings up what it needs, and headless — how
+    // CI plays this — needs no video at all.
     static int Run()
     {
-        if (!SDL_Init(SDL_INIT_VIDEO))
-        {
-            SDL_Log("SDL_Init failed: %s", SDL_GetError());
-            return EXIT_FAILURE;
-        }
-        const int result = PlatformerGame().Play();
-        SDL_Quit();
-        return result;
+        return PlatformerGame().Play();
     }
 
   private:

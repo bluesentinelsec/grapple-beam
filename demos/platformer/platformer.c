@@ -137,12 +137,8 @@ int main(int argc, char **argv)
 {
     (void)argc;
     (void)argv;
-    if (!SDL_Init(SDL_INIT_VIDEO))
-    {
-        SDL_Log("SDL_Init failed: %s", SDL_GetError());
-        return EXIT_FAILURE;
-    }
-
+    /* No SDL_Init here: the engine brings up what it needs, and headless —
+       how CI plays this, with no display to open — needs no video at all. */
     Game game = {0};
     game.headless = SDL_getenv("GRAPPLE_HEADLESS") != NULL;
 
@@ -154,7 +150,6 @@ int main(int argc, char **argv)
     if (game.engine == NULL)
     {
         SDL_Log("could not create an engine: %s", SDL_GetError());
-        SDL_Quit();
         return EXIT_FAILURE;
     }
 
@@ -166,7 +161,6 @@ int main(int argc, char **argv)
     {
         SDL_Log("could not create the level: %s", SDL_GetError());
         Grapple_DestroyEngine(game.engine);
-        SDL_Quit();
         return EXIT_FAILURE;
     }
     BuildLevel(game.level);
@@ -181,6 +175,5 @@ int main(int argc, char **argv)
 
     Grapple_DestroyPlatformer(game.level);
     Grapple_DestroyEngine(game.engine);
-    SDL_Quit();
     return ok ? EXIT_SUCCESS : EXIT_FAILURE;
 }
