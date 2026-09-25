@@ -219,7 +219,8 @@ Persist the value with the settings and restore it on launch.
 | `INTEGER` | kept | yes | no | pixel art, where a fractional scale is what makes it shimmer |
 | `STRETCH` | **lost** | no | no | effectively nothing; it distorts |
 | `NATIVE` | n/a | n/a | n/a | tools, editors and debug windows that want to think in pixels |
-| **`PIXEL`** | kept | yes | no | **pixel art** — every art pixel a square block on a display the design divides, and never an uneven one on a display it does not |
+| **`PIXEL`** | kept | yes | no | **pixel art** — every art pixel a square block, motion by screen pixels |
+| `PIXEL_SNAP` | kept | yes | no | pixel art with motion by whole art pixels: the Celeste look |
 
 **Recommendation: `LETTERBOX` for art drawn at high resolution, `PIXEL` for pixel art.**
 It is the only mode that guarantees every player sees exactly the frame you
@@ -246,21 +247,24 @@ The others are each a considered trade against that:
   if you like, but do not ship it as a default.
 - **`NATIVE`** turns the whole design-space idea off.
 - **`PIXEL`** is what pixel art should use, and what `INTEGER` was an
-  approximation of. The frame is drawn at exactly the design size into a
-  texture, enlarged by the largest whole number that fits the window with
-  point sampling, and the remainder — only when the window is not an exact
-  multiple — is a linear stretch of that already enlarged frame. Positions
-  snap to design pixels, as on the hardware it imitates. Design a 16:9 game
-  at 384×216 or 640×360 and 1080p and 4K are exact multiples, so those
-  displays get the crisp one-blit path; 1440p gets a 6× or 4× enlargement
-  softened by a ninth or a twelfth of a pixel, which the eye does not read as
-  blur. This is the pipeline Celeste, Shovel Knight and the pixel-perfect
-  cameras in Unity and Godot use; `INTEGER` gives the same crispness but
-  leaves most of the screen as bars on any display that is not a multiple.
-  Render scale does not apply under `PIXEL`: the design *is* the resolution.
-  Text and UI belong in `post_render`, which runs after the enlargement and
-  so rasterises at the window's density; drawn in `render` they go into the
-  small frame and come out as blocks.
+  approximation of. The frame is drawn into a texture that is the design
+  size times the largest whole number of screen pixels per design unit that
+  fits the window, with point sampling, so every art pixel is a crisp
+  square block — and because the frame has that many texels per unit,
+  sprites move and the camera scrolls by screen pixels, which is what keeps
+  motion at 1.6 art pixels a frame from looking steppy. If the window is not
+  an exact multiple the remainder is a linear stretch of that frame by less
+  than one art pixel: faintly softened, never uneven. Design a 16:9 game at
+  384×216 or 640×360 and 1080p and 4K are exact multiples; 1440p is a 6× or
+  4× frame softened by a ninth or a twelfth of a pixel. This is what Unity's
+  Pixel Perfect Camera does with pixel snapping off. Render scale does not
+  apply under `PIXEL`: the design *is* the resolution. Text and UI belong
+  in `post_render`, which runs after the frame is put on the window.
+- **`PIXEL_SNAP`** draws the frame at exactly the design size and enlarges
+  it afterwards, so positions snap to whole art pixels as they did on the
+  hardware it imitates — the Celeste and Shovel Knight look, deliberately
+  steppy at low speeds. `Grapple_EngineFrameScale` tells a camera which
+  grid to snap its origin to under either mode.
 
 Whichever you pick, these two calls describe what the player is seeing:
 

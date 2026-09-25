@@ -8,7 +8,7 @@
 {"display.max_fps", "max-fps", "display", "", SET_FPS, 10, 1000, TARGET_GFX, offsetof(Grapple_GraphicsSettings, max_fps)},
 {"display.resizable", "resizable", "on", "", SET_INVERT, 0, 0, TARGET_CONFIG, offsetof(Grapple_EngineConfig, fixed_size)},
 {"display.high_dpi", "high-dpi", "on", "", SET_INVERT, 0, 0, TARGET_CONFIG, offsetof(Grapple_EngineConfig, low_dpi)},
-{"display.presentation", "presentation", "letterbox", "letterbox|expand|overscan|integer|stretch|native|pixel", SET_ENUM, 0, 0, TARGET_GFX, offsetof(Grapple_GraphicsSettings, presentation)},
+{"display.presentation", "presentation", "letterbox", "letterbox|expand|overscan|integer|stretch|native|pixel|pixel_snap", SET_ENUM, 0, 0, TARGET_GFX, offsetof(Grapple_GraphicsSettings, presentation)},
 {"display.render_scale", "render-scale", "1", "0.25..2", SET_FLOAT, 0.25, 2, TARGET_GFX, offsetof(Grapple_GraphicsSettings, render_scale)},
 {"display.filter", "filter", "auto", "auto|linear|nearest", SET_ENUM, 0, 0, TARGET_GFX, offsetof(Grapple_GraphicsSettings, filter)},
 {"quality.particles", "particles", "high", "off|low|medium|high", SET_ENUM, 0, 0, TARGET_GFX, offsetof(Grapple_GraphicsSettings, particles)},

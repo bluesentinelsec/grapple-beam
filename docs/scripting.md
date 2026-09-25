@@ -136,7 +136,7 @@ about a key it does not recognise:
 local engine = Grapple.engine{
   title = "My Game",
   window = { width = 1280, height = 720 },
-  presentation = "letterbox",   -- or "pixel", "native", "expand", "integer", ...
+  presentation = "letterbox",   -- or "pixel", "pixel_snap", "native", "expand", ...
   tick_rate = 120,
 }
 ```

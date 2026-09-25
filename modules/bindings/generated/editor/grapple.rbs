@@ -2618,6 +2618,7 @@ module GrappleC
   def self.EngineEmbedMedia: (String data, String? password) -> void
   def self.EngineFps: (untyped engine) -> Float
   def self.EngineFrameCount: (untyped engine) -> Integer
+  def self.EngineFrameScale: (untyped engine) -> Integer
   def self.EngineMaxFps: (untyped engine) -> Integer
   def self.EngineMediaPath: (untyped engine) -> String?
   def self.EngineMediaSource: (untyped engine) -> Integer

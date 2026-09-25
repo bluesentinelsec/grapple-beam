@@ -677,10 +677,33 @@ void Grapple_PlatformerUpdate(Grapple_Platformer *level, float dt)
         return;
     }
     Grapple_Camera *camera = &level->camera;
+    /* Where the player is drawn this frame; the snap below anchors to it. */
+    float anchor_x = 0.0f;
+    float anchor_y = 0.0f;
     if (level->player.exists)
     {
         const PlatformerPlayer *p = &level->player;
         const float half_height = p->height * 0.5f;
+
+        /* Follow the player where it is *drawn* — between its last two
+           steps, by this frame's alpha — not where the simulation has it.
+           The sprite is interpolated; a camera aimed at the un-interpolated
+           position is up to a step out from it, by an amount that changes
+           every frame, and the player visibly wobbles against the world. */
+        float px = p->x;
+        float py = p->y;
+        Grapple_Actor *actor = Grapple_ActorGet(level->engine, p->id);
+        if (actor != NULL)
+        {
+            const Grapple_ActorTransform drawn =
+                Grapple_ActorRenderTransform(actor, Grapple_EngineAlpha(level->engine));
+            px = drawn.x;
+            py = drawn.y;
+        }
+        /* The sprite's corner is what the renderer rounds: half a width
+           left of the feet, and a height above. */
+        anchor_x = px - p->width * 0.5f;
+        anchor_y = py - p->height;
 
         /* Look ahead of the player in the direction faced, easing there so
            a turn swings the view over rather than snapping it. */
@@ -690,13 +713,13 @@ void Grapple_PlatformerUpdate(Grapple_Platformer *level, float dt)
         /* The player moves inside a box before the view follows; the box is
            what stops a hop or a half-step from twitching the screen. */
         const float half_zone = level->deadzone_w * 0.5f;
-        if (p->x > level->follow_x + half_zone)
+        if (px > level->follow_x + half_zone)
         {
-            level->follow_x = p->x - half_zone;
+            level->follow_x = px - half_zone;
         }
-        else if (p->x < level->follow_x - half_zone)
+        else if (px < level->follow_x - half_zone)
         {
-            level->follow_x = p->x + half_zone;
+            level->follow_x = px + half_zone;
         }
         const float target_x = level->follow_x + level->look;
 
@@ -706,7 +729,7 @@ void Grapple_PlatformerUpdate(Grapple_Platformer *level, float dt)
            the top of the view, or falling out of the bottom. Grounded, the
            feet's level is the ground level, so stairs and ledges scroll. */
         float target_y = p->ground_y - half_height;
-        const float mid_y = p->y - half_height;
+        const float mid_y = py - half_height;
         if (!p->grounded && level->vertical_band > 0.0f)
         {
             if (mid_y < target_y - level->vertical_band)
@@ -726,8 +749,8 @@ void Grapple_PlatformerUpdate(Grapple_Platformer *level, float dt)
             camera->bounds = (SDL_FRect){0.0f, 0.0f, (float)(level->width * level->tile),
                                          (float)(level->height * level->tile)};
             level->look = want_look;
-            level->follow_x = p->x;
-            Grapple_CameraSnap(camera, p->x + level->look, target_y);
+            level->follow_x = px;
+            Grapple_CameraSnap(camera, px + level->look, target_y);
             level->camera_snapped = true;
         }
         else
@@ -736,6 +759,52 @@ void Grapple_PlatformerUpdate(Grapple_Platformer *level, float dt)
         }
     }
     Grapple_CameraUpdate(camera, level->engine, dt);
+
+    /* Under the pixel presentations the frame has a whole number of texels
+       per design unit, and everything drawn is rounded to that grid. Two
+       things round — the view's origin and the player — and whichever is
+       meant to hold still on screen must be the one that lands exactly on
+       the grid, or their difference flickers by a texel as their fractional
+       parts round different ways. While the camera is following, the
+       player is what stays put on screen: the origin is placed so the
+       player is on the grid and the world scrolls by whole texels. While
+       the camera is still — clamped at the level's edge, or the player
+       inside the deadzone — the world is what stays put: the origin itself
+       goes on the grid and the player steps across it. */
+    const int grid = Grapple_EngineFrameScale(level->engine);
+    if (grid > 0)
+    {
+        const float unit = 1.0f / (float)grid;
+        const bool moving_x = SDL_fabsf(camera->x - level->last_cam_x) > 0.0001f;
+        const bool moving_y = SDL_fabsf(camera->y - level->last_cam_y) > 0.0001f;
+        level->last_cam_x = camera->x;
+        level->last_cam_y = camera->y;
+
+        float snapped_x;
+        float snapped_y;
+        if (moving_x && level->player.exists)
+        {
+            const float gap = SDL_floorf((anchor_x - camera->visible.x) / unit + 0.5f) * unit;
+            snapped_x = anchor_x - gap;
+        }
+        else
+        {
+            snapped_x = SDL_floorf(camera->visible.x / unit + 0.5f) * unit;
+        }
+        if (moving_y && level->player.exists)
+        {
+            const float gap = SDL_floorf((anchor_y - camera->visible.y) / unit + 0.5f) * unit;
+            snapped_y = anchor_y - gap;
+        }
+        else
+        {
+            snapped_y = SDL_floorf(camera->visible.y / unit + 0.5f) * unit;
+        }
+        camera->x += snapped_x - camera->visible.x;
+        camera->y += snapped_y - camera->visible.y;
+        camera->visible.x = snapped_x;
+        camera->visible.y = snapped_y;
+    }
 
     if (level->scroll == GRAPPLE_PLATFORMER_SCROLL_FORWARD)
     {

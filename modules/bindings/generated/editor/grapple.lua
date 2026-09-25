@@ -15093,6 +15093,11 @@ function GrappleC.EngineFps(engine) end
 ---@return integer
 function GrappleC.EngineFrameCount(engine) end
 
+---Calls `Grapple_EngineFrameScale`.
+---@param engine userdata
+---@return integer
+function GrappleC.EngineFrameScale(engine) end
+
 ---Calls `Grapple_EngineMaxFps`.
 ---@param engine userdata
 ---@return integer

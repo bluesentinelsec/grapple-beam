@@ -211,11 +211,14 @@ static void GenRead_Grapple_Camera(lua_State *L, int idx, Grapple_Camera *out)
     lua_getfield(L, idx, "visible");
     GenRead_SDL_FRect(L, lua_gettop(L), &out->visible);
     lua_pop(L, 1);
+    out->last_target_x = (float)GrappleGen_LuaFieldNum(L, idx, "last_target_x");
+    out->last_target_y = (float)GrappleGen_LuaFieldNum(L, idx, "last_target_y");
+    out->has_last_target = (bool)GrappleGen_LuaFieldBool(L, idx, "has_last_target");
 }
 
 static void GenPush_Grapple_Camera(lua_State *L, const Grapple_Camera *in)
 {
-    lua_createtable(L, 0, 15);
+    lua_createtable(L, 0, 18);
     lua_pushnumber(L, (lua_Number)in->x);
     lua_setfield(L, -2, "x");
     lua_pushnumber(L, (lua_Number)in->y);
@@ -246,6 +249,12 @@ static void GenPush_Grapple_Camera(lua_State *L, const Grapple_Camera *in)
     lua_setfield(L, -2, "viewport");
     GenPush_SDL_FRect(L, &in->visible);
     lua_setfield(L, -2, "visible");
+    lua_pushnumber(L, (lua_Number)in->last_target_x);
+    lua_setfield(L, -2, "last_target_x");
+    lua_pushnumber(L, (lua_Number)in->last_target_y);
+    lua_setfield(L, -2, "last_target_y");
+    lua_pushboolean(L, (int)in->has_last_target);
+    lua_setfield(L, -2, "has_last_target");
 }
 
 static void GenPush_Grapple_ChipDiagnostic(lua_State *L, const Grapple_ChipDiagnostic *in)
@@ -3387,6 +3396,15 @@ static int GenL_Grapple_EngineFrameCount(lua_State *L)
     (void)L;
     Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Engine");
     Uint64 rv = Grapple_EngineFrameCount(a0);
+    lua_pushinteger(L, (lua_Integer)rv);
+    return 1;
+}
+
+static int GenL_Grapple_EngineFrameScale(lua_State *L)
+{
+    (void)L;
+    Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Engine");
+    int rv = Grapple_EngineFrameScale(a0);
     lua_pushinteger(L, (lua_Integer)rv);
     return 1;
 }
@@ -9015,7 +9033,7 @@ static int GenL_Grapple_WheelJointDefSetSpring(lua_State *L)
 int GrappleGen_OpenLua_grapple(lua_State *L);
 int GrappleGen_OpenLua_grapple(lua_State *L)
 {
-    lua_createtable(L, 0, 790);
+    lua_createtable(L, 0, 791);
     lua_pushcfunction(L, GenL_Grapple_ActionBind);
     lua_setfield(L, -2, "ActionBind");
     lua_pushcfunction(L, GenL_Grapple_ActionBindAxis);
@@ -9474,6 +9492,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "EngineFps");
     lua_pushcfunction(L, GenL_Grapple_EngineFrameCount);
     lua_setfield(L, -2, "EngineFrameCount");
+    lua_pushcfunction(L, GenL_Grapple_EngineFrameScale);
+    lua_setfield(L, -2, "EngineFrameScale");
     lua_pushcfunction(L, GenL_Grapple_EngineMaxFps);
     lua_setfield(L, -2, "EngineMaxFps");
     lua_pushcfunction(L, GenL_Grapple_EngineMediaPath);
@@ -10780,6 +10800,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "GRAPPLE_PRESENT_NATIVE");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_PRESENT_PIXEL);
     lua_setfield(L, -2, "GRAPPLE_PRESENT_PIXEL");
+    lua_pushinteger(L, (lua_Integer)GRAPPLE_PRESENT_PIXEL_SNAP);
+    lua_setfield(L, -2, "GRAPPLE_PRESENT_PIXEL_SNAP");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_AXIS_LEFT_X);
     lua_setfield(L, -2, "GRAPPLE_AXIS_LEFT_X");
     lua_pushinteger(L, (lua_Integer)GRAPPLE_AXIS_LEFT_Y);

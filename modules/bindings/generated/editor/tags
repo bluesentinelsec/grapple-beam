@@ -197,6 +197,7 @@ GRAPPLE_PRESENT_LETTERBOX	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_LETTER
 GRAPPLE_PRESENT_NATIVE	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_NATIVE/;"	e
 GRAPPLE_PRESENT_OVERSCAN	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_OVERSCAN/;"	e
 GRAPPLE_PRESENT_PIXEL	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_PIXEL/;"	e
+GRAPPLE_PRESENT_PIXEL_SNAP	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_PIXEL_SNAP/;"	e
 GRAPPLE_PRESENT_STRETCH	include/grapple/audio_bus.h	/^.*GRAPPLE_PRESENT_STRETCH/;"	e
 GRAPPLE_QUALITY_HIGH	include/grapple/audio_bus.h	/^.*GRAPPLE_QUALITY_HIGH/;"	e
 GRAPPLE_QUALITY_LOW	include/grapple/audio_bus.h	/^.*GRAPPLE_QUALITY_LOW/;"	e
@@ -512,6 +513,7 @@ Grapple_EngineEffectsAvailable	include/grapple/engine_graphics.h	/^.*Grapple_Eng
 Grapple_EngineEmbedMedia	include/grapple/engine_media.h	/^.*Grapple_EngineEmbedMedia *(/;"	f
 Grapple_EngineFps	include/grapple/engine.h	/^.*Grapple_EngineFps *(/;"	f
 Grapple_EngineFrameCount	include/grapple/engine.h	/^.*Grapple_EngineFrameCount *(/;"	f
+Grapple_EngineFrameScale	include/grapple/engine.h	/^.*Grapple_EngineFrameScale *(/;"	f
 Grapple_EngineGraphics	include/grapple/engine_graphics.h	/^.*Grapple_EngineGraphics *(/;"	f
 Grapple_EngineInterpolation	include/grapple/audio_bus.h	/^.*Grapple_EngineInterpolation/;"	g
 Grapple_EngineMaxFps	include/grapple/engine.h	/^.*Grapple_EngineMaxFps *(/;"	f
@@ -5979,6 +5981,7 @@ h	include/nuklear.h	/^.*h/;"	m
 handle	include/nuklear.h	/^.*handle/;"	m
 handle	include/yaml.h	/^.*handle/;"	m
 has_depth_stencil_target	include/SDL3/SDL_assert.h	/^.*has_depth_stencil_target/;"	m
+has_last_target	include/grapple/audio_bus.h	/^.*has_last_target/;"	m
 has_preferred_x	include/nuklear.h	/^.*has_preferred_x/;"	m
 has_scrolling	include/nuklear.h	/^.*has_scrolling/;"	m
 hat	include/SDL3/SDL_assert.h	/^.*hat/;"	m
@@ -6081,6 +6084,8 @@ lane	include/grapple/audio_bus.h	/^.*lane/;"	m
 language	include/SDL3/SDL_assert.h	/^.*language/;"	m
 large_magnitude	include/SDL3/SDL_assert.h	/^.*large_magnitude/;"	m
 last	include/nuklear.h	/^.*last/;"	m
+last_target_x	include/grapple/audio_bus.h	/^.*last_target_x/;"	m
+last_target_y	include/grapple/audio_bus.h	/^.*last_target_y/;"	m
 last_widget_state	include/nuklear.h	/^.*last_widget_state/;"	m
 lastticks	include/SDL3_gfx/SDL3_framerate.h	/^.*lastticks/;"	m
 layer	include/SDL3/SDL_assert.h	/^.*layer/;"	m

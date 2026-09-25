@@ -180,6 +180,9 @@ static void GenRead_Grapple_Camera(mrb_state *mrb, mrb_value h, Grapple_Camera *
     out->shake_scale = (float)GrappleGen_RubyFieldNum(mrb, h, "shake_scale");
     GenRead_SDL_FRect(mrb, GrappleGen_RubyFieldGet(mrb, h, "viewport"), &out->viewport);
     GenRead_SDL_FRect(mrb, GrappleGen_RubyFieldGet(mrb, h, "visible"), &out->visible);
+    out->last_target_x = (float)GrappleGen_RubyFieldNum(mrb, h, "last_target_x");
+    out->last_target_y = (float)GrappleGen_RubyFieldNum(mrb, h, "last_target_y");
+    out->has_last_target = (bool)GrappleGen_RubyFieldBool(mrb, h, "has_last_target");
 }
 
 static mrb_value GenPush_Grapple_Camera(mrb_state *mrb, const Grapple_Camera *in)
@@ -200,6 +203,9 @@ static mrb_value GenPush_Grapple_Camera(mrb_state *mrb, const Grapple_Camera *in
     GrappleGen_RubyHashSet(mrb, h, "shake_scale", mrb_float_value(mrb, (mrb_float)in->shake_scale));
     GrappleGen_RubyHashSet(mrb, h, "viewport", GenPush_SDL_FRect(mrb, &in->viewport));
     GrappleGen_RubyHashSet(mrb, h, "visible", GenPush_SDL_FRect(mrb, &in->visible));
+    GrappleGen_RubyHashSet(mrb, h, "last_target_x", mrb_float_value(mrb, (mrb_float)in->last_target_x));
+    GrappleGen_RubyHashSet(mrb, h, "last_target_y", mrb_float_value(mrb, (mrb_float)in->last_target_y));
+    GrappleGen_RubyHashSet(mrb, h, "has_last_target", mrb_bool_value((mrb_bool)(in->has_last_target != 0)));
     return h;
 }
 
@@ -4225,6 +4231,19 @@ static mrb_value GenR_Grapple_EngineFrameCount(mrb_state *mrb, mrb_value self)
     {
     Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_Engine");
     Uint64 rv = Grapple_EngineFrameCount(a0);
+    return mrb_int_value(mrb, (mrb_int)rv);
+    }
+}
+
+static mrb_value GenR_Grapple_EngineFrameScale(mrb_state *mrb, mrb_value self)
+{
+    const mrb_value *argv = NULL;
+    mrb_int argc = 0;
+    (void)self;
+    mrb_get_args(mrb, "*", &argv, &argc);
+    {
+    Grapple_Engine *a0 = (Grapple_Engine *)GrappleGen_RubyCheckHandle(mrb, (argc > 0 ? argv[0] : mrb_nil_value()), "Grapple_Engine");
+    int rv = Grapple_EngineFrameScale(a0);
     return mrb_int_value(mrb, (mrb_int)rv);
     }
 }
@@ -12586,6 +12605,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_module_function(mrb, mod, "EngineEmbedMedia", GenR_Grapple_EngineEmbedMedia, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineFps", GenR_Grapple_EngineFps, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineFrameCount", GenR_Grapple_EngineFrameCount, MRB_ARGS_ANY());
+    mrb_define_module_function(mrb, mod, "EngineFrameScale", GenR_Grapple_EngineFrameScale, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineMaxFps", GenR_Grapple_EngineMaxFps, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineMediaPath", GenR_Grapple_EngineMediaPath, MRB_ARGS_ANY());
     mrb_define_module_function(mrb, mod, "EngineMediaSource", GenR_Grapple_EngineMediaSource, MRB_ARGS_ANY());
@@ -13239,6 +13259,7 @@ void GrappleGen_OpenRuby_grapple(mrb_state *mrb)
     mrb_define_const(mrb, mod, "GRAPPLE_PRESENT_STRETCH", mrb_int_value(mrb, (mrb_int)GRAPPLE_PRESENT_STRETCH));
     mrb_define_const(mrb, mod, "GRAPPLE_PRESENT_NATIVE", mrb_int_value(mrb, (mrb_int)GRAPPLE_PRESENT_NATIVE));
     mrb_define_const(mrb, mod, "GRAPPLE_PRESENT_PIXEL", mrb_int_value(mrb, (mrb_int)GRAPPLE_PRESENT_PIXEL));
+    mrb_define_const(mrb, mod, "GRAPPLE_PRESENT_PIXEL_SNAP", mrb_int_value(mrb, (mrb_int)GRAPPLE_PRESENT_PIXEL_SNAP));
     mrb_define_const(mrb, mod, "GRAPPLE_AXIS_LEFT_X", mrb_int_value(mrb, (mrb_int)GRAPPLE_AXIS_LEFT_X));
     mrb_define_const(mrb, mod, "GRAPPLE_AXIS_LEFT_Y", mrb_int_value(mrb, (mrb_int)GRAPPLE_AXIS_LEFT_Y));
     mrb_define_const(mrb, mod, "GRAPPLE_AXIS_RIGHT_X", mrb_int_value(mrb, (mrb_int)GRAPPLE_AXIS_RIGHT_X));

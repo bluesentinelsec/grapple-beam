@@ -557,22 +557,34 @@ TEST_F(PresentationHarness, DesignSizeCanBeSetLaterAndReportsWhetherItWas)
 // window that is not an exact multiple still renders, frame after frame.
 TEST_F(PresentationHarness, PixelKeepsTheDesignViewAndSurvivesAnyWindow)
 {
-    for (const auto [w, h, scale] :
-         {std::tuple{3840, 2160, 2.0f}, std::tuple{2560, 1440, 1.3333f}, std::tuple{1000, 700, 0.5208f}})
+    for (const auto mode : {GRAPPLE_PRESENT_PIXEL, GRAPPLE_PRESENT_PIXEL_SNAP})
     {
-        Grapple_Engine *engine = Make(w, h, GRAPPLE_PRESENT_PIXEL);
-        ASSERT_NE(engine, nullptr) << SDL_GetError();
-        const SDL_FRect view = Grapple_EngineViewRect(engine);
-        EXPECT_FLOAT_EQ(view.w, 1920.0f) << w << "x" << h;
-        EXPECT_FLOAT_EQ(view.h, 1080.0f) << w << "x" << h;
-        EXPECT_NEAR(Grapple_EngineRenderScale(engine), scale, 0.01f) << w << "x" << h;
-        for (int i = 0; i < 3; ++i)
+        for (const auto [w, h, scale, whole] : {std::tuple{3840, 2160, 2.0f, 2},
+                                                std::tuple{2560, 1440, 1.3333f, 1},
+                                                std::tuple{1000, 700, 0.5208f, 1}})
         {
-            Grapple_EngineAdvance(engine, 16666667ull);
-            Grapple_EngineTick(engine);
+            Grapple_Engine *engine = Make(w, h, mode);
+            ASSERT_NE(engine, nullptr) << SDL_GetError();
+            const SDL_FRect view = Grapple_EngineViewRect(engine);
+            EXPECT_FLOAT_EQ(view.w, 1920.0f) << w << "x" << h;
+            EXPECT_FLOAT_EQ(view.h, 1080.0f) << w << "x" << h;
+            EXPECT_NEAR(Grapple_EngineRenderScale(engine), scale, 0.01f) << w << "x" << h;
+            // PIXEL draws the frame at the whole multiple; PIXEL_SNAP at 1.
+            EXPECT_EQ(Grapple_EngineFrameScale(engine),
+                      (mode == GRAPPLE_PRESENT_PIXEL) ? whole : 1)
+                << w << "x" << h;
+            for (int i = 0; i < 3; ++i)
+            {
+                Grapple_EngineAdvance(engine, 16666667ull);
+                Grapple_EngineTick(engine);
+            }
+            Grapple_DestroyEngine(engine);
         }
-        Grapple_DestroyEngine(engine);
     }
+    Grapple_Engine *plain = Make(1920, 1080, GRAPPLE_PRESENT_LETTERBOX);
+    ASSERT_NE(plain, nullptr);
+    EXPECT_EQ(Grapple_EngineFrameScale(plain), 0);
+    Grapple_DestroyEngine(plain);
 }
 
 // Overscan is the one mode that *crops*. The view and safe rects have to

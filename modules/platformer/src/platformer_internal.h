@@ -101,11 +101,12 @@ struct Grapple_Platformer
     Grapple_Camera camera;
     Grapple_PlatformerScroll scroll;
     bool camera_snapped;
-    float deadzone_w;    /* pixels the player may move before the view follows */
-    float follow_x;      /* the deadzone's anchor: where the view follows from */
-    float look_ahead;    /* pixels, in the facing direction */
-    float look;          /* where the look-ahead currently is, eased */
-    float vertical_band; /* pixels above and below the ground level before following */
+    float deadzone_w;             /* pixels the player may move before the view follows */
+    float follow_x;               /* the deadzone's anchor: where the view follows from */
+    float look_ahead;             /* pixels, in the facing direction */
+    float look;                   /* where the look-ahead currently is, eased */
+    float vertical_band;          /* pixels above and below the ground level before following */
+    float last_cam_x, last_cam_y; /* to tell a following camera from a still one */
 
     char scene_name[32];
     bool attached;

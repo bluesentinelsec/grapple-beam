@@ -93,18 +93,24 @@ typedef enum Grapple_EnginePresentation
     GRAPPLE_PRESENT_INTEGER,
     GRAPPLE_PRESENT_STRETCH, /**< fill, ignoring aspect ratio: distorts */
     GRAPPLE_PRESENT_NATIVE,  /**< no scaling: coordinates are pixels */
-    /** Pixel art's mode. The frame is drawn at exactly the design size into
-     *  an offscreen texture, enlarged by the largest whole number that
-     *  fits the window with point sampling, and the remainder — if the
-     *  window is not an exact multiple — is a linear stretch of that already
-     *  enlarged frame. Every art pixel is a crisp square block on a 1080p or
-     *  4K display that the design divides, and a faintly softened one, never
-     *  an uneven one, on a display it does not; the aspect is kept and
-     *  the rest is bars. Positions snap to design pixels, as they did on the
-     *  hardware this imitates. This is the pipeline Celeste, Shovel Knight
-     *  and the pixel-perfect cameras of Unity and Godot use. The view rect
-     *  is the design rect, as in LETTERBOX. */
-    GRAPPLE_PRESENT_PIXEL
+    /** Pixel art's mode. The frame is drawn into an offscreen texture that
+     *  is the design size times the largest whole number that fits the
+     *  window, with point sampling, so every art pixel is a crisp square
+     *  block of that many screen pixels — and, because the frame has that
+     *  many texels per design unit, sprites move and the camera scrolls by
+     *  *screen* pixels rather than by whole art pixels, which is what makes
+     *  motion at 1.6 art pixels a frame look smooth instead of steppy. If
+     *  the window is not an exact multiple the remainder is a linear
+     *  stretch of that frame by less than one art pixel: faintly softened,
+     *  never uneven. The aspect is kept and the rest is bars; the view rect
+     *  is the design rect, as in LETTERBOX. This is what Unity's Pixel
+     *  Perfect Camera does with pixel snapping off. */
+    GRAPPLE_PRESENT_PIXEL,
+    /** As PIXEL, but the frame is drawn at exactly the design size and
+     *  enlarged afterwards, so positions snap to whole art pixels as they
+     *  did on the hardware this imitates — the Celeste and Shovel Knight
+     *  look, steppy at low speeds by design. */
+    GRAPPLE_PRESENT_PIXEL_SNAP
 } Grapple_EnginePresentation;
 
 /**
@@ -435,6 +441,12 @@ extern bool Grapple_EngineSetDesignSize(Grapple_Engine *engine, int width, int h
 /** True when the game (or SetDesignSize) chose the design size, false while
  *  it is still the engine's 1920x1080 default. */
 extern bool Grapple_EngineDesignExplicit(Grapple_Engine *engine);
+
+/** Under PIXEL, the whole number of screen pixels per design unit the
+ *  offscreen frame is drawn at; 1 under PIXEL_SNAP; 0 under any other mode.
+ *  A camera that snaps its origin to multiples of 1/this keeps every edge
+ *  in the frame on a texel, so tile seams do not shimmer as it scrolls. */
+extern int Grapple_EngineFrameScale(Grapple_Engine *engine);
 
 /** The design-space rectangle actually visible in the window.
  *

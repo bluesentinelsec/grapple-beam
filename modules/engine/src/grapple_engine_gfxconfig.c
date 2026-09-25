@@ -112,7 +112,8 @@ static bool ParsePresentation(const char *text, Grapple_EnginePresentation *out)
                   {"integer", GRAPPLE_PRESENT_INTEGER},
                   {"stretch", GRAPPLE_PRESENT_STRETCH},
                   {"native", GRAPPLE_PRESENT_NATIVE},
-                  {"pixel", GRAPPLE_PRESENT_PIXEL}};
+                  {"pixel", GRAPPLE_PRESENT_PIXEL},
+                  {"pixel_snap", GRAPPLE_PRESENT_PIXEL_SNAP}};
     if (text == NULL || out == NULL)
     {
         return false;
@@ -144,6 +145,8 @@ static const char *PresentationName(Grapple_EnginePresentation mode)
         return "native";
     case GRAPPLE_PRESENT_PIXEL:
         return "pixel";
+    case GRAPPLE_PRESENT_PIXEL_SNAP:
+        return "pixel_snap";
     case GRAPPLE_PRESENT_LETTERBOX:
     default:
         return "letterbox";

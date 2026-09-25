@@ -25,7 +25,38 @@
 
 static bool IsPixel(const Grapple_Engine *engine)
 {
-    return engine->presentation == GRAPPLE_PRESENT_PIXEL;
+    return engine->presentation == GRAPPLE_PRESENT_PIXEL ||
+           engine->presentation == GRAPPLE_PRESENT_PIXEL_SNAP;
+}
+
+/* Screen pixels per design unit, as a whole number, for the window as it
+   is now: the largest that fits. */
+static int WholeScale(const Grapple_Engine *engine, int pixel_w, int pixel_h)
+{
+    const float scale = SDL_min((float)pixel_w / engine->view_width,
+                                (float)pixel_h / engine->view_height);
+    const int whole = (int)SDL_floorf(scale + SCALE_EPSILON);
+    return (whole < 1) ? 1 : whole;
+}
+
+int Grapple_EngineFrameScale(Grapple_Engine *engine)
+{
+    if (engine == NULL || engine->renderer == NULL || !IsPixel(engine))
+    {
+        return 0;
+    }
+    if (engine->presentation == GRAPPLE_PRESENT_PIXEL_SNAP)
+    {
+        return 1;
+    }
+    int pixel_w = 0;
+    int pixel_h = 0;
+    if (!SDL_GetRenderOutputSize(engine->renderer, &pixel_w, &pixel_h) || pixel_w <= 0 ||
+        pixel_h <= 0)
+    {
+        return 1;
+    }
+    return WholeScale(engine, pixel_w, pixel_h);
 }
 
 /* Render scale and PIXEL presentation need the offscreen frame.
@@ -64,13 +95,17 @@ static bool EnsureTexture(Grapple_Engine *engine, SDL_Texture **texture, int *ha
 
 static bool EnsureTarget(Grapple_Engine *engine, int width, int height)
 {
-    /* Under PIXEL the frame is enlarged by a whole number, and point
-       sampling is what keeps every art pixel a square block. Under render
-       scale it is linear, so a 0.75-scale frame does not come back blocky.
-       The game's own filter setting applies to its textures, not to this. */
+    /* Under PIXEL_SNAP the frame is enlarged by a whole number, and point
+       sampling is what keeps every art pixel a square block. Under PIXEL it
+       is already at that size and is only ever blitted 1:1 or stretched by
+       a fraction, and under render scale a 0.75-scale frame must not come
+       back blocky: linear for both. The game's own filter setting applies
+       to its textures, not to this. */
     return EnsureTexture(engine, &engine->frame_target, &engine->frame_target_w,
                          &engine->frame_target_h, width, height,
-                         IsPixel(engine) ? SDL_SCALEMODE_NEAREST : SDL_SCALEMODE_LINEAR);
+                         (engine->presentation == GRAPPLE_PRESENT_PIXEL_SNAP)
+                             ? SDL_SCALEMODE_NEAREST
+                             : SDL_SCALEMODE_LINEAR);
 }
 
 /* The window rectangle the design frame lands in: the largest aspect-true
@@ -78,14 +113,10 @@ static bool EnsureTarget(Grapple_Engine *engine, int width, int height)
 static void PixelFit(const Grapple_Engine *engine, int pixel_w, int pixel_h, SDL_FRect *dst,
                      int *whole)
 {
-    const float design_w = (float)engine->frame_target_w;
-    const float design_h = (float)engine->frame_target_h;
+    const float design_w = engine->view_width;
+    const float design_h = engine->view_height;
     const float scale = SDL_min((float)pixel_w / design_w, (float)pixel_h / design_h);
-    *whole = (int)SDL_floorf(scale + SCALE_EPSILON);
-    if (*whole < 1)
-    {
-        *whole = 1;
-    }
+    *whole = WholeScale(engine, pixel_w, pixel_h);
     dst->w = design_w * scale;
     dst->h = design_h * scale;
     dst->x = ((float)pixel_w - dst->w) * 0.5f;
@@ -114,17 +145,24 @@ static void PresentPixelFrame(Grapple_Engine *engine)
     SDL_SetRenderDrawColor(engine->renderer, 0, 0, 0, 255);
     SDL_RenderClear(engine->renderer);
 
-    const int enlarged_w = engine->frame_target_w * whole;
-    const int enlarged_h = engine->frame_target_h * whole;
+    const int enlarged_w = (int)(engine->view_width + 0.5f) * whole;
+    const int enlarged_h = (int)(engine->view_height + 0.5f) * whole;
     const bool exact = SDL_fabsf(dst.w - (float)enlarged_w) < 0.5f &&
                        SDL_fabsf(dst.h - (float)enlarged_h) < 0.5f;
     if (exact)
     {
-        /* A display the design divides: one point-sampled blit. */
+        /* A display the design divides: one blit, point sampled from a
+           design-size frame, 1:1 from a frame already at this size. */
         dst.x = SDL_floorf(dst.x);
         dst.y = SDL_floorf(dst.y);
         dst.w = (float)enlarged_w;
         dst.h = (float)enlarged_h;
+        SDL_RenderTexture(engine->renderer, engine->frame_target, NULL, &dst);
+        return;
+    }
+    if (engine->frame_target_w == enlarged_w && engine->frame_target_h == enlarged_h)
+    {
+        /* PIXEL: the frame is already the enlarged size, and is linear. */
         SDL_RenderTexture(engine->renderer, engine->frame_target, NULL, &dst);
         return;
     }
@@ -163,10 +201,14 @@ void Grapple_EngineBeginFrameTarget(Grapple_Engine *engine)
     int target_h;
     if (IsPixel(engine))
     {
-        /* The frame *is* the design: one texel per design unit. Render
-           scale does not apply — there is no resolution to trade. */
-        target_w = (int)(engine->view_width + 0.5f);
-        target_h = (int)(engine->view_height + 0.5f);
+        /* The frame is the design times a whole number of screen pixels
+           per unit — one under PIXEL_SNAP. Render scale does not apply:
+           there is no resolution to trade. */
+        const int whole = (engine->presentation == GRAPPLE_PRESENT_PIXEL_SNAP)
+                              ? 1
+                              : WholeScale(engine, pixel_w, pixel_h);
+        target_w = (int)(engine->view_width + 0.5f) * whole;
+        target_h = (int)(engine->view_height + 0.5f) * whole;
     }
     else
     {
@@ -197,12 +239,15 @@ void Grapple_EngineBeginFrameTarget(Grapple_Engine *engine)
     /* Re-apply the logical presentation against the target. Without this
        the game would draw into a 1440x810 texture at the scale worked out
        for a 1920x1080 window, and everything would be a quarter too big. */
+    /* Design units onto the target: 1:1 for a design-size frame, and an
+       exact whole-number letterbox — the target has that aspect, so no
+       bars — for a frame drawn at a multiple of it. */
+    const bool one_to_one = engine->presentation == GRAPPLE_PRESENT_NATIVE ||
+                            engine->presentation == GRAPPLE_PRESENT_PIXEL_SNAP;
     SDL_SetRenderLogicalPresentation(engine->renderer, (int)(engine->view_width + 0.5f),
                                      (int)(engine->view_height + 0.5f),
-                                     (engine->presentation == GRAPPLE_PRESENT_NATIVE ||
-                                      IsPixel(engine))
-                                         ? SDL_LOGICAL_PRESENTATION_DISABLED
-                                         : SDL_LOGICAL_PRESENTATION_LETTERBOX);
+                                     one_to_one ? SDL_LOGICAL_PRESENTATION_DISABLED
+                                                : SDL_LOGICAL_PRESENTATION_LETTERBOX);
 }
 
 void Grapple_EngineEndFrameTarget(Grapple_Engine *engine)

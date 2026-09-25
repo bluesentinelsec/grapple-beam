@@ -69,11 +69,19 @@ The display is the level's business, not the game's. A level frames the
 view at **24 by 13.5 tiles** — the framing of the modern Mario games, and
 at 16-pixel tiles a 384×216 frame that 1080p and 4K enlarge by exactly 5×
 and 10× — and presents it with the engine's [`pixel`
-mode](engine.md#presentation-modes): the whole frame is drawn once at that
-size and enlarged as one picture, by the largest whole number that fits the
-display, with any remainder a stretch of less than an art pixel. Nothing is
-scaled per sprite or per tile, so every art pixel is a square block on a
-laptop and on a 4K monitor alike, and a game never has to think about it.
+mode](engine.md#presentation-modes): the whole frame is drawn once, at that
+size times the whole number of screen pixels per art pixel the display
+allows, and put on the window as one picture, with any remainder a stretch
+of less than an art pixel. Every art pixel is a square block on a laptop
+and on a 4K monitor alike, sprites and the camera move by screen pixels so
+motion is smooth, and a game never has to think about it. The camera
+follows the player where it is *drawn*, between simulation steps, with a
+smoothing that settles at exactly the same distance whatever the frame
+times, and rounds to the frame's grid anchored on whatever should hold
+still on screen — the player while the camera follows, the world while it
+is clamped or the player is inside the deadzone — so the player never
+wobbles against the world and tile seams never shimmer. `presentation = "pixel_snap"` on
+the engine gives the whole-art-pixel motion of Celeste instead.
 
 To take over, say so at the engine: a `design` size changes the frame (the
 level leaves an explicit one alone), and any `presentation` other than the

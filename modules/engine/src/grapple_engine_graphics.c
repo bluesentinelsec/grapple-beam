@@ -140,7 +140,7 @@ void Grapple_GraphicsClamp(Grapple_GraphicsSettings *s)
     {
         s->window_mode = GRAPPLE_WINDOW_WINDOWED;
     }
-    if ((int)s->presentation < 0 || (int)s->presentation > (int)GRAPPLE_PRESENT_PIXEL)
+    if ((int)s->presentation < 0 || (int)s->presentation > (int)GRAPPLE_PRESENT_PIXEL_SNAP)
     {
         s->presentation = GRAPPLE_PRESENT_LETTERBOX;
     }
@@ -598,7 +598,8 @@ void Grapple_EngineApplyFilter(Grapple_Engine *engine)
         /* Integer scaling exists for pixel art, and pixel art wants point
            sampling — so AUTO follows the presentation mode. */
         mode = (engine->presentation == GRAPPLE_PRESENT_INTEGER ||
-                engine->presentation == GRAPPLE_PRESENT_PIXEL)
+                engine->presentation == GRAPPLE_PRESENT_PIXEL ||
+                engine->presentation == GRAPPLE_PRESENT_PIXEL_SNAP)
                    ? SDL_SCALEMODE_NEAREST
                    : SDL_SCALEMODE_LINEAR;
         break;

@@ -1672,6 +1672,7 @@ inline constexpr auto& EngineDisplayName = ::Grapple_EngineDisplayName;
 inline constexpr auto& EngineEmbedMedia = ::Grapple_EngineEmbedMedia;
 inline constexpr auto& EngineFps = ::Grapple_EngineFps;
 inline constexpr auto& EngineFrameCount = ::Grapple_EngineFrameCount;
+inline constexpr auto& EngineFrameScale = ::Grapple_EngineFrameScale;
 inline constexpr auto& EngineGraphics = ::Grapple_EngineGraphics;
 inline constexpr auto& EngineMaxFps = ::Grapple_EngineMaxFps;
 inline constexpr auto& EngineMediaPath = ::Grapple_EngineMediaPath;

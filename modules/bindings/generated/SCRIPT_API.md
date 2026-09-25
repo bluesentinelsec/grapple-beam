@@ -2644,6 +2644,7 @@ returns as an array.
 | `GrappleC.EngineEmbedMedia(data: string|nil, password: string|nil)` | nil |
 | `GrappleC.EngineFps(engine: Grapple_Engine)` | number |
 | `GrappleC.EngineFrameCount(engine: Grapple_Engine)` | integer |
+| `GrappleC.EngineFrameScale(engine: Grapple_Engine)` | integer |
 | `GrappleC.EngineMaxFps(engine: Grapple_Engine)` | integer |
 | `GrappleC.EngineMediaPath(engine: Grapple_Engine)` | string|nil |
 | `GrappleC.EngineMediaSource(engine: Grapple_Engine)` | integer |

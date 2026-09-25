@@ -201,7 +201,7 @@ static bool ParsePresentation(const char *name, Grapple_EnginePresentation *out)
         {"letterbox", GRAPPLE_PRESENT_LETTERBOX}, {"expand", GRAPPLE_PRESENT_EXPAND},
         {"overscan", GRAPPLE_PRESENT_OVERSCAN},   {"integer", GRAPPLE_PRESENT_INTEGER},
         {"stretch", GRAPPLE_PRESENT_STRETCH},     {"native", GRAPPLE_PRESENT_NATIVE},
-        {"pixel", GRAPPLE_PRESENT_PIXEL},
+        {"pixel", GRAPPLE_PRESENT_PIXEL},         {"pixel_snap", GRAPPLE_PRESENT_PIXEL_SNAP},
     };
     for (size_t i = 0; i < SDL_arraysize(kModes); ++i)
     {
@@ -274,7 +274,7 @@ static int LEngineNew(lua_State *L)
     {
         return luaL_error(L,
                           "unknown presentation '%s' (letterbox, expand, overscan, "
-                          "integer, stretch, native, pixel)",
+                          "integer, stretch, native, pixel, pixel_snap)",
                           presentation);
     }
 
