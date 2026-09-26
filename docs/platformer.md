@@ -101,10 +101,37 @@ when it says which:
 | `create_block{ x, y, width, height }` | a solid rectangle; a single block is the default 1×1 |
 | `create_stairs{ x, y, steps, direction }` | a staircase standing on row `y`, starting at column `x`; each column is one taller than the last going `"up"`, one shorter going `"down"` |
 | `create_platform{ x, y, width }` | a one-way ledge |
+| `create_slope{ x, y, width, height, direction }` | solid below a line across the rectangle, rising to the right (`"up"`) or falling (`"down"`); 4 wide by 2 tall is a gentle hill, 1 by 1 is 45° |
+| `create_loop{ x, y, radius }` | a Sonic loop-de-loop of that outer radius in tiles, one tile thick, in the square whose top-left cell is (x, y); its inner bottom is the top of row y + 2·radius − 1, so put the floor there |
 | `solid{ x, y, w, h }` | a generic solid rectangle in **pixels**, for anything else; returns an id for `remove_solid` |
 
 Each is sugar over `FillTiles`, and `set_tile`/`tile_at`/`fill` are there
-for the case the names do not cover.
+for the case the names do not cover. Slopes and loops paint cells with a
+pixel mask rather than filling them, so a cell can be half a hill;
+`tile_at` still calls such a cell solid, and `solid_at(x, y)` answers for a
+single pixel.
+
+### Slopes and loops
+
+Walking is done the way Sonic did it: on the ground the player is a point
+at the feet with a direction along the surface, and two sensors either
+side of the feet that look into the ground — whichever of the four
+directions the surface normal is closest to. The surface's angle comes
+from the two sensors, the speed is along the surface, and gravity pulls
+along it (`slope_gravity`), so a run uphill slows, a run downhill speeds
+up past `run_speed`, and a jump leaves along the surface's normal. The
+sprite is rotated by the angle about its feet, so it leans into a hill and
+turns all the way round a loop; `angle()` and `ground_speed()` report both.
+
+A loop is run in from one side fast enough, up the far wall, across the
+ceiling, down the near wall and out along the floor. Slower than
+`loop_min_speed` on a wall or the ceiling, the player falls off. A run
+down a slope is the way to get the speed: a plateau four tiles up and a
+ramp down is enough for a loop of radius three. The exit path crosses the
+entry path, which no single geometry can allow, so the loop puts its two
+bottom quarters on different collision layers and switches the player
+between them at the entrance, the top and the exit — Sonic's own trick.
+`layer()` reports which the player is on; nothing else changes it.
 
 ### Levels from Tiled
 
@@ -190,6 +217,9 @@ is a key:
 | `wall_jump_x`, `wall_jump_y` | 96, 240 px/s | the kick off a wall, as high as a ground jump; a `wall_jump_y` of 0 turns wall jumping off |
 | `wall_coyote_time`, `wall_jump_lock` | 0.10, 0.05 s | how long after leaving a wall a jump still kicks, and how long the stick is ignored after one |
 | `wall_return_accel`, `wall_return_time` | 1200 px/s², 0.6 s | how hard, and for how long after a kick, steering back toward the wall just left turns the player around |
+| `slope_gravity` | 450 px/s² | gravity's pull along a surface: slows a run up, speeds a run down |
+| `loop_min_speed` | 96 px/s | slower than this on a wall or a ceiling and the player falls off |
+| `momentum_decel` | 150 px/s² | how quickly speed gained on a slope bleeds off on the flat; gentle, so a ramp's momentum carries a few tiles into a loop |
 
 ```lua
 local mario = level:create_player{ x = 3, y = 12, run_speed = 200, jump_height = 80 }
@@ -219,7 +249,9 @@ end)
 
 `position` is the feet in pixels, `velocity` in pixels per second,
 `grounded` and `facing` (−1 or +1) are the obvious things, and `wall` is
-−1 or +1 while pressed against a wall in the air, else 0. A player that
+−1 or +1 while pressed against a wall in the air, else 0. `angle` is the
+surface's angle in degrees (0 flat, negative rising to the right, ±180 on
+a ceiling) and `ground_speed` the speed along it, both 0 in the air. A player that
 falls out of the bottom of the level is put back where it spawned in the
 same step and reports `fell`; a game that wants a death animation pauses
 the player there and takes over. `respawn(x, y)` and `respawn()` teleport,
@@ -323,7 +355,6 @@ scripting languages for anything the objects do not spell.
 
 ## What is next
 
-Ducking, sliding, ladders, slopes and loops are the next states
-of the same machine and the same collision pass — slopes as height-mask
-cells, the way Super Mario World and Sonic did them, so the mover keeps its
-shape. Animation clips from Aseprite exports plug into `state_changed`.
+Ducking, sliding and ladders are the next states
+of the same machine and the same collision pass. Animation clips from
+Aseprite exports plug into `state_changed`.

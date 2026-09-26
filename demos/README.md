@@ -15,7 +15,8 @@ through the library and engine loop. It also demonstrates offline WAV export.
 ## Platformer
 
 The opening stretch of a Super Mario Bros. style level — floor, blocks, walls,
-stairs, pits — and a character that runs and jumps around it, on
+stairs, pits, hills, and near the end a ramp into a Sonic loop-de-loop — and a
+character that runs and jumps around it, on
 [`Grapple::Platformer`](../docs/platformer.md). Everything on screen is a
 filled rectangle; the shapes are where the art goes. Same game four times:
 

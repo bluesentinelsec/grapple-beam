@@ -25,6 +25,7 @@ static const char *const kTuningKeys[TUNE_COUNT] = {
     "coyote_time",    "jump_buffer",       "wall_slide_speed",
     "wall_jump_x",    "wall_jump_y",       "wall_coyote_time",
     "wall_jump_lock", "wall_return_accel", "wall_return_time",
+    "slope_gravity",  "loop_min_speed",    "momentum_decel",
 };
 
 /* Defaults in *tiles* per second (and per second squared), so a level with
@@ -54,6 +55,13 @@ static const float kTuningDefaultsInTiles[TUNE_COUNT] = {
        lets a single wall be climbed kick after kick — so a player holding
        into the wall is back on it while still above where they kicked. */
     [TUNE_WALL_RETURN_ACCEL] = 75.0f,
+    /* Slopes and loops: the pull along a surface, and how slow a run up a
+       wall or across a ceiling can get before falling off. */
+    [TUNE_SLOPE_GRAVITY] = 28.125f,
+    [TUNE_LOOP_MIN_SPEED] = 6.0f,
+    /* How quickly speed gained on a slope bleeds off on the flat: gently,
+       so a ramp's momentum carries into a loop a few tiles on. */
+    [TUNE_MOMENTUM_DECEL] = 9.375f,
 };
 
 static const char *const kStateNames[GRAPPLE_PLAYER_STATE_COUNT] = {
@@ -98,6 +106,7 @@ void PlatformerPlayerInit(Grapple_Platformer *level)
     p->color = (SDL_FColor){0.90f, 0.25f, 0.20f, 1.0f};
     p->facing = 1;
     p->state = GRAPPLE_PLAYER_IDLE;
+    p->layer = PLATFORMER_LAYER_A;
 }
 
 /* --- the actor -------------------------------------------------------------- */
@@ -176,188 +185,305 @@ bool PlatformerPlayerSpawnActor(Grapple_Platformer *level)
     return true;
 }
 
-/* --- collision -------------------------------------------------------------- */
+/* --- collision ----------------------------------------------------------------
+ *
+ * Everything below tests the world pixel by pixel through
+ * PlatformerSolidPixel, which is what lets a cell be a slope or a piece of a
+ * loop as easily as a block. Movement is in steps of at most one pixel, so
+ * nothing is ever inside anything: a wall stops the player at its face, a
+ * floor at its top, a slope where the line is.
+ */
 
-static int FloorDiv(float v, float size)
+#define NO_GROUND (-1.0e9f)
+
+static bool Solid(Grapple_Platformer *level, const PlatformerPlayer *p, float x, float y)
 {
-    return (int)SDL_floorf(v / size);
+    return PlatformerSolidPixel(level, (int)SDL_floorf(x), (int)SDL_floorf(y), p->layer);
 }
 
-static bool SolidOverlaps(const Grapple_Platformer *level, float left, float top, float right,
-                          float bottom, SDL_FRect *hit)
+static bool InsideLevel(const Grapple_Platformer *level, float x)
 {
-    for (int i = 0; i < level->solid_count; ++i)
-    {
-        if (!level->solids[i].alive)
-        {
-            continue;
-        }
-        const SDL_FRect r = level->solids[i].rect;
-        if (left < r.x + r.w - EDGE_EPSILON && right > r.x + EDGE_EPSILON &&
-            top < r.y + r.h - EDGE_EPSILON && bottom > r.y + EDGE_EPSILON)
-        {
-            *hit = r;
-            return true;
-        }
-    }
-    return false;
+    return x >= 0.0f && x < (float)(level->width * level->tile);
 }
 
-/* Move horizontally by dx, stopping at the first solid the leading edge
-   would enter. Returns true if something was hit. */
+/* Airborne: move horizontally by dx, one pixel at a time, stopping at the
+   first solid the leading column of the box would enter. */
 static bool MoveX(Grapple_Platformer *level, PlatformerPlayer *p, float dx)
 {
     if (dx == 0.0f)
     {
         return false;
     }
-    const float size = (float)level->tile;
+    const float s = (dx > 0.0f) ? 1.0f : -1.0f;
     const float half = p->width * 0.5f;
-    const float top = p->y - p->height;
-    const float bottom = p->y;
-    const int r0 = FloorDiv(top + EDGE_EPSILON, size);
-    const int r1 = FloorDiv(bottom - EDGE_EPSILON, size);
-
-    float x = p->x + dx;
-    bool hit = false;
-    bool real_wall = false; /* a cell or solid, not the edge of the level */
-    if (dx > 0.0f)
+    float remaining = SDL_fabsf(dx);
+    while (remaining > 0.0f)
     {
-        const int col = FloorDiv(x + half - EDGE_EPSILON, size);
-        for (int r = r0; r <= r1; ++r)
+        const float piece = SDL_min(1.0f, remaining);
+        const float nx = p->x + s * piece;
+        const float edge = (s > 0.0f) ? nx + half - EDGE_EPSILON : nx - half + EDGE_EPSILON;
+        const float top = p->y - p->height + EDGE_EPSILON;
+        const float bottom = p->y - EDGE_EPSILON;
+        bool blocked = false;
+        for (float yy = top; !blocked; yy += 1.0f)
         {
-            if (PlatformerCellBlocks(level, col, r, false, bottom))
+            if (yy > bottom)
             {
-                x = (float)col * size - half;
-                hit = true;
-                real_wall = col < level->width;
+                yy = bottom;
+            }
+            blocked = Solid(level, p, edge, yy);
+            if (yy >= bottom)
+            {
                 break;
             }
         }
-    }
-    else
-    {
-        const int col = FloorDiv(x - half + EDGE_EPSILON, size);
-        for (int r = r0; r <= r1; ++r)
+        if (blocked)
         {
-            if (PlatformerCellBlocks(level, col, r, false, bottom))
+            const float face = SDL_floorf(edge);
+            p->x = (s > 0.0f) ? face - half : face + 1.0f + half;
+            if (InsideLevel(level, edge))
             {
-                x = (float)(col + 1) * size + half;
-                hit = true;
-                real_wall = col >= 0;
-                break;
+                /* The invisible wall at the edge of the level stops the
+                   player but is nothing to kick off. */
+                p->wall = (s > 0.0f) ? 1 : -1;
             }
+            return true;
         }
+        p->x = nx;
+        remaining -= piece;
     }
-    SDL_FRect solid;
-    if (SolidOverlaps(level, x - half, top, x + half, bottom, &solid))
-    {
-        x = (dx > 0.0f) ? solid.x - half : solid.x + solid.w + half;
-        hit = true;
-        real_wall = true;
-    }
-    p->x = x;
-    if (real_wall)
-    {
-        /* The invisible wall at the edge of the level stops the player but
-           is nothing to kick off: a wall jump off empty air reads as a bug. */
-        p->wall = (dx > 0.0f) ? 1 : -1;
-    }
-    return hit;
+    return false;
 }
 
-/* Move vertically by dy. Sets grounded when landing, bumped when hitting a
-   ceiling. Returns true if something was hit. */
+/* Airborne: move vertically by dy, one pixel at a time. Landing sets
+   grounded; hitting a ceiling sets bumped. The feet's three columns are
+   what land, so a slope catches the corner and the sensors sort it out. */
 static bool MoveY(Grapple_Platformer *level, PlatformerPlayer *p, float dy)
 {
     if (dy == 0.0f)
     {
         return false;
     }
-    const float size = (float)level->tile;
+    const float s = (dy > 0.0f) ? 1.0f : -1.0f;
     const float half = p->width * 0.5f;
-    const float left = p->x - half;
-    const float right = p->x + half;
-    const int c0 = FloorDiv(left + EDGE_EPSILON, size);
-    const int c1 = FloorDiv(right - EDGE_EPSILON, size);
+    const float columns[3] = {p->x - half + EDGE_EPSILON, p->x, p->x + half - EDGE_EPSILON};
     const float old_bottom = p->y;
-
-    float y = p->y + dy;
-    bool hit = false;
-    if (dy > 0.0f)
+    float remaining = SDL_fabsf(dy);
+    while (remaining > 0.0f)
     {
-        const int row = FloorDiv(y - EDGE_EPSILON, size);
-        for (int c = c0; c <= c1; ++c)
+        const float piece = SDL_min(1.0f, remaining);
+        const float ny = p->y + s * piece;
+        const float edge = (s > 0.0f) ? ny - EDGE_EPSILON : ny - p->height + EDGE_EPSILON;
+        bool blocked = false;
+        int column = 1;
+        for (int i = 0; i < 3 && !blocked; ++i)
         {
-            if (PlatformerCellBlocks(level, c, row, true, old_bottom))
+            blocked = Solid(level, p, columns[i], edge);
+            if (!blocked && s > 0.0f)
             {
-                y = (float)row * size;
-                hit = true;
-                p->grounded = true;
-                break;
+                blocked = PlatformerLedgePixel(level, (int)SDL_floorf(columns[i]),
+                                               (int)SDL_floorf(edge), old_bottom);
             }
+            column = i;
         }
+        if (blocked)
+        {
+            const float face = SDL_floorf(edge);
+            if (s > 0.0f)
+            {
+                p->y = face;
+                p->grounded = true;
+                p->land_column = column;
+            }
+            else
+            {
+                p->y = face + 1.0f + p->height;
+                p->bumped = true;
+            }
+            return true;
+        }
+        p->y = ny;
+        remaining -= piece;
+    }
+    return false;
+}
+
+/* --- ground sensors -----------------------------------------------------------
+ *
+ * On the ground the player is a point — the feet — with a direction along
+ * the surface, and two sensors either side of the feet that look "down" into
+ * the ground, where down is whichever of the four directions the surface
+ * normal is closest to. That is Sonic's model, and it is what lets the same
+ * code walk a floor, climb a slope, and run up a wall and across a ceiling.
+ */
+
+/* The direction into the ground for the current angle, and which axis the
+   sensors spread along (the other one). */
+static void GroundDirection(float angle, int *dx, int *dy)
+{
+    const float deg = angle * 180.0f / SDL_PI_F;
+    if (deg > -45.0f && deg <= 45.0f)
+    {
+        *dx = 0;
+        *dy = 1; /* floor */
+    }
+    else if (deg > -135.0f && deg <= -45.0f)
+    {
+        *dx = 1;
+        *dy = 0; /* running up a wall on the right */
+    }
+    else if (deg > 45.0f && deg <= 135.0f)
+    {
+        *dx = -1;
+        *dy = 0; /* running down a wall on the left */
     }
     else
     {
-        const int row = FloorDiv(y - p->height + EDGE_EPSILON, size);
-        for (int c = c0; c <= c1; ++c)
+        *dx = 0;
+        *dy = -1; /* a ceiling */
+    }
+}
+
+/* Look along (dx, dy) from the boundary `f` (the feet's coordinate on that
+   axis) at the sensor's position `c` on the other axis. Returns where the
+   surface boundary is on the probe axis — below the feet if the ground is
+   further away, above if the feet are inside it — or NO_GROUND. */
+static float Probe(Grapple_Platformer *level, const PlatformerPlayer *p, int dx, int dy, float f,
+                   float c, int max_in, int max_out)
+{
+    const int sign = (dx + dy > 0) ? 1 : -1;
+    /* The pixel just ahead of the boundary. */
+    const int first = (sign > 0) ? (int)SDL_floorf(f) : (int)SDL_ceilf(f) - 1;
+    const int cc = (int)SDL_floorf(c);
+    const bool vertical = dy != 0;
+    /* Looking down, a ledge's top row is ground too — from above it. */
+#define PIXEL_SOLID(k)                                                                             \
+    (vertical ? (PlatformerSolidPixel(level, cc, first + (k) * sign, p->layer) ||                  \
+                 (sign > 0 && (k) >= 0 && PlatformerLedgePixel(level, cc, first + (k) * sign, f))) \
+              : PlatformerSolidPixel(level, first + (k) * sign, cc, p->layer))
+    if (PIXEL_SOLID(0))
+    {
+        /* Inside the ground: back out until a free pixel, then stand on
+           the last solid one's outer edge. */
+        for (int k = 1; k <= max_out; ++k)
         {
-            if (PlatformerCellBlocks(level, c, row, false, old_bottom))
+            if (!PIXEL_SOLID(-k))
             {
-                y = (float)(row + 1) * size + p->height;
-                hit = true;
-                p->bumped = true;
-                break;
+                const int last_solid = first - (k - 1) * sign;
+                return (sign > 0) ? (float)last_solid : (float)(last_solid + 1);
             }
         }
+        return NO_GROUND;
     }
-    SDL_FRect solid;
-    if (SolidOverlaps(level, left, y - p->height, right, y, &solid))
+    for (int k = 1; k <= max_in; ++k)
     {
-        if (dy > 0.0f)
+        if (PIXEL_SOLID(k))
         {
-            y = solid.y;
-            p->grounded = true;
+            const int hit = first + k * sign;
+            return (sign > 0) ? (float)hit : (float)(hit + 1);
+        }
+    }
+#undef PIXEL_SOLID
+    return NO_GROUND;
+}
+
+static float WrapAngle(float a)
+{
+    while (a > SDL_PI_F)
+    {
+        a -= 2.0f * SDL_PI_F;
+    }
+    while (a <= -SDL_PI_F)
+    {
+        a += 2.0f * SDL_PI_F;
+    }
+    return a;
+}
+
+/* Find the ground under the feet for the current angle, put the feet on it,
+   and take the surface's angle from the two side sensors. The feet stand
+   where the centre sensor finds ground — on a tight concave curve like the
+   inside of a loop the side sensors find the surface much nearer or
+   further than the centre does, and standing on either drags the feet off
+   the curve — and a side sensor holds the player up only at a ledge, where
+   the centre finds nothing. False if there is no ground within reach,
+   which is how walking off a ledge becomes falling. */
+static bool FindGround(Grapple_Platformer *level, PlatformerPlayer *p, int max_in)
+{
+    int dx;
+    int dy;
+    GroundDirection(p->angle, &dx, &dy);
+    const bool vertical = dy != 0;
+    const float spread = SDL_max(1.0f, SDL_min(4.0f, p->width * 0.5f - 1.0f));
+    const float f = vertical ? p->y : p->x; /* the feet, on the probe axis */
+    const float c = vertical ? p->x : p->y; /* the feet, on the other axis */
+    const int max_out = level->tile * 2;
+    const float fa = Probe(level, p, dx, dy, f, c - spread, max_in, max_out);
+    const float fm = Probe(level, p, dx, dy, f, c, max_in, max_out);
+    const float fb = Probe(level, p, dx, dy, f, c + spread, max_in, max_out);
+    if (fa == NO_GROUND && fm == NO_GROUND && fb == NO_GROUND)
+    {
+        return false;
+    }
+
+    float on = fm;
+    if (on == NO_GROUND)
+    {
+        /* Only an edge under one side: stand on it. */
+        const bool toward_plus = (dx + dy) > 0;
+        if (fa == NO_GROUND)
+        {
+            on = fb;
+        }
+        else if (fb == NO_GROUND)
+        {
+            on = fa;
         }
         else
         {
-            y = solid.y + solid.h + p->height;
-            p->bumped = true;
+            on = toward_plus ? SDL_min(fa, fb) : SDL_max(fa, fb);
         }
-        hit = true;
     }
-    p->y = y;
-    return hit;
-}
+    if (vertical)
+    {
+        p->y = on;
+    }
+    else
+    {
+        p->x = on;
+    }
 
-/* Sweep in pieces no larger than half a tile, so a fast fall cannot pass
-   through a floor between two positions. */
-static void Sweep(Grapple_Platformer *level, PlatformerPlayer *p, float dx, float dy)
-{
-    const float limit = (float)level->tile * 0.5f;
-    const float longest = SDL_max(SDL_fabsf(dx), SDL_fabsf(dy));
-    int pieces = (int)SDL_ceilf(longest / limit);
-    if (pieces < 1)
+    /* The angle, from the line between two surface points — the two sides
+       if both found ground, else the centre and the side that did — kept
+       pointing the way we were already going. */
+    float ca = c - spread;
+    float cb = c + spread;
+    float sa = fa;
+    float sb = fb;
+    if (sa == NO_GROUND && fm != NO_GROUND)
     {
-        pieces = 1;
+        ca = c;
+        sa = fm;
     }
-    const float px = dx / (float)pieces;
-    const float py = dy / (float)pieces;
-    bool stop_x = false;
-    bool stop_y = false;
-    for (int i = 0; i < pieces; ++i)
+    if (sb == NO_GROUND && fm != NO_GROUND)
     {
-        if (!stop_x && MoveX(level, p, px))
-        {
-            stop_x = true;
-            p->vx = 0.0f;
-        }
-        if (!stop_y && MoveY(level, p, py))
-        {
-            stop_y = true;
-        }
+        cb = c;
+        sb = fm;
     }
+    if (sa != NO_GROUND && sb != NO_GROUND && ca != cb)
+    {
+        const float ax = vertical ? ca : sa;
+        const float ay = vertical ? sa : ca;
+        const float bx = vertical ? cb : sb;
+        const float by = vertical ? sb : cb;
+        float angle = SDL_atan2f(by - ay, bx - ax);
+        if (SDL_cosf(angle) * SDL_cosf(p->angle) + SDL_sinf(angle) * SDL_sinf(p->angle) < 0.0f)
+        {
+            angle = WrapAngle(angle + SDL_PI_F);
+        }
+        p->angle = angle;
+    }
+    return true;
 }
 
 /* --- the step --------------------------------------------------------------- */
@@ -412,6 +538,133 @@ static void ReadInput(Grapple_Platformer *level, float *move, bool *jump, bool *
     *run = Grapple_ActionDown(level->engine, level->actions, 0, "run");
 }
 
+/* Off the ground: the speed along the surface becomes a velocity. */
+static void LeaveGround(PlatformerPlayer *p)
+{
+    p->vx = SDL_cosf(p->angle) * p->gsp;
+    p->vy = SDL_sinf(p->angle) * p->gsp;
+    p->grounded = false;
+    p->gsp = 0.0f;
+    p->angle = 0.0f;
+}
+
+/* Onto the ground: the velocity becomes a speed along the surface. */
+static void LandOn(PlatformerPlayer *p)
+{
+    p->gsp = p->vx * SDL_cosf(p->angle) + p->vy * SDL_sinf(p->angle);
+    p->grounded = true;
+    p->rising = false;
+}
+
+/* A step on the ground: accelerate along the surface, feel the slope, move
+   along the tangent a pixel at a time keeping the feet on the ground. */
+static void GroundStep(Grapple_Platformer *level, PlatformerPlayer *p, float step, float move,
+                       bool run_down)
+{
+    const float *t = p->tuning;
+    const float top_speed = run_down ? t[TUNE_RUN_SPEED] : t[TUNE_WALK_SPEED];
+
+    /* Gravity's pull along the surface: uphill slows, downhill speeds, and
+       downhill is not capped, which is how a loop gets entered fast. */
+    p->gsp += t[TUNE_SLOPE_GRAVITY] * SDL_sinf(p->angle) * step;
+
+    /* Traction: the feet push only as hard as the ground pushes back, so
+       acceleration, braking and skidding fade with the slope and are gone
+       on a wall or a ceiling — which is what makes a run up a loop's wall
+       a climb that slows, not a run that keeps its pace. */
+    const float traction = SDL_max(0.0f, SDL_cosf(p->angle));
+
+    if (move != 0.0f)
+    {
+        const bool reversing = p->gsp != 0.0f && (move > 0.0f) != (p->gsp > 0.0f);
+        if (reversing)
+        {
+            p->gsp = Approach(p->gsp, move * top_speed, t[TUNE_SKID_DECEL] * traction * step);
+        }
+        else if (SDL_fabsf(p->gsp) < top_speed)
+        {
+            p->gsp = Approach(p->gsp, move * top_speed, t[TUNE_ACCEL] * traction * step);
+        }
+        else if (SDL_sinf(p->angle) * move <= 0.0f)
+        {
+            /* Faster than the run, thanks to a slope, and no longer going
+               down one: ease back to the run rather than keep the speed
+               forever — Mario's rule, not Sonic's. Downhill it is kept. */
+            p->gsp = Approach(p->gsp, move * top_speed, t[TUNE_MOMENTUM_DECEL] * traction * step);
+        }
+    }
+    else
+    {
+        p->gsp = Approach(p->gsp, 0.0f, t[TUNE_DECEL] * traction * step);
+    }
+    if (move > 0.05f)
+    {
+        p->facing = 1;
+    }
+    else if (move < -0.05f)
+    {
+        p->facing = -1;
+    }
+
+    /* Too slow for a wall or a ceiling: fall off it. */
+    const float normal_y = -SDL_cosf(p->angle);
+    if (normal_y > -0.5f && SDL_fabsf(p->gsp) < t[TUNE_LOOP_MIN_SPEED])
+    {
+        LeaveGround(p);
+        return;
+    }
+
+    const float distance = p->gsp * step;
+    const float s = (distance >= 0.0f) ? 1.0f : -1.0f;
+    float remaining = SDL_fabsf(distance);
+    const float half = p->width * 0.5f;
+    while (remaining > 0.0f)
+    {
+        const float tx = SDL_cosf(p->angle);
+        const float ty = SDL_sinf(p->angle);
+        const float nx = SDL_sinf(p->angle);
+        const float ny = -SDL_cosf(p->angle);
+        /* Something ahead at mid height stops the run: a wall, a step. On
+           flat ground the player is put flush against it. */
+        const float piece = SDL_min(1.0f, remaining);
+        const float qx = p->x + tx * s * (half + piece) + nx * p->height * 0.5f;
+        const float qy = p->y + ty * s * (half + piece) + ny * p->height * 0.5f;
+        if (Solid(level, p, qx, qy))
+        {
+            if (SDL_fabsf(ty) < 0.01f)
+            {
+                const float face = SDL_floorf(qx);
+                const float flush = (s > 0.0f) ? face - half : face + 1.0f + half;
+                if ((s > 0.0f && flush >= p->x) || (s < 0.0f && flush <= p->x))
+                {
+                    p->x = flush;
+                }
+            }
+            p->gsp = 0.0f;
+            break;
+        }
+        p->x += tx * s * piece;
+        p->y += ty * s * piece;
+        remaining -= piece;
+        if (!FindGround(level, p, level->tile))
+        {
+            LeaveGround(p);
+            return;
+        }
+    }
+    if (remaining <= 0.0f && distance == 0.0f)
+    {
+        /* Standing still: the ground can still go away underneath. */
+        if (!FindGround(level, p, 2))
+        {
+            LeaveGround(p);
+            return;
+        }
+    }
+    p->vx = SDL_cosf(p->angle) * p->gsp;
+    p->vy = SDL_sinf(p->angle) * p->gsp;
+}
+
 void PlatformerPlayerStep(Grapple_Platformer *level, float step)
 {
     PlatformerPlayer *p = &level->player;
@@ -430,63 +683,13 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
     ReadInput(level, &move, &jump_down, &run_down);
     const bool jump_pressed = jump_down && !p->jump_was_down;
     p->jump_was_down = jump_down;
+    const float x0 = p->x;
+    const float y0 = p->y;
+    const bool was_grounded = p->grounded;
 
-    /* Horizontal: accelerate toward the speed the stick and the run button
-       ask for. Turning around on the ground uses the skid rate, which is
-       what makes a reversal feel decisive rather than icy. */
-    const float top_speed = run_down ? t[TUNE_RUN_SPEED] : t[TUNE_WALK_SPEED];
-    const float target = move * top_speed;
-    float rate;
-    if (p->wall_lock > 0.0f)
-    {
-        /* Just kicked off a wall: the stick is ignored for a moment, or a
-           player still holding toward the wall would cancel the kick
-           before it carried them anywhere — the Mega Man X rule. */
-        p->wall_lock = SDL_max(0.0f, p->wall_lock - step);
-        rate = 0.0f;
-    }
-    else if (p->grounded)
-    {
-        if (move != 0.0f && p->vx != 0.0f && (move > 0.0f) != (p->vx > 0.0f))
-        {
-            rate = t[TUNE_SKID_DECEL];
-        }
-        else
-        {
-            rate = (move != 0.0f) ? t[TUNE_ACCEL] : t[TUNE_DECEL];
-        }
-    }
-    else
-    {
-        rate = (move != 0.0f) ? t[TUNE_AIR_ACCEL] : t[TUNE_AIR_DECEL];
-        if (p->wall_return > 0.0f)
-        {
-            /* Just kicked off a wall and steering back toward it: turn
-               around hard, so the same wall can be caught again higher up. */
-            p->wall_return = SDL_max(0.0f, p->wall_return - step);
-            if (move * (float)p->last_wall > 0.3f)
-            {
-                rate = t[TUNE_WALL_RETURN_ACCEL];
-            }
-        }
-    }
-    p->vx = Approach(p->vx, target, rate * step);
-    if (p->wall_lock <= 0.0f)
-    {
-        if (move > 0.05f)
-        {
-            p->facing = 1;
-        }
-        else if (move < -0.05f)
-        {
-            p->facing = -1;
-        }
-    }
-
-    /* Jumping. Coyote time lets a jump pressed just after walking off a
-       ledge still happen; the buffer lets one pressed just before landing
-       happen on landing. Both are the difference between "the game ate my
-       jump" and a controller that feels read. */
+    /* Jump timers. Coyote time lets a jump pressed just after walking off
+       a ledge still happen; the buffer lets one pressed just before landing
+       happen on landing. */
     if (p->grounded)
     {
         p->coyote = t[TUNE_COYOTE_TIME];
@@ -503,14 +706,23 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
     {
         p->buffer = SDL_max(0.0f, p->buffer - step);
     }
+
     if (p->buffer > 0.0f && (p->grounded || p->coyote > 0.0f))
     {
-        /* A running jump goes higher: the bonus scales with how much of the
-           run speed the player has, so a standing jump gets none of it. */
-        const float run_fraction =
-            (t[TUNE_RUN_SPEED] > 0.0f) ? SDL_min(1.0f, SDL_fabsf(p->vx) / t[TUNE_RUN_SPEED]) : 0.0f;
-        p->vy = -(t[TUNE_JUMP_SPEED] + t[TUNE_RUN_JUMP_BONUS] * run_fraction);
+        /* Off the surface along its normal, keeping the speed along it: on
+           flat ground that is straight up; on a slope, away from the slope;
+           inside a loop, toward its middle. A running jump goes higher. */
+        const float run_fraction = (t[TUNE_RUN_SPEED] > 0.0f)
+                                       ? SDL_min(1.0f, SDL_fabsf(p->gsp) / t[TUNE_RUN_SPEED])
+                                       : 0.0f;
+        const float take_off = t[TUNE_JUMP_SPEED] + t[TUNE_RUN_JUMP_BONUS] * run_fraction;
+        const float angle = p->grounded ? p->angle : 0.0f;
+        const float along = p->grounded ? p->gsp : p->vx;
+        p->vx = SDL_sinf(angle) * take_off + SDL_cosf(angle) * along;
+        p->vy = -SDL_cosf(angle) * take_off + SDL_sinf(angle) * along;
         p->grounded = false;
+        p->gsp = 0.0f;
+        p->angle = 0.0f;
         p->rising = true;
         p->coyote = 0.0f;
         p->buffer = 0.0f;
@@ -518,9 +730,7 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
     }
     else if (p->buffer > 0.0f && p->wall_coyote > 0.0f && t[TUNE_WALL_JUMP_Y] > 0.0f)
     {
-        /* Off the wall: away from it and up, facing the way we go. Holds for
-           a moment after leaving the wall, the same forgiveness a ledge
-           gets, so a jump pressed as the slide ends still kicks. */
+        /* Off the wall: away from it and up, facing the way we go. */
         p->vx = (float)-p->last_wall * t[TUNE_WALL_JUMP_X];
         p->vy = -t[TUNE_WALL_JUMP_Y];
         p->facing = -p->last_wall;
@@ -532,32 +742,116 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
         p->jumped = true;
     }
 
-    /* Gravity: light while the button is held on the way up, heavy
-       otherwise. Letting go early ends the light phase, which is the whole
-       of the variable-height jump. */
-    if (!jump_down || p->vy >= 0.0f)
+    bool sliding = false;
+    if (p->grounded)
     {
-        p->rising = false;
+        p->wall = 0;
+        p->wall_coyote = 0.0f;
+        p->wall_return = 0.0f;
+        GroundStep(level, p, step, move, run_down);
     }
-    const float gravity = p->rising ? t[TUNE_JUMP_GRAVITY] : t[TUNE_FALL_GRAVITY];
-    p->vy = SDL_min(p->vy + gravity * step, t[TUNE_MAX_FALL]);
+    else
+    {
+        /* In the air: steer, fall, and sweep against the world. */
+        const float top_speed = run_down ? t[TUNE_RUN_SPEED] : t[TUNE_WALK_SPEED];
+        const float target = move * top_speed;
+        float rate;
+        if (p->wall_lock > 0.0f)
+        {
+            /* Just kicked off a wall: the stick is ignored for a moment. */
+            p->wall_lock = SDL_max(0.0f, p->wall_lock - step);
+            rate = 0.0f;
+        }
+        else
+        {
+            rate = (move != 0.0f) ? t[TUNE_AIR_ACCEL] : t[TUNE_AIR_DECEL];
+            if (p->wall_return > 0.0f)
+            {
+                p->wall_return = SDL_max(0.0f, p->wall_return - step);
+                if (move * (float)p->last_wall > 0.3f)
+                {
+                    rate = t[TUNE_WALL_RETURN_ACCEL];
+                }
+            }
+        }
+        /* Steer toward the stick's speed, but never slow a faster launch. */
+        if (SDL_fabsf(p->vx) <= top_speed || (move != 0.0f && (move > 0.0f) != (p->vx > 0.0f)))
+        {
+            p->vx = Approach(p->vx, target, rate * step);
+        }
+        else if (move == 0.0f)
+        {
+            p->vx = Approach(p->vx, 0.0f, rate * step);
+        }
+        if (p->wall_lock <= 0.0f)
+        {
+            if (move > 0.05f)
+            {
+                p->facing = 1;
+            }
+            else if (move < -0.05f)
+            {
+                p->facing = -1;
+            }
+        }
 
-    /* Move and collide, x then y. Gravity is applied every step and the
-       floor cancels it, so grounded is decided fresh each step by whether
-       the downward move was stopped. */
-    const bool was_grounded = p->grounded;
-    p->grounded = false;
-    p->wall = 0;
-    Sweep(level, p, p->vx * step, p->vy * step);
-    if (p->grounded && p->vy > 0.0f)
-    {
-        p->vy = 0.0f;
+        /* Gravity: light while the button is held on the way up, heavy
+           otherwise — the whole of the variable-height jump. */
+        if (!jump_down || p->vy >= 0.0f)
+        {
+            p->rising = false;
+        }
+        const float gravity = p->rising ? t[TUNE_JUMP_GRAVITY] : t[TUNE_FALL_GRAVITY];
+        p->vy = SDL_min(p->vy + gravity * step, t[TUNE_MAX_FALL]);
+
+        p->wall = 0;
+        p->bumped = false;
+        if (MoveX(level, p, p->vx * step))
+        {
+            p->vx = 0.0f;
+        }
+        MoveY(level, p, p->vy * step);
+        if (p->bumped && p->vy < 0.0f)
+        {
+            p->vy = 0.0f;
+            p->rising = false;
+        }
+        if (p->grounded)
+        {
+            /* Landed: take the surface's angle and carry the speed along
+               it. A corner of the box catching a steep surface with nothing
+               under the feet is not a landing: slide off it sideways. */
+            p->angle = 0.0f;
+            if (FindGround(level, p, level->tile))
+            {
+                LandOn(p);
+            }
+            else
+            {
+                p->grounded = false;
+                p->x += (p->land_column == 2) ? -1.0f : (p->land_column == 0) ? 1.0f : 0.0f;
+            }
+        }
+
+        /* Against a wall, holding toward it: a wall slide. */
+        const bool holding_wall = !p->grounded && p->wall != 0 && move * (float)p->wall > 0.3f;
+        if (holding_wall)
+        {
+            p->last_wall = p->wall;
+            p->wall_coyote = t[TUNE_WALL_COYOTE_TIME];
+            if (p->vy > t[TUNE_WALL_SLIDE_SPEED])
+            {
+                p->vy = t[TUNE_WALL_SLIDE_SPEED];
+            }
+        }
+        else
+        {
+            p->wall = 0;
+            p->wall_coyote = p->grounded ? 0.0f : SDL_max(0.0f, p->wall_coyote - step);
+        }
+        sliding = !p->grounded && holding_wall && p->vy >= 0.0f;
     }
-    if (p->bumped && p->vy < 0.0f)
-    {
-        p->vy = 0.0f;
-        p->rising = false;
-    }
+
     if (p->grounded && !was_grounded)
     {
         p->landed = true;
@@ -565,45 +859,31 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
     if (p->grounded)
     {
         p->ground_y = p->y;
-        p->wall_return = 0.0f;
     }
 
-    /* Against a wall in the air, holding toward it: a wall slide. The wall
-       is only held while the stick pushes into it, so letting go drops off
-       the wall — how it reads in every game that has one. */
-    const bool holding_wall = !p->grounded && p->wall != 0 && move * (float)p->wall > 0.3f;
-    if (holding_wall)
-    {
-        p->last_wall = p->wall;
-        p->wall_coyote = t[TUNE_WALL_COYOTE_TIME];
-        if (p->vy > t[TUNE_WALL_SLIDE_SPEED])
-        {
-            p->vy = t[TUNE_WALL_SLIDE_SPEED];
-        }
-    }
-    else
-    {
-        p->wall = 0;
-        p->wall_coyote = p->grounded ? 0.0f : SDL_max(0.0f, p->wall_coyote - step);
-    }
+    /* A loop's path swappers watch the feet cross their lines. */
+    PlatformerApplySwappers(level, x0, y0, p->x, p->y, &p->layer);
 
     /* Forward scrolling: what has scrolled off the left is gone, and the
-       edge of the screen is a wall, exactly as in the game this copies. */
+       edge of the screen is a wall. */
     if (level->scroll == GRAPPLE_PLATFORMER_SCROLL_FORWARD)
     {
         const float edge = level->camera.bounds.x + p->width * 0.5f;
         if (p->x < edge)
         {
             p->x = edge;
-            if (p->vx < 0.0f)
+            if (p->grounded)
+            {
+                p->gsp = SDL_max(p->gsp, 0.0f);
+            }
+            else if (p->vx < 0.0f)
             {
                 p->vx = 0.0f;
             }
         }
     }
 
-    /* Out of the bottom of the level: back to the start. A game that wants
-       a death animation reads the event and takes over. */
+    /* Out of the bottom of the level: back to the start. */
     const float floor_y = (float)(level->height * level->tile);
     if (p->y - p->height > floor_y + (float)level->tile * 2.0f)
     {
@@ -612,7 +892,7 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
         return;
     }
 
-    if (holding_wall && p->vy >= 0.0f)
+    if (sliding)
     {
         SetState(p, GRAPPLE_PLAYER_WALL_SLIDE);
     }
@@ -620,11 +900,11 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
     {
         SetState(p, (p->vy < 0.0f) ? GRAPPLE_PLAYER_JUMP : GRAPPLE_PLAYER_FALL);
     }
-    else if (SDL_fabsf(p->vx) < 1.0f)
+    else if (SDL_fabsf(p->gsp) < 1.0f)
     {
         SetState(p, GRAPPLE_PLAYER_IDLE);
     }
-    else if (SDL_fabsf(p->vx) > t[TUNE_WALK_SPEED] + 1.0f)
+    else if (SDL_fabsf(p->gsp) > t[TUNE_WALK_SPEED] + 1.0f)
     {
         SetState(p, GRAPPLE_PLAYER_RUN);
     }
@@ -637,6 +917,11 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
     if (actor != NULL)
     {
         Grapple_ActorSetPosition(actor, p->x, p->y);
+        /* Lean into the surface: the sprite turns with the ground, about
+           its feet, all the way round a loop. */
+        Grapple_ActorTransform local = Grapple_ActorLocal(actor);
+        local.rotation = p->grounded ? p->angle * 180.0f / SDL_PI_F : 0.0f;
+        Grapple_ActorSetLocal(actor, &local);
         Grapple_Sprite *sprite = Grapple_ActorSprite(actor);
         if (sprite != NULL)
         {
@@ -668,6 +953,9 @@ Grapple_ActorId Grapple_PlatformerCreatePlayer(Grapple_Platformer *level, int ti
     p->wall_coyote = 0.0f;
     p->wall_lock = 0.0f;
     p->wall_return = 0.0f;
+    p->angle = 0.0f;
+    p->gsp = 0.0f;
+    p->layer = PLATFORMER_LAYER_A;
     p->ground_y = p->y;
     p->state = GRAPPLE_PLAYER_IDLE;
     p->facing = 1;
@@ -872,6 +1160,22 @@ int Grapple_PlatformerPlayerWall(Grapple_Platformer *level)
     return (level != NULL) ? level->player.wall : 0;
 }
 
+float Grapple_PlatformerPlayerAngle(Grapple_Platformer *level)
+{
+    return (level != NULL && level->player.grounded) ? level->player.angle * 180.0f / SDL_PI_F
+                                                     : 0.0f;
+}
+
+float Grapple_PlatformerPlayerGroundSpeed(Grapple_Platformer *level)
+{
+    return (level != NULL && level->player.grounded) ? level->player.gsp : 0.0f;
+}
+
+int Grapple_PlatformerPlayerLayer(Grapple_Platformer *level)
+{
+    return (level != NULL) ? level->player.layer : PLATFORMER_LAYER_A;
+}
+
 int Grapple_PlatformerPlayerFacing(Grapple_Platformer *level)
 {
     return (level != NULL) ? level->player.facing : 1;
@@ -920,6 +1224,9 @@ void Grapple_PlatformerPlayerRespawn(Grapple_Platformer *level, float x, float y
     p->wall_coyote = 0.0f;
     p->wall_lock = 0.0f;
     p->wall_return = 0.0f;
+    p->angle = 0.0f;
+    p->gsp = 0.0f;
+    p->layer = PLATFORMER_LAYER_A;
     p->ground_y = y;
     Grapple_Actor *actor = Grapple_ActorGet(level->engine, p->id);
     if (actor != NULL)

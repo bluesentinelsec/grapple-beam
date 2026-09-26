@@ -192,9 +192,18 @@ Grapple_Platformer *Grapple_CreatePlatformer(Grapple_Engine *engine, int width, 
     {
         return NULL;
     }
+    if (tile_size > PLATFORMER_MAX_TILE)
+    {
+        SDL_SetError("tiles larger than %d px are not supported", PLATFORMER_MAX_TILE);
+        SDL_free(level);
+        return NULL;
+    }
     level->cells = (Uint8 *)SDL_calloc((size_t)width * (size_t)height, sizeof(Uint8));
+    level->cell_mask = (Uint16 *)SDL_calloc((size_t)width * (size_t)height, sizeof(Uint16));
+    level->cell_layers = (Uint8 *)SDL_calloc((size_t)width * (size_t)height, sizeof(Uint8));
     level->actions = Grapple_ActionMapCreate();
-    if (level->cells == NULL || level->actions == NULL)
+    if (level->cells == NULL || level->cell_mask == NULL || level->cell_layers == NULL ||
+        level->actions == NULL)
     {
         Grapple_DestroyPlatformer(level);
         return NULL;
@@ -269,6 +278,10 @@ void Grapple_DestroyPlatformer(Grapple_Platformer *level)
     }
     Grapple_PlatformerRemovePlayer(level);
     Grapple_ActionMapDestroy(level->actions);
+    SDL_free(level->swappers);
+    SDL_free(level->masks);
+    SDL_free(level->cell_layers);
+    SDL_free(level->cell_mask);
     SDL_free(level->solids);
     SDL_free(level->cells);
     SDL_free(level);
@@ -329,6 +342,7 @@ bool Grapple_PlatformerSetTile(Grapple_Platformer *level, int x, int y, Grapple_
         return SDL_SetError("unknown tile kind %d", (int)tile);
     }
     level->cells[(size_t)y * (size_t)level->width + (size_t)x] = (Uint8)tile;
+    level->cell_mask[(size_t)y * (size_t)level->width + (size_t)x] = 0; /* a whole cell again */
     return true;
 }
 
@@ -375,6 +389,7 @@ int Grapple_PlatformerFillTiles(Grapple_Platformer *level, int x, int y, int wid
         for (int cx = x0; cx < x1; ++cx)
         {
             level->cells[(size_t)cy * (size_t)level->width + (size_t)cx] = (Uint8)tile;
+            level->cell_mask[(size_t)cy * (size_t)level->width + (size_t)cx] = 0;
             count++;
         }
     }
@@ -426,6 +441,318 @@ bool Grapple_PlatformerCreateStairs(Grapple_Platformer *level, int x, int y, int
 bool Grapple_PlatformerCreatePlatform(Grapple_Platformer *level, int x, int y, int width)
 {
     return Grapple_PlatformerFillTiles(level, x, y, width, 1, GRAPPLE_PLATFORMER_ONE_WAY) > 0;
+}
+
+/* --- masks: cells that are not whole blocks -------------------------------- */
+
+static size_t CellIndex(const Grapple_Platformer *level, int x, int y)
+{
+    return (size_t)y * (size_t)level->width + (size_t)x;
+}
+
+/* The mask of cell (x, y), making one if it has none. A whole solid cell
+   gets a full mask; an empty cell an empty one. NULL when out of memory. */
+static PlatformerMask *CellMask(Grapple_Platformer *level, int x, int y)
+{
+    const size_t index = CellIndex(level, x, y);
+    if (level->cell_mask[index] != 0)
+    {
+        return &level->masks[level->cell_mask[index] - 1];
+    }
+    if (level->mask_count == level->mask_capacity)
+    {
+        const int grown = (level->mask_capacity == 0) ? 64 : level->mask_capacity * 2;
+        PlatformerMask *masks =
+            (PlatformerMask *)SDL_realloc(level->masks, (size_t)grown * sizeof(*masks));
+        if (masks == NULL)
+        {
+            return NULL;
+        }
+        level->masks = masks;
+        level->mask_capacity = grown;
+    }
+    PlatformerMask *mask = &level->masks[level->mask_count];
+    const Uint32 full = (level->tile >= 32) ? 0xFFFFFFFFu : ((1u << level->tile) - 1u);
+    const bool solid = level->cells[index] == GRAPPLE_PLATFORMER_SOLID;
+    for (int r = 0; r < PLATFORMER_MAX_TILE; ++r)
+    {
+        mask->rows[r] = solid ? full : 0u;
+    }
+    level->cell_mask[index] = (Uint16)(level->mask_count + 1);
+    level->cells[index] = GRAPPLE_PLATFORMER_SOLID;
+    level->mask_count++;
+    return mask;
+}
+
+/* Make pixel (px, py) solid, on `layers` (0 = both), as part of a shape. A
+   cell that becomes wholly solid stays a plain block; one that is partly
+   solid gets a mask. Existing solids are kept. */
+static void PaintPixel(Grapple_Platformer *level, int px, int py, int layers)
+{
+    const int cx = px / level->tile;
+    const int cy = py / level->tile;
+    if (px < 0 || py < 0 || cx >= level->width || cy >= level->height)
+    {
+        return;
+    }
+    const size_t index = CellIndex(level, cx, cy);
+    if (level->cells[index] == GRAPPLE_PLATFORMER_SOLID && level->cell_mask[index] == 0)
+    {
+        return; /* already a whole block, on both layers */
+    }
+    PlatformerMask *mask = CellMask(level, cx, cy);
+    if (mask == NULL)
+    {
+        return;
+    }
+    mask->rows[py % level->tile] |= 1u << (px % level->tile);
+    level->cell_layers[index] = (Uint8)layers;
+}
+
+/* After painting: cells whose mask filled up become whole blocks again, so
+   the fast path and TileAt see them as such. */
+static void SettleMasks(Grapple_Platformer *level)
+{
+    const Uint32 full = (level->tile >= 32) ? 0xFFFFFFFFu : ((1u << level->tile) - 1u);
+    for (int cy = 0; cy < level->height; ++cy)
+    {
+        for (int cx = 0; cx < level->width; ++cx)
+        {
+            const size_t index = CellIndex(level, cx, cy);
+            if (level->cell_mask[index] == 0)
+            {
+                continue;
+            }
+            const PlatformerMask *mask = &level->masks[level->cell_mask[index] - 1];
+            bool whole = true;
+            bool empty = true;
+            for (int r = 0; r < level->tile; ++r)
+            {
+                whole = whole && mask->rows[r] == full;
+                empty = empty && mask->rows[r] == 0u;
+            }
+            if (whole && level->cell_layers[index] == 0)
+            {
+                level->cell_mask[index] = 0; /* the mask stays in the pool, unused */
+            }
+            else if (empty)
+            {
+                level->cell_mask[index] = 0;
+                level->cells[index] = GRAPPLE_PLATFORMER_EMPTY;
+            }
+        }
+    }
+}
+
+bool PlatformerSolidPixel(Grapple_Platformer *level, int px, int py, int layer)
+{
+    const int cx = (px >= 0) ? px / level->tile : -1;
+    const int cy = (py >= 0) ? py / level->tile : -1;
+    if (cx < 0 || cx >= level->width)
+    {
+        return true; /* the sides of the level are walls */
+    }
+    if (cy < 0 || cy >= level->height)
+    {
+        return false; /* open above and below */
+    }
+    const size_t index = CellIndex(level, cx, cy);
+    if (level->cells[index] == GRAPPLE_PLATFORMER_SOLID)
+    {
+        const Uint8 layers = level->cell_layers[index];
+        if (layers != 0 && (layers & layer) == 0)
+        {
+            return false; /* on the other layer */
+        }
+        if (level->cell_mask[index] == 0)
+        {
+            return true;
+        }
+        const PlatformerMask *mask = &level->masks[level->cell_mask[index] - 1];
+        return (mask->rows[py % level->tile] >> (px % level->tile)) & 1u;
+    }
+    for (int i = 0; i < level->solid_count; ++i)
+    {
+        const SDL_FRect r = level->solids[i].rect;
+        if (level->solids[i].alive && (float)px >= r.x && (float)px < r.x + r.w &&
+            (float)py >= r.y && (float)py < r.y + r.h)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool PlatformerLedgePixel(Grapple_Platformer *level, int px, int py, float old_bottom)
+{
+    const int cx = px / level->tile;
+    const int cy = py / level->tile;
+    if (px < 0 || py < 0 || cx >= level->width || cy >= level->height)
+    {
+        return false;
+    }
+    if (level->cells[CellIndex(level, cx, cy)] != GRAPPLE_PLATFORMER_ONE_WAY)
+    {
+        return false;
+    }
+    /* Only the ledge's top row, and only from above it. */
+    return py % level->tile == 0 && old_bottom <= (float)py + 0.01f;
+}
+
+bool Grapple_PlatformerSolidAt(Grapple_Platformer *level, float x, float y)
+{
+    if (level == NULL)
+    {
+        return false;
+    }
+    const int layer =
+        level->player.exists ? level->player.layer : (PLATFORMER_LAYER_A | PLATFORMER_LAYER_B);
+    return PlatformerSolidPixel(level, (int)SDL_floorf(x), (int)SDL_floorf(y), layer);
+}
+
+bool Grapple_PlatformerCreateSlope(Grapple_Platformer *level, int x, int y, int width, int height,
+                                   bool rising)
+{
+    if (level == NULL)
+    {
+        return SDL_InvalidParamError("level");
+    }
+    if (width <= 0 || height <= 0)
+    {
+        return SDL_SetError("a slope needs a positive size");
+    }
+    const int tile = level->tile;
+    const int left = x * tile;
+    const int top = y * tile;
+    const int w = width * tile;
+    const int h = height * tile;
+    /* Solid below the line; the line runs corner to corner. */
+    bool painted = false;
+    for (int py = top; py < top + h; ++py)
+    {
+        for (int px = left; px < left + w; ++px)
+        {
+            const float u = ((float)(px - left) + 0.5f) / (float)w; /* 0 at the left edge */
+            const float surface =
+                rising ? (float)(top + h) - u * (float)h : (float)top + u * (float)h;
+            if ((float)py + 0.5f >= surface)
+            {
+                PaintPixel(level, px, py, 0);
+                painted = true;
+            }
+        }
+    }
+    SettleMasks(level);
+    return painted;
+}
+
+static bool AddSwapper(Grapple_Platformer *level, float x, float y0, float y1, int moving_right,
+                       int moving_left)
+{
+    if (level->swapper_count == level->swapper_capacity)
+    {
+        const int grown = (level->swapper_capacity == 0) ? 8 : level->swapper_capacity * 2;
+        PlatformerSwapper *swappers =
+            (PlatformerSwapper *)SDL_realloc(level->swappers, (size_t)grown * sizeof(*swappers));
+        if (swappers == NULL)
+        {
+            return false;
+        }
+        level->swappers = swappers;
+        level->swapper_capacity = grown;
+    }
+    level->swappers[level->swapper_count++] =
+        (PlatformerSwapper){x, y0, y1, moving_right, moving_left};
+    return true;
+}
+
+void PlatformerApplySwappers(Grapple_Platformer *level, float x0, float y0, float x1, float y1,
+                             int *layer)
+{
+    for (int i = 0; i < level->swapper_count; ++i)
+    {
+        const PlatformerSwapper *s = &level->swappers[i];
+        if (x0 == x1)
+        {
+            continue;
+        }
+        const bool crossed = (x0 < s->x && x1 >= s->x) || (x0 >= s->x && x1 < s->x);
+        if (!crossed)
+        {
+            continue;
+        }
+        /* Where the move crossed the line, vertically. */
+        const float t = (s->x - x0) / (x1 - x0);
+        const float y = y0 + (y1 - y0) * t;
+        if (y < s->y0 || y > s->y1)
+        {
+            continue;
+        }
+        const int set = (x1 > x0) ? s->moving_right : s->moving_left;
+        if (set != 0)
+        {
+            *layer = set;
+        }
+    }
+}
+
+bool Grapple_PlatformerCreateLoop(Grapple_Platformer *level, int x, int y, int radius)
+{
+    if (level == NULL)
+    {
+        return SDL_InvalidParamError("level");
+    }
+    if (radius < 2)
+    {
+        return SDL_SetError("a loop needs a radius of at least 2 tiles");
+    }
+    const int tile = level->tile;
+    const float outer = (float)(radius * tile);
+    const float inner = outer - (float)tile;
+    const float cx = (float)(x * tile) + outer;
+    const float cy = (float)(y * tile) + outer;
+
+    /* The ring, painted pixel by pixel. Its two bottom quarters are on
+       different layers: the entry side passes through the far quarter,
+       the exit side through the near one. Angles are y-down: 0 is right,
+       +90 is straight down, 180 left, -90 up. */
+    for (int py = (int)(cy - outer); py < (int)(cy + outer) + 1; ++py)
+    {
+        for (int px = (int)(cx - outer); px < (int)(cx + outer) + 1; ++px)
+        {
+            const float dx = (float)px + 0.5f - cx;
+            const float dy = (float)py + 0.5f - cy;
+            const float dist = SDL_sqrtf(dx * dx + dy * dy);
+            if (dist < inner || dist >= outer)
+            {
+                continue;
+            }
+            const float deg = SDL_atan2f(dy, dx) * 180.0f / SDL_PI_F;
+            int layers = 0;
+            if (deg > 0.0f && deg < 90.0f)
+            {
+                layers = PLATFORMER_LAYER_A; /* bottom-right quarter */
+            }
+            else if (deg >= 90.0f && deg < 180.0f)
+            {
+                layers = PLATFORMER_LAYER_B; /* bottom-left quarter */
+            }
+            PaintPixel(level, px, py, layers);
+        }
+    }
+    SettleMasks(level);
+
+    /* Entrance and exit lines on either side, lower half, and the top
+       switch. Entering from the left puts the player on A: the bottom-left
+       quarter is not there, the bottom-right is, and the run goes up the
+       right side. Crossing the top leftward switches to B: the bottom-left
+       quarter catches the way down and the bottom-right is gone, so the
+       run continues out to the right. The mirror image from the right. */
+    const bool ok =
+        AddSwapper(level, cx - outer, cy, cy + outer, PLATFORMER_LAYER_A, PLATFORMER_LAYER_A) &&
+        AddSwapper(level, cx + outer, cy, cy + outer, PLATFORMER_LAYER_B, PLATFORMER_LAYER_B) &&
+        AddSwapper(level, cx, cy - outer, cy, PLATFORMER_LAYER_A, PLATFORMER_LAYER_B);
+    return ok;
 }
 
 /* --- pixel solids --------------------------------------------------------- */
@@ -826,6 +1153,44 @@ static void DrawCell(Grapple_Platformer *level, SDL_Renderer *renderer, int cx, 
     const float size = (float)level->tile;
     const SDL_FRect world = {(float)cx * size, (float)cy * size, size, size};
     const SDL_FRect dst = Grapple_CameraRect(&level->camera, world);
+    const size_t index = CellIndex(level, cx, cy);
+    if (tile == GRAPPLE_PLATFORMER_SOLID && level->cell_mask[index] != 0)
+    {
+        /* A shaped cell: its solid pixels, row by row, as runs. A cell on
+           one layer only draws a little paler, so a loop reads as a ring
+           with a path through it rather than a wall. */
+        const PlatformerMask *mask = &level->masks[level->cell_mask[index] - 1];
+        SDL_FColor color = level->tile_colors[tile];
+        if (level->cell_layers[index] != 0)
+        {
+            color.r = color.r * 0.75f + 0.25f;
+            color.g = color.g * 0.75f + 0.25f;
+            color.b = color.b * 0.75f + 0.25f;
+        }
+        SDL_SetRenderDrawColorFloat(renderer, color.r, color.g, color.b, color.a);
+        for (int r = 0; r < level->tile; ++r)
+        {
+            const Uint32 row = mask->rows[r];
+            int c = 0;
+            while (c < level->tile)
+            {
+                if (((row >> c) & 1u) == 0u)
+                {
+                    c++;
+                    continue;
+                }
+                int end = c;
+                while (end < level->tile && ((row >> end) & 1u))
+                {
+                    end++;
+                }
+                const SDL_FRect run = {dst.x + (float)c, dst.y + (float)r, (float)(end - c), 1.0f};
+                SDL_RenderFillRect(renderer, &run);
+                c = end;
+            }
+        }
+        return;
+    }
     if (level->tile_textures[tile] != NULL)
     {
         SDL_RenderTexture(renderer, level->tile_textures[tile], NULL, &dst);

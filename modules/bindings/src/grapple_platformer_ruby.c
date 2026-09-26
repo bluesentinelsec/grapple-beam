@@ -466,6 +466,57 @@ static mrb_value RPlatform(mrb_state *mrb, mrb_value self)
                                          (int)ReqNumber(mrb, o, "width", "create_platform")));
 }
 
+static mrb_value RSlope(mrb_state *mrb, mrb_value self)
+{
+    static const char *const keys[] = {"x", "y", "width", "height", "direction"};
+    Grapple_Platformer *level = LevelOf(mrb, self);
+    const mrb_value o = Options(mrb);
+    CheckKeys(mrb, o, keys, SDL_arraysize(keys), "create_slope");
+    const char *direction = OptString(mrb, o, "direction", "up");
+    bool rising;
+    if (SDL_strcasecmp(direction, "up") == 0)
+    {
+        rising = true;
+    }
+    else if (SDL_strcasecmp(direction, "down") == 0)
+    {
+        rising = false;
+    }
+    else
+    {
+        mrb_raisef(mrb, E_ARGUMENT_ERROR, "unknown slope direction '%s' (up, down)", direction);
+        return mrb_nil_value();
+    }
+    return mrb_bool_value(
+        Grapple_PlatformerCreateSlope(level, (int)ReqNumber(mrb, o, "x", "create_slope"),
+                                      (int)ReqNumber(mrb, o, "y", "create_slope"),
+                                      (int)ReqNumber(mrb, o, "width", "create_slope"),
+                                      (int)ReqNumber(mrb, o, "height", "create_slope"), rising));
+}
+
+static mrb_value RLoop(mrb_state *mrb, mrb_value self)
+{
+    static const char *const keys[] = {"x", "y", "radius"};
+    Grapple_Platformer *level = LevelOf(mrb, self);
+    const mrb_value o = Options(mrb);
+    CheckKeys(mrb, o, keys, SDL_arraysize(keys), "create_loop");
+    if (!Grapple_PlatformerCreateLoop(level, (int)ReqNumber(mrb, o, "x", "create_loop"),
+                                      (int)ReqNumber(mrb, o, "y", "create_loop"),
+                                      (int)ReqNumber(mrb, o, "radius", "create_loop")))
+    {
+        return Fail(mrb);
+    }
+    return mrb_true_value();
+}
+
+static mrb_value RSolidAt(mrb_state *mrb, mrb_value self)
+{
+    mrb_float x = 0.0;
+    mrb_float y = 0.0;
+    mrb_get_args(mrb, "ff", &x, &y);
+    return mrb_bool_value(Grapple_PlatformerSolidAt(LevelOf(mrb, self), (float)x, (float)y));
+}
+
 static mrb_value RSolid(mrb_state *mrb, mrb_value self)
 {
     static const char *const keys[] = {"x", "y", "w", "h", "width", "height"};
@@ -850,6 +901,21 @@ static mrb_value RPWall(mrb_state *mrb, mrb_value self)
     return mrb_fixnum_value(Grapple_PlatformerPlayerWall(PlayerLevel(mrb, self)));
 }
 
+static mrb_value RPAngle(mrb_state *mrb, mrb_value self)
+{
+    return mrb_float_value(mrb, Grapple_PlatformerPlayerAngle(PlayerLevel(mrb, self)));
+}
+
+static mrb_value RPGroundSpeed(mrb_state *mrb, mrb_value self)
+{
+    return mrb_float_value(mrb, Grapple_PlatformerPlayerGroundSpeed(PlayerLevel(mrb, self)));
+}
+
+static mrb_value RPLayer(mrb_state *mrb, mrb_value self)
+{
+    return mrb_fixnum_value(Grapple_PlatformerPlayerLayer(PlayerLevel(mrb, self)));
+}
+
 static mrb_value RPFacing(mrb_state *mrb, mrb_value self)
 {
     return mrb_fixnum_value(Grapple_PlatformerPlayerFacing(PlayerLevel(mrb, self)));
@@ -1021,6 +1087,9 @@ bool Grapple_OpenRubyPlatformer(mrb_state *mrb)
     mrb_define_method(mrb, level, "create_block", RBlock, MRB_ARGS_OPT(1));
     mrb_define_method(mrb, level, "create_stairs", RStairs, MRB_ARGS_OPT(1));
     mrb_define_method(mrb, level, "create_platform", RPlatform, MRB_ARGS_OPT(1));
+    mrb_define_method(mrb, level, "create_slope", RSlope, MRB_ARGS_OPT(1));
+    mrb_define_method(mrb, level, "create_loop", RLoop, MRB_ARGS_OPT(1));
+    mrb_define_method(mrb, level, "solid_at?", RSolidAt, MRB_ARGS_REQ(2));
     mrb_define_method(mrb, level, "solid", RSolid, MRB_ARGS_OPT(1));
     mrb_define_method(mrb, level, "remove_solid", RRemoveSolid, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, level, "fill", RFill, MRB_ARGS_OPT(1));
@@ -1066,6 +1135,9 @@ bool Grapple_OpenRubyPlatformer(mrb_state *mrb)
     mrb_define_method(mrb, player, "paused?", RPPaused, MRB_ARGS_NONE());
     mrb_define_method(mrb, player, "facing", RPFacing, MRB_ARGS_NONE());
     mrb_define_method(mrb, player, "wall", RPWall, MRB_ARGS_NONE());
+    mrb_define_method(mrb, player, "angle", RPAngle, MRB_ARGS_NONE());
+    mrb_define_method(mrb, player, "ground_speed", RPGroundSpeed, MRB_ARGS_NONE());
+    mrb_define_method(mrb, player, "layer", RPLayer, MRB_ARGS_NONE());
     mrb_define_method(mrb, player, "position", RPPosition, MRB_ARGS_NONE());
     mrb_define_method(mrb, player, "velocity", RPVelocity, MRB_ARGS_NONE());
     mrb_define_method(mrb, player, "size", RPSize, MRB_ARGS_NONE());

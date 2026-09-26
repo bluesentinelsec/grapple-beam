@@ -106,7 +106,39 @@ class PlatformerGame
         level_.CreateBlock(72, 5, 6, 1);
         level_.CreateBlock(96, 3, 4, 1);
         level_.CreateBlock(105, 3, 6, 1);
-        level_.CreateBlock(189, 12, 1, 8);
+
+        level_.CreatePlatform(30, 15, 4);
+        level_.CreatePlatform(58, 13, 5);
+        level_.CreatePlatform(113, 6, 4);
+        level_.CreatePlatform(119, 9, 4);
+
+        // Pipes to climb over, and at x = 100 a shaft three tiles wide to wall-jump up.
+        for (const auto &[x, y, height] :
+             {std::tuple{28, 18, 2}, std::tuple{29, 18, 2}, std::tuple{38, 17, 3},
+              std::tuple{39, 17, 3}, std::tuple{46, 16, 4}, std::tuple{47, 16, 4},
+              std::tuple{57, 16, 4}, std::tuple{58, 16, 4}, std::tuple{100, 4, 16},
+              std::tuple{104, 4, 16}})
+        {
+            level_.CreateWall(x, y, height);
+        }
+
+        // Hills, stairs, then a slope to a plateau, a ramp down for speed, and a
+        // loop on the floor: in fast, up the right, over the top, out to the right.
+        level_.CreateSlope(126, 18, 4, 2, true);
+        level_.CreateSlope(130, 18, 4, 2, false);
+        level_.CreateStairs(134, 19, 4, true);
+        level_.CreateStairs(140, 19, 4, false);
+        level_.CreateStairs(148, 19, 4, true);
+        level_.CreateStairs(155, 19, 4, false);
+        level_.CreateSlope(160, 16, 4, 4, true);
+        level_.CreateFloor(164, 16, 3);
+        level_.CreateSlope(167, 16, 8, 4, false);
+        if (const grapple::Status status = level_.CreateLoop(178, 15, 3); !status.ok())
+        {
+            SDL_Log("no loop: %s", status.message().c_str());
+        }
+        level_.CreateStairs(190, 19, 8, true);
+        level_.CreateBlock(198, 12, 1, 8);
 
         level_.CreatePlatform(30, 15, 4);
         level_.CreatePlatform(58, 13, 5);
