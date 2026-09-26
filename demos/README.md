@@ -15,7 +15,8 @@ through the library and engine loop. It also demonstrates offline WAV export.
 ## Platformer
 
 The opening stretch of a Super Mario Bros. style level — floor, blocks, walls,
-stairs, pits — and a character that runs and jumps around it, on
+stairs, pits, hills, and near the end a ramp into a Sonic loop-de-loop — and a
+character that runs and jumps around it, on
 [`Grapple::Platformer`](../docs/platformer.md). Everything on screen is a
 filled rectangle; the shapes are where the art goes. Same game four times:
 
@@ -25,6 +26,7 @@ filled rectangle; the shapes are where the art goes. Same game four times:
 | [`platformer/platformer.cpp`](platformer/platformer.cpp) | C++ | compiled to `platformer-cpp` |
 | [`platformer/platformer.lua`](platformer/platformer.lua) | Lua | `grapple-beam run platformer.lua` |
 | [`platformer/platformer.rb`](platformer/platformer.rb) | Ruby | `grapple-beam run platformer.rb` |
+| [`platformer/slopes.lua`](platformer/slopes.lua) | Lua | `grapple-beam run slopes.lua` — a playground of hills, ramps and two loops |
 
 Controls: **A**/**D** or the arrows walk, **Shift** or **X** runs, **Space**
 or **Z** jumps. An Xbox-layout pad works the same — left stick or d-pad,

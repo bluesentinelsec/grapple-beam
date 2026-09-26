@@ -459,6 +459,57 @@ static int LPlatform(lua_State *L)
     return 1;
 }
 
+static int LSlope(lua_State *L)
+{
+    static const char *const keys[] = {"x", "y", "width", "height", "direction"};
+    Grapple_Platformer *level = CheckLevel(L, 1);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    CheckKeys(L, 2, keys, SDL_arraysize(keys), "create_slope");
+    const char *direction = OptString(L, 2, "direction", "up");
+    bool rising;
+    if (SDL_strcasecmp(direction, "up") == 0)
+    {
+        rising = true;
+    }
+    else if (SDL_strcasecmp(direction, "down") == 0)
+    {
+        rising = false;
+    }
+    else
+    {
+        return luaL_error(L, "unknown slope direction '%s' (up, down)", direction);
+    }
+    lua_pushboolean(
+        L, Grapple_PlatformerCreateSlope(level, (int)ReqNumber(L, 2, "x", "create_slope"),
+                                         (int)ReqNumber(L, 2, "y", "create_slope"),
+                                         (int)ReqNumber(L, 2, "width", "create_slope"),
+                                         (int)ReqNumber(L, 2, "height", "create_slope"), rising));
+    return 1;
+}
+
+static int LLoop(lua_State *L)
+{
+    static const char *const keys[] = {"x", "y", "radius"};
+    Grapple_Platformer *level = CheckLevel(L, 1);
+    luaL_checktype(L, 2, LUA_TTABLE);
+    CheckKeys(L, 2, keys, SDL_arraysize(keys), "create_loop");
+    if (!Grapple_PlatformerCreateLoop(level, (int)ReqNumber(L, 2, "x", "create_loop"),
+                                      (int)ReqNumber(L, 2, "y", "create_loop"),
+                                      (int)ReqNumber(L, 2, "radius", "create_loop")))
+    {
+        return Fail(L);
+    }
+    lua_pushboolean(L, 1);
+    return 1;
+}
+
+static int LSolidAt(lua_State *L)
+{
+    lua_pushboolean(L, Grapple_PlatformerSolidAt(CheckLevel(L, 1), (float)luaL_checknumber(L, 2),
+                                                 (float)luaL_checknumber(L, 3)));
+    return 1;
+}
+
 static int LSolid(lua_State *L)
 {
     static const char *const keys[] = {"x", "y", "w", "h", "width", "height"};
@@ -838,6 +889,24 @@ static int LPWall(lua_State *L)
     return 1;
 }
 
+static int LPAngle(lua_State *L)
+{
+    lua_pushnumber(L, Grapple_PlatformerPlayerAngle(CheckPlayer(L, 1)));
+    return 1;
+}
+
+static int LPGroundSpeed(lua_State *L)
+{
+    lua_pushnumber(L, Grapple_PlatformerPlayerGroundSpeed(CheckPlayer(L, 1)));
+    return 1;
+}
+
+static int LPLayer(lua_State *L)
+{
+    lua_pushinteger(L, Grapple_PlatformerPlayerLayer(CheckPlayer(L, 1)));
+    return 1;
+}
+
 static int LPFacing(lua_State *L)
 {
     lua_pushinteger(L, Grapple_PlatformerPlayerFacing(CheckPlayer(L, 1)));
@@ -990,6 +1059,9 @@ bool Grapple_OpenLuaPlatformer(lua_State *L)
         {"create_block", LBlock},
         {"create_stairs", LStairs},
         {"create_platform", LPlatform},
+        {"create_slope", LSlope},
+        {"create_loop", LLoop},
+        {"solid_at", LSolidAt},
         {"solid", LSolid},
         {"remove_solid", LRemoveSolid},
         {"fill", LFill},
@@ -1033,6 +1105,9 @@ bool Grapple_OpenLuaPlatformer(lua_State *L)
         {"grounded", LPGrounded},
         {"facing", LPFacing},
         {"wall", LPWall},
+        {"angle", LPAngle},
+        {"ground_speed", LPGroundSpeed},
+        {"layer", LPLayer},
         {"position", LPPosition},
         {"velocity", LPVelocity},
         {"size", LPSize},

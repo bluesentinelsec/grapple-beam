@@ -165,6 +165,31 @@ extern "C"
      *  through from below and from the sides. */
     extern bool Grapple_PlatformerCreatePlatform(Grapple_Platformer *level, int x, int y,
                                                  int width);
+    /** A slope filling the rectangle (x, y, width, height) in tiles, solid
+     *  below a straight line from its bottom-left to its top-right when
+     *  `rising`, top-left to bottom-right when not. Cells the line crosses
+     *  become pixel masks; the player runs along the line at the slope's
+     *  angle, slowed going up and sped going down. Two wide by one tall is
+     *  a gentle hill, one by one is 45 degrees. */
+    extern bool Grapple_PlatformerCreateSlope(Grapple_Platformer *level, int x, int y, int width,
+                                              int height, bool rising);
+    /** A loop-de-loop, Sonic style: a ring `radius` tiles in outer radius
+     *  and one tile thick, in the square whose top-left cell is (x, y) and
+     *  whose side is 2 * radius. Its inner bottom is the top of row
+     *  y + 2 * radius - 1, so put the floor there. Run in from the left fast
+     *  enough — a run down a slope will do — and the player goes up the
+     *  right side, over the top and down the left, and out to the right
+     *  along the floor; too slow on the wall or the ceiling and the player
+     *  falls off. The exit crosses the entry, which no single geometry can
+     *  allow, so the loop puts its two bottom quarters on different
+     *  collision layers and switches the player between them at the
+     *  entrance, the top and the exit — Sonic's own trick. Works in both
+     *  directions. */
+    extern bool Grapple_PlatformerCreateLoop(Grapple_Platformer *level, int x, int y, int radius);
+    /** Is the pixel (x, y) solid, for the player's current collision layer
+     *  (both layers if there is no player)? Whole cells, slope and loop
+     *  masks, pixel solids and the level's side walls count; ledges do not. */
+    extern bool Grapple_PlatformerSolidAt(Grapple_Platformer *level, float x, float y);
 
     /** A generic solid rectangle in **pixels**, for anything the grid cannot
      *  express — a thin ledge, a moving platform to be. Returns an id for
@@ -240,7 +265,8 @@ extern "C"
      *   jump_speed jump_height run_jump_bonus jump_gravity fall_gravity
      *   max_fall coyote_time jump_buffer
      *   wall_slide_speed wall_jump_x wall_jump_y wall_coyote_time wall_jump_lock
-     *   wall_return_accel wall_return_time
+     *   wall_return_accel wall_return_time slope_gravity loop_min_speed
+     *   momentum_decel
      *
      * The wall keys make the wall jump of the modern Mario games and Mega
      * Man X: pressing into a wall while falling slides down it at
@@ -255,6 +281,13 @@ extern "C"
      * Speeds are pixels per second, accelerations pixels per second squared,
      * times seconds. jump_height is jump_speed spelled as the tiles-tall
      * standing jump it produces under jump_gravity, in pixels; setting either
+     *
+     * On a slope, slope_gravity is the pull along the surface: it slows a
+     * run up and speeds a run down, and a run down is not capped at
+     * run_speed, which is how a loop is entered fast enough. On a wall or a
+     * ceiling — a loop's sides and top — slower than loop_min_speed the
+     * player falls off. Speed gained on a slope bleeds off on the flat at
+     * momentum_decel, gently, so it carries a few tiles.
      * updates the other. */
 
     /** Spawn the player standing on top of cell (tile_x, tile_y + 1) — that
@@ -303,6 +336,17 @@ extern "C"
     /** -1 or +1 while the player is airborne and pressed against a wall on
      *  that side — the state a wall jump kicks off from — else 0. */
     extern int Grapple_PlatformerPlayerWall(Grapple_Platformer *level);
+    /** The surface the player stands on, in degrees: 0 on flat ground,
+     *  negative when it rises to the right, -90 running up a wall on the
+     *  right, 180 upside down across a loop's ceiling. 0 in the air. The
+     *  player's actor is rotated by this, so a sprite leans into a slope. */
+    extern float Grapple_PlatformerPlayerAngle(Grapple_Platformer *level);
+    /** Speed along the surface, pixels per second, signed by direction of
+     *  travel along it; 0 in the air. */
+    extern float Grapple_PlatformerPlayerGroundSpeed(Grapple_Platformer *level);
+    /** Which of the two collision layers the player is on, 1 or 2. Only a
+     *  loop ever changes it. */
+    extern int Grapple_PlatformerPlayerLayer(Grapple_Platformer *level);
     /** -1 facing left, +1 facing right. */
     extern int Grapple_PlatformerPlayerFacing(Grapple_Platformer *level);
     /** The feet, in pixels. */

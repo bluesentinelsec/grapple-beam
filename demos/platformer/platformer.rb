@@ -54,6 +54,36 @@ level.create_platform(x: 119, y: 9, width: 4)
   level.create_wall(x: x, y: y, height: height)
 end
 
+# Hills.
+level.create_slope(x: 126, y: 18, width: 4, height: 2, direction: :up)
+level.create_slope(x: 130, y: 18, width: 4, height: 2, direction: :down)
+
+# Stairs.
+level.create_stairs(x: 134, y: 19, steps: 4, direction: :up)
+level.create_stairs(x: 140, y: 19, steps: 4, direction: :down)
+level.create_stairs(x: 148, y: 19, steps: 4, direction: :up)
+level.create_stairs(x: 155, y: 19, steps: 4, direction: :down)
+
+# A slope to a plateau, a ramp down for speed, and a loop on the floor.
+level.create_slope(x: 160, y: 16, width: 4, height: 4, direction: :up)
+level.create_floor(x: 164, y: 16, width: 3)
+level.create_slope(x: 167, y: 16, width: 8, height: 4, direction: :down)
+level.create_loop(x: 178, y: 15, radius: 3)
+
+level.create_stairs(x: 190, y: 19, steps: 8, direction: :up)
+level.create_block(x: 198, y: 12, height: 8)
+
+# Ledges.
+level.create_platform(x: 30, y: 15, width: 4)
+level.create_platform(x: 58, y: 13, width: 5)
+level.create_platform(x: 113, y: 6, width: 4)
+level.create_platform(x: 119, y: 9, width: 4)
+
+# Walls, including the wall-jump shaft at x = 100.
+[[28, 18, 2], [29, 18, 2], [38, 17, 3], [39, 17, 3], [46, 16, 4], [47, 16, 4], [57, 16, 4], [58, 16, 4], [100, 4, 16], [104, 4, 16]].each do |x, y, height|
+  level.create_wall(x: x, y: y, height: height)
+end
+
 # Stairs.
 level.create_stairs(x: 134, y: 19, steps: 4, direction: :up)
 level.create_stairs(x: 140, y: 19, steps: 4, direction: :down)

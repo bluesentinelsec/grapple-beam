@@ -63,7 +63,6 @@ static void BuildLevel(Grapple_Platformer *level)
     Grapple_PlatformerCreateBlock(level, 72, 5, 6, 1);
     Grapple_PlatformerCreateBlock(level, 96, 3, 4, 1);
     Grapple_PlatformerCreateBlock(level, 105, 3, 6, 1);
-    Grapple_PlatformerCreateBlock(level, 189, 12, 1, 8);
 
     /* Ledges: jump up through them, land on them from above. */
     Grapple_PlatformerCreatePlatform(level, 30, 15, 4);
@@ -81,12 +80,26 @@ static void BuildLevel(Grapple_Platformer *level)
         Grapple_PlatformerCreateWall(level, walls[i][0], walls[i][1], walls[i][2]);
     }
 
+    /* Hills: a slope up and a slope down, two tiles high over four wide. */
+    Grapple_PlatformerCreateSlope(level, 126, 18, 4, 2, true);
+    Grapple_PlatformerCreateSlope(level, 130, 18, 4, 2, false);
+
     /* Stairs. */
     Grapple_PlatformerCreateStairs(level, 134, 19, 4, true);
     Grapple_PlatformerCreateStairs(level, 140, 19, 4, false);
     Grapple_PlatformerCreateStairs(level, 148, 19, 4, true);
     Grapple_PlatformerCreateStairs(level, 155, 19, 4, false);
-    Grapple_PlatformerCreateStairs(level, 181, 19, 8, true);
+
+    /* A slope up to a plateau, a ramp down for speed, and a loop on the
+       floor beyond it: go in fast, up the right side, over the top, down
+       the left and out to the right. */
+    Grapple_PlatformerCreateSlope(level, 160, 16, 4, 4, true);
+    Grapple_PlatformerCreateFloor(level, 164, 16, 3, 0);
+    Grapple_PlatformerCreateSlope(level, 167, 16, 8, 4, false);
+    Grapple_PlatformerCreateLoop(level, 178, 15, 3);
+
+    Grapple_PlatformerCreateStairs(level, 190, 19, 8, true);
+    Grapple_PlatformerCreateBlock(level, 198, 12, 1, 8);
 }
 
 static void Update(void *user, float dt)
