@@ -681,6 +681,60 @@ TEST_F(PlatformerHarness, RunningDownASlopeGoesFasterThanRunSpeed)
     EXPECT_GT(fastest, Grapple_PlatformerPlayerTuning(level_, "run_speed") * 1.3f);
 }
 
+TEST_F(PlatformerHarness, AJumpFromASlopeGoesForwardAndARampLaunchesOverAGap)
+{
+    // Floor, a 2:1 ramp up from column 10 to 16, then an eight-tile gap
+    // and floor beyond. Running up the ramp and jumping at its lip clears
+    // the gap; walking off the lip does not.
+    level_ = Grapple_CreatePlatformer(engine_, 60, 24, kTile);
+    ASSERT_NE(level_, nullptr);
+    ASSERT_TRUE(Grapple_PlatformerCreateFloor(level_, 0, 20, 10, 0));
+    ASSERT_TRUE(Grapple_PlatformerCreateSlope(level_, 10, 17, 6, 3, true));
+    ASSERT_TRUE(Grapple_PlatformerCreateFloor(level_, 10, 20, 6, 0)); // under the ramp
+    ASSERT_TRUE(Grapple_PlatformerCreateFloor(level_, 24, 20, 36, 0));
+    ASSERT_NE(Grapple_PlatformerCreatePlayer(level_, 3, 19), GRAPPLE_ACTOR_NONE);
+    Grapple_PlatformerSetScriptedInput(level_, true);
+    ASSERT_TRUE(Grapple_PlatformerAttach(level_));
+    Frames(20);
+    ASSERT_TRUE(Grapple_PlatformerPlayerGrounded(level_));
+
+    // Run up the ramp; on the ramp, jump and hold it.
+    bool jumped = false;
+    float vx_at_jump = 0.0f;
+    for (int i = 0; i < 400; ++i)
+    {
+        const bool on_ramp = Grapple_PlatformerPlayerGrounded(level_) && X() > 13.0f * kTile;
+        Frames(1, 1.0f, jumped || on_ramp, true);
+        if (!jumped && Grapple_PlatformerPlayerJumped(level_))
+        {
+            jumped = true;
+            vx_at_jump = Vx();
+            EXPECT_GT(vx_at_jump, 0.0f) << "the jump keeps going forward, not back off the slope";
+            EXPECT_LT(Vy(), -Grapple_PlatformerPlayerTuning(level_, "jump_speed"))
+                << "and the ramp's upward speed adds to the jump";
+        }
+        if (jumped && Grapple_PlatformerPlayerGrounded(level_))
+        {
+            break;
+        }
+    }
+    ASSERT_TRUE(jumped);
+    EXPECT_TRUE(Grapple_PlatformerPlayerGrounded(level_));
+    EXPECT_GT(X(), 24.0f * kTile) << "cleared the gap";
+    EXPECT_FLOAT_EQ(Y(), 20.0f * kTile);
+
+    // Without the jump, running off the lip drops into the gap.
+    Grapple_PlatformerPlayerRespawn(level_, 3.5f * kTile, 20.0f * kTile);
+    Frames(20);
+    bool fell = false;
+    for (int i = 0; i < 400 && !fell; ++i)
+    {
+        Frames(1, 1.0f, false, true);
+        fell = Grapple_PlatformerPlayerFell(level_);
+    }
+    EXPECT_TRUE(fell);
+}
+
 class LoopHarness : public PlatformerHarness
 {
   protected:
@@ -748,7 +802,7 @@ TEST_F(LoopHarness, TooSlowTheLoopDropsThePlayerOffItsWall)
     bool ceiling = false;
     for (int i = 0; i < 300; ++i)
     {
-        Frames(1, 1.0f, false, true);
+        Frames(1, 1.0f, false, false); // walking, not running
         const float angle = Grapple_PlatformerPlayerAngle(level_);
         climbed = climbed || angle < -30.0f;
         ceiling = ceiling || std::fabs(angle) > 150.0f;
@@ -756,7 +810,7 @@ TEST_F(LoopHarness, TooSlowTheLoopDropsThePlayerOffItsWall)
     }
     EXPECT_TRUE(climbed) << "started up the wall";
     EXPECT_TRUE(fell) << "and came off it";
-    EXPECT_FALSE(ceiling) << "never made the top at run speed on the flat";
+    EXPECT_FALSE(ceiling) << "never made the top at walking speed on the flat";
     EXPECT_TRUE(Grapple_PlatformerPlayerGrounded(level_)) << "back on the floor";
 }
 

@@ -45,7 +45,7 @@ typedef enum PlatformerTuning
 
 typedef struct PlatformerMask
 {
-    Uint32 rows[PLATFORMER_MAX_TILE];
+    Uint32 rows[2][PLATFORMER_MAX_TILE]; /* [0] solid on layer A, [1] on layer B */
 } PlatformerMask;
 
 typedef struct PlatformerSwapper
@@ -121,7 +121,6 @@ struct Grapple_Platformer
        pixel mask: one row per pixel row, bit c set where column c is solid.
        cell_mask holds 1 + the mask's index, 0 for a whole cell. */
     Uint16 *cell_mask;
-    Uint8 *cell_layers; /* PLATFORMER_LAYER_* bits; 0 means both */
     PlatformerMask *masks;
     int mask_count, mask_capacity;
     /* Path swappers: crossing the vertical line x between y0 and y1 sets the

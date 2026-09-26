@@ -57,8 +57,8 @@ static const float kTuningDefaultsInTiles[TUNE_COUNT] = {
     [TUNE_WALL_RETURN_ACCEL] = 75.0f,
     /* Slopes and loops: the pull along a surface, and how slow a run up a
        wall or across a ceiling can get before falling off. */
-    [TUNE_SLOPE_GRAVITY] = 28.125f,
-    [TUNE_LOOP_MIN_SPEED] = 6.0f,
+    [TUNE_SLOPE_GRAVITY] = 18.75f,
+    [TUNE_LOOP_MIN_SPEED] = 3.0f,
     /* How quickly speed gained on a slope bleeds off on the flat: gently,
        so a ramp's momentum carries into a loop a few tiles on. */
     [TUNE_MOMENTUM_DECEL] = 9.375f,
@@ -383,6 +383,24 @@ static float Probe(Grapple_Platformer *level, const PlatformerPlayer *p, int dx,
             return (sign > 0) ? (float)hit : (float)(hit + 1);
         }
     }
+    /* Nothing below the feet, but a surface just above them: the feet have
+       sunk a little under a thin slope, or a step. Stand on it. */
+    for (int k = 1; k <= 4; ++k)
+    {
+        if (PIXEL_SOLID(-k))
+        {
+            int last_solid = first - k * sign;
+            for (int m = k + 1; m <= max_out; ++m)
+            {
+                if (!PIXEL_SOLID(-m))
+                {
+                    break;
+                }
+                last_solid = first - m * sign;
+            }
+            return (sign > 0) ? (float)last_solid : (float)(last_solid + 1);
+        }
+    }
 #undef PIXEL_SOLID
     return NO_GROUND;
 }
@@ -541,11 +559,33 @@ static void ReadInput(Grapple_Platformer *level, float *move, bool *jump, bool *
 /* Off the ground: the speed along the surface becomes a velocity. */
 static void LeaveGround(PlatformerPlayer *p)
 {
+    /* The feet move so that the upright box in the air sits where the body
+       was along the surface's normal. Off a wall the body was lying
+       sideways from the feet; leaving the feet where they were would stand
+       an upright box half inside the wall, and a box inside a wall is a box
+       that is stuck. */
+    const float half_height = p->height * 0.5f;
+    p->x += SDL_sinf(p->angle) * half_height;
+    p->y += -SDL_cosf(p->angle) * half_height + half_height;
     p->vx = SDL_cosf(p->angle) * p->gsp;
     p->vy = SDL_sinf(p->angle) * p->gsp;
     p->grounded = false;
     p->gsp = 0.0f;
     p->angle = 0.0f;
+}
+
+/* Is the middle of the body inside something? On the ground the body
+   stands along the surface's normal — sideways on a wall, downward on a
+   ceiling — and in the air it stands up. */
+static bool BodyEmbedded(Grapple_Platformer *level, const PlatformerPlayer *p)
+{
+    const float half_height = p->height * 0.5f;
+    if (!p->grounded)
+    {
+        return Solid(level, p, p->x, p->y - half_height);
+    }
+    return Solid(level, p, p->x + SDL_sinf(p->angle) * half_height,
+                 p->y - SDL_cosf(p->angle) * half_height);
 }
 
 /* Onto the ground: the velocity becomes a speed along the surface. */
@@ -612,6 +652,36 @@ static void GroundStep(Grapple_Platformer *level, PlatformerPlayer *p, float ste
     {
         LeaveGround(p);
         return;
+    }
+
+    /* Inside something — a wall the feet found ground beside: push out
+       along the surface, whichever way is nearer, or fall. */
+    if (BodyEmbedded(level, p))
+    {
+        const float tx0 = SDL_cosf(p->angle);
+        const float ty0 = SDL_sinf(p->angle);
+        bool freed = false;
+        for (int k = 1; k <= (int)p->width + 2 && !freed; ++k)
+        {
+            for (int dir = -1; dir <= 1 && !freed; dir += 2)
+            {
+                const float ox = p->x + tx0 * (float)(dir * k);
+                const float oy = p->y + ty0 * (float)(dir * k);
+                const float cx = ox + SDL_sinf(p->angle) * p->height * 0.5f;
+                const float cy = oy - SDL_cosf(p->angle) * p->height * 0.5f;
+                if (!Solid(level, p, cx, cy))
+                {
+                    p->x = ox;
+                    p->y = oy;
+                    freed = true;
+                }
+            }
+        }
+        if (!freed || !FindGround(level, p, level->tile))
+        {
+            LeaveGround(p);
+            return;
+        }
     }
 
     const float distance = p->gsp * step;
@@ -709,17 +779,38 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
 
     if (p->buffer > 0.0f && (p->grounded || p->coyote > 0.0f))
     {
-        /* Off the surface along its normal, keeping the speed along it: on
-           flat ground that is straight up; on a slope, away from the slope;
-           inside a loop, toward its middle. A running jump goes higher. */
+        /* Straight up, keeping the velocity the ground gave: from flat
+           ground and from slopes alike, so a jump off a ramp keeps the
+           ramp's forward speed and adds its upward speed to the jump — a
+           jump ramp — rather than being thrown back off the slope. Only
+           from a wall or a ceiling, where "up" is into the surface, does
+           the jump leave along the surface's normal instead, Sonic's way.
+           A running jump goes higher. */
         const float run_fraction = (t[TUNE_RUN_SPEED] > 0.0f)
                                        ? SDL_min(1.0f, SDL_fabsf(p->gsp) / t[TUNE_RUN_SPEED])
                                        : 0.0f;
         const float take_off = t[TUNE_JUMP_SPEED] + t[TUNE_RUN_JUMP_BONUS] * run_fraction;
         const float angle = p->grounded ? p->angle : 0.0f;
         const float along = p->grounded ? p->gsp : p->vx;
-        p->vx = SDL_sinf(angle) * take_off + SDL_cosf(angle) * along;
-        p->vy = -SDL_cosf(angle) * take_off + SDL_sinf(angle) * along;
+        const float carried_x = SDL_cosf(angle) * along;
+        const float carried_y = p->grounded ? SDL_sinf(angle) * along : 0.0f;
+        if (SDL_cosf(angle) > 0.5f)
+        {
+            p->vx = carried_x;
+            p->vy = SDL_min(carried_y, 0.0f) - take_off;
+        }
+        else
+        {
+            p->vx = SDL_sinf(angle) * take_off + carried_x;
+            p->vy = -SDL_cosf(angle) * take_off + carried_y;
+        }
+        if (p->grounded && SDL_cosf(angle) <= 0.5f)
+        {
+            /* Leaving a wall or ceiling: stand the box up where the body was. */
+            const float half_height = p->height * 0.5f;
+            p->x += SDL_sinf(angle) * half_height;
+            p->y += -SDL_cosf(angle) * half_height + half_height;
+        }
         p->grounded = false;
         p->gsp = 0.0f;
         p->angle = 0.0f;
@@ -806,11 +897,27 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
 
         p->wall = 0;
         p->bumped = false;
-        if (MoveX(level, p, p->vx * step))
+        /* Rising, move up first: a jump off a slope must lift the box's
+           low corner clear of the slope ahead before it moves forward, or
+           the corner clips the slope and the jump loses its forward speed
+           — the "thrown back off the ramp" feel. Falling, sideways first,
+           so a landing is found under the feet where they end up. */
+        if (p->vy < 0.0f)
         {
-            p->vx = 0.0f;
+            MoveY(level, p, p->vy * step);
+            if (MoveX(level, p, p->vx * step))
+            {
+                p->vx = 0.0f;
+            }
         }
-        MoveY(level, p, p->vy * step);
+        else
+        {
+            if (MoveX(level, p, p->vx * step))
+            {
+                p->vx = 0.0f;
+            }
+            MoveY(level, p, p->vy * step);
+        }
         if (p->bumped && p->vy < 0.0f)
         {
             p->vy = 0.0f;
@@ -822,7 +929,7 @@ void PlatformerPlayerStep(Grapple_Platformer *level, float step)
                it. A corner of the box catching a steep surface with nothing
                under the feet is not a landing: slide off it sideways. */
             p->angle = 0.0f;
-            if (FindGround(level, p, level->tile))
+            if (FindGround(level, p, level->tile) && !BodyEmbedded(level, p))
             {
                 LandOn(p);
             }

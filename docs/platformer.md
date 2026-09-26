@@ -119,7 +119,11 @@ side of the feet that look into the ground — whichever of the four
 directions the surface normal is closest to. The surface's angle comes
 from the two sensors, the speed is along the surface, and gravity pulls
 along it (`slope_gravity`), so a run uphill slows, a run downhill speeds
-up past `run_speed`, and a jump leaves along the surface's normal. The
+up past `run_speed`, A jump from a slope goes straight up and keeps the speed the slope
+gave — forward and, on a ramp, upward, so a run up a ramp and a jump at
+its lip is a launch that clears a gap the flat never could. Only from a
+wall or a ceiling, where up is into the surface, does a jump leave along
+the surface's normal. The
 sprite is rotated by the angle about its feet, so it leans into a hill and
 turns all the way round a loop; `angle()` and `ground_speed()` report both.
 
@@ -217,8 +221,8 @@ is a key:
 | `wall_jump_x`, `wall_jump_y` | 96, 240 px/s | the kick off a wall, as high as a ground jump; a `wall_jump_y` of 0 turns wall jumping off |
 | `wall_coyote_time`, `wall_jump_lock` | 0.10, 0.05 s | how long after leaving a wall a jump still kicks, and how long the stick is ignored after one |
 | `wall_return_accel`, `wall_return_time` | 1200 px/s², 0.6 s | how hard, and for how long after a kick, steering back toward the wall just left turns the player around |
-| `slope_gravity` | 450 px/s² | gravity's pull along a surface: slows a run up, speeds a run down |
-| `loop_min_speed` | 96 px/s | slower than this on a wall or a ceiling and the player falls off |
+| `slope_gravity` | 300 px/s² | gravity's pull along a surface: slows a run up, speeds a run down |
+| `loop_min_speed` | 48 px/s | slower than this on a wall or a ceiling and the player falls off |
 | `momentum_decel` | 150 px/s² | how quickly speed gained on a slope bleeds off on the flat; gentle, so a ramp's momentum carries a few tiles into a loop |
 
 ```lua

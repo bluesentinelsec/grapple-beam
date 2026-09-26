@@ -10,7 +10,10 @@
 -- carries you up the wall, over the top and out. Try the second loop
 -- without the run button and watch the player drop off the wall.
 --
--- 1 respawns at the start, 2 at the first ramp, 3 at the second. Esc quits.
+-- Past the loops, a jump ramp over a gap: run up it and jump at the lip.
+--
+-- 1 respawns at the start, 2 at the first ramp, 3 at the second, 4 before
+-- the jump ramp. Esc quits.
 
 local engine = Grapple.engine{
   title = "Slopes and loops — grapple-beam",
@@ -18,8 +21,9 @@ local engine = Grapple.engine{
   headless = SDL.getenv("GRAPPLE_HEADLESS") ~= nil,
 }
 
-local level = Grapple.create_level(engine, { width = 110, height = 22 })
-level:create_floor{ x = 0, y = 20, width = 110 }
+local level = Grapple.create_level(engine, { width = 130, height = 22 })
+level:create_floor{ x = 0, y = 20, width = 106 }
+level:create_floor{ x = 116, y = 20, width = 14 }
 
 -- Two hills: a gentle one, then a steeper one with a flat top.
 level:create_slope{ x = 8,  y = 18, width = 6, height = 2, direction = "up" }
@@ -41,6 +45,11 @@ level:create_floor{ x = 75, y = 13, width = 3 }
 level:create_slope{ x = 78, y = 13, width = 10, height = 7, direction = "down" }
 level:create_loop{ x = 91, y = 13, radius = 4 }
 
+-- A jump ramp: run up it holding run and jump at the lip, and the ramp's
+-- upward speed adds to the jump — enough to clear the ten-tile gap. Walk
+-- off the lip without jumping and you drop in.
+level:create_slope{ x = 100, y = 17, width = 6, height = 3, direction = "up" }
+
 local player = level:create_player{ x = 3, y = 19 }
 
 -- Headless, the level plays itself and narrates, so CI can tell it ran.
@@ -48,7 +57,7 @@ local headless = SDL.getenv("GRAPPLE_HEADLESS") ~= nil
 local last_angle = 0
 if headless then player:scripted_input(true) end
 
-local respawns = { [1] = { 3 * 16 + 8, 20 * 16 }, [2] = { 45 * 16, 16 * 16 }, [3] = { 76 * 16, 13 * 16 } }
+local respawns = { [1] = { 3 * 16 + 8, 20 * 16 }, [2] = { 45 * 16, 16 * 16 }, [3] = { 76 * 16, 13 * 16 }, [4] = { 94 * 16, 20 * 16 } }
 
 engine:on_update(function(dt)
   if engine:key_pressed("escape") then engine:quit() end
@@ -74,5 +83,5 @@ engine:on_post_render(function()
   GrappleC.RenderDebugText(renderer, 8, 8,
     string.format("%s  x=%d  angle=%d  speed=%d", player:state(), math.floor(x / 16),
       math.floor(player:angle() + 0.5), math.floor(math.abs(player:ground_speed()) + 0.5)))
-  GrappleC.RenderDebugText(renderer, 8, 202, "hold shift down the ramps   1/2/3 respawn   esc quit")
+  GrappleC.RenderDebugText(renderer, 8, 202, "hold shift down the ramps   1-4 respawn   esc quit")
 end)
