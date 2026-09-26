@@ -34,6 +34,11 @@ if(GRAPPLE_BEAM_BUILD_TESTS)
   endif()
 
   if(TARGET grapple-beam_app)
+    add_test(NAME demo_platformer_slopes_lua
+      COMMAND ${CMAKE_COMMAND} -DDEMO=$<TARGET_FILE:grapple-beam_app>
+              -DSCRIPT=${CMAKE_CURRENT_SOURCE_DIR}/slopes.lua -DSECONDS=8
+              "-DPATTERN=angle=-[0-9]" -P ${CMAKE_SOURCE_DIR}/scripts/run_demo_smoke.cmake)
+    set_tests_properties(demo_platformer_slopes_lua PROPERTIES RUN_SERIAL TRUE)
     foreach(language lua rb)
       add_test(NAME demo_platformer_${language}
         COMMAND ${CMAKE_COMMAND} -DDEMO=$<TARGET_FILE:grapple-beam_app>
