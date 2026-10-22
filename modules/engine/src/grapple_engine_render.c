@@ -262,11 +262,38 @@ static void DrawItems(Grapple_Engine *engine, const DrawItem *items, int count,
         if (sprite->texture == NULL)
         {
             /* No texture: a solid rectangle. How a game gets something on
-               screen before it has any art. */
+               screen before it has any art. Rotated like a sprite would be,
+               about its origin, so a placeholder leans into a slope too. */
             SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColorFloat(renderer, sprite->color.r, sprite->color.g,
-                                        sprite->color.b, sprite->color.a);
-            SDL_RenderFillRect(renderer, &destination);
+            if (item->transform.rotation == 0.0f)
+            {
+                SDL_SetRenderDrawColorFloat(renderer, sprite->color.r, sprite->color.g,
+                                            sprite->color.b, sprite->color.a);
+                SDL_RenderFillRect(renderer, &destination);
+                continue;
+            }
+            const float radians = item->transform.rotation * (SDL_PI_F / 180.0f);
+            const float c = SDL_cosf(radians);
+            const float sn = SDL_sinf(radians);
+            const float ox = destination.x + destination.w * sprite->origin_x;
+            const float oy = destination.y + destination.h * sprite->origin_y;
+            const float xs[4] = {destination.x, destination.x + destination.w,
+                                 destination.x + destination.w, destination.x};
+            const float ys[4] = {destination.y, destination.y, destination.y + destination.h,
+                                 destination.y + destination.h};
+            SDL_Vertex quad[4];
+            for (int k = 0; k < 4; ++k)
+            {
+                const float dx = xs[k] - ox;
+                const float dy = ys[k] - oy;
+                quad[k].position.x = ox + dx * c - dy * sn;
+                quad[k].position.y = oy + dx * sn + dy * c;
+                quad[k].color = sprite->color;
+                quad[k].tex_coord.x = 0.0f;
+                quad[k].tex_coord.y = 0.0f;
+            }
+            static const int order[6] = {0, 1, 2, 0, 2, 3};
+            SDL_RenderGeometry(renderer, NULL, quad, 4, order, 6);
             continue;
         }
 

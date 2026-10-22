@@ -49,6 +49,10 @@ class PlatformerPlayer {
   int facing() const { return Grapple_PlatformerPlayerFacing(level_); }
   // -1 or +1 while airborne and pressed against a wall on that side.
   int wall() const { return Grapple_PlatformerPlayerWall(level_); }
+  // The surface's angle in degrees (0 flat, negative rising right), 0 in the air.
+  float angle() const { return Grapple_PlatformerPlayerAngle(level_); }
+  float ground_speed() const { return Grapple_PlatformerPlayerGroundSpeed(level_); }
+  int layer() const { return Grapple_PlatformerPlayerLayer(level_); }
 
   std::pair<float, float> position() const {
     float x = 0.0f;
@@ -174,6 +178,16 @@ class Platformer {
   bool CreatePlatform(int x, int y, int width) const {
     return Grapple_PlatformerCreatePlatform(level_, x, y, width);
   }
+  // Solid below a line across the rectangle: rising to the right, or falling.
+  bool CreateSlope(int x, int y, int width, int height, bool rising = true) const {
+    return Grapple_PlatformerCreateSlope(level_, x, y, width, height, rising);
+  }
+  // A Sonic loop of the given outer radius, its inner bottom on row y + 2r - 1.
+  Status CreateLoop(int x, int y, int radius) const {
+    if (!Grapple_PlatformerCreateLoop(level_, x, y, radius)) return Status::FromSdl();
+    return Status::Ok();
+  }
+  bool SolidAt(float x, float y) const { return Grapple_PlatformerSolidAt(level_, x, y); }
   // A generic solid rectangle in pixels; -1 on failure.
   int AddSolid(float x, float y, float w, float h) const {
     return Grapple_PlatformerAddSolid(level_, x, y, w, h);

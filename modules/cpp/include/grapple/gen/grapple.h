@@ -979,6 +979,15 @@ class PlatformerHandle {
   Status PlatformerCreatePlatform(int x, int y, int width) {
     return ::Grapple_PlatformerCreatePlatform(value_, x, y, width) ? Status() : Status::FromSdl();
   }
+  Status PlatformerCreateSlope(int x, int y, int width, int height, bool rising) {
+    return ::Grapple_PlatformerCreateSlope(value_, x, y, width, height, rising) ? Status() : Status::FromSdl();
+  }
+  Status PlatformerCreateLoop(int x, int y, int radius) {
+    return ::Grapple_PlatformerCreateLoop(value_, x, y, radius) ? Status() : Status::FromSdl();
+  }
+  Status PlatformerSolidAt(float x, float y) {
+    return ::Grapple_PlatformerSolidAt(value_, x, y) ? Status() : Status::FromSdl();
+  }
   int PlatformerAddSolid(float x, float y, float w, float h) {
     return ::Grapple_PlatformerAddSolid(value_, x, y, w, h);
   }
@@ -1057,6 +1066,15 @@ class PlatformerHandle {
   }
   int PlatformerPlayerWall() {
     return ::Grapple_PlatformerPlayerWall(value_);
+  }
+  float PlatformerPlayerAngle() {
+    return ::Grapple_PlatformerPlayerAngle(value_);
+  }
+  float PlatformerPlayerGroundSpeed() {
+    return ::Grapple_PlatformerPlayerGroundSpeed(value_);
+  }
+  int PlatformerPlayerLayer() {
+    return ::Grapple_PlatformerPlayerLayer(value_);
   }
   int PlatformerPlayerFacing() {
     return ::Grapple_PlatformerPlayerFacing(value_);

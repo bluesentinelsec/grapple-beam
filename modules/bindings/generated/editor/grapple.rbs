@@ -2938,8 +2938,10 @@ module GrappleC
   def self.PlatformerCameraPosition: (untyped level, Float x, Float y) -> [Float, Float]
   def self.PlatformerCreateBlock: (untyped level, Integer x, Integer y, Integer width, Integer height) -> bool
   def self.PlatformerCreateFloor: (untyped level, Integer x, Integer y, Integer width, Integer depth) -> bool
+  def self.PlatformerCreateLoop: (untyped level, Integer x, Integer y, Integer radius) -> bool
   def self.PlatformerCreatePlatform: (untyped level, Integer x, Integer y, Integer width) -> bool
   def self.PlatformerCreatePlayer: (untyped level, Integer tile_x, Integer tile_y) -> Integer
+  def self.PlatformerCreateSlope: (untyped level, Integer x, Integer y, Integer width, Integer height, bool rising) -> bool
   def self.PlatformerCreateStairs: (untyped level, Integer x, Integer y, Integer steps, bool rising) -> bool
   def self.PlatformerCreateWall: (untyped level, Integer x, Integer y, Integer height) -> bool
   def self.PlatformerDetach: (untyped level) -> void
@@ -2949,12 +2951,15 @@ module GrappleC
   def self.PlatformerHeight: (untyped level) -> Integer
   def self.PlatformerPixelSize: (untyped level, Float width, Float height) -> [Float, Float]
   def self.PlatformerPlayer: (untyped level) -> Integer
+  def self.PlatformerPlayerAngle: (untyped level) -> Float
   def self.PlatformerPlayerBumped: (untyped level) -> bool
   def self.PlatformerPlayerFacing: (untyped level) -> Integer
   def self.PlatformerPlayerFell: (untyped level) -> bool
+  def self.PlatformerPlayerGroundSpeed: (untyped level) -> Float
   def self.PlatformerPlayerGrounded: (untyped level) -> bool
   def self.PlatformerPlayerJumped: (untyped level) -> bool
   def self.PlatformerPlayerLanded: (untyped level) -> bool
+  def self.PlatformerPlayerLayer: (untyped level) -> Integer
   def self.PlatformerPlayerPaused: (untyped level) -> bool
   def self.PlatformerPlayerPosition: (untyped level, Float x, Float y) -> [Float, Float]
   def self.PlatformerPlayerRespawn: (untyped level, Float x, Float y) -> void
@@ -2987,6 +2992,7 @@ module GrappleC
   def self.PlatformerSetTile: (untyped level, Integer x, Integer y, Integer tile) -> bool
   def self.PlatformerSetTileColor: (untyped level, Integer tile, Float r, Float g, Float b, Float a) -> void
   def self.PlatformerSetTileTexture: (untyped level, Integer tile, untyped texture) -> void
+  def self.PlatformerSolidAt: (untyped level, Float x, Float y) -> bool
   def self.PlatformerSolidCount: (untyped level) -> Integer
   def self.PlatformerStep: (untyped level, Float step) -> void
   def self.PlatformerTileAt: (untyped level, Integer x, Integer y) -> Integer

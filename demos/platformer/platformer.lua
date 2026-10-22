@@ -84,6 +84,49 @@ level:create_wall{ x = 58, y = 16, height = 4 }
 level:create_wall{ x = 100, y = 4, height = 16 }
 level:create_wall{ x = 104, y = 4, height = 16 }
 
+-- Hills: a slope up and a slope down, two tiles high over four wide.
+level:create_slope{ x = 126, y = 18, width = 4, height = 2, direction = "up" }
+level:create_slope{ x = 130, y = 18, width = 4, height = 2, direction = "down" }
+
+-- Stairs up, a gap, stairs down: the staircases near the end of 1-1.
+level:create_stairs{ x = 134, y = 19, steps = 4, direction = "up" }
+level:create_stairs{ x = 140, y = 19, steps = 4, direction = "down" }
+level:create_stairs{ x = 148, y = 19, steps = 4, direction = "up" }
+level:create_stairs{ x = 155, y = 19, steps = 4, direction = "down" }
+
+-- The loop. A 45-degree slope climbs to a plateau, a ramp runs down from
+-- it — run down it and the slope adds speed past the run speed — and the
+-- loop stands on the floor beyond, its inner bottom on row 20. Go in fast:
+-- up the right side, over the top, down the left and out to the right.
+level:create_slope{ x = 160, y = 16, width = 4, height = 4, direction = "up" }
+level:create_floor{ x = 164, y = 16, width = 3 }
+level:create_slope{ x = 167, y = 16, width = 8, height = 4, direction = "down" }
+level:create_loop{ x = 178, y = 15, radius = 3 }
+
+-- The final staircase and the top of the flagpole hill.
+level:create_stairs{ x = 190, y = 19, steps = 8, direction = "up" }
+level:create_block{ x = 198, y = 12, height = 8 }
+
+-- Ledges: jump up through them, land on them from above.
+level:create_platform{ x = 30, y = 15, width = 4 }
+level:create_platform{ x = 58, y = 13, width = 5 }
+level:create_platform{ x = 113, y = 6, width = 4 }
+level:create_platform{ x = 119, y = 9, width = 4 }
+
+-- Walls: pipes to climb over, and at x = 100 a tall shaft three tiles wide.
+-- Press into either side of it while falling to slide, jump to kick off, and
+-- keep alternating to climb out onto the ledges at the top.
+level:create_wall{ x = 28, y = 18, height = 2 }
+level:create_wall{ x = 29, y = 18, height = 2 }
+level:create_wall{ x = 38, y = 17, height = 3 }
+level:create_wall{ x = 39, y = 17, height = 3 }
+level:create_wall{ x = 46, y = 16, height = 4 }
+level:create_wall{ x = 47, y = 16, height = 4 }
+level:create_wall{ x = 57, y = 16, height = 4 }
+level:create_wall{ x = 58, y = 16, height = 4 }
+level:create_wall{ x = 100, y = 4, height = 16 }
+level:create_wall{ x = 104, y = 4, height = 16 }
+
 -- Stairs up, a gap, stairs down: the staircases near the end of 1-1.
 level:create_stairs{ x = 134, y = 19, steps = 4, direction = "up" }
 level:create_stairs{ x = 140, y = 19, steps = 4, direction = "down" }

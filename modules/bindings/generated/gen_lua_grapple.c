@@ -6563,6 +6563,18 @@ static int GenL_Grapple_PlatformerCreateFloor(lua_State *L)
     return 1;
 }
 
+static int GenL_Grapple_PlatformerCreateLoop(lua_State *L)
+{
+    (void)L;
+    Grapple_Platformer *a0 = (Grapple_Platformer *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Platformer");
+    int a1 = (int)luaL_checkinteger(L, 2);
+    int a2 = (int)luaL_checkinteger(L, 3);
+    int a3 = (int)luaL_checkinteger(L, 4);
+    bool rv = Grapple_PlatformerCreateLoop(a0, a1, a2, a3);
+    lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
 static int GenL_Grapple_PlatformerCreatePlatform(lua_State *L)
 {
     (void)L;
@@ -6583,6 +6595,20 @@ static int GenL_Grapple_PlatformerCreatePlayer(lua_State *L)
     int a2 = (int)luaL_checkinteger(L, 3);
     Grapple_ActorId rv = Grapple_PlatformerCreatePlayer(a0, a1, a2);
     lua_pushinteger(L, (lua_Integer)rv);
+    return 1;
+}
+
+static int GenL_Grapple_PlatformerCreateSlope(lua_State *L)
+{
+    (void)L;
+    Grapple_Platformer *a0 = (Grapple_Platformer *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Platformer");
+    int a1 = (int)luaL_checkinteger(L, 2);
+    int a2 = (int)luaL_checkinteger(L, 3);
+    int a3 = (int)luaL_checkinteger(L, 4);
+    int a4 = (int)luaL_checkinteger(L, 5);
+    bool a5 = (bool)lua_toboolean(L, 6);
+    bool rv = Grapple_PlatformerCreateSlope(a0, a1, a2, a3, a4, a5);
+    lua_pushboolean(L, (int)rv);
     return 1;
 }
 
@@ -6681,6 +6707,15 @@ static int GenL_Grapple_PlatformerPlayer(lua_State *L)
     return 1;
 }
 
+static int GenL_Grapple_PlatformerPlayerAngle(lua_State *L)
+{
+    (void)L;
+    Grapple_Platformer *a0 = (Grapple_Platformer *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Platformer");
+    float rv = Grapple_PlatformerPlayerAngle(a0);
+    lua_pushnumber(L, (lua_Number)rv);
+    return 1;
+}
+
 static int GenL_Grapple_PlatformerPlayerBumped(lua_State *L)
 {
     (void)L;
@@ -6708,6 +6743,15 @@ static int GenL_Grapple_PlatformerPlayerFell(lua_State *L)
     return 1;
 }
 
+static int GenL_Grapple_PlatformerPlayerGroundSpeed(lua_State *L)
+{
+    (void)L;
+    Grapple_Platformer *a0 = (Grapple_Platformer *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Platformer");
+    float rv = Grapple_PlatformerPlayerGroundSpeed(a0);
+    lua_pushnumber(L, (lua_Number)rv);
+    return 1;
+}
+
 static int GenL_Grapple_PlatformerPlayerGrounded(lua_State *L)
 {
     (void)L;
@@ -6732,6 +6776,15 @@ static int GenL_Grapple_PlatformerPlayerLanded(lua_State *L)
     Grapple_Platformer *a0 = (Grapple_Platformer *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Platformer");
     bool rv = Grapple_PlatformerPlayerLanded(a0);
     lua_pushboolean(L, (int)rv);
+    return 1;
+}
+
+static int GenL_Grapple_PlatformerPlayerLayer(lua_State *L)
+{
+    (void)L;
+    Grapple_Platformer *a0 = (Grapple_Platformer *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Platformer");
+    int rv = Grapple_PlatformerPlayerLayer(a0);
+    lua_pushinteger(L, (lua_Integer)rv);
     return 1;
 }
 
@@ -7050,6 +7103,17 @@ static int GenL_Grapple_PlatformerSetTileTexture(lua_State *L)
     SDL_Texture *a2 = (SDL_Texture *)GrappleGen_LuaCheckHandle(L, 3, "SDL_Texture");
     Grapple_PlatformerSetTileTexture(a0, a1, a2);
     return 0;
+}
+
+static int GenL_Grapple_PlatformerSolidAt(lua_State *L)
+{
+    (void)L;
+    Grapple_Platformer *a0 = (Grapple_Platformer *)GrappleGen_LuaCheckHandle(L, 1, "Grapple_Platformer");
+    float a1 = (float)luaL_checknumber(L, 2);
+    float a2 = (float)luaL_checknumber(L, 3);
+    bool rv = Grapple_PlatformerSolidAt(a0, a1, a2);
+    lua_pushboolean(L, (int)rv);
+    return 1;
 }
 
 static int GenL_Grapple_PlatformerSolidCount(lua_State *L)
@@ -9033,7 +9097,7 @@ static int GenL_Grapple_WheelJointDefSetSpring(lua_State *L)
 int GrappleGen_OpenLua_grapple(lua_State *L);
 int GrappleGen_OpenLua_grapple(lua_State *L)
 {
-    lua_createtable(L, 0, 791);
+    lua_createtable(L, 0, 797);
     lua_pushcfunction(L, GenL_Grapple_ActionBind);
     lua_setfield(L, -2, "ActionBind");
     lua_pushcfunction(L, GenL_Grapple_ActionBindAxis);
@@ -10132,10 +10196,14 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "PlatformerCreateBlock");
     lua_pushcfunction(L, GenL_Grapple_PlatformerCreateFloor);
     lua_setfield(L, -2, "PlatformerCreateFloor");
+    lua_pushcfunction(L, GenL_Grapple_PlatformerCreateLoop);
+    lua_setfield(L, -2, "PlatformerCreateLoop");
     lua_pushcfunction(L, GenL_Grapple_PlatformerCreatePlatform);
     lua_setfield(L, -2, "PlatformerCreatePlatform");
     lua_pushcfunction(L, GenL_Grapple_PlatformerCreatePlayer);
     lua_setfield(L, -2, "PlatformerCreatePlayer");
+    lua_pushcfunction(L, GenL_Grapple_PlatformerCreateSlope);
+    lua_setfield(L, -2, "PlatformerCreateSlope");
     lua_pushcfunction(L, GenL_Grapple_PlatformerCreateStairs);
     lua_setfield(L, -2, "PlatformerCreateStairs");
     lua_pushcfunction(L, GenL_Grapple_PlatformerCreateWall);
@@ -10154,18 +10222,24 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "PlatformerPixelSize");
     lua_pushcfunction(L, GenL_Grapple_PlatformerPlayer);
     lua_setfield(L, -2, "PlatformerPlayer");
+    lua_pushcfunction(L, GenL_Grapple_PlatformerPlayerAngle);
+    lua_setfield(L, -2, "PlatformerPlayerAngle");
     lua_pushcfunction(L, GenL_Grapple_PlatformerPlayerBumped);
     lua_setfield(L, -2, "PlatformerPlayerBumped");
     lua_pushcfunction(L, GenL_Grapple_PlatformerPlayerFacing);
     lua_setfield(L, -2, "PlatformerPlayerFacing");
     lua_pushcfunction(L, GenL_Grapple_PlatformerPlayerFell);
     lua_setfield(L, -2, "PlatformerPlayerFell");
+    lua_pushcfunction(L, GenL_Grapple_PlatformerPlayerGroundSpeed);
+    lua_setfield(L, -2, "PlatformerPlayerGroundSpeed");
     lua_pushcfunction(L, GenL_Grapple_PlatformerPlayerGrounded);
     lua_setfield(L, -2, "PlatformerPlayerGrounded");
     lua_pushcfunction(L, GenL_Grapple_PlatformerPlayerJumped);
     lua_setfield(L, -2, "PlatformerPlayerJumped");
     lua_pushcfunction(L, GenL_Grapple_PlatformerPlayerLanded);
     lua_setfield(L, -2, "PlatformerPlayerLanded");
+    lua_pushcfunction(L, GenL_Grapple_PlatformerPlayerLayer);
+    lua_setfield(L, -2, "PlatformerPlayerLayer");
     lua_pushcfunction(L, GenL_Grapple_PlatformerPlayerPaused);
     lua_setfield(L, -2, "PlatformerPlayerPaused");
     lua_pushcfunction(L, GenL_Grapple_PlatformerPlayerPosition);
@@ -10230,6 +10304,8 @@ int GrappleGen_OpenLua_grapple(lua_State *L)
     lua_setfield(L, -2, "PlatformerSetTileColor");
     lua_pushcfunction(L, GenL_Grapple_PlatformerSetTileTexture);
     lua_setfield(L, -2, "PlatformerSetTileTexture");
+    lua_pushcfunction(L, GenL_Grapple_PlatformerSolidAt);
+    lua_setfield(L, -2, "PlatformerSolidAt");
     lua_pushcfunction(L, GenL_Grapple_PlatformerSolidCount);
     lua_setfield(L, -2, "PlatformerSolidCount");
     lua_pushcfunction(L, GenL_Grapple_PlatformerStep);

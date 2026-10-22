@@ -2964,8 +2964,10 @@ returns as an array.
 | `GrappleC.PlatformerCameraPosition(level: Grapple_Platformer, x: number, y: number)` | x: number, y: number |
 | `GrappleC.PlatformerCreateBlock(level: Grapple_Platformer, x: integer, y: integer, width: integer, height: integer)` | boolean |
 | `GrappleC.PlatformerCreateFloor(level: Grapple_Platformer, x: integer, y: integer, width: integer, depth: integer)` | boolean |
+| `GrappleC.PlatformerCreateLoop(level: Grapple_Platformer, x: integer, y: integer, radius: integer)` | boolean |
 | `GrappleC.PlatformerCreatePlatform(level: Grapple_Platformer, x: integer, y: integer, width: integer)` | boolean |
 | `GrappleC.PlatformerCreatePlayer(level: Grapple_Platformer, tile_x: integer, tile_y: integer)` | integer |
+| `GrappleC.PlatformerCreateSlope(level: Grapple_Platformer, x: integer, y: integer, width: integer, height: integer, rising: boolean)` | boolean |
 | `GrappleC.PlatformerCreateStairs(level: Grapple_Platformer, x: integer, y: integer, steps: integer, rising: boolean)` | boolean |
 | `GrappleC.PlatformerCreateWall(level: Grapple_Platformer, x: integer, y: integer, height: integer)` | boolean |
 | `GrappleC.PlatformerDetach(level: Grapple_Platformer)` | nil |
@@ -2975,12 +2977,15 @@ returns as an array.
 | `GrappleC.PlatformerHeight(level: Grapple_Platformer)` | integer |
 | `GrappleC.PlatformerPixelSize(level: Grapple_Platformer, width: number, height: number)` | width: number, height: number |
 | `GrappleC.PlatformerPlayer(level: Grapple_Platformer)` | integer |
+| `GrappleC.PlatformerPlayerAngle(level: Grapple_Platformer)` | number |
 | `GrappleC.PlatformerPlayerBumped(level: Grapple_Platformer)` | boolean |
 | `GrappleC.PlatformerPlayerFacing(level: Grapple_Platformer)` | integer |
 | `GrappleC.PlatformerPlayerFell(level: Grapple_Platformer)` | boolean |
+| `GrappleC.PlatformerPlayerGroundSpeed(level: Grapple_Platformer)` | number |
 | `GrappleC.PlatformerPlayerGrounded(level: Grapple_Platformer)` | boolean |
 | `GrappleC.PlatformerPlayerJumped(level: Grapple_Platformer)` | boolean |
 | `GrappleC.PlatformerPlayerLanded(level: Grapple_Platformer)` | boolean |
+| `GrappleC.PlatformerPlayerLayer(level: Grapple_Platformer)` | integer |
 | `GrappleC.PlatformerPlayerPaused(level: Grapple_Platformer)` | boolean |
 | `GrappleC.PlatformerPlayerPosition(level: Grapple_Platformer, x: number, y: number)` | x: number, y: number |
 | `GrappleC.PlatformerPlayerRespawn(level: Grapple_Platformer, x: number, y: number)` | nil |
@@ -3013,6 +3018,7 @@ returns as an array.
 | `GrappleC.PlatformerSetTile(level: Grapple_Platformer, x: integer, y: integer, tile: integer)` | boolean |
 | `GrappleC.PlatformerSetTileColor(level: Grapple_Platformer, tile: integer, r: number, g: number, b: number, a: number)` | nil |
 | `GrappleC.PlatformerSetTileTexture(level: Grapple_Platformer, tile: integer, texture: SDL_Texture)` | nil |
+| `GrappleC.PlatformerSolidAt(level: Grapple_Platformer, x: number, y: number)` | boolean |
 | `GrappleC.PlatformerSolidCount(level: Grapple_Platformer)` | integer |
 | `GrappleC.PlatformerStep(level: Grapple_Platformer, step: number)` | nil |
 | `GrappleC.PlatformerTileAt(level: Grapple_Platformer, x: integer, y: integer)` | integer |
